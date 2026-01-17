@@ -182,6 +182,17 @@ Mark the completed task:
 
 ⚠️ This commit completes ONE task. After committing, STOP immediately. Do not continue to another task.
 
+First, check if git is initialized:
+```bash
+git rev-parse --git-dir 2>/dev/null
+```
+
+**If NO git repo exists:**
+- Ask the user: "No git repository found. Would you like me to initialize one with `git init`?"
+- Wait for confirmation before initializing
+- After init, make an initial commit with existing files
+
+**If git repo exists:**
 One coherent unit per commit:
 ```bash
 git add .

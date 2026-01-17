@@ -161,6 +161,17 @@ If validation fails: Fix the issues in the same iteration. Don't commit broken c
 
 ⚠️ This commit completes ONE task. After committing, STOP immediately.
 
+First, check if git is initialized:
+```bash
+git rev-parse --git-dir 2>/dev/null
+```
+
+**If NO git repo exists:**
+- Ask the user: "No git repository found. Would you like me to initialize one with `git init`?"
+- Wait for confirmation before initializing
+- After init, make an initial commit with existing files
+
+**If git repo exists:**
 ```bash
 git add .
 git commit -m "Brief description of what was implemented"

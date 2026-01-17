@@ -1,10 +1,12 @@
 # Project Guidance for AI Agents
 
-## Knowledge Base (MUST USE)
+## Knowledge Base (Optional Integration)
+
+> **Brain Integration:** If `../../brain/` exists, use it for KB lookups. Otherwise, proceed without external brain KB - this project works standalone.
 
 ### Progressive Disclosure: Always Read in This Order
 
-**ALWAYS start here:**
+**If brain repository is available, ALWAYS start here:**
 1. `../../brain/kb/SUMMARY.md` - Knowledge base overview and usage guide
 2. `../../brain/references/react-best-practices/HOTLIST.md` - Top 10 most applicable performance rules (covers 80% of scenarios)
 
@@ -22,6 +24,12 @@
 - **Token efficiency**: HOTLIST covers most common scenarios with minimal tokens
 - **Faster results**: Start broad, drill down only when needed
 - **Avoid overwhelm**: Don't read all rules unless explicitly instructed
+
+### Standalone Mode
+If the brain repository is not present (e.g., project cloned standalone), skip the KB lookups above and rely on:
+- Project-local documentation in `docs/`
+- Standard best practices for your tech stack
+- Any project-specific conventions documented in this file
 
 ## Knowledge Growth Rule (Mandatory)
 
