@@ -375,7 +375,8 @@ run_once() {
     fi
   } > "$prompt_with_mode"
 
-  # Feed prompt into RovoDev
+  # Feed prompt into RovoDev (run from project root, not ralph/)
+  cd "$ROOT"
   script -q -c "cat \"$prompt_with_mode\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG}" "$log"
 
   # Clean up temporary prompt
