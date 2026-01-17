@@ -147,20 +147,24 @@ project-root/           ← YOU ARE HERE (working directory)
 ├── package.json        ← Config files go HERE  
 ├── tsconfig.json       ← Config files go HERE
 ├── index.html          ← Entry points go HERE
-├── AGENTS.md           ← Project guidance
-├── THOUGHTS.md         ← Project vision
-├── NEURONS.md          ← Codebase map
-└── ralph/              ← ONLY loop orchestration files
+├── README.md           ← Project readme
+└── ralph/              ← Ralph files (loop + project context)
     ├── PROMPT.md       ← This file
     ├── IMPLEMENTATION_PLAN.md
     ├── RALPH.md
+    ├── VALIDATION_CRITERIA.md
+    ├── AGENTS.md       ← Agent guidance
+    ├── THOUGHTS.md     ← Project vision
+    ├── NEURONS.md      ← Codebase map
     ├── loop.sh
+    ├── kb/             ← Project knowledge base
+    ├── logs/           ← Iteration logs
     └── progress.txt
 ```
 
 **NEVER put source code, package.json, or config files inside ralph/**
-- `ralph/` is ONLY for the loop runner infrastructure
-- All actual project files go in the project root
+- `ralph/` contains loop infrastructure AND project context files (AGENTS, THOUGHTS, NEURONS, kb/)
+- All actual application files go in the project root
 - When creating files, use paths like `src/...`, NOT `ralph/src/...`
 
 Implementation guidelines:

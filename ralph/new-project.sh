@@ -320,9 +320,9 @@ info "Creating project directory structure..."
 mkdir -p "$PROJECT_LOCATION"
 mkdir -p "$PROJECT_LOCATION/ralph"
 mkdir -p "$PROJECT_LOCATION/ralph/logs"
+mkdir -p "$PROJECT_LOCATION/ralph/kb"
 mkdir -p "$PROJECT_LOCATION/src"
 mkdir -p "$PROJECT_LOCATION/docs"
-mkdir -p "$PROJECT_LOCATION/kb"
 
 # ============================================
 # Copy and Process Template Files
@@ -330,11 +330,11 @@ mkdir -p "$PROJECT_LOCATION/kb"
 
 info "Copying template files..."
 
-# Copy root-level templates
+# Copy AGENTS.md to ralph/ (not project root)
 if [ -f "$TEMPLATES_DIR/AGENTS.project.md" ]; then
-    cp "$TEMPLATES_DIR/AGENTS.project.md" "$PROJECT_LOCATION/AGENTS.md"
-    substitute_placeholders "$PROJECT_LOCATION/AGENTS.md" "$REPO_NAME" "$WORK_BRANCH"
-    success "Copied AGENTS.md"
+    cp "$TEMPLATES_DIR/AGENTS.project.md" "$PROJECT_LOCATION/ralph/AGENTS.md"
+    substitute_placeholders "$PROJECT_LOCATION/ralph/AGENTS.md" "$REPO_NAME" "$WORK_BRANCH"
+    success "Copied ralph/AGENTS.md"
 else
     warn "Template not found: AGENTS.project.md"
 fi
@@ -396,30 +396,32 @@ fi
 info "Generating custom project files..."
 
 # TODO: Task 11 - HIGH INTELLIGENCE generator for THOUGHTS.md
+# THOUGHTS.md goes in ralph/, not project root
 if [ -f "$BRAIN_DIR/generators/generate-thoughts.sh" ]; then
     info "Generating custom THOUGHTS.md..."
-    bash "$BRAIN_DIR/generators/generate-thoughts.sh" "$IDEA_FILE" "$PROJECT_LOCATION/THOUGHTS.md"
-    success "Generated THOUGHTS.md"
+    bash "$BRAIN_DIR/generators/generate-thoughts.sh" "$IDEA_FILE" "$PROJECT_LOCATION/ralph/THOUGHTS.md"
+    success "Generated ralph/THOUGHTS.md"
 else
     warn "Generator not found: generate-thoughts.sh (using template fallback)"
     if [ -f "$TEMPLATES_DIR/THOUGHTS.project.md" ]; then
-        cp "$TEMPLATES_DIR/THOUGHTS.project.md" "$PROJECT_LOCATION/THOUGHTS.md"
-        substitute_placeholders "$PROJECT_LOCATION/THOUGHTS.md" "$REPO_NAME" "$WORK_BRANCH"
-        success "Copied THOUGHTS.md template (needs customization)"
+        cp "$TEMPLATES_DIR/THOUGHTS.project.md" "$PROJECT_LOCATION/ralph/THOUGHTS.md"
+        substitute_placeholders "$PROJECT_LOCATION/ralph/THOUGHTS.md" "$REPO_NAME" "$WORK_BRANCH"
+        success "Copied ralph/THOUGHTS.md template (needs customization)"
     fi
 fi
 
 # TODO: Task 12 - HIGH INTELLIGENCE generator for NEURONS.md
+# NEURONS.md goes in ralph/, not project root
 if [ -f "$BRAIN_DIR/generators/generate-neurons.sh" ]; then
     info "Generating custom NEURONS.md..."
-    bash "$BRAIN_DIR/generators/generate-neurons.sh" "$IDEA_FILE" "$PROJECT_LOCATION/NEURONS.md"
-    success "Generated NEURONS.md"
+    bash "$BRAIN_DIR/generators/generate-neurons.sh" "$IDEA_FILE" "$PROJECT_LOCATION/ralph/NEURONS.md"
+    success "Generated ralph/NEURONS.md"
 else
     warn "Generator not found: generate-neurons.sh (using template fallback)"
     if [ -f "$TEMPLATES_DIR/NEURONS.project.md" ]; then
-        cp "$TEMPLATES_DIR/NEURONS.project.md" "$PROJECT_LOCATION/NEURONS.md"
-        substitute_placeholders "$PROJECT_LOCATION/NEURONS.md" "$REPO_NAME" "$WORK_BRANCH"
-        success "Copied NEURONS.md template (needs customization)"
+        cp "$TEMPLATES_DIR/NEURONS.project.md" "$PROJECT_LOCATION/ralph/NEURONS.md"
+        substitute_placeholders "$PROJECT_LOCATION/ralph/NEURONS.md" "$REPO_NAME" "$WORK_BRANCH"
+        success "Copied ralph/NEURONS.md template (needs customization)"
     fi
 fi
 

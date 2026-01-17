@@ -113,30 +113,34 @@ acli rovodev run "$(Get-Content ralph\PROMPT.md -Raw)"
 ## File Structure
 
 ```
-project-root/               ← All project files go here
-├── AGENTS.md               # Project guidance for agents
-├── THOUGHTS.md             # Project vision, goals, success criteria
-├── NEURONS.md              # Codebase map (auto-generated)
+project-root/               ← Application code and config files
 ├── src/                    # Source code - ALWAYS in project root!
 ├── package.json            # Dependencies - in project root
 ├── tsconfig.json           # Config files - in project root
 ├── index.html              # Entry points - in project root
-└── ralph/                  # ONLY loop orchestration files
+├── README.md               # Project readme
+└── ralph/                  # ALL Ralph-related files
     ├── RALPH.md            # This file - Ralph contract
     ├── PROMPT.md           # Unified prompt (mode detection)
     ├── IMPLEMENTATION_PLAN.md  # Task tracking
+    ├── VALIDATION_CRITERIA.md  # Quality gates
+    ├── AGENTS.md           # Agent guidance for this project
+    ├── THOUGHTS.md         # Project vision, goals, success criteria
+    ├── NEURONS.md          # Codebase map (auto-generated)
     ├── loop.sh             # Loop runner script
+    ├── logs/               # Iteration logs
+    ├── kb/                 # Project-specific knowledge base
     └── progress.txt        # Iteration log (appended)
 ```
 
-### ⚠️ CRITICAL: ralph/ is NOT for source code!
+### ⚠️ CRITICAL: Source code goes in PROJECT ROOT, not ralph/!
 
-**The `ralph/` directory contains ONLY the loop infrastructure.**
+**The `ralph/` directory contains Ralph loop infrastructure AND project context files.**
 
 - Source code → `src/` (project root)
 - Config files → project root (`package.json`, `tsconfig.json`, etc.)
 - Entry points → project root (`index.html`, `main.py`, etc.)
-- Loop files → `ralph/` (PROMPT.md, IMPLEMENTATION_PLAN.md, loop.sh, etc.)
+- Ralph files → `ralph/` (PROMPT.md, IMPLEMENTATION_PLAN.md, AGENTS.md, THOUGHTS.md, NEURONS.md, kb/, logs/, etc.)
 
 **NEVER create `ralph/src/` or put application code inside `ralph/`.**
 
