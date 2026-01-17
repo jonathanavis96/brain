@@ -46,12 +46,13 @@ usage() {
   cat <<'EOF'
 Usage:
   loop.sh [--prompt <path>] [--iterations N] [--plan-every N] [--yolo|--no-yolo]
-          [--model <model>] [--dry-run] [--rollback [N]] [--resume]
+          [--model <model>] [--branch <name>] [--dry-run] [--rollback [N]] [--resume]
 
 Defaults:
   --iterations 1
   --plan-every 3
   --model       Uses default from ~/.rovodev/config.yml
+  --branch      Current branch (use 'ralph-work' for PR workflow)
   If --prompt is NOT provided, loop alternates:
     - PLAN on iteration 1 and every N iterations
     - BUILD otherwise
@@ -63,6 +64,11 @@ Model Selection:
                    opus    -> Opus 4.5 (anthropic.claude-opus-4-5-20251101-v1:0)
                    sonnet4 -> Sonnet 4 (anthropic.claude-sonnet-4-20250514-v1:0)
                    Or provide a full model ID directly.
+
+Branch Workflow:
+  --branch <name>  Work on specified branch (creates if needed, switches to it)
+                   Use --branch ralph-work for PR batch workflow
+                   Then run pr-batch.sh to create PRs to main
 
 Safety Features:
   --dry-run       Preview changes without committing (appends instruction to prompt)
@@ -102,6 +108,7 @@ PLAN_EVERY=3
 YOLO_FLAG="--yolo"
 PROMPT_ARG=""
 MODEL_ARG=""
+BRANCH_ARG=""
 DRY_RUN=false
 ROLLBACK_MODE=false
 ROLLBACK_COUNT=1
@@ -122,6 +129,8 @@ while [[ $# -gt 0 ]]; do
       YOLO_FLAG=""; shift ;;
     --model)
       MODEL_ARG="${2:-}"; shift 2 ;;
+    --branch)
+      BRANCH_ARG="${2:-}"; shift 2 ;;
     --dry-run)
       DRY_RUN=true; shift ;;
     --rollback)
@@ -264,6 +273,29 @@ if [[ "$RESUME_MODE" == "true" ]]; then
   
   echo "✅ Continuing with existing changes..."
   echo ""
+fi
+
+# Handle branch switching
+if [[ -n "$BRANCH_ARG" ]]; then
+  CURRENT_BRANCH=$(git branch --show-current)
+  if [[ "$CURRENT_BRANCH" != "$BRANCH_ARG" ]]; then
+    echo "========================================"
+    echo "🌿 Branch: $BRANCH_ARG"
+    echo "========================================"
+    
+    # Check if branch exists
+    if git show-ref --verify --quiet "refs/heads/$BRANCH_ARG"; then
+      git checkout "$BRANCH_ARG"
+    else
+      echo "Creating new branch: $BRANCH_ARG"
+      git checkout -b "$BRANCH_ARG"
+      # Push if remote exists
+      if git remote get-url origin &>/dev/null; then
+        git push -u origin "$BRANCH_ARG" 2>/dev/null || true
+      fi
+    fi
+    echo ""
+  fi
 fi
 
 # Ralph determines mode from iteration number (PROMPT.md has conditional logic)
