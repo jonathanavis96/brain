@@ -93,7 +93,7 @@ Commit message MUST include:
 - Current project state
 
 Example commit messages:
-```
+```text
 Ralph Plan: Add authentication system
 
 - Implement JWT token generation and validation
@@ -104,7 +104,7 @@ Ralph Plan: Add authentication system
 Files: src/auth/*.ts, src/middleware/session.ts
 ```
 
-```
+```text
 Ralph Plan: Initial project setup
 
 - Create project structure and dependencies
