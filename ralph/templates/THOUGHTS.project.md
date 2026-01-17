@@ -75,13 +75,17 @@ For this project, "source code" means:
 
 ## Knowledge Base Integration
 
+> **Brain Integration (Optional):** If `../../brain/` exists, this project can leverage shared knowledge. Otherwise, the project works standalone.
+
 [REPLACE: How does this project use the brain repository's knowledge base?]
 
-This project references brain repository knowledge:
+**If brain repository is available**, this project can reference:
 
 - **Performance Patterns:** `../../brain/references/react-best-practices/` (if applicable)
 - **Domain Conventions:** `../../brain/kb/domains/[relevant-domain].md` (if applicable)
 - **Project Learnings:** `../../brain/kb/projects/[this-project-slug].md` (project-specific patterns that might benefit other projects)
+
+**Standalone mode:** If brain is not present, rely on project-local documentation in `docs/` and standard best practices.
 
 ## Technical Context
 

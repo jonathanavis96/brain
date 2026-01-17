@@ -40,7 +40,7 @@ See `PROMPT.md` (building mode section) for full instructions.
 3. Run build/tests
 4. Update fix_plan.md (mark completed ✅)
 5. Append progress to ralph/progress.txt
-6. Commit with clear message
+6. **DO NOT COMMIT** - PLAN phase handles commits
 
 ### Parallelism Contract
 
@@ -53,14 +53,14 @@ See `PROMPT.md` (building mode section) for full instructions.
 - Running build commands
 - Executing tests and benchmarks
 - Making file modifications
-- Git operations (commit, etc.)
+- Git operations (PLAN phase only)
 
 ### Completion Sentinel
 
 When all work is complete, Ralph outputs:
 
-```xml
-<promise>COMPLETE</promise>
+```
+:::COMPLETE:::
 ```
 
 The loop runner detects this sentinel and stops iteration.
@@ -76,10 +76,18 @@ All Ralph iterations are logged to `ralph/progress.txt` with:
 
 ## Git Commits
 
-Each BUILD iteration ends with a commit:
+**Commits happen in PLAN phase only**, not after each BUILD iteration.
+
+PLAN phase commits all accumulated changes from BUILD iterations:
 ```
-git commit -m "Ralph #N: [clear description of what changed]"
+git add -A
+git commit -m "Ralph Plan: [comprehensive summary of all changes]"
 ```
+
+This ensures:
+- Fewer, more meaningful commits
+- Comprehensive commit messages (Ralph has full context during PLAN)
+- All related changes grouped together
 
 ## Knowledge Base Integration
 
@@ -113,17 +121,36 @@ acli rovodev run "$(Get-Content ralph\PROMPT.md -Raw)"
 ## File Structure
 
 ```
-project-root/
-├── AGENTS.md                    # Project guidance for agents
-├── THOUGHTS.md                  # Project vision, goals, success criteria
-├── fix_plan.md                  # Prioritized Top 10 checklist
-├── src/                         # Source code (or document actual)
-└── ralph/
-    ├── RALPH.md                 # This file - Ralph contract
-    ├── PROMPT.md                # Unified prompt (mode detection)
-    ├── ralph.ps1                # PowerShell loop runner
-    └── progress.txt             # Iteration log (appended)
+project-root/               ← Application code and config files
+├── src/                    # Source code - ALWAYS in project root!
+├── package.json            # Dependencies - in project root
+├── tsconfig.json           # Config files - in project root
+├── index.html              # Entry points - in project root
+├── README.md               # Project readme
+└── ralph/                  # ALL Ralph-related files
+    ├── RALPH.md            # This file - Ralph contract
+    ├── PROMPT.md           # Unified prompt (mode detection)
+    ├── IMPLEMENTATION_PLAN.md  # Task tracking
+    ├── VALIDATION_CRITERIA.md  # Quality gates
+    ├── AGENTS.md           # Agent guidance for this project
+    ├── THOUGHTS.md         # Project vision, goals, success criteria
+    ├── NEURONS.md          # Codebase map (auto-generated)
+    ├── loop.sh             # Loop runner script
+    ├── logs/               # Iteration logs
+    ├── kb/                 # Project-specific knowledge base
+    └── progress.txt        # Iteration log (appended)
 ```
+
+### ⚠️ CRITICAL: Source code goes in PROJECT ROOT, not ralph/!
+
+**The `ralph/` directory contains Ralph loop infrastructure AND project context files.**
+
+- Source code → `src/` (project root)
+- Config files → project root (`package.json`, `tsconfig.json`, etc.)
+- Entry points → project root (`index.html`, `main.py`, etc.)
+- Ralph files → `ralph/` (PROMPT.md, IMPLEMENTATION_PLAN.md, AGENTS.md, THOUGHTS.md, NEURONS.md, kb/, logs/, etc.)
+
+**NEVER create `ralph/src/` or put application code inside `ralph/`.**
 
 ## Philosophy: Ralph Wiggum
 
