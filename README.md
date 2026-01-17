@@ -57,9 +57,18 @@ brain/
     ├── kb/                        # Knowledge Base
     │   ├── SUMMARY.md             # KB index
     │   ├── conventions.md         # KB authoring guide
-    │   ├── domains/               # Reusable patterns
-    │   │   ├── auth-patterns.md   # OAuth2, JWT, sessions
-    │   │   └── ralph-patterns.md  # Ralph loop architecture
+    │   ├── domains/               # Reusable patterns (11 files)
+    │   │   ├── api-design-patterns.md
+    │   │   ├── auth-patterns.md
+    │   │   ├── bootstrap-patterns.md
+    │   │   ├── caching-patterns.md
+    │   │   ├── database-patterns.md
+    │   │   ├── deployment-patterns.md
+    │   │   ├── error-handling-patterns.md
+    │   │   ├── ralph-patterns.md
+    │   │   ├── security-patterns.md
+    │   │   ├── state-management-patterns.md
+    │   │   └── testing-patterns.md
     │   └── projects/              # Project-specific knowledge
     │       └── brain-example.md   # Brain repo conventions
     │
@@ -348,7 +357,7 @@ Ensure brain integrity:
 # File structure
 ls -la kb/ templates/ references/
 
-# KB file count (should be 7)
+# KB file count (should be 16)
 find kb/ -name "*.md" | wc -l
 
 # React rules count (should be 45)
