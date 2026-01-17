@@ -63,20 +63,22 @@ Last updated: YYYY-MM-DD HH:MM:SS
 [Anything learned during analysis]
 ```
 
-**Step 4: Commit All Changes**
+### Step 4: Commit All Changes
 
-Commit all accumulated changes from BUILD iterations plus the updated plan:
+Commit all accumulated changes from BUILD iterations plus the updated plan.
 
 First, check if git is initialized:
 ```bash
 git rev-parse --git-dir 2>/dev/null
 ```
 
-**If NO git repo exists:**
+#### If NO git repo exists
+
 - Initialize with `git init`
 - Make an initial commit with all files
 
-**If git repo exists:**
+#### If git repo exists
+
 ```bash
 git add -A
 git status  # Review what's being committed
@@ -110,7 +112,8 @@ Ralph Plan: Initial project setup
 Files: package.json, tsconfig.json, src/index.ts
 ```
 
-**Step 5: Stop**
+### Step 5: Stop
+
 After committing, stop. Do NOT output `:::COMPLETE:::` in planning mode.
 
 ---
