@@ -59,8 +59,8 @@ See `PROMPT.md` (building mode section) for full instructions.
 
 When all work is complete, Ralph outputs:
 
-```xml
-<promise>COMPLETE</promise>
+```
+:::COMPLETE:::
 ```
 
 The loop runner detects this sentinel and stops iteration.
@@ -113,17 +113,32 @@ acli rovodev run "$(Get-Content ralph\PROMPT.md -Raw)"
 ## File Structure
 
 ```
-project-root/
-├── AGENTS.md                    # Project guidance for agents
-├── THOUGHTS.md                  # Project vision, goals, success criteria
-├── fix_plan.md                  # Prioritized Top 10 checklist
-├── src/                         # Source code (or document actual)
-└── ralph/
-    ├── RALPH.md                 # This file - Ralph contract
-    ├── PROMPT.md                # Unified prompt (mode detection)
-    ├── ralph.ps1                # PowerShell loop runner
-    └── progress.txt             # Iteration log (appended)
+project-root/               ← All project files go here
+├── AGENTS.md               # Project guidance for agents
+├── THOUGHTS.md             # Project vision, goals, success criteria
+├── NEURONS.md              # Codebase map (auto-generated)
+├── src/                    # Source code - ALWAYS in project root!
+├── package.json            # Dependencies - in project root
+├── tsconfig.json           # Config files - in project root
+├── index.html              # Entry points - in project root
+└── ralph/                  # ONLY loop orchestration files
+    ├── RALPH.md            # This file - Ralph contract
+    ├── PROMPT.md           # Unified prompt (mode detection)
+    ├── IMPLEMENTATION_PLAN.md  # Task tracking
+    ├── loop.sh             # Loop runner script
+    └── progress.txt        # Iteration log (appended)
 ```
+
+### ⚠️ CRITICAL: ralph/ is NOT for source code!
+
+**The `ralph/` directory contains ONLY the loop infrastructure.**
+
+- Source code → `src/` (project root)
+- Config files → project root (`package.json`, `tsconfig.json`, etc.)
+- Entry points → project root (`index.html`, `main.py`, etc.)
+- Loop files → `ralph/` (PROMPT.md, IMPLEMENTATION_PLAN.md, loop.sh, etc.)
+
+**NEVER create `ralph/src/` or put application code inside `ralph/`.**
 
 ## Philosophy: Ralph Wiggum
 

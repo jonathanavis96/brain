@@ -31,13 +31,13 @@ Hotkeys: `h` (toggle), `r` (archive), `f` (refresh), `c` (clear), `q` (quit)
 
 ## Loop Stop Sentinel
 Ralph outputs when ALL tasks complete:
-```xml
-<promise>COMPLETE</promise>
+```
+:::COMPLETE:::
 ```
 
 ## Troubleshooting
 - **acli not found**: Add to PATH in ~/.bashrc
-- **Loop doesn't stop**: Check `<promise>COMPLETE</promise>` output
+- **Loop doesn't stop**: Check `:::COMPLETE:::` output
 - **Ralph batches tasks**: See PROMPT.md "EXACTLY ONE task" emphasis
 - **Wrong mode**: Check iteration number (1 or 3rd = PLAN)
 

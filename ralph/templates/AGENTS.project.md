@@ -78,7 +78,26 @@ When you discover a new convention, architectural decision, or project-specific 
 - Write clear, self-documenting code with minimal comments
 
 ### Project Structure
-- Prefer `src/` for source code (document actual location if different)
+
+**⚠️ CRITICAL: All project files go in the PROJECT ROOT, not in ralph/!**
+
+```
+project-root/           ← Working directory for all project files
+├── src/                ← Source code HERE
+├── package.json        ← Config files HERE
+├── tsconfig.json       
+├── AGENTS.md           ← This file
+├── THOUGHTS.md         ← Project vision
+├── NEURONS.md          ← Codebase map
+└── ralph/              ← ONLY loop orchestration files
+    ├── PROMPT.md
+    ├── IMPLEMENTATION_PLAN.md
+    └── loop.sh
+```
+
+- **Source code**: Always in `src/` at project root (NOT `ralph/src/`)
+- **Config files**: Always at project root (`package.json`, `tsconfig.json`, etc.)
+- **ralph/ directory**: Contains ONLY loop infrastructure (PROMPT.md, IMPLEMENTATION_PLAN.md, loop.sh)
 - Keep project goals and vision in `THOUGHTS.md`
 - Maintain `ralph/IMPLEMENTATION_PLAN.md` as a prioritized task list
 
@@ -87,7 +106,7 @@ When you discover a new convention, architectural decision, or project-specific 
 This project uses the Ralph Wiggum iterative loop for systematic development:
 - **Single unified prompt**: See `ralph/PROMPT.md` (determines mode from iteration number)
 - **Progress tracking**: All work logged in `ralph/progress.txt`
-- **Completion**: Look for `<promise>COMPLETE</promise>` sentinel
+- **Completion**: Look for `:::COMPLETE:::` sentinel
 
 ## RovoDev + CLI Guardrails
 

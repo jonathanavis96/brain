@@ -39,7 +39,7 @@ Check these after completing implementation tasks to ensure the system meets req
 - [ ] Planning mode test: Ralph does gap analysis, updates plan, NO implementation
 - [ ] Building mode test: Ralph implements ONE task, commits, stops
 - [ ] NEURONS.md accessed via subagent (check logs)
-- [ ] No `<promise>COMPLETE</promise>` in planning mode
+- [ ] No `:::COMPLETE:::` in planning mode
 - [ ] Completion sentinel only when ZERO tasks remain in IMPLEMENTATION_PLAN.md
 
 ## Documentation Validation

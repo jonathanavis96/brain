@@ -231,8 +231,8 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 - `PROMPT_verify.md` - Verification prompt (validation checks)
 
 **Stop Sentinel:**
-```xml
-<promise>COMPLETE</promise>
+```
+:::COMPLETE:::
 ```
 Only output when ALL tasks in IMPLEMENTATION_PLAN.md are 100% complete.
 
@@ -285,7 +285,7 @@ Use for:
 **Loop Structure:**
 - **PLAN phase:** Gap analysis, updates TODO list, NO code changes, NO commits
 - **BUILD phase:** Implements top task, validates, commits when complete
-- **Completion:** Outputs `<promise>COMPLETE</promise>` when all tasks done
+- **Completion:** Outputs `:::COMPLETE:::` when all tasks done
 
 ---
 

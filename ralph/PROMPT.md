@@ -17,7 +17,7 @@ If unclear, assume BUILDING mode (safer default - reads plan without modifying i
 **ABSOLUTE RULES:**
 - **NO IMPLEMENTATION** - Do not write code, do not modify files (except IMPLEMENTATION_PLAN.md)
 - **NO COMMITS** - Do not commit anything
-- **NO `<promise>COMPLETE</promise>`** - Never output this in planning mode
+- **NO `:::COMPLETE:::`** - Never output this in planning mode
 - **ANALYSIS ONLY** - Study existing files, create prioritized plan
 
 ### Your Job: Gap Analysis & Planning
@@ -68,7 +68,7 @@ Last updated: YYYY-MM-DD HH:MM:SS
 ```
 
 **Step 4: Stop**
-After updating IMPLEMENTATION_PLAN.md, stop. Do NOT output `<promise>COMPLETE</promise>`.
+After updating IMPLEMENTATION_PLAN.md, stop. Do NOT output `:::COMPLETE:::`.
 
 ---
 
@@ -199,9 +199,9 @@ When you start a new iteration:
 2. Scan for unchecked `[ ]` tasks
 3. **IF ZERO unchecked tasks exist**, output this exact text on its own line:
 
-<promise>COMPLETE</promise>
+:::COMPLETE:::
 
-⚠️ The XML tags are required - the loop script looks for exactly `<promise>COMPLETE</promise>` to stop. Do not omit the tags.
+⚠️ The colons are required - the loop script looks for exactly `:::COMPLETE:::` to stop.
 
 4. **IF ANY unchecked tasks exist**, implement the first one (do NOT output the completion sentinel)
 

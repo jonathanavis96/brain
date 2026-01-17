@@ -136,8 +136,8 @@ This is the **project map** that Ralph and all agents read on-demand when needed
 - `VALIDATION_CRITERIA.md` - Quality gates and acceptance criteria
 
 **Stop Sentinel:**
-```xml
-<promise>COMPLETE</promise>
+```
+:::COMPLETE:::
 ```
 Only output when ALL tasks in IMPLEMENTATION_PLAN.md are 100% complete.
 

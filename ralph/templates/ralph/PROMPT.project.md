@@ -17,7 +17,7 @@ If unclear, assume BUILDING mode (safer default - reads plan without modifying i
 **ABSOLUTE RULES:**
 - **NO IMPLEMENTATION** - Do not write code, do not modify files (except IMPLEMENTATION_PLAN.md)
 - **NO COMMITS** - Do not commit anything
-- **NO `<promise>COMPLETE</promise>`** - Never output this in planning mode
+- **NO `:::COMPLETE:::`** - Never output this in planning mode
 - **ANALYSIS ONLY** - Study existing files, create prioritized plan
 
 ### Your Job: Gap Analysis & Planning
@@ -64,7 +64,7 @@ Last updated: YYYY-MM-DD HH:MM:SS
 ```
 
 **Step 4: Stop**
-After updating IMPLEMENTATION_PLAN.md, stop. Do NOT output `<promise>COMPLETE</promise>`.
+After updating IMPLEMENTATION_PLAN.md, stop. Do NOT output `:::COMPLETE:::`.
 
 ---
 
@@ -136,6 +136,32 @@ Use **exactly 1 subagent** for:
 - File operations
 
 Conflict Prevention: Only this single subagent modifies files. All others are read-only.
+
+### ⚠️ CRITICAL: Project Structure - Where to Put Files
+
+**Source code goes in the PROJECT ROOT, NOT in ralph/!**
+
+```
+project-root/           ← YOU ARE HERE (working directory)
+├── src/                ← Source code goes HERE
+├── package.json        ← Config files go HERE  
+├── tsconfig.json       ← Config files go HERE
+├── index.html          ← Entry points go HERE
+├── AGENTS.md           ← Project guidance
+├── THOUGHTS.md         ← Project vision
+├── NEURONS.md          ← Codebase map
+└── ralph/              ← ONLY loop orchestration files
+    ├── PROMPT.md       ← This file
+    ├── IMPLEMENTATION_PLAN.md
+    ├── RALPH.md
+    ├── loop.sh
+    └── progress.txt
+```
+
+**NEVER put source code, package.json, or config files inside ralph/**
+- `ralph/` is ONLY for the loop runner infrastructure
+- All actual project files go in the project root
+- When creating files, use paths like `src/...`, NOT `ralph/src/...`
 
 Implementation guidelines:
 - Follow patterns from existing code
@@ -219,7 +245,7 @@ Do not:
 The only exception:
 If you need to check whether to output the completion sentinel, quickly verify if any unchecked `[ ]` tasks remain in IMPLEMENTATION_PLAN.md:
 - If ANY tasks remain: Simply stop (no sentinel output)
-- If ZERO tasks remain: Output `<promise>COMPLETE</promise>` and then stop
+- If ZERO tasks remain: Output `:::COMPLETE:::` and then stop
 
 ### Stop Condition
 
@@ -231,7 +257,7 @@ After committing one task, simply stop generating output. The bash loop will:
 3. Restart you for the next task
 
 DO NOT:
-- Output `<promise>COMPLETE</promise>` after a single task
+- Output `:::COMPLETE:::` after a single task
 - Check if more work remains
 - Decide whether to continue
 
@@ -245,9 +271,9 @@ The loop will restart you with fresh context. When you start a new iteration:
 2. Scan for unchecked `[ ]` tasks
 3. **IF you find ZERO unchecked tasks**, output this exact text on its own line:
 
-<promise>COMPLETE</promise>
+:::COMPLETE:::
 
-⚠️ The XML tags are required - the loop script looks for exactly `<promise>COMPLETE</promise>` to stop. Do not omit the tags.
+⚠️ The colons are required - the loop script looks for exactly `:::COMPLETE:::` to stop.
 
 4. **IF you find ANY unchecked tasks**, pick the first one and implement it (do NOT output the sentinel)
 
