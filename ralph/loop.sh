@@ -377,7 +377,7 @@ run_once() {
   
   # Check for completion sentinel (strip ANSI codes, require standalone line)
   # Only matches when sentinel appears alone on a line (not in validation/discussion)
-  if sed 's/\x1b\[[0-9;]*m//g' "$log" | grep -qE '^\s*<promise>COMPLETE</promise>\s*$'; then
+  if sed 's/\x1b\[[0-9;]*m//g' "$log" | grep -qE '^\s*:::COMPLETE:::\s*$'; then
     echo ""
     echo "========================================"
     echo "🎉 Ralph signaled completion!"

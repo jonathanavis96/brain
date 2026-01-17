@@ -115,7 +115,7 @@ THOUGHTS.md (last updated 2026-01-16) contains outdated task list that doesn't r
 THOUGHTS.md could be updated to mark Goal #1 tasks as complete, but since it's a vision/planning document (not the TODO list), this is optional maintenance. The actual TODO list (IMPLEMENTATION_PLAN.md) correctly shows zero active tasks.
 
 **Next Steps:**
-Since zero unchecked tasks exist in IMPLEMENTATION_PLAN.md, Ralph should output `<promise>COMPLETE</promise>` on next BUILD iteration.
+Since zero unchecked tasks exist in IMPLEMENTATION_PLAN.md, Ralph should output `:::COMPLETE:::` on next BUILD iteration.
 
 ### 2026-01-16 22:41 - BUILD Mode: Fixed QUICKSTART.md References
 
@@ -175,7 +175,7 @@ Zero critical gaps found. Brain repository is production-ready and self-sustaini
    - AGENTS.md: 1,719 bytes (~429 tokens) - 14% under target
    - IMPLEMENTATION_PLAN.md: This file (persistent TODO list)
    - VALIDATION_CRITERIA.md: Quality gates defined
-   - Sentinel detection working: `<promise>COMPLETE</promise>`
+   - Sentinel detection working: `:::COMPLETE:::`
 
 5. **Documentation (COMPREHENSIVE)**
    - README.md: Complete overview with quick start, structure, validation
@@ -230,5 +230,5 @@ The brain repository has achieved **full production maturity**:
 - ✓ Token budgets under targets (PROMPT.md: -2.6%, AGENTS.md: -14%)
 
 **Next Steps:**
-Brain repository is complete. No high or medium priority work remains. Ralph should output `<promise>COMPLETE</promise>` on next BUILD iteration since no unchecked tasks exist.
+Brain repository is complete. No high or medium priority work remains. Ralph should output `:::COMPLETE:::` on next BUILD iteration since no unchecked tasks exist.
 
