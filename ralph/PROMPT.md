@@ -225,9 +225,11 @@ Do not:
 
 ### Stop Condition
 
-**After Every Task:** Simply stop after updating the plan. The loop handles restart.
+#### After Every Task
 
-**Only When ALL Tasks Complete:** 
+Simply stop after updating the plan. The loop handles restart.
+
+#### Only When ALL Tasks Complete 
 
 When you start a new iteration:
 1. Read IMPLEMENTATION_PLAN.md
