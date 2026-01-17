@@ -79,26 +79,31 @@ When you discover a new convention, architectural decision, or project-specific 
 
 ### Project Structure
 
-**⚠️ CRITICAL: All project files go in the PROJECT ROOT, not in ralph/!**
+**⚠️ CRITICAL: Source code goes in PROJECT ROOT, not in ralph/!**
 
 ```
-project-root/           ← Working directory for all project files
+project-root/           ← Working directory for application files
 ├── src/                ← Source code HERE
 ├── package.json        ← Config files HERE
 ├── tsconfig.json       
-├── AGENTS.md           ← This file
-├── THOUGHTS.md         ← Project vision
-├── NEURONS.md          ← Codebase map
-└── ralph/              ← ONLY loop orchestration files
-    ├── PROMPT.md
-    ├── IMPLEMENTATION_PLAN.md
-    └── loop.sh
+├── README.md           ← Project readme
+└── ralph/              ← Ralph files (loop + project context)
+    ├── AGENTS.md       ← This file (agent guidance)
+    ├── THOUGHTS.md     ← Project vision
+    ├── NEURONS.md      ← Codebase map
+    ├── PROMPT.md       ← Loop prompt
+    ├── IMPLEMENTATION_PLAN.md  ← Task tracking
+    ├── VALIDATION_CRITERIA.md  ← Quality gates
+    ├── RALPH.md        ← Loop contract
+    ├── loop.sh         ← Loop runner
+    ├── kb/             ← Project knowledge base
+    └── logs/           ← Iteration logs
 ```
 
 - **Source code**: Always in `src/` at project root (NOT `ralph/src/`)
 - **Config files**: Always at project root (`package.json`, `tsconfig.json`, etc.)
-- **ralph/ directory**: Contains ONLY loop infrastructure (PROMPT.md, IMPLEMENTATION_PLAN.md, loop.sh)
-- Keep project goals and vision in `THOUGHTS.md`
+- **ralph/ directory**: Contains loop infrastructure AND project context (AGENTS, THOUGHTS, NEURONS, kb/, logs/)
+- Keep project goals and vision in `ralph/THOUGHTS.md`
 - Maintain `ralph/IMPLEMENTATION_PLAN.md` as a prioritized task list
 
 ## Ralph Integration
