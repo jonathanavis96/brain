@@ -37,7 +37,7 @@ Check these after completing implementation tasks to ensure the system meets req
 
 - [ ] bash -n loop.sh passes
 - [ ] Planning mode test: Ralph does gap analysis, updates plan, NO implementation
-- [ ] Building mode test: Ralph implements ONE task, commits, stops
+- [ ] Building mode test: Ralph implements ONE task, updates plan, stops (no commit)
 - [ ] NEURONS.md accessed via subagent (check logs)
 - [ ] No `:::COMPLETE:::` in planning mode
 - [ ] Completion sentinel only when ZERO tasks remain in IMPLEMENTATION_PLAN.md

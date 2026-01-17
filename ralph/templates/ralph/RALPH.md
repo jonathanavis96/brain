@@ -40,7 +40,7 @@ See `PROMPT.md` (building mode section) for full instructions.
 3. Run build/tests
 4. Update fix_plan.md (mark completed ✅)
 5. Append progress to ralph/progress.txt
-6. Commit with clear message
+6. **DO NOT COMMIT** - PLAN phase handles commits
 
 ### Parallelism Contract
 
@@ -53,7 +53,7 @@ See `PROMPT.md` (building mode section) for full instructions.
 - Running build commands
 - Executing tests and benchmarks
 - Making file modifications
-- Git operations (commit, etc.)
+- Git operations (PLAN phase only)
 
 ### Completion Sentinel
 
@@ -76,10 +76,18 @@ All Ralph iterations are logged to `ralph/progress.txt` with:
 
 ## Git Commits
 
-Each BUILD iteration ends with a commit:
+**Commits happen in PLAN phase only**, not after each BUILD iteration.
+
+PLAN phase commits all accumulated changes from BUILD iterations:
 ```
-git commit -m "Ralph #N: [clear description of what changed]"
+git add -A
+git commit -m "Ralph Plan: [comprehensive summary of all changes]"
 ```
+
+This ensures:
+- Fewer, more meaningful commits
+- Comprehensive commit messages (Ralph has full context during PLAN)
+- All related changes grouped together
 
 ## Knowledge Base Integration
 

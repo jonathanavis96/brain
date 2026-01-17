@@ -16,7 +16,7 @@ If unclear, assume BUILDING mode (safer default - reads plan without modifying i
 
 **ABSOLUTE RULES:**
 - **NO IMPLEMENTATION** - Do not write code, do not modify files (except IMPLEMENTATION_PLAN.md)
-- **NO COMMITS** - Do not commit anything
+- **COMMIT all accumulated changes** - Save all work from BUILD iterations plus updated plan
 - **NO `:::COMPLETE:::`** - Never output this in planning mode
 - **ANALYSIS ONLY** - Study existing files, create prioritized plan
 
@@ -67,8 +67,55 @@ Last updated: YYYY-MM-DD HH:MM:SS
 [Anything learned during analysis]
 ```
 
-**Step 4: Stop**
-After updating IMPLEMENTATION_PLAN.md, stop. Do NOT output `:::COMPLETE:::`.
+**Step 4: Commit All Changes**
+
+Commit all accumulated changes from BUILD iterations plus the updated plan:
+
+First, check if git is initialized:
+```bash
+git rev-parse --git-dir 2>/dev/null
+```
+
+**If NO git repo exists:**
+- Initialize with `git init`
+- Make an initial commit with all files
+
+**If git repo exists:**
+```bash
+git add -A
+git status  # Review what's being committed
+git commit -m "Ralph Plan: [comprehensive summary]"
+```
+
+Commit message MUST include:
+- What features/fixes were implemented since last plan
+- Key files changed
+- Current project state
+
+Example commit messages:
+```
+Ralph Plan: Add authentication system
+
+- Implement JWT token generation and validation
+- Add login/logout API endpoints
+- Create user session middleware
+- 5 tasks completed, 3 remaining
+
+Files: src/auth/*.ts, src/middleware/session.ts
+```
+
+```
+Ralph Plan: Initial project setup
+
+- Create project structure and dependencies
+- Add base configuration files
+- Set up development environment
+
+Files: package.json, tsconfig.json, src/index.ts
+```
+
+**Step 5: Stop**
+After committing, stop. Do NOT output `:::COMPLETE:::` in planning mode.
 
 ---
 
@@ -76,13 +123,13 @@ After updating IMPLEMENTATION_PLAN.md, stop. Do NOT output `:::COMPLETE:::`.
 
 **ABSOLUTE RULES:**
 - **IMPLEMENTATION_PLAN.md is your TODO list** - Always read it first
-- **EXACTLY ONE task per iteration** - Pick ONLY the first unchecked task, implement it fully, commit, then STOP immediately
-- **DO NOT continue to next task** - After committing, STOP and let the loop restart you automatically
+- **EXACTLY ONE task per iteration** - Pick ONLY the first unchecked task, implement it fully, then STOP
+- **DO NOT COMMIT** - Planning phase handles all commits
+- **DO NOT continue to next task** - After completing, STOP and let the loop restart you automatically
 - **Don't assume not implemented** - Always search codebase before creating new functionality
-- **Use exactly 1 subagent** for implementation, git operations, and file writes
-- **Test before committing** - Run validation commands from AGENTS.md
+- **Use exactly 1 subagent** for implementation and file writes
+- **Test before stopping** - Run validation commands from AGENTS.md
 - **Update the plan** - Mark tasks complete, add discoveries
-- **Commit when done** - One coherent unit per commit
 
 ### ⚠️ CRITICAL: ONE TASK ONLY
 
@@ -92,7 +139,7 @@ Why this matters:
 - Each iteration gets fresh context from the loop
 - Batching tasks defeats the deterministic context loading
 - The loop handles task sequencing, not you
-- Your job: ONE task → validate → commit → STOP
+- Your job: ONE task → validate → STOP (PLAN phase commits)
 
 ### Your Job: Implement One Task
 
@@ -149,7 +196,7 @@ bash -n loop.sh
 ls -lh AGENTS.md NEURONS.md PROMPT.md IMPLEMENTATION_PLAN.md VALIDATION_CRITERIA.md
 ```
 
-If validation fails: Fix the issues in the same iteration. Don't commit broken code.
+If validation fails: Fix the issues in the same iteration. Don't leave broken code.
 
 **Step 5: Update IMPLEMENTATION_PLAN.md**
 
@@ -157,40 +204,25 @@ If validation fails: Fix the issues in the same iteration. Don't commit broken c
 - Add discoveries or notes under "Discoveries & Notes"
 - Add new tasks if you discovered missing functionality
 
-**Step 6: Commit**
+**Step 6: STOP (No Commit)**
 
-⚠️ This commit completes ONE task. After committing, STOP immediately.
+⚠️ Do NOT commit. The next PLAN iteration will commit all accumulated changes with a comprehensive message.
 
-First, check if git is initialized:
-```bash
-git rev-parse --git-dir 2>/dev/null
-```
+After validation passes and IMPLEMENTATION_PLAN.md is updated, simply STOP.
 
-**If NO git repo exists:**
-- Ask the user: "No git repository found. Would you like me to initialize one with `git init`?"
-- Wait for confirmation before initializing
-- After init, make an initial commit with existing files
+Do not proceed to another task.
 
-**If git repo exists:**
-```bash
-git add .
-git commit -m "Brief description of what was implemented"
-```
-
-Commit message format: Imperative mood ("Add X", "Fix Y", "Update Z")
-
-**Step 7: STOP After One Task**
-
-After committing, STOP IMMEDIATELY. The bash loop will restart you for the next iteration.
+The bash loop will automatically restart you for the next iteration with fresh context.
 
 Do not:
 - Re-read IMPLEMENTATION_PLAN.md to check for more work
 - Look ahead to the next task
 - Implement multiple tasks in one iteration
+- Continue after updating the plan
 
 ### Stop Condition
 
-**After Every Task:** Simply stop after committing. The loop handles restart.
+**After Every Task:** Simply stop after updating the plan. The loop handles restart.
 
 **Only When ALL Tasks Complete:** 
 
@@ -209,8 +241,9 @@ When you start a new iteration:
 
 If something goes wrong:
 - Document the issue in IMPLEMENTATION_PLAN.md
-- Commit what works
 - Leave the broken task unchecked for next iteration
+- Add notes about what failed and why
+- PLAN phase will commit whatever state exists
 
 ---
 
@@ -250,14 +283,14 @@ grep -r "pattern" kb/ templates/ references/
 - NEURONS.md = codebase map (where things are)
 
 ### One Task Per Iteration
-- BUILD mode: Implement + validate + commit + STOP
-- PLAN mode: Analyze + update plan + STOP
+- BUILD mode: Implement + validate + update plan + STOP (no commit)
+- PLAN mode: Analyze + update plan + COMMIT all + STOP
 - Loop handles sequencing, not you
 - Trust the mechanism
 
 ### Design Philosophy
 - **Prefer correctness over speed** - Get it right, then optimize
 - **Search before creating** - Avoid duplicate implementations
-- **Commit working units** - Each commit should be complete and testable
+- **Leave code working** - Each task should leave the codebase in a testable state
 - **Update documentation** - Keep AGENTS.md operational, add to kb/ for patterns
 - **Use NEURONS.md** - It's your map of the brain, reference it constantly
