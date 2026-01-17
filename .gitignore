@@ -1,0 +1,29 @@
+# Logs
+ralph/logs/
+*.log
+
+# Backup files
+*.bak
+
+# Old/archived markdown files
+ralph/old_md/
+ralph/old_projects/
+
+# Temporary files
+tmp_rovodev_*
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Credentials/secrets (if any)
+*.gpg
+.gpg_passphrase

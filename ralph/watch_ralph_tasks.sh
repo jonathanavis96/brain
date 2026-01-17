@@ -1,0 +1,408 @@
+#!/bin/bash
+# Ralph Task Monitor - Real-time display of IMPLEMENTATION_PLAN.md tasks
+#
+# Usage: bash watch_ralph_tasks.sh [--hide-completed]
+#
+# Features:
+#   - Auto-detects task formats (numbered, unnumbered, plain)
+#   - Interactive hotkeys for task management
+#   - Real-time file change monitoring
+#   - Archive completed tasks with timestamps
+#
+# Supported Task Formats:
+#   - [ ] **Task 1:** Description           (numbered)
+#   - [ ] **Description text**              (unnumbered bold)
+#   - [ ] Description text                  (plain)
+#
+# Interactive Hotkeys:
+#   h - Toggle hide/show completed tasks
+#   r - Reset/archive completed tasks to timestamped section
+#   f - Force refresh display
+#   c - Clear completed tasks (with confirmation)
+#   ? - Show help screen
+#   q - Quit cleanly
+
+RALPH_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PLAN_FILE="$RALPH_DIR/IMPLEMENTATION_PLAN.md"
+HIDE_COMPLETED=false
+LAST_MODIFIED=""
+SHOW_HELP=false
+
+# Parse arguments
+if [[ "$1" == "--hide-completed" ]]; then
+    HIDE_COMPLETED=true
+fi
+
+# Check if IMPLEMENTATION_PLAN.md exists
+if [[ ! -f "$PLAN_FILE" ]]; then
+    echo "Error: IMPLEMENTATION_PLAN.md not found in $RALPH_DIR"
+    exit 1
+fi
+
+# Function to get file modification time
+get_file_mtime() {
+    stat -c %Y "$PLAN_FILE" 2>/dev/null || stat -f %m "$PLAN_FILE" 2>/dev/null
+}
+
+# Function to extract tasks from IMPLEMENTATION_PLAN.md
+extract_tasks() {
+    local show_completed=$1
+    local current_section=""
+    local in_task_section=false
+    local task_counter=0
+    
+    while IFS= read -r line; do
+        # Detect High/Medium/Low Priority sections (flexible matching)
+        # Matches: "### High Priority", "### Phase 1: Desc (High Priority)", "### Phase 1: Desc (High Priority - Details)"
+        if [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+            current_section="High Priority"
+            in_task_section=true
+        elif [[ "$line" =~ Medium[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+            current_section="Medium Priority"
+            in_task_section=true
+        elif [[ "$line" =~ Low[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+            current_section="Low Priority"
+            in_task_section=true
+        elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
+            # Exit task section when we hit any other ### headers
+            in_task_section=false
+        fi
+        
+        # Only process tasks in valid sections
+        if [[ "$in_task_section" == "true" ]]; then
+            local status="" task_label="" task_desc=""
+            
+            # Pattern 1: Numbered tasks - [ ] **Task 1:** Description
+            if [[ "$line" =~ ^[[:space:]]*-[[:space:]]\[([ x])\][[:space:]]\*\*Task[[:space:]]+([0-9]+):\*\*[[:space:]]*(.*)$ ]]; then
+                status="${BASH_REMATCH[1]}"
+                task_label="Task ${BASH_REMATCH[2]}"
+                task_desc="${BASH_REMATCH[3]}"
+            # Pattern 2: Unnumbered bold - [ ] **Description text**
+            elif [[ "$line" =~ ^[[:space:]]*-[[:space:]]\[([ x])\][[:space:]]\*\*([^*]+)\*\*(.*)$ ]]; then
+                status="${BASH_REMATCH[1]}"
+                ((task_counter++))
+                task_label="Task $task_counter"
+                task_desc="${BASH_REMATCH[2]}${BASH_REMATCH[3]}"
+            # Pattern 3: Plain format - [ ] Description text
+            elif [[ "$line" =~ ^[[:space:]]*-[[:space:]]\[([ x])\][[:space:]]+([^*].*)$ ]]; then
+                status="${BASH_REMATCH[1]}"
+                ((task_counter++))
+                task_label="Task $task_counter"
+                task_desc="${BASH_REMATCH[2]}"
+            fi
+            
+            # If we found a task, process it
+            if [[ -n "$status" ]]; then
+                # Skip completed tasks if --hide-completed is set
+                if [[ "$show_completed" == "false" && "$status" == "x" ]]; then
+                    continue
+                fi
+                
+                # Format output - keep full description
+                if [[ "$status" == "x" ]]; then
+                    echo "✓|$current_section|$task_label|$task_desc|completed"
+                else
+                    echo "○|$current_section|$task_label|$task_desc|pending"
+                fi
+            fi
+        fi
+    done < "$PLAN_FILE"
+}
+
+# Function to show help
+show_help() {
+    clear
+    echo "╔════════════════════════════════════════════════════════════════╗"
+    echo "║              RALPH TASK MONITOR - HELP                         ║"
+    echo "╚════════════════════════════════════════════════════════════════╝"
+    echo ""
+    echo "  HOTKEYS:"
+    echo ""
+    echo "  [h]  Hide/Show Completed Tasks"
+    echo "       Toggle visibility of completed tasks without modifying the file"
+    echo ""
+    echo "  [r]  Reset/Archive Completed Tasks"
+    echo "       Move all completed tasks to an Archive section at the bottom"
+    echo "       Creates: ### Archive - YYYY-MM-DD HH:MM"
+    echo ""
+    echo "  [f]  Force Refresh"
+    echo "       Manually refresh the display (auto-refreshes on file changes)"
+    echo ""
+    echo "  [c]  Clear Completed Tasks"
+    echo "       Permanently remove all completed tasks (with confirmation)"
+    echo "       WARNING: This action cannot be undone!"
+    echo ""
+    echo "  [?]  Show This Help"
+    echo "       Display this help screen"
+    echo ""
+    echo "  [q]  Quit"
+    echo "       Exit the task monitor cleanly"
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "  Press any key to return to task monitor..."
+    read -n 1 -s
+}
+
+# Function to archive completed tasks
+archive_completed_tasks() {
+    local timestamp=$(date "+%Y-%m-%d %H:%M")
+    local temp_file="${PLAN_FILE}.tmp"
+    local archive_section="### Archive - $timestamp"
+    local completed_tasks=""
+    local in_task_section=false
+    
+    # Extract completed tasks
+    while IFS= read -r line; do
+        if [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+            in_task_section=true
+        elif [[ "$line" =~ Medium[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+            in_task_section=true
+        elif [[ "$line" =~ Low[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+            in_task_section=true
+        elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
+            in_task_section=false
+        fi
+        
+        if [[ "$in_task_section" == "true" && "$line" =~ ^[[:space:]]*-[[:space:]]\[x\] ]]; then
+            completed_tasks+="$line"$'\n'
+        fi
+    done < "$PLAN_FILE"
+    
+    if [[ -z "$completed_tasks" ]]; then
+        echo ""
+        echo "  No completed tasks to archive."
+        sleep 2
+        return
+    fi
+    
+    # Write new file without completed tasks, add archive at end
+    {
+        local skip_line=false
+        while IFS= read -r line; do
+            if [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+                in_task_section=true
+            elif [[ "$line" =~ Medium[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+                in_task_section=true
+            elif [[ "$line" =~ Low[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+                in_task_section=true
+            elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
+                in_task_section=false
+            fi
+            
+            # Skip completed tasks in active sections
+            if [[ "$in_task_section" == "true" && "$line" =~ ^[[:space:]]*-[[:space:]]\[x\] ]]; then
+                continue
+            fi
+            
+            echo "$line"
+        done < "$PLAN_FILE"
+        
+        # Add archive section
+        echo ""
+        echo "$archive_section"
+        echo ""
+        echo "$completed_tasks"
+    } > "$temp_file"
+    
+    # Atomic replace
+    mv "$temp_file" "$PLAN_FILE"
+    echo ""
+    echo "  ✓ Archived completed tasks to: $archive_section"
+    sleep 2
+}
+
+# Function to clear completed tasks
+clear_completed_tasks() {
+    echo ""
+    echo -n "  ⚠️  Clear all completed tasks permanently? [y/N]: "
+    read -n 1 -r confirm
+    echo ""
+    
+    if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+        echo "  Cancelled."
+        sleep 1
+        return
+    fi
+    
+    local temp_file="${PLAN_FILE}.tmp"
+    local in_task_section=false
+    
+    # Write new file without completed tasks
+    {
+        while IFS= read -r line; do
+            if [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+                in_task_section=true
+            elif [[ "$line" =~ Medium[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+                in_task_section=true
+            elif [[ "$line" =~ Low[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+                in_task_section=true
+            elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
+                in_task_section=false
+            fi
+            
+            # Skip completed tasks in active sections
+            if [[ "$in_task_section" == "true" && "$line" =~ ^[[:space:]]*-[[:space:]]\[x\] ]]; then
+                continue
+            fi
+            
+            echo "$line"
+        done < "$PLAN_FILE"
+    } > "$temp_file"
+    
+    # Atomic replace
+    mv "$temp_file" "$PLAN_FILE"
+    echo "  ✓ Cleared all completed tasks."
+    sleep 2
+}
+
+# Function to display tasks with formatting
+display_tasks() {
+    clear
+    
+    # Header
+    echo "╔════════════════════════════════════════════════════════════════╗"
+    echo "║          RALPH TASK MONITOR - $(date +%H:%M:%S)                   ║"
+    echo "╚════════════════════════════════════════════════════════════════╝"
+    echo ""
+    
+    # Extract and group tasks by section
+    local tasks
+    if [[ "$HIDE_COMPLETED" == "true" ]]; then
+        tasks=$(extract_tasks "false")
+    else
+        tasks=$(extract_tasks "true")
+    fi
+    
+    if [[ -z "$tasks" ]]; then
+        echo "  No tasks found in IMPLEMENTATION_PLAN.md"
+        echo ""
+        return
+    fi
+    
+    local current_section=""
+    local pending_count=0
+    local completed_count=0
+    
+    while IFS='|' read -r icon section task desc status; do
+        # Print section header when it changes
+        if [[ "$section" != "$current_section" ]]; then
+            if [[ -n "$current_section" ]]; then
+                echo ""
+            fi
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "  $section"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            current_section="$section"
+        fi
+        
+        # Print task with color and full description
+        if [[ "$status" == "completed" ]]; then
+            echo -e "  \033[32m$icon\033[0m $task: $desc"
+            ((completed_count++))
+        else
+            echo -e "  \033[33m$icon\033[0m $task: $desc"
+            ((pending_count++))
+        fi
+    done <<< "$tasks"
+    
+    # Footer with stats
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "  Completed: $completed_count | Pending: $pending_count | Total: $((completed_count + pending_count))"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    
+    # Hotkey legend
+    echo "╔════════════════════════════════════════════════════════════════╗"
+    echo "║  HOTKEYS: [h] Hide/Show Done  [r] Reset/Archive  [f] Refresh  ║"
+    echo "║           [c] Clear Done      [?] Help           [q] Quit     ║"
+    echo "╚════════════════════════════════════════════════════════════════╝"
+    echo ""
+    
+    if [[ "$HIDE_COMPLETED" == "true" ]]; then
+        echo "  Mode: Hiding completed tasks (press 'h' to show)"
+    fi
+}
+
+# Main loop - interactive with file watching
+echo "Starting Ralph Task Monitor..."
+echo "Watching: $PLAN_FILE"
+echo "Interactive mode - press '?' for help"
+echo ""
+
+# Display tasks immediately on start
+display_tasks
+
+# Get initial modification time
+LAST_MODIFIED=$(get_file_mtime)
+
+# Enable non-blocking input
+if [[ -t 0 ]]; then
+    stty -echo -icanon time 0 min 0
+fi
+
+# Cleanup function
+cleanup() {
+    if [[ -t 0 ]]; then
+        stty sane
+    fi
+    echo ""
+    echo "Exiting Ralph Task Monitor..."
+    exit 0
+}
+
+trap cleanup EXIT INT TERM
+
+# Monitor for file changes and hotkeys
+while true; do
+    # Check for hotkey input (non-blocking)
+    if read -t 0.1 -n 1 key 2>/dev/null; then
+        case "$key" in
+            h|H)
+                # Toggle hide completed
+                if [[ "$HIDE_COMPLETED" == "true" ]]; then
+                    HIDE_COMPLETED=false
+                else
+                    HIDE_COMPLETED=true
+                fi
+                display_tasks
+                ;;
+            r|R)
+                # Archive completed tasks
+                archive_completed_tasks
+                LAST_MODIFIED=$(get_file_mtime)
+                display_tasks
+                ;;
+            f|F)
+                # Force refresh
+                display_tasks
+                ;;
+            c|C)
+                # Clear completed tasks
+                clear_completed_tasks
+                LAST_MODIFIED=$(get_file_mtime)
+                display_tasks
+                ;;
+            \?)
+                # Show help
+                show_help
+                display_tasks
+                ;;
+            q|Q)
+                # Quit
+                cleanup
+                ;;
+        esac
+    fi
+    
+    # Check for file changes
+    CURRENT_MODIFIED=$(get_file_mtime)
+    if [[ "$CURRENT_MODIFIED" != "$LAST_MODIFIED" ]]; then
+        LAST_MODIFIED="$CURRENT_MODIFIED"
+        display_tasks
+    fi
+    
+    # Small sleep to prevent CPU spinning
+    sleep 0.5
+done
