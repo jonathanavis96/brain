@@ -14,7 +14,7 @@ If unclear, assume BUILDING mode (safer default - reads plan without modifying i
 
 ## If PLANNING Mode
 
-**ABSOLUTE RULES:**
+### ABSOLUTE RULES
 - **NO IMPLEMENTATION** - Do not write code, do not modify files (except IMPLEMENTATION_PLAN.md)
 - **COMMIT all accumulated changes** - Save all work from BUILD iterations plus updated plan
 - **NO `:::COMPLETE:::`** - Never output this in planning mode
@@ -22,18 +22,18 @@ If unclear, assume BUILDING mode (safer default - reads plan without modifying i
 
 ### Your Job: Gap Analysis & Planning
 
-**Step 1: Study Specifications**
+#### Step 1: Study Specifications
 - Read THOUGHTS.md for project goals and success criteria
 - Identify requirements
 
-**Step 2: Analyze Current State**
+### Step 2: Analyze Current State
 Use up to 500 parallel subagents to:
 - Search codebase for existing implementations
 - Read NEURONS.md via subagent (codebase map)
 - Compare specs to current code
 - Identify gaps, missing features, technical debt
 
-**Step 3: Create/Update IMPLEMENTATION_PLAN.md**
+### Step 3: Create/Update IMPLEMENTATION_PLAN.md
 
 Keep the plan clean and focused on CURRENT work only:
 - **Remove ALL `### ARCHIVE` sections** - Old tasks belong in git history
@@ -124,7 +124,7 @@ After committing, stop. Do NOT output `:::COMPLETE:::` in planning mode.
 
 ## If BUILDING Mode
 
-**ABSOLUTE RULES:**
+### ABSOLUTE RULES
 - **IMPLEMENTATION_PLAN.md is your TODO list** - Always read it first
 - **EXACTLY ONE task per iteration** - Pick ONLY the first unchecked task, implement it fully, then STOP
 - **DO NOT COMMIT** - Planning phase handles all commits
@@ -136,7 +136,7 @@ After committing, stop. Do NOT output `:::COMPLETE:::` in planning mode.
 
 ### ⚠️ CRITICAL: ONE TASK ONLY
 
-**You will implement EXACTLY ONE task this iteration. Not two. Not three. ONE.**
+### You will implement EXACTLY ONE task this iteration. Not two. Not three. ONE.
 
 Why this matters:
 - Each iteration gets fresh context from the loop
@@ -146,14 +146,14 @@ Why this matters:
 
 ### Your Job: Implement One Task
 
-**Step 1: Select ONE Task**
+### Step 1: Select ONE Task
 
 1. Open IMPLEMENTATION_PLAN.md
 2. Read through priority sections (High → Medium → Low)
 3. Find the FIRST unchecked `[ ]` task
 4. **THIS IS YOUR ONLY TASK** - Stop reading, ignore all other tasks
 
-**Step 2: Investigate (Parallel Subagents for Reading)**
+### Step 2: Investigate (Parallel Subagents for Reading)
 
 Use up to 100 parallel subagents to:
 - Search existing code: **Don't assume functionality is missing!**
@@ -164,7 +164,7 @@ Use up to 100 parallel subagents to:
 
 Critical: Search first, implement second. Never duplicate existing functionality.
 
-**Step 3: Implement (Single Subagent for Modifications)**
+### Step 3: Implement (Single Subagent for Modifications)
 
 Use **exactly 1 subagent** for:
 - Creating/modifying files
@@ -179,7 +179,7 @@ Implementation guidelines:
 - Keep code consistent with project conventions
 - Add comments explaining "why" not "what"
 
-**Step 4: Validate**
+### Step 4: Validate
 
 Run validation commands from AGENTS.md and check VALIDATION_CRITERIA.md:
 ```bash
@@ -201,13 +201,13 @@ ls -lh AGENTS.md NEURONS.md PROMPT.md IMPLEMENTATION_PLAN.md VALIDATION_CRITERIA
 
 If validation fails: Fix the issues in the same iteration. Don't leave broken code.
 
-**Step 5: Update IMPLEMENTATION_PLAN.md**
+### Step 5: Update IMPLEMENTATION_PLAN.md
 
 - Change `- [ ]` to `- [x]` for completed task
 - Add discoveries or notes under "Discoveries & Notes"
 - Add new tasks if you discovered missing functionality
 
-**Step 6: STOP (No Commit)**
+### Step 6: STOP (No Commit)
 
 ⚠️ Do NOT commit. The next PLAN iteration will commit all accumulated changes with a comprehensive message.
 
