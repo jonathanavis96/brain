@@ -14,7 +14,7 @@ If unclear, assume BUILDING mode (safer default - reads plan without modifying i
 
 ## If PLANNING Mode
 
-**ABSOLUTE RULES:**
+### ABSOLUTE RULES
 - **NO IMPLEMENTATION** - Do not write code, do not modify files (except IMPLEMENTATION_PLAN.md)
 - **COMMIT all accumulated changes** - Save all work from BUILD iterations plus updated plan
 - **NO `:::COMPLETE:::`** - Never output this in planning mode
@@ -22,19 +22,19 @@ If unclear, assume BUILDING mode (safer default - reads plan without modifying i
 
 ### Your Job: Gap Analysis & Planning
 
-**Step 1: Study Specifications**
+#### Step 1: Study Specifications
 - Read THOUGHTS.md for project goals
 - Identify success criteria
 - Understand requirements
 
-**Step 2: Analyze Current State**
+#### Step 2: Analyze Current State
 Use up to 500 parallel subagents to:
 - Search codebase for existing implementations
 - Read NEURONS.md via subagent (codebase map)
 - Compare specs to current code
 - Identify gaps, missing features, technical debt
 
-**Step 3: Create/Update IMPLEMENTATION_PLAN.md**
+#### Step 3: Create/Update IMPLEMENTATION_PLAN.md
 Structure:
 ```markdown
 # Implementation Plan - [Project Name]
@@ -120,7 +120,7 @@ After committing, stop. Do NOT output `:::COMPLETE:::` in planning mode.
 
 ## If BUILDING Mode
 
-**ABSOLUTE RULES:**
+### ABSOLUTE RULES
 - **IMPLEMENTATION_PLAN.md is your TODO list** - Always read it first
 - **EXACTLY ONE task per iteration** - Pick ONLY the first unchecked task, implement it fully, then STOP
 - **DO NOT COMMIT** - Planning phase handles all commits
@@ -132,7 +132,7 @@ After committing, stop. Do NOT output `:::COMPLETE:::` in planning mode.
 
 ### ⚠️ CRITICAL: ONE TASK ONLY
 
-**You will implement EXACTLY ONE task this iteration. Not two. Not three. ONE.**
+### You will implement EXACTLY ONE task this iteration. Not two. Not three. ONE.
 
 - Read IMPLEMENTATION_PLAN.md and find the FIRST unchecked [ ] task
 - Implement ONLY that ONE task
@@ -143,7 +143,7 @@ After committing, stop. Do NOT output `:::COMPLETE:::` in planning mode.
 - The loop restarts you automatically with fresh context
 - Trust the loop mechanism
 
-**Why this matters:**
+#### Why this matters
 - Each iteration gets fresh context from the loop
 - Batching tasks defeats the deterministic context loading
 - The loop handles task sequencing, not you
@@ -151,7 +151,7 @@ After committing, stop. Do NOT output `:::COMPLETE:::` in planning mode.
 
 ### Your Job: Implement One Task
 
-**Step 1: Read IMPLEMENTATION_PLAN.md and Select ONE Task**
+### Step 1: Read IMPLEMENTATION_PLAN.md and Select ONE Task
 
 Task selection process:
 1. Open IMPLEMENTATION_PLAN.md
@@ -163,7 +163,7 @@ Task selection process:
 
 Critical: Do not plan ahead. Do not batch tasks. Do not read beyond this ONE task.
 
-**Step 2: Investigate (Parallel Subagents for Reading)**
+### Step 2: Investigate (Parallel Subagents for Reading)
 
 Use up to 100 parallel subagents to:
 - Search existing code: **Don't assume functionality is missing!**
@@ -176,7 +176,7 @@ Use up to 100 parallel subagents to:
 
 Critical: Search first, implement second. Never duplicate existing functionality.
 
-**Step 3: Implement (Single Subagent for Modifications)**
+### Step 3: Implement (Single Subagent for Modifications)
 
 ⚠️ Reminder: You are implementing ONE task only. Do not add features beyond the current task's scope.
 
@@ -189,9 +189,9 @@ Conflict Prevention: Only this single subagent modifies files. All others are re
 
 ### ⚠️ CRITICAL: Project Structure - Where to Put Files
 
-**Source code goes in the PROJECT ROOT, NOT in ralph/!**
+#### Source code goes in the PROJECT ROOT, NOT in ralph/
 
-```
+```text
 project-root/           ← YOU ARE HERE (working directory)
 ├── src/                ← Source code goes HERE
 ├── package.json        ← Config files go HERE  
@@ -212,7 +212,8 @@ project-root/           ← YOU ARE HERE (working directory)
     └── progress.txt
 ```
 
-**NEVER put source code, package.json, or config files inside ralph/**
+#### NEVER put source code, package.json, or config files inside ralph/
+
 - `ralph/` contains loop infrastructure AND project context files (AGENTS, THOUGHTS, NEURONS, kb/)
 - All actual application files go in the project root
 - When creating files, use paths like `src/...`, NOT `ralph/src/...`
@@ -224,7 +225,7 @@ Implementation guidelines:
 - Keep code consistent with project conventions
 - Add comments explaining "why" not "what"
 
-**Step 4: Validate (Backpressure)**
+### Step 4: Validate (Backpressure)
 
 Run validation commands from AGENTS.md and check VALIDATION_CRITERIA.md for quality gates.
 
@@ -250,7 +251,7 @@ Reference VALIDATION_CRITERIA.md for task-specific quality standards.
 
 If validation fails: Fix the issues in the same iteration. Don't leave broken code.
 
-**Step 5: Update IMPLEMENTATION_PLAN.md**
+### Step 5: Update IMPLEMENTATION_PLAN.md
 
 Mark the completed task:
 - Change `- [ ]` to `- [x]` for completed task
@@ -258,7 +259,7 @@ Mark the completed task:
 - Add new tasks if you discovered missing functionality
 - Update "Current State Summary" if significant progress made
 
-**Step 6: STOP (No Commit)**
+### Step 6: STOP (No Commit)
 
 ⚠️ Do NOT commit. The next PLAN iteration will commit all accumulated changes with a comprehensive message.
 
@@ -281,7 +282,7 @@ If you need to check whether to output the completion sentinel, quickly verify i
 
 ### Stop Condition
 
-**After Every Task: STOP Immediately**
+#### After Every Task: STOP Immediately
 
 After completing one task, simply stop generating output. The bash loop will:
 1. Detect your completion
@@ -295,7 +296,7 @@ DO NOT:
 
 The loop handles iteration, not you.
 
-**Only When ALL Tasks Complete: Output Completion Sentinel**
+### Only When ALL Tasks Complete: Output Completion Sentinel
 
 The loop will restart you with fresh context. When you start a new iteration:
 
