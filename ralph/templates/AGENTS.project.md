@@ -1,10 +1,12 @@
 # Project Guidance for AI Agents
 
-## Knowledge Base (MUST USE)
+## Knowledge Base (Optional Integration)
+
+> **Brain Integration:** If `../../brain/` exists, use it for KB lookups. Otherwise, proceed without external brain KB - this project works standalone.
 
 ### Progressive Disclosure: Always Read in This Order
 
-**ALWAYS start here:**
+**If brain repository is available, ALWAYS start here:**
 1. `../../brain/kb/SUMMARY.md` - Knowledge base overview and usage guide
 2. `../../brain/references/react-best-practices/HOTLIST.md` - Top 10 most applicable performance rules (covers 80% of scenarios)
 
@@ -22,6 +24,12 @@
 - **Token efficiency**: HOTLIST covers most common scenarios with minimal tokens
 - **Faster results**: Start broad, drill down only when needed
 - **Avoid overwhelm**: Don't read all rules unless explicitly instructed
+
+### Standalone Mode
+If the brain repository is not present (e.g., project cloned standalone), skip the KB lookups above and rely on:
+- Project-local documentation in `docs/`
+- Standard best practices for your tech stack
+- Any project-specific conventions documented in this file
 
 ## Knowledge Growth Rule (Mandatory)
 
@@ -70,8 +78,32 @@ When you discover a new convention, architectural decision, or project-specific 
 - Write clear, self-documenting code with minimal comments
 
 ### Project Structure
-- Prefer `src/` for source code (document actual location if different)
-- Keep project goals and vision in `THOUGHTS.md`
+
+**⚠️ CRITICAL: Source code goes in PROJECT ROOT, not in ralph/!**
+
+```
+project-root/           ← Working directory for application files
+├── src/                ← Source code HERE
+├── package.json        ← Config files HERE
+├── tsconfig.json       
+├── README.md           ← Project readme
+└── ralph/              ← Ralph files (loop + project context)
+    ├── AGENTS.md       ← This file (agent guidance)
+    ├── THOUGHTS.md     ← Project vision
+    ├── NEURONS.md      ← Codebase map
+    ├── PROMPT.md       ← Loop prompt
+    ├── IMPLEMENTATION_PLAN.md  ← Task tracking
+    ├── VALIDATION_CRITERIA.md  ← Quality gates
+    ├── RALPH.md        ← Loop contract
+    ├── loop.sh         ← Loop runner
+    ├── kb/             ← Project knowledge base
+    └── logs/           ← Iteration logs
+```
+
+- **Source code**: Always in `src/` at project root (NOT `ralph/src/`)
+- **Config files**: Always at project root (`package.json`, `tsconfig.json`, etc.)
+- **ralph/ directory**: Contains loop infrastructure AND project context (AGENTS, THOUGHTS, NEURONS, kb/, logs/)
+- Keep project goals and vision in `ralph/THOUGHTS.md`
 - Maintain `ralph/IMPLEMENTATION_PLAN.md` as a prioritized task list
 
 ## Ralph Integration
@@ -79,7 +111,7 @@ When you discover a new convention, architectural decision, or project-specific 
 This project uses the Ralph Wiggum iterative loop for systematic development:
 - **Single unified prompt**: See `ralph/PROMPT.md` (determines mode from iteration number)
 - **Progress tracking**: All work logged in `ralph/progress.txt`
-- **Completion**: Look for `<promise>COMPLETE</promise>` sentinel
+- **Completion**: Look for `:::COMPLETE:::` sentinel
 
 ## RovoDev + CLI Guardrails
 

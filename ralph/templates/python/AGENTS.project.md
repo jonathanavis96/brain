@@ -89,7 +89,7 @@ When you discover a new convention, architectural decision, or project-specific 
 This project uses the Ralph Wiggum iterative loop for systematic development:
 - **Single unified prompt**: See `ralph/PROMPT.md` (determines mode from iteration number)
 - **Progress tracking**: All work logged in `ralph/progress.txt`
-- **Completion**: Look for `<promise>COMPLETE</promise>` sentinel
+- **Completion**: Look for `:::COMPLETE:::` sentinel
 
 ## RovoDev + CLI Guardrails
 

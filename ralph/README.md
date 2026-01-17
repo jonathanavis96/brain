@@ -267,7 +267,7 @@ All templates use **bash-style forward slash paths**:
 
 1. Maintain bash path standard: `../../brain/`
 2. Test path depth matches template location
-3. Validate before committing
+3. Validate before completing task
 4. Document new conventions in `templates/README.md`
 
 ### Running Ralph on Brain
@@ -293,9 +293,10 @@ bash watch_ralph_tasks.sh
 - **IMPLEMENTATION_PLAN.md** - The persistent TODO list (actionable tasks only)
 - **VALIDATION_CRITERIA.md** - Quality gates and acceptance criteria (reference document)
 - **NEURONS.md** - Codebase map (read via subagent when needed, not first-load)
-- **One Iteration = One Unit** - Implement + validate + update plan + commit
+- **One Iteration = One Unit** - Implement + validate + update plan + STOP
 - **Don't Assume Missing** - Always search codebase before creating
-- **One Task Per Iteration** - BUILD mode: implement ONE task, commit, STOP
+- **One Task Per Iteration** - BUILD mode: implement ONE task, STOP (PLAN commits)
+- **PLAN Phase Commits** - All commits happen during planning phase with comprehensive messages
 
 **Safety Features:**
 
@@ -366,11 +367,11 @@ grep -r "## When to Use It" kb/domains/ kb/projects/
 2. **Progressive Disclosure** - Start with HOTLIST/SUMMARY, drill down only when needed
 3. **Token Efficiency** - Keep context files lean
 4. **Bash Paths Standard** - All templates use `../../brain/` (not Windows paths)
-5. **One Task Per Iteration** - BUILD mode: ONE task, validate, commit, STOP
+5. **One Task Per Iteration** - BUILD mode: ONE task, validate, STOP (no commit)
 6. **Documentation Reflects Reality** - Fix immediately if docs and code disagree
 7. **Templates Are Sacred** - Test thoroughly before changing (many projects depend on them)
 8. **Knowledge Grows Organically** - Add to KB when patterns emerge in 2+ projects
-9. **Validation Is Mandatory** - All changes must pass validation before commit
+9. **Validation Is Mandatory** - All changes must pass validation before stopping
 10. **Ralph Maintains Ralph** - Brain loop improves itself continuously
 
 ## Success Metrics

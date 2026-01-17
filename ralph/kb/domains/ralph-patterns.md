@@ -56,12 +56,29 @@ Prompts explicitly tell RovoDev to use subagents:
 
 These instructions guide RovoDev's internal behavior. Ralph.ps1 doesn't enforce this - it just passes the prompt through.
 
+### Commit Strategy
+
+**Commits happen in PLAN phase only**, not after each BUILD iteration:
+
+```
+Iteration 1 (PLAN):  Analyze → Update plan → COMMIT all → Stop
+Iteration 2 (BUILD): Implement task → Validate → Stop (no commit)
+Iteration 3 (BUILD): Implement task → Validate → Stop (no commit)
+Iteration 4 (BUILD): Implement task → Validate → Stop (no commit)
+Iteration 5 (PLAN):  Re-analyze → Update plan → COMMIT all (iterations 2-4) → Stop
+```
+
+Benefits:
+- Fewer, more meaningful commits
+- Comprehensive commit messages (Ralph has full context during PLAN)
+- All related changes grouped together
+
 ### Best Practices
 
 1. **Reading phase**: Request parallel subagents for speed
 2. **Writing phase**: Specify single agent for safety
-3. **Verbose mode**: Add `--verbose` flag to ralph.ps1 to see tool activity
-4. **Debugging**: Check `ralph/progress.txt` for full execution log
+3. **Verbose mode**: Add `--verbose` flag to loop.sh to see tool activity
+4. **Debugging**: Check `ralph/logs/` for iteration transcripts
 
 ### Common Misconception
 

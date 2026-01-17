@@ -63,8 +63,8 @@ This is the **project map** that Ralph and all agents read on-demand when needed
 | **[Common task 1]** | `[location/file.ext]` |
 | **[Common task 2]** | `[location/file.ext]` |
 | **[Common task 3]** | `[location/file.ext]` |
-| **Reference brain KB** | `../../brain/kb/SUMMARY.md` |
-| **Check React patterns** | `../../brain/references/react-best-practices/HOTLIST.md` |
+| **Reference brain KB** | `../../brain/kb/SUMMARY.md` (if brain exists) |
+| **Check React patterns** | `../../brain/references/react-best-practices/HOTLIST.md` (if brain exists) |
 
 ### "Where do I put..."
 
@@ -136,18 +136,22 @@ This is the **project map** that Ralph and all agents read on-demand when needed
 - `VALIDATION_CRITERIA.md` - Quality gates and acceptance criteria
 
 **Stop Sentinel:**
-```xml
-<promise>COMPLETE</promise>
+```
+:::COMPLETE:::
 ```
 Only output when ALL tasks in IMPLEMENTATION_PLAN.md are 100% complete.
 
 ---
 
-## Brain Repository Integration
+## Brain Repository Integration (Optional)
+
+> **Note:** Brain integration is optional. If `../../brain/` exists, use it for KB lookups. Otherwise, this project works standalone - skip brain references and rely on project-local docs and standard best practices.
 
 ### Knowledge Base References
 
 [REPLACE: Document how this project uses brain repository knowledge]
+
+**If brain repository is available:**
 
 **Performance Patterns (if React/Next.js):**
 - Path: `../../brain/references/react-best-practices/`
@@ -164,9 +168,15 @@ Only output when ALL tasks in IMPLEMENTATION_PLAN.md are 100% complete.
 - Usage: Document learnings that might benefit other projects
 
 ### Path Conventions
-- Brain references use: `../../brain/kb/` (relative from project root)
+- Brain references use: `../../brain/kb/` (relative from project root, if brain exists)
 - Internal references use: `./relative/path` (within project)
 - Absolute paths: Avoid - use relative paths for portability
+
+### Standalone Mode
+If brain repository is not present:
+- Skip all `../../brain/` references
+- Rely on `docs/` for project documentation
+- Use standard best practices for your tech stack
 
 ---
 
@@ -335,12 +345,14 @@ This [PROJECT_NAME] repository contains:
 1. Read NEURONS.md (this file) via subagent when needed
 2. Use progressive disclosure (broad → specific)
 3. Search before creating (don't assume missing)
-4. Follow brain KB patterns: `../../brain/kb/SUMMARY.md`
-5. Consult React patterns (if applicable): `../../brain/references/react-best-practices/HOTLIST.md`
+4. Follow brain KB patterns (if brain exists): `../../brain/kb/SUMMARY.md`
+5. Consult React patterns (if applicable and brain exists): `../../brain/references/react-best-practices/HOTLIST.md`
 
 **For questions about:**
 - **How to run Ralph** → See AGENTS.md
 - **What exists where** → You're reading it (NEURONS.md)
 - **Project goals** → See THOUGHTS.md
-- **Brain KB patterns** → See `../../brain/kb/SUMMARY.md`
-- **React optimization** → See `../../brain/references/react-best-practices/HOTLIST.md`
+- **Brain KB patterns** → See `../../brain/kb/SUMMARY.md` (if brain exists)
+- **React optimization** → See `../../brain/references/react-best-practices/HOTLIST.md` (if brain exists)
+
+> **Note:** All brain references are optional. If `../../brain/` doesn't exist, skip those references - this project works standalone.

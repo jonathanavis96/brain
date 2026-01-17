@@ -26,7 +26,7 @@ Ralph Wiggum is an iterative development loop pattern that alternates between PL
 **Loop Structure**:
 - **PLAN phase**: Gap analysis, creates/updates IMPLEMENTATION_PLAN.md, NO code changes, NO commits
 - **BUILD phase**: Takes top task, implements fully, runs validation, commits if complete
-- **Completion**: BUILD outputs `<promise>COMPLETE</promise>` when all tasks done
+- **Completion**: BUILD outputs `:::COMPLETE:::` when all tasks done
 
 ### 3. Specs Pattern (https://ghuntley.com/specs/)
 **Specification Structure**:
@@ -53,12 +53,12 @@ Ralph Wiggum is an iterative development loop pattern that alternates between PL
 - **Input**: specs/*, existing code, IMPLEMENTATION_PLAN.md
 - **Actions**: Gap analysis, update IMPLEMENTATION_PLAN.md, log summary
 - **Output**: Updated IMPLEMENTATION_PLAN.md
-- **Forbidden**: Code changes, commits, `<promise>COMPLETE</promise>`
+- **Forbidden**: Code changes, commits, `:::COMPLETE:::`
 
 ### BUILD Phase Rules
 - **Input**: Top task from IMPLEMENTATION_PLAN.md
 - **Actions**: Implement, validate, update plan, commit
-- **Output**: Working code, `<promise>COMPLETE</promise>` if all tasks done
+- **Output**: Working code, `:::COMPLETE:::` if all tasks done
 - **Forbidden**: Creating new tasks without implementing them
 
 ## Validation Commands (Backpressure)

@@ -24,7 +24,7 @@ AGENTS.md never mentioned `IMPLEMENTATION_PLAN.md` - the file that persists acro
 - **Analysis only** - no implementation allowed
 - Creates/updates IMPLEMENTATION_PLAN.md
 - NO commits
-- Does NOT output `<promise>COMPLETE</promise>`
+- Does NOT output `:::COMPLETE:::`
 - Uses up to 500 parallel subagents for comparison
 
 ### 2. Created Proper PROMPT_build.md (131 lines)
@@ -33,7 +33,7 @@ AGENTS.md never mentioned `IMPLEMENTATION_PLAN.md` - the file that persists acro
 - Implements, validates, commits
 - Updates IMPLEMENTATION_PLAN.md
 - Uses exactly 1 subagent for modifications
-- Outputs `<promise>COMPLETE</promise>` when all tasks done
+- Outputs `:::COMPLETE:::` when all tasks done
 
 ### 3. Updated AGENTS.md (101 lines)
 **Added new section:** "Two-Mode Loop System"

@@ -14,27 +14,27 @@ If unclear, assume BUILDING mode (safer default - reads plan without modifying i
 
 ## If PLANNING Mode
 
-**ABSOLUTE RULES:**
+### ABSOLUTE RULES
 - **NO IMPLEMENTATION** - Do not write code, do not modify files (except IMPLEMENTATION_PLAN.md)
-- **NO COMMITS** - Do not commit anything
-- **NO `<promise>COMPLETE</promise>`** - Never output this in planning mode
+- **COMMIT all accumulated changes** - Save all work from BUILD iterations plus updated plan
+- **NO `:::COMPLETE:::`** - Never output this in planning mode
 - **ANALYSIS ONLY** - Study existing files, create prioritized plan
 
 ### Your Job: Gap Analysis & Planning
 
-**Step 1: Study Specifications**
+#### Step 1: Study Specifications
 - Read THOUGHTS.md for project goals
 - Identify success criteria
 - Understand requirements
 
-**Step 2: Analyze Current State**
+#### Step 2: Analyze Current State
 Use up to 500 parallel subagents to:
 - Search codebase for existing implementations
 - Read NEURONS.md via subagent (codebase map)
 - Compare specs to current code
 - Identify gaps, missing features, technical debt
 
-**Step 3: Create/Update IMPLEMENTATION_PLAN.md**
+#### Step 3: Create/Update IMPLEMENTATION_PLAN.md
 Structure:
 ```markdown
 # Implementation Plan - [Project Name]
@@ -63,45 +63,95 @@ Last updated: YYYY-MM-DD HH:MM:SS
 [Anything learned during analysis]
 ```
 
-**Step 4: Stop**
-After updating IMPLEMENTATION_PLAN.md, stop. Do NOT output `<promise>COMPLETE</promise>`.
+### Step 4: Commit All Changes
+
+Commit all accumulated changes from BUILD iterations plus the updated plan.
+
+First, check if git is initialized:
+```bash
+git rev-parse --git-dir 2>/dev/null
+```
+
+#### If NO git repo exists
+
+- Initialize with `git init`
+- Make an initial commit with all files
+
+#### If git repo exists
+
+```bash
+git add -A
+git status  # Review what's being committed
+git commit -m "Ralph Plan: [comprehensive summary]"
+```
+
+Commit message MUST include:
+- What features/fixes were implemented since last plan
+- Key files changed
+- Current project state
+
+Example commit messages:
+```text
+Ralph Plan: Add authentication system
+
+- Implement JWT token generation and validation
+- Add login/logout API endpoints
+- Create user session middleware
+- 5 tasks completed, 3 remaining
+
+Files: src/auth/*.ts, src/middleware/session.ts
+```
+
+```text
+Ralph Plan: Initial project setup
+
+- Create project structure and dependencies
+- Add base configuration files
+- Set up development environment
+
+Files: package.json, tsconfig.json, src/index.ts
+```
+
+### Step 5: Stop
+
+After committing, stop. Do NOT output `:::COMPLETE:::` in planning mode.
 
 ---
 
 ## If BUILDING Mode
 
-**ABSOLUTE RULES:**
+### ABSOLUTE RULES
 - **IMPLEMENTATION_PLAN.md is your TODO list** - Always read it first
-- **EXACTLY ONE task per iteration** - Pick ONLY the first unchecked task, implement it fully, commit, then STOP immediately
-- **DO NOT continue to next task** - After committing, STOP and let the loop restart you automatically
+- **EXACTLY ONE task per iteration** - Pick ONLY the first unchecked task, implement it fully, then STOP
+- **DO NOT COMMIT** - Planning phase handles all commits
+- **DO NOT continue to next task** - After completing, STOP and let the loop restart you automatically
 - **Don't assume not implemented** - Always search codebase before creating new functionality
-- **Use exactly 1 subagent** for implementation, git operations, and file writes
-- **Test before committing** - Run validation commands from AGENTS.md
+- **Use exactly 1 subagent** for implementation and file writes
+- **Test before stopping** - Run validation commands from AGENTS.md
 - **Update the plan** - Mark tasks complete, add discoveries
-- **Commit when done** - One coherent unit per commit
 
 ### ⚠️ CRITICAL: ONE TASK ONLY
 
-**You will implement EXACTLY ONE task this iteration. Not two. Not three. ONE.**
+### You will implement EXACTLY ONE task this iteration. Not two. Not three. ONE.
 
 - Read IMPLEMENTATION_PLAN.md and find the FIRST unchecked [ ] task
 - Implement ONLY that ONE task
-- After committing that ONE task, STOP IMMEDIATELY
+- After completing that ONE task, STOP IMMEDIATELY
 - Do not check for more work
 - Do not batch tasks
 - Do not read ahead
 - The loop restarts you automatically with fresh context
 - Trust the loop mechanism
 
-**Why this matters:**
+#### Why this matters
 - Each iteration gets fresh context from the loop
 - Batching tasks defeats the deterministic context loading
 - The loop handles task sequencing, not you
-- Your job: ONE task → validate → commit → STOP
+- Your job: ONE task → validate → STOP (PLAN phase commits)
 
 ### Your Job: Implement One Task
 
-**Step 1: Read IMPLEMENTATION_PLAN.md and Select ONE Task**
+### Step 1: Read IMPLEMENTATION_PLAN.md and Select ONE Task
 
 Task selection process:
 1. Open IMPLEMENTATION_PLAN.md
@@ -113,7 +163,7 @@ Task selection process:
 
 Critical: Do not plan ahead. Do not batch tasks. Do not read beyond this ONE task.
 
-**Step 2: Investigate (Parallel Subagents for Reading)**
+### Step 2: Investigate (Parallel Subagents for Reading)
 
 Use up to 100 parallel subagents to:
 - Search existing code: **Don't assume functionality is missing!**
@@ -126,7 +176,7 @@ Use up to 100 parallel subagents to:
 
 Critical: Search first, implement second. Never duplicate existing functionality.
 
-**Step 3: Implement (Single Subagent for Modifications)**
+### Step 3: Implement (Single Subagent for Modifications)
 
 ⚠️ Reminder: You are implementing ONE task only. Do not add features beyond the current task's scope.
 
@@ -137,6 +187,37 @@ Use **exactly 1 subagent** for:
 
 Conflict Prevention: Only this single subagent modifies files. All others are read-only.
 
+### ⚠️ CRITICAL: Project Structure - Where to Put Files
+
+#### Source code goes in the PROJECT ROOT, NOT in ralph/
+
+```text
+project-root/           ← YOU ARE HERE (working directory)
+├── src/                ← Source code goes HERE
+├── package.json        ← Config files go HERE  
+├── tsconfig.json       ← Config files go HERE
+├── index.html          ← Entry points go HERE
+├── README.md           ← Project readme
+└── ralph/              ← Ralph files (loop + project context)
+    ├── PROMPT.md       ← This file
+    ├── IMPLEMENTATION_PLAN.md
+    ├── RALPH.md
+    ├── VALIDATION_CRITERIA.md
+    ├── AGENTS.md       ← Agent guidance
+    ├── THOUGHTS.md     ← Project vision
+    ├── NEURONS.md      ← Codebase map
+    ├── loop.sh
+    ├── kb/             ← Project knowledge base
+    ├── logs/           ← Iteration logs
+    └── progress.txt
+```
+
+#### NEVER put source code, package.json, or config files inside ralph/
+
+- `ralph/` contains loop infrastructure AND project context files (AGENTS, THOUGHTS, NEURONS, kb/)
+- All actual application files go in the project root
+- When creating files, use paths like `src/...`, NOT `ralph/src/...`
+
 Implementation guidelines:
 - Follow patterns from existing code
 - Reference `../../brain/kb/` for domain patterns and conventions
@@ -144,7 +225,7 @@ Implementation guidelines:
 - Keep code consistent with project conventions
 - Add comments explaining "why" not "what"
 
-**Step 4: Validate (Backpressure)**
+### Step 4: Validate (Backpressure)
 
 Run validation commands from AGENTS.md and check VALIDATION_CRITERIA.md for quality gates.
 
@@ -168,9 +249,9 @@ ls -lh AGENTS.md NEURONS.md PROMPT.md IMPLEMENTATION_PLAN.md VALIDATION_CRITERIA
 
 Reference VALIDATION_CRITERIA.md for task-specific quality standards.
 
-If validation fails: Fix the issues in the same iteration. Don't commit broken code.
+If validation fails: Fix the issues in the same iteration. Don't leave broken code.
 
-**Step 5: Update IMPLEMENTATION_PLAN.md**
+### Step 5: Update IMPLEMENTATION_PLAN.md
 
 Mark the completed task:
 - Change `- [ ]` to `- [x]` for completed task
@@ -178,24 +259,13 @@ Mark the completed task:
 - Add new tasks if you discovered missing functionality
 - Update "Current State Summary" if significant progress made
 
-**Step 6: Commit**
+### Step 6: STOP (No Commit)
 
-⚠️ This commit completes ONE task. After committing, STOP immediately. Do not continue to another task.
+⚠️ Do NOT commit. The next PLAN iteration will commit all accumulated changes with a comprehensive message.
 
-One coherent unit per commit:
-```bash
-git add .
-git commit -m "Brief description of what was implemented"
-```
+After validation passes and IMPLEMENTATION_PLAN.md is updated, simply STOP.
 
-Commit message format:
-- Imperative mood: "Add X", "Fix Y", "Update Z"
-- Reference task from IMPLEMENTATION_PLAN.md
-- Keep it concise but clear
-
-**Step 7: STOP After One Task**
-
-After committing, STOP IMMEDIATELY. Do not proceed to another task.
+Do not proceed to another task.
 
 The bash loop will automatically restart you for the next iteration with fresh context.
 
@@ -203,30 +273,30 @@ Do not:
 - Re-read IMPLEMENTATION_PLAN.md to check for more work
 - Look ahead to the next task
 - Implement multiple tasks in one iteration
-- Continue past the commit
+- Continue after updating the plan
 
 The only exception:
 If you need to check whether to output the completion sentinel, quickly verify if any unchecked `[ ]` tasks remain in IMPLEMENTATION_PLAN.md:
 - If ANY tasks remain: Simply stop (no sentinel output)
-- If ZERO tasks remain: Output `<promise>COMPLETE</promise>` and then stop
+- If ZERO tasks remain: Output `:::COMPLETE:::` and then stop
 
 ### Stop Condition
 
-**After Every Task: STOP Immediately**
+#### After Every Task: STOP Immediately
 
-After committing one task, simply stop generating output. The bash loop will:
+After completing one task, simply stop generating output. The bash loop will:
 1. Detect your completion
 2. Clear your context
 3. Restart you for the next task
 
 DO NOT:
-- Output `<promise>COMPLETE</promise>` after a single task
+- Output `:::COMPLETE:::` after a single task
 - Check if more work remains
 - Decide whether to continue
 
 The loop handles iteration, not you.
 
-**Only When ALL Tasks Complete: Output Completion Sentinel**
+### Only When ALL Tasks Complete: Output Completion Sentinel
 
 The loop will restart you with fresh context. When you start a new iteration:
 
@@ -234,9 +304,9 @@ The loop will restart you with fresh context. When you start a new iteration:
 2. Scan for unchecked `[ ]` tasks
 3. **IF you find ZERO unchecked tasks**, output this exact text on its own line:
 
-<promise>COMPLETE</promise>
+:::COMPLETE:::
 
-⚠️ The XML tags are required - the loop script looks for exactly `<promise>COMPLETE</promise>` to stop. Do not omit the tags.
+⚠️ The colons are required - the loop script looks for exactly `:::COMPLETE:::` to stop.
 
 4. **IF you find ANY unchecked tasks**, pick the first one and implement it (do NOT output the sentinel)
 
@@ -247,9 +317,9 @@ The completion sentinel is ONLY for when the entire plan is complete, not after 
 If something goes wrong:
 - Don't panic
 - Document the issue in IMPLEMENTATION_PLAN.md
-- Commit what works
 - Leave the broken task unchecked for next iteration
 - Add notes about what failed and why
+- PLAN phase will commit whatever state exists
 
 ---
 
@@ -290,15 +360,15 @@ grep -r "pattern" src/ lib/ tests/
 - NEURONS.md = codebase map (where things are)
 
 ### One Task Per Iteration
-- BUILD mode: Implement + validate + commit + STOP
-- PLAN mode: Analyze + update plan + STOP
+- BUILD mode: Implement + validate + update plan + STOP (no commit)
+- PLAN mode: Analyze + update plan + COMMIT all + STOP
 - Loop handles sequencing, not you
 - Trust the mechanism
 
 ### Design Philosophy
 - **Prefer correctness over speed** - Get it right, then optimize
 - **Search before creating** - Avoid duplicate implementations
-- **Commit working units** - Each commit should be a complete, testable piece
+- **Leave code working** - Each task should leave the codebase in a testable state
 - **Update documentation** - Keep AGENTS.md operational, add to kb/ for patterns
 - **Use NEURONS.md** - It's your map of the codebase, reference it constantly
 
