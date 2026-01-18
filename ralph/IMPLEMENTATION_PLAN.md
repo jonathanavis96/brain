@@ -105,7 +105,7 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
   - Document two-monitor system: current_ralph_tasks.sh and thunk_ralph_tasks.sh
   - Document hotkeys and usage
 
-- [ ] **5.2** Verify all three bugs are fixed
+- [x] **5.2** Verify all three bugs are fixed
   - **Bug A:** Tasks under `### Phase` headers are extracted correctly
   - **Bug B:** No duplicate headers/footers after multiple file updates
   - **Bug C:** THUNK monitor only watches THUNK.md, does not auto-sync from PLAN
@@ -143,12 +143,12 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
 - [x] No visual corruption after terminal resize <!-- tested: SIGWINCH triggers full redraw -->
 
 ### Bug C: THUNK Monitor
-- [ ] Watches THUNK.md as sole source (no PLAN_FILE references)
-- [ ] Updates display when THUNK.md changes
-- [ ] Does NOT auto-sync from IMPLEMENTATION_PLAN.md (monitor should only display, not modify)
-- [ ] Does NOT modify THUNK.md (Ralph appends, monitor only watches)
-- [ ] No "Scanning IMPLEMENTATION_PLAN.md" messages (only watches THUNK.md)
-- [ ] No force sync hotkey 'f' (removed entirely)
+- [x] Watches THUNK.md as sole source (no PLAN_FILE references) <!-- tested: grep shows no PLAN_FILE in thunk_ralph_tasks.sh -->
+- [x] Updates display when THUNK.md changes <!-- tested: monitor startup shows "Watching: THUNK.md" -->
+- [x] Does NOT auto-sync from IMPLEMENTATION_PLAN.md (monitor should only display, not modify) <!-- tested: no scan_for_new_completions function -->
+- [x] Does NOT modify THUNK.md (Ralph appends, monitor only watches) <!-- tested: header documents "Display-only monitor" -->
+- [x] No "Scanning IMPLEMENTATION_PLAN.md" messages (only watches THUNK.md) <!-- tested: grep shows no scanning messages -->
+- [x] No force sync hotkey 'f' (removed entirely) <!-- tested: hotkey documentation shows only r, e, q -->
 
 ---
 

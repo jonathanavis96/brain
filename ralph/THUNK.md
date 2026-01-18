@@ -220,3 +220,5 @@ Started: 2026-01-18
 | 189 | 3.3 | HIGH | **3.3** Remove initial scan and "Syncing with" messages from thunk_ralph_tasks.sh - Removed auto-sync features from header comments - Removed 'f' hotkey from documentation and display | 2026-01-18 |
 | 190 | 3.4 | HIGH | **3.4** Update thunk_ralph_tasks.sh header comments - Already completed as part of task 3.3 | 2026-01-18 |
 | 191 | 3.5 | HIGH | **3.5** Test monitor is display-only - All 5 tests pass: startup clean, watches THUNK.md only, no PLAN references, no scanning messages, no 'f' hotkey | 2026-01-18 |
+| 190 | 3.3 | HIGH | **3.3** Remove initial scan and "Syncing with" messages | 2026-01-18 |
+| 192 | 5.2 | HIGH | **5.2** Verify all three bugs are fixed - Bug A: Parser handles ### subsections ✓, Bug B: Full clear/redraw (no artifacts) ✓, Bug C: THUNK monitor display-only ✓ | 2026-01-18 |
