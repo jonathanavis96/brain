@@ -405,7 +405,7 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
 
 #### Phase 4B: thunk_ralph_tasks.sh Improvements
 
-- [ ] **P4B.1** Implement line-count tracking for THUNK.md:
+- [x] **P4B.1** Implement line-count tracking for THUNK.md: ✅ COMPLETE
   - Store LAST_LINE_COUNT after initial load
   - On file change, compare current line count
   - If increased: only new lines added (common case)
