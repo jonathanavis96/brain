@@ -201,3 +201,4 @@ Started: 2026-01-18
 | 172 | 2.3 | HIGH | **2.3** Create skill: Ralph Loop Architecture Deep Dive - Expand skills/domains/ralph-patterns.md with more detail - Add troubleshooting patterns from recent monitor fixes - Include: parser state machines, display strategies, file watching patterns | 2026-01-18 |
 | 173 | 3.1 | HIGH | **3.1** Sync current_ralph_tasks.sh updates to template - Copied latest version (22KB) from root to templates/ralph/ | 2026-01-18 |
 | 174 | 3.2 | HIGH | **3.2** Sync thunk_ralph_tasks.sh updates to template - Copied latest version (22.5KB) from root to templates/ralph/ | 2026-01-18 |
+| 175 | 3.3 | HIGH | **3.3** Sync loop.sh updates to template - Copied latest version (21KB) from root to templates/ralph/ | 2026-01-18 |
