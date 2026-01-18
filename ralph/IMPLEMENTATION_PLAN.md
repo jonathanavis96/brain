@@ -82,7 +82,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 - [x] **T3.2** Mark complete: THUNK.md parsing and display implemented (lines 188-240)
 - [x] **T3.3** Mark complete: Completion detection implemented (scan_for_new_completions, lines 109-186)
 - [x] **T3.4** Mark complete: Auto-append logic with sequential numbering implemented (lines 145-176)
-- [ ] **T3.5** Mark complete: Hotkeys implemented - `[r]` refresh, `[f]` force sync, `[e]` new era, `[q]` quit (lines 320-370)
+- [x] **T3.5** Mark complete: Hotkeys implemented - `[r]` refresh, `[f]` force sync, `[e]` new era, `[q]` quit (lines 320-370)
 - [ ] **T3.6** Test thunk_ralph_tasks.sh displays correctly and all features work
 
 #### Phase T3.5: Human-Friendly Display Formatting
