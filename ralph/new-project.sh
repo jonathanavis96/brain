@@ -409,6 +409,22 @@ else
     warn "Template not found: ralph/thunk_ralph_tasks.sh"
 fi
 
+# Copy and process THUNK.project.md template
+if [ -f "$TEMPLATES_DIR/ralph/THUNK.project.md" ]; then
+    cp "$TEMPLATES_DIR/ralph/THUNK.project.md" "$PROJECT_LOCATION/ralph/THUNK.md"
+    CREATION_DATE=$(date +"%Y-%m-%d")
+    INITIAL_ERA_NAME="Initial Setup"
+    
+    # Process template placeholders
+    sed -i "s/{{PROJECT_NAME}}/$PROJECT_NAME/g" "$PROJECT_LOCATION/ralph/THUNK.md"
+    sed -i "s/{{CREATION_DATE}}/$CREATION_DATE/g" "$PROJECT_LOCATION/ralph/THUNK.md"
+    sed -i "s/{{INITIAL_ERA_NAME}}/$INITIAL_ERA_NAME/g" "$PROJECT_LOCATION/ralph/THUNK.md"
+    
+    success "Copied ralph/THUNK.md (from template)"
+else
+    warn "Template not found: ralph/THUNK.project.md"
+fi
+
 # Generate custom files using HIGH INTELLIGENCE generators
 info "Generating custom project files..."
 
