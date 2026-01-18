@@ -197,3 +197,4 @@ Started: 2026-01-18
 | 168 | 1.2 | HIGH | Review and consolidate legacy THUNK entries - Started new era for Brain Repository Maintenance | 2026-01-18 |
 | 169 | 1.3 | HIGH | Audit TODOs in new-project.sh - Removed outdated TODO comments (generators already implemented) | 2026-01-18 |
 | 170 | 2.1 | HIGH | Review GAP_BACKLOG.md entries for promotion - Both entries kept as reference (do not meet recurring criteria) | 2026-01-18 |
+| 171 | 2.2 | HIGH | Verify skills/index.md completeness - All 12 domain + 2 project files correctly indexed, no updates needed | 2026-01-18 |
