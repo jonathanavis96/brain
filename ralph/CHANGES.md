@@ -1,5 +1,31 @@
 # Ralph Loop Changes
 
+## 2026-01-18: Stale Lock Detection & Default Model Override
+
+### Summary
+Two improvements to Ralph loop reliability and model consistency:
+
+1. **Stale Lock Detection**: Automatically detects and removes stale lock files from crashed/killed processes
+2. **Default Model Override**: Ralph always uses Sonnet 4.5 by default, regardless of global rovodev config
+
+### Stale Lock Detection
+- Before acquiring lock, checks if the PID in the lock file is still running
+- If the process is dead, automatically removes the stale lock and continues
+- Shows message: `🧹 Removing stale lock (PID XXXX no longer running)`
+- Handles race conditions in the noclobber fallback path
+
+### Default Model Override
+- Ralph now defaults to `anthropic.claude-sonnet-4-5-20250929-v1:0` when no `--model` is specified
+- Creates a temp config file that overrides the model, so global config changes don't affect Ralph
+- Added model version constants as single source of truth for easy updates
+- Can still override with `--model opus` or `--model auto` (to use global setting)
+
+### Files Changed
+- `brain/ralph/loop.sh` - Added stale lock detection and model defaults
+- `rovo-test/ralph/loop.sh` - Added lock logic with stale detection
+
+---
+
 ## 2026-01-18: Token-Efficient Architecture
 
 ### Summary
