@@ -240,7 +240,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 - [x] **5.2** Update `PROMPT.md` (including commit scope on ~line 93)
 - [x] **5.3** Update `NEURONS.md`
 - [x] **5.4** Update `README.md` (15 kb/ references found)
-- [ ] **5.5** Update `VALIDATION_CRITERIA.md`
+- [x] **5.5** Update `VALIDATION_CRITERIA.md`
 - [ ] **5.6** Update `EDGE_CASES.md`
 - [ ] **5.7** Update `CHANGES.md`
 - [ ] **5.8** Update `HISTORY.md`

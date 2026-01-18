@@ -70,10 +70,10 @@ Check these after completing implementation tasks to ensure the system meets req
 
 ```bash
 # File structure
-ls -la kb/ templates/ references/ specs/
+ls -la skills/ templates/ references/ specs/
 
-# Check KB integrity
-grep -r "## Why This Exists" kb/domains/ kb/projects/
+# Check skills integrity
+grep -r "## Why This Exists" skills/domains/ skills/projects/
 
 # React rules unchanged (should be 45)
 find references/react-best-practices/rules/ -name "*.md" | wc -l
