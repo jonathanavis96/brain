@@ -28,6 +28,12 @@ HIDE_COMPLETED=false
 LAST_MODIFIED=""
 SHOW_HELP=false
 
+# Completed task cache - stores hashes of completed task descriptions
+# Key: hash of task description, Value: full task line
+declare -A COMPLETED_CACHE
+
+# Display state tracking removed - always do full redraw for simplicity and reliability
+
 # Parse arguments
 if [[ "$1" == "--hide-completed" ]]; then
     HIDE_COMPLETED=true
@@ -117,8 +123,9 @@ extract_tasks() {
             current_section="Low Priority"
             in_task_section=true
             task_counter=0
-        elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
-            # Exit task section when we hit any other ### headers
+        elif [[ "$line" =~ ^##[[:space:]]+ ]] && [[ ! "$line_upper" =~ (HIGH|MEDIUM|LOW)[[:space:]]*PRIORITY ]]; then
+            # Exit task section only on ## (major section) headers that aren't priority sections
+            # This allows ### and #### subsection headers to remain within the current priority section
             in_task_section=false
         fi
         
@@ -146,26 +153,51 @@ extract_tasks() {
             
             # If we found a task, process it
             if [[ -n "$status" && -n "$task_desc" ]]; then
-                # Skip completed tasks if --hide-completed is set
-                if [[ "$show_completed" == "false" && "$status" == "x" ]]; then
-                    continue
-                fi
-                
-                # Generate short title from description
-                local short_title=$(generate_title "$task_desc")
-                
-                # Format output with indent level
-                local task_label=""
-                if [[ "$is_subtask" == "true" ]]; then
-                    task_label="subtask"
-                else
-                    task_label="Task $task_counter"
-                fi
-                
+                # For completed tasks, check cache first
                 if [[ "$status" == "x" ]]; then
-                    echo "✓|$current_section|$task_label|$short_title|$indent_level|completed|$task_desc"
+                    # Generate cache key (hash of task description)
+                    local cache_key=$(echo -n "$task_desc" | md5sum | cut -d' ' -f1)
+                    
+                    # If cached, return cached value
+                    if [[ -n "${COMPLETED_CACHE[$cache_key]}" ]]; then
+                        # Skip completed tasks if --hide-completed is set
+                        if [[ "$show_completed" == "false" ]]; then
+                            continue
+                        fi
+                        echo "${COMPLETED_CACHE[$cache_key]}"
+                        continue
+                    fi
+                    
+                    # Not cached - process and cache it
+                    local short_title=$(generate_title "$task_desc")
+                    local task_label=""
+                    if [[ "$is_subtask" == "true" ]]; then
+                        task_label="subtask"
+                    else
+                        task_label="Task $task_counter"
+                    fi
+                    
+                    local output_line="✓|$current_section|$task_label|$short_title|$indent_level|completed|$task_desc"
+                    COMPLETED_CACHE[$cache_key]="$output_line"
+                    
+                    # Skip completed tasks if --hide-completed is set
+                    if [[ "$show_completed" == "false" ]]; then
+                        continue
+                    fi
+                    
+                    echo "$output_line"
                 else
-                    echo "○|$current_section|$task_label|$short_title|$indent_level|pending|$task_desc"
+                    # Pending task - always process (no caching)
+                    local short_title=$(generate_title "$task_desc")
+                    local task_label=""
+                    if [[ "$is_subtask" == "true" ]]; then
+                        task_label="subtask"
+                    else
+                        task_label="Task $task_counter"
+                    fi
+                    
+                    # Use current indicator (▶) for first pending task, pending indicator (○) for others
+                    echo "pending|$current_section|$task_label|$short_title|$indent_level|pending|$task_desc"
                 fi
             fi
         fi
@@ -338,13 +370,8 @@ wrap_text() {
 
 # Function to display tasks with formatting
 display_tasks() {
+    # Always do full redraw - simple and reliable
     clear
-    
-    # Header
-    echo "╔════════════════════════════════════════════════════════════════╗"
-    echo "║          CURRENT RALPH TASKS - $(date +%H:%M:%S)                  ║"
-    echo "╚════════════════════════════════════════════════════════════════╝"
-    echo ""
     
     # Extract and group tasks by section
     local tasks
@@ -354,81 +381,89 @@ display_tasks() {
         tasks=$(extract_tasks "true")
     fi
     
+    # Build display content
+    local pending_count=0
+    local completed_count=0
+    local first_pending_seen=false
+    
+    # Header
+    echo "╔════════════════════════════════════════════════════════════════╗"
+    echo "║          CURRENT RALPH TASKS - $(date +%H:%M:%S)                  ║"
+    echo "╚════════════════════════════════════════════════════════════════╝"
+    echo ""
+    
     if [[ -z "$tasks" ]]; then
         echo "  No tasks found in IMPLEMENTATION_PLAN.md"
         echo ""
-        return
+    else
+        local current_section=""
+        
+        while IFS='|' read -r icon section task_label short_title indent_level status full_desc; do
+            # Print section header when it changes
+            if [[ "$section" != "$current_section" ]]; then
+                if [[ -n "$current_section" ]]; then
+                    echo ""
+                fi
+                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                echo "  $section"
+                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                current_section="$section"
+            fi
+            
+            # Calculate base indent (2 spaces per level)
+            local base_indent=""
+            for ((i=0; i<indent_level; i++)); do
+                base_indent="  ${base_indent}"
+            done
+            
+            # Format task display with human-friendly title
+            local display_line=""
+            if [[ "$task_label" == "subtask" ]]; then
+                # Subtask: just show the short title with bullet
+                display_line="${base_indent}  • ${short_title}"
+            else
+                # Main task: show "Task N — <short title>" with bold
+                if [[ -t 1 ]]; then
+                    # Terminal supports formatting
+                    display_line="${base_indent}  \033[1m${task_label}\033[0m — ${short_title}"
+                else
+                    # No terminal formatting
+                    display_line="${base_indent}  ${task_label} — ${short_title}"
+                fi
+            fi
+            
+            # Build task line with color and appropriate symbol
+            local task_line=""
+            if [[ "$status" == "completed" ]]; then
+                if [[ -t 1 ]]; then
+                    task_line="  \033[32m✓\033[0m ${display_line:2}"
+                else
+                    task_line="  ✓ ${display_line:2}"
+                fi
+                ((completed_count++))
+            else
+                # Pending task: use ▶ for first pending, ○ for others
+                local symbol="○"
+                if [[ "$first_pending_seen" == "false" ]]; then
+                    symbol="▶"
+                    first_pending_seen=true
+                fi
+                
+                if [[ -t 1 ]]; then
+                    task_line="  \033[33m${symbol}\033[0m ${display_line:2}"
+                else
+                    task_line="  ${symbol} ${display_line:2}"
+                fi
+                ((pending_count++))
+            fi
+            
+            # Display task line
+            echo -e "$task_line"
+            
+            # Add empty line after each task for readability
+            echo ""
+        done <<< "$tasks"
     fi
-    
-    local current_section=""
-    local pending_count=0
-    local completed_count=0
-    
-    while IFS='|' read -r icon section task_label short_title indent_level status full_desc; do
-        # Print section header when it changes
-        if [[ "$section" != "$current_section" ]]; then
-            if [[ -n "$current_section" ]]; then
-                echo ""
-            fi
-            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-            echo "  $section"
-            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-            current_section="$section"
-        fi
-        
-        # Calculate base indent (2 spaces per level)
-        local base_indent=""
-        for ((i=0; i<indent_level; i++)); do
-            base_indent="  ${base_indent}"
-        done
-        
-        # Format task display with human-friendly title
-        local display_line=""
-        if [[ "$task_label" == "subtask" ]]; then
-            # Subtask: just show the short title with bullet
-            display_line="${base_indent}  • ${short_title}"
-        else
-            # Main task: show "Task N — <short title>" with bold
-            if [[ -t 1 ]]; then
-                # Terminal supports formatting
-                display_line="${base_indent}  \033[1m${task_label}\033[0m — ${short_title}"
-            else
-                # No terminal formatting
-                display_line="${base_indent}  ${task_label} — ${short_title}"
-            fi
-        fi
-        
-        # Print task with color and wrap if needed
-        local wrap_width=60
-        local continuation_indent="${base_indent}    "
-        
-        if [[ "$status" == "completed" ]]; then
-            if [[ -t 1 ]]; then
-                echo -e "  \033[32m${icon}\033[0m $(wrap_text "${display_line:2}" $wrap_width "$continuation_indent" | head -1)"
-                # Print continuation lines if any
-                wrap_text "${display_line:2}" $wrap_width "$continuation_indent" | tail -n +2 | while IFS= read -r line; do
-                    echo "    $line"
-                done
-            else
-                echo "  ${icon} ${display_line:2}"
-            fi
-            ((completed_count++))
-        else
-            if [[ -t 1 ]]; then
-                echo -e "  \033[33m${icon}\033[0m $(wrap_text "${display_line:2}" $wrap_width "$continuation_indent" | head -1)"
-                # Print continuation lines if any
-                wrap_text "${display_line:2}" $wrap_width "$continuation_indent" | tail -n +2 | while IFS= read -r line; do
-                    echo "    $line"
-                done
-            else
-                echo "  ${icon} ${display_line:2}"
-            fi
-            ((pending_count++))
-        fi
-        
-        # Add empty line after each task for readability
-        echo ""
-    done <<< "$tasks"
     
     # Footer with stats
     echo ""
