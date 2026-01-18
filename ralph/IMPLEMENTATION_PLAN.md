@@ -132,7 +132,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 - [x] **T5.2** Copy `thunk_ralph_tasks.sh` to `templates/ralph/thunk_ralph_tasks.sh`
 - [x] **T5.3** Create `templates/ralph/THUNK.project.md` template with placeholders
 - [x] **T5.4** Update `new-project.sh` to copy monitor scripts (with chmod +x)
-- [ ] **T5.5** Update `new-project.sh` to copy and process THUNK.project.md
+- [x] **T5.5** Update `new-project.sh` to copy and process THUNK.project.md
 
 #### Phase T6: THUNK Validation
 
