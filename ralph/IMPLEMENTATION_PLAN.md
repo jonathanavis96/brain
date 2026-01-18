@@ -274,7 +274,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 - [x] **5.8** Update `HISTORY.md` (2 kb/ references in historical notes)
 
 **Generators:**
-- [ ] **5.9** Update `generators/generate-neurons.sh` (5 kb/ references)
+- [x] **5.9** Update `generators/generate-neurons.sh` (5 kb/ references)
 - [ ] **5.10** Update `generators/generate-thoughts.sh` (3 kb/ references)
 
 **Templates (Root):**

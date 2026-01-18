@@ -70,3 +70,6 @@ Started: 2026-01-18
 | 56 | 5.4 | MEDIUM | **5.4** Update `README.md` (15 kb/ references found) | 2026-01-18 |
 | 57 | 5.5 | MEDIUM | **5.5** Update `VALIDATION_CRITERIA.md` | 2026-01-18 |
 | 58 | 5.6 | MEDIUM | **5.6** Update `EDGE_CASES.md` | 2026-01-18 |
+| 59 | 5.2 | MEDIUM | **5.2** Update `PROMPT.md` (including commit scope) | 2026-01-18 |
+| 60 | 5.4 | MEDIUM | **5.4** Update `README.md` (15 kb/ references) | 2026-01-18 |
+| 61 | 7.1 | MEDIUM | **7.1** Verify no remaining `/kb/` references in active files: | 2026-01-18 |
