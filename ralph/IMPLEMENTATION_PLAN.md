@@ -220,18 +220,26 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - **Applied to:** Both current_ralph_tasks.sh and thunk_ralph_tasks.sh monitor launches
   - **Commit:** 9e14972
 
-- [ ] **P3.2** Add functionality test for gnome-terminal:
+- [x] **P3.2** Add functionality test for gnome-terminal: ✅ COMPLETE
   - Current: Only checks `command -v gnome-terminal`
   - Add: `timeout 2s gnome-terminal --version &>/dev/null`
   - Only use gnome-terminal if version check succeeds
+  - **Implementation:** Modified loop.sh lines 530 and 550 to add `&& timeout 2s gnome-terminal --version &>/dev/null`
+  - **Benefit:** Prevents DBus errors when gnome-terminal exists but can't launch (e.g., headless environments)
+  - **Fallback:** If test fails, falls through to next terminal option (konsole, xterm, tmux, or manual instructions)
+  - **Commit:** 56942fd
 
-- [ ] **P3.3** Reorder terminal detection priority:
+- [x] **P3.3** Reorder terminal detection priority: ✅ COMPLETE
   1. tmux (if $TMUX is set) — most reliable for headless/WSL
   2. Windows Terminal (wt.exe) — best for WSL2 with GUI
   3. gnome-terminal (with functionality test) — Linux desktop
   4. konsole — KDE desktop
   5. xterm — fallback X11 terminal
   6. Manual instructions — last resort
+  - **Implementation:** Modified loop.sh launch_monitors() function
+  - **Rationale:** tmux is most reliable in headless/SSH environments where graphical terminals may fail
+  - **Benefit:** Prevents unnecessary fallback messages when running inside tmux sessions
+  - **Commit:** b95192b
 
 - [ ] **P3.4** Implement single-shot fallback message:
   - If all terminal launches fail, print manual commands ONCE
