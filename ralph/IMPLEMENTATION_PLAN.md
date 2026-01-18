@@ -49,7 +49,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 #### Phase T1: Rename Existing Monitor
 
-- [ ] **T1.1** Rename `watch_ralph_tasks.sh` → `current_ralph_tasks.sh`:
+- [x] **T1.1** Rename `watch_ralph_tasks.sh` → `current_ralph_tasks.sh`:
   ```bash
   mv watch_ralph_tasks.sh current_ralph_tasks.sh
   ```
