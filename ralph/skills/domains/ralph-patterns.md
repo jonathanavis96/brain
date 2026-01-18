@@ -2,7 +2,7 @@
 
 ## Why This Exists
 
-Ralph is the automated self-improvement loop for brain repositories and projects. Agents need to understand how Ralph works internally (subagents, tool visibility, execution flow) to effectively write prompts and debug issues.
+Ralph is the automated self-improvement loop for brain repositories and projects. Agents need to understand how Ralph works internally (subagents, tool visibility, execution flow, monitoring systems) to effectively write prompts, debug issues, and implement similar task automation systems.
 
 ## When to Use It
 
@@ -10,19 +10,25 @@ Ralph is the automated self-improvement loop for brain repositories and projects
 - Debugging Ralph execution issues
 - Understanding why certain operations are fast (parallel) vs slow (sequential)
 - Deciding between interactive RovoDev sessions vs Ralph automation
+- Implementing file-watching monitors or task tracking systems
+- Troubleshooting display artifacts or parser issues in bash scripts
 
-## Details
+## High-Level Architecture
 
-### Architecture
+### Core Components
 
 ```
-ralph.ps1 (PowerShell loop)
+loop.sh (Bash orchestrator)
     ↓
 acli rovodev run --yolo -- "$promptContent"
     ↓
 RovoDev Agent (executes prompt instructions)
     ↓
 Spawns subagents as instructed by prompt
+    ↓
+Updates IMPLEMENTATION_PLAN.md + THUNK.md
+    ↓
+Monitors detect changes and update displays
 ```
 
 ### Subagent Usage
@@ -31,7 +37,7 @@ Ralph prompts instruct RovoDev to use:
 - **Reading/Searching**: Up to 100 parallel subagents
 - **Writing/Modifying**: Exactly 1 agent (sequential for safety)
 
-**Key insight**: Subagent orchestration happens inside RovoDev backend, not in ralph.ps1. The PowerShell script just calls acli and logs output.
+**Key insight**: Subagent orchestration happens inside RovoDev backend, not in loop.sh. The bash script just calls acli and logs output.
 
 ### Visibility
 
@@ -51,38 +57,384 @@ Ralph prompts instruct RovoDev to use:
 Prompts explicitly tell RovoDev to use subagents:
 
 ```markdown
-**0a. Study specs/*** (using parallel subagents, max 100)
+### Context Gathering (up to 100 parallel subagents)
+- Study `skills/SUMMARY.md` for overview
 ```
 
-These instructions guide RovoDev's internal behavior. Ralph.ps1 doesn't enforce this - it just passes the prompt through.
+These instructions guide RovoDev's internal behavior. Loop.sh doesn't enforce this - it just passes the prompt through.
 
 ### Commit Strategy
 
-**Commits happen in PLAN phase only**, not after each BUILD iteration:
+**BUILD mode**: Local commits only (no push)
+**PLAN mode**: Commits local changes + pushes all accumulated commits
 
 ```
-Iteration 1 (PLAN):  Analyze → Update plan → COMMIT all → Stop
-Iteration 2 (BUILD): Implement task → Validate → Stop (no commit)
-Iteration 3 (BUILD): Implement task → Validate → Stop (no commit)
-Iteration 4 (BUILD): Implement task → Validate → Stop (no commit)
-Iteration 5 (PLAN):  Re-analyze → Update plan → COMMIT all (iterations 2-4) → Stop
+Iteration 1 (PLAN):  Analyze → Update plan → COMMIT + PUSH all → Stop
+Iteration 2 (BUILD): Implement task → Mark [x] → COMMIT local → Stop
+Iteration 3 (BUILD): Implement task → Mark [x] → COMMIT local → Stop
+Iteration 4 (BUILD): Implement task → Mark [x] → COMMIT local → Stop
+Iteration 5 (PLAN):  Re-analyze → Update plan → COMMIT + PUSH all → Stop
 ```
 
 Benefits:
-- Fewer, more meaningful commits
-- Comprehensive commit messages (Ralph has full context during PLAN)
-- All related changes grouped together
+- All commits are local and fast during BUILD
+- PLAN phase has full context for meaningful commit messages
+- Related changes grouped together in git history
+- Push happens only after validation and planning
 
-### Best Practices
+## Monitor Architecture Deep Dive
+
+Ralph includes two real-time monitoring scripts that demonstrate advanced bash patterns for file watching, parsing, and display management.
+
+### Current Ralph Tasks Monitor (`current_ralph_tasks.sh`)
+
+**Purpose**: Display pending tasks from IMPLEMENTATION_PLAN.md in real-time
+
+**Key Features**:
+- Extracts tasks from priority sections (HIGH/MEDIUM/LOW)
+- Marks first unchecked task with `▶` symbol (current task)
+- Watches file for changes (sub-second updates)
+- Interactive hotkeys: `q` (quit), `h` (hide completed), `r` (archive), `c` (clear)
+- Always full-screen redraw (no rendering artifacts)
+
+**Parser State Machine**:
+```bash
+# State tracking
+current_section=""      # HIGH/MEDIUM/LOW PRIORITY
+in_task_section=false  # Inside a priority section?
+task_counter=0         # Sequential task numbering per section
+indent_level=0         # Nesting depth (0, 1, 2, ...)
+
+# Transition rules:
+# 1. Line matches "HIGH PRIORITY" → in_task_section=true, reset counter
+# 2. Line matches "MEDIUM PRIORITY" → in_task_section=true, reset counter  
+# 3. Line matches "LOW PRIORITY" → in_task_section=true, reset counter
+# 4. Line matches "## " (major section) → in_task_section=false
+# 5. Line matches "- [ ]" or "- [x]" → extract task, determine indent
+```
+
+**Parsing Algorithm**:
+1. Scan file line-by-line
+2. Track current priority section (state machine)
+3. Match task pattern: `^([[:space:]]*)-[[:space:]]\[([ x])\][[:space:]]*(.*)$`
+4. Calculate indent level: `${#leading_spaces} / 2`
+5. Generate short title from task description (action verb extraction)
+6. Cache completed tasks (hash-based) for performance
+7. Output structured data: `status|section|label|title|indent|status|full_desc`
+
+**Display Strategy**:
+- **Always full redraw**: Simplicity over incremental updates
+- **No cursor positioning**: Clear screen + rebuild from scratch
+- **Benefits**: No artifacts, no state tracking complexity, reliable
+- **Cost**: Slightly more CPU, but negligible for human-scale task lists
+
+**File Watching Pattern**:
+```bash
+# Get initial modification time
+LAST_MODIFIED=$(stat -c %Y "$PLAN_FILE" 2>/dev/null || stat -f %m "$PLAN_FILE" 2>/dev/null)
+
+# Monitor loop
+while true; do
+    CURRENT_MODIFIED=$(get_file_mtime)
+    if [[ "$CURRENT_MODIFIED" != "$LAST_MODIFIED" ]]; then
+        LAST_MODIFIED="$CURRENT_MODIFIED"
+        display_tasks  # Trigger full redraw
+    fi
+    sleep 0.5  # Poll interval
+done
+```
+
+**Non-blocking Input**:
+```bash
+# Enable non-blocking stdin
+stty -echo -icanon time 0 min 0
+
+# Read with timeout
+if read -t 0.1 -n 1 key 2>/dev/null; then
+    case "$key" in
+        q|Q) cleanup ;;
+        h|H) toggle_hide_completed ;;
+    esac
+fi
+```
+
+### THUNK Monitor (`thunk_ralph_tasks.sh`)
+
+**Purpose**: Display completed tasks appended to THUNK.md in real-time
+
+**Key Features**:
+- Watches THUNK.md for Ralph-appended completions
+- Safety net: Auto-syncs from IMPLEMENTATION_PLAN.md if Ralph forgets
+- Append-only display optimization (tail parsing)
+- Interactive hotkeys: `r` (refresh), `f` (force sync), `e` (new era), `q` (quit)
+- Sequential THUNK numbering across project lifecycle
+
+**Parser State Machine**:
+```bash
+# State tracking
+current_era=""         # Current era name
+in_era=false          # Inside an era section?
+total_count=0         # Total completed tasks
+LAST_LINE_COUNT=0     # Track file growth
+
+# Transition rules:
+# 1. Line matches "## Era: (.+)" → current_era=name, in_era=true
+# 2. Line matches table row "| N | ... |" → extract and display
+# 3. File grows → parse only new lines (incremental)
+# 4. File shrinks → full refresh needed
+```
+
+**Incremental Update Strategy**:
+```bash
+# Check line count to determine update strategy
+CURRENT_LINE_COUNT=$(wc -l < "$THUNK_FILE")
+
+if [[ "$CURRENT_LINE_COUNT" -lt "$LAST_LINE_COUNT" ]]; then
+    # Line count decreased - full refresh (deletions)
+    display_thunks
+elif [[ "$CURRENT_LINE_COUNT" -gt "$LAST_LINE_COUNT" ]]; then
+    # Line count increased - tail-only parsing (append-only)
+    parse_new_thunk_entries "$LAST_LINE_COUNT"
+else
+    # Same line count - content modified (edits)
+    display_thunks
+fi
+```
+
+**Tail-Only Parsing** (Optimization):
+```bash
+# Only parse new lines since last read
+parse_new_thunk_entries() {
+    local start_line="$1"
+    local line_num=0
+    
+    while IFS= read -r line; do
+        ((line_num++))
+        if [[ $line_num -le $start_line ]]; then
+            continue  # Skip already-displayed lines
+        fi
+        # Parse and append new entries using cursor positioning
+        if [[ "$line" =~ table_pattern ]]; then
+            tput cup $append_row 0  # Position cursor
+            echo "  ✓ THUNK #$num — $title"
+            ((append_row++))
+        fi
+    done < "$THUNK_FILE"
+    
+    # Update footer in-place (no full redraw)
+    update_footer_count
+}
+```
+
+**Auto-Sync Pattern** (Safety Net):
+```bash
+# Scan IMPLEMENTATION_PLAN.md for new [x] tasks
+scan_for_new_completions() {
+    while IFS= read -r line; do
+        if [[ "$line" =~ ^[[:space:]]*-[[:space:]]\[x\][[:space:]]*(.*)$ ]]; then
+            local task_desc="${BASH_REMATCH[1]}"
+            
+            # Check if already in THUNK.md
+            if task_exists_in_thunk "$task_desc"; then
+                continue
+            fi
+            
+            # Append to THUNK.md
+            append_to_thunk_table "$task_desc"
+        fi
+    done < "$PLAN_FILE"
+}
+```
+
+## Advanced Bash Patterns
+
+### Terminal Control with tput
+
+**Cursor Positioning**:
+```bash
+tput cup $row $col     # Move cursor to (row, col)
+tput clear             # Clear entire screen
+tput el                # Clear to end of line
+```
+
+**Color & Formatting**:
+```bash
+echo -e "\033[32m✓\033[0m"      # Green checkmark
+echo -e "\033[1mBold\033[0m"    # Bold text
+echo -e "\033[33m▶\033[0m"      # Yellow arrow
+```
+
+### Associative Arrays for Caching
+
+```bash
+declare -A COMPLETED_CACHE
+
+# Generate cache key
+cache_key=$(echo -n "$task_desc" | md5sum | cut -d' ' -f1)
+
+# Store in cache
+COMPLETED_CACHE[$cache_key]="$output_line"
+
+# Retrieve from cache
+if [[ -n "${COMPLETED_CACHE[$cache_key]}" ]]; then
+    echo "${COMPLETED_CACHE[$cache_key]}"
+fi
+```
+
+**Benefits**:
+- O(1) lookup vs O(n) scanning
+- Avoids repeated title generation for completed tasks
+- Significant performance gain for large task lists
+
+### Regex Patterns for Task Parsing
+
+**Flexible Priority Matching**:
+```bash
+local line_upper="${line^^}"  # Convert to uppercase
+if [[ "$line_upper" =~ HIGH[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
+    current_section="High Priority"
+fi
+```
+
+**Task Line Extraction**:
+```bash
+# Captures: leading spaces, status (space or x), description
+if [[ "$line" =~ ^([[:space:]]*)-[[:space:]]\[([ x])\][[:space:]]*(.*)$ ]]; then
+    local leading_spaces="${BASH_REMATCH[1]}"
+    local status="${BASH_REMATCH[2]}"
+    local task_desc="${BASH_REMATCH[3]}"
+fi
+```
+
+**Title Generation** (Action Verb Extraction):
+```bash
+# Extract verb + object: "Update foo.sh" → "Update foo"
+if [[ "$desc" =~ ^(Create|Update|Fix|Test|Implement)([[:space:]]*:[[:space:]]*|[[:space:]]+)(.+)$ ]]; then
+    local verb="${BASH_REMATCH[1]}"
+    local rest="${BASH_REMATCH[3]}"
+    # Truncate at period, arrow, or 50 chars
+    echo "$verb $rest" | cut -c1-50
+fi
+```
+
+## Troubleshooting Patterns
+
+### Display Artifacts
+
+**Symptom**: Ghost text, overlapping lines, corrupted display
+
+**Root Cause**: Incremental updates with cursor positioning without proper clearing
+
+**Solution**: Always full redraw (clear + rebuild)
+```bash
+# ❌ BAD: Incremental update without clearing
+tput cup 10 0
+echo "New line"
+
+# ✅ GOOD: Full redraw
+clear
+rebuild_entire_display
+```
+
+**When incremental is acceptable**: Append-only logs where previous content never changes (THUNK monitor tail-only parsing)
+
+### File Watching Delays
+
+**Symptom**: Monitor updates slowly (2-5 seconds after file change)
+
+**Root Cause**: Long sleep interval or stat() caching
+
+**Solution**: Short sleep + force stat refresh
+```bash
+# ✅ GOOD: Sub-second updates
+sleep 0.5  # 500ms polling
+
+# Portable stat (handles Linux + macOS)
+stat -c %Y "$FILE" 2>/dev/null || stat -f %m "$FILE" 2>/dev/null
+```
+
+### Parser Skipping Tasks
+
+**Symptom**: Tasks visible in file but not in monitor
+
+**Root Cause**: State machine doesn't account for subsection headers
+
+**Solution**: Only exit task section on major headers
+```bash
+# ❌ BAD: Exit on any header
+if [[ "$line" =~ ^###[[:space:]]+ ]]; then
+    in_task_section=false
+fi
+
+# ✅ GOOD: Exit only on major sections (##), allow subsections (###, ####)
+if [[ "$line" =~ ^##[[:space:]]+ ]] && [[ ! "$line_upper" =~ PRIORITY ]]; then
+    in_task_section=false
+fi
+```
+
+### Terminal State Corruption
+
+**Symptom**: Terminal behaves oddly after script exit (no echo, weird input)
+
+**Root Cause**: Non-blocking stdin setup not cleaned up
+
+**Solution**: Trap cleanup with stty restore
+```bash
+cleanup() {
+    if [[ -t 0 ]]; then
+        stty sane  # Restore terminal to sane state
+    fi
+    exit 0
+}
+
+trap cleanup EXIT INT TERM
+
+# Enable non-blocking
+stty -echo -icanon time 0 min 0
+```
+
+## Best Practices
+
+### Prompt Design
 
 1. **Reading phase**: Request parallel subagents for speed
 2. **Writing phase**: Specify single agent for safety
-3. **Verbose mode**: Add `--verbose` flag to loop.sh to see tool activity
-4. **Debugging**: Check `ralph/logs/` for iteration transcripts
+3. **Atomic tasks**: One task per BUILD iteration (no batching)
+4. **Stop conditions**: Explicit `:::COMPLETE:::` signal
 
-### Common Misconception
+### Script Development
+
+1. **File watching**: Use stat() mtime + short polling (0.5s)
+2. **Display updates**: Prefer full redraw unless append-only
+3. **State machines**: Explicit state tracking + clear transition rules
+4. **Terminal control**: Always cleanup with trap + stty restore
+5. **Performance**: Cache expensive operations (title generation, regex matching)
+
+### Debugging
+
+1. **Verbose mode**: Add `--verbose` flag to loop.sh to see tool activity
+2. **Logs**: Check `ralph/logs/` for iteration transcripts
+3. **Manual testing**: Run monitors standalone with test files
+4. **State inspection**: Add debug output for state machine transitions
+
+## Common Misconceptions
 
 ❌ "Ralph spawns subagents"
 ✅ "Ralph passes prompts to RovoDev, which spawns subagents as instructed"
 
-Ralph is just the orchestrator. RovoDev is the executor.
+❌ "Monitors must use incremental updates for performance"
+✅ "Full redraw is often simpler and more reliable for human-scale data"
+
+❌ "File watching requires inotify or fswatch"
+✅ "Stat polling with 0.5s interval is sufficient and portable"
+
+❌ "Cursor positioning eliminates all flicker"
+✅ "Cursor positioning can cause artifacts; full clear is often cleaner"
+
+## References
+
+- **PROMPT.md**: Ralph's core instructions (BUILD vs PLAN modes)
+- **AGENTS.md**: Validation commands and operational guide
+- **current_ralph_tasks.sh**: Reference implementation for task parsing
+- **thunk_ralph_tasks.sh**: Reference implementation for tail-only parsing
+- **HISTORY.md**: Monitor bug fixes and architecture evolution
