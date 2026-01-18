@@ -53,7 +53,8 @@ This plan contains **36 unchecked tasks** across one major feature:
 - ✅ **Phase 2: Folder Rename** - COMPLETE (2 tasks)
 - ✅ **Phase 3: Self-Improvement System** - COMPLETE (6 tasks) ✅
 - ✅ **Phase 4: Update Summary & Create Index** - COMPLETE (2 tasks) ✅
-- 🔄 **Next: Task 5.3** - Update NEURONS.md
+- 🔄 **Phase 5: Reference Updates** - IN PROGRESS (3/29 tasks)
+- 🔄 **Next: Task 5.4** - Update README.md (15 kb/ references)
 - Each BUILD iteration: Execute EXACTLY ONE unchecked task in sequence
 
 **THUNK Monitor Status:**
@@ -65,8 +66,9 @@ This plan contains **36 unchecked tasks** across one major feature:
 
 **KB→Skills Migration Status:**
 - ✅ Phases 1-3: Infrastructure complete (folder rename, self-improvement system)
-- ✅ Phase 4: skills/SUMMARY.md updated
-- 🔄 Phase 4-7: Reference updates and validation (37 tasks remaining)
+- ✅ Phase 4: skills/SUMMARY.md and skills/index.md created
+- 🔄 Phase 5: Reference updates (3/29 tasks complete, 26 remaining)
+- ⏳ Phases 6-7: Protocol wiring and validation (8 tasks pending)
 
 ---
 
@@ -164,9 +166,9 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 **Full runbook:** See THOUGHTS.md section "KB→Skills Migration Runbook"
 
-**Progress:** 14/50 tasks complete (28%)
+**Progress:** 15/50 tasks complete (30%)
 
-**Status:** Phases 1-4 complete. Phase 5 in progress. **Ready to continue with task 5.3.**
+**Status:** Phases 1-4 complete. Phase 5 in progress. **Ready to continue with task 5.4.**
 
 Complete these tasks in order. Mark each `[x]` when done.
 
@@ -237,7 +239,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 - [x] **5.1** Update `AGENTS.md`
 - [x] **5.2** Update `PROMPT.md` (including commit scope on ~line 93)
 - [x] **5.3** Update `NEURONS.md`
-- [ ] **5.4** Update `README.md`
+- [ ] **5.4** Update `README.md` (15 kb/ references found)
 - [ ] **5.5** Update `VALIDATION_CRITERIA.md`
 - [ ] **5.6** Update `EDGE_CASES.md`
 - [ ] **5.7** Update `CHANGES.md`
@@ -857,6 +859,45 @@ T3.1 was more comprehensive than plan anticipated. The script includes:
 - **Total:** 8/85 tasks complete, 77 remaining
 
 **Next BUILD iteration:** Execute T2.3 - Migrate completed tasks to THUNK.md
+
+---
+
+### 2026-01-18 15:39 - PLAN Mode: Phase 5 Progress Update & Push Commits
+
+**Current State:**
+- ✅ **THUNK Monitor System: 100% COMPLETE** - All 50 tasks validated
+- ✅ **KB Phases 1-4: COMPLETE** (13/13 tasks) - Infrastructure, folder rename, self-improvement, index
+- 🔄 **KB Phase 5: IN PROGRESS** (3/29 tasks) - Core files updated (AGENTS.md, PROMPT.md, NEURONS.md)
+
+**Git Status:**
+- 6 commits ahead of origin/brain-work
+- Working tree clean
+- Ready to push accumulated commits
+
+**Remaining Work Analysis:**
+- Phase 5: 26 tasks remaining (generators: 2, templates: 18, skills internal: 3, external projects: 2, this file: 1)
+- Phase 6: 4 tasks (protocol wiring)
+- Phase 7: 4 tasks (final validation)
+- **Total remaining:** 35 tasks (30% complete, 70% remaining)
+
+**Reference Count by File Type:**
+- README.md: 15 references (mostly examples and tree structure)
+- VALIDATION_CRITERIA.md: 3 references (commands)
+- EDGE_CASES.md: 4 references (knowledge navigation)
+- generators/: 8 references (2 files)
+- templates/: 42 references (15+ files across ralph/, backend/, python/)
+- skills/ internal: ~6 references (README.md files, conventions.md)
+
+**Planning Actions:**
+1. Updated progress metrics: 15/50 tasks complete (30%)
+2. Marked task 5.3 complete (NEURONS.md already updated in commit 45cae50)
+3. Ready to push 6 accumulated commits
+4. Next BUILD iteration targets: Task 5.4 (README.md - 15 references)
+
+**Execution Strategy:**
+- Continue Phase 5 sequentially (5.4 → 5.5 → ... → 5.24)
+- Each BUILD iteration: exactly ONE task
+- After Phase 5 complete: Wire protocol (Phase 6), then validate (Phase 7)
 
 ---
 
