@@ -26,13 +26,13 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
 
 **Root Cause:** Startup messages occupy screen rows before first render. `display_tasks()` uses `tput cup 0 0` assuming row 0 is empty. Differential update logic tracks wrong row positions, causing duplicated headers/footers.
 
-- [ ] **2.1** Remove differential update complexity from `current_ralph_tasks.sh` `display_tasks()`
+- [x] **2.1** Remove differential update complexity from `current_ralph_tasks.sh` `display_tasks()`
   - Remove `force_full_redraw` parameter logic (lines 378, 519-526)
   - Remove `TASK_DISPLAY_ROWS`, `LAST_RENDERED_CONTENT`, `LAST_FOOTER_*` tracking (lines 36-41, 569-580)
   - Always do full redraw: `clear` at start of function, then render all content
   - Simpler = more robust. Parsing 100 tasks takes <50ms - imperceptible to humans
 
-- [ ] **2.2** Simplify display rendering to always clear screen before drawing
+- [x] **2.2** Simplify display rendering to always clear screen before drawing
   - Replace lines 527-566 (conditional rendering) with simple sequential echo statements
   - Pattern: `clear` → loop over content → echo each line
   - Remove all `tput cup $row $col` cursor positioning logic (only needed for differential updates)
