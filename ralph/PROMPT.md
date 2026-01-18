@@ -89,7 +89,9 @@ When ZERO unchecked `[ ]` tasks remain in IMPLEMENTATION_PLAN.md:
 - **One task per BUILD** - No batching, no "while I'm here" extras
 - **Never remove uncompleted items** - During PLANNING, you may add/reorganize tasks but NEVER delete `[ ]` unchecked items from IMPLEMENTATION_PLAN.md or acceptance criteria from THOUGHTS.md
 - **Never mark criteria complete prematurely** - Acceptance criteria can only be marked `[x]` AFTER the corresponding validation tasks are completed
-- **Acceptance criteria require proof** - Mark `[x]` only with evidence: `<!-- verified: <commit> -->` or `<!-- tested: <output> -->`
+- **Acceptance criteria require proof** - Mark `[x]` only with actual test output showing the fix works. Not "by design" or line number references - run the code and paste results
+- **Never redefine bugs as features** - If something is listed as a bug to fix, you must fix it. You cannot change the acceptance criteria to match current broken behavior or claim "it's actually a feature"
+- **Never rewrite acceptance criteria** - You may only mark items `[x]` or `[ ]`. You cannot change the wording, add new criteria, or remove existing ones
 
 ## File Roles
 
