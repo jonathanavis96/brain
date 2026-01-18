@@ -170,11 +170,11 @@ If you're unsure what state the codebase is in:
 | Codebase map | NEURONS.md (read via subagent) |
 | Task list | IMPLEMENTATION_PLAN.md |
 | Validation commands | AGENTS.md |
-| Patterns/conventions | kb/SUMMARY.md → specific domain files |
+| Patterns/conventions | skills/SUMMARY.md → specific domain files |
 | React best practices | references/react-best-practices/HOTLIST.md |
 
-### KB Lookup Order (Token Efficient)
-1. `kb/SUMMARY.md` - Overview, when to use what
+### Skills Lookup Order (Token Efficient)
+1. `skills/SUMMARY.md` - Overview, when to use what
 2. `references/*/HOTLIST.md` - Top 10 rules (covers 80% of cases)
 3. Specific rule files - Only when HOTLIST doesn't cover your scenario
 
@@ -187,7 +187,7 @@ If you're unsure what state the codebase is in:
 - **Prefer correctness over speed** - Get it right, then optimize
 - **Search before creating** - Avoid duplicate implementations
 - **Leave code working** - Each task should leave codebase testable
-- **Update documentation** - Keep AGENTS.md operational, add to kb/ for patterns
+- **Update documentation** - Keep AGENTS.md operational, add to skills/ for patterns
 - **Trust the loop** - It handles sequencing, you handle one task
 
 ### What Makes a Good Task
