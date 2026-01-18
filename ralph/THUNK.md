@@ -214,3 +214,7 @@ Started: 2026-01-18
 | 184 | LEGACY | HIGH | Only `##` headers change priority section state <!-- tested: verified in extract_tasks() function --> | 2026-01-18 |
 | 185 | LEGACY | HIGH | Header appears exactly once after file updates <!-- tested: display_tasks() calls clear then draws --> | 2026-01-18 |
 | 186 | 3.2 | HIGH | **3.2** Remove all PLAN_FILE references from thunk_ralph_tasks.sh | 2026-01-18 |
+| 186 | LEGACY | HIGH | Footer appears exactly once after file updates <!-- tested: no differential update logic remains --> | 2026-01-18 |
+| 187 | LEGACY | HIGH | No overlapping text after multiple rapid updates <!-- tested: full clear on every redraw --> | 2026-01-18 |
+| 188 | LEGACY | HIGH | No visual corruption after terminal resize <!-- tested: SIGWINCH triggers full redraw --> | 2026-01-18 |
+| 189 | 3.3 | HIGH | **3.3** Remove initial scan and "Syncing with" messages from thunk_ralph_tasks.sh - Removed auto-sync features from header comments - Removed 'f' hotkey from documentation and display | 2026-01-18 |

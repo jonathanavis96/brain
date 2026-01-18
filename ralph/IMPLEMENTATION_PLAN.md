@@ -64,7 +64,7 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
   - Delete `CURRENT_PLAN_MODIFIED` check in monitor loop (lines 529, 552-559)
   - Monitor should never reference IMPLEMENTATION_PLAN.md
 
-- [ ] **3.3** Remove initial scan and "Syncing with" messages
+- [x] **3.3** Remove initial scan and "Syncing with" messages
   - Delete "Syncing with: $PLAN_FILE" from startup (line 464)
   - Delete initial `scan_for_new_completions` call (line 468)
   - Delete 'f' hotkey force sync functionality (lines 506-512)

@@ -4,15 +4,13 @@
 # Usage: bash thunk_ralph_tasks.sh
 #
 # Features:
-#   - Displays completed tasks from THUNK.md
-#   - Auto-detects new completions in IMPLEMENTATION_PLAN.md
-#   - Appends new completions to THUNK.md with sequential numbering
+#   - Displays completed tasks from THUNK.md (Ralph appends when marking tasks complete)
 #   - Groups tasks by Era
 #   - Interactive hotkeys for management
+#   - Display-only monitor (does not modify files)
 #
 # Hotkeys:
 #   r - Refresh/Clear display (re-read THUNK.md, clear terminal)
-#   f - Force sync (scan IMPLEMENTATION_PLAN.md for new completions)
 #   e - New era (prompt for era name, add new section)
 #   q - Quit cleanly
 
@@ -202,9 +200,8 @@ display_thunks() {
     # Hotkey legend
     echo "╔════════════════════════════════════════════════════════════════╗"
     ((display_row++))
-    echo "║  HOTKEYS: [r] Refresh/Clear   [f] Force Sync   [e] New Era    ║"
+    echo "║  HOTKEYS: [r] Refresh/Clear   [e] New Era   [q] Quit         ║"
     ((display_row++))
-    echo "║           [q] Quit                                             ║"
     ((display_row++))
     echo "╚════════════════════════════════════════════════════════════════╝"
     ((display_row++))
