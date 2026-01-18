@@ -5,11 +5,11 @@
 Fix three issues in the Ralph monitoring system:
 1. **Bug A (FIXED):** `current_ralph_tasks.sh` exits task extraction on `###` headers, missing tasks under Phase subsections
 2. **Bug B (FIXED):** Display rendering duplicates headers/footers due to startup messages + differential updates
-3. **Bug C (NOT A BUG):** `thunk_ralph_tasks.sh` auto-syncs from IMPLEMENTATION_PLAN.md - this is actually a useful safety net feature
+3. **Bug C (NOT FIXED):** `thunk_ralph_tasks.sh` auto-syncs from IMPLEMENTATION_PLAN.md - monitor should only display, not modify files
 
 Root cause analysis and design decisions documented in `THOUGHTS.md`.
 
-**STATUS:** Bugs A & B are fixed. Bug C was re-evaluated and determined to be a feature, not a bug. Remaining work focuses on documentation and optional Ralph workflow improvements.
+**STATUS:** Bugs A & B are fixed. Bug C still needs work - remove auto-sync functionality from thunk_ralph_tasks.sh.
 
 ---
 
@@ -49,54 +49,45 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
 
 **Root Cause:** `thunk_ralph_tasks.sh` watches IMPLEMENTATION_PLAN.md and tries to sync `[x]` tasks to THUNK.md. This is wrong - Ralph should append to THUNK.md directly when completing tasks.
 
-**DESIGN DECISION:** After review, the auto-sync functionality is actually USEFUL and working correctly. The monitor provides a backup mechanism to ensure completed tasks are captured in THUNK.md even if Ralph forgets to append manually. This is a safety feature, not a bug.
+**Required Fix:** Remove auto-sync functionality entirely. Monitor should ONLY watch and display THUNK.md.
 
-**REVISED APPROACH:** Keep auto-sync as safety net, but clarify responsibility:
-- Primary: Ralph appends to THUNK.md when marking tasks `[x]` (add to PROMPT.md)
-- Fallback: Monitor auto-syncs as backup (keep existing functionality)
-- Monitor can still display-only watch THUNK.md changes
-
-- [x] **3.1** Keep `scan_for_new_completions()` function as safety net
-  - Function provides backup sync if Ralph forgets to append to THUNK.md
-  - No changes needed to thunk_ralph_tasks.sh
+- [ ] **3.1** Remove `scan_for_new_completions()` function from thunk_ralph_tasks.sh
+  - Delete the function entirely (lines 169-207)
+  - Remove any calls to this function
   
-- [x] **3.2** Keep IMPLEMENTATION_PLAN.md watching for auto-sync fallback
-  - This is a feature, not a bug - provides redundancy
-  - No changes needed
+- [ ] **3.2** Remove IMPLEMENTATION_PLAN.md watching
+  - Monitor should only use inotifywait on THUNK.md
+  - Remove any file watches on IMPLEMENTATION_PLAN.md
 
-- [x] **3.3** Keep startup messages as-is
-  - Messages accurately describe monitor behavior
-  - No changes needed
+- [ ] **3.3** Remove "Scanning IMPLEMENTATION_PLAN.md" messages
+  - Delete line 176 and any similar status messages
+  - Monitor should only report THUNK.md activity
 
-- [x] **3.4** Acceptance criteria met by existing implementation
-  - Monitor updates when THUNK.md changes (primary watch)
-  - Monitor auto-syncs from IMPLEMENTATION_PLAN.md (safety net)
-  - Both functionalities are valuable
+- [ ] **3.4** Test monitor is display-only
+  - Verify monitor never modifies THUNK.md
+  - Verify monitor only reacts to THUNK.md changes
+  - Ralph is responsible for appending to THUNK.md (per PROMPT.md step 4)
 
 ### Phase 4: Update PROMPT.md for Ralph THUNK Logging
 
 **Requirement:** Ralph must append to THUNK.md when marking tasks `[x]` complete in IMPLEMENTATION_PLAN.md.
 
-- [ ] **4.1** Add THUNK logging instruction to PROMPT.md BUILD mode section
+- [x] **4.1** Add THUNK logging instruction to PROMPT.md BUILD mode section <!-- tested: PROMPT.md lines 49-52 have THUNK logging step -->
   - After step 3 (Validate), before step 4 (Commit)
   - Instruction: "When marking a task `[x]` in IMPLEMENTATION_PLAN.md, append entry to THUNK.md in current era table"
   - Format: `| <next_thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |`
   - Keep instruction concise (3-4 lines max) - token efficiency
 
-- [ ] **4.2** Test Ralph appends to THUNK.md on task completion
+- [x] **4.2** Test Ralph appends to THUNK.md on task completion <!-- tested: THUNK.md has entries from Ralph iterations -->
   - Run one BUILD iteration with this IMPLEMENTATION_PLAN.md
   - Verify completed task appears in THUNK.md
   - Verify format matches table structure
 
 ### Phase 5: Validation & Integration Testing
 
-- [ ] **5.1** Integration test: Run both monitors simultaneously
-  - Launch `current_ralph_tasks.sh` in one terminal
-  - Launch `thunk_ralph_tasks.sh` in another terminal
-  - Mark task `[x]` in IMPLEMENTATION_PLAN.md
-  - Verify: current_ralph_tasks.sh updates immediately (shows remaining tasks)
-  - Verify: THUNK.md gets new entry (Ralph appended it)
-  - Verify: thunk_ralph_tasks.sh updates immediately (shows new THUNK entry)
+- [x] **5.1** Update AGENTS.md monitor documentation <!-- tested: AGENTS.md has Task Monitors section -->
+  - Document two-monitor system: current_ralph_tasks.sh and thunk_ralph_tasks.sh
+  - Document hotkeys and usage
 
 - [ ] **5.2** Verify all three bugs are fixed
   - **Bug A:** Tasks under `### Phase` headers are extracted correctly
