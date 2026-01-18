@@ -441,11 +441,35 @@ BUILD_PROMPT="$RALPH/PROMPT.md"
 # Verifier gate - runs AC.rules checks after BUILD
 VERIFY_SCRIPT="$RALPH/verifier.sh"
 RUN_ID_FILE="$RALPH/.verify/run_id.txt"
+INIT_SCRIPT="$RALPH/init_verifier_baselines.sh"
+AC_HASH_FILE="$RALPH/.verify/ac.sha256"
+
+# Auto-init verifier baselines if missing
+init_verifier_if_needed() {
+  if [[ -x "$INIT_SCRIPT" && ! -f "$AC_HASH_FILE" ]]; then
+    echo ""
+    echo "========================================"
+    echo "🔧 Initializing verifier baselines..."
+    echo "========================================"
+    if "$INIT_SCRIPT"; then
+      echo "✅ Baselines initialized successfully"
+    else
+      echo "❌ Failed to initialize baselines"
+      return 1
+    fi
+  fi
+  return 0
+}
 
 run_verifier() {
   if [[ ! -x "$VERIFY_SCRIPT" ]]; then
     echo "⚠️  Verifier not found or not executable: $VERIFY_SCRIPT"
     return 0  # Don't block if verifier doesn't exist yet
+  fi
+  
+  # Auto-init baselines if missing
+  if ! init_verifier_if_needed; then
+    return 1
   fi
   
   echo ""
