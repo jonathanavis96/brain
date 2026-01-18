@@ -53,7 +53,7 @@ Ongoing maintenance and improvement tasks for the brain repository. This plan tr
 
 ### Template Improvements
 
-- [ ] **3.1** Sync current_ralph_tasks.sh updates to template
+- [x] **3.1** Sync current_ralph_tasks.sh updates to template
   - templates/ralph/current_ralph_tasks.sh is outdated (20KB vs 21.9KB in root)
   - Copy latest version from root
   - Ensure all monitor bug fixes are in template
