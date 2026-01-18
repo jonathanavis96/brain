@@ -320,7 +320,7 @@ info "Creating project directory structure..."
 mkdir -p "$PROJECT_LOCATION"
 mkdir -p "$PROJECT_LOCATION/ralph"
 mkdir -p "$PROJECT_LOCATION/ralph/logs"
-mkdir -p "$PROJECT_LOCATION/ralph/kb"
+mkdir -p "$PROJECT_LOCATION/skills"
 mkdir -p "$PROJECT_LOCATION/src"
 mkdir -p "$PROJECT_LOCATION/docs"
 
