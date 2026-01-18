@@ -447,10 +447,13 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - Skips full file re-parsing for append-only updates (common case)
   - Full refresh still used for deletions or edits (rare cases)
 
-- [ ] **P4B.3** Implement append-only display mode:
+- [x] **P4B.3** Implement append-only display mode: ✅ COMPLETE
   - New thunks append to bottom of list
   - No screen clear on incremental update
   - Full refresh only on [r] hotkey or line count decrease
+  - Implementation: display_thunks() tracks display_row position
+  - parse_new_thunk_entries() uses tput cup for cursor positioning
+  - Footer updates in-place with new total count
 
 - [ ] **P4B.4** Add cursor positioning for incremental append:
   - Track last display row
