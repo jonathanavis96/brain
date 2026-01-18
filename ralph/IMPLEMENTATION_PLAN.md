@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & Ralph System
 
-Last updated: 2026-01-18
+Last updated: 2026-01-18 (PLAN iteration)
 
 ## Current State
 
@@ -21,21 +21,64 @@ The brain repository is **fully mature and production-ready** with comprehensive
 - React rules: 45 files (validated, unmodified)
 - Templates: 20 files (4 root + 3 backend + 3 python + 10 ralph)
 - All bash scripts pass syntax validation ✓
-- THUNK.md: 87 completed tasks logged
+- THUNK.md: 108 completed tasks logged
 - KB→Skills Migration: 100% COMPLETE ✅
-- Ralph Loop Fixes: IN PROGRESS (1/47 tasks complete)
+- Ralph Loop Fixes: IN PROGRESS (5/82 tasks complete = 6%)
+
+### Progress Summary
+
+**Phase 1 (Stop Condition):** 3/3 complete ✅
+- P1.1, P1.1a: :::COMPLETE::: detection fixes applied
+- P1.2, P1.3: Completion detection validated with comprehensive tests
+
+**Phase 2 (Decouple Monitors):** 1/5 complete (20%)
+- P2.1: Verified thunk monitor watches THUNK.md directly ✅
+- Remaining: Verify current tasks monitor, test manual modifications
+
+**Phase 3 (Monitor Launch):** 0/7 pending
+- Need: Windows Terminal detection, gnome-terminal functionality test, fallback messaging
+
+**Phase 4 (Performance & UX):** 0/16 pending
+- Need: Incremental display, caching, cursor positioning, symbol improvements
+
+**Phase 5 (Verification):** 0/4 pending
+- Need: Structure validation, template scaffolding tests
+
+**Phase 6 (Test Clarity):** 0/4 pending
+- Need: Audit test tasks, update format standards, integration testing
+
+**Future Enhancements:** 0/5 pending (low priority)
+
+### Analysis: Implementation Status
+
+**Current completion rate:** 5/82 tasks = 6%
+
+**Key observations:**
+1. **Phase 1 is complete** - :::COMPLETE::: detection now works reliably
+2. **Phase 2 is partially documented** - Monitor decoupling is already correct by design, just needs verification
+3. **Phases 3-6 remain untouched** - These are the major UX and reliability improvements
+4. **No blockers identified** - All required information is in THOUGHTS.md
+
+**Estimated remaining effort:**
+- Phase 2: 2-3 BUILD iterations (verification tasks)
+- Phase 3: 5-7 BUILD iterations (terminal detection + tests)
+- Phase 4: 12-15 BUILD iterations (performance improvements)
+- Phase 5: 3-4 BUILD iterations (structure validation)
+- Phase 6: 3-4 BUILD iterations (test clarity)
+
+Total estimate: 25-33 BUILD iterations remaining
 
 ### Known Issues Requiring Fixes
 
 The following issues have been identified and require resolution:
 
-1. **:::COMPLETE::: detection fails** — Loop continues despite completion signal
-2. **Lost verification tasks** — Two critical tasks removed from plan need restoration
-3. **current_ralph_tasks.sh UX issues** — Blank screen, slow refresh, bottom-anchored display
-4. **thunk_ralph_tasks.sh performance** — Full regeneration instead of incremental updates
-5. **Vague task descriptions** — "Test" tasks lack actionable detail
-6. **Monitor launch errors** — gnome-terminal DBus errors on startup
-7. **Monitor coupling perception** — Updates seem to only trigger during planning iterations
+1. ✅ **:::COMPLETE::: detection fails** — FIXED (Phase 1 complete)
+2. **Lost verification tasks** — Two critical tasks removed from plan need restoration (Phase 5)
+3. **current_ralph_tasks.sh UX issues** — Blank screen, slow refresh, bottom-anchored display (Phase 4A)
+4. **thunk_ralph_tasks.sh performance** — Full regeneration instead of incremental updates (Phase 4B)
+5. **Vague task descriptions** — "Test" tasks lack actionable detail (Phase 6)
+6. **Monitor launch errors** — gnome-terminal DBus errors on startup (Phase 3)
+7. **Monitor coupling perception** — Already correct by design, needs documentation (Phase 2)
 
 See THOUGHTS.md for detailed root cause analysis and design decisions.
 
