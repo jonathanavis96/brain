@@ -177,3 +177,5 @@ Started: 2026-01-18
 | 162 | 4.2 | HIGH | Test Ralph appends to THUNK.md on task completion | 2026-01-18 |
 | 163 | 5.1 | HIGH | Integration test: Run both monitors simultaneously | 2026-01-18 |
 | 164 | 5.2 | HIGH | Verify all three bugs are fixed | 2026-01-18 |
+| 165 | 6.1 | MEDIUM | Update AGENTS.md monitor documentation | 2026-01-18 |
+| 166 | 6.2 | MEDIUM | Update VALIDATION_CRITERIA.md with monitor bug fix test cases | 2026-01-18 |
