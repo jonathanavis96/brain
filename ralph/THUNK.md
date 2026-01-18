@@ -52,3 +52,4 @@ Started: 2026-01-18
 | 38 | 5.1 | MEDIUM | **5.1** Update `AGENTS.md` | 2026-01-18 |
 | 39 | T6.2 | HIGH | **T6.2** Test: Sequential numbering works (next task gets next THUNK #) | 2026-01-18 |
 | 40 | LEGACY | HIGH | **TEST-SEQ-1** Test sequential numbering validation task | 2026-01-18 |
+| 41 | T6.3 | HIGH | **T6.3** Test: Era sections display correctly in thunk_ralph_tasks.sh | 2026-01-18 |

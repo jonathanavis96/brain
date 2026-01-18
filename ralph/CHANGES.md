@@ -84,7 +84,7 @@ Brain-Repo: jonathanavis96/brain
 ```
 
 **Types:** `feat`, `fix`, `docs`, `refactor`, `chore`, `test`
-**Scopes:** `ralph`, `templates`, `kb`, `refs`, `plan`, `loop`
+**Scopes:** `ralph`, `templates`, `skills`, `refs`, `plan`, `loop`
 
 ### Migration
 For existing projects:

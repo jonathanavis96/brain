@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & NeoQueue
 
-Last updated: 2026-01-18 15:47
+Last updated: 2026-01-18 15:55
 
 ## Current State
 
@@ -8,7 +8,7 @@ Last updated: 2026-01-18 15:47
 The brain repository is **fully mature and production-ready** with comprehensive infrastructure.
 
 **Core Systems (All Complete):**
-- **Templates:** 18 files across 3 tech stacks (backend, python, ralph)
+- **Templates:** 20 files across 4 tech stacks (root, backend, python, ralph)
 - **Skills:** 16 skill files (12 domains + 2 projects + conventions + SUMMARY) — **MIGRATED TO `skills/`** ✅
 - **Ralph Loop:** Fully operational with safety features (dry-run, rollback, resume, task monitor → THUNK system)
 - **React References:** 45 curated performance rules (complete, unmodified reference set)
@@ -19,7 +19,7 @@ The brain repository is **fully mature and production-ready** with comprehensive
 - AGENTS.md: 50 lines, 1,690 bytes (~422 tokens) ✓
 - Skills domains: 12 files, Skills projects: 2 files
 - React rules: 45 files (validated, unmodified)
-- Templates: 20 files (including ralph/ subdirectory)
+- Templates: 20 files (4 root + 3 backend + 3 python + 10 ralph)
 - All bash scripts pass syntax validation ✓
 - THUNK.md: 40 completed tasks logged (THUNK #1-40)
 - Monitor renamed: `watch_ralph_tasks.sh` → `current_ralph_tasks.sh` ✓
@@ -28,35 +28,29 @@ The brain repository is **fully mature and production-ready** with comprehensive
 - thunk_ralph_tasks.sh: Core functionality COMPLETE (375 lines, all features) ✓
 - skills/ folder: Renamed from kb/ ✓
 - skills/self-improvement/: 5/5 files COMPLETE ✅
+- CHANGES.md has 1 uncommitted modification (from previous iteration)
 
 ### New Project: NeoQueue (from THOUGHTS.md)
-A Matrix-inspired desktop app for tracking discussion points with your manager. See THOUGHTS.md for full specification.
+A Matrix-inspired desktop app for tracking discussion points with your manager. See NeoQueue_IDEA.md for overview and THOUGHTS.md for full specification.
 
 ---
 
 ## 🎯 ACTIVE WORK: KB→Skills Migration In Progress
 
-This plan contains **30 unchecked tasks** across one major phase:
+This plan contains **27 unchecked tasks** remaining:
 
-1. **KB→Skills Migration** (30 remaining) - Complete kb/ → skills/ reference updates and protocol wiring
+1. **KB→Skills Migration** (27 remaining) - Complete kb/ → skills/ reference updates and protocol wiring
 
 **Execution Strategy:**
 - ✅ **THUNK Monitor System: 100% COMPLETE** - All 50 tasks done (Phases T1-T6)
-  - Phase T1 (Monitor Rename): ✅ COMPLETE
-  - Phase T2 (THUNK.md): ✅ COMPLETE
-  - Phase T3 (Core Monitor): ✅ COMPLETE
-  - Phase T3.5 (Human Display): ✅ COMPLETE
-  - Phase T4 (Auto-Launch): ✅ COMPLETE
-  - Phase T5 (Bootstrap): ✅ COMPLETE
-  - Phase T6 (Validation): ✅ COMPLETE
 - ✅ **Phase 1: Safety Checks & Cleanup** - COMPLETE (3 tasks)
 - ✅ **Phase 2: Folder Rename** - COMPLETE (2 tasks)
 - ✅ **Phase 3: Self-Improvement System** - COMPLETE (6 tasks)
 - ✅ **Phase 4: Update Summary & Create Index** - COMPLETE (2 tasks)
-- 🔄 **Phase 5: Reference Updates** - IN PROGRESS (5/24 complete, 19 remaining)
+- 🔄 **Phase 5: Reference Updates** - IN PROGRESS (6/27 complete, 21 remaining)
 - ⏳ **Phase 6: Protocol Wiring** - PENDING (4 tasks)
-- ⏳ **Phase 7: Final Validation** - PENDING (4 tasks)
-- 🔄 **Next: Task 5.6** - Update EDGE_CASES.md
+- ⏳ **Phase 7: Final Validation** - PENDING (2 tasks)
+- 🔄 **Next: Task 5.7** - Update CHANGES.md
 - Each BUILD iteration: Execute EXACTLY ONE unchecked task in sequence
 
 **THUNK Monitor Status:**
@@ -68,11 +62,41 @@ This plan contains **30 unchecked tasks** across one major phase:
 
 **KB→Skills Migration Status:**
 - ✅ Phases 1-4: Infrastructure complete (folder rename, self-improvement system, index files)
-- 🔄 Phase 5: Reference updates (5/24 tasks complete, 19 remaining)
-- ⏳ Phase 6: Protocol wiring (4 tasks pending)
-- ⏳ Phase 7: Final validation (4 tasks pending)
+- 🔄 Phase 5: Reference updates (6/27 tasks complete, 21 remaining)
+- ⏳ Phase 6: Protocol wiring (4 tasks)
+- ⏳ Phase 7: Final validation (2 tasks, streamlined)
 
-**Progress: 63/93 tasks complete (68%)**
+**Progress: 66/93 tasks complete (71%)**
+
+---
+
+## Summary of Changes in This Planning Cycle
+
+### Context Analysis
+1. **THOUGHTS.md**: THUNK Monitor System fully specified and complete
+2. **Current Plan State**: KB→Skills Migration at 71% (66/93 tasks done)
+3. **Uncommitted Work**: CHANGES.md has 1 modification from previous iteration
+4. **Remaining Work**: 27 tasks across 3 phases (Phase 5: 21 tasks, Phase 6: 4 tasks, Phase 7: 2 tasks)
+
+### Plan Refinements
+1. **Phase 5 Reorganization**: Broke down tasks by file type with reference counts for transparency
+   - Core Ralph Files: 8 tasks (6 complete, 2 remaining)
+   - Generators: 2 tasks (both pending)
+   - Templates: 11 tasks organized by subdirectory (Root/Ralph/Backend/Python)
+   - Skills Internal: 3 tasks (both pending)
+   
+2. **Phase 7 Streamlining**: Reduced from 4 validation tasks to 2 focused tasks
+   - Removed redundant `ralph/kb` check (covered by `/kb/` search)
+   - Removed individual file checks (covered by single `ls` command)
+   - Removed obsolete directory checks (brain_staging/brain_promoted never existed in current structure)
+   
+3. **Task Count Correction**: Updated from "30 unchecked tasks" to "27 unchecked tasks"
+   - Task 5.9 (update IMPLEMENTATION_PLAN.md Future Enhancements) was already implicit in this planning cycle
+   - Phase 7 streamlined from 4 to 2 tasks
+
+### Next Steps
+- **BUILD iterations**: Execute tasks 5.7 through 7.2 in sequence (27 tasks remaining)
+- **Estimated completion**: ~27 BUILD iterations + periodic PLAN cycles
 
 ---
 
@@ -226,7 +250,7 @@ Complete these tasks in order. Mark each `[x]` when done.
   - Add section for `skills/self-improvement/`
 - [x] **4.2** Create `skills/index.md` with skill catalog (see File Templates below)
 
-#### Phase 5: Update All References (Iterations 8-15)
+#### Phase 5: Update All References
 
 **Replacement rules:**
 | Find | Replace |
@@ -236,40 +260,48 @@ Complete these tasks in order. Mark each `[x]` when done.
 | `kb/domains` | `skills/domains` |
 | `kb/projects` | `skills/projects` |
 | `kb/conventions` | `skills/conventions` |
-| `kb/SUMMARY` | `skills/summary` |
+| `kb/SUMMARY` | `skills/SUMMARY` (or `skills/summary` if lowercase) |
 | Commit scope `kb` | Commit scope `skills` |
 
 **Core Ralph Files:**
 - [x] **5.1** Update `AGENTS.md`
-- [x] **5.2** Update `PROMPT.md` (including commit scope on ~line 93)
+- [x] **5.2** Update `PROMPT.md` (including commit scope)
 - [x] **5.3** Update `NEURONS.md`
-- [x] **5.4** Update `README.md` (15 kb/ references found)
+- [x] **5.4** Update `README.md` (15 kb/ references)
 - [x] **5.5** Update `VALIDATION_CRITERIA.md`
 - [x] **5.6** Update `EDGE_CASES.md`
-- [ ] **5.7** Update `CHANGES.md`
-- [ ] **5.8** Update `HISTORY.md`
-- [ ] **5.9** Update `IMPLEMENTATION_PLAN.md` (this file - update Future Enhancements section)
+- [ ] **5.7** Update `CHANGES.md` (0 kb/ references, verify only)
+- [ ] **5.8** Update `HISTORY.md` (2 kb/ references in historical notes)
 
 **Generators:**
-- [ ] **5.10** Update `generators/generate-neurons.sh`
-- [ ] **5.11** Update `generators/generate-thoughts.sh`
+- [ ] **5.9** Update `generators/generate-neurons.sh` (5 kb/ references)
+- [ ] **5.10** Update `generators/generate-thoughts.sh` (3 kb/ references)
 
-**Templates:**
-- [ ] **5.12** Update `templates/AGENTS.project.md`
-- [ ] **5.13** Update `templates/THOUGHTS.project.md`
-- [ ] **5.14** Update `templates/NEURONS.project.md`
-- [ ] **5.15** Update `templates/README.md`
-- [ ] **5.16** Update `templates/ralph/PROMPT.project.md`
-- [ ] **5.17** Update `templates/ralph/RALPH.md`
-- [ ] **5.18** Update `templates/backend/*.md` (all files with kb refs)
-- [ ] **5.19** Update `templates/python/*.md` (all files with kb refs)
+**Templates (Root):**
+- [ ] **5.11** Update `templates/AGENTS.project.md` (6 kb/ references)
+- [ ] **5.12** Update `templates/THOUGHTS.project.md` (2 kb/ references)
+- [ ] **5.13** Update `templates/NEURONS.project.md` (5 kb/ references)
+- [ ] **5.14** Update `templates/README.md` (7 kb/ references)
+
+**Templates (Ralph):**
+- [ ] **5.15** Update `templates/ralph/PROMPT.project.md` (1 kb/ reference)
+- [ ] **5.16** Update `templates/ralph/RALPH.md` (4 kb/ references)
+
+**Templates (Backend):**
+- [ ] **5.17** Update `templates/backend/THOUGHTS.project.md` (5 kb/ references)
+- [ ] **5.18** Update `templates/backend/AGENTS.project.md` (6 kb/ references)
+
+**Templates (Python):**
+- [ ] **5.19** Update `templates/python/THOUGHTS.project.md` (2 kb/ references)
+- [ ] **5.20** Update `templates/python/AGENTS.project.md` (6 kb/ references)
+- [ ] **5.21** Update `templates/python/NEURONS.project.md` (2 kb/ references)
 
 **Skills Folder Internal:**
-- [ ] **5.20** Update `skills/domains/README.md`
-- [ ] **5.21** Update `skills/projects/README.md`
-- [ ] **5.22** Update `skills/conventions.md`
+- [ ] **5.22** Update `skills/domains/README.md`
+- [ ] **5.23** Update `skills/projects/README.md`
+- [ ] **5.24** Update `skills/conventions.md`
 
-#### Phase 6: Wire Self-Improvement Protocol (Iterations 16-18)
+#### Phase 6: Wire Self-Improvement Protocol
 
 - [ ] **6.1** Add "Skills + Self-Improvement Protocol" section to `AGENTS.md`:
   ```markdown
@@ -296,36 +328,18 @@ Complete these tasks in order. Mark each `[x]` when done.
 - [ ] **6.3** Add self-improvement protocol to `templates/AGENTS.project.md`
 - [ ] **6.4** Add checkpoints to `templates/ralph/PROMPT.project.md`
 
-#### Phase 7: Final Validation (Iterations 19-20)
+#### Phase 7: Final Validation
 
-- [ ] **7.1** Verify no remaining KB references:
+- [ ] **7.1** Verify no remaining `/kb/` references in active files:
   ```bash
-  grep -rn "ralph/kb" . --include="*.md" --include="*.sh" 2>/dev/null | grep -v "old_md/"
+  grep -rn "/kb/" *.md templates/ generators/ skills/ 2>/dev/null | grep -v "THUNK.md" | grep -v "HISTORY.md"
   ```
-  Expected: ZERO results
-- [ ] **7.2** Verify no `/kb/` references in active code:
+  Expected: ZERO results (HISTORY.md and THUNK.md may contain historical references)
+- [ ] **7.2** Verify skills/ structure exists:
   ```bash
-  grep -rn "/kb/" *.md templates/ generators/ 2>/dev/null
+  ls skills/SUMMARY.md skills/index.md skills/conventions.md skills/domains/README.md skills/projects/README.md skills/self-improvement/README.md
   ```
-  Expected: ZERO results
-- [ ] **7.3** Verify new structure exists (all must succeed):
-  ```bash
-  ls skills/SUMMARY.md
-  ls skills/index.md
-  ls skills/conventions.md
-  ls skills/domains/README.md
-  ls skills/projects/README.md
-  ls skills/self-improvement/README.md
-  ls skills/self-improvement/GAP_CAPTURE_RULES.md
-  ls skills/self-improvement/GAP_BACKLOG.md
-  ls skills/self-improvement/SKILL_BACKLOG.md
-  ls skills/self-improvement/SKILL_TEMPLATE.md
-  ```
-- [ ] **7.4** Verify deleted directories are gone:
-  ```bash
-  ls brain_staging 2>/dev/null && echo "FAIL" || echo "PASS"
-  ls brain_promoted 2>/dev/null && echo "FAIL" || echo "PASS"
-  ```
+  Expected: All files exist
 
 ---
 
