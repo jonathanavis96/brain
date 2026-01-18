@@ -456,6 +456,58 @@ Each fix requires specific verification:
 
 ---
 
+### H. Test Task Format Standard
+
+**Convention:** All test tasks must follow a clear, actionable format that specifies:
+1. The action being performed
+2. The expected observable outcome
+
+**Format Pattern:**
+```
+Test: <action> → expect <observable outcome>
+```
+
+**Examples:**
+
+✅ **Good (Clear & Actionable):**
+```
+Test: Mark task [x] in plan → expect task appears in THUNK.md
+Test: Run loop.sh without completion marker → expect loop continues
+Test: Add entry to THUNK.md → expect new entry appears without full redraw
+Test: Modify IMPLEMENTATION_PLAN.md manually → expect monitor updates within 1 second
+```
+
+❌ **Bad (Vague, Not Actionable):**
+```
+Test
+Test: Functionality
+Test: Behavior verification
+Test: Basic case
+```
+
+**Rationale:**
+- **Prevents ambiguity** — Anyone reading the task knows exactly what to do and what success looks like
+- **Enables automation** — Clear expectations can be scripted into test assertions
+- **Improves debugging** — When a test fails, the expected outcome is explicit
+- **Reduces token overhead** — Implementation plan remains self-documenting without requiring THOUGHTS.md lookups
+
+**Title Extraction Behavior:**
+When test tasks are displayed in monitors (current_ralph_tasks.sh, thunk_ralph_tasks.sh), the `generate_title()` function extracts the action portion:
+
+```
+Input:  Test: Mark task [x] in plan → expect task appears in THUNK.md
+Output: Test: Mark task [x] in plan
+```
+
+This preserves context while keeping display concise (truncates at the `→` arrow).
+
+**Enforcement:**
+- All new test tasks in IMPLEMENTATION_PLAN.md must follow this format
+- Existing vague test tasks should be rewritten when encountered
+- Test tasks without clear expectations should be rejected during plan review
+
+---
+
 ## Answers to Clarifying Questions
 
 1. **When :::COMPLETE::: detected, should loop exit entirely?**
