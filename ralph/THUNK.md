@@ -232,3 +232,4 @@ Started: 2026-01-18
 | 198 | LEGACY | HIGH | Does NOT modify THUNK.md (Ralph appends, monitor only watches) <!-- tested: header documents "Display-only monitor" --> | 2026-01-19 |
 | 199 | LEGACY | HIGH | No "Scanning IMPLEMENTATION_PLAN.md" messages (only watches THUNK.md) <!-- tested: grep shows no scanning messages --> | 2026-01-19 |
 | 200 | LEGACY | HIGH | No force sync hotkey 'f' (removed entirely) <!-- tested: hotkey documentation shows only r, e, q --> | 2026-01-19 |
+| 201 | 7.1 | HIGH | **7.1** Audit skills/ directory for consistency - Structure: 11/12 compliant (ralph-patterns uses descriptive headers), Triggers: 12/12 have usage sections, Index: 12/12 indexed, Cross-refs: All valid after fixing brain-example.md kb/ → skills/ paths | 2026-01-19 |
