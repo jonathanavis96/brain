@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & NeoQueue
 
-Last updated: 2026-01-18 15:29:57
+Last updated: 2026-01-18 15:47
 
 ## Current State
 
@@ -36,9 +36,9 @@ A Matrix-inspired desktop app for tracking discussion points with your manager. 
 
 ## 🎯 ACTIVE WORK: KB→Skills Migration In Progress
 
-This plan contains **36 unchecked tasks** across one major feature:
+This plan contains **30 unchecked tasks** across one major phase:
 
-1. **KB→Skills Migration** (36 remaining) - Complete kb/ → skills/ reference updates
+1. **KB→Skills Migration** (30 remaining) - Complete kb/ → skills/ reference updates and protocol wiring
 
 **Execution Strategy:**
 - ✅ **THUNK Monitor System: 100% COMPLETE** - All 50 tasks done (Phases T1-T6)
@@ -51,9 +51,11 @@ This plan contains **36 unchecked tasks** across one major feature:
   - Phase T6 (Validation): ✅ COMPLETE
 - ✅ **Phase 1: Safety Checks & Cleanup** - COMPLETE (3 tasks)
 - ✅ **Phase 2: Folder Rename** - COMPLETE (2 tasks)
-- ✅ **Phase 3: Self-Improvement System** - COMPLETE (6 tasks) ✅
-- ✅ **Phase 4: Update Summary & Create Index** - COMPLETE (2 tasks) ✅
-- 🔄 **Phase 5: Reference Updates** - IN PROGRESS (5/29 tasks)
+- ✅ **Phase 3: Self-Improvement System** - COMPLETE (6 tasks)
+- ✅ **Phase 4: Update Summary & Create Index** - COMPLETE (2 tasks)
+- 🔄 **Phase 5: Reference Updates** - IN PROGRESS (5/24 complete, 19 remaining)
+- ⏳ **Phase 6: Protocol Wiring** - PENDING (4 tasks)
+- ⏳ **Phase 7: Final Validation** - PENDING (4 tasks)
 - 🔄 **Next: Task 5.6** - Update EDGE_CASES.md
 - Each BUILD iteration: Execute EXACTLY ONE unchecked task in sequence
 
@@ -65,10 +67,12 @@ This plan contains **36 unchecked tasks** across one major feature:
 - ✅ All validation tests passed (T6.1-T6.5)
 
 **KB→Skills Migration Status:**
-- ✅ Phases 1-3: Infrastructure complete (folder rename, self-improvement system)
-- ✅ Phase 4: skills/SUMMARY.md and skills/index.md created
-- 🔄 Phase 5: Reference updates (3/29 tasks complete, 26 remaining)
-- ⏳ Phases 6-7: Protocol wiring and validation (8 tasks pending)
+- ✅ Phases 1-4: Infrastructure complete (folder rename, self-improvement system, index files)
+- 🔄 Phase 5: Reference updates (5/24 tasks complete, 19 remaining)
+- ⏳ Phase 6: Protocol wiring (4 tasks pending)
+- ⏳ Phase 7: Final validation (4 tasks pending)
+
+**Progress: 63/93 tasks complete (68%)**
 
 ---
 
@@ -264,10 +268,6 @@ Complete these tasks in order. Mark each `[x]` when done.
 - [ ] **5.20** Update `skills/domains/README.md`
 - [ ] **5.21** Update `skills/projects/README.md`
 - [ ] **5.22** Update `skills/conventions.md`
-
-**External Projects (Optional - only if they exist):**
-- [ ] **5.23** Check if `../rovo-test/` exists; if yes, update `AGENTS.md`, `NEURONS.md`, `THOUGHTS.md`, `ralph/PROMPT.md`
-- [ ] **5.24** Check if `../NeoQueue/` exists; if yes, update `ralph/PROMPT.md`, `ralph/RALPH.md`, `ralph/AGENTS.md`
 
 #### Phase 6: Wire Self-Improvement Protocol (Iterations 16-18)
 
