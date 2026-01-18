@@ -55,6 +55,23 @@ When you discover a new convention, architectural decision, or project-specific 
    [The actual knowledge, patterns, conventions, etc.]
    ```
 
+## Skills + Self-Improvement Protocol
+
+**Start of iteration:**
+1. Study `../../brain/skills/SUMMARY.md` for overview
+2. Check `../../brain/skills/index.md` for available skills
+3. Review `../../brain/skills/self-improvement/GAP_CAPTURE_RULES.md` for capture protocol
+
+**End of iteration:**
+1. If you used undocumented knowledge/procedure/tooling:
+   - Search `../../brain/skills/` for existing matching skill
+   - Search `../../brain/skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
+   - If not found: append new entry to `GAP_BACKLOG.md`
+2. If a gap is clear, specific, and recurring:
+   - Add to `../../brain/skills/self-improvement/SKILL_BACKLOG.md`
+   - Create skill file using `SKILL_TEMPLATE.md`
+   - Update `../../brain/skills/index.md`
+
 ## Parallelism Rule
 
 **Reading/searching/spec review**: Use up to **100 parallel subagents** for maximum efficiency

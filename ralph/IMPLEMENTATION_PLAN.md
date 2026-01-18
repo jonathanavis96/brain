@@ -335,7 +335,7 @@ Complete these tasks in order. Mark each `[x]` when done.
      - Create skill file using `SKILL_TEMPLATE.md`
      - Update `skills/index.md`
   ```
-- [ ] **6.2** Add checkpoints to `PROMPT.md`: 
+- [x] **6.2** Add checkpoints to `PROMPT.md`: 
   - Before planning: "Study skills/SUMMARY.md and skills/index.md"
   - After completing work: "Log undocumented knowledge as gap; promote if clear/recurring"
 - [ ] **6.3** Add self-improvement protocol to `templates/AGENTS.project.md`
