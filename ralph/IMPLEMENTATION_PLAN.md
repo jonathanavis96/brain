@@ -248,19 +248,15 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - **Benefit:** Prevents unnecessary fallback messages when running inside tmux sessions
   - **Commit:** b95192b
 
-- [ ] **P3.4** Implement single-shot fallback message:
-  - If all terminal launches fail, print manual commands ONCE
-  - Do not retry or spam warnings
-  - Format:
-  ```
-  ═══════════════════════════════════════════════════════════════
-    ⚠️  Could not auto-launch monitor terminals.
-    
-    To run monitors manually, open new terminals and run:
-      bash /full/path/to/ralph/current_ralph_tasks.sh
-      bash /full/path/to/ralph/thunk_ralph_tasks.sh
-  ═══════════════════════════════════════════════════════════════
-  ```
+- [x] **P3.4** Implement single-shot fallback message: ✅ COMPLETE
+  - Tracks launch success for both monitors (current_tasks_launched, thunk_tasks_launched)
+  - Prints consolidated message only when ALL terminal options fail
+  - Removed individual per-monitor warnings to reduce noise
+  - Already-running monitors count as successful (prevents false fallback)
+  - Message shows full paths using $monitor_dir variable
+  - Printed once at startup, no retries
+  - **Implementation:** Modified launch_monitors() in loop.sh lines 520-577
+  - **Commit:** 25a53f1
 
 - [ ] **P3.5** Ensure launch failures are non-fatal:
   - Wrap all terminal launch commands in subshell with error suppression
