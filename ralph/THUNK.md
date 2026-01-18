@@ -173,3 +173,4 @@ Started: 2026-01-18
 | 158 | LEGACY | HIGH | Does NOT modify any files (display only) | 2026-01-18 |
 | 159 | LEGACY | HIGH | No "Scanning IMPLEMENTATION_PLAN.md" messages | 2026-01-18 |
 | 160 | 1.1 | HIGH | **1.1** Fix section detection logic in `current_ralph_tasks.sh` `extract_tasks()` function | 2026-01-18 |
+| 161 | 4.1 | HIGH | Add THUNK logging instruction to PROMPT.md BUILD mode section | 2026-01-18 |

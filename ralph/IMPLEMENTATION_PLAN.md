@@ -77,7 +77,7 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
 
 **Requirement:** Ralph must append to THUNK.md when marking tasks `[x]` complete in IMPLEMENTATION_PLAN.md.
 
-- [ ] **4.1** Add THUNK logging instruction to PROMPT.md BUILD mode section
+- [x] **4.1** Add THUNK logging instruction to PROMPT.md BUILD mode section
   - After step 3 (Validate), before step 4 (Commit)
   - Instruction: "When marking a task `[x]` in IMPLEMENTATION_PLAN.md, append entry to THUNK.md in current era table"
   - Format: `| <next_thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |`
