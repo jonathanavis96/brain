@@ -36,9 +36,9 @@ A Matrix-inspired desktop app for tracking discussion points with your manager. 
 
 ## 🎯 ACTIVE WORK: KB→Skills Migration - Final Phase
 
-This plan contains **5 unchecked tasks** remaining:
+This plan contains **4 unchecked tasks** remaining:
 
-1. **KB→Skills Migration** (5 remaining) - Complete final reference update and protocol wiring
+1. **KB→Skills Migration** (4 remaining) - Complete protocol wiring
 
 **Execution Strategy:**
 - ✅ **THUNK Monitor System: 100% COMPLETE** - All 50 tasks done (Phases T1-T6)
@@ -46,10 +46,10 @@ This plan contains **5 unchecked tasks** remaining:
 - ✅ **Phase 2: Folder Rename** - COMPLETE (2 tasks)
 - ✅ **Phase 3: Self-Improvement System** - COMPLETE (6 tasks)
 - ✅ **Phase 4: Update Summary & Create Index** - COMPLETE (2 tasks)
-- 🔄 **Phase 5: Reference Updates** - IN PROGRESS (26/27 complete, 1 remaining)
+- ✅ **Phase 5: Reference Updates** - COMPLETE (27/27 complete)
 - ⏳ **Phase 6: Protocol Wiring** - PENDING (4 tasks)
 - ✅ **Phase 7: Final Validation** - COMPLETE (1 task already done, 1 task merged into Phase 5)
-- 🔄 **Next: Task 5.26** - Update skills/conventions.md (9 kb/ references)
+- 🔄 **Next: Task 6.1** - Add Skills + Self-Improvement Protocol to AGENTS.md
 - Each BUILD iteration: Execute EXACTLY ONE unchecked task in sequence
 
 **THUNK Monitor Status:**
@@ -61,11 +61,11 @@ This plan contains **5 unchecked tasks** remaining:
 
 **KB→Skills Migration Status:**
 - ✅ Phases 1-4: Infrastructure complete (folder rename, self-improvement system, index files)
-- 🔄 Phase 5: Reference updates (26/27 tasks complete, 1 remaining)
+- ✅ Phase 5: Reference updates (27/27 tasks complete)
 - ⏳ Phase 6: Protocol wiring (4 tasks)
 - ✅ Phase 7: Validation complete (task 7.1 done, task 7.2 absorbed into Phase 5)
 
-**Progress: 88/93 tasks complete (95%)**
+**Progress: 89/93 tasks complete (96%)**
 
 ---
 
@@ -311,7 +311,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 **Skills Folder Internal:**
 - [x] **5.24** Update `skills/domains/README.md` (verify kb/ references if any)
 - [x] **5.25** Update `skills/projects/README.md` (7 kb/ references updated)
-- [x] **5.26** Update `skills/conventions.md` (9 kb/ references updated to skills/)
+- [x] **5.26** Update `skills/conventions.md` (2 KB references updated to skills/)
 
 #### Phase 6: Wire Self-Improvement Protocol
 
