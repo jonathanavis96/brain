@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & Ralph System
 
-Last updated: 2026-01-18 17:48 (PLAN iteration)
+Last updated: 2026-01-18 17:52 (BUILD iteration - P3.5 complete)
 
 ## Current State
 
@@ -38,8 +38,9 @@ The brain repository is **fully mature and production-ready** with comprehensive
 - P2.4: Tested THUNK.md manual modification detection ✅
 - P2.5: Tested IMPLEMENTATION_PLAN.md manual modification detection ✅
 
-**Phase 3 (Monitor Launch):** 0/7 pending
-- Need: Windows Terminal detection, gnome-terminal functionality test, fallback messaging
+**Phase 3 (Monitor Launch):** 5/7 complete (71%)
+- P3.1-P3.5: Terminal detection, functionality tests, priority reordering, fallback messaging, non-fatal launches ✅
+- Remaining: Integration tests (P3.6-P3.7)
 
 **Phase 4 (Performance & UX):** 0/16 pending
 - Need: Incremental display, caching, cursor positioning, symbol improvements
@@ -54,29 +55,29 @@ The brain repository is **fully mature and production-ready** with comprehensive
 
 ### Analysis: Implementation Status
 
-**Current completion rate:** 19/82 tasks = 23%
+**Current completion rate:** 20/82 tasks = 24%
 
 **Key observations:**
 1. **Phase 1 is complete** (3/3) - :::COMPLETE::: detection now works reliably ✅
 2. **Phase 2 is complete** (5/5) - Monitors correctly watch files via mtime polling, no coupling to plan mode ✅
-3. **Phase 3 is 43% complete** (3/7) - Windows Terminal detection added, gnome-terminal test added, priority reordered
+3. **Phase 3 is 71% complete** (5/7) - Terminal detection, functionality tests, fallback messaging, non-fatal launches complete ✅
 4. **Phase 4 has 1/16 complete** - Title extraction for "Test:" tasks fixed (P4A.6) ✅
 5. **Phases 5-6 remain untouched** - Structure verification and test clarity improvements pending
 
 **Estimated remaining effort:**
-- Phase 3: 3-4 BUILD iterations (fallback message, non-fatal checks, integration tests)
+- Phase 3: 2 BUILD iterations (integration tests)
 - Phase 4: 13-15 BUILD iterations (cursor positioning, caching, incremental display, symbols)
 - Phase 5: 3-4 BUILD iterations (structure validation)
 - Phase 6: 3-4 BUILD iterations (test clarity)
 
-Total estimate: 22-27 BUILD iterations remaining
+Total estimate: 21-25 BUILD iterations remaining
 
 **Recent progress (last 5 commits):**
+- 4cb6756 - P3.5 complete: Monitor launch failures now non-fatal
 - 05f5f2c - P4A.6 complete: Test title extraction fixed
 - 27708ad - fix(ralph): Title extraction for 'Test:' tasks
 - b95192b - feat(ralph): Reordered terminal priority (tmux first)
 - 56942fd - fix(ralph): gnome-terminal functionality test
-- 9e14972 - feat(loop): Windows Terminal detection
 
 ### Known Issues Requiring Fixes
 
@@ -98,7 +99,7 @@ See THOUGHTS.md for detailed root cause analysis and design decisions.
 
 **Full specification:** See THOUGHTS.md
 
-**Progress:** 11/47 tasks complete (23%)
+**Progress:** 12/47 tasks complete (26%)
 
 Complete these tasks in order. Mark each `[x]` when done.
 
@@ -258,10 +259,13 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - **Implementation:** Modified launch_monitors() in loop.sh lines 520-577
   - **Commit:** 25a53f1
 
-- [ ] **P3.5** Ensure launch failures are non-fatal:
-  - Wrap all terminal launch commands in subshell with error suppression
-  - Ralph loop must continue regardless of monitor launch success
-  - Current: Already non-fatal (launches with &)
+- [x] **P3.5** Ensure launch failures are non-fatal: ✅ COMPLETE
+  - Wrapped all terminal launch commands in subshells with `|| true`
+  - Prevents any launch failure from propagating to parent shell (set -e protection)
+  - Ralph loop continues regardless of monitor launch success
+  - Applied to both current_ralph_tasks.sh and thunk_ralph_tasks.sh launches
+  - **Implementation:** Modified launch_monitors() in loop.sh lines 525-564
+  - **Commit:** 4cb6756
 
 - [ ] **P3.6** Test: Run loop.sh in tmux → expect tmux windows created for both monitors
   - Verify window titles are correct
