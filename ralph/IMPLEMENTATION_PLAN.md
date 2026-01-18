@@ -308,7 +308,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 - [x] **5.23** Update `test-bootstrap.sh` (3 kb/ references for directory validation)
 
 **Skills Folder Internal:**
-- [ ] **5.24** Update `skills/domains/README.md` (verify kb/ references if any)
+- [x] **5.24** Update `skills/domains/README.md` (verify kb/ references if any)
 - [ ] **5.25** Update `skills/projects/README.md` (verify kb/ references if any)
 - [ ] **5.26** Update `skills/conventions.md` (verify kb/ references if any)
 
