@@ -237,7 +237,7 @@ scan_for_new_completions() {
     sleep 2
 }
 
-# Function to display THUNK.md contents
+# Function to display THUNK.md contents (full refresh)
 display_thunks() {
     clear
     
@@ -310,6 +310,62 @@ display_thunks() {
     echo "║           [q] Quit                                             ║"
     echo "╚════════════════════════════════════════════════════════════════╝"
     echo ""
+}
+
+# Function to parse only new entries from THUNK.md (tail-only parsing)
+# Args: $1 = start_line (line number to start reading from)
+# Returns: Array of parsed task lines ready for display
+parse_new_thunk_entries() {
+    local start_line="$1"
+    local line_num=0
+    local new_entries=()
+    
+    while IFS= read -r line; do
+        ((line_num++))
+        
+        # Skip lines before start_line
+        if [[ $line_num -le $start_line ]]; then
+            continue
+        fi
+        
+        # Parse table rows only (skip headers, era markers, etc.)
+        if [[ "$line" =~ ^\|[[:space:]]*([0-9]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|$ ]]; then
+            # Parse table row
+            local thunk_num="${BASH_REMATCH[1]}"
+            local orig_num="${BASH_REMATCH[2]}"
+            local priority="${BASH_REMATCH[3]}"
+            local description="${BASH_REMATCH[4]}"
+            local completed="${BASH_REMATCH[5]}"
+            
+            # Strip whitespace
+            thunk_num=$(echo "$thunk_num" | xargs)
+            orig_num=$(echo "$orig_num" | xargs)
+            priority=$(echo "$priority" | xargs)
+            description=$(echo "$description" | xargs)
+            completed=$(echo "$completed" | xargs)
+            
+            # Skip header row
+            if [[ "$thunk_num" =~ ^[0-9]+$ ]]; then
+                # Generate human-friendly short title
+                local short_title=$(generate_title "$description")
+                
+                # Format as "THUNK N — <short title>" with bold if terminal supports
+                local formatted_line
+                if [[ -t 1 ]]; then
+                    formatted_line="  \033[32m✓\033[0m \033[1mTHUNK #$thunk_num\033[0m — $short_title"
+                else
+                    formatted_line="  ✓ THUNK #$thunk_num — $short_title"
+                fi
+                
+                new_entries+=("$formatted_line")
+            fi
+        fi
+    done < "$THUNK_FILE"
+    
+    # Output new entries (one per line)
+    for entry in "${new_entries[@]}"; do
+        echo -e "$entry"
+    done
 }
 
 # Function to create new era
@@ -426,9 +482,9 @@ while true; do
             # Line count decreased - full refresh needed (rare case: deletions)
             display_thunks
         elif [[ "$CURRENT_LINE_COUNT" -gt "$LAST_LINE_COUNT" ]]; then
-            # Line count increased - only new lines added (common case)
-            # For now, still do full refresh (incremental display in P4B.2-P4B.4)
-            display_thunks
+            # Line count increased - only new lines added (common case: append-only)
+            # Use tail-only parsing for efficiency
+            parse_new_thunk_entries "$LAST_LINE_COUNT"
         else
             # Same line count - content modified (edits)
             display_thunks
