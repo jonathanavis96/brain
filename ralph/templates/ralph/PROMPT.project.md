@@ -34,6 +34,18 @@ npm run lint
 npm test
 ```
 
+## Self-Improvement Protocol
+
+**End of each BUILD iteration:**
+
+If you used undocumented knowledge/procedure/tooling:
+1. Search `../brain/skills/` for existing matching skill
+2. Search `../brain/skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
+3. If not found: append new entry to `GAP_BACKLOG.md`
+4. If gap is clear, specific, and recurring: promote to `SKILL_BACKLOG.md`
+
+See `../brain/skills/self-improvement/GAP_CAPTURE_RULES.md` for details.
+
 ## Project-Specific Notes
 
 [Add any project-specific conventions, architecture decisions, or patterns here]

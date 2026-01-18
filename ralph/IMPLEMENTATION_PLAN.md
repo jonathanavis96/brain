@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & NeoQueue
 
-Last updated: 2026-01-18 16:22
+Last updated: 2026-01-18 16:26
 
 ## Current State
 
@@ -36,9 +36,9 @@ A Matrix-inspired desktop app for tracking discussion points with your manager. 
 
 ## 🎯 ACTIVE WORK: KB→Skills Migration - Final Phase
 
-This plan contains **3 unchecked tasks** remaining:
+This plan contains **1 unchecked task** remaining:
 
-1. **KB→Skills Migration** (3 remaining) - Complete protocol wiring
+1. **KB→Skills Migration** (1 remaining) - Complete protocol wiring
 
 **Execution Strategy:**
 - ✅ **THUNK Monitor System: 100% COMPLETE** - All 50 tasks done (Phases T1-T6)
@@ -47,9 +47,9 @@ This plan contains **3 unchecked tasks** remaining:
 - ✅ **Phase 3: Self-Improvement System** - COMPLETE (6 tasks)
 - ✅ **Phase 4: Update Summary & Create Index** - COMPLETE (2 tasks)
 - ✅ **Phase 5: Reference Updates** - COMPLETE (27/27 tasks)
-- ⏳ **Phase 6: Protocol Wiring** - IN PROGRESS (3 remaining: 6.2, 6.3, 6.4)
+- ⏳ **Phase 6: Protocol Wiring** - IN PROGRESS (1 remaining: 6.4)
 - ✅ **Phase 7: Final Validation** - COMPLETE (1 task already done, 1 task merged into Phase 5)
-- 🔄 **Next: Task 6.2** - Add checkpoints to PROMPT.md
+- 🔄 **Next: Task 6.4** - Add checkpoints to templates/ralph/PROMPT.project.md
 - Each BUILD iteration: Execute EXACTLY ONE unchecked task in sequence
 
 **THUNK Monitor Status:**
@@ -61,32 +61,32 @@ This plan contains **3 unchecked tasks** remaining:
 
 **KB→Skills Migration Status:**
 - ✅ Phases 1-5: Complete (infrastructure, folder rename, self-improvement system, index files, all references updated)
-- ⏳ Phase 6: Protocol wiring (3 remaining: PROMPT.md checkpoints, template updates)
+- ⏳ Phase 6: Protocol wiring (1 remaining: templates/ralph/PROMPT.project.md)
 - ✅ Phase 7: Validation complete (task 7.1 done, task 7.2 absorbed into Phase 5)
 
-**Progress: 90/93 tasks complete (97%)**
+**Progress: 92/93 tasks complete (99%)**
 
 ---
 
 ## Summary of Changes in This Planning Cycle
 
-### Context Analysis (2026-01-18 16:22)
+### Context Analysis (2026-01-18 16:26)
 1. **THOUGHTS.md**: THUNK Monitor System fully specified and complete
-2. **Current Plan State**: KB→Skills Migration at 97% (90/93 tasks done)
-3. **Git Status**: 6 commits ahead of origin (ready to push)
-4. **Remaining Work**: 3 tasks in Phase 6 (Protocol wiring)
+2. **Current Plan State**: KB→Skills Migration at 99% (92/93 tasks done)
+3. **Git Status**: 7 commits ahead of origin (ready to push)
+4. **Remaining Work**: 1 task in Phase 6 (Protocol wiring)
 
 ### Plan Refinements
 1. **Recent BUILD Progress** (since last PLAN cycle):
-   - Completed tasks 5.26, 6.1 (2 tasks)
-   - THUNK.md now contains 80 completed tasks (THUNK #1-80)
+   - Completed tasks 5.26, 6.1, 6.2, 6.3 (4 tasks)
+   - THUNK.md now contains 81 completed tasks (THUNK #1-81)
    - Phase 5 fully complete - all kb/ references migrated to skills/
-   - Phase 6 started - Skills protocol added to AGENTS.md
+   - Phase 6 nearly complete - Skills protocol added to AGENTS.md, PROMPT.md, templates/AGENTS.project.md
    
 2. **Updated Task Counts**:
    - Phase 5: COMPLETE (27/27 tasks) ✅
-   - Phase 6: 3 remaining (down from 4)
-   - Total remaining: 3 tasks (down from 4)
+   - Phase 6: 1 remaining (down from 4)
+   - Total remaining: 1 task (down from 4)
    
 3. **Migration Status**:
    - All template files updated ✅
@@ -94,7 +94,7 @@ This plan contains **3 unchecked tasks** remaining:
    - All generator scripts updated ✅
    - Test scripts updated ✅
    - Skills internal docs: COMPLETE ✅
-   - Protocol wiring: 1/4 complete (AGENTS.md done)
+   - Protocol wiring: 3/4 complete (AGENTS.md, PROMPT.md, templates/AGENTS.project.md done)
    
 4. **Ready to Complete**:
    - Phase 5 COMPLETE (all kb/ → skills/ references migrated)
@@ -338,7 +338,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 - [x] **6.2** Add checkpoints to `PROMPT.md`: 
   - Before planning: "Study skills/SUMMARY.md and skills/index.md"
   - After completing work: "Log undocumented knowledge as gap; promote if clear/recurring"
-- [ ] **6.3** Add self-improvement protocol to `templates/AGENTS.project.md`
+- [x] **6.3** Add self-improvement protocol to `templates/AGENTS.project.md`
 - [ ] **6.4** Add checkpoints to `templates/ralph/PROMPT.project.md`
 
 #### Phase 7: Final Validation ✅ COMPLETE
