@@ -179,11 +179,11 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 #### Phase 2: Folder Rename (Iteration 2)
 
-- [ ] **2.1** Rename `kb` to `skills`:
+- [x] **2.1** Rename `kb` to `skills`:
   ```bash
   mv kb skills
   ```
-- [ ] **2.2** Verify rename succeeded:
+- [x] **2.2** Verify rename succeeded:
   ```bash
   ls -la skills/
   ```
