@@ -178,10 +178,13 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - ✅ Poll interval: 0.5s (line 515 `sleep 0.5`)
   - **Documentation:** This is already correct behavior - monitor watches IMPLEMENTATION_PLAN.md directly via mtime polling, no coupling to Ralph's planning mode
 
-- [ ] **P2.3** Verify monitors use file mtime polling (not inotify):
-  - Current: 0.5s poll interval (line 515 in current_ralph_tasks.sh)
-  - This is correct for cross-platform compatibility
-  - Document: No changes needed for decoupling
+- [x] **P2.3** Verify monitors use file mtime polling (not inotify): ✅ VERIFIED
+  - ✅ current_ralph_tasks.sh uses `get_file_mtime()` at lines 42-44 (stat-based)
+  - ✅ thunk_ralph_tasks.sh uses `get_file_mtime()` at lines 37-40 (stat-based)
+  - ✅ Both scripts poll every 0.5s (line 515 in current_ralph_tasks.sh, line 416 in thunk_ralph_tasks.sh)
+  - ✅ No inotify, inotifywait, or fswatch dependencies found in codebase
+  - ✅ Cross-platform compatible: Uses stat command (both Linux -c and macOS -f flags)
+  - **Documentation:** File watching is implemented via mtime polling, ensuring cross-platform compatibility (WSL2, Linux, macOS) without external dependencies
 
 - [ ] **P2.4** Test: Modify THUNK.md manually → expect thunk monitor updates within 1 second
   - Add a test row to THUNK.md table
