@@ -75,7 +75,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 #### Phase T3: Create thunk_ralph_tasks.sh
 
-- [ ] **T3.1** Create `thunk_ralph_tasks.sh` monitor script
+- [x] **T3.1** Create `thunk_ralph_tasks.sh` monitor script
 - [ ] **T3.2** Implement THUNK.md parsing and display (show THUNK #, original #, priority, description)
 - [ ] **T3.3** Implement completion detection (compare IMPLEMENTATION_PLAN.md `[x]` items against THUNK.md)
 - [ ] **T3.4** Implement auto-append logic with sequential numbering
