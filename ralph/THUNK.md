@@ -176,3 +176,4 @@ Started: 2026-01-18
 | 161 | 4.1 | HIGH | Add THUNK logging instruction to PROMPT.md BUILD mode section | 2026-01-18 |
 | 162 | 4.2 | HIGH | Test Ralph appends to THUNK.md on task completion | 2026-01-18 |
 | 163 | 5.1 | HIGH | Integration test: Run both monitors simultaneously | 2026-01-18 |
+| 164 | 5.2 | HIGH | Verify all three bugs are fixed | 2026-01-18 |
