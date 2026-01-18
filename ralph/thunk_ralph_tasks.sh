@@ -44,12 +44,13 @@ get_file_mtime() {
 get_next_thunk_number() {
     local max_num=0
     
-    # Parse THUNK.md for highest THUNK number
-    while IFS='|' read -r thunk_num rest; do
-        # Strip whitespace and extract number
-        thunk_num=$(echo "$thunk_num" | tr -d ' ')
-        if [[ "$thunk_num" =~ ^[0-9]+$ ]] && [[ $thunk_num -gt $max_num ]]; then
-            max_num=$thunk_num
+    # Parse THUNK.md for highest THUNK number using regex
+    while IFS= read -r line; do
+        if [[ "$line" =~ ^\|[[:space:]]*([0-9]+)[[:space:]]*\| ]]; then
+            local thunk_num="${BASH_REMATCH[1]}"
+            if [[ $thunk_num -gt $max_num ]]; then
+                max_num=$thunk_num
+            fi
         fi
     done < <(grep -E '^\|[[:space:]]*[0-9]+[[:space:]]*\|' "$THUNK_FILE")
     
@@ -59,8 +60,8 @@ get_next_thunk_number() {
 # Function to normalize description for comparison
 normalize_description() {
     local desc="$1"
-    # Remove markdown bold, backticks, leading/trailing whitespace, task IDs
-    desc=$(echo "$desc" | sed -E 's/\*\*//g; s/`//g; s/^[[:space:]]*//; s/[[:space:]]*$//; s/^[T]?[0-9]+(\.[0-9]+)*[[:space:]]*//')
+    # Remove markdown bold, backticks, leading/trailing whitespace, task IDs, trailing colons
+    desc=$(echo "$desc" | sed -E 's/\*\*//g; s/`//g; s/^[[:space:]]*//; s/[[:space:]]*$//; s/^[T]?[0-9]+(\.[0-9]+)*[[:space:]]*:?[[:space:]]*//; s/:+[[:space:]]*$//')
     echo "$desc"
 }
 
@@ -69,11 +70,13 @@ task_exists_in_thunk() {
     local description="$1"
     local normalized=$(normalize_description "$description")
     
-    # Search THUNK.md for matching description
-    while IFS='|' read -r thunk_num orig_num priority desc completed; do
-        local thunk_desc=$(normalize_description "$desc")
-        if [[ "$thunk_desc" == "$normalized" ]]; then
-            return 0  # Found
+    # Search THUNK.md for matching description using regex parsing
+    while IFS= read -r line; do
+        if [[ "$line" =~ ^\|[[:space:]]*([0-9]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|$ ]]; then
+            local thunk_desc=$(normalize_description "${BASH_REMATCH[4]}")
+            if [[ "$thunk_desc" == "$normalized" ]]; then
+                return 0  # Found
+            fi
         fi
     done < <(grep -E '^\|[[:space:]]*[0-9]+[[:space:]]*\|' "$THUNK_FILE")
     
