@@ -139,7 +139,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 - [x] **T6.2** Test: Sequential numbering works (next task gets next THUNK #)
 - [x] **T6.3** Test: Era sections display correctly in thunk_ralph_tasks.sh
 - [x] **T6.4** Test: Hotkey `[r]` clears display but preserves THUNK.md
-- [ ] **T6.5** Test: Bootstrap new project → verify monitors exist and work
+- [x] **T6.5** Test: Bootstrap new project → verify monitors exist and work
 
 ---
 
