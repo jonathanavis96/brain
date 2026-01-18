@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & Ralph System
 
-Last updated: 2026-01-18 18:00 (PLAN iteration - Progress analysis and priority review)
+Last updated: 2026-01-18 18:10 (PLAN iteration - Progress review and git push)
 
 ## Current State
 
@@ -41,9 +41,13 @@ The brain repository is **fully mature and production-ready** with comprehensive
 **Phase 3 (Monitor Launch):** 7/7 complete ✅
 - P3.1-P3.7: Terminal detection, functionality tests, priority reordering, fallback messaging, non-fatal launches, tmux integration, headless fallback test ✅
 
-**Phase 4 (Performance & UX):** 1/16 complete (6%)
-- P4A.6 complete: Title extraction for "Test:" tasks ✅
-- Remaining: Incremental display, caching, cursor positioning, symbol improvements
+**Phase 4 (Performance & UX):** 6/16 complete (38%)
+- P4A.1: Cursor positioning (top-anchored display) ✅
+- P4A.2: Completed task caching ✅
+- P4A.3: Differential display update ✅
+- P4A.5: Task formatting with spacing ✅
+- P4A.6: Title extraction for "Test:" tasks ✅
+- Remaining: Current task indicator (P4A.4), test validation (P4A.7-9), thunk monitor improvements (P4B)
 
 **Phase 5 (Verification):** 0/4 pending (0%)
 - Need: Structure validation, template scaffolding tests
@@ -55,9 +59,9 @@ The brain repository is **fully mature and production-ready** with comprehensive
 
 ### Analysis: Implementation Status
 
-**Current completion rate:** 17/82 tasks = 21%
+**Current completion rate:** 22/82 tasks = 27%
 
-**Completed work (17/82 tasks):**
+**Completed work (22/82 tasks):**
 1. **Phase 1 (Stop Condition):** 3/3 complete ✅
    - :::COMPLETE::: detection bug fixed in both code paths
    - Comprehensive testing validates loop exit behavior
@@ -73,19 +77,23 @@ The brain repository is **fully mature and production-ready** with comprehensive
    - Single-shot fallback message with graceful degradation
    - Non-fatal launch failures ensure Ralph loop continues
    
-4. **Phase 4 (Performance & UX):** 1/16 complete (6%)
-   - P4A.6: Title extraction for "Test:" tasks fixed ✅
+4. **Phase 4 (Performance & UX):** 6/16 complete (38%)
+   - P4A.1: Cursor positioning (top-anchored display) ✅
+   - P4A.2: Completed task caching (reduces CPU) ✅
+   - P4A.3: Differential display update (stable content) ✅
+   - P4A.5: Task formatting with spacing (readability) ✅
+   - P4A.6: Title extraction for "Test:" tasks ✅
    - **Next critical tasks:**
-     - P4A.1: Cursor positioning (eliminates blank screen)
-     - P4A.2: Completed task caching (reduces CPU)
-     - P4A.4: Current task indicator (UX improvement)
+     - P4A.4: Current task indicator with `▶` symbol (highest user value)
+     - P4A.7-9: Validation tests for new display features
+     - P4B.1-7: thunk_ralph_tasks.sh performance improvements
 
-**Remaining work (65/82 tasks):**
+**Remaining work (60/82 tasks):**
 
-**HIGH PRIORITY - Phase 4 Remaining (15 tasks):**
-- **Performance critical (P4A.1-P4A.3, P4B.1-P4B.4):** Incremental display, caching, cursor positioning
-- **UX improvements (P4A.4-P4A.5, P4A.9):** Symbol indicators, spacing, current task highlighting
-- **Validation (P4A.7-P4A.8, P4B.6-P4B.7):** Performance testing, visual verification
+**HIGH PRIORITY - Phase 4 Remaining (10 tasks):**
+- **UX improvements (P4A.4, P4A.9):** Current task indicator with `▶` symbol, symbol behavior validation
+- **Validation (P4A.7-P4A.8):** Performance testing for 50+ tasks, differential update verification
+- **thunk_ralph_tasks.sh performance (P4B.1-P4B.7):** Incremental append, tail-only parsing, cursor positioning
 
 **MEDIUM PRIORITY - Phase 5 (4 tasks):**
 - Structure verification post-migration
@@ -103,21 +111,23 @@ The brain repository is **fully mature and production-ready** with comprehensive
 - Optional features (--no-monitors flag, health checks, custom terminal support)
 
 **Estimated remaining effort:**
-- Phase 4: ~15 BUILD iterations (performance and UX are interconnected)
+- Phase 4: ~10 BUILD iterations (UX improvements and thunk monitor optimization)
 - Phase 5: ~4 BUILD iterations (straightforward validation)
 - Phase 6: ~22 BUILD iterations (comprehensive testing and documentation)
 
-**Total estimate:** ~41 BUILD iterations remaining
+**Total estimate:** ~36 BUILD iterations remaining
 
 **Strategic recommendation for next BUILD iteration:**
-Start with **P4A.1** (cursor positioning) - highest impact for eliminating blank screen issue
+Start with **P4A.4** (current task indicator) - highest user value, completes current_ralph_tasks.sh UX improvements
 
-**Recent progress (last 5 commits):**
-- 4cb6756 - P3.5 complete: Monitor launch failures now non-fatal
-- 05f5f2c - P4A.6 complete: Test title extraction fixed
-- 27708ad - fix(ralph): Title extraction for 'Test:' tasks
-- b95192b - feat(ralph): Reordered terminal priority (tmux first)
-- 56942fd - fix(ralph): gnome-terminal functionality test
+**Recent progress (last 7 commits - ready to push):**
+- 56736e0 - docs(plan): Mark P4A.3 complete - differential display update
+- fe8eb33 - feat(ralph): Implement differential display update
+- 68080ad - docs(plan): Mark P4A.5 task formatting with spacing as complete
+- 330e5b5 - feat(ralph): Add empty line spacing between tasks
+- f408f04 - feat(ralph): Add completed task caching
+- de04865 - docs(plan): Mark P4A.1 complete, log tput gap
+- 400300b - feat(ralph): Implement cursor positioning for top-anchored display
 
 ### Known Issues Requiring Fixes
 
