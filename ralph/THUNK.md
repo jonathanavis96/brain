@@ -90,3 +90,5 @@ Started: 2026-01-18
 | 76 | 5.21 | MEDIUM | **5.21** Update `templates/python/AGENTS.project.md` (2 kb/ references - directory structure only) | 2026-01-18 |
 | 77 | 5.22 | MEDIUM | **5.22** Update `templates/python/NEURONS.project.md` (1 kb/ reference) | 2026-01-18 |
 | 78 | 5.23 | MEDIUM | **5.23** Update `test-bootstrap.sh` (3 kb/ references for directory validation) | 2026-01-18 |
+| 79 | 5.24 | MEDIUM | **5.24** Update `skills/domains/README.md` (verify kb/ references if any) | 2026-01-18 |
+| 80 | 5.25 | MEDIUM | **5.25** Update `skills/projects/README.md` (7 kb/ references updated) | 2026-01-18 |
