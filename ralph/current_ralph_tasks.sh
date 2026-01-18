@@ -44,12 +44,49 @@ get_file_mtime() {
     stat -c %Y "$PLAN_FILE" 2>/dev/null || stat -f %m "$PLAN_FILE" 2>/dev/null
 }
 
+# Function to generate short human-readable title from task description
+generate_title() {
+    local desc="$1"
+    
+    # Strip technical IDs (T1.1, T2.3, 1.1, 2.3, etc.) from the beginning
+    desc=$(echo "$desc" | sed -E 's/^[[:space:]]*\*\*[T]?[0-9]+(\.[0-9]+)*\*\*[[:space:]]*//')
+    
+    # Strip markdown bold markers
+    desc=$(echo "$desc" | sed -E 's/\*\*//g')
+    
+    # Extract action verb and main object (look for common action verbs)
+    if [[ "$desc" =~ ^(Rename|Update|Create|Verify|Delete|Add|Remove|Test|Implement|Fix|Refactor|Document|Migrate|Copy|Set|Run|If)[[:space:]]+(.+)$ ]]; then
+        local verb="${BASH_REMATCH[1]}"
+        local rest="${BASH_REMATCH[2]}"
+        
+        # For the rest, take up to first colon or period, or first 50 chars
+        if [[ "$rest" =~ ^([^:.]+)[:.] ]]; then
+            rest="${BASH_REMATCH[1]}"
+        else
+            rest=$(echo "$rest" | cut -c1-50)
+        fi
+        
+        # Remove any trailing quotes, backticks, or markdown
+        rest=$(echo "$rest" | sed -E 's/`[[:space:]]*$//; s/[[:space:]]*$//')
+        
+        echo "$verb $rest"
+    else
+        # Fallback: take first 60 chars or up to first colon
+        if [[ "$desc" =~ ^([^:.]+)[:.] ]]; then
+            echo "${BASH_REMATCH[1]}"
+        else
+            echo "$desc" | cut -c1-60 | sed 's/[[:space:]]*$//'
+        fi
+    fi
+}
+
 # Function to extract tasks from IMPLEMENTATION_PLAN.md
 extract_tasks() {
     local show_completed=$1
     local current_section=""
     local in_task_section=false
     local task_counter=0
+    local indent_level=0
     
     while IFS= read -r line; do
         # Detect High/Medium/Low Priority sections (flexible matching)
@@ -59,12 +96,15 @@ extract_tasks() {
         if [[ "$line_upper" =~ HIGH[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
             current_section="High Priority"
             in_task_section=true
+            task_counter=0
         elif [[ "$line_upper" =~ MEDIUM[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
             current_section="Medium Priority"
             in_task_section=true
+            task_counter=0
         elif [[ "$line_upper" =~ LOW[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
             current_section="Low Priority"
             in_task_section=true
+            task_counter=0
         elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
             # Exit task section when we hit any other ### headers
             in_task_section=false
@@ -72,39 +112,48 @@ extract_tasks() {
         
         # Only process tasks in valid sections
         if [[ "$in_task_section" == "true" ]]; then
-            local status="" task_label="" task_desc=""
+            local status="" task_desc="" is_subtask=false
             
-            # Pattern 1: Numbered tasks - [ ] **Task 1:** Description
-            if [[ "$line" =~ ^[[:space:]]*-[[:space:]]\[([ x])\][[:space:]]\*\*Task[[:space:]]+([0-9]+):\*\*[[:space:]]*(.*)$ ]]; then
-                status="${BASH_REMATCH[1]}"
-                task_label="Task ${BASH_REMATCH[2]}"
+            # Detect indentation level (count leading spaces)
+            if [[ "$line" =~ ^([[:space:]]*)-[[:space:]]\[([ x])\][[:space:]]*(.*)$ ]]; then
+                local leading_spaces="${BASH_REMATCH[1]}"
+                status="${BASH_REMATCH[2]}"
                 task_desc="${BASH_REMATCH[3]}"
-            # Pattern 2: Unnumbered bold - [ ] **Description text**
-            elif [[ "$line" =~ ^[[:space:]]*-[[:space:]]\[([ x])\][[:space:]]\*\*([^*]+)\*\*(.*)$ ]]; then
-                status="${BASH_REMATCH[1]}"
-                ((task_counter++))
-                task_label="Task $task_counter"
-                task_desc="${BASH_REMATCH[2]}${BASH_REMATCH[3]}"
-            # Pattern 3: Plain format - [ ] Description text
-            elif [[ "$line" =~ ^[[:space:]]*-[[:space:]]\[([ x])\][[:space:]]+([^*].*)$ ]]; then
-                status="${BASH_REMATCH[1]}"
-                ((task_counter++))
-                task_label="Task $task_counter"
-                task_desc="${BASH_REMATCH[2]}"
+                
+                # Calculate indent level (2 spaces = 1 level, 4 spaces = 2 levels, etc.)
+                indent_level=$((${#leading_spaces} / 2))
+                
+                # Determine if this is a subtask (indented)
+                if [[ $indent_level -gt 0 ]]; then
+                    is_subtask=true
+                else
+                    # Main task - increment counter
+                    ((task_counter++))
+                fi
             fi
             
             # If we found a task, process it
-            if [[ -n "$status" ]]; then
+            if [[ -n "$status" && -n "$task_desc" ]]; then
                 # Skip completed tasks if --hide-completed is set
                 if [[ "$show_completed" == "false" && "$status" == "x" ]]; then
                     continue
                 fi
                 
-                # Format output - keep full description
-                if [[ "$status" == "x" ]]; then
-                    echo "✓|$current_section|$task_label|$task_desc|completed"
+                # Generate short title from description
+                local short_title=$(generate_title "$task_desc")
+                
+                # Format output with indent level
+                local task_label=""
+                if [[ "$is_subtask" == "true" ]]; then
+                    task_label="subtask"
                 else
-                    echo "○|$current_section|$task_label|$task_desc|pending"
+                    task_label="Task $task_counter"
+                fi
+                
+                if [[ "$status" == "x" ]]; then
+                    echo "✓|$current_section|$task_label|$short_title|$indent_level|completed|$task_desc"
+                else
+                    echo "○|$current_section|$task_label|$short_title|$indent_level|pending|$task_desc"
                 fi
             fi
         fi
@@ -258,6 +307,23 @@ clear_completed_tasks() {
     sleep 2
 }
 
+# Function to wrap text to specified width with indent
+wrap_text() {
+    local text="$1"
+    local width="$2"
+    local indent="$3"
+    local first_line=true
+    
+    echo "$text" | fold -s -w "$width" | while IFS= read -r line; do
+        if [[ "$first_line" == "true" ]]; then
+            echo "$line"
+            first_line=false
+        else
+            echo "${indent}${line}"
+        fi
+    done
+}
+
 # Function to display tasks with formatting
 display_tasks() {
     clear
@@ -286,7 +352,7 @@ display_tasks() {
     local pending_count=0
     local completed_count=0
     
-    while IFS='|' read -r icon section task desc status; do
+    while IFS='|' read -r icon section task_label short_title indent_level status full_desc; do
         # Print section header when it changes
         if [[ "$section" != "$current_section" ]]; then
             if [[ -n "$current_section" ]]; then
@@ -298,12 +364,53 @@ display_tasks() {
             current_section="$section"
         fi
         
-        # Print task with color and full description
+        # Calculate base indent (2 spaces per level)
+        local base_indent=""
+        for ((i=0; i<indent_level; i++)); do
+            base_indent="  ${base_indent}"
+        done
+        
+        # Format task display with human-friendly title
+        local display_line=""
+        if [[ "$task_label" == "subtask" ]]; then
+            # Subtask: just show the short title with bullet
+            display_line="${base_indent}  • ${short_title}"
+        else
+            # Main task: show "Task N — <short title>" with bold
+            if [[ -t 1 ]]; then
+                # Terminal supports formatting
+                display_line="${base_indent}  \033[1m${task_label}\033[0m — ${short_title}"
+            else
+                # No terminal formatting
+                display_line="${base_indent}  ${task_label} — ${short_title}"
+            fi
+        fi
+        
+        # Print task with color and wrap if needed
+        local wrap_width=60
+        local continuation_indent="${base_indent}    "
+        
         if [[ "$status" == "completed" ]]; then
-            echo -e "  \033[32m$icon\033[0m $task: $desc"
+            if [[ -t 1 ]]; then
+                echo -e "  \033[32m${icon}\033[0m $(wrap_text "${display_line:2}" $wrap_width "$continuation_indent" | head -1)"
+                # Print continuation lines if any
+                wrap_text "${display_line:2}" $wrap_width "$continuation_indent" | tail -n +2 | while IFS= read -r line; do
+                    echo "    $line"
+                done
+            else
+                echo "  ${icon} ${display_line:2}"
+            fi
             ((completed_count++))
         else
-            echo -e "  \033[33m$icon\033[0m $task: $desc"
+            if [[ -t 1 ]]; then
+                echo -e "  \033[33m${icon}\033[0m $(wrap_text "${display_line:2}" $wrap_width "$continuation_indent" | head -1)"
+                # Print continuation lines if any
+                wrap_text "${display_line:2}" $wrap_width "$continuation_indent" | tail -n +2 | while IFS= read -r line; do
+                    echo "    $line"
+                done
+            else
+                echo "  ${icon} ${display_line:2}"
+            fi
             ((pending_count++))
         fi
     done <<< "$tasks"
