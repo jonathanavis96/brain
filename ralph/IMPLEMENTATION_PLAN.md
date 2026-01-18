@@ -103,9 +103,17 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - All tests pass - completion detection works as expected
   - Exit code propagation verified (42 → loop exits, 0 → loop continues)
 
-- [ ] **P1.3** Test: Run without completion marker → verify loop continues
-  - Verify normal iteration flow unaffected
-  - Verify iteration counter increments correctly
+- [x] **P1.3** Test: Run without completion marker → verify loop continues: ✅ COMPLETE
+  - Created comprehensive unit test: tmp_rovodev_test_loop_continues_unit.sh
+  - Verified 6 test scenarios:
+    1. Grep pattern ignores logs without :::COMPLETE::: ✓
+    2. Grep pattern ignores inline mentions of marker ✓
+    3. Grep pattern detects standalone marker correctly ✓
+    4. Loop completes all iterations without marker (5 iterations tested) ✓
+    5. Return code 0 for continue, 42 for completion ✓
+    6. Return code capture pattern works correctly (lines 583, 603, 606) ✓
+  - All tests pass - loop continues correctly when completion marker is absent
+  - Normal iteration flow unaffected by P1.1 fixes
 
 ---
 
