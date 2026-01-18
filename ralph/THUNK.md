@@ -110,3 +110,6 @@ Started: 2026-01-18
 | 95 | LEGACY | HIGH | **P2.3** Verify monitors use file mtime polling (not inotify): ✅ VERIFIED | 2026-01-18 |
 | 96 | LEGACY | HIGH | **P2.4** Test: Modify THUNK.md manually → expect thunk monitor updates within 1 second: ✅ VERIFIED | 2026-01-18 |
 | 97 | LEGACY | HIGH | **P2.5** Test: Modify IMPLEMENTATION_PLAN.md manually → expect current tasks monitor updates within 1 second: ✅ VERIFIED | 2026-01-18 |
+| 98 | LEGACY | HIGH | **P3.1** Add Windows Terminal (wt.exe) detection to launch_monitors(): ✅ COMPLETE | 2026-01-18 |
+| 99 | LEGACY | HIGH | **P3.2** Add functionality test for gnome-terminal: ✅ COMPLETE | 2026-01-18 |
+| 100 | LEGACY | HIGH | **P3.3** Reorder terminal detection priority: ✅ COMPLETE | 2026-01-18 |
