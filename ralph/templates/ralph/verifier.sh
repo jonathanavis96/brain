@@ -33,6 +33,32 @@ read_approval() {
   grep -E "^${id}=" "$APPROVALS_FILE" >/dev/null 2>&1
 }
 
+# Check if baselines are initialized (fail fast with clear message)
+check_init_required() {
+  local missing=()
+  
+  [[ ! -f "$AC_HASH_FILE" ]] && missing+=("ac.sha256")
+  [[ ! -f "${VERIFY_DIR}/loop.sha256" ]] && missing+=("loop.sha256")
+  [[ ! -f "${VERIFY_DIR}/verifier.sha256" ]] && missing+=("verifier.sha256")
+  [[ ! -f "${VERIFY_DIR}/prompt.sha256" ]] && missing+=("prompt.sha256")
+  
+  if [[ ${#missing[@]} -gt 0 ]]; then
+    echo ""
+    echo "❌ ERROR: Verifier baselines not initialized!"
+    echo ""
+    echo "Missing baseline files:"
+    for f in "${missing[@]}"; do
+      echo "  - .verify/$f"
+    done
+    echo ""
+    echo "Fix: Run the init script first:"
+    echo "  bash init_verifier_baselines.sh"
+    echo ""
+    return 1
+  fi
+  return 0
+}
+
 hash_guard_check() {
   if [[ ! -f "$AC_HASH_FILE" ]]; then
     {
@@ -102,6 +128,11 @@ main() {
 
   # Change to script directory so commands in AC.rules use relative paths
   cd "$SCRIPT_DIR"
+
+  # Fail fast if baselines not initialized
+  if ! check_init_required; then
+    exit 1
+  fi
 
   write_header
 
