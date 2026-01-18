@@ -1,12 +1,12 @@
-# KB Domains
+# Skills Domains
 
 ## Why This Exists
 
-This directory contains **technical domain knowledge** - reusable patterns, conventions, and practices that apply across multiple projects. Domain KB files capture architectural decisions, implementation patterns, and technical best practices discovered during development.
+This directory contains **technical domain knowledge** - reusable patterns, conventions, and practices that apply across multiple projects. Domain skill files capture architectural decisions, implementation patterns, and technical best practices discovered during development.
 
 ## When to Use It
 
-Create a KB file in `kb/domains/` when you:
+Create a skill file in `skills/domains/` when you:
 - Discover a reusable technical pattern (e.g., authentication flows, caching strategies)
 - Document an architectural decision that applies broadly (e.g., API design patterns)
 - Capture implementation best practices for a specific technology area
@@ -25,9 +25,9 @@ Create a KB file in `kb/domains/` when you:
 - Be **descriptive but concise**: Name should clearly indicate the domain
 - Use **plural forms** for collections: `api-patterns.md` not `api-pattern.md`
 
-## KB File Format
+## Skill File Format
 
-Every domain KB file must follow this structure:
+Every domain skill file must follow this structure:
 
 ```markdown
 # [Domain Name]
@@ -49,15 +49,15 @@ Every domain KB file must follow this structure:
 
 ## Contributing
 
-After creating a new domain KB file:
+After creating a new domain skill file:
 
 1. Ensure it follows the format above (Why/When/Details)
-2. Update `kb/SUMMARY.md` to link to your new file
+2. Update `skills/SUMMARY.md` to link to your new file
 3. Use clear, concise language optimized for AI agent consumption
 4. Include concrete examples where helpful
 
 ## See Also
 
-- `kb/projects/README.md` - Project-specific knowledge (less reusable)
-- `kb/conventions.md` - Detailed KB authoring guidelines (planned)
-- `kb/SUMMARY.md` - KB index and navigation
+- `skills/projects/README.md` - Project-specific knowledge (less reusable)
+- `skills/conventions.md` - Detailed skill authoring guidelines (planned)
+- `skills/SUMMARY.md` - Skills index and navigation

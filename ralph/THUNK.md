@@ -73,3 +73,6 @@ Started: 2026-01-18
 | 59 | 5.2 | MEDIUM | **5.2** Update `PROMPT.md` (including commit scope) | 2026-01-18 |
 | 60 | 5.4 | MEDIUM | **5.4** Update `README.md` (15 kb/ references) | 2026-01-18 |
 | 61 | 7.1 | MEDIUM | **7.1** Verify no remaining `/kb/` references in active files: | 2026-01-18 |
+| 62 | 5.7 | MEDIUM | **5.7** Update `CHANGES.md` (0 kb/ references, verify only) | 2026-01-18 |
+| 63 | 5.8 | MEDIUM | **5.8** Update `HISTORY.md` (2 kb/ references in historical notes) | 2026-01-18 |
+| 64 | 5.9 | MEDIUM | **5.9** Update `generators/generate-neurons.sh` (5 kb/ references) | 2026-01-18 |
