@@ -435,10 +435,13 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - If increased: only new lines added (common case)
   - If decreased: full refresh needed (rare case)
 
-- [ ] **P4B.2** Implement tail-only parsing for new entries:
+- [x] **P4B.2** Implement tail-only parsing for new entries: ✅ COMPLETE
   - When line count increases, read only lines from LAST_LINE_COUNT to end
   - Parse only new table rows
   - Append to display without clearing
+  - Added parse_new_thunk_entries() function
+  - Skips full file re-parsing for append-only updates (common case)
+  - Full refresh still used for deletions or edits (rare cases)
 
 - [ ] **P4B.3** Implement append-only display mode:
   - New thunks append to bottom of list
