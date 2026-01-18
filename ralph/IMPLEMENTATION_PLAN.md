@@ -106,7 +106,7 @@ Complete these tasks in order. Mark each `[x]` when done.
   - Extract main object/target
   - Keep to 2-4 words max
   - ✅ Implemented in generate_title() function (lines 47-80)
-- [ ] **T3.9** Update `thunk_ralph_tasks.sh` to use same human-friendly formatting
+- [x] **T3.9** Update `thunk_ralph_tasks.sh` to use same human-friendly formatting
 - [ ] **T3.10** Test display formatting with various task types:
   - Single action tasks
   - Tasks with context/details
@@ -212,7 +212,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 | Commit scope `kb` | Commit scope `skills` |
 
 **Core Ralph Files:**
-- [ ] **5.1** Update `AGENTS.md`
+- [x] **5.1** Update `AGENTS.md`
 - [ ] **5.2** Update `PROMPT.md` (including commit scope on ~line 93)
 - [ ] **5.3** Update `NEURONS.md`
 - [ ] **5.4** Update `README.md`
