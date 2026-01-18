@@ -339,10 +339,13 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - **Implementation:** Modified display_tasks() in current_ralph_tasks.sh line 328-331
   - **Result:** Screen no longer blanks during refresh - content appears immediately
 
-- [ ] **P4A.2** Add completed task caching:
+- [x] **P4A.2** Add completed task caching: ✅ COMPLETE
   - Create array COMPLETED_CACHE to store hashes of completed tasks
   - On first load: populate cache with all `[x]` task descriptions
   - On refresh: skip full parsing for cached completed tasks
+  - **Implementation:** Added declare -A COMPLETED_CACHE at line 30, modified extract_tasks() to cache completed tasks using md5sum hash
+  - **Result:** Completed tasks cached on first parse, subsequent refreshes return cached values without reprocessing
+  - **Commit:** f408f04
 
 - [ ] **P4A.3** Implement differential display update:
   - Track which tasks changed since last display

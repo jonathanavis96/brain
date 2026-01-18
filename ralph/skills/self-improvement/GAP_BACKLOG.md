@@ -36,3 +36,17 @@ Rules:
   - Other useful commands: `tput cup $row $col`, `tput el` (clear line), `tput sc/rc` (save/restore cursor)
 - **Priority:** P2
 - **Status:** Identified
+
+### 2026-01-18 — Bash Associative Arrays for Caching
+- **Type:** Knowledge / Pattern
+- **Why useful:** Improves performance by avoiding repeated expensive operations (parsing, computation) on immutable data
+- **When triggered:** Implementing completed task caching in current_ralph_tasks.sh (task P4A.2)
+- **Evidence:**
+  - Used `declare -A COMPLETED_CACHE` to create associative array for key-value storage
+  - Generated cache keys using `md5sum`: `cache_key=$(echo -n "$data" | md5sum | cut -d' ' -f1)`
+  - Checked cache: `if [[ -n "${CACHE[$key]}" ]]; then echo "${CACHE[$key]}"; fi`
+  - Stored values: `CACHE[$key]="$value"`
+  - Pattern useful for caching parsed data, computed results, or any immutable lookups
+  - Current use case: Cache completed task display strings to skip title generation on refresh
+- **Priority:** P2
+- **Status:** Identified
