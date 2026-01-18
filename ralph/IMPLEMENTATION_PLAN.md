@@ -473,11 +473,12 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
 
 **Goal:** Ensure migration completeness and template integrity.
 
-- [ ] **P5.1** Verify templates scaffold correctly:
+- [x] **P5.1** Verify templates scaffold correctly:
   - Run: `bash new-project.sh test-verify-scaffold`
   - Verify created project has `skills/` directory (not `kb/`)
   - Verify AGENTS.md references `skills/` path
   - Clean up: `rm -rf test-verify-scaffold`
+  - ✅ FIXED: Changed new-project.sh line 322 from `mkdir -p "$PROJECT_LOCATION/ralph/kb"` to `mkdir -p "$PROJECT_LOCATION/skills"`
 
 
 - [ ] **P5.2** Verify no remaining /kb/ references in active files:
