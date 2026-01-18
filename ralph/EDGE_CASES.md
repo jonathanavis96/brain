@@ -33,7 +33,7 @@ Brain-Repo: ${BRAIN_REPO}
 |-------|-------------|
 | `ralph` | Changes to Ralph loop files (PROMPT, AGENTS, etc.) |
 | `templates` | Changes to project templates |
-| `kb` | Knowledge base additions/updates |
+| `skills` | Skills additions/updates |
 | `refs` | Reference documentation changes |
 | `plan` | IMPLEMENTATION_PLAN.md updates |
 | `loop` | loop.sh changes |
