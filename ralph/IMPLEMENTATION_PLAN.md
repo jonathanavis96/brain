@@ -116,7 +116,7 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
 
 ### Phase 6: Documentation & Cleanup
 
-- [ ] **6.1** Sync templates/ralph/thunk_ralph_tasks.sh with fixed version
+- [x] **6.1** Sync templates/ralph/thunk_ralph_tasks.sh with fixed version
   - Replace entire file with root thunk_ralph_tasks.sh (fixed version is 410 lines, template is 564 lines with old auto-sync code)
   - Remove scan_for_new_completions, task_exists_in_thunk, extract_task_id functions
   - Remove PLAN_FILE variable and all references

@@ -222,3 +222,6 @@ Started: 2026-01-18
 | 191 | 3.5 | HIGH | **3.5** Test monitor is display-only - All 5 tests pass: startup clean, watches THUNK.md only, no PLAN references, no scanning messages, no 'f' hotkey | 2026-01-18 |
 | 190 | 3.3 | HIGH | **3.3** Remove initial scan and "Syncing with" messages | 2026-01-18 |
 | 192 | 5.2 | HIGH | **5.2** Verify all three bugs are fixed - Bug A: Parser handles ### subsections ✓, Bug B: Full clear/redraw (no artifacts) ✓, Bug C: THUNK monitor display-only ✓ | 2026-01-18 |
+| 193 | 3.4 | HIGH | **3.4** Update thunk_ralph_tasks.sh header comments | 2026-01-19 |
+| 194 | 3.5 | HIGH | **3.5** Test monitor is display-only | 2026-01-19 |
+| 194 | 6.1 | MEDIUM | **6.1** Sync templates/ralph/thunk_ralph_tasks.sh with fixed version - Replaced 564-line template with 410-line fixed version (no auto-sync code) | 2026-01-19 |
