@@ -36,3 +36,17 @@ Started: 2026-01-18
 | 22 | LEGACY | MEDIUM | Verify current_ralph_tasks.sh filtering behavior (commit 89994fa) | 2026-01-18 |
 | 23 | LEGACY | MEDIUM | Create THUNK.md with Era 1 structure (commit 5efe47b) | 2026-01-18 |
 | 24 | LEGACY | MEDIUM | Safety check and cleanup of brain_staging/brain_promoted directories | 2026-01-18 |
+| 25 | T3.6 | HIGH | **T3.6** Test thunk_ralph_tasks.sh displays correctly and all features work | 2026-01-18 |
+| 26 | T3.9 | HIGH | **T3.9** Update `thunk_ralph_tasks.sh` to use same human-friendly formatting | 2026-01-18 |
+| 27 | T3.10 | HIGH | **T3.10** Test display formatting with various task types: | 2026-01-18 |
+| 28 | T4.1 | HIGH | **T4.1** Update `loop.sh` to add `launch_monitors()` function (includes terminal auto-detection and pgrep checks) | 2026-01-18 |
+| 29 | T4.2 | HIGH | **T4.2** Make terminal launch command configurable (support gnome-terminal, Windows Terminal, tmux) - ✅ Implemented in T4.1 | 2026-01-18 |
+| 30 | T4.3 | HIGH | **T4.3** Add pgrep check to avoid duplicate monitor launches - ✅ Implemented in T4.1 | 2026-01-18 |
+| 31 | T4.4 | HIGH | **T4.4** Test auto-launch works when running `loop.sh` | 2026-01-18 |
+| 32 | T5.1 | HIGH | **T5.1** Copy `current_ralph_tasks.sh` to `templates/ralph/current_ralph_tasks.sh` | 2026-01-18 |
+| 33 | T5.2 | HIGH | **T5.2** Copy `thunk_ralph_tasks.sh` to `templates/ralph/thunk_ralph_tasks.sh` | 2026-01-18 |
+| 34 | T5.3 | HIGH | **T5.3** Create `templates/ralph/THUNK.project.md` template with placeholders | 2026-01-18 |
+| 35 | T5.4 | HIGH | **T5.4** Update `new-project.sh` to copy monitor scripts (with chmod +x) | 2026-01-18 |
+| 36 | T5.5 | HIGH | **T5.5** Update `new-project.sh` to copy and process THUNK.project.md | 2026-01-18 |
+| 37 | T6.1 | HIGH | **T6.1** Test: Mark a task `[x]` in IMPLEMENTATION_PLAN.md → verify it appears in THUNK.md | 2026-01-18 |
+| 38 | 5.1 | MEDIUM | **5.1** Update `AGENTS.md` | 2026-01-18 |

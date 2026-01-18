@@ -136,7 +136,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 #### Phase T6: THUNK Validation
 
-- [ ] **T6.1** Test: Mark a task `[x]` in IMPLEMENTATION_PLAN.md → verify it appears in THUNK.md
+- [x] **T6.1** Test: Mark a task `[x]` in IMPLEMENTATION_PLAN.md → verify it appears in THUNK.md
 - [ ] **T6.2** Test: Sequential numbering works (next task gets next THUNK #)
 - [ ] **T6.3** Test: Era sections display correctly in thunk_ralph_tasks.sh
 - [ ] **T6.4** Test: Hotkey `[r]` clears display but preserves THUNK.md
