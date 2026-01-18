@@ -17,16 +17,17 @@ BRAIN_REPO="${BRAIN_REPO:-jonathanavis96/brain}"
 
 # Derive clean branch name from git repo name
 # Derive repo name from git remote (stable across machines) or fall back to folder name
-if git remote get-url origin &>/dev/null; then
-  REPO_NAME=$(basename -s .git "$(git remote get-url origin)")
+# Use git -C "$ROOT" to ensure commands run against the intended project directory
+if git -C "$ROOT" remote get-url origin &>/dev/null; then
+  REPO_NAME=$(basename -s .git "$(git -C "$ROOT" remote get-url origin)")
 else
-  REPO_NAME=$(basename "$(git rev-parse --show-toplevel)")
+  REPO_NAME=$(basename "$ROOT")
 fi
 WORK_BRANCH="${REPO_NAME}-work"
 
 # Lock file to prevent concurrent runs
 # Lock file includes hash of repo path for uniqueness across same-named repos
-REPO_PATH_HASH=$(git rev-parse --show-toplevel | md5sum | cut -c1-8)
+REPO_PATH_HASH=$(cd "$ROOT" && pwd | md5sum | cut -c1-8)
 LOCK_FILE="/tmp/ralph-${REPO_NAME}-${REPO_PATH_HASH}.lock"
 
 # TARGET_BRANCH will be set after arg parsing (uses BRANCH_ARG if provided, else WORK_BRANCH)
@@ -34,13 +35,14 @@ LOCK_FILE="/tmp/ralph-${REPO_NAME}-${REPO_PATH_HASH}.lock"
 # Atomic lock acquisition using noclobber (portable fallback if flock unavailable)
 acquire_lock() {
   if command -v flock &>/dev/null; then
-    # Use flock for atomic locking
-    exec 9>"$LOCK_FILE"
+    # Use flock for atomic locking (append mode to avoid truncating before lock acquired)
+    exec 9>>"$LOCK_FILE"
     if ! flock -n 9; then
       LOCK_PID=$(cat "$LOCK_FILE" 2>/dev/null || echo "unknown")
       echo "ERROR: Ralph loop already running (lock: $LOCK_FILE, PID: $LOCK_PID)"
       exit 1
     fi
+    # Now holding lock, safe to overwrite with our PID
     echo "$$" >"$LOCK_FILE"
   else
     # Portable fallback: noclobber atomic create
@@ -254,8 +256,17 @@ EOF
   echo "Using model: $RESOLVED_MODEL"
 fi
 
-# Resolve target branch: user-provided --branch takes precedence over default WORK_BRANCH
-TARGET_BRANCH="${BRANCH_ARG:-$WORK_BRANCH}"
+# Resolve target branch:
+# 1. User-provided --branch takes precedence
+# 2. On --resume without --branch, stay on current branch
+# 3. Otherwise use default WORK_BRANCH
+if [[ -n "$BRANCH_ARG" ]]; then
+  TARGET_BRANCH="$BRANCH_ARG"
+elif [[ "$RESUME_MODE" == "true" ]]; then
+  TARGET_BRANCH="$(git -C "$ROOT" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "$WORK_BRANCH")"
+else
+  TARGET_BRANCH="$WORK_BRANCH"
+fi
 
 # Debug output for derived values
 echo "Repo: $REPO_NAME | Branch: $TARGET_BRANCH | Lock: $LOCK_FILE"
