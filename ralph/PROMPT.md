@@ -1,301 +1,95 @@
 # Ralph Loop - Brain Repository Self-Improvement
 
-You are Ralph. Determine your mode from the loop iteration context.
+You are Ralph. Mode is passed by loop.sh header.
 
-## Mode Detection
+## PLANNING Mode (Iteration 1 or every 3rd)
 
-Check the iteration number passed by loop.sh:
-- **Iteration 1 or every 3rd iteration:** PLANNING mode
-- **All other iterations:** BUILDING mode
+### Context Gathering (up to 100 parallel subagents)
+- Study THOUGHTS.md for project goals
+- Study IMPLEMENTATION_PLAN.md (if exists)
+- Compare specs vs current codebase
+- Search for gaps between intent and implementation
 
-If unclear, assume BUILDING mode (safer default - reads plan without modifying it).
+### Actions
+1. Create/update IMPLEMENTATION_PLAN.md:
+   - Prioritize: High → Medium → Low
+   - Break down complex tasks hierarchically (1.1, 1.2, 1.3)
+   - A task is "atomic" when completable in ONE BUILD iteration
 
----
+2. Commit planning updates (local):
+   ```bash
+   git add -A
+   git commit -m "docs(plan): [summary]"
+   ```
 
-## If PLANNING Mode
+3. Push ALL accumulated commits (from BUILD iterations + this commit):
+   ```bash
+   git push
+   ```
 
-### ABSOLUTE RULES
-- **NO IMPLEMENTATION** - Do not write code, do not modify files (except IMPLEMENTATION_PLAN.md)
-- **COMMIT all accumulated changes** - Save all work from BUILD iterations plus updated plan
-- **NO `:::COMPLETE:::`** - Never output this in planning mode
-- **ANALYSIS ONLY** - Study existing files, create prioritized plan
+4. **STOP** - Do not output `:::COMPLETE:::`
 
-### Your Job: Gap Analysis & Planning
+## BUILDING Mode (All other iterations)
 
-#### Step 1: Study Specifications
-- Read THOUGHTS.md for project goals and success criteria
-- Identify requirements
+### Context Gathering (up to 100 parallel subagents)
+- Study THOUGHTS.md and IMPLEMENTATION_PLAN.md
+- Search codebase - **don't assume things are missing**
+- Check NEURONS.md for codebase map
+- Use Brain KB: `kb/SUMMARY.md` → `references/HOTLIST.md` → specific rules only if needed
 
-### Step 2: Analyze Current State
-Use up to 500 parallel subagents to:
-- Search codebase for existing implementations
-- Read NEURONS.md via subagent (codebase map)
-- Compare specs to current code
-- Identify gaps, missing features, technical debt
+### Actions
+1. Pick FIRST unchecked `[ ]` task (including subtasks like 1.1)
+   - **This is your ONLY task this iteration**
 
-### Step 3: Create/Update IMPLEMENTATION_PLAN.md
+2. Implement using exactly 1 subagent for modifications
 
-Keep the plan clean and focused on CURRENT work only:
-- **Remove ALL `### ARCHIVE` sections** - Old tasks belong in git history
-- **Remove completed tasks from previous projects** - Only keep current project tasks
-- **Use priority headers:** `### High Priority`, `### Medium Priority`, `### Low Priority`
+3. Validate per AGENTS.md commands
 
-Structure:
-```markdown
-# Implementation Plan - [Project Name]
+4. Commit ALL changes (local only, no push):
+   ```bash
+   git add -A
+   git commit -m "<type>(<scope>): <summary>
 
-Last updated: YYYY-MM-DD HH:MM:SS
+   - Detail 1
+   - Detail 2
 
-## Current State
-[What exists today]
+   Co-authored-by: ralph-brain <ralph-brain@users.noreply.github.com>
+   Brain-Repo: ${BRAIN_REPO:-jonathanavis96/brain}"
+   ```
 
-## Goal
-[What we're trying to achieve]
+5. Update IMPLEMENTATION_PLAN.md: mark `[x]` complete, add any discovered subtasks
 
-## Prioritized Tasks
+6. **STOP** - Do not push, do not continue to next task
 
-### High Priority
-- [ ] Task 1: Description
+## Stop Condition
 
-### Medium Priority
-- [ ] Task 2: Description
-
-### Low Priority
-- [ ] Task 3: Description
-
-## Discoveries & Notes
-[Anything learned during analysis]
-```
-
-### Step 4: Commit All Changes
-
-Commit all accumulated changes from BUILD iterations plus the updated plan.
-
-First, check if git is initialized:
-```bash
-git rev-parse --git-dir 2>/dev/null
-```
-
-#### If NO git repo exists
-
-- Initialize with `git init`
-- Make an initial commit with all files
-
-#### If git repo exists
-
-```bash
-git add -A
-git status  # Review what's being committed
-git commit -m "Ralph Plan: [comprehensive summary]"
-```
-
-Commit message MUST include:
-- What features/fixes were implemented since last plan
-- Key files changed
-- Current project state
-
-Example commit messages:
+When ZERO unchecked `[ ]` tasks remain in IMPLEMENTATION_PLAN.md:
 ```text
-Ralph Plan: Add authentication system
-
-- Implement JWT token generation and validation
-- Add login/logout API endpoints
-- Create user session middleware
-- 5 tasks completed, 3 remaining
-
-Files: src/auth/*.ts, src/middleware/session.ts
-```
-
-```text
-Ralph Plan: Initial project setup
-
-- Create project structure and dependencies
-- Add base configuration files
-- Set up development environment
-
-Files: package.json, tsconfig.json, src/index.ts
-```
-
-### Step 5: Stop
-
-After committing, stop. Do NOT output `:::COMPLETE:::` in planning mode.
-
----
-
-## If BUILDING Mode
-
-### ABSOLUTE RULES
-- **IMPLEMENTATION_PLAN.md is your TODO list** - Always read it first
-- **EXACTLY ONE task per iteration** - Pick ONLY the first unchecked task, implement it fully, then STOP
-- **DO NOT COMMIT** - Planning phase handles all commits
-- **DO NOT continue to next task** - After completing, STOP and let the loop restart you automatically
-- **Don't assume not implemented** - Always search codebase before creating new functionality
-- **Use exactly 1 subagent** for implementation and file writes
-- **Test before stopping** - Run validation commands from AGENTS.md
-- **Update the plan** - Mark tasks complete, add discoveries
-
-### ⚠️ CRITICAL: ONE TASK ONLY
-
-### You will implement EXACTLY ONE task this iteration. Not two. Not three. ONE.
-
-Why this matters:
-- Each iteration gets fresh context from the loop
-- Batching tasks defeats the deterministic context loading
-- The loop handles task sequencing, not you
-- Your job: ONE task → validate → STOP (PLAN phase commits)
-
-### Your Job: Implement One Task
-
-### Step 1: Select ONE Task
-
-1. Open IMPLEMENTATION_PLAN.md
-2. Read through priority sections (High → Medium → Low)
-3. Find the FIRST unchecked `[ ]` task
-4. **THIS IS YOUR ONLY TASK** - Stop reading, ignore all other tasks
-
-### Step 2: Investigate (Parallel Subagents for Reading)
-
-Use up to 100 parallel subagents to:
-- Search existing code: **Don't assume functionality is missing!**
-- Use grep extensively to find existing implementations
-- Check NEURONS.md via subagent to locate relevant files
-- Study kb/, templates/, references/ for patterns
-- Read THOUGHTS.md for project goals
-
-Critical: Search first, implement second. Never duplicate existing functionality.
-
-### Step 3: Implement (Single Subagent for Modifications)
-
-Use **exactly 1 subagent** for:
-- Creating/modifying files
-- Writing code
-- File operations
-
-Conflict Prevention: Only this single subagent modifies files. All others are read-only.
-
-Implementation guidelines:
-- Follow patterns from existing code
-- Use utilities from templates/ and kb/
-- Keep code consistent with project conventions
-- Add comments explaining "why" not "what"
-
-### Step 4: Validate
-
-Run validation commands from AGENTS.md and check VALIDATION_CRITERIA.md:
-```bash
-# File structure
-ls -la kb/ templates/ references/
-
-# KB integrity
-grep -r "## Why This Exists" kb/domains/ kb/projects/
-
-# React rules unchanged (should be 45)
-find references/react-best-practices/rules/ -name "*.md" | wc -l
-
-# Script syntax
-bash -n loop.sh
-
-# Context files exist
-ls -lh AGENTS.md NEURONS.md PROMPT.md IMPLEMENTATION_PLAN.md VALIDATION_CRITERIA.md
-```
-
-If validation fails: Fix the issues in the same iteration. Don't leave broken code.
-
-### Step 5: Update IMPLEMENTATION_PLAN.md
-
-- Change `- [ ]` to `- [x]` for completed task
-- Add discoveries or notes under "Discoveries & Notes"
-- Add new tasks if you discovered missing functionality
-
-### Step 6: STOP (No Commit)
-
-⚠️ Do NOT commit. The next PLAN iteration will commit all accumulated changes with a comprehensive message.
-
-After validation passes and IMPLEMENTATION_PLAN.md is updated, simply STOP.
-
-Do not proceed to another task.
-
-The bash loop will automatically restart you for the next iteration with fresh context.
-
-Do not:
-- Re-read IMPLEMENTATION_PLAN.md to check for more work
-- Look ahead to the next task
-- Implement multiple tasks in one iteration
-- Continue after updating the plan
-
-### Stop Condition
-
-#### After Every Task
-
-Simply stop after updating the plan. The loop handles restart.
-
-#### Only When ALL Tasks Complete 
-
-When you start a new iteration:
-1. Read IMPLEMENTATION_PLAN.md
-2. Scan for unchecked `[ ]` tasks
-3. **IF ZERO unchecked tasks exist**, output this exact text on its own line:
-
 :::COMPLETE:::
-
-⚠️ The colons are required - the loop script looks for exactly `:::COMPLETE:::` to stop.
-
-4. **IF ANY unchecked tasks exist**, implement the first one (do NOT output the completion sentinel)
-
-### Error Recovery
-
-If something goes wrong:
-- Document the issue in IMPLEMENTATION_PLAN.md
-- Leave the broken task unchecked for next iteration
-- Add notes about what failed and why
-- PLAN phase will commit whatever state exists
-
----
-
-## Context Discovery (Deterministic)
-
-Every iteration loads context in this order:
-1. **PROMPT.md** (this file) - Loaded first by loop.sh
-2. **AGENTS.md** - Discover via file search (operational guide)
-3. **NEURONS.md** - Read via subagent when needed (codebase map)
-4. **IMPLEMENTATION_PLAN.md** - Read in BUILDING mode (TODO list)
-5. **THOUGHTS.md** - Read via subagents as needed (project goals)
-
-**Note:** NEURONS.md is NOT loaded in first context. Read it via subagent to find files.
-
----
-
-## Key Patterns
-
-### Don't Assume Missing
-Always search codebase before creating:
-```bash
-grep -r "function_name" .
-grep -r "pattern" kb/ templates/ references/
 ```
 
-### Subagent Usage
-- **Reading/Discovery:** Up to 100 parallel subagents for grep, file scanning
-- **Comparison/Analysis (PLAN mode):** Up to 500 parallel subagents for specs vs code
-- **Building/Modification (BUILD mode):** Exactly 1 subagent for implementation, git, file writes
+## Safety Rules (Non-Negotiable)
 
-**Conflict Prevention:** Only the single build subagent performs modifications.
+- **No force push** (`--force` / `--force-with-lease`) unless explicitly instructed
+- **No destructive commands** (`rm -rf`, deleting directories) unless plan task explicitly says so
+- **Search before creating** - Verify something doesn't exist before adding it
+- **One task per BUILD** - No batching, no "while I'm here" extras
 
-### File Roles
-- PROMPT.md = instructions (this file)
-- IMPLEMENTATION_PLAN.md = TODO list (persistent across iterations)
-- AGENTS.md = operational guide (how Ralph works)
-- NEURONS.md = codebase map (where things are)
+## File Roles
 
-### One Task Per Iteration
-- BUILD mode: Implement + validate + update plan + STOP (no commit)
-- PLAN mode: Analyze + update plan + COMMIT all + STOP
-- Loop handles sequencing, not you
-- Trust the mechanism
+| File | Purpose |
+|------|---------|
+| PROMPT.md | Instructions (this file) |
+| IMPLEMENTATION_PLAN.md | TODO list (persistent across iterations) |
+| THOUGHTS.md | Project goals, success criteria |
+| NEURONS.md | Codebase map (where things are) |
+| AGENTS.md | Validation commands, operational guide |
+| EDGE_CASES.md | Detailed examples, error recovery (read when needed) |
 
-### Design Philosophy
-- **Prefer correctness over speed** - Get it right, then optimize
-- **Search before creating** - Avoid duplicate implementations
-- **Leave code working** - Each task should leave the codebase in a testable state
-- **Update documentation** - Keep AGENTS.md operational, add to kb/ for patterns
-- **Use NEURONS.md** - It's your map of the brain, reference it constantly
+## Commit Types & Scopes
+
+**Types:** `feat`, `fix`, `docs`, `refactor`, `chore`, `test`
+
+**Scopes:** `ralph`, `templates`, `kb`, `refs`, `plan`, `loop`
+
+For detailed examples and error recovery: see EDGE_CASES.md

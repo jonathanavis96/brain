@@ -24,11 +24,12 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 /home/grafe/code/brain/ralph/
 ├── AGENTS.md                    # Ralph operational guide (how to run)
 ├── NEURONS.md                   # This file (brain map - what exists where)
-├── loop.sh                      # Ralph loop runner (bash)
+├── loop.sh                      # Ralph loop runner (safe branch handling, lock file)
 ├── rovodev-config.yml           # RovoDev configuration
 │
-├── PROMPT.md                    # Unified prompt (plan + build modes)
-├── PROMPT_verify.md             # Verification prompt
+├── PROMPT.md                    # Lean prompt (~95 lines) - core Ralph mechanics
+├── EDGE_CASES.md                # Detailed examples, error recovery (read on-demand)
+├── CHANGES.md                   # Release notes and migration guide
 ├── IMPLEMENTATION_PLAN.md       # Persistent TODO list
 │
 ├── kb/                          # Knowledge Base (7 files)
@@ -48,11 +49,13 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 │       ├── INDEX.md             # Categorized rule index
 │       └── rules/               # 45 individual rule files (DO NOT MODIFY)
 │
-├── templates/                   # Project bootstrap templates (4 files)
+├── templates/                   # Project bootstrap templates
 │   ├── README.md                # Template usage and path conventions
 │   ├── AGENTS.project.md        # Project AGENTS.md template
 │   ├── fix_plan.md              # Task checklist template
 │   └── ralph/                   # Ralph loop templates
+│       ├── PROMPT.project.md    # Lean project prompt (~39 lines, references brain)
+│       ├── loop.sh              # Thin wrapper (~25 lines, delegates to brain)
 │       └── RALPH.md             # Ralph contract template
 │
 ├── specs/                       # Project specifications (1 file)
@@ -70,6 +73,16 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 
 ---
 
+## Environment Variables
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `BRAIN_ROOT` | `../brain` (sibling dir) | Path to brain repository |
+| `BRAIN_REPO` | `jonathanavis96/brain` | GitHub repo for commit trailers |
+| `RALPH_PROJECT_ROOT` | (auto) | Set by thin wrapper for project delegation |
+
+---
+
 ## Quick Reference Lookup
 
 ### "I need to..."
@@ -79,6 +92,8 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 | **Understand what's in the brain** | `NEURONS.md` (this file) |
 | **Run Ralph loop** | `AGENTS.md` → `bash loop.sh` |
 | **Find TODO list** | `IMPLEMENTATION_PLAN.md` |
+| **See commit examples & error recovery** | `EDGE_CASES.md` |
+| **See recent changes** | `CHANGES.md` |
 | **See KB structure** | `kb/SUMMARY.md` |
 | **Check React performance patterns** | `references/react-best-practices/HOTLIST.md` → `INDEX.md` |
 | **Create new KB file** | `kb/conventions.md` (authoring guide) |

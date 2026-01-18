@@ -1,17 +1,67 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-RALPH="$ROOT/ralph"
+# ROOT can be overridden via env var for project delegation
+if [[ -n "${RALPH_PROJECT_ROOT:-}" ]]; then
+  ROOT="$RALPH_PROJECT_ROOT"
+  RALPH="$ROOT/ralph"
+else
+  ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+  RALPH="$ROOT/ralph"
+fi
 LOGDIR="$RALPH/logs"
 mkdir -p "$LOGDIR"
+
+# Configurable Brain repo for commit trailers
+BRAIN_REPO="${BRAIN_REPO:-jonathanavis96/brain}"
+
+# Derive clean branch name from git repo name
+# Derive repo name from git remote (stable across machines) or fall back to folder name
+# Use git -C "$ROOT" to ensure commands run against the intended project directory
+if git -C "$ROOT" remote get-url origin &>/dev/null; then
+  REPO_NAME=$(basename -s .git "$(git -C "$ROOT" remote get-url origin)")
+else
+  REPO_NAME=$(basename "$ROOT")
+fi
+WORK_BRANCH="${REPO_NAME}-work"
+
+# Lock file to prevent concurrent runs
+# Lock file includes hash of repo path for uniqueness across same-named repos
+REPO_PATH_HASH=$(cd "$ROOT" && pwd | md5sum | cut -c1-8)
+LOCK_FILE="/tmp/ralph-${REPO_NAME}-${REPO_PATH_HASH}.lock"
+
+# TARGET_BRANCH will be set after arg parsing (uses BRANCH_ARG if provided, else WORK_BRANCH)
+
+# Atomic lock acquisition using noclobber (portable fallback if flock unavailable)
+acquire_lock() {
+  if command -v flock &>/dev/null; then
+    # Use flock for atomic locking (append mode to avoid truncating before lock acquired)
+    exec 9>>"$LOCK_FILE"
+    if ! flock -n 9; then
+      LOCK_PID=$(cat "$LOCK_FILE" 2>/dev/null || echo "unknown")
+      echo "ERROR: Ralph loop already running (lock: $LOCK_FILE, PID: $LOCK_PID)"
+      exit 1
+    fi
+    # Now holding lock, safe to overwrite with our PID
+    echo "$$" >"$LOCK_FILE"
+  else
+    # Portable fallback: noclobber atomic create
+    if ! ( set -o noclobber; echo "$$" > "$LOCK_FILE" ) 2>/dev/null; then
+      LOCK_PID=$(cat "$LOCK_FILE" 2>/dev/null || echo "unknown")
+      echo "ERROR: Ralph loop already running (lock: $LOCK_FILE, PID: $LOCK_PID)"
+      exit 1
+    fi
+  fi
+}
+acquire_lock
 
 # Interrupt handling: First Ctrl+C = graceful exit, Second Ctrl+C = immediate exit
 INTERRUPT_COUNT=0
 INTERRUPT_RECEIVED=false
 
-# Cleanup function for temp files
+# Cleanup function for temp files and lock
 cleanup() {
+  rm -f "$LOCK_FILE"
   if [[ -n "${TEMP_CONFIG:-}" && -f "${TEMP_CONFIG:-}" ]]; then
     rm -f "$TEMP_CONFIG"
   fi
@@ -42,6 +92,24 @@ handle_interrupt() {
 trap 'handle_interrupt' INT TERM
 trap 'cleanup' EXIT
 
+# Safe branch handling - ensures target branch exists without resetting history
+# Accepts optional branch name; defaults to WORK_BRANCH
+ensure_worktree_branch() {
+  local branch="${1:-$WORK_BRANCH}"
+  if git show-ref --verify --quiet "refs/heads/$branch"; then
+    git checkout "$branch"
+  else
+    echo "Creating new worktree branch: $branch"
+    git checkout -b "$branch"
+  fi
+  
+  # Set upstream if not already set
+  if ! git rev-parse --abbrev-ref --symbolic-full-name "@{u}" >/dev/null 2>&1; then
+    echo "Setting upstream for $branch"
+    git push -u origin "$branch" 2>/dev/null || true
+  fi
+}
+
 usage() {
   cat <<'EOF'
 Usage:
@@ -52,7 +120,7 @@ Defaults:
   --iterations 1
   --plan-every 3
   --model       Uses default from ~/.rovodev/config.yml
-  --branch      Current branch (use 'ralph-work' for PR workflow)
+  --branch      Defaults to <repo>-work (e.g., brain-work, NeoQueue-work)
   If --prompt is NOT provided, loop alternates:
     - PLAN on iteration 1 and every N iterations
     - BUILD otherwise
@@ -67,7 +135,7 @@ Model Selection:
 
 Branch Workflow:
   --branch <name>  Work on specified branch (creates if needed, switches to it)
-                   Use --branch ralph-work for PR batch workflow
+                   Default: <repo>-work (derived from git remote, e.g., brain-work)
                    Then run pr-batch.sh to create PRs to main
 
 Safety Features:
@@ -188,6 +256,20 @@ EOF
   echo "Using model: $RESOLVED_MODEL"
 fi
 
+# Resolve target branch:
+# 1. User-provided --branch takes precedence
+# 2. On --resume without --branch, stay on current branch
+# 3. Otherwise use default WORK_BRANCH
+if [[ -n "$BRANCH_ARG" ]]; then
+  TARGET_BRANCH="$BRANCH_ARG"
+elif [[ "$RESUME_MODE" == "true" ]]; then
+  TARGET_BRANCH="$(git -C "$ROOT" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "$WORK_BRANCH")"
+else
+  TARGET_BRANCH="$WORK_BRANCH"
+fi
+
+# Debug output for derived values
+echo "Repo: $REPO_NAME | Branch: $TARGET_BRANCH | Lock: $LOCK_FILE"
 
 # Resolve a prompt path robustly (works from repo root or ralph/)
 resolve_prompt() {
@@ -388,6 +470,14 @@ run_once() {
   
   return 0
 }
+
+# Ensure we're on the worktree branch before starting
+echo ""
+echo "========================================"
+echo "Setting up worktree branch: $TARGET_BRANCH"
+echo "========================================"
+ensure_worktree_branch "$TARGET_BRANCH"
+echo ""
 
 # Determine prompt strategy
 if [[ -n "$PROMPT_ARG" ]]; then
