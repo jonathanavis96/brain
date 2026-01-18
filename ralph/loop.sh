@@ -600,11 +600,13 @@ else
     
     if [[ "$i" -eq 1 ]] || (( PLAN_EVERY > 0 && ( (i-1) % PLAN_EVERY == 0 ) )); then
       run_once "$PLAN_PROMPT" "plan" "$i"
+      run_result=$?
     else
       run_once "$BUILD_PROMPT" "build" "$i"
+      run_result=$?
     fi
-    # Check if Ralph signaled completion
-    if [[ $? -eq 42 ]]; then
+    # Check if Ralph signaled completion (exit code 42)
+    if [[ $run_result -eq 42 ]]; then
       echo ""
       echo "Loop terminated early due to completion."
       break
