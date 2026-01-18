@@ -271,7 +271,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 - [x] **5.5** Update `VALIDATION_CRITERIA.md`
 - [x] **5.6** Update `EDGE_CASES.md`
 - [x] **5.7** Update `CHANGES.md` (0 kb/ references, verify only)
-- [ ] **5.8** Update `HISTORY.md` (2 kb/ references in historical notes)
+- [x] **5.8** Update `HISTORY.md` (2 kb/ references in historical notes)
 
 **Generators:**
 - [ ] **5.9** Update `generators/generate-neurons.sh` (5 kb/ references)
