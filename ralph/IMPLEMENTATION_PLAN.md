@@ -27,10 +27,10 @@ Ongoing maintenance and improvement tasks for the brain repository. This plan tr
   - Started new era: "Brain Repository Maintenance"
   - Previous era summarized in THUNK.md
 
-- [ ] **1.3** Audit TODOs in new-project.sh
+- [x] **1.3** Audit TODOs in new-project.sh
   - Lines 431, 446, 461 have TODO comments for HIGH INTELLIGENCE generators
   - Evaluate: implement generators or remove TODOs
-  - Decision: Keep as future work or promote to task
+  - Decision: Generators already implemented - removed outdated TODOs
 
 ### Skills Knowledge Base
 
