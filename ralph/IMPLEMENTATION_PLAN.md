@@ -418,9 +418,14 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
     - Cursor positioning with tput cup (no blank screen)
     - Footer always updates on any change
 
-- [ ] **P4A.9** Test: First unchecked task shows `▶` symbol, others show `○`
-  - Verify symbol changes when first task is completed
-  - Next unchecked task becomes `▶`
+- [x] **P4A.9** Test: First unchecked task shows `▶` symbol, others show `○`: ✅ COMPLETE
+  - ✅ Verified code contains ▶ symbol for first pending task (line 453)
+  - ✅ Verified code contains ○ symbol for subsequent pending tasks (line 451)
+  - ✅ Verified code contains ✓ symbol for completed tasks (line 444)
+  - ✅ Verified first_pending_seen flag properly initialized in display_tasks() (line 382)
+  - ✅ Logic simulation confirms correct symbol assignment
+  - ✅ Completion simulation confirms symbol transitions (▶ moves to next pending)
+  - **Test script:** tmp_rovodev_test_p4a9.sh (executed successfully)
 
 #### Phase 4B: thunk_ralph_tasks.sh Improvements
 
