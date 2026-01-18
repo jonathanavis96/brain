@@ -218,7 +218,7 @@ Complete these tasks in order. Mark each `[x]` when done.
   - Add folder tree showing new structure
   - Add link to `skills/index.md`
   - Add section for `skills/self-improvement/`
-- [ ] **4.2** Create `skills/index.md` with skill catalog (see File Templates below)
+- [x] **4.2** Create `skills/index.md` with skill catalog (see File Templates below)
 
 #### Phase 5: Update All References (Iterations 8-15)
 
