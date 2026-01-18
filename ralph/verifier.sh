@@ -13,6 +13,12 @@ AC_HASH_FILE="${VERIFY_DIR}/ac.sha256"
 
 mkdir -p "$VERIFY_DIR"
 
+# Freshness: Write run_id if provided by loop.sh
+RUN_ID_FILE="${VERIFY_DIR}/run_id.txt"
+if [[ -n "${RUN_ID:-}" ]]; then
+  echo "$RUN_ID" > "$RUN_ID_FILE"
+fi
+
 timestamp() { date +"%Y-%m-%d %H:%M:%S"; }
 git_head() { git rev-parse --short HEAD 2>/dev/null || echo "no-git"; }
 
