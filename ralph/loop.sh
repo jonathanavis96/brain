@@ -517,6 +517,47 @@ run_once() {
   return 0
 }
 
+# Auto-launch monitors in background if not already running
+launch_monitors() {
+  local monitor_dir="$RALPH"
+  
+  # Check if current_ralph_tasks.sh exists and launch
+  if [[ -f "$monitor_dir/current_ralph_tasks.sh" ]]; then
+    if ! pgrep -f "current_ralph_tasks.sh" > /dev/null; then
+      # Try to detect available terminal emulator
+      if command -v gnome-terminal &>/dev/null; then
+        gnome-terminal --title="Current Ralph Tasks" -- bash "$monitor_dir/current_ralph_tasks.sh" &
+      elif command -v konsole &>/dev/null; then
+        konsole --title "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh" &
+      elif command -v xterm &>/dev/null; then
+        xterm -T "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh" &
+      elif [[ -n "${TMUX:-}" ]]; then
+        tmux new-window -n "Current Tasks" "bash $monitor_dir/current_ralph_tasks.sh"
+      else
+        echo "⚠️  No terminal emulator detected. Skipping current_ralph_tasks.sh launch."
+      fi
+    fi
+  fi
+  
+  # Check if thunk_ralph_tasks.sh exists and launch
+  if [[ -f "$monitor_dir/thunk_ralph_tasks.sh" ]]; then
+    if ! pgrep -f "thunk_ralph_tasks.sh" > /dev/null; then
+      # Try to detect available terminal emulator
+      if command -v gnome-terminal &>/dev/null; then
+        gnome-terminal --title="Thunk Ralph Tasks" -- bash "$monitor_dir/thunk_ralph_tasks.sh" &
+      elif command -v konsole &>/dev/null; then
+        konsole --title "Thunk Ralph Tasks" -e bash "$monitor_dir/thunk_ralph_tasks.sh" &
+      elif command -v xterm &>/dev/null; then
+        xterm -T "Thunk Ralph Tasks" -e bash "$monitor_dir/thunk_ralph_tasks.sh" &
+      elif [[ -n "${TMUX:-}" ]]; then
+        tmux new-window -n "Thunk Tasks" "bash $monitor_dir/thunk_ralph_tasks.sh"
+      else
+        echo "⚠️  No terminal emulator detected. Skipping thunk_ralph_tasks.sh launch."
+      fi
+    fi
+  fi
+}
+
 # Ensure we're on the worktree branch before starting
 echo ""
 echo "========================================"
@@ -524,6 +565,9 @@ echo "Setting up worktree branch: $TARGET_BRANCH"
 echo "========================================"
 ensure_worktree_branch "$TARGET_BRANCH"
 echo ""
+
+# Launch monitors before starting iterations
+launch_monitors
 
 # Determine prompt strategy
 if [[ -n "$PROMPT_ARG" ]]; then
