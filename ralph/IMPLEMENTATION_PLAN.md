@@ -79,7 +79,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 #### Phase T3: Create thunk_ralph_tasks.sh (Core Functionality)
 
 - [x] **T3.1** Create `thunk_ralph_tasks.sh` monitor script with core functions (375 lines)
-- [ ] **T3.2** Mark complete: THUNK.md parsing and display implemented (lines 188-240)
+- [x] **T3.2** Mark complete: THUNK.md parsing and display implemented (lines 188-240)
 - [ ] **T3.3** Mark complete: Completion detection implemented (scan_for_new_completions, lines 109-186)
 - [ ] **T3.4** Mark complete: Auto-append logic with sequential numbering implemented (lines 145-176)
 - [ ] **T3.5** Mark complete: Hotkeys implemented - `[r]` refresh, `[f]` force sync, `[e]` new era, `[q]` quit (lines 320-370)
