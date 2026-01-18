@@ -32,8 +32,27 @@ LOCK_FILE="/tmp/ralph-${REPO_NAME}-${REPO_PATH_HASH}.lock"
 
 # TARGET_BRANCH will be set after arg parsing (uses BRANCH_ARG if provided, else WORK_BRANCH)
 
-# Atomic lock acquisition using noclobber (portable fallback if flock unavailable)
+# Check if a PID is still running
+is_pid_running() {
+  local pid="$1"
+  if [[ -z "$pid" || "$pid" == "unknown" ]]; then
+    return 1  # Invalid PID, treat as not running
+  fi
+  # Check if process exists (works on Linux/macOS)
+  kill -0 "$pid" 2>/dev/null
+}
+
+# Atomic lock acquisition with stale lock detection
 acquire_lock() {
+  # First, check for stale lock
+  if [[ -f "$LOCK_FILE" ]]; then
+    LOCK_PID=$(cat "$LOCK_FILE" 2>/dev/null || echo "unknown")
+    if ! is_pid_running "$LOCK_PID"; then
+      echo "🧹 Removing stale lock (PID $LOCK_PID no longer running)"
+      rm -f "$LOCK_FILE"
+    fi
+  fi
+
   if command -v flock &>/dev/null; then
     # Use flock for atomic locking (append mode to avoid truncating before lock acquired)
     exec 9>>"$LOCK_FILE"
@@ -48,8 +67,19 @@ acquire_lock() {
     # Portable fallback: noclobber atomic create
     if ! ( set -o noclobber; echo "$$" > "$LOCK_FILE" ) 2>/dev/null; then
       LOCK_PID=$(cat "$LOCK_FILE" 2>/dev/null || echo "unknown")
-      echo "ERROR: Ralph loop already running (lock: $LOCK_FILE, PID: $LOCK_PID)"
-      exit 1
+      # Double-check: maybe we lost a race but the winner is now dead
+      if ! is_pid_running "$LOCK_PID"; then
+        echo "🧹 Removing stale lock (PID $LOCK_PID no longer running)"
+        rm -f "$LOCK_FILE"
+        # Retry once
+        if ! ( set -o noclobber; echo "$$" > "$LOCK_FILE" ) 2>/dev/null; then
+          echo "ERROR: Ralph loop already running (lock: $LOCK_FILE)"
+          exit 1
+        fi
+      else
+        echo "ERROR: Ralph loop already running (lock: $LOCK_FILE, PID: $LOCK_PID)"
+        exit 1
+      fi
     fi
   fi
 }
