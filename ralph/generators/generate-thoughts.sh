@@ -80,8 +80,8 @@ infer_project_type() {
 
 PROJECT_TYPE=$(infer_project_type "$PROJECT_TECH")
 
-# HIGH INTELLIGENCE: Infer KB references based on tech stack
-infer_kb_references() {
+# HIGH INTELLIGENCE: Infer skills references based on tech stack
+infer_skills_references() {
     local tech="$1"
     tech_lower=$(echo "$tech" | tr '[:upper:]' '[:lower:]')
     
@@ -97,7 +97,7 @@ infer_kb_references() {
     echo -e "$refs"
 }
 
-KB_REFS=$(infer_kb_references "$PROJECT_TECH")
+SKILLS_REFS=$(infer_skills_references "$PROJECT_TECH")
 
 # HIGH INTELLIGENCE: Generate Definition of Done categories based on project type
 generate_dod_categories() {
@@ -367,9 +367,9 @@ ${SOURCE_STRUCTURE}
 
 This project references brain repository knowledge:
 
-${KB_REFS}
-${KB_REFS:+
-}${KB_REFS:+}Refer to \`../../brain/skills/SUMMARY.md\` for complete knowledge base index.
+${SKILLS_REFS}
+${SKILLS_REFS:+
+}${SKILLS_REFS:+}Refer to \`../../brain/skills/SUMMARY.md\` for complete knowledge base index.
 
 ## Technical Context
 
