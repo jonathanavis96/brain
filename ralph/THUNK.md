@@ -50,3 +50,5 @@ Started: 2026-01-18
 | 36 | T5.5 | HIGH | **T5.5** Update `new-project.sh` to copy and process THUNK.project.md | 2026-01-18 |
 | 37 | T6.1 | HIGH | **T6.1** Test: Mark a task `[x]` in IMPLEMENTATION_PLAN.md → verify it appears in THUNK.md | 2026-01-18 |
 | 38 | 5.1 | MEDIUM | **5.1** Update `AGENTS.md` | 2026-01-18 |
+| 39 | T6.2 | HIGH | **T6.2** Test: Sequential numbering works (next task gets next THUNK #) | 2026-01-18 |
+| 40 | LEGACY | HIGH | **TEST-SEQ-1** Test sequential numbering validation task | 2026-01-18 |
