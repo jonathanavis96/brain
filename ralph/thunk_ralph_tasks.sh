@@ -17,20 +17,13 @@
 #   q - Quit cleanly
 
 RALPH_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PLAN_FILE="$RALPH_DIR/IMPLEMENTATION_PLAN.md"
 THUNK_FILE="$RALPH_DIR/THUNK.md"
 LAST_THUNK_MODIFIED=""
-LAST_PLAN_MODIFIED=""
 
 # Check if required files exist
 if [[ ! -f "$THUNK_FILE" ]]; then
     echo "Error: THUNK.md not found in $RALPH_DIR"
     echo "Please create THUNK.md first (see THOUGHTS.md for template)"
-    exit 1
-fi
-
-if [[ ! -f "$PLAN_FILE" ]]; then
-    echo "Error: IMPLEMENTATION_PLAN.md not found in $RALPH_DIR"
     exit 1
 fi
 
@@ -346,7 +339,6 @@ display_thunks
 
 # Get initial modification times and line count
 LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
-LAST_PLAN_MODIFIED=$(get_file_mtime "$PLAN_FILE")
 LAST_LINE_COUNT=$(wc -l < "$THUNK_FILE" 2>/dev/null || echo "0")
 
 # Enable non-blocking input
@@ -393,7 +385,6 @@ while true; do
     
     # Check for file changes
     CURRENT_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
-    CURRENT_PLAN_MODIFIED=$(get_file_mtime "$PLAN_FILE")
     
     if [[ "$CURRENT_THUNK_MODIFIED" != "$LAST_THUNK_MODIFIED" ]]; then
         LAST_THUNK_MODIFIED="$CURRENT_THUNK_MODIFIED"
