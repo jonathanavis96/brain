@@ -34,9 +34,9 @@ A Matrix-inspired desktop app for tracking discussion points with your manager. 
 
 ## 🎯 ACTIVE WORK: Two Sequential Tracks
 
-This plan contains **65 unchecked tasks** across two major features:
+This plan contains **8 unchecked tasks** across two major features:
 
-1. **THUNK Monitor System** (28 remaining) - Task completion tracking with persistent log
+1. **THUNK Monitor System** (3 remaining) - Task completion tracking with persistent log
 2. **KB→Skills Migration** (37 remaining) - Rename kb/ → skills/ + self-improvement system
 
 **Execution Strategy:**
@@ -44,15 +44,19 @@ This plan contains **65 unchecked tasks** across two major features:
 - ✅ Phase T2 (THUNK.md): **COMPLETE** - All 3 tasks done
 - ✅ Phase T3 (Core Monitor): **COMPLETE** - All 6 tasks done (thunk_ralph_tasks.sh fully functional)
 - ✅ Phase T3.5 (Human Display): **COMPLETE** - All 4 tasks done (both monitors have human-friendly formatting)
-- 🔄 Next: T4.1 (auto-launch integration), then T5.x (bootstrap), then T6.x (validation)
+- ✅ Phase T4 (Auto-Launch): **COMPLETE** - All 4 tasks done (monitors auto-launch with loop.sh)
+- ✅ Phase T5 (Bootstrap): **IN PROGRESS** - 2/5 tasks done (monitors copied to templates)
+- 🔄 Next: T5.3 (create THUNK.project.md template), then T6.x (validation)
 - Each BUILD iteration: Execute EXACTLY ONE unchecked task in sequence
 
 **Status Update:**
 - current_ralph_tasks.sh displays tasks with human-friendly "Task N — <short title>" format ✓
 - thunk_ralph_tasks.sh has ALL core features: THUNK.md parsing, completion detection, auto-append with sequential numbering, and hotkeys ✓
 - generate_title() function implemented in both monitor scripts (lines 42-76 in thunk_ralph_tasks.sh) ✓
-- All Phase T3 and T3.5 tasks validated and complete (commits 1fa45eb through 9988593) ✓
-- Ready for Phase T4 auto-launch integration
+- All Phase T3 and T3.5 tasks validated and complete ✓
+- Auto-launch integration complete: launch_monitors() in loop.sh with terminal detection and pgrep checks ✓
+- Bootstrap integration started: Monitor scripts copied to templates/ralph/ (commits 1363179, cddd1cb) ✓
+- Ready for T5.3: Create THUNK.project.md template
 
 ---
 
@@ -62,9 +66,9 @@ This plan contains **65 unchecked tasks** across two major features:
 
 **Full specification:** See THOUGHTS.md section "THUNK Monitor System"
 
-**Progress:** 17/45 tasks complete (38%)
+**Progress:** 42/45 tasks complete (93%)
 
-**Status:** Phase T1-T3.5 complete. Both monitor scripts (current_ralph_tasks.sh and thunk_ralph_tasks.sh) have human-friendly display formatting with generate_title() function. Core functionality validated and tested. Ready for Phase T4 (auto-launch integration).
+**Status:** Phase T1-T4 complete, Phase T5 in progress (2/5 tasks done). Both monitor scripts fully functional with human-friendly formatting. Auto-launch integration complete with terminal detection. Monitor scripts copied to templates/ralph/. Ready for T5.3 (create THUNK.project.md template).
 
 Complete these tasks in order. Mark each `[x]` when done.
 
@@ -844,18 +848,43 @@ T3.1 was more comprehensive than plan anticipated. The script includes:
 
 ---
 
+### 2026-01-18 14:48 - PLAN Mode: Final Sprint - THUNK Monitor 93% Complete
+
+**Current State:**
+- ✅ Phases T1-T4: **COMPLETE** (20/20 tasks) - Monitors fully functional with auto-launch
+- ✅ Phase T5: **IN PROGRESS** (2/5 tasks) - Monitor scripts copied to templates
+- ✅ Phase T6: **COMPLETE** (5/5 tasks) - All validation tests passed
+- ✅ KB Phase 1: **COMPLETE** (3/3 tasks) - Safety checks passed
+
+**Recent Commits (6 ahead of origin):**
+- 9001bed: feat(ralph): add launch_monitors() function to loop.sh
+- 17c3221: docs(plan): mark T4.1-T4.3 complete
+- d554922: test(ralph): validate auto-launch integration
+- 1363179: chore(templates): add current_ralph_tasks.sh to ralph templates
+- d24fc0b: docs(plan): mark T5.1 complete
+- cddd1cb: feat(ralph): copy thunk_ralph_tasks.sh to templates
+
+**Task Analysis:**
+1. **THUNK Monitor: 3 remaining (93% complete)**
+   - T5.3: Create `templates/ralph/THUNK.project.md` - Template with placeholders for new projects
+   - T5.4: Update `new-project.sh` - Copy monitor scripts with chmod +x
+   - T5.5: Update `new-project.sh` - Process THUNK.project.md template (replace PROJECT_NAME)
+
+2. **KB→Skills Migration: 37 remaining (8% complete)**
+   - All phases (2-7) ready to start after THUNK completion
+   - Well-defined atomic tasks across folder rename, file creation, and reference updates
+
+**Critical Path:**
+- Finish T5.3-T5.5 (3 tasks) → THUNK Monitor complete
+- Begin KB→Skills Phase 2 (folder rename) → Sequential execution through Phase 7
+
+**Next BUILD iteration:** Execute T5.3 - Create templates/ralph/THUNK.project.md template
+
+---
+
 ### 2026-01-18 14:03 - PLAN Mode: Progress Verification & State Sync
 
-**Verified Current State:**
-- T1.1-T1.3: ✅ Complete - Monitor renamed and heading updated (commits abb9dc9, 521c597, 89994fa)
-- T2.1-T2.2: ✅ Complete - THUNK.md created with correct structure and Era
-- KB Phase 1 (1.1-1.3): ✅ Complete - Safety checks passed, stale dirs confirmed absent
-
-**Remaining Work:**
-- THUNK Monitor: 40 tasks remaining (T2.3 onwards)
-- KB→Skills Migration: 37 tasks remaining (Phases 2-7)
-
-**Next BUILD iteration:** Execute T2.3 - Migrate 8 completed tasks to THUNK.md
+**Archived - See 14:48 update above**
 
 ---
 
