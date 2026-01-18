@@ -455,10 +455,12 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - parse_new_thunk_entries() uses tput cup for cursor positioning
   - Footer updates in-place with new total count
 
-- [ ] **P4B.4** Add cursor positioning for incremental append:
-  - Track last display row
-  - Position cursor at next row for new content
-  - Update totals in footer using `tput cup`
+- [x] **P4B.4** Add cursor positioning for incremental append: ✅ COMPLETE
+  - Track last display row: LAST_DISPLAY_ROW variable stores position after full display
+  - Position cursor at next row for new content: append_row calculated by backing up from footer (LAST_DISPLAY_ROW - 8)
+  - Update totals in footer using `tput cup`: Footer redrawn in-place at lines 396-403
+  - Implementation: parse_new_thunk_entries() uses tput cup for cursor positioning
+  - Verified: All cursor positioning logic confirmed via automated test
 
 - [ ] **P4B.5** Apply same title extraction fix for "Test:" tasks:
   - Use same logic as P4A.6
