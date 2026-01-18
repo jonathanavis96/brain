@@ -97,3 +97,4 @@ Started: 2026-01-18
 | 83 | LEGACY | MEDIUM | Bootstrap NeoQueue project using brain infrastructure | 2026-01-18 |
 | 84 | 6.3 | MEDIUM | **6.3** Add self-improvement protocol to `templates/AGENTS.project.md` | 2026-01-18 |
 | 84 | 6.2 | MEDIUM | **6.2** Add checkpoints to `PROMPT.md`:  | 2026-01-18 |
+| 85 | 6.4 | MEDIUM | **6.4** Add checkpoints to `templates/ralph/PROMPT.project.md` | 2026-01-18 |
