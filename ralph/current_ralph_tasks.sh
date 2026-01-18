@@ -326,7 +326,10 @@ wrap_text() {
 
 # Function to display tasks with formatting
 display_tasks() {
-    clear
+    # Use cursor positioning instead of clear to avoid blank screen
+    # Move cursor to top-left (0,0) and clear from cursor to end of screen
+    tput cup 0 0
+    tput ed
     
     # Header
     echo "╔════════════════════════════════════════════════════════════════╗"
