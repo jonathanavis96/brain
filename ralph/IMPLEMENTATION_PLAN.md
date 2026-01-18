@@ -270,7 +270,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 - [x] **5.4** Update `README.md` (15 kb/ references)
 - [x] **5.5** Update `VALIDATION_CRITERIA.md`
 - [x] **5.6** Update `EDGE_CASES.md`
-- [ ] **5.7** Update `CHANGES.md` (0 kb/ references, verify only)
+- [x] **5.7** Update `CHANGES.md` (0 kb/ references, verify only)
 - [ ] **5.8** Update `HISTORY.md` (2 kb/ references in historical notes)
 
 **Generators:**
