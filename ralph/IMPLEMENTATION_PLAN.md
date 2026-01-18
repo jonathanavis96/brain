@@ -20,7 +20,7 @@
 
 ### Phase 7: Knowledge Base Quality Assurance
 
-- [ ] **7.1** Audit skills/ directory for consistency
+- [x] **7.1** Audit skills/ directory for consistency
   - Verify all skill files follow conventions.md structure
   - Check for missing "When to Use" or "Triggers" sections
   - Ensure all skills are indexed in skills/index.md
