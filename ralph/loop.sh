@@ -440,6 +440,8 @@ BUILD_PROMPT="$RALPH/PROMPT.md"
 
 # Verifier gate - runs AC.rules checks after BUILD
 VERIFY_SCRIPT="$RALPH/verifier.sh"
+RUN_ID_FILE="$RALPH/.verify/run_id.txt"
+
 run_verifier() {
   if [[ ! -x "$VERIFY_SCRIPT" ]]; then
     echo "⚠️  Verifier not found or not executable: $VERIFY_SCRIPT"
@@ -451,8 +453,26 @@ run_verifier() {
   echo "🔍 Running acceptance criteria verifier..."
   echo "========================================"
   
+  # Generate unique run ID for freshness check
+  export RUN_ID="$(date +%s)-$$"
+  
   if "$VERIFY_SCRIPT"; then
-    echo "✅ All acceptance criteria passed!"
+    # Verify freshness: run_id.txt must match our RUN_ID
+    if [[ -f "$RUN_ID_FILE" ]]; then
+      local stored_id
+      stored_id=$(cat "$RUN_ID_FILE" 2>/dev/null)
+      if [[ "$stored_id" != "$RUN_ID" ]]; then
+        echo "❌ Freshness check FAILED: run_id mismatch"
+        echo "   Expected: $RUN_ID"
+        echo "   Got: $stored_id"
+        return 1
+      fi
+    else
+      echo "❌ Freshness check FAILED: run_id.txt not found"
+      return 1
+    fi
+    
+    echo "✅ All acceptance criteria passed! (run_id: $RUN_ID)"
     cat "$RALPH/.verify/latest.txt" 2>/dev/null | tail -10 || true
     return 0
   else
