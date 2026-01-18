@@ -5,6 +5,7 @@ You are Ralph. Mode is passed by loop.sh header.
 ## PLANNING Mode (Iteration 1 or every 3rd)
 
 ### Context Gathering (up to 100 parallel subagents)
+- Study `skills/SUMMARY.md` for overview and `skills/index.md` for available skills
 - Study THOUGHTS.md for project goals
 - Study IMPLEMENTATION_PLAN.md (if exists)
 - Compare specs vs current codebase
@@ -32,6 +33,7 @@ You are Ralph. Mode is passed by loop.sh header.
 ## BUILDING Mode (All other iterations)
 
 ### Context Gathering (up to 100 parallel subagents)
+- Study `skills/SUMMARY.md` for overview and `skills/index.md` for available skills
 - Study THOUGHTS.md and IMPLEMENTATION_PLAN.md
 - Search codebase - **don't assume things are missing**
 - Check NEURONS.md for codebase map
@@ -59,7 +61,13 @@ You are Ralph. Mode is passed by loop.sh header.
 
 5. Update IMPLEMENTATION_PLAN.md: mark `[x]` complete, add any discovered subtasks
 
-6. **STOP** - Do not push, do not continue to next task
+6. **Self-Improvement Check:** If you used undocumented knowledge/procedure/tooling:
+   - Search `skills/` for existing matching skill
+   - Search `skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
+   - If not found: append new entry to `GAP_BACKLOG.md`
+   - If gap is clear, specific, and recurring: promote to `SKILL_BACKLOG.md`
+
+7. **STOP** - Do not push, do not continue to next task
 
 ## Stop Condition
 
