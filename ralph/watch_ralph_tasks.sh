@@ -53,14 +53,16 @@ extract_tasks() {
     
     while IFS= read -r line; do
         # Detect High/Medium/Low Priority sections (flexible matching)
-        # Matches: "### High Priority", "### Phase 1: Desc (High Priority)", "### Phase 1: Desc (High Priority - Details)"
-        if [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+        # Matches: "### High Priority", "### Phase 1: Desc (High Priority)", "### 🔴 HIGH PRIORITY: Desc"
+        # Case-insensitive matching via converting to uppercase for comparison
+        local line_upper="${line^^}"
+        if [[ "$line_upper" =~ HIGH[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
             current_section="High Priority"
             in_task_section=true
-        elif [[ "$line" =~ Medium[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+        elif [[ "$line_upper" =~ MEDIUM[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
             current_section="Medium Priority"
             in_task_section=true
-        elif [[ "$line" =~ Low[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+        elif [[ "$line_upper" =~ LOW[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
             current_section="Low Priority"
             in_task_section=true
         elif [[ "$line" =~ ^###[[:space:]]+ ]]; then

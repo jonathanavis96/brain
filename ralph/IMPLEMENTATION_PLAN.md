@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & NeoQueue
 
-Last updated: 2026-01-18 12:11:00
+Last updated: 2026-01-18 13:50:00
 
 ## Current State
 
@@ -9,7 +9,7 @@ The brain repository is **fully mature and production-ready** with comprehensive
 
 **Core Systems (All Complete):**
 - **Templates:** 18 files across 3 tech stacks (backend, python, ralph)
-- **Knowledge Base:** 16 KB files (12 domains + 2 projects + conventions + SUMMARY)
+- **Knowledge Base:** 16 KB files (12 domains + 2 projects + conventions + SUMMARY) — **PENDING MIGRATION TO `skills/`**
 - **Ralph Loop:** Fully operational with safety features (dry-run, rollback, resume, task monitor)
 - **React References:** 45 curated performance rules (complete, unmodified reference set)
 - **Documentation:** Comprehensive README.md, AGENTS.md, NEURONS.md, VALIDATION_CRITERIA.md
@@ -25,14 +25,681 @@ The brain repository is **fully mature and production-ready** with comprehensive
 ### New Project: NeoQueue (from THOUGHTS.md)
 A Matrix-inspired desktop app for tracking discussion points with your manager. See THOUGHTS.md for full specification.
 
+---
+
+## 🚨 ACTIVE MIGRATION: KB → Skills
+
+**Objective:** Rename `ralph/kb/` to `ralph/skills/` and introduce a self-improvement system.
+
+**Full runbook:** See THOUGHTS.md section "KB→Skills Migration Runbook"
+
+**Runtime context:**
+- Expected iterations: 20+
+- PlanEvery: 10
+
+---
+
 ## Prioritized Tasks
 
-### High Priority
+### 🔴 HIGH PRIORITY: THUNK Monitor System
 
-- [ ] Commit uncommitted changes to loop.sh, PROMPT.md, EDGE_CASES.md
-  - loop.sh: Added `--branch` argument support, refactored ensure_worktree_branch
-  - PROMPT.md: Fixed Markdown code block syntax (```text)
-  - EDGE_CASES.md: Fixed Markdown code block syntax highlighting
+**Full specification:** See THOUGHTS.md section "THUNK Monitor System"
+
+Complete these tasks in order. Mark each `[x]` when done.
+
+#### Phase T1: Rename Existing Monitor
+
+- [ ] **T1.1** Rename `watch_ralph_tasks.sh` → `current_ralph_tasks.sh`:
+  ```bash
+  mv brain/ralph/watch_ralph_tasks.sh brain/ralph/current_ralph_tasks.sh
+  ```
+- [ ] **T1.2** Update heading in `current_ralph_tasks.sh` from `RALPH TASK MONITOR` → `CURRENT RALPH TASKS`
+- [ ] **T1.3** Verify `current_ralph_tasks.sh` only shows `[ ]` items (already excludes `[x]` - confirm behavior)
+
+#### Phase T2: Create THUNK.md
+
+- [ ] **T2.1** Create `brain/ralph/THUNK.md` with initial structure (see File Templates below)
+- [ ] **T2.2** Set initial Era to "THUNK Monitor + KB→Skills Migration"
+- [ ] **T2.3** Migrate any already-completed `[x]` tasks from IMPLEMENTATION_PLAN.md to THUNK.md
+
+#### Phase T3: Create thunk_ralph_tasks.sh
+
+- [ ] **T3.1** Create `brain/ralph/thunk_ralph_tasks.sh` monitor script
+- [ ] **T3.2** Implement THUNK.md parsing and display (show THUNK #, original #, priority, description)
+- [ ] **T3.3** Implement completion detection (compare IMPLEMENTATION_PLAN.md `[x]` items against THUNK.md)
+- [ ] **T3.4** Implement auto-append logic with sequential numbering
+- [ ] **T3.5** Implement hotkeys: `[r]` refresh/clear, `[f]` force sync, `[e]` new era, `[q]` quit
+- [ ] **T3.6** Test thunk_ralph_tasks.sh displays correctly
+
+#### Phase T3.5: Human-Friendly Display Formatting
+
+**Full specification:** See THOUGHTS.md section "Monitor Display Formatting (Human-Optimized)"
+
+- [ ] **T3.7** Update `current_ralph_tasks.sh` to transform LLM format → human display:
+  - Strip technical IDs (T1.1, T2.3) from display
+  - Generate short human titles from task descriptions
+  - Format as `Task N — <short title>` with bold if terminal supports
+  - Indent sub-bullets under task headers
+  - Wrap long lines but maintain indent
+- [ ] **T3.8** Implement title generation logic:
+  - Look for action verbs (Rename, Update, Create, Verify, Delete, Add, Remove, Test)
+  - Extract main object/target
+  - Keep to 2-4 words max
+- [ ] **T3.9** Update `thunk_ralph_tasks.sh` to use same human-friendly formatting
+- [ ] **T3.10** Test display formatting with various task types:
+  - Single action tasks
+  - Tasks with context/details
+  - Tasks with multiple sub-items
+  - Long task descriptions that need wrapping
+
+#### Phase T4: Auto-Launch Integration
+
+- [ ] **T4.1** Update `loop.sh` to add `launch_monitors()` function
+- [ ] **T4.2** Make terminal launch command configurable (support gnome-terminal, Windows Terminal, tmux)
+- [ ] **T4.3** Add pgrep check to avoid duplicate monitor launches
+- [ ] **T4.4** Test auto-launch works when running `loop.sh`
+
+#### Phase T5: Bootstrap Integration
+
+- [ ] **T5.1** Copy `current_ralph_tasks.sh` to `templates/ralph/current_ralph_tasks.sh`
+- [ ] **T5.2** Copy `thunk_ralph_tasks.sh` to `templates/ralph/thunk_ralph_tasks.sh`
+- [ ] **T5.3** Create `templates/ralph/THUNK.project.md` template with placeholders
+- [ ] **T5.4** Update `new-project.sh` to copy monitor scripts (with chmod +x)
+- [ ] **T5.5** Update `new-project.sh` to copy and process THUNK.project.md
+
+#### Phase T6: THUNK Validation
+
+- [ ] **T6.1** Test: Mark a task `[x]` in IMPLEMENTATION_PLAN.md → verify it appears in THUNK.md
+- [ ] **T6.2** Test: Sequential numbering works (next task gets next THUNK #)
+- [ ] **T6.3** Test: Era sections display correctly in thunk_ralph_tasks.sh
+- [ ] **T6.4** Test: Hotkey `[r]` clears display but preserves THUNK.md
+- [ ] **T6.5** Test: Bootstrap new project → verify monitors exist and work
+
+---
+
+### 🔴 HIGH PRIORITY: KB→Skills Migration
+
+**Full runbook:** See THOUGHTS.md section "KB→Skills Migration Runbook"
+
+Complete these tasks in order. Mark each `[x]` when done.
+
+#### Phase 1: Safety Checks & Cleanup (Iteration 1)
+
+- [x] **1.1** Run safety check for `brain_staging/` and `brain_promoted/` dependencies:
+  ```bash
+  grep -rn "brain_staging\|brain_promoted" . --include="*.sh" --include="*.md" --include="*.yml" 2>/dev/null | grep -v "^./brain_staging" | grep -v "^./brain_promoted" | grep -v "logs/" | grep -v "old_md/"
+  ```
+  ✅ Verified 2026-01-18: Only historical references in docs (IMPLEMENTATION_PLAN.md, THOUGHTS.md, PROMPT_verify.md)
+- [x] **1.2** If check passes (empty or only historical refs), delete stale directories:
+  ```bash
+  rm -rf brain_staging brain_promoted
+  ```
+  ✅ Verified 2026-01-18: Directories already do not exist
+- [x] **1.3** Verify current KB structure exists:
+  ```bash
+  ls -la kb/
+  ```
+  ✅ Verified 2026-01-18: kb/ exists with SUMMARY.md, conventions.md, domains/, projects/
+
+#### Phase 2: Folder Rename (Iteration 2)
+
+- [ ] **2.1** Rename `kb` to `skills`:
+  ```bash
+  mv brain/ralph/kb brain/ralph/skills
+  ```
+- [ ] **2.2** Verify rename succeeded:
+  ```bash
+  ls -la brain/ralph/skills/
+  ```
+
+#### Phase 3: Create Self-Improvement System (Iterations 3-5)
+
+- [ ] **3.1** Create self-improvement directory:
+  ```bash
+  mkdir -p brain/ralph/skills/self-improvement
+  ```
+- [ ] **3.2** Create `skills/self-improvement/README.md` with content from File Templates section below
+- [ ] **3.3** Create `skills/self-improvement/GAP_CAPTURE_RULES.md` with content from File Templates section below
+- [ ] **3.4** Create `skills/self-improvement/GAP_BACKLOG.md` with content from File Templates section below
+- [ ] **3.5** Create `skills/self-improvement/SKILL_BACKLOG.md` with content from File Templates section below
+- [ ] **3.6** Create `skills/self-improvement/SKILL_TEMPLATE.md` with content from File Templates section below
+
+#### Phase 4: Update Summary & Create Index (Iterations 6-7)
+
+- [ ] **4.1** Update `brain/ralph/skills/summary.md`:
+  - Change all `kb/` references to `skills/`
+  - Add folder tree showing new structure
+  - Add link to `skills/index.md`
+  - Add section for `skills/self-improvement/`
+- [ ] **4.2** Create `brain/ralph/skills/index.md` with skill catalog (see File Templates below)
+
+#### Phase 5: Update All References (Iterations 8-15)
+
+**Replacement rules:**
+| Find | Replace |
+|------|---------|
+| `ralph/kb/` | `ralph/skills/` |
+| `/kb/` | `/skills/` |
+| `kb/domains` | `skills/domains` |
+| `kb/projects` | `skills/projects` |
+| `kb/conventions` | `skills/conventions` |
+| `kb/SUMMARY` | `skills/summary` |
+| Commit scope `kb` | Commit scope `skills` |
+
+**Core Ralph Files:**
+- [ ] **5.1** Update `brain/ralph/AGENTS.md`
+- [ ] **5.2** Update `brain/ralph/PROMPT.md` (including commit scope on ~line 93)
+- [ ] **5.3** Update `brain/ralph/NEURONS.md`
+- [ ] **5.4** Update `brain/ralph/README.md`
+- [ ] **5.5** Update `brain/ralph/VALIDATION_CRITERIA.md`
+- [ ] **5.6** Update `brain/ralph/EDGE_CASES.md`
+- [ ] **5.7** Update `brain/ralph/CHANGES.md`
+- [ ] **5.8** Update `brain/ralph/HISTORY.md`
+- [ ] **5.9** Update `brain/ralph/IMPLEMENTATION_PLAN.md` (this file - update Future Enhancements section)
+
+**Generators:**
+- [ ] **5.10** Update `brain/ralph/generators/generate-neurons.sh`
+- [ ] **5.11** Update `brain/ralph/generators/generate-thoughts.sh`
+
+**Templates:**
+- [ ] **5.12** Update `brain/ralph/templates/AGENTS.project.md`
+- [ ] **5.13** Update `brain/ralph/templates/THOUGHTS.project.md`
+- [ ] **5.14** Update `brain/ralph/templates/NEURONS.project.md`
+- [ ] **5.15** Update `brain/ralph/templates/README.md`
+- [ ] **5.16** Update `brain/ralph/templates/ralph/PROMPT.project.md`
+- [ ] **5.17** Update `brain/ralph/templates/ralph/RALPH.md`
+- [ ] **5.18** Update `brain/ralph/templates/backend/*.md` (all files with kb refs)
+- [ ] **5.19** Update `brain/ralph/templates/python/*.md` (all files with kb refs)
+
+**Skills Folder Internal:**
+- [ ] **5.20** Update `brain/ralph/skills/domains/README.md`
+- [ ] **5.21** Update `brain/ralph/skills/projects/README.md`
+- [ ] **5.22** Update `brain/ralph/skills/conventions.md`
+
+**External Projects:**
+- [ ] **5.23** Update `rovo-test/AGENTS.md`
+- [ ] **5.24** Update `rovo-test/NEURONS.md`
+- [ ] **5.25** Update `rovo-test/THOUGHTS.md`
+- [ ] **5.26** Update `rovo-test/ralph/PROMPT.md`
+- [ ] **5.27** Update `NeoQueue/ralph/PROMPT.md`
+- [ ] **5.28** Update `NeoQueue/ralph/RALPH.md`
+- [ ] **5.29** Update `NeoQueue/ralph/AGENTS.md`
+
+#### Phase 6: Wire Self-Improvement Protocol (Iterations 16-18)
+
+- [ ] **6.1** Add "Skills + Self-Improvement Protocol" section to `brain/ralph/AGENTS.md`:
+  ```markdown
+  ## Skills + Self-Improvement Protocol
+
+  **Start of iteration:**
+  1. Study `skills/summary.md` for overview
+  2. Check `skills/index.md` for available skills
+  3. Review `skills/self-improvement/GAP_CAPTURE_RULES.md` for capture protocol
+
+  **End of iteration:**
+  1. If you used undocumented knowledge/procedure/tooling:
+     - Search `skills/` for existing matching skill
+     - Search `skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
+     - If not found: append new entry to `GAP_BACKLOG.md`
+  2. If a gap is clear, specific, and recurring:
+     - Add to `skills/self-improvement/SKILL_BACKLOG.md`
+     - Create skill file using `SKILL_TEMPLATE.md`
+     - Update `skills/index.md`
+  ```
+- [ ] **6.2** Add checkpoints to `brain/ralph/PROMPT.md`:
+  - Before planning: "Study skills/summary.md and skills/index.md"
+  - After completing work: "Log undocumented knowledge as gap; promote if clear/recurring"
+- [ ] **6.3** Add self-improvement protocol to `brain/ralph/templates/AGENTS.project.md`
+- [ ] **6.4** Add checkpoints to `brain/ralph/templates/ralph/PROMPT.project.md`
+
+#### Phase 7: Final Validation (Iterations 19-20)
+
+- [ ] **7.1** Verify no remaining KB references:
+  ```bash
+  grep -rn "ralph/kb" . --include="*.md" --include="*.sh" 2>/dev/null | grep -v HISTORY.md | grep -v "old_md/"
+  ```
+  Expected: ZERO results
+- [ ] **7.2** Verify no `/kb/` references in active code:
+  ```bash
+  grep -rn "/kb/" brain/ralph/*.md brain/ralph/templates/ brain/ralph/generators/ 2>/dev/null
+  ```
+  Expected: ZERO results
+- [ ] **7.3** Verify new structure exists (all must succeed):
+  ```bash
+  ls brain/ralph/skills/summary.md
+  ls brain/ralph/skills/index.md
+  ls brain/ralph/skills/conventions.md
+  ls brain/ralph/skills/domains/README.md
+  ls brain/ralph/skills/projects/README.md
+  ls brain/ralph/skills/self-improvement/README.md
+  ls brain/ralph/skills/self-improvement/GAP_CAPTURE_RULES.md
+  ls brain/ralph/skills/self-improvement/GAP_BACKLOG.md
+  ls brain/ralph/skills/self-improvement/SKILL_BACKLOG.md
+  ls brain/ralph/skills/self-improvement/SKILL_TEMPLATE.md
+  ```
+- [ ] **7.4** Verify deleted directories are gone:
+  ```bash
+  ls brain_staging 2>/dev/null && echo "FAIL" || echo "PASS"
+  ls brain_promoted 2>/dev/null && echo "FAIL" || echo "PASS"
+  ```
+
+---
+
+## File Templates (Exact Content for New Files)
+
+### THUNK.md (Initial for brain/ralph/)
+
+```markdown
+# THUNK - Completed Task Log
+
+Persistent record of all completed tasks across IMPLEMENTATION_PLAN.md iterations.
+
+Project: brain
+Created: 2026-01-18
+
+---
+
+## Era: THUNK Monitor + KB→Skills Migration
+Started: 2026-01-18
+
+| THUNK # | Original # | Priority | Description | Completed |
+|---------|------------|----------|-------------|-----------|
+
+*No tasks completed yet.*
+```
+
+### THUNK.project.md (Template for bootstrapped projects)
+
+```markdown
+# THUNK - Completed Task Log
+
+Persistent record of all completed tasks across IMPLEMENTATION_PLAN.md iterations.
+
+Project: {{PROJECT_NAME}}
+Created: {{DATE}}
+
+---
+
+## Era: Initial Setup
+Started: {{DATE}}
+
+| THUNK # | Original # | Priority | Description | Completed |
+|---------|------------|----------|-------------|-----------|
+
+*No tasks completed yet.*
+```
+
+### skills/self-improvement/README.md
+
+```markdown
+# Self-Improvement System
+
+This folder contains the self-improvement protocol for the Ralph brain system.
+
+## Purpose
+
+Capture knowledge gaps discovered during work and promote clear, recurring gaps into reusable skill files.
+
+## Files
+
+| File | Purpose |
+|------|---------|
+| [GAP_CAPTURE_RULES.md](GAP_CAPTURE_RULES.md) | Mandatory rules for gap capture and promotion |
+| [GAP_BACKLOG.md](GAP_BACKLOG.md) | Raw capture log of all discovered gaps |
+| [SKILL_BACKLOG.md](SKILL_BACKLOG.md) | Promotion queue for gaps ready to become skills |
+| [SKILL_TEMPLATE.md](SKILL_TEMPLATE.md) | Template for creating new skill files |
+
+## Workflow
+
+1. **Discover gap** → Always log in `GAP_BACKLOG.md`
+2. **Evaluate** → Is it clear, specific, and recurring?
+3. **Promote** → If yes, add to `SKILL_BACKLOG.md` and create skill file
+4. **Place** → `skills/domains/<topic>/<skill>.md` or `skills/projects/<project>/<skill>.md`
+5. **Index** → Update `skills/index.md`
+
+## Placement Rules
+
+- **Broadly reusable** → `skills/domains/<topic>/<skill>.md`
+- **Project-specific but reusable** → `skills/projects/<project>/<skill>.md`
+- **Uncertain** → Default to `skills/domains/` with best-guess topic
+- **Create folders as needed** (one file per skill)
+```
+
+### skills/self-improvement/GAP_CAPTURE_RULES.md
+
+```markdown
+# Gap Capture Rules (Mandatory)
+
+These rules are enforced for all agents operating within the Ralph brain system.
+
+## What Is a Gap?
+
+A **gap** is missing brain capability that would have helped you complete a task more effectively. Types:
+
+| Type | Description |
+|------|-------------|
+| Knowledge | Facts, concepts, or domain knowledge not documented |
+| Procedure | Step-by-step process not captured anywhere |
+| Tooling | Tool usage, commands, or integrations not documented |
+| Pattern | Reusable solution pattern not in skills/ |
+| Debugging | Troubleshooting approach for a specific failure mode |
+| Reference | External documentation or specification needed |
+
+## Rule 1: Search First (No Duplicates)
+
+Before logging ANY gap:
+
+1. Search `skills/` for existing matching skill
+2. Search `skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
+3. If found: **UPDATE existing entry** rather than creating new one
+
+## Rule 2: Always Log Gaps
+
+If you used knowledge/procedure/tooling that isn't documented in `skills/`:
+
+1. Append entry to `GAP_BACKLOG.md`
+2. Use the format specified in GAP_BACKLOG.md
+3. Include evidence (paths, filenames, observations)
+
+## Rule 3: Promotion Criteria
+
+A gap should be promoted to a skill when ALL of these are true:
+
+- [ ] The gap is **clear** (well-defined, not vague)
+- [ ] The gap is **specific** (actionable, not overly broad)
+- [ ] The gap is **recurring** (likely to help again)
+- [ ] The skill can be expressed as **triggers + steps + outputs** (LLM-executable)
+
+## Rule 4: Promotion Process
+
+When promotion criteria are met:
+
+1. Add entry to `SKILL_BACKLOG.md` with status "Pending"
+2. Create skill file using `SKILL_TEMPLATE.md`
+3. Place in correct location:
+   - Broadly reusable → `skills/domains/<topic>/<skill>.md`
+   - Project-specific → `skills/projects/<project>/<skill>.md`
+4. Create folder if needed (one file per skill)
+5. Update `skills/index.md`
+6. Mark `SKILL_BACKLOG.md` entry as "Done" with link to new file
+
+## Rule 5: Update Operational Signs
+
+After creating a new skill, check if it affects agent behavior:
+
+- If the skill changes how agents should operate → Update `AGENTS.md`
+- If the skill changes prompts → Update `PROMPT.md` or templates
+- If the skill affects validation → Update `VALIDATION_CRITERIA.md`
+```
+
+### skills/self-improvement/GAP_BACKLOG.md
+
+```markdown
+# Gap Backlog (Auto-maintained by Claude)
+
+Rules:
+- Each entry is a missing brain capability discovered during work.
+- If a similar entry exists, **UPDATE it** (don't duplicate).
+- Include evidence (paths, filenames, brief snippets, or observations).
+- Priority:
+  - P0 = blocks work / repeatedly causes failure
+  - P1 = high leverage / recurring
+  - P2 = nice-to-have
+
+---
+
+## Backlog Items
+
+<!-- Add new entries below this line using the format:
+
+### YYYY-MM-DD — <Suggested Skill Name>
+- **Type:** Knowledge / Procedure / Tooling / Pattern / Debugging / Reference
+- **Why useful:** <1–2 lines>
+- **When triggered:** <what you were trying to do>
+- **Evidence:** <paths/logs/observations>
+- **What's missing:** <one sentence gap definition>
+- **Priority:** P0 / P1 / P2
+- **Suggested placement:** `skills/domains/<topic>/<name>.md` or `skills/projects/<project>/<name>.md`
+- **Reason for placement:** <why this location>
+- **Next action:** backlog-only OR promote to SKILL_BACKLOG
+- **Notes for future:** <what info is needed if backlog-only>
+
+-->
+
+*No gaps logged yet.*
+```
+
+### skills/self-improvement/SKILL_BACKLOG.md
+
+```markdown
+# Skill Backlog (Promotion Queue)
+
+This file tracks gaps that have met promotion criteria and are queued for skill file creation.
+
+Rules:
+- Only add entries here when promotion criteria are met (see GAP_CAPTURE_RULES.md)
+- Update status as work progresses
+- Link to created skill file when done
+
+---
+
+## Status Key
+
+| Status | Meaning |
+|--------|---------|
+| Pending | Approved for promotion, not yet started |
+| In-Progress | Skill file being created |
+| Done | Skill file created and indexed |
+
+---
+
+## Backlog Items
+
+<!-- Add new entries below this line using the format:
+
+### <Suggested Skill Name>
+- **Status:** Pending / In-Progress / Done
+- **Source gap:** Link to GAP_BACKLOG.md entry or date
+- **Target path:** `skills/domains/<topic>/<name>.md` or `skills/projects/<project>/<name>.md`
+- **Assigned iteration:** (optional)
+- **Skill file link:** (fill when Done)
+- **Notes:**
+
+-->
+
+*No skills queued for promotion yet.*
+```
+
+### skills/self-improvement/SKILL_TEMPLATE.md
+
+```markdown
+# Skill Template (LLM-Optimized)
+
+Use this template when creating new skill files. Copy and fill in all sections.
+
+---
+
+# Skill: <skill-short-name>
+
+## 1) Intent (1 sentence)
+
+What this skill enables Claude to do reliably.
+
+## 2) Type
+
+Choose one:
+- Knowledge / Procedure / Tooling / Pattern / Debugging / Reference
+
+## 3) Trigger Conditions (When to use)
+
+Use this skill when ANY of these are true:
+- <trigger 1>
+- <trigger 2>
+- <trigger 3>
+
+## 4) Non-Goals (What NOT to do)
+
+- <non-goal 1>
+- <non-goal 2>
+
+## 5) Inputs Required (and how to confirm)
+
+Claude must gather/confirm:
+- <input 1> (where to find it; how to validate)
+- <input 2> (where to find it; how to validate)
+
+## 6) Files / Sources to Study (DON'T SKIP)
+
+Study these before acting:
+- <path/file 1>
+- <path/file 2>
+
+Rules:
+- Don't assume not implemented. Confirm with repo search.
+- Prefer existing repo conventions/patterns over inventing new ones.
+
+## 7) Procedure (LLM Playbook)
+
+Follow in order:
+
+### Step 1: Orient
+- Study relevant docs/specs/code paths.
+- Define the smallest viable outcome.
+
+### Step 2: Decide
+- Choose the simplest approach that matches existing patterns.
+- If multiple approaches exist, pick the one that reduces future work.
+
+### Step 3: Execute
+- Keep changes minimal.
+- Use consistent naming, paths, and conventions.
+
+### Step 4: Validate
+- Run the repo's standard checks/tests/build steps if any.
+- If failures occur, fix them or document the failure + cause.
+
+### Step 5: Record
+- Update operational signs if needed (AGENTS.md, prompts, conventions).
+- Update skills index (index.md).
+
+## 8) Output / Deliverables
+
+This skill is complete when these exist:
+- <deliverable 1>
+- <deliverable 2>
+
+## 9) Gotchas / Failure Modes
+
+Common ways Claude fails here:
+- <failure mode 1> → mitigation
+- <failure mode 2> → mitigation
+
+## 10) Minimal Example (repo-specific)
+
+**Context:**
+<describe the situation>
+
+**Steps taken:**
+1. <step 1>
+2. <step 2>
+
+**Result:**
+<what was produced>
+```
+
+### skills/index.md
+
+```markdown
+# Skills Index
+
+Catalog of all skill files in the brain system.
+
+Last updated: <date>
+
+---
+
+## How to Use This Index
+
+1. Scan categories below to find relevant skills
+2. Click through to read full skill file
+3. Follow the skill's trigger conditions and procedure
+
+## Adding New Skills
+
+1. Use `self-improvement/SKILL_TEMPLATE.md`
+2. Place in correct folder (see placement rules below)
+3. Update this index
+
+### Placement Rules
+
+| Scope | Location |
+|-------|----------|
+| Broadly reusable across repos | `skills/domains/<topic>/<skill>.md` |
+| Project-specific but reusable | `skills/projects/<project>/<skill>.md` |
+| Uncertain | Default to `skills/domains/` with best-guess topic |
+
+---
+
+## Domains (Broadly Reusable)
+
+### API Design
+- [api-design-patterns.md](domains/api-design-patterns.md) - REST API design patterns and conventions
+
+### Authentication
+- [auth-patterns.md](domains/auth-patterns.md) - Authentication and authorization patterns
+
+### Bootstrap
+- [bootstrap-patterns.md](domains/bootstrap-patterns.md) - Project bootstrapping patterns
+
+### Caching
+- [caching-patterns.md](domains/caching-patterns.md) - Caching strategies and patterns
+
+### Database
+- [database-patterns.md](domains/database-patterns.md) - Database design and query patterns
+
+### Deployment
+- [deployment-patterns.md](domains/deployment-patterns.md) - Deployment and CI/CD patterns
+
+### Error Handling
+- [error-handling-patterns.md](domains/error-handling-patterns.md) - Error handling strategies
+
+### Ralph
+- [ralph-patterns.md](domains/ralph-patterns.md) - Ralph loop operational patterns
+
+### Security
+- [security-patterns.md](domains/security-patterns.md) - Security best practices
+
+### State Management
+- [state-management-patterns.md](domains/state-management-patterns.md) - State management patterns
+
+### Testing
+- [testing-patterns.md](domains/testing-patterns.md) - Testing strategies and patterns
+
+---
+
+## Projects (Project-Specific)
+
+### Brain
+- [brain-example.md](projects/brain-example.md) - Brain repository patterns and conventions
+
+---
+
+## Self-Improvement (Meta)
+
+- [README.md](self-improvement/README.md) - Self-improvement system overview
+- [GAP_CAPTURE_RULES.md](self-improvement/GAP_CAPTURE_RULES.md) - Gap capture protocol
+- [GAP_BACKLOG.md](self-improvement/GAP_BACKLOG.md) - Raw gap capture log
+- [SKILL_BACKLOG.md](self-improvement/SKILL_BACKLOG.md) - Promotion queue
+- [SKILL_TEMPLATE.md](self-improvement/SKILL_TEMPLATE.md) - Template for new skills
+```
+
+---
+
+## Blockers
+
+*None currently.*
+
+---
 
 ### Medium Priority (NeoQueue Bootstrap - When Ready)
 
@@ -54,17 +721,42 @@ These are **not active tasks** - they represent potential future work that shoul
 **Template Expansion:**
 - When: A new project type can't be bootstrapped with existing templates
 - Add: Go (Gin/Echo), Java (Spring Boot), Frontend-only (Vite/Create React App)
-- Document: Template creation process in kb/domains/bootstrap-patterns.md
+- Document: Template creation process in skills/domains/bootstrap-patterns.md
 - Rationale: Current coverage (React/Next.js, Python, Backend APIs) handles 80% of projects
 
-**KB Versioning Strategy:**
-- When: Need to update KB files without breaking projects using old versions
-- Research: Version numbers or change logs for KB files
+**Skills Versioning Strategy:**
+- When: Need to update skill files without breaking projects using old versions
+- Research: Version numbers or change logs for skill files
 - Research: Pattern deprecation strategy
-- Document: Decision in kb/conventions.md
-- Rationale: Currently no KB versioning needed (backward compatible so far)
+- Document: Decision in skills/conventions.md
+- Rationale: Currently no skills versioning needed (backward compatible so far)
 
 ## Discoveries & Notes
+
+### 2026-01-18 13:50 - PLAN Mode: THUNK Monitor + KB→Skills Migration Status
+
+**Gap Analysis Summary:**
+
+Two major features specified in THOUGHTS.md are NOT YET IMPLEMENTED:
+
+1. **THUNK Monitor System (43 subtasks):**
+   - `watch_ralph_tasks.sh` exists but NOT renamed to `current_ralph_tasks.sh`
+   - `thunk_ralph_tasks.sh` does NOT exist
+   - `THUNK.md` does NOT exist
+   - No monitor templates in `templates/ralph/`
+   - Auto-launch integration NOT done in `loop.sh`
+
+2. **KB→Skills Migration (41 subtasks):**
+   - Phase 1 (Safety Checks): ✅ COMPLETE - brain_staging/brain_promoted already deleted, kb/ exists
+   - Phase 2-7: NOT STARTED - `kb/` not renamed to `skills/`, no self-improvement system
+
+**Prioritization Decision:**
+- THUNK Monitor first (smaller scope, provides visibility into task completion)
+- KB→Skills Migration second (larger scope, depends on having good task tracking)
+
+**Next BUILD iteration should:** Execute task T1.1 (rename watch_ralph_tasks.sh → current_ralph_tasks.sh)
+
+---
 
 ### 2026-01-16 22:44 - PLAN Mode: Comprehensive Gap Analysis - ZERO Gaps Found
 
