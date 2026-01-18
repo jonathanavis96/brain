@@ -107,7 +107,7 @@ Complete these tasks in order. Mark each `[x]` when done.
   - Keep to 2-4 words max
   - ✅ Implemented in generate_title() function (lines 47-80)
 - [x] **T3.9** Update `thunk_ralph_tasks.sh` to use same human-friendly formatting
-- [ ] **T3.10** Test display formatting with various task types:
+- [x] **T3.10** Test display formatting with various task types:
   - Single action tasks
   - Tasks with context/details
   - Tasks with multiple sub-items
