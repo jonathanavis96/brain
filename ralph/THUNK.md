@@ -175,3 +175,4 @@ Started: 2026-01-18
 | 160 | 1.1 | HIGH | **1.1** Fix section detection logic in `current_ralph_tasks.sh` `extract_tasks()` function | 2026-01-18 |
 | 161 | 4.1 | HIGH | Add THUNK logging instruction to PROMPT.md BUILD mode section | 2026-01-18 |
 | 162 | 4.2 | HIGH | Test Ralph appends to THUNK.md on task completion | 2026-01-18 |
+| 163 | 5.1 | HIGH | Integration test: Run both monitors simultaneously | 2026-01-18 |

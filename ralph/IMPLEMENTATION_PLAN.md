@@ -90,7 +90,7 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
 
 ### Phase 5: Validation & Integration Testing
 
-- [ ] **5.1** Integration test: Run both monitors simultaneously
+- [x] **5.1** Integration test: Run both monitors simultaneously
   - Launch `current_ralph_tasks.sh` in one terminal
   - Launch `thunk_ralph_tasks.sh` in another terminal
   - Mark task `[x]` in IMPLEMENTATION_PLAN.md
