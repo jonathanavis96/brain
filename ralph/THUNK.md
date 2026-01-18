@@ -179,3 +179,18 @@ Started: 2026-01-18
 | 164 | 5.2 | HIGH | Verify all three bugs are fixed | 2026-01-18 |
 | 165 | 6.1 | MEDIUM | Update AGENTS.md monitor documentation | 2026-01-18 |
 | 166 | 6.2 | MEDIUM | Update VALIDATION_CRITERIA.md with monitor bug fix test cases | 2026-01-18 |
+| 167 | 1.1 | HIGH | Archive completed THOUGHTS.md (monitor bug fixes) to HISTORY.md | 2026-01-18 |
+
+---
+
+## Era: Brain Repository Maintenance
+Started: 2026-01-18
+
+**Previous Era Summary:** Monitor Bug Fixes & KB→Skills Migration (167 tasks completed)
+- Implemented dual-monitor system (current_ralph_tasks.sh + thunk_ralph_tasks.sh)
+- Fixed critical loop.sh bugs ($? overwrite, monitor launch, parser logic)
+- Migrated kb/ → skills/ with self-improvement protocol
+- Enhanced display rendering (no flicker, differential updates, tail parsing)
+
+| THUNK # | Original # | Priority | Description | Completed |
+|---------|------------|----------|-------------|-----------|
