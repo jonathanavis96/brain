@@ -520,24 +520,26 @@ run_once() {
 # Auto-launch monitors in background if not already running
 launch_monitors() {
   local monitor_dir="$RALPH"
+  local current_tasks_launched=false
+  local thunk_tasks_launched=false
   
   # Check if current_ralph_tasks.sh exists and launch
   if [[ -f "$monitor_dir/current_ralph_tasks.sh" ]]; then
     if ! pgrep -f "current_ralph_tasks.sh" > /dev/null; then
       # Try to detect available terminal emulator (priority order: tmux, wt.exe, gnome-terminal, konsole, xterm)
       if [[ -n "${TMUX:-}" ]]; then
-        tmux new-window -n "Current Tasks" "bash $monitor_dir/current_ralph_tasks.sh"
+        tmux new-window -n "Current Tasks" "bash $monitor_dir/current_ralph_tasks.sh" && current_tasks_launched=true
       elif command -v wt.exe &>/dev/null; then
-        wt.exe new-tab --title "Current Ralph Tasks" -- wsl bash "$monitor_dir/current_ralph_tasks.sh" &
+        wt.exe new-tab --title "Current Ralph Tasks" -- wsl bash "$monitor_dir/current_ralph_tasks.sh" & current_tasks_launched=true
       elif command -v gnome-terminal &>/dev/null && timeout 2s gnome-terminal --version &>/dev/null; then
-        gnome-terminal --title="Current Ralph Tasks" -- bash "$monitor_dir/current_ralph_tasks.sh" &
+        gnome-terminal --title="Current Ralph Tasks" -- bash "$monitor_dir/current_ralph_tasks.sh" & current_tasks_launched=true
       elif command -v konsole &>/dev/null; then
-        konsole --title "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh" &
+        konsole --title "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh" & current_tasks_launched=true
       elif command -v xterm &>/dev/null; then
-        xterm -T "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh" &
-      else
-        echo "⚠️  No terminal emulator detected. Skipping current_ralph_tasks.sh launch."
+        xterm -T "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh" & current_tasks_launched=true
       fi
+    else
+      current_tasks_launched=true  # Already running
     fi
   fi
   
@@ -546,19 +548,32 @@ launch_monitors() {
     if ! pgrep -f "thunk_ralph_tasks.sh" > /dev/null; then
       # Try to detect available terminal emulator (priority order: tmux, wt.exe, gnome-terminal, konsole, xterm)
       if [[ -n "${TMUX:-}" ]]; then
-        tmux new-window -n "Thunk Tasks" "bash $monitor_dir/thunk_ralph_tasks.sh"
+        tmux new-window -n "Thunk Tasks" "bash $monitor_dir/thunk_ralph_tasks.sh" && thunk_tasks_launched=true
       elif command -v wt.exe &>/dev/null; then
-        wt.exe new-tab --title "Thunk Ralph Tasks" -- wsl bash "$monitor_dir/thunk_ralph_tasks.sh" &
+        wt.exe new-tab --title "Thunk Ralph Tasks" -- wsl bash "$monitor_dir/thunk_ralph_tasks.sh" & thunk_tasks_launched=true
       elif command -v gnome-terminal &>/dev/null && timeout 2s gnome-terminal --version &>/dev/null; then
-        gnome-terminal --title="Thunk Ralph Tasks" -- bash "$monitor_dir/thunk_ralph_tasks.sh" &
+        gnome-terminal --title="Thunk Ralph Tasks" -- bash "$monitor_dir/thunk_ralph_tasks.sh" & thunk_tasks_launched=true
       elif command -v konsole &>/dev/null; then
-        konsole --title "Thunk Ralph Tasks" -e bash "$monitor_dir/thunk_ralph_tasks.sh" &
+        konsole --title "Thunk Ralph Tasks" -e bash "$monitor_dir/thunk_ralph_tasks.sh" & thunk_tasks_launched=true
       elif command -v xterm &>/dev/null; then
-        xterm -T "Thunk Ralph Tasks" -e bash "$monitor_dir/thunk_ralph_tasks.sh" &
-      else
-        echo "⚠️  No terminal emulator detected. Skipping thunk_ralph_tasks.sh launch."
+        xterm -T "Thunk Ralph Tasks" -e bash "$monitor_dir/thunk_ralph_tasks.sh" & thunk_tasks_launched=true
       fi
+    else
+      thunk_tasks_launched=true  # Already running
     fi
+  fi
+  
+  # If both monitors failed to launch, print consolidated fallback message
+  if [[ "$current_tasks_launched" == "false" && "$thunk_tasks_launched" == "false" ]]; then
+    echo ""
+    echo "═══════════════════════════════════════════════════════════════"
+    echo "  ⚠️  Could not auto-launch monitor terminals."
+    echo ""
+    echo "  To run monitors manually, open new terminals and run:"
+    echo "    bash $monitor_dir/current_ralph_tasks.sh"
+    echo "    bash $monitor_dir/thunk_ralph_tasks.sh"
+    echo "═══════════════════════════════════════════════════════════════"
+    echo ""
   fi
 }
 
