@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & NeoQueue
 
-Last updated: 2026-01-18 14:03:00
+Last updated: 2026-01-18 14:07:00
 
 ## Current State
 
@@ -10,7 +10,7 @@ The brain repository is **fully mature and production-ready** with comprehensive
 **Core Systems (All Complete):**
 - **Templates:** 18 files across 3 tech stacks (backend, python, ralph)
 - **Knowledge Base:** 16 KB files (12 domains + 2 projects + conventions + SUMMARY) — **PENDING MIGRATION TO `skills/`**
-- **Ralph Loop:** Fully operational with safety features (dry-run, rollback, resume, task monitor)
+- **Ralph Loop:** Fully operational with safety features (dry-run, rollback, resume, task monitor → THUNK system)
 - **React References:** 45 curated performance rules (complete, unmodified reference set)
 - **Documentation:** Comprehensive README.md, AGENTS.md, NEURONS.md, VALIDATION_CRITERIA.md
 
@@ -21,21 +21,25 @@ The brain repository is **fully mature and production-ready** with comprehensive
 - React rules: 45 files (validated, unmodified)
 - Templates: 20 files (including ralph/ subdirectory)
 - All bash scripts pass syntax validation ✓
+- THUNK.md: Created, Era 1 started
+- Monitor renamed: `watch_ralph_tasks.sh` → `current_ralph_tasks.sh`
 
 ### New Project: NeoQueue (from THOUGHTS.md)
 A Matrix-inspired desktop app for tracking discussion points with your manager. See THOUGHTS.md for full specification.
 
 ---
 
-## 🚨 ACTIVE MIGRATION: KB → Skills
+## 🎯 ACTIVE WORK: Two Parallel Tracks
 
-**Objective:** Rename `ralph/kb/` to `ralph/skills/` and introduce a self-improvement system.
+This plan contains **77 unchecked tasks** across two major features:
 
-**Full runbook:** See THOUGHTS.md section "KB→Skills Migration Runbook"
+1. **THUNK Monitor System** (40 tasks) - Task completion tracking with persistent log
+2. **KB→Skills Migration** (37 tasks) - Rename kb/ → skills/ + self-improvement system
 
-**Runtime context:**
-- Expected iterations: 20+
-- PlanEvery: 10
+**Execution Strategy:**
+- Complete THUNK Monitor first (provides visibility for remaining work)
+- Then execute KB→Skills Migration (benefits from improved tracking)
+- Each BUILD iteration: Execute EXACTLY ONE unchecked task in sequence
 
 ---
 
@@ -44,6 +48,8 @@ A Matrix-inspired desktop app for tracking discussion points with your manager. 
 ### 🔴 HIGH PRIORITY: THUNK Monitor System
 
 **Full specification:** See THOUGHTS.md section "THUNK Monitor System"
+
+**Progress:** 5/45 tasks complete (11%)
 
 Complete these tasks in order. Mark each `[x]` when done.
 
@@ -117,13 +123,17 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 ---
 
-### 🔴 HIGH PRIORITY: KB→Skills Migration
+### 🟡 MEDIUM PRIORITY: KB→Skills Migration
 
 **Full runbook:** See THOUGHTS.md section "KB→Skills Migration Runbook"
 
+**Progress:** 3/40 tasks complete (8%)
+
+**Status:** Phase 1 complete. Ready to begin Phase 2 (folder rename) after THUNK Monitor is operational.
+
 Complete these tasks in order. Mark each `[x]` when done.
 
-#### Phase 1: Safety Checks & Cleanup (Iteration 1)
+#### Phase 1: Safety Checks & Cleanup ✅ COMPLETE
 
 - [x] **1.1** Run safety check for `brain_staging/` and `brain_promoted/` dependencies:
   ```bash
@@ -709,10 +719,15 @@ These tasks should be tackled when starting the NeoQueue project:
   - [ ] Run `new-project.sh neoqueue` to create project scaffold
   - [ ] Copy THOUGHTS.md content to neoqueue project as project spec
 
-### ✅ Completed Tasks
+### ✅ Recently Completed (Last 7 Days)
 
-- [x] Fix documentation references in kb/projects/brain-example.md - Remove references to non-existent QUICKSTART.md file
 - [x] Brain repository infrastructure complete and validated
+- [x] Fix documentation references in kb/projects/brain-example.md
+- [x] Rename watch_ralph_tasks.sh → current_ralph_tasks.sh (commit abb9dc9)
+- [x] Update monitor heading to CURRENT RALPH TASKS (commit 521c597)
+- [x] Verify current_ralph_tasks.sh filtering behavior (commit 89994fa)
+- [x] Create THUNK.md with Era 1 structure (commit 5efe47b)
+- [x] Safety check and cleanup of brain_staging/brain_promoted directories
 
 ### Future Enhancements (Implement When Needed)
 
@@ -733,6 +748,24 @@ These are **not active tasks** - they represent potential future work that shoul
 
 ## Discoveries & Notes
 
+### 2026-01-18 14:07 - PLAN Mode: Implementation Plan Refinement
+
+**Status Update:**
+- Refined task counts and progress tracking
+- Added clear execution strategy (THUNK first, then KB→Skills)
+- Updated "Current State" section with latest metrics
+- Reorganized "Recently Completed" section with commit references
+- Clarified that KB→Skills is MEDIUM priority (blocked until THUNK operational)
+
+**Task Summary:**
+- **THUNK Monitor:** 5/45 complete (11%) - Phases T1, T2 mostly done
+- **KB→Skills Migration:** 3/40 complete (8%) - Phase 1 complete
+- **Total:** 8/85 tasks complete, 77 remaining
+
+**Next BUILD iteration:** Execute T2.3 - Migrate completed tasks to THUNK.md
+
+---
+
 ### 2026-01-18 14:03 - PLAN Mode: Progress Verification & State Sync
 
 **Verified Current State:**
@@ -741,8 +774,8 @@ These are **not active tasks** - they represent potential future work that shoul
 - KB Phase 1 (1.1-1.3): ✅ Complete - Safety checks passed, stale dirs confirmed absent
 
 **Remaining Work:**
-- THUNK Monitor: 28 tasks remaining (T2.3 + T3.x + T3.5x + T4.x + T5.x + T6.x)
-- KB→Skills Migration: 39 tasks remaining (Phases 2-7)
+- THUNK Monitor: 40 tasks remaining (T2.3 onwards)
+- KB→Skills Migration: 37 tasks remaining (Phases 2-7)
 
 **Next BUILD iteration:** Execute T2.3 - Migrate 8 completed tasks to THUNK.md
 
