@@ -63,7 +63,7 @@ Ongoing maintenance and improvement tasks for the brain repository. This plan tr
   - Copy latest version from root
   - Ensure all monitor bug fixes are in template
 
-- [ ] **3.3** Sync loop.sh updates to template
+- [x] **3.3** Sync loop.sh updates to template
   - templates/ralph/loop.sh is severely outdated (888 bytes vs 21KB in root)
   - Copy latest version from root
   - Verify all recent improvements included
