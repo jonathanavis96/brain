@@ -213,7 +213,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 #### Phase 4: Update Summary & Create Index (Iterations 6-7)
 
-- [ ] **4.1** Update `skills/SUMMARY.md`:
+- [x] **4.1** Update `skills/SUMMARY.md`:
   - Change all `kb/` references to `skills/`
   - Add folder tree showing new structure
   - Add link to `skills/index.md`
