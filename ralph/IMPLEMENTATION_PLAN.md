@@ -9,7 +9,7 @@ Fix three issues in the Ralph monitoring system:
 
 Root cause analysis and design decisions documented in `THOUGHTS.md`.
 
-**STATUS:** Bugs A & B are fixed. Bug C was re-evaluated and determined to be a feature, not a bug. Remaining work focuses on documentation and optional Ralph workflow improvements.
+**STATUS:** ✅ ALL BUGS FIXED (A, B, C addressed). Core functionality complete and tested. Only documentation updates remain (MEDIUM priority).
 
 ---
 
@@ -99,9 +99,9 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
   - Verify: thunk_ralph_tasks.sh updates immediately (shows new THUNK entry)
 
 - [x] **5.2** Verify all three bugs are fixed
-  - **Bug A:** Tasks under `### Phase` headers are extracted correctly
-  - **Bug B:** No duplicate headers/footers after multiple file updates
-  - **Bug C:** THUNK monitor only watches THUNK.md, does not auto-sync from PLAN
+  - **Bug A:** Tasks under `### Phase` headers are extracted correctly ✅
+  - **Bug B:** No duplicate headers/footers after multiple file updates ✅
+  - **Bug C (REVISED):** Ralph workflow updated to append to THUNK.md directly; auto-sync retained as safety net ✅
 
 ---
 
@@ -110,14 +110,14 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
 ### Phase 6: Documentation Updates
 
 - [ ] **6.1** Update AGENTS.md monitor documentation
-  - Update "Task Monitor" section with correct behavior descriptions
-  - Remove any references to auto-sync functionality
-  - Document that Ralph appends to THUNK.md directly
+  - Clarify that THUNK monitor has auto-sync as safety net (not primary behavior)
+  - Document that Ralph should append to THUNK.md directly when completing tasks
+  - Update monitor behavior descriptions to reflect Bug A and Bug B fixes
 
 - [ ] **6.2** Update VALIDATION_CRITERIA.md
-  - Add test cases for hierarchical task extraction (Bug A fix)
-  - Add test cases for display rendering stability (Bug B fix)
-  - Add test cases for THUNK monitor watch-only behavior (Bug C fix)
+  - Add test cases for hierarchical task extraction (Bug A fix - subsection headers)
+  - Add test cases for display rendering stability (Bug B fix - no duplicates)
+  - Document THUNK monitor dual-responsibility model (display + safety net sync)
 
 ---
 
