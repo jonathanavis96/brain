@@ -330,7 +330,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 #### Phase 7: Final Validation
 
-- [ ] **7.1** Verify no remaining `/kb/` references in active files:
+- [x] **7.1** Verify no remaining `/kb/` references in active files:
   ```bash
   grep -rn "/kb/" *.md templates/ generators/ skills/ 2>/dev/null | grep -v "THUNK.md" | grep -v "HISTORY.md"
   ```
