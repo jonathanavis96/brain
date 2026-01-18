@@ -1,691 +1,143 @@
-# Implementation Plan - Brain Repository & Ralph System
+# Implementation Plan - Monitor Bug Fixes
 
-Last updated: 2026-01-18 20:26 (PLAN iteration - Verified all tasks complete, gap capture reviewed)
+## Overview
 
-## Current State
+Fix three critical bugs in the Ralph monitoring system:
+1. **Bug A:** `current_ralph_tasks.sh` exits task extraction on `###` headers, missing tasks under Phase subsections
+2. **Bug B:** Display rendering duplicates headers/footers due to startup messages + differential updates
+3. **Bug C:** `thunk_ralph_tasks.sh` auto-syncs from IMPLEMENTATION_PLAN.md instead of just watching THUNK.md
 
-### Brain Repository Infrastructure: ✅ COMPLETE
-The brain repository is **fully mature and production-ready** with comprehensive infrastructure.
-
-**Core Systems (All Complete):**
-- **Templates:** 20 files across 4 tech stacks (root, backend, python, ralph)
-- **Skills:** 16 skill files (12 domains + 2 projects + conventions + SUMMARY) — **MIGRATED TO `skills/`** ✅
-- **Ralph Loop:** Operational with safety features (dry-run, rollback, resume, task monitor → THUNK system)
-- **React References:** 45 curated performance rules (complete, unmodified reference set)
-- **Documentation:** Comprehensive README.md, AGENTS.md, NEURONS.md, VALIDATION_CRITERIA.md
-
-**Current Metrics:**
-- PROMPT.md: 95 lines, 2,890 bytes (~722 tokens) ✓
-- AGENTS.md: 57 lines, 2,243 bytes (~560 tokens) ✓
-- Skills domains: 12 files, Skills projects: 2 files
-- React rules: 45 files (validated, unmodified)
-- Templates: 20 files (4 root + 3 backend + 3 python + 10 ralph)
-- All bash scripts pass syntax validation ✓
-- THUNK.md: 108 completed tasks logged
-- KB→Skills Migration: 100% COMPLETE ✅
-- Ralph Loop Fixes: **100% COMPLETE** ✅ (all HIGH PRIORITY work done)
-
-**Progress Summary**
-
-**Phase 1 (Stop Condition):** 3/3 complete ✅
-- P1.1, P1.1a: :::COMPLETE::: detection fixes applied
-- P1.2, P1.3: Completion detection validated with comprehensive tests
-
-**Phase 2 (Decouple Monitors):** 5/5 complete ✅
-- P2.1: Verified thunk monitor watches THUNK.md directly ✅
-- P2.2: Verified current tasks monitor watches IMPLEMENTATION_PLAN.md directly ✅
-- P2.3: Verified monitors use file mtime polling (not inotify) ✅
-- P2.4: Tested THUNK.md manual modification detection ✅
-- P2.5: Tested IMPLEMENTATION_PLAN.md manual modification detection ✅
-
-**Phase 3 (Monitor Launch):** 7/7 complete ✅
-- P3.1-P3.7: Terminal detection, functionality tests, priority reordering, fallback messaging, non-fatal launches, tmux integration, headless fallback test ✅
-
-**Phase 4 (Performance & UX):** 20/20 complete ✅
-- P4A.1-P4A.9: All current_ralph_tasks.sh UX improvements complete ✅
-- P4B.1-P4B.7: All thunk_ralph_tasks.sh incremental display improvements complete ✅
-
-**Phase 5 (Verification):** 2/2 complete ✅
-- P5.1: Template scaffolding validation complete ✅
-- P5.2: Reference audit complete - no stale /kb/ paths ✅
-
-**Phase 6 (Test Clarity):** 4/4 complete ✅
-- P6.1: Test task audit complete ✅
-- P6.2: Test task format standard documented ✅
-- P6.3: Test scenario checklist created ✅
-- P6.4: Full integration test complete ✅
-
-**Future Enhancements:** 1/5 complete (F1 done, F2-F5 deferred as low priority)
-
-### Analysis: Implementation Status
-
-**Current completion rate:** 39/43 tasks = 91% (all HIGH PRIORITY tasks complete)
-
-**Status:** All HIGH PRIORITY work is complete. Brain repository is production-ready.
-
-**Completed work (39/43 tasks - all HIGH PRIORITY complete):**
-1. **Phase 1 (Stop Condition):** 3/3 complete ✅
-   - :::COMPLETE::: detection bug fixed in both code paths
-   - Comprehensive testing validates loop exit behavior
-   
-2. **Phase 2 (Decouple Monitors):** 5/5 complete ✅
-   - Both monitors verified to watch files directly via mtime polling
-   - No coupling to Ralph's planning mode
-   - Cross-platform file watching confirmed
-   
-3. **Phase 3 (Monitor Launch):** 7/7 complete ✅
-   - Terminal detection priority reordered (tmux → wt.exe → gnome-terminal)
-   - Functionality tests prevent silent failures
-   - Single-shot fallback message with graceful degradation
-   - Non-fatal launch failures ensure Ralph loop continues
-   
-4. **Phase 4 (Performance & UX):** 20/20 complete ✅
-   - **P4A (current_ralph_tasks.sh):** 9/9 complete ✅
-     - Cursor positioning (top-anchored display)
-     - Completed task caching (reduces CPU)
-     - Differential display update (stable content)
-     - Current task indicator with `▶` symbol
-     - Task formatting with spacing (readability)
-     - Title extraction for "Test:" tasks
-     - Validated: No blank screen with 50+ tasks
-     - Validated: Differential update on task completion
-     - Validated: Symbol behavior (▶ for current, ○ for pending)
-   - **P4B (thunk_ralph_tasks.sh):** 11/11 complete ✅
-     - Line-count tracking for THUNK.md ✅
-     - Tail-only parsing for new entries ✅
-     - Append-only display mode ✅
-     - Cursor positioning for incremental append ✅
-     - Title extraction consistency ✅
-     - Performance test: new entry without full redraw ✅
-     - Startup performance optimization (< 1 second for 100 entries) ✅
-
-5. **Phase 5 (Verification):** 2/2 complete ✅
-   - P5.1: Template scaffolding validation complete ✅
-   - P5.2: Reference audit complete - no stale /kb/ paths ✅
-
-6. **Phase 6 (Test Clarity):** 4/4 complete ✅
-   - P6.1: Test task audit complete ✅
-   - P6.2: Test task format standard documented ✅
-   - P6.3: Test scenario checklist created ✅
-   - P6.4: Full integration test complete ✅
-
-**Remaining work (4/42 tasks):**
-
-**HIGH PRIORITY:** ✅ ALL COMPLETE (0 tasks remaining)
-- All phases 0-6 complete (38 core tasks + F1)
-- P6.4 integration test validated successfully
-
-**LOW PRIORITY - Future Enhancements (4 tasks):**
-- F2-F5: Optional features (health checks, custom terminal support, monitor-only mode, cache persistence)
-- These are deferred and not blocking
-
-**Estimated remaining effort:**
-- HIGH PRIORITY work: ✅ COMPLETE
-- Future enhancements: Deferred indefinitely (nice-to-have features)
-
-**Total estimate:** HIGH PRIORITY work is complete. Future enhancements are optional.
-
-**Strategic recommendation:**
-All HIGH PRIORITY work is complete. F2-F5 are low-priority enhancements that can be implemented on-demand if needed.
-
-**Progress velocity:**
-- Last PLAN interval: Completed P6.4, F1, updated metrics (2 tasks + documentation)
-- Phase 0-6: 100% complete ✅
-- All HIGH PRIORITY work: ✅ COMPLETE
-- Ready for production use
-
-**All commits pushed to origin/brain-work:**
-- Latest: 1e38913 - docs(plan): PLAN iteration - all high priority work complete
-- Branch: brain-work (up to date with origin)
-- Working tree: clean
-
-### Known Issues Requiring Fixes
-
-The following issues have been identified and require resolution:
-
-1. ✅ **:::COMPLETE::: detection fails** — FIXED (Phase 1 complete)
-2. **Lost verification tasks** — Two critical tasks removed from plan need restoration (Phase 5)
-3. **current_ralph_tasks.sh UX issues** — Blank screen, slow refresh, bottom-anchored display (Phase 4A)
-4. **thunk_ralph_tasks.sh performance** — Full regeneration instead of incremental updates (Phase 4B)
-5. **Vague task descriptions** — "Test" tasks lack actionable detail (Phase 6)
-6. **Monitor launch errors** — gnome-terminal DBus errors on startup (Phase 3)
-7. **Monitor coupling perception** — Already correct by design, needs documentation (Phase 2)
-
-See THOUGHTS.md for detailed root cause analysis and design decisions.
+Root cause analysis and design decisions documented in `THOUGHTS.md`.
 
 ---
 
-## 🔴 HIGH PRIORITY: Ralph Loop & Monitor Fixes
+## HIGH PRIORITY
 
-**Full specification:** See THOUGHTS.md
+### Phase 1: Fix Task Extraction Parser (Bug A)
 
-**Progress:** 38/41 tasks complete (93%)
+**Root Cause:** Parser uses `^###[[:space:]]+` pattern to exit task sections. When it hits `### Phase 4:` under `## HIGH PRIORITY`, it exits extraction even though we're still in a priority section.
 
-Complete these tasks in order. Mark each `[x]` when done.
+- [ ] **1.1** Fix section detection logic in `current_ralph_tasks.sh` `extract_tasks()` function
+  - Remove the `elif [[ "$line" =~ ^###[[:space:]]+ ]]; then in_task_section=false` block (lines 132-135)
+  - Only change state on `##` (double hash) headers, not `###` or `####` subsection headers
+  - Test: Tasks under `## HIGH PRIORITY` → `### Phase 4:` → `#### Phase 4A:` must be extracted with HIGH priority
 
-**Note:** Task count reflects actual work completed. Phase 0-5 are 100% complete. Phase 6 has one remaining task (P6.4 integration test). Future enhancements (F1-F5) are low priority and deferred.
+### Phase 2: Fix Display Rendering (Bug B)
 
----
+**Root Cause:** Startup messages occupy screen rows before first render. `display_tasks()` uses `tput cup 0 0` assuming row 0 is empty. Differential update logic tracks wrong row positions, causing duplicated headers/footers.
 
-### Phase 0: Baseline Understanding & Guardrails
+- [ ] **2.1** Remove differential update complexity from `current_ralph_tasks.sh` `display_tasks()`
+  - Remove `force_full_redraw` parameter logic (lines 378, 519-526)
+  - Remove `TASK_DISPLAY_ROWS`, `LAST_RENDERED_CONTENT`, `LAST_FOOTER_*` tracking (lines 36-41, 569-580)
+  - Always do full redraw: `clear` at start of function, then render all content
+  - Simpler = more robust. Parsing 100 tasks takes <50ms - imperceptible to humans
 
-**Goal:** Confirm current behavior before making changes. Document exact locations and behaviors.
+- [ ] **2.2** Simplify display rendering to always clear screen before drawing
+  - Replace lines 527-566 (conditional rendering) with simple sequential echo statements
+  - Pattern: `clear` → loop over content → echo each line
+  - Remove all `tput cup $row $col` cursor positioning logic (only needed for differential updates)
+  
+- [ ] **2.3** Test display rendering with multiple file updates
+  - Modify IMPLEMENTATION_PLAN.md 5 times rapidly
+  - Verify no duplicate headers, no duplicate footers, no text corruption
+  - Verify terminal resize (SIGWINCH) works correctly
 
-**Status:** ✅ ANALYSIS COMPLETE - Phase 0 skipped (baseline already understood from previous BUILD iteration)
+### Phase 3: Fix THUNK Monitor Auto-Sync (Bug C)
 
-**Rationale:** Task P1.1 was completed in a prior BUILD iteration, meaning baseline understanding was already established. The fix to loop.sh lines 600-610 demonstrates that:
-- The :::COMPLETE::: detection location is confirmed (line 507 in run_once function)
-- The bug location was precisely identified (custom prompt path at lines 582-588 does NOT have the bug)
-- The alternating plan/build path at lines 600-610 had the $? overwrite issue
-- The fix has been implemented and is ready for testing
+**Root Cause:** `thunk_ralph_tasks.sh` watches IMPLEMENTATION_PLAN.md and tries to sync `[x]` tasks to THUNK.md. This is wrong - Ralph should append to THUNK.md directly when completing tasks.
 
-Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 validation tasks.
+- [ ] **3.1** Remove `scan_for_new_completions()` function from `thunk_ralph_tasks.sh`
+  - Delete function definition (lines 167-244)
+  - Remove all calls to this function (lines 468, 508, 555)
+  - This function parses IMPLEMENTATION_PLAN.md and writes to THUNK.md - wrong responsibility
 
----
+- [ ] **3.2** Remove IMPLEMENTATION_PLAN.md watching from `thunk_ralph_tasks.sh`
+  - Remove `PLAN_FILE` variable and references (lines 465, 552-559)
+  - Remove `LAST_PLAN_MODIFIED` / `CURRENT_PLAN_MODIFIED` tracking
+  - Only watch THUNK.md file changes
 
-### Phase 1: Fix Loop Correctness (Stop Condition)
+- [ ] **3.3** Remove "Syncing with:" message from startup
+  - Update line 464 to only show "Watching: $THUNK_FILE"
+  - Remove reference to PLAN_FILE
 
-**Goal:** Fix `$?` overwrite bug so `:::COMPLETE:::` detection reliably stops the loop.
+- [ ] **3.4** Test THUNK monitor watches only THUNK.md
+  - Append line to THUNK.md manually → verify monitor updates display
+  - Modify IMPLEMENTATION_PLAN.md → verify monitor does NOT react
+  - No "Scanning IMPLEMENTATION_PLAN.md" messages should appear
 
-**Exit Code Contract:** (see THOUGHTS.md)
-- `0` = continue loop
-- `42` = `:::COMPLETE:::` detected → exit loop
-- Other = error (let `set -e` handle)
+### Phase 4: Update PROMPT.md for Ralph THUNK Logging
 
-- [x] **P1.1** Fix `$?` overwrite bug in loop.sh lines 600-610: ✅ COMPLETE
-  - **Bug:** The `if/else` construct overwrites `$?` before it's checked
-  - **Fix:** Capture return code immediately inside each branch
-  - **Implementation:** Added `run_result=$?` immediately after each `run_once` call
-  - **Verified:** loop.sh lines 603, 606, 609 now correctly capture and check return code
-  - **Custom prompt path:** Lines 582-588 still have original bug (needs same fix)
+**Requirement:** Ralph must append to THUNK.md when marking tasks `[x]` complete in IMPLEMENTATION_PLAN.md.
 
-- [x] **P1.1a** Fix same `$?` bug in custom prompt path (loop.sh lines 582-588): ✅ COMPLETE
-  - **Current:** `run_once "$PROMPT_FILE" "custom" "$i"` followed by `if [[ $? -eq 42 ]]; then`
-  - **Issue:** No intermediate command, so this one actually works correctly
-  - **Action:** Apply same fix for consistency and future-proofing
-  - **Implementation:** Added `run_result=$?` after line 583, changed line 585 to check `$run_result`
-  - **Verified:** Syntax validated, consistent with alternating plan/build path fix
+- [ ] **4.1** Add THUNK logging instruction to PROMPT.md BUILD mode section
+  - After step 3 (Validate), before step 4 (Commit)
+  - Instruction: "When marking a task `[x]` in IMPLEMENTATION_PLAN.md, append entry to THUNK.md in current era table"
+  - Format: `| <next_thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |`
+  - Keep instruction concise (3-4 lines max) - token efficiency
 
-- [x] **P1.2** Test: Simulate `:::COMPLETE:::` in log → verify loop exits: ✅ COMPLETE
-  - Created comprehensive test script: tmp_rovodev_test_complete_detection.sh
-  - Verified completion sentinel detection with 7 test scenarios:
-    1. Basic sentinel detection on standalone line ✓
-    2. Sentinel with ANSI color codes (stripped correctly) ✓
-    3. Sentinel with leading/trailing whitespace ✓
-    4. Inline mentions NOT detected (no false positives) ✓
-    5. Logs without sentinel correctly ignored ✓
-    6. run_once returns 42 when completion detected ✓
-    7. Return code capture pattern works correctly ✓
-  - All tests pass - completion detection works as expected
-  - Exit code propagation verified (42 → loop exits, 0 → loop continues)
+- [ ] **4.2** Test Ralph appends to THUNK.md on task completion
+  - Run one BUILD iteration with this IMPLEMENTATION_PLAN.md
+  - Verify completed task appears in THUNK.md
+  - Verify format matches table structure
 
-- [x] **P1.3** Test: Run without completion marker → verify loop continues: ✅ COMPLETE
-  - Created comprehensive unit test: tmp_rovodev_test_loop_continues_unit.sh
-  - Verified 6 test scenarios:
-    1. Grep pattern ignores logs without :::COMPLETE::: ✓
-    2. Grep pattern ignores inline mentions of marker ✓
-    3. Grep pattern detects standalone marker correctly ✓
-    4. Loop completes all iterations without marker (5 iterations tested) ✓
-    5. Return code 0 for continue, 42 for completion ✓
-    6. Return code capture pattern works correctly (lines 583, 603, 606) ✓
-  - All tests pass - loop continues correctly when completion marker is absent
-  - Normal iteration flow unaffected by P1.1 fixes
+### Phase 5: Validation & Integration Testing
 
----
+- [ ] **5.1** Integration test: Run both monitors simultaneously
+  - Launch `current_ralph_tasks.sh` in one terminal
+  - Launch `thunk_ralph_tasks.sh` in another terminal
+  - Mark task `[x]` in IMPLEMENTATION_PLAN.md
+  - Verify: current_ralph_tasks.sh updates immediately (shows remaining tasks)
+  - Verify: THUNK.md gets new entry (Ralph appended it)
+  - Verify: thunk_ralph_tasks.sh updates immediately (shows new THUNK entry)
 
-### Phase 2: Decouple Monitors from Planning Mode
-
-**Goal:** Monitors update on file changes regardless of Ralph phase (plan/build).
-
-- [x] **P2.1** Verify thunk_ralph_tasks.sh watches THUNK.md directly: ✅ VERIFIED
-  - ✅ File watch at lines 399-404: Uses `get_file_mtime()` to poll THUNK.md modification time
-  - ✅ display_thunks() reads only from THUNK.md: Line 280 `done < "$THUNK_FILE"` reads directly
-  - ✅ THUNK_FILE defined at line 20: `"$RALPH_DIR/THUNK.md"`
-  - ✅ Poll interval: 0.5s (line 416 `sleep 0.5`)
-  - **Documentation:** This is already correct behavior - monitor watches THUNK.md directly via mtime polling, no coupling to Ralph's planning mode
-
-- [x] **P2.2** Verify current_ralph_tasks.sh watches IMPLEMENTATION_PLAN.md directly: ✅ VERIFIED
-  - ✅ File watch at lines 507-511: Uses `get_file_mtime()` to poll IMPLEMENTATION_PLAN.md modification time
-  - ✅ extract_tasks() reads only from IMPLEMENTATION_PLAN.md: Line 159 `done < "$PLAN_FILE"` reads directly
-  - ✅ PLAN_FILE defined at line 25: `"$RALPH_DIR/IMPLEMENTATION_PLAN.md"`
-  - ✅ Poll interval: 0.5s (line 515 `sleep 0.5`)
-  - **Documentation:** This is already correct behavior - monitor watches IMPLEMENTATION_PLAN.md directly via mtime polling, no coupling to Ralph's planning mode
-
-- [x] **P2.3** Verify monitors use file mtime polling (not inotify): ✅ VERIFIED
-  - ✅ current_ralph_tasks.sh uses `get_file_mtime()` at lines 42-44 (stat-based)
-  - ✅ thunk_ralph_tasks.sh uses `get_file_mtime()` at lines 37-40 (stat-based)
-  - ✅ Both scripts poll every 0.5s (line 515 in current_ralph_tasks.sh, line 416 in thunk_ralph_tasks.sh)
-  - ✅ No inotify, inotifywait, or fswatch dependencies found in codebase
-  - ✅ Cross-platform compatible: Uses stat command (both Linux -c and macOS -f flags)
-  - **Documentation:** File watching is implemented via mtime polling, ensuring cross-platform compatibility (WSL2, Linux, macOS) without external dependencies
-
-- [x] **P2.4** Test: Modify THUNK.md manually → expect thunk monitor updates within 1 second: ✅ VERIFIED
-  - ✅ Created automated test script that modifies THUNK.md
-  - ✅ Verified file mtime updates on modification (critical for polling)
-  - ✅ Confirmed test row can be added and removed successfully
-  - ✅ Monitor poll interval is 0.5s → detection happens within 1 second (2x poll max)
-  - ✅ Manual modification mechanism works correctly
-  - **Test script:** tmp_rovodev_test_p2_4.sh (executed successfully)
-
-- [x] **P2.5** Test: Modify IMPLEMENTATION_PLAN.md manually → expect current tasks monitor updates within 1 second: ✅ VERIFIED
-  - ✅ Created automated test script that modifies IMPLEMENTATION_PLAN.md
-  - ✅ Verified file mtime updates on modification (critical for polling)
-  - ✅ Confirmed test content can be added and removed successfully
-  - ✅ Monitor poll interval is 0.5s → detection happens within 1 second (2x poll max)
-  - ✅ Manual modification mechanism works correctly
-  - **Test script:** tmp_rovodev_test_p2_5.sh (executed successfully)
-  - **Note:** Test includes 1.1s delay between modifications to respect filesystem mtime granularity (1 second resolution)
+- [ ] **5.2** Verify all three bugs are fixed
+  - **Bug A:** Tasks under `### Phase` headers are extracted correctly
+  - **Bug B:** No duplicate headers/footers after multiple file updates
+  - **Bug C:** THUNK monitor only watches THUNK.md, does not auto-sync from PLAN
 
 ---
 
-### Phase 3: Monitor Launch at Startup
+## MEDIUM PRIORITY
 
-**Goal:** Both monitors launch immediately when loop.sh starts, with graceful fallback.
+### Phase 6: Documentation Updates
 
-- [x] **P3.1** Add Windows Terminal (wt.exe) detection to launch_monitors(): ✅ COMPLETE
-  - ✅ Check for wt.exe in PATH (WSL2 environments)
-  - ✅ Launch with: `wt.exe new-tab --title "Current Ralph Tasks" -- wsl bash "$script"`
-  - ✅ Add before gnome-terminal check
-  - **Implementation:** Modified loop.sh launch_monitors() function
-  - **Applied to:** Both current_ralph_tasks.sh and thunk_ralph_tasks.sh monitor launches
-  - **Commit:** 9e14972
+- [ ] **6.1** Update AGENTS.md monitor documentation
+  - Update "Task Monitor" section with correct behavior descriptions
+  - Remove any references to auto-sync functionality
+  - Document that Ralph appends to THUNK.md directly
 
-- [x] **P3.2** Add functionality test for gnome-terminal: ✅ COMPLETE
-  - Current: Only checks `command -v gnome-terminal`
-  - Add: `timeout 2s gnome-terminal --version &>/dev/null`
-  - Only use gnome-terminal if version check succeeds
-  - **Implementation:** Modified loop.sh lines 530 and 550 to add `&& timeout 2s gnome-terminal --version &>/dev/null`
-  - **Benefit:** Prevents DBus errors when gnome-terminal exists but can't launch (e.g., headless environments)
-  - **Fallback:** If test fails, falls through to next terminal option (konsole, xterm, tmux, or manual instructions)
-  - **Commit:** 56942fd
-
-- [x] **P3.3** Reorder terminal detection priority: ✅ COMPLETE
-  1. tmux (if $TMUX is set) — most reliable for headless/WSL
-  2. Windows Terminal (wt.exe) — best for WSL2 with GUI
-  3. gnome-terminal (with functionality test) — Linux desktop
-  4. konsole — KDE desktop
-  5. xterm — fallback X11 terminal
-  6. Manual instructions — last resort
-  - **Implementation:** Modified loop.sh launch_monitors() function
-  - **Rationale:** tmux is most reliable in headless/SSH environments where graphical terminals may fail
-  - **Benefit:** Prevents unnecessary fallback messages when running inside tmux sessions
-  - **Commit:** b95192b
-
-- [x] **P3.4** Implement single-shot fallback message: ✅ COMPLETE
-  - Tracks launch success for both monitors (current_tasks_launched, thunk_tasks_launched)
-  - Prints consolidated message only when ALL terminal options fail
-  - Removed individual per-monitor warnings to reduce noise
-  - Already-running monitors count as successful (prevents false fallback)
-  - Message shows full paths using $monitor_dir variable
-  - Printed once at startup, no retries
-  - **Implementation:** Modified launch_monitors() in loop.sh lines 520-577
-  - **Commit:** 25a53f1
-
-- [x] **P3.5** Ensure launch failures are non-fatal: ✅ COMPLETE
-  - Wrapped all terminal launch commands in subshells with `|| true`
-  - Prevents any launch failure from propagating to parent shell (set -e protection)
-  - Ralph loop continues regardless of monitor launch success
-  - Applied to both current_ralph_tasks.sh and thunk_ralph_tasks.sh launches
-  - **Implementation:** Modified launch_monitors() in loop.sh lines 525-564
-  - **Commit:** 4cb6756
-
-- [x] **P3.6** Test: Run loop.sh in tmux → expect tmux windows created for both monitors: ✅ COMPLETE
-  - ✅ Created comprehensive test script: tmp_rovodev_test_p3_6.sh
-  - ✅ Verified tmux new-window commands create monitor windows correctly
-  - ✅ Window titles verified: "Current Tasks" and "Thunk Tasks"
-  - ✅ Window count increases by 2 when monitors launch
-  - ✅ Test simulates exact behavior of launch_monitors() in tmux environment
-  - **Implementation:** Test script creates detached tmux session, launches monitors, verifies window creation
-  - **Result:** Both monitors launch successfully in tmux with correct window titles
-
-- [x] **P3.7** Test: Run loop.sh outside tmux without display → expect manual commands printed once: ✅ COMPLETE
-  - ✅ Created isolated test that simulates launch_monitors function
-  - ✅ Verified fallback message appears in headless environment (no TMUX, no DISPLAY)
-  - ✅ Verified message includes manual commands for both monitors
-  - ✅ Verified message appears exactly once (not repeated)
-  - ✅ Verified no error/fatal messages (Ralph loop continues normally)
-  - **Test script:** tmp_rovodev_test_p3_7.sh (executed successfully)
+- [ ] **6.2** Update VALIDATION_CRITERIA.md
+  - Add test cases for hierarchical task extraction (Bug A fix)
+  - Add test cases for display rendering stability (Bug B fix)
+  - Add test cases for THUNK monitor watch-only behavior (Bug C fix)
 
 ---
 
-### Phase 4: Incremental/Append-Only Monitor Performance & UX
+## Acceptance Criteria
 
-**Goal:** Eliminate blank screens, reduce CPU usage, improve visual feedback.
+### Bug A: Task Extraction
+- [x] Tasks under `## HIGH PRIORITY` → `### Phase X:` → `#### Subphase Y:` are extracted with HIGH priority
+- [x] Parser does not exit on `###` or `####` headers
+- [x] Only `##` headers change priority section state
 
-#### Phase 4A: current_ralph_tasks.sh Improvements
+### Bug B: Display Rendering
+- [x] Header appears exactly once after file updates
+- [x] Footer appears exactly once after file updates
+- [x] No overlapping text after multiple rapid updates
+- [x] No visual corruption after terminal resize
 
-- [x] **P4A.1** Implement cursor positioning for top-anchored display: ✅ COMPLETE
-  - Replace `clear` with `tput cup 0 0` + `tput ed` (clear from cursor)
-  - Cursor starts at top-left, then content renders downward
-  - User sees content immediately, not blank screen
-  - **Implementation:** Modified display_tasks() in current_ralph_tasks.sh line 328-331
-  - **Result:** Screen no longer blanks during refresh - content appears immediately
-
-- [x] **P4A.2** Add completed task caching: ✅ COMPLETE
-  - Create array COMPLETED_CACHE to store hashes of completed tasks
-  - On first load: populate cache with all `[x]` task descriptions
-  - On refresh: skip full parsing for cached completed tasks
-  - **Implementation:** Added declare -A COMPLETED_CACHE at line 30, modified extract_tasks() to cache completed tasks using md5sum hash
-  - **Result:** Completed tasks cached on first parse, subsequent refreshes return cached values without reprocessing
-  - **Commit:** f408f04
-
-- [x] **P4A.3** Implement differential display update: ✅ COMPLETE
-  - Track which tasks changed since last display
-  - Only redraw changed lines using `tput cup $row 0`
-  - Keep stable content (completed tasks) without redraw
-  - **Implementation:** Added TASK_DISPLAY_ROWS and LAST_RENDERED_CONTENT tracking arrays
-  - **Logic:** Build new display state, compare row-by-row with last render
-  - **Differential:** Only redraw rows where content changed or footer/timestamp updates
-  - **Full redraw:** First render, state size changes, or hotkey actions (toggle, archive, clear, refresh, help)
-  - **Result:** Completed tasks remain stable, only changed lines update on file modifications
-
-- [x] **P4A.4** Add "current task" indicator with distinct symbol: ✅ COMPLETE
-  - First `[ ]` task encountered = current (mark with `▶`)
-  - All subsequent `[ ]` tasks = pending (mark with `○`)
-  - Completed tasks = `✓` (unchanged)
-  - **Implementation:** Modified extract_tasks() and display_tasks() in current_ralph_tasks.sh
-  - **Logic:** Tracks first_pending_seen flag, assigns ▶ to first pending, ○ to rest
-  - **Result:** Current task clearly visible in monitor display
-
-- [x] **P4A.5** Implement detailed task formatting with spacing: ✅ COMPLETE
-  - Add empty line between each task for readability
-  - Add indentation (2 spaces) for task content
-  - Keep priority section separators (━━━ lines)
-  - **Implementation:** Empty lines already added at line 470-472 in current_ralph_tasks.sh
-  - **Result:** Tasks have visual spacing for improved readability
-
-- [x] **P4A.6** Fix title extraction for "Test:" tasks: ✅ COMPLETE
-  - Current: Truncates at colon, showing just "Test"
-  - Fix: For "Test:" prefix, include object being tested
-  - Pattern: `Test: <action>` instead of just `Test`
-  - Example: "Test: Mark task [x] in plan" not "Test"
-  - **Implementation:** Already implemented in generate_title() function
-
-- [x] **P4A.7** Test: Refresh display with 50+ tasks → expect no blank screen: ✅ COMPLETE
-  - ✅ Screen shows header immediately (tput cup 0 0)
-  - ✅ Content populates progressively (no clear command)
-  - ✅ No visible "flash" or blank period (tput ed for partial clear)
-  - ✅ Verified cursor positioning, differential updates, caching all working
-  - ✅ Test script validates behavior with 65-task plan file
-  - **Test script:** tmp_rovodev_test_p4a7.sh (executed successfully)
-
-- [x] **P4A.8** Test: Complete a task → expect only that task line updates: ✅ COMPLETE
-  - ✅ Other task lines should not redraw (differential update verified)
-  - ✅ Completed count in footer updates (footer refresh logic confirmed)
-  - ✅ Cache correctly updated (COMPLETED_CACHE mechanism validated)
-  - **Test script:** tmp_rovodev_test_p4a8.sh (executed successfully)
-  - **Verified behaviors:**
-    - Task state transition ([ ] → [x]) updates counts correctly
-    - COMPLETED_CACHE exists for optimization
-    - LAST_RENDERED_CONTENT tracks previous state for comparison
-    - Row-level comparison (line 532-544) only redraws changed rows
-    - Cursor positioning with tput cup (no blank screen)
-    - Footer always updates on any change
-
-- [x] **P4A.9** Test: First unchecked task shows `▶` symbol, others show `○`: ✅ COMPLETE
-  - ✅ Verified code contains ▶ symbol for first pending task (line 453)
-  - ✅ Verified code contains ○ symbol for subsequent pending tasks (line 451)
-  - ✅ Verified code contains ✓ symbol for completed tasks (line 444)
-  - ✅ Verified first_pending_seen flag properly initialized in display_tasks() (line 382)
-  - ✅ Logic simulation confirms correct symbol assignment
-  - ✅ Completion simulation confirms symbol transitions (▶ moves to next pending)
-  - **Test script:** tmp_rovodev_test_p4a9.sh (executed successfully)
-
-#### Phase 4B: thunk_ralph_tasks.sh Improvements
-
-- [x] **P4B.1** Implement line-count tracking for THUNK.md: ✅ COMPLETE
-  - Store LAST_LINE_COUNT after initial load
-  - On file change, compare current line count
-  - If increased: only new lines added (common case)
-  - If decreased: full refresh needed (rare case)
-
-- [x] **P4B.2** Implement tail-only parsing for new entries: ✅ COMPLETE
-  - When line count increases, read only lines from LAST_LINE_COUNT to end
-  - Parse only new table rows
-  - Append to display without clearing
-  - Added parse_new_thunk_entries() function
-  - Skips full file re-parsing for append-only updates (common case)
-  - Full refresh still used for deletions or edits (rare cases)
-
-- [x] **P4B.3** Implement append-only display mode: ✅ COMPLETE
-  - New thunks append to bottom of list
-  - No screen clear on incremental update
-  - Full refresh only on [r] hotkey or line count decrease
-  - Implementation: display_thunks() tracks display_row position
-  - parse_new_thunk_entries() uses tput cup for cursor positioning
-  - Footer updates in-place with new total count
-
-- [x] **P4B.4** Add cursor positioning for incremental append: ✅ COMPLETE
-  - Track last display row: LAST_DISPLAY_ROW variable stores position after full display
-  - Position cursor at next row for new content: append_row calculated by backing up from footer (LAST_DISPLAY_ROW - 8)
-  - Update totals in footer using `tput cup`: Footer redrawn in-place at lines 396-403
-  - Implementation: parse_new_thunk_entries() uses tput cup for cursor positioning
-  - Verified: All cursor positioning logic confirmed via automated test
-
-- [x] **P4B.5** Apply same title extraction fix for "Test:" tasks: ✅ COMPLETE
-  - Copied Test: prefix handling from thunk_ralph_tasks.sh to current_ralph_tasks.sh
-  - Both monitors now consistently display "Test: <object>" format
-  - Enhanced ID pattern regex to handle alphanumeric task IDs (P4A.7, T1.1, etc.)
-  - Updated both active script and template version
-
-- [x] **P4B.6** Test: Add entry to THUNK.md → expect new entry appears without full redraw: ✅ COMPLETE
-  - Manually append a table row to THUNK.md
-  - Observe monitor appends entry
-  - Previous entries remain stable
-  - Automated test validates: monitor detects +1 line, processes new entry without crash
-  - Line-count tracking and tail-only parsing working correctly
-
-- [x] **P4B.7** Test: thunk_ralph_tasks.sh startup time < 1 second for 100 entries: ✅ COMPLETE
-  - Created test with 100 entries
-  - Optimized generate_title() to use bash built-ins instead of sed/cut subprocesses
-  - Optimized whitespace trimming to use parameter expansion instead of xargs
-  - Display rendering time: 0.167s (was 3.15s before optimization - 19x speedup)
-  - Test passes: rendering < 1 second threshold
-  - Performance improvements committed: ac2e5ac
+### Bug C: THUNK Monitor
+- [x] Watches ONLY THUNK.md
+- [x] Updates display when THUNK.md changes
+- [x] Does NOT watch IMPLEMENTATION_PLAN.md
+- [x] Does NOT modify any files (display only)
+- [x] No "Scanning IMPLEMENTATION_PLAN.md" messages
 
 ---
 
-### Phase 5: Restore & Strengthen Verification Tasks
+## Notes
 
-**Goal:** Ensure migration completeness and template integrity.
-
-- [x] **P5.1** Verify templates scaffold correctly:
-  - Run: `bash new-project.sh test-verify-scaffold`
-  - Verify created project has `skills/` directory (not `kb/`)
-  - Verify AGENTS.md references `skills/` path
-  - Clean up: `rm -rf test-verify-scaffold`
-  - ✅ FIXED: Changed new-project.sh line 322 from `mkdir -p "$PROJECT_LOCATION/ralph/kb"` to `mkdir -p "$PROJECT_LOCATION/skills"`
-
-
-- [x] **P5.2** Verify no remaining /kb/ references in active files: ✅ VERIFIED
-  - Run: `grep -r "/kb/" --include="*.md" --include="*.sh" . | grep -v references/ | grep -v THUNK.md`
-  - Result: Only references in IMPLEMENTATION_PLAN.md (task description) and archived `old_md/` directory
-  - Active code files have zero /kb/ references
-  - Verified `brain/ralph/kb/` directory does NOT exist
-
----
-
-### Phase 6: Improve Test Clarity
-
-**Goal:** Rewrite vague test descriptions to specify object and expected outcome.
-
-- [x] **P6.1** Audit existing test tasks in THUNK.md: ✅ COMPLETE
-  - Identified 15 test tasks (THUNK #37-57, 91-104, 110-111, 116-118)
-  - Most test tasks already follow good format: "Test: <action> → <expected outcome>"
-  - Tasks with suboptimal descriptions:
-    - THUNK #38 "T6.2": "Test: Sequential numbering works (next task gets next THUNK #)"
-    - THUNK #42 "T6.4": "Test: Hotkey `[r]` clears display but preserves THUNK.md"
-    - These are acceptable but could specify observable outcome more explicitly
-  - All other test tasks follow proper format or are legacy entries
-  - **CONCLUSION**: Current test task format is already compliant with P6.2 standard
-
-- [x] **P6.2** Update test task format standard: ✅ COMPLETE
-  - Format: `Test: <action> → expect <observable outcome>`
-  - Example: `Test: Mark task [x] in plan → expect task appears in THUNK.md`
-  - Documented in THOUGHTS.md section H (Test Task Format Standard)
-  - Includes rationale, examples, title extraction behavior, and enforcement guidelines
-
-- [x] **P6.3** Create test scenario checklist for monitors and loop: ✅ COMPLETE
-  - ✅ Created TEST_SCENARIOS.md with 36 comprehensive test scenarios
-  - ✅ Organized into 8 categories (Loop Correctness, Monitor Launch, File Watching, Performance, Display Format, Integration, Error Handling, Regression)
-  - ✅ Each test includes: description, run instructions, expected outcome, validation criteria
-  - ✅ Coverage summary: 22 automated tests, 14 manual tests
-  - ✅ Test script naming convention documented
-  - ✅ Usage guidelines for manual testing, automated testing, regression testing, CI/CD integration
-  - ✅ References to IMPLEMENTATION_PLAN.md, THOUGHTS.md, VALIDATION_CRITERIA.md
-
-- [x] **P6.4** Test: Run full integration test of Ralph loop with all fixes: ✅ COMPLETE
-  - Created comprehensive integration test: tmp_rovodev_test_p6_4_simple.sh
-  - Validated 8 test scenarios:
-    1. Core scripts exist (loop.sh, monitors)
-    2. Completion marker detection (:::COMPLETE:::)
-    3. Task parsing logic (pending/completed counting)
-    4. Symbol assignment logic (✓/▶/○)
-    5. File mtime polling mechanism
-    6. Monitor launch environment detection
-    7. THUNK.md structure validation
-    8. IMPLEMENTATION_PLAN.md structure validation
-  - All tests passed - integration validated end-to-end
-
----
-
-## 🟡 LOW PRIORITY: Future Enhancements (Optional)
-
-These tasks were considered but explicitly deferred as they provide marginal value. They can be added to a future plan if needed.
-
-- [x] **F1** Add `--no-monitors` flag to loop.sh to skip monitor auto-launch ✅
-
-**Deferred (removed from active plan):**
-- **F2** Add monitor health check endpoint (touch file to indicate alive)
-- **F3** Support custom terminal command via `RALPH_TERMINAL` env var
-- **F4** Add `--monitor-only` mode to run just monitors without loop
-- **F5** Persist completed task cache to file for faster restart
-
-**Status:** F1 complete. F2-F5 removed from active plan as they are optional enhancements that don't block production use. The current implementation is production-ready without these features.
-
----
-
-## 🟢 LOW PRIORITY: Completed Work Archive
-
-### KB→Skills Migration: ✅ 100% COMPLETE
-
-All 93 tasks completed. See THUNK.md for full completion log.
-
-**Summary:**
-**All 93 migration tasks completed:**
-- Phase 1: Safety Checks & Cleanup ✅
-- Phase 2: Folder Rename (kb → skills) ✅
-- Phase 3: Self-Improvement System ✅
-- Phase 4: Update Summary & Create Index ✅
-- Phase 5: Reference Updates ✅
-- Phase 6: Protocol Wiring ✅
-- Phase 7: Final Validation ✅
-
-**Current state verified:**
-- ✅ `skills/` directory exists with 12 domain files, 2 project files
-- ✅ `skills/self-improvement/` system operational with 5 files
-- ✅ `skills/index.md` and `skills/SUMMARY.md` complete
-- ✅ `kb/` directory removed
-- ✅ Templates reference `skills/` not `kb/`
-- ✅ No active `/kb/` references in code (only historical docs in `old_md/`)
-
-### THUNK Monitor System: ✅ 100% COMPLETE
-
-All 50 tasks completed. Phases T1-T6 done.
-
-**All 50 THUNK system tasks completed:**
-- Phase T1: Rename Existing Monitor ✅
-- Phase T2: Create THUNK.md ✅
-- Phase T3: Create thunk_ralph_tasks.sh ✅
-- Phase T3.5: Human-Friendly Display Formatting ✅
-- Phase T4: Integration with loop.sh ✅
-- Phase T5: Template Integration ✅
-- Phase T6: Validation & Testing ✅
-
-**Current state verified:**
-- ✅ `current_ralph_tasks.sh` monitors IMPLEMENTATION_PLAN.md
-- ✅ `thunk_ralph_tasks.sh` monitors THUNK.md
-- ✅ Both monitors use mtime polling (0.5s interval)
-- ✅ THUNK.md serves as append-only completion log
-- ✅ Templates include both monitor scripts
-
----
-
-## Verification Checklist
-
-Before marking this plan complete, ALL must pass:
-
-### Loop Correctness
-- [x] `:::COMPLETE:::` in log file stops loop immediately (P1.1, P1.1a, P1.2)
-- [x] Return code 42 is captured correctly (P1.1, P1.1a, P1.2)
-- [x] Loop continues normally when no completion marker (P1.3)
-
-### Monitor Launch
-- [x] Monitors launch in tmux environment (P3.3, P3.6)
-- [x] Monitors launch with Windows Terminal in WSL2 (P3.1)
-- [x] Fallback message prints when no terminal available (P3.4, P3.7)
-- [x] Ralph loop continues regardless of monitor launch status (P3.5)
-
-### Monitor Performance
-- [x] No blank screen during current_ralph_tasks.sh refresh (P4A.1, P4A.7)
-- [x] Completed tasks cached and not re-parsed (P4A.2)
-- [x] thunk_ralph_tasks.sh uses tail-only parsing (P4B.2)
-- [x] Both monitors update within 1 second of file change (P2.4, P2.5)
-
-### Monitor Display
-- [x] Current task marked with `▶` symbol (P4A.4, P4A.9)
-- [x] Pending tasks marked with `○` symbol (P4A.4, P4A.9)
-- [x] Completed tasks marked with `✓` symbol (P4A.4, P4A.9)
-- [x] Empty line between tasks for readability (P4A.5)
-- [x] "Test:" tasks show full action, not just "Test" (P4A.6, P4B.5)
-
-### Structure Verification
-- [x] `skills/` directory exists with all subdirectories
-- [x] `brain/ralph/kb/` does NOT exist
-- [x] Templates scaffold with `skills/` not `kb/`
-- [x] No active /kb/ references in code files
-
----
-
-## Appendix: File Locations
-
-| File | Purpose | Path |
-|------|---------|------|
-| loop.sh | Main Ralph loop | `$RALPH_DIR/loop.sh` |
-| current_ralph_tasks.sh | Current tasks monitor | `$RALPH_DIR/current_ralph_tasks.sh` |
-| thunk_ralph_tasks.sh | Completed tasks monitor | `$RALPH_DIR/thunk_ralph_tasks.sh` |
-| THUNK.md | Append-only completion log | `$RALPH_DIR/THUNK.md` |
-| IMPLEMENTATION_PLAN.md | Task backlog (this file) | `$RALPH_DIR/IMPLEMENTATION_PLAN.md` |
-| THOUGHTS.md | Design rationale | `$RALPH_DIR/THOUGHTS.md` |
-
----
-
-## Appendix: Symbol Reference
-
-| Symbol | Meaning | Used In |
-|--------|---------|---------|
-| `✓` | Completed | Both monitors |
-| `▶` | Current/In-Progress | current_ralph_tasks.sh |
-| `○` | Pending | current_ralph_tasks.sh |
-| `[x]` | Completed (markdown) | IMPLEMENTATION_PLAN.md |
-| `[ ]` | Pending (markdown) | IMPLEMENTATION_PLAN.md |
-
----
-
-## Appendix: Error Handling
-
-### gnome-terminal DBus Error
-```
-Error constructing proxy for org.gnome.Terminal:/org/gnome/Terminal/Factory0
-```
-**Cause:** gnome-terminal binary exists but cannot connect to display/DBus.
-**Solution:** Functionality test before use, fallback to other terminals.
-
-### Return Code Lost
-```bash
-run_once "..." "..." "$i"
-echo "..."  # This resets $?
-if [[ $? -eq 42 ]]; then  # Always false!
-```
-**Cause:** Any command between function call and $? check resets the value.
-**Solution:** Capture immediately: `result=$?`
+- Keep changes minimal and focused - fix bugs, don't refactor unnecessarily
+- Maintain backwards compatibility with existing IMPLEMENTATION_PLAN.md formats
+- Preserve all existing hotkey functionality
+- All fixes tested individually before integration testing
