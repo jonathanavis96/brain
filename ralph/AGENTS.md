@@ -23,11 +23,33 @@ bash loop.sh --resume           # Resume from interruption
 
 Mode: Iteration 1 or every 3rd = PLAN, others = BUILD.
 
-## Task Monitor
+## Task Monitors
+
+Ralph uses two complementary monitors for real-time task tracking:
+
+### Current Ralph Tasks Monitor
 ```bash
-bash watch_ralph_tasks.sh       # Real-time task tracking
+bash current_ralph_tasks.sh     # Shows pending tasks from IMPLEMENTATION_PLAN.md
 ```
-Hotkeys: `h` (toggle), `r` (archive), `f` (refresh), `c` (clear), `q` (quit)
+**Purpose:** Displays unchecked `[ ]` tasks only, organized by priority (HIGH/MEDIUM/LOW)
+**Hotkeys:** `q` (quit)
+**Key Features:**
+- Extracts tasks from all priority sections, including nested subsections (`###`, `####`)
+- First unchecked task marked with `▶` symbol (current task Ralph should work on)
+- Always full screen redraw (no rendering artifacts)
+- Updates within 1 second of IMPLEMENTATION_PLAN.md changes
+
+### THUNK Monitor (Completed Tasks)
+```bash
+bash thunk_ralph_tasks.sh       # Shows completed task log from THUNK.md
+```
+**Purpose:** Displays completed tasks appended to THUNK.md
+**Hotkeys:** `r` (refresh), `f` (force sync), `e` (new era), `q` (quit)
+**Key Features:**
+- Primary: Watches THUNK.md for Ralph-appended completions
+- Safety net: Auto-syncs from IMPLEMENTATION_PLAN.md if Ralph forgets to append
+- Append-only display (tail parsing for performance)
+- Sequential THUNK numbering across project lifecycle
 
 ## Loop Stop Sentinel
 Ralph outputs when ALL tasks complete:
