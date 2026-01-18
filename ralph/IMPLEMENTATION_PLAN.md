@@ -332,10 +332,12 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
 
 #### Phase 4A: current_ralph_tasks.sh Improvements
 
-- [ ] **P4A.1** Implement cursor positioning for top-anchored display:
+- [x] **P4A.1** Implement cursor positioning for top-anchored display: ✅ COMPLETE
   - Replace `clear` with `tput cup 0 0` + `tput ed` (clear from cursor)
   - Cursor starts at top-left, then content renders downward
   - User sees content immediately, not blank screen
+  - **Implementation:** Modified display_tasks() in current_ralph_tasks.sh line 328-331
+  - **Result:** Screen no longer blanks during refresh - content appears immediately
 
 - [ ] **P4A.2** Add completed task caching:
   - Create array COMPLETED_CACHE to store hashes of completed tasks

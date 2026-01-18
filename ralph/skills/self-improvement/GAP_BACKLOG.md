@@ -25,4 +25,14 @@ Rules:
 
 -->
 
-<!-- No gaps logged yet. Gaps will be added here as Claude discovers missing capabilities. -->
+### 2026-01-18 — Bash Terminal Control with tput
+- **Type:** Tooling / Knowledge
+- **Why useful:** Prevents screen flashing/blanking during display refreshes in interactive bash scripts
+- **When triggered:** Implementing cursor positioning for top-anchored display in current_ralph_tasks.sh (task P4A.1)
+- **Evidence:** 
+  - Used `tput cup 0 0` to move cursor to top-left without clearing screen
+  - Used `tput ed` to clear from cursor to end of screen
+  - Pattern: Replace `clear` command with `tput cup 0 0 && tput ed` for flicker-free updates
+  - Other useful commands: `tput cup $row $col`, `tput el` (clear line), `tput sc/rc` (save/restore cursor)
+- **Priority:** P2
+- **Status:** Identified
