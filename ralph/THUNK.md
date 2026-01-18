@@ -107,3 +107,4 @@ Started: 2026-01-18
 | 92 | LEGACY | HIGH | **P1.3** Test: Run without completion marker → verify loop continues: ✅ COMPLETE | 2026-01-18 |
 | 93 | LEGACY | HIGH | **P2.1** Verify thunk_ralph_tasks.sh watches THUNK.md directly: ✅ VERIFIED | 2026-01-18 |
 | 94 | P2.2 | HIGH | **P2.2** Verify current_ralph_tasks.sh watches IMPLEMENTATION_PLAN.md directly: ✅ VERIFIED | 2026-01-18 |
+| 95 | LEGACY | HIGH | **P2.3** Verify monitors use file mtime polling (not inotify): ✅ VERIFIED | 2026-01-18 |
