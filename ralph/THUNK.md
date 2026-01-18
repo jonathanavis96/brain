@@ -98,3 +98,6 @@ Started: 2026-01-18
 | 84 | 6.3 | MEDIUM | **6.3** Add self-improvement protocol to `templates/AGENTS.project.md` | 2026-01-18 |
 | 84 | 6.2 | MEDIUM | **6.2** Add checkpoints to `PROMPT.md`:  | 2026-01-18 |
 | 85 | 6.4 | MEDIUM | **6.4** Add checkpoints to `templates/ralph/PROMPT.project.md` | 2026-01-18 |
+| 86 | LEGACY | MEDIUM | Run `new-project.sh neoqueue` to create project scaffold | 2026-01-18 |
+| 87 | LEGACY | MEDIUM | Copy THOUGHTS.md content to neoqueue project as project spec | 2026-01-18 |
+| 88 | LEGACY | HIGH | **P1.1** Fix `$?` overwrite bug in loop.sh lines 600-610: | 2026-01-18 |
