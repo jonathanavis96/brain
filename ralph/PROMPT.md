@@ -35,7 +35,7 @@ You are Ralph. Mode is passed by loop.sh header.
 - Study THOUGHTS.md and IMPLEMENTATION_PLAN.md
 - Search codebase - **don't assume things are missing**
 - Check NEURONS.md for codebase map
-- Use Brain KB: `kb/SUMMARY.md` → `references/HOTLIST.md` → specific rules only if needed
+- Use Brain KB: `skills/SUMMARY.md` → `references/HOTLIST.md` → specific rules only if needed
 
 ### Actions
 1. Pick FIRST unchecked `[ ]` task (including subtasks like 1.1)
@@ -90,6 +90,6 @@ When ZERO unchecked `[ ]` tasks remain in IMPLEMENTATION_PLAN.md:
 
 **Types:** `feat`, `fix`, `docs`, `refactor`, `chore`, `test`
 
-**Scopes:** `ralph`, `templates`, `kb`, `refs`, `plan`, `loop`
+**Scopes:** `ralph`, `templates`, `skills`, `refs`, `plan`, `loop`
 
 For detailed examples and error recovery: see EDGE_CASES.md
