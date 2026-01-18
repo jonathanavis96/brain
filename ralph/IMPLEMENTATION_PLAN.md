@@ -121,10 +121,12 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
 
 **Goal:** Monitors update on file changes regardless of Ralph phase (plan/build).
 
-- [ ] **P2.1** Verify thunk_ralph_tasks.sh watches THUNK.md directly:
-  - Confirm file watch at line 399-404
-  - Confirm display_thunks() reads only from THUNK.md
-  - Document: This is already correct behavior
+- [x] **P2.1** Verify thunk_ralph_tasks.sh watches THUNK.md directly: ✅ VERIFIED
+  - ✅ File watch at lines 399-404: Uses `get_file_mtime()` to poll THUNK.md modification time
+  - ✅ display_thunks() reads only from THUNK.md: Line 280 `done < "$THUNK_FILE"` reads directly
+  - ✅ THUNK_FILE defined at line 20: `"$RALPH_DIR/THUNK.md"`
+  - ✅ Poll interval: 0.5s (line 416 `sleep 0.5`)
+  - **Documentation:** This is already correct behavior - monitor watches THUNK.md directly via mtime polling, no coupling to Ralph's planning mode
 
 - [ ] **P2.2** Verify current_ralph_tasks.sh watches IMPLEMENTATION_PLAN.md directly:
   - Confirm file watch at line 507-511

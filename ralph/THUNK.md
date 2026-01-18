@@ -104,3 +104,4 @@ Started: 2026-01-18
 | 89 | LEGACY | HIGH | **P1.1** Fix `$?` overwrite bug in loop.sh lines 600-610: ✅ COMPLETE | 2026-01-18 |
 | 90 | LEGACY | HIGH | **P1.1a** Fix same `$?` bug in custom prompt path (loop.sh lines 582-588): ✅ COMPLETE | 2026-01-18 |
 | 91 | LEGACY | HIGH | **P1.2** Test: Simulate `:::COMPLETE:::` in log → verify loop exits: ✅ COMPLETE | 2026-01-18 |
+| 92 | LEGACY | HIGH | **P1.3** Test: Run without completion marker → verify loop continues: ✅ COMPLETE | 2026-01-18 |
