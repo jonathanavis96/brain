@@ -40,32 +40,33 @@ Ongoing maintenance and improvement tasks for the brain repository. This plan tr
   - Decision: Keep both as reference (do not meet "recurring" criteria per GAP_CAPTURE_RULES.md)
   - Updated GAP_BACKLOG.md with review notes and status
 
-- [ ] **2.2** Create skill: Ralph Loop Architecture Deep Dive
+- [ ] **2.2** Verify skills/index.md completeness
+  - Cross-reference with actual files in skills/domains/ and skills/projects/
+  - Ensure all skill files are indexed
+  - Update last modified date
+  - Status: Preliminary check shows 12 domain files + 2 project files match index
+
+- [ ] **2.3** Create skill: Ralph Loop Architecture Deep Dive
   - Expand skills/domains/ralph-patterns.md with more detail
   - Add troubleshooting patterns from recent monitor fixes
   - Include: parser state machines, display strategies, file watching patterns
 
-- [ ] **2.3** Verify skills/index.md completeness
-  - Cross-reference with actual files in skills/domains/ and skills/projects/
-  - Ensure all skill files are indexed
-  - Update last modified date
-
 ### Template Improvements
 
 - [ ] **3.1** Sync current_ralph_tasks.sh updates to template
-  - templates/ralph/current_ralph_tasks.sh may be outdated
-  - Copy latest version from root (22KB vs 20KB in templates)
-  - Ensure bug fixes are in template
+  - templates/ralph/current_ralph_tasks.sh is outdated (20KB vs 21.9KB in root)
+  - Copy latest version from root
+  - Ensure all monitor bug fixes are in template
 
 - [ ] **3.2** Sync thunk_ralph_tasks.sh updates to template
-  - templates/ralph/thunk_ralph_tasks.sh may be outdated  
-  - Copy latest version from root (22KB vs 16KB in templates)
-  - Ensure bug fixes are in template
+  - templates/ralph/thunk_ralph_tasks.sh is outdated (16KB vs 22.5KB in root)
+  - Copy latest version from root
+  - Ensure all monitor bug fixes are in template
 
 - [ ] **3.3** Sync loop.sh updates to template
-  - templates/ralph/loop.sh is 888 bytes vs 21KB in root
-  - Verify template has all recent improvements
-  - Copy if outdated
+  - templates/ralph/loop.sh is severely outdated (888 bytes vs 21KB in root)
+  - Copy latest version from root
+  - Verify all recent improvements included
 
 ---
 
