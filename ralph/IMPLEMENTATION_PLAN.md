@@ -36,9 +36,9 @@ A Matrix-inspired desktop app for tracking discussion points with your manager. 
 
 ## 🎯 ACTIVE WORK: KB→Skills Migration In Progress
 
-This plan contains **9 unchecked tasks** remaining:
+This plan contains **8 unchecked tasks** remaining:
 
-1. **KB→Skills Migration** (9 remaining) - Complete kb/ → skills/ reference updates and protocol wiring
+1. **KB→Skills Migration** (8 remaining) - Complete kb/ → skills/ reference updates and protocol wiring
 
 **Execution Strategy:**
 - ✅ **THUNK Monitor System: 100% COMPLETE** - All 50 tasks done (Phases T1-T6)
@@ -46,10 +46,10 @@ This plan contains **9 unchecked tasks** remaining:
 - ✅ **Phase 2: Folder Rename** - COMPLETE (2 tasks)
 - ✅ **Phase 3: Self-Improvement System** - COMPLETE (6 tasks)
 - ✅ **Phase 4: Update Summary & Create Index** - COMPLETE (2 tasks)
-- 🔄 **Phase 5: Reference Updates** - IN PROGRESS (22/27 complete, 5 remaining)
+- 🔄 **Phase 5: Reference Updates** - IN PROGRESS (23/27 complete, 4 remaining)
 - ⏳ **Phase 6: Protocol Wiring** - PENDING (4 tasks)
 - ✅ **Phase 7: Final Validation** - COMPLETE (1 task already done, 1 task merged into Phase 5)
-- 🔄 **Next: Task 5.10** - Update generators/generate-thoughts.sh
+- 🔄 **Next: Task 5.26** - Update skills/conventions.md
 - Each BUILD iteration: Execute EXACTLY ONE unchecked task in sequence
 
 **THUNK Monitor Status:**
@@ -65,7 +65,7 @@ This plan contains **9 unchecked tasks** remaining:
 - ⏳ Phase 6: Protocol wiring (4 tasks)
 - ✅ Phase 7: Validation complete (task 7.1 done, task 7.2 absorbed into Phase 5)
 
-**Progress: 84/93 tasks complete (90%)**
+**Progress: 85/93 tasks complete (91%)**
 
 ---
 
@@ -309,7 +309,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 **Skills Folder Internal:**
 - [x] **5.24** Update `skills/domains/README.md` (verify kb/ references if any)
-- [ ] **5.25** Update `skills/projects/README.md` (verify kb/ references if any)
+- [x] **5.25** Update `skills/projects/README.md` (7 kb/ references updated)
 - [ ] **5.26** Update `skills/conventions.md` (verify kb/ references if any)
 
 #### Phase 6: Wire Self-Improvement Protocol
