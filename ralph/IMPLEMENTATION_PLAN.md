@@ -60,9 +60,9 @@ The brain repository is **fully mature and production-ready** with comprehensive
 
 ### Analysis: Implementation Status
 
-**Current completion rate:** 28/82 tasks = 34%
+**Current completion rate:** 29/82 tasks = 35%
 
-**Completed work (28/82 tasks):**
+**Completed work (29/82 tasks):**
 1. **Phase 1 (Stop Condition):** 3/3 complete ✅
    - :::COMPLETE::: detection bug fixed in both code paths
    - Comprehensive testing validates loop exit behavior
@@ -78,23 +78,25 @@ The brain repository is **fully mature and production-ready** with comprehensive
    - Single-shot fallback message with graceful degradation
    - Non-fatal launch failures ensure Ralph loop continues
    
-4. **Phase 4 (Performance & UX):** 13/16 complete (81%)
-   - P4A.1-P4A.6: All current_ralph_tasks.sh UX improvements complete ✅
+4. **Phase 4 (Performance & UX):** 14/16 complete (88%)
+   - P4A.1-P4A.8: All current_ralph_tasks.sh UX improvements complete ✅
      - Cursor positioning (top-anchored display)
      - Completed task caching (reduces CPU)
      - Differential display update (stable content)
      - Current task indicator with `▶` symbol
      - Task formatting with spacing (readability)
      - Title extraction for "Test:" tasks
+     - Validated: No blank screen with 50+ tasks
+     - Validated: Differential update on task completion
    - **Next critical tasks:**
-     - P4A.7-9: Validation tests for new display features (3 tasks)
-     - P4B.1-7: thunk_ralph_tasks.sh performance improvements (7 tasks)
+     - P4A.9: Symbol behavior validation (1 task)
+     - P4B.2-7: thunk_ralph_tasks.sh performance improvements (6 tasks)
 
-**Remaining work (54/82 tasks):**
+**Remaining work (53/82 tasks):**
 
-**HIGH PRIORITY - Phase 4 Remaining (10 tasks):**
-- **Validation (P4A.7-P4A.9):** Performance testing for 50+ tasks, differential update verification, symbol behavior validation
-- **thunk_ralph_tasks.sh performance (P4B.1-P4B.7):** Incremental append, tail-only parsing, cursor positioning
+**HIGH PRIORITY - Phase 4 Remaining (9 tasks):**
+- **Validation (P4A.9):** Symbol behavior validation (▶ for current, ○ for pending)
+- **thunk_ralph_tasks.sh performance (P4B.2-P4B.7):** Incremental append, tail-only parsing, cursor positioning
 
 **MEDIUM PRIORITY - Phase 5 (4 tasks):**
 - Structure verification post-migration
@@ -119,7 +121,7 @@ The brain repository is **fully mature and production-ready** with comprehensive
 **Total estimate:** ~30 BUILD iterations remaining
 
 **Strategic recommendation for next BUILD iteration:**
-Start with **P4A.7** (validation testing) - verify new UX improvements work correctly with large task lists
+Start with **P4A.9** (symbol behavior validation) - verify ▶ symbol moves to next task when current task is completed
 
 **Recent progress (last 3 commits - ready to push):**
 - 339691d - docs(plan): Mark P4A.5 and P4A.6 complete - task formatting
@@ -394,10 +396,18 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - ✅ Test script validates behavior with 65-task plan file
   - **Test script:** tmp_rovodev_test_p4a7.sh (executed successfully)
 
-- [ ] **P4A.8** Test: Complete a task → expect only that task line updates
-  - Other task lines should not redraw
-  - Completed count in footer updates
-  - Cache correctly updated
+- [x] **P4A.8** Test: Complete a task → expect only that task line updates: ✅ COMPLETE
+  - ✅ Other task lines should not redraw (differential update verified)
+  - ✅ Completed count in footer updates (footer refresh logic confirmed)
+  - ✅ Cache correctly updated (COMPLETED_CACHE mechanism validated)
+  - **Test script:** tmp_rovodev_test_p4a8.sh (executed successfully)
+  - **Verified behaviors:**
+    - Task state transition ([ ] → [x]) updates counts correctly
+    - COMPLETED_CACHE exists for optimization
+    - LAST_RENDERED_CONTENT tracks previous state for comparison
+    - Row-level comparison (line 532-544) only redraws changed rows
+    - Cursor positioning with tput cup (no blank screen)
+    - Footer always updates on any change
 
 - [ ] **P4A.9** Test: First unchecked task shows `▶` symbol, others show `○`
   - Verify symbol changes when first task is completed
