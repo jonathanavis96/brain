@@ -165,3 +165,10 @@ Started: 2026-01-18
 | 150 | LEGACY | HIGH | Only `##` headers change priority section state | 2026-01-18 |
 | 151 | LEGACY | HIGH | Header appears exactly once after file updates | 2026-01-18 |
 | 152 | LEGACY | HIGH | Footer appears exactly once after file updates | 2026-01-18 |
+| 153 | LEGACY | HIGH | No overlapping text after multiple rapid updates | 2026-01-18 |
+| 154 | LEGACY | HIGH | No visual corruption after terminal resize | 2026-01-18 |
+| 155 | LEGACY | HIGH | Watches ONLY THUNK.md | 2026-01-18 |
+| 156 | LEGACY | HIGH | Updates display when THUNK.md changes | 2026-01-18 |
+| 157 | LEGACY | HIGH | Does NOT watch IMPLEMENTATION_PLAN.md | 2026-01-18 |
+| 158 | LEGACY | HIGH | Does NOT modify any files (display only) | 2026-01-18 |
+| 159 | LEGACY | HIGH | No "Scanning IMPLEMENTATION_PLAN.md" messages | 2026-01-18 |
