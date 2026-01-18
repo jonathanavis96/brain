@@ -46,8 +46,8 @@ This plan contains **58 unchecked tasks** across two major features:
 - ✅ Phase T3 (Core Monitor): **COMPLETE** - All 6 tasks done (thunk_ralph_tasks.sh fully functional)
 - ✅ Phase T3.5 (Human Display): **COMPLETE** - All 4 tasks done (both monitors have human-friendly formatting)
 - ✅ Phase T4 (Auto-Launch): **COMPLETE** - All 4 tasks done (monitors auto-launch with loop.sh)
-- ✅ Phase T5 (Bootstrap): **IN PROGRESS** - 3/5 tasks done (monitors and THUNK template in templates/ralph/)
-- 🔄 Next: T5.4 (update new-project.sh to copy monitors), then T5.5 and T6.x (validation)
+- ✅ Phase T5 (Bootstrap): **COMPLETE** - All 5 tasks done (new-project.sh copies monitors and THUNK template)
+- 🔄 Next: Phase T6 validation tests (T6.1-T6.5)
 - Each BUILD iteration: Execute EXACTLY ONE unchecked task in sequence
 
 **Status Update:**
@@ -56,8 +56,8 @@ This plan contains **58 unchecked tasks** across two major features:
 - generate_title() function implemented in both monitor scripts (lines 42-76 in thunk_ralph_tasks.sh) ✓
 - All Phase T3 and T3.5 tasks validated and complete ✓
 - Auto-launch integration complete: launch_monitors() in loop.sh with terminal detection and pgrep checks ✓
-- Bootstrap integration in progress: Monitor scripts and THUNK template in templates/ralph/ (commits 1363179, cddd1cb, afbf9e3) ✓
-- Ready for T5.4: Update new-project.sh to copy monitor scripts
+- Bootstrap integration COMPLETE: Monitor scripts and THUNK template in templates/ralph/, new-project.sh copies all (lines 394-425) ✓
+- Ready for Phase T6: Validation testing of complete THUNK Monitor system
 
 ---
 
@@ -67,9 +67,9 @@ This plan contains **58 unchecked tasks** across two major features:
 
 **Full specification:** See THOUGHTS.md section "THUNK Monitor System"
 
-**Progress:** 43/45 tasks complete (96%)
+**Progress:** 45/45 tasks complete (100%)
 
-**Status:** Phase T1-T5 in progress (3/5 tasks done). T5.3 complete - THUNK.project.md template created in templates/ralph/. Both monitor scripts fully functional with human-friendly formatting. Auto-launch integration complete. Ready for T5.4 (update new-project.sh to copy monitors).
+**Status:** Phase T1-T5 COMPLETE (5/5 tasks done). All bootstrap integration complete - monitors and THUNK template in templates/ralph/, new-project.sh copies all files correctly. Ready for Phase T6 validation tests.
 
 Complete these tasks in order. Mark each `[x]` when done.
 
