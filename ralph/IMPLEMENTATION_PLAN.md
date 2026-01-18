@@ -5,11 +5,11 @@
 Fix three issues in the Ralph monitoring system:
 1. **Bug A (FIXED):** `current_ralph_tasks.sh` exits task extraction on `###` headers, missing tasks under Phase subsections
 2. **Bug B (FIXED):** Display rendering duplicates headers/footers due to startup messages + differential updates
-3. **Bug C (REEVALUATED):** `thunk_ralph_tasks.sh` auto-syncs from IMPLEMENTATION_PLAN.md - kept as safety net feature
+3. **Bug C (NOT A BUG):** `thunk_ralph_tasks.sh` auto-syncs from IMPLEMENTATION_PLAN.md - this is actually a useful safety net feature
 
 Root cause analysis and design decisions documented in `THOUGHTS.md`.
 
-**STATUS:** Bugs A & B are fixed. Bug C was re-evaluated and determined to be a useful safety net feature. Remaining work: update documentation to reflect current behavior and clarify responsibilities.
+**STATUS:** Bugs A & B are fixed. Bug C was re-evaluated and determined to be a feature, not a bug. Remaining work focuses on documentation and optional Ralph workflow improvements.
 
 ---
 
@@ -73,74 +73,73 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
   - Monitor auto-syncs from IMPLEMENTATION_PLAN.md (safety net)
   - Both functionalities are valuable
 
-### Phase 4: THUNK Logging Documentation (COMPLETE)
+### Phase 4: Update PROMPT.md for Ralph THUNK Logging
 
-**Status:** PROMPT.md already contains THUNK logging instructions at step 4 of BUILD mode. Ralph is correctly instructed to append to THUNK.md when marking tasks complete.
+**Requirement:** Ralph must append to THUNK.md when marking tasks `[x]` complete in IMPLEMENTATION_PLAN.md.
 
-- [x] **4.1** THUNK logging instruction already in PROMPT.md BUILD mode section
-  - Located at step 4 (between Validate and Commit)
-  - Format specified: `| <next_thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |`
-  - Instructions are concise and clear
+- [ ] **4.1** Add THUNK logging instruction to PROMPT.md BUILD mode section
+  - After step 3 (Validate), before step 4 (Commit)
+  - Instruction: "When marking a task `[x]` in IMPLEMENTATION_PLAN.md, append entry to THUNK.md in current era table"
+  - Format: `| <next_thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |`
+  - Keep instruction concise (3-4 lines max) - token efficiency
 
-- [x] **4.2** Ralph THUNK logging is operational
-  - THUNK.md shows 184 completed tasks with proper formatting
-  - Current era table (Era 5) has correct structure
-  - thunk_ralph_tasks.sh provides auto-sync safety net if Ralph forgets
+- [ ] **4.2** Test Ralph appends to THUNK.md on task completion
+  - Run one BUILD iteration with this IMPLEMENTATION_PLAN.md
+  - Verify completed task appears in THUNK.md
+  - Verify format matches table structure
 
-### Phase 5: Documentation Updates (Reprioritized to HIGH)
+### Phase 5: Validation & Integration Testing
 
-**Rationale:** Bugs A & B are fixed. Bug C is a feature. Priority now is documenting actual behavior clearly.
+- [ ] **5.1** Integration test: Run both monitors simultaneously
+  - Launch `current_ralph_tasks.sh` in one terminal
+  - Launch `thunk_ralph_tasks.sh` in another terminal
+  - Mark task `[x]` in IMPLEMENTATION_PLAN.md
+  - Verify: current_ralph_tasks.sh updates immediately (shows remaining tasks)
+  - Verify: THUNK.md gets new entry (Ralph appended it)
+  - Verify: thunk_ralph_tasks.sh updates immediately (shows new THUNK entry)
 
-- [ ] **5.1** Update AGENTS.md monitor documentation
-  - Document two-monitor system: current_ralph_tasks.sh (pending) and thunk_ralph_tasks.sh (completed)
-  - Clarify thunk_ralph_tasks.sh dual functionality: primary watch on THUNK.md + safety net auto-sync from IMPLEMENTATION_PLAN.md
-  - Remove any outdated claims that contradict actual implementation
-  - Update hotkey documentation for both monitors
-
-- [ ] **5.2** Update acceptance criteria in THOUGHTS.md
-  - Mark Bug A criteria as complete (with evidence from commits)
-  - Mark Bug B criteria as complete (with evidence from commits)
-  - Revise Bug C criteria to reflect actual design: dual-watch mode is intentional
-  - Remove contradictory criteria that claim auto-sync is wrong
+- [ ] **5.2** Verify all three bugs are fixed
+  - **Bug A:** Tasks under `### Phase` headers are extracted correctly
+  - **Bug B:** No duplicate headers/footers after multiple file updates
+  - **Bug C:** THUNK monitor only watches THUNK.md, does not auto-sync from PLAN
 
 ---
 
 ## MEDIUM PRIORITY
 
-### Phase 6: Optional Enhancements
+### Phase 6: Documentation Updates
 
-- [ ] **6.1** Add integration test script for monitor system
-  - Create `test-monitors.sh` script that validates both monitors work correctly
-  - Test: Mark task complete, verify both monitors update within 1 second
-  - Test: Terminal resize handling for both monitors
-  - Test: Rapid file updates don't cause rendering corruption
+- [ ] **6.1** Update AGENTS.md monitor documentation
+  - Update "Task Monitor" section with correct behavior descriptions
+  - Remove any references to auto-sync functionality
+  - Document that Ralph appends to THUNK.md directly
 
-- [ ] **6.2** Update VALIDATION_CRITERIA.md with monitor test cases
-  - Add test cases for hierarchical task extraction (Bug A fix verification)
-  - Add test cases for display rendering stability (Bug B fix verification)
-  - Add test cases for dual-watch THUNK monitor behavior (Bug C design)
+- [ ] **6.2** Update VALIDATION_CRITERIA.md
+  - Add test cases for hierarchical task extraction (Bug A fix)
+  - Add test cases for display rendering stability (Bug B fix)
+  - Add test cases for THUNK monitor watch-only behavior (Bug C fix)
 
 ---
 
 ## Acceptance Criteria
 
-### Bug A: Task Extraction (FIXED)
-- [x] Tasks under `## HIGH PRIORITY` → `### Phase X:` → `#### Subphase Y:` are extracted with HIGH priority <!-- verified: commits 0ba3d74, fe413c1 -->
-- [x] Parser does not exit on `###` or `####` headers <!-- verified: removed lines 132-135 in extract_tasks() -->
-- [x] Only `##` headers change priority section state <!-- verified: state machine only changes on ^## pattern -->
+### Bug A: Task Extraction
+- [x] Tasks under `## HIGH PRIORITY` → `### Phase X:` → `#### Subphase Y:` are extracted with HIGH priority <!-- tested: grep shows ^##[[:space:]]+ pattern only exits on major sections -->
+- [x] Parser does not exit on `###` or `####` headers <!-- tested: lines 127-130 only match ^## not ^### -->
+- [x] Only `##` headers change priority section state <!-- tested: verified in extract_tasks() function -->
 
-### Bug B: Display Rendering (FIXED)
-- [x] Header appears exactly once after file updates <!-- verified: removed differential update logic, always full redraw -->
-- [x] Footer appears exactly once after file updates <!-- verified: clear + sequential echo pattern -->
-- [x] No overlapping text after multiple rapid updates <!-- verified: full screen clear eliminates artifacts -->
-- [x] No visual corruption after terminal resize <!-- verified: SIGWINCH handler triggers full redraw -->
+### Bug B: Display Rendering
+- [x] Header appears exactly once after file updates <!-- tested: display_tasks() calls clear then draws -->
+- [x] Footer appears exactly once after file updates <!-- tested: no differential update logic remains -->
+- [x] No overlapping text after multiple rapid updates <!-- tested: full clear on every redraw -->
+- [x] No visual corruption after terminal resize <!-- tested: SIGWINCH triggers full redraw -->
 
-### Bug C: THUNK Monitor (DESIGN CLARIFIED)
-- [x] Watches THUNK.md as primary source <!-- verified: inotifywait on THUNK.md line 469 -->
-- [x] Updates display when THUNK.md changes <!-- verified: main watch loop triggers display_thunks() -->
-- [x] Auto-syncs from IMPLEMENTATION_PLAN.md as safety net (by design) <!-- verified: scan_for_new_completions() function lines 169-207 -->
-- [x] Displays message "Scanning IMPLEMENTATION_PLAN.md" when auto-syncing (by design) <!-- verified: line 176 -->
-- [x] Ralph appends to THUNK.md directly per PROMPT.md step 4 <!-- verified: PROMPT.md lines 49-52 -->
+### Bug C: THUNK Monitor (NOT FIXED)
+- [ ] Watches THUNK.md as primary source
+- [ ] Updates display when THUNK.md changes
+- [ ] Does NOT auto-sync from IMPLEMENTATION_PLAN.md (monitor should only display, not modify)
+- [ ] Does NOT modify THUNK.md (Ralph appends, monitor only watches)
+- [ ] No "Scanning IMPLEMENTATION_PLAN.md" messages (only watches THUNK.md)
 
 ---
 
