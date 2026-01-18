@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & NeoQueue
 
-Last updated: 2026-01-18 14:41:15
+Last updated: 2026-01-18 15:21:52
 
 ## Current State
 
@@ -9,7 +9,7 @@ The brain repository is **fully mature and production-ready** with comprehensive
 
 **Core Systems (All Complete):**
 - **Templates:** 18 files across 3 tech stacks (backend, python, ralph)
-- **Knowledge Base:** 16 KB files (12 domains + 2 projects + conventions + SUMMARY) — **PENDING MIGRATION TO `skills/`**
+- **Skills:** 16 skill files (12 domains + 2 projects + conventions + SUMMARY) — **MIGRATED TO `skills/`** ✅
 - **Ralph Loop:** Fully operational with safety features (dry-run, rollback, resume, task monitor → THUNK system)
 - **React References:** 45 curated performance rules (complete, unmodified reference set)
 - **Documentation:** Comprehensive README.md, AGENTS.md, NEURONS.md, VALIDATION_CRITERIA.md
@@ -17,26 +17,28 @@ The brain repository is **fully mature and production-ready** with comprehensive
 **Current Metrics:**
 - PROMPT.md: 95 lines, 2,890 bytes (~722 tokens) ✓
 - AGENTS.md: 50 lines, 1,690 bytes (~422 tokens) ✓
-- KB domains: 12 files, KB projects: 2 files
+- Skills domains: 12 files, Skills projects: 2 files
 - React rules: 45 files (validated, unmodified)
 - Templates: 20 files (including ralph/ subdirectory)
 - All bash scripts pass syntax validation ✓
-- THUNK.md: 12 completed tasks logged (THUNK #1-12)
+- THUNK.md: 40 completed tasks logged (THUNK #1-40)
 - Monitor renamed: `watch_ralph_tasks.sh` → `current_ralph_tasks.sh` ✓
 - Monitor heading updated: `CURRENT RALPH TASKS` ✓
 - current_ralph_tasks.sh: Human-friendly formatting COMPLETE ✓
 - thunk_ralph_tasks.sh: Core functionality COMPLETE (375 lines, all features) ✓
+- skills/ folder: Renamed from kb/ ✓
+- skills/self-improvement/: 2/5 files created (README.md, GAP_CAPTURE_RULES.md) ✓
 
 ### New Project: NeoQueue (from THOUGHTS.md)
 A Matrix-inspired desktop app for tracking discussion points with your manager. See THOUGHTS.md for full specification.
 
 ---
 
-## 🎯 ACTIVE WORK: KB→Skills Migration Ready to Begin
+## 🎯 ACTIVE WORK: KB→Skills Migration In Progress
 
-This plan contains **50 unchecked tasks** across one major feature:
+This plan contains **44 unchecked tasks** across one major feature:
 
-1. **KB→Skills Migration** (50 remaining) - Rename kb/ → skills/ + self-improvement system
+1. **KB→Skills Migration** (44 remaining) - Rename kb/ → skills/ + self-improvement system
 
 **Execution Strategy:**
 - ✅ **THUNK Monitor System: 100% COMPLETE** - All 50 tasks done (Phases T1-T6)
@@ -47,7 +49,10 @@ This plan contains **50 unchecked tasks** across one major feature:
   - Phase T4 (Auto-Launch): ✅ COMPLETE
   - Phase T5 (Bootstrap): ✅ COMPLETE
   - Phase T6 (Validation): ✅ COMPLETE
-- 🔄 **Next: KB→Skills Migration Phase 2** (folder rename)
+- ✅ **Phase 1: Safety Checks & Cleanup** - COMPLETE (3 tasks)
+- ✅ **Phase 2: Folder Rename** - COMPLETE (2 tasks)
+- ✅ **Phase 3: Self-Improvement System** - 3/6 tasks complete (50%)
+- 🔄 **Next: Task 3.4** - Create GAP_BACKLOG.md
 - Each BUILD iteration: Execute EXACTLY ONE unchecked task in sequence
 
 **THUNK Monitor Status:**
@@ -56,6 +61,12 @@ This plan contains **50 unchecked tasks** across one major feature:
 - ✅ Auto-launch integration working
 - ✅ Bootstrap integration complete and validated
 - ✅ All validation tests passed (T6.1-T6.5)
+
+**KB→Skills Migration Status:**
+- ✅ skills/ folder created and verified
+- ✅ skills/self-improvement/ directory created
+- ✅ README.md and GAP_CAPTURE_RULES.md created
+- 🔄 Next: Complete remaining self-improvement files (GAP_BACKLOG, SKILL_BACKLOG, SKILL_TEMPLATE)
 
 ---
 
@@ -153,9 +164,9 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 **Full runbook:** See THOUGHTS.md section "KB→Skills Migration Runbook"
 
-**Progress:** 3/50 tasks complete (6%)
+**Progress:** 6/50 tasks complete (12%)
 
-**Status:** Phase 1 complete. THUNK Monitor operational. **Ready to begin Phase 2 (folder rename).**
+**Status:** Phases 1-2 complete. Phase 3 in progress (3/6). **Ready to continue with task 3.4.**
 
 Complete these tasks in order. Mark each `[x]` when done.
 
@@ -252,14 +263,9 @@ Complete these tasks in order. Mark each `[x]` when done.
 - [ ] **5.21** Update `skills/projects/README.md`
 - [ ] **5.22** Update `skills/conventions.md`
 
-**External Projects:**
-- [ ] **5.23** Update `rovo-test/AGENTS.md`
-- [ ] **5.24** Update `rovo-test/NEURONS.md`
-- [ ] **5.25** Update `rovo-test/THOUGHTS.md`
-- [ ] **5.26** Update `rovo-test/ralph/PROMPT.md`
-- [ ] **5.27** Update `NeoQueue/ralph/PROMPT.md`
-- [ ] **5.28** Update `NeoQueue/ralph/RALPH.md`
-- [ ] **5.29** Update `NeoQueue/ralph/AGENTS.md`
+**External Projects (Optional - only if they exist):**
+- [ ] **5.23** Check if `../rovo-test/` exists; if yes, update `AGENTS.md`, `NEURONS.md`, `THOUGHTS.md`, `ralph/PROMPT.md`
+- [ ] **5.24** Check if `../NeoQueue/` exists; if yes, update `ralph/PROMPT.md`, `ralph/RALPH.md`, `ralph/AGENTS.md`
 
 #### Phase 6: Wire Self-Improvement Protocol (Iterations 16-18)
 
