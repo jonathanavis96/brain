@@ -41,10 +41,10 @@ The brain repository is **fully mature and production-ready** with comprehensive
 **Phase 3 (Monitor Launch):** 7/7 complete ✅
 - P3.1-P3.7: Terminal detection, functionality tests, priority reordering, fallback messaging, non-fatal launches, tmux integration, headless fallback test ✅
 
-**Phase 4 (Performance & UX):** 17/22 complete (77%)
+**Phase 4 (Performance & UX):** 18/22 complete (82%)
 - P4A.1-P4A.9: All current_ralph_tasks.sh UX improvements complete ✅
-- P4B.1-P4B.2: thunk_ralph_tasks.sh line-count tracking and tail-only parsing complete ✅
-- **Remaining:** P4B.3-P4B.7 (5 tasks: append-only display, cursor positioning, title extraction, performance tests)
+- P4B.1-P4B.6: thunk_ralph_tasks.sh incremental display improvements complete ✅
+- **Remaining:** P4B.7 (1 task: startup performance test)
 
 **Phase 5 (Verification):** 2/2 complete ✅
 - P5.1: Template scaffolding validation complete ✅
@@ -468,10 +468,12 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - Enhanced ID pattern regex to handle alphanumeric task IDs (P4A.7, T1.1, etc.)
   - Updated both active script and template version
 
-- [ ] **P4B.6** Test: Add entry to THUNK.md → expect new entry appears without full redraw
+- [x] **P4B.6** Test: Add entry to THUNK.md → expect new entry appears without full redraw: ✅ COMPLETE
   - Manually append a table row to THUNK.md
   - Observe monitor appends entry
   - Previous entries remain stable
+  - Automated test validates: monitor detects +1 line, processes new entry without crash
+  - Line-count tracking and tail-only parsing working correctly
 
 - [ ] **P4B.7** Test: thunk_ralph_tasks.sh startup time < 1 second for 100 entries
   - Create THUNK.md with 100 test entries
