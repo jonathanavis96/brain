@@ -527,7 +527,7 @@ launch_monitors() {
       # Try to detect available terminal emulator
       if command -v wt.exe &>/dev/null; then
         wt.exe new-tab --title "Current Ralph Tasks" -- wsl bash "$monitor_dir/current_ralph_tasks.sh" &
-      elif command -v gnome-terminal &>/dev/null; then
+      elif command -v gnome-terminal &>/dev/null && timeout 2s gnome-terminal --version &>/dev/null; then
         gnome-terminal --title="Current Ralph Tasks" -- bash "$monitor_dir/current_ralph_tasks.sh" &
       elif command -v konsole &>/dev/null; then
         konsole --title "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh" &
@@ -547,7 +547,7 @@ launch_monitors() {
       # Try to detect available terminal emulator
       if command -v wt.exe &>/dev/null; then
         wt.exe new-tab --title "Thunk Ralph Tasks" -- wsl bash "$monitor_dir/thunk_ralph_tasks.sh" &
-      elif command -v gnome-terminal &>/dev/null; then
+      elif command -v gnome-terminal &>/dev/null && timeout 2s gnome-terminal --version &>/dev/null; then
         gnome-terminal --title="Thunk Ralph Tasks" -- bash "$monitor_dir/thunk_ralph_tasks.sh" &
       elif command -v konsole &>/dev/null; then
         konsole --title "Thunk Ralph Tasks" -e bash "$monitor_dir/thunk_ralph_tasks.sh" &

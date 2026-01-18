@@ -212,10 +212,13 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
 
 **Goal:** Both monitors launch immediately when loop.sh starts, with graceful fallback.
 
-- [ ] **P3.1** Add Windows Terminal (wt.exe) detection to launch_monitors():
-  - Check for wt.exe in PATH (WSL2 environments)
-  - Launch with: `wt.exe new-tab --title "Current Ralph Tasks" -- wsl bash "$script"`
-  - Add before gnome-terminal check
+- [x] **P3.1** Add Windows Terminal (wt.exe) detection to launch_monitors(): ✅ COMPLETE
+  - ✅ Check for wt.exe in PATH (WSL2 environments)
+  - ✅ Launch with: `wt.exe new-tab --title "Current Ralph Tasks" -- wsl bash "$script"`
+  - ✅ Add before gnome-terminal check
+  - **Implementation:** Modified loop.sh launch_monitors() function
+  - **Applied to:** Both current_ralph_tasks.sh and thunk_ralph_tasks.sh monitor launches
+  - **Commit:** 9e14972
 
 - [ ] **P3.2** Add functionality test for gnome-terminal:
   - Current: Only checks `command -v gnome-terminal`
