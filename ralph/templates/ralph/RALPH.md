@@ -94,7 +94,7 @@ This ensures:
 Ralph MUST consult the shared brain knowledge base:
 
 **Always read first:**
-- `../../brain/kb/SUMMARY.md`
+- `../../brain/skills/SUMMARY.md`
 - `../../brain/references/react-best-practices/HOTLIST.md`
 
 **Read on-demand:**
@@ -103,7 +103,7 @@ Ralph MUST consult the shared brain knowledge base:
 - `../../brain/references/react-best-practices/rules/*` (specific rules only)
 
 **Knowledge growth:**
-When Ralph discovers new conventions or decisions, it creates/updates KB files in `../../brain/kb/` and updates `../../brain/kb/SUMMARY.md`.
+When Ralph discovers new conventions or decisions, it creates/updates KB files in `../../brain/skills/` and updates `../../brain/skills/SUMMARY.md`.
 
 ## Running Ralph
 

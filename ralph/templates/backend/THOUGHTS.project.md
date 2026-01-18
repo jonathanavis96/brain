@@ -112,11 +112,11 @@ For this project, "source code" means:
 
 This project references brain repository knowledge:
 
-- **API Design Patterns:** `../../brain/kb/domains/api-design-patterns.md` - RESTful conventions, versioning, pagination
-- **Caching Patterns:** `../../brain/kb/domains/caching-patterns.md` - Redis, in-memory caching strategies
-- **Auth Patterns:** `../../brain/kb/domains/auth-patterns.md` - JWT, OAuth2, session management
-- **Testing Patterns:** `../../brain/kb/domains/testing-patterns.md` - Test organization and strategies
-- **Project Learnings:** `../../brain/kb/projects/[this-project-slug].md` - Project-specific patterns
+- **API Design Patterns:** `../../brain/skills/domains/api-design-patterns.md` - RESTful conventions, versioning, pagination
+- **Caching Patterns:** `../../brain/skills/domains/caching-patterns.md` - Redis, in-memory caching strategies
+- **Auth Patterns:** `../../brain/skills/domains/auth-patterns.md` - JWT, OAuth2, session management
+- **Testing Patterns:** `../../brain/skills/domains/testing-patterns.md` - Test organization and strategies
+- **Project Learnings:** `../../brain/skills/projects/[this-project-slug].md` - Project-specific patterns
 
 ## Technical Context
 

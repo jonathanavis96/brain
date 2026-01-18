@@ -91,7 +91,7 @@ infer_kb_references() {
     fi
     
     if [[ "$tech_lower" =~ auth|authentication|login ]]; then
-        refs="${refs}\n- **Auth Patterns:** \`../../brain/kb/domains/auth-patterns.md\`"
+        refs="${refs}\n- **Auth Patterns:** \`../../brain/skills/domains/auth-patterns.md\`"
     fi
     
     echo -e "$refs"
@@ -369,7 +369,7 @@ This project references brain repository knowledge:
 
 ${KB_REFS}
 ${KB_REFS:+
-}${KB_REFS:+}Refer to \`../../brain/kb/SUMMARY.md\` for complete knowledge base index.
+}${KB_REFS:+}Refer to \`../../brain/skills/SUMMARY.md\` for complete knowledge base index.
 
 ## Technical Context
 
@@ -382,7 +382,7 @@ ${TECH_REQS:-Architecture decisions will be documented here as the project evolv
 ### Project Classification
 - **Type:** ${PROJECT_TYPE^}
 - **Primary Language:** $(echo "$PROJECT_TECH" | awk '{print $1}')
-- **Knowledge Domain:** Custom (project-specific patterns may be promoted to \`../../brain/kb/projects/${PROJECT_NAME}.md\` if reusable)
+- **Knowledge Domain:** Custom (project-specific patterns may be promoted to \`../../brain/skills/projects/${PROJECT_NAME}.md\` if reusable)
 EOF
 
 echo "Generated custom THOUGHTS.md at: $OUTPUT_FILE"

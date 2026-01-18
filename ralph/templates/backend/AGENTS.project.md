@@ -5,14 +5,14 @@
 ### Progressive Disclosure: Always Read in This Order
 
 **ALWAYS start here:**
-1. `../../brain/kb/SUMMARY.md` - Knowledge base overview and usage guide
-2. `../../brain/kb/domains/` - Domain-specific patterns (caching, API design, auth, testing, etc.)
+1. `../../brain/skills/SUMMARY.md` - Knowledge base overview and usage guide
+2. `../../brain/skills/domains/` - Domain-specific patterns (caching, API design, auth, testing, etc.)
 
 **When working with specific technologies:**
 3. `../../brain/references/` - Technology-specific best practices and patterns
 
 **For project-specific patterns:**
-4. `../../brain/kb/projects/<project-slug>.md` - Project-specific conventions discovered in this codebase
+4. `../../brain/skills/projects/<project-slug>.md` - Project-specific conventions discovered in this codebase
 
 ### Why This Order Matters
 - **Token efficiency**: Start with summaries, drill down only when needed
@@ -24,10 +24,10 @@
 When you discover a new convention, architectural decision, or project-specific pattern:
 
 1. **Create a KB file** in the brain repo:
-   - Project-specific: `../../brain/kb/projects/<project-slug>.md`
-   - Domain/cross-project: `../../brain/kb/domains/<domain>.md`
+   - Project-specific: `../../brain/skills/projects/<project-slug>.md`
+   - Domain/cross-project: `../../brain/skills/domains/<domain>.md`
 
-2. **Update the index**: Add a link in `../../brain/kb/SUMMARY.md`
+2. **Update the index**: Add a link in `../../brain/skills/SUMMARY.md`
 
 3. **Structure new KB files** with:
    ```markdown

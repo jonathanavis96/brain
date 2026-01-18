@@ -7,7 +7,7 @@
 ### Progressive Disclosure: Always Read in This Order
 
 **If brain repository is available, ALWAYS start here:**
-1. `../../brain/kb/SUMMARY.md` - Knowledge base overview and usage guide
+1. `../../brain/skills/SUMMARY.md` - Knowledge base overview and usage guide
 2. `../../brain/references/react-best-practices/HOTLIST.md` - Top 10 most applicable performance rules (covers 80% of scenarios)
 
 **Only if HOTLIST doesn't cover your scenario:**
@@ -36,10 +36,10 @@ If the brain repository is not present (e.g., project cloned standalone), skip t
 When you discover a new convention, architectural decision, or project-specific pattern:
 
 1. **Create a KB file** in the brain repo:
-   - Project-specific: `../../brain/kb/projects/<project-slug>.md`
-   - Domain/cross-project: `../../brain/kb/domains/<domain>.md`
+   - Project-specific: `../../brain/skills/projects/<project-slug>.md`
+   - Domain/cross-project: `../../brain/skills/domains/<domain>.md`
 
-2. **Update the index**: Add a link in `../../brain/kb/SUMMARY.md`
+2. **Update the index**: Add a link in `../../brain/skills/SUMMARY.md`
 
 3. **Structure new KB files** with:
    ```markdown

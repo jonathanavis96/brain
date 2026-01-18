@@ -56,9 +56,9 @@ This is critical to understand:
 - AGENTS.md references are **local**: `kb/conventions.md`
 
 **When in templates (for NEW projects):**
-- KB references use **relative paths from project root**: `../brain/kb/SUMMARY.md`
+- KB references use **relative paths from project root**: `../brain/skills/SUMMARY.md`
 - Templates assume project is sibling to brain: `../brain/`
-- Template prompts use **relative paths**: `../../brain/kb/SUMMARY.md`
+- Template prompts use **relative paths**: `../../brain/skills/SUMMARY.md`
 
 **Example:**
 
@@ -67,13 +67,13 @@ This is critical to understand:
 Read [conventions](kb/conventions.md)
 
 <!-- In brain/templates/AGENTS.project.md (relative paths) -->
-Read [conventions](../brain/kb/conventions.md)
+Read [conventions](../brain/skills/conventions.md)
 
 <!-- In brain/ralph/PROMPT.md (local paths, brain's own Ralph) -->
 Read `kb/SUMMARY.md`
 
 <!-- In brain/templates/ralph/PROMPT.md (relative paths, for projects) -->
-Read `../../brain/kb/SUMMARY.md`
+Read `../../brain/skills/SUMMARY.md`
 ```
 
 ### Brain Self-Improvement with Ralph
@@ -156,7 +156,7 @@ When updating templates, ensure consistency:
 - Ralph prompts in templates use `../../brain/` (relative from project/ralph/)
 
 **Progressive disclosure order:**
-1. `../brain/kb/SUMMARY.md`
+1. `../brain/skills/SUMMARY.md`
 2. `../brain/references/react-best-practices/HOTLIST.md`
 3. `../brain/references/react-best-practices/INDEX.md` (only if needed)
 4. `../brain/references/react-best-practices/rules/*` (only specific rules)

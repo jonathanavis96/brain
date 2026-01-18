@@ -18,7 +18,7 @@ Read `../brain/ralph/PROMPT.md` for full Ralph loop mechanics (PLANNING vs BUILD
 ## Brain Knowledge Base
 
 For patterns and best practices, use progressive disclosure:
-1. `../brain/kb/SUMMARY.md` - Knowledge base overview
+1. `../brain/skills/SUMMARY.md` - Knowledge base overview
 2. `../brain/references/react-best-practices/HOTLIST.md` - Top 10 rules (covers 80%)
 3. Specific rule files only if HOTLIST doesn't cover your scenario
 
