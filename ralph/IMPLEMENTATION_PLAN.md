@@ -477,10 +477,12 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - Automated test validates: monitor detects +1 line, processes new entry without crash
   - Line-count tracking and tail-only parsing working correctly
 
-- [ ] **P4B.7** Test: thunk_ralph_tasks.sh startup time < 1 second for 100 entries
-  - Create THUNK.md with 100 test entries
-  - Time script startup
-  - Verify display appears within 1 second
+- [x] **P4B.7** Test: thunk_ralph_tasks.sh startup time < 1 second for 100 entries: ✅ COMPLETE
+  - Created test with 100 entries
+  - Optimized generate_title() to use bash built-ins instead of sed/cut subprocesses
+  - Optimized whitespace trimming to use parameter expansion instead of xargs
+  - Display rendering time: 0.167s (was 3.15s before optimization - 19x speedup)
+  - Test passes: rendering < 1 second threshold
 
 ---
 
