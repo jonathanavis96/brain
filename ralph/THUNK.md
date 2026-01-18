@@ -218,3 +218,4 @@ Started: 2026-01-18
 | 187 | LEGACY | HIGH | No overlapping text after multiple rapid updates <!-- tested: full clear on every redraw --> | 2026-01-18 |
 | 188 | LEGACY | HIGH | No visual corruption after terminal resize <!-- tested: SIGWINCH triggers full redraw --> | 2026-01-18 |
 | 189 | 3.3 | HIGH | **3.3** Remove initial scan and "Syncing with" messages from thunk_ralph_tasks.sh - Removed auto-sync features from header comments - Removed 'f' hotkey from documentation and display | 2026-01-18 |
+| 190 | 3.4 | HIGH | **3.4** Update thunk_ralph_tasks.sh header comments - Already completed as part of task 3.3 | 2026-01-18 |
