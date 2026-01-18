@@ -44,11 +44,14 @@ get_file_mtime() {
 generate_title() {
     local desc="$1"
     
-    # Strip technical IDs (T1.1, P4A.7, 1.1, 2.3, etc.) from the beginning
-    desc=$(echo "$desc" | sed -E 's/^[[:space:]]*\*\*[T]?[0-9A-Za-z]+(\.[0-9A-Za-z]+)*\*\*[[:space:]]*//')
+    # Strip technical IDs (T1.1, P4A.7, 1.1, 2.3, etc.) from the beginning - use bash parameter expansion
+    desc="${desc#"${desc%%[![:space:]]*}"}"  # Trim leading whitespace
+    if [[ "$desc" =~ ^\*\*[T]?[0-9A-Za-z]+(\.[0-9A-Za-z]+)*\*\*[[:space:]]* ]]; then
+        desc="${desc#*\*\* }"  # Remove up to and including "** "
+    fi
     
-    # Strip markdown bold markers
-    desc=$(echo "$desc" | sed -E 's/\*\*//g')
+    # Strip markdown bold markers - use bash parameter expansion
+    desc="${desc//\*\*/}"
     
     # Extract action verb and main object (look for common action verbs)
     if [[ "$desc" =~ ^(Rename|Update|Create|Verify|Delete|Add|Remove|Test|Implement|Fix|Refactor|Document|Migrate|Copy|Set|Run|If)([[:space:]]*:[[:space:]]*|[[:space:]]+)(.+)$ ]]; then
@@ -62,20 +65,22 @@ generate_title() {
             if [[ "$rest" =~ ^([^.→]+)[.→] ]]; then
                 rest="${BASH_REMATCH[1]}"
             else
-                rest=$(echo "$rest" | cut -c1-50)
+                rest="${rest:0:50}"  # Use bash substring instead of cut
             fi
-            # Remove any trailing quotes, backticks, or markdown
-            rest=$(echo "$rest" | sed -E 's/`[[:space:]]*$//; s/[[:space:]]*$//')
+            # Remove trailing whitespace and backticks - use bash parameter expansion
+            rest="${rest%\`}"
+            rest="${rest%"${rest##*[![:space:]]}"}"  # Trim trailing whitespace
             echo "$verb: $rest"
         else
             # For other verbs, take up to colon with space (title separator) or first 50 chars
             if [[ "$rest" =~ ^([^:]+):[[:space:]] ]]; then
                 rest="${BASH_REMATCH[1]}"
             else
-                rest=$(echo "$rest" | cut -c1-50)
+                rest="${rest:0:50}"  # Use bash substring instead of cut
             fi
-            # Remove any trailing quotes, backticks, or markdown
-            rest=$(echo "$rest" | sed -E 's/`[[:space:]]*$//; s/[[:space:]]*$//')
+            # Remove trailing whitespace and backticks - use bash parameter expansion
+            rest="${rest%\`}"
+            rest="${rest%"${rest##*[![:space:]]}"}"  # Trim trailing whitespace
             echo "$verb $rest"
         fi
     else
@@ -83,7 +88,9 @@ generate_title() {
         if [[ "$desc" =~ ^([^:.]+)[:.] ]]; then
             echo "${BASH_REMATCH[1]}"
         else
-            echo "$desc" | cut -c1-60 | sed 's/[[:space:]]*$//'
+            local result="${desc:0:60}"  # Use bash substring instead of cut
+            result="${result%"${result##*[![:space:]]}"}"  # Trim trailing whitespace
+            echo "$result"
         fi
     fi
 }
@@ -274,12 +281,17 @@ display_thunks() {
             local description="${BASH_REMATCH[4]}"
             local completed="${BASH_REMATCH[5]}"
             
-            # Strip whitespace
-            thunk_num=$(echo "$thunk_num" | xargs)
-            orig_num=$(echo "$orig_num" | xargs)
-            priority=$(echo "$priority" | xargs)
-            description=$(echo "$description" | xargs)
-            completed=$(echo "$completed" | xargs)
+            # Strip whitespace using bash parameter expansion (faster than xargs)
+            thunk_num="${thunk_num#"${thunk_num%%[![:space:]]*}"}"  # Trim leading
+            thunk_num="${thunk_num%"${thunk_num##*[![:space:]]}"}"  # Trim trailing
+            orig_num="${orig_num#"${orig_num%%[![:space:]]*}"}"
+            orig_num="${orig_num%"${orig_num##*[![:space:]]}"}"
+            priority="${priority#"${priority%%[![:space:]]*}"}"
+            priority="${priority%"${priority##*[![:space:]]}"}"
+            description="${description#"${description%%[![:space:]]*}"}"
+            description="${description%"${description##*[![:space:]]}"}"
+            completed="${completed#"${completed%%[![:space:]]*}"}"
+            completed="${completed%"${completed##*[![:space:]]}"}"
             
             # Skip header row
             if [[ "$thunk_num" =~ ^[0-9]+$ ]]; then
@@ -363,12 +375,17 @@ parse_new_thunk_entries() {
             local description="${BASH_REMATCH[4]}"
             local completed="${BASH_REMATCH[5]}"
             
-            # Strip whitespace
-            thunk_num=$(echo "$thunk_num" | xargs)
-            orig_num=$(echo "$orig_num" | xargs)
-            priority=$(echo "$priority" | xargs)
-            description=$(echo "$description" | xargs)
-            completed=$(echo "$completed" | xargs)
+            # Strip whitespace using bash parameter expansion (faster than xargs)
+            thunk_num="${thunk_num#"${thunk_num%%[![:space:]]*}"}"  # Trim leading
+            thunk_num="${thunk_num%"${thunk_num##*[![:space:]]}"}"  # Trim trailing
+            orig_num="${orig_num#"${orig_num%%[![:space:]]*}"}"
+            orig_num="${orig_num%"${orig_num##*[![:space:]]}"}"
+            priority="${priority#"${priority%%[![:space:]]*}"}"
+            priority="${priority%"${priority##*[![:space:]]}"}"
+            description="${description#"${description%%[![:space:]]*}"}"
+            description="${description%"${description##*[![:space:]]}"}"
+            completed="${completed#"${completed%%[![:space:]]*}"}"
+            completed="${completed%"${completed##*[![:space:]]}"}"
             
             # Skip header row
             if [[ "$thunk_num" =~ ^[0-9]+$ ]]; then
