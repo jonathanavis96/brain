@@ -428,7 +428,6 @@ fi
 # Generate custom files using HIGH INTELLIGENCE generators
 info "Generating custom project files..."
 
-# TODO: Task 11 - HIGH INTELLIGENCE generator for THOUGHTS.md
 # THOUGHTS.md goes in ralph/, not project root
 if [ -f "$BRAIN_DIR/generators/generate-thoughts.sh" ]; then
     info "Generating custom THOUGHTS.md..."
@@ -443,7 +442,6 @@ else
     fi
 fi
 
-# TODO: Task 12 - HIGH INTELLIGENCE generator for NEURONS.md
 # NEURONS.md goes in ralph/, not project root
 if [ -f "$BRAIN_DIR/generators/generate-neurons.sh" ]; then
     info "Generating custom NEURONS.md..."
@@ -458,7 +456,7 @@ else
     fi
 fi
 
-# TODO: Task 13 - HIGH INTELLIGENCE generator for IMPLEMENTATION_PLAN.md
+# Generate IMPLEMENTATION_PLAN.md using HIGH INTELLIGENCE generator
 if [ -f "$BRAIN_DIR/generators/generate-implementation-plan.sh" ]; then
     info "Generating custom IMPLEMENTATION_PLAN.md..."
     bash "$BRAIN_DIR/generators/generate-implementation-plan.sh" "$IDEA_FILE" "$PROJECT_LOCATION/ralph/IMPLEMENTATION_PLAN.md"
