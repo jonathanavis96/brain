@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & NeoQueue
 
-Last updated: 2026-01-18 16:05
+Last updated: 2026-01-18 16:13
 
 ## Current State
 
@@ -21,7 +21,7 @@ The brain repository is **fully mature and production-ready** with comprehensive
 - React rules: 45 files (validated, unmodified)
 - Templates: 20 files (4 root + 3 backend + 3 python + 10 ralph)
 - All bash scripts pass syntax validation ✓
-- THUNK.md: 40 completed tasks logged (THUNK #1-40)
+- THUNK.md: 74 completed tasks logged (THUNK #1-74)
 - Monitor renamed: `watch_ralph_tasks.sh` → `current_ralph_tasks.sh` ✓
 - Monitor heading updated: `CURRENT RALPH TASKS` ✓
 - current_ralph_tasks.sh: Human-friendly formatting COMPLETE ✓
@@ -34,11 +34,11 @@ A Matrix-inspired desktop app for tracking discussion points with your manager. 
 
 ---
 
-## 🎯 ACTIVE WORK: KB→Skills Migration In Progress
+## 🎯 ACTIVE WORK: KB→Skills Migration - Final Phase
 
-This plan contains **8 unchecked tasks** remaining:
+This plan contains **5 unchecked tasks** remaining:
 
-1. **KB→Skills Migration** (8 remaining) - Complete kb/ → skills/ reference updates and protocol wiring
+1. **KB→Skills Migration** (5 remaining) - Complete final reference update and protocol wiring
 
 **Execution Strategy:**
 - ✅ **THUNK Monitor System: 100% COMPLETE** - All 50 tasks done (Phases T1-T6)
@@ -46,14 +46,14 @@ This plan contains **8 unchecked tasks** remaining:
 - ✅ **Phase 2: Folder Rename** - COMPLETE (2 tasks)
 - ✅ **Phase 3: Self-Improvement System** - COMPLETE (6 tasks)
 - ✅ **Phase 4: Update Summary & Create Index** - COMPLETE (2 tasks)
-- 🔄 **Phase 5: Reference Updates** - IN PROGRESS (23/27 complete, 4 remaining)
+- 🔄 **Phase 5: Reference Updates** - IN PROGRESS (26/27 complete, 1 remaining)
 - ⏳ **Phase 6: Protocol Wiring** - PENDING (4 tasks)
 - ✅ **Phase 7: Final Validation** - COMPLETE (1 task already done, 1 task merged into Phase 5)
-- 🔄 **Next: Task 5.26** - Update skills/conventions.md
+- 🔄 **Next: Task 5.26** - Update skills/conventions.md (9 kb/ references)
 - Each BUILD iteration: Execute EXACTLY ONE unchecked task in sequence
 
 **THUNK Monitor Status:**
-- ✅ 40 completed tasks logged in THUNK.md (THUNK #1-40)
+- ✅ 74 completed tasks logged in THUNK.md (THUNK #1-74)
 - ✅ Both monitors operational with human-friendly formatting
 - ✅ Auto-launch integration working
 - ✅ Bootstrap integration complete and validated
@@ -61,49 +61,50 @@ This plan contains **8 unchecked tasks** remaining:
 
 **KB→Skills Migration Status:**
 - ✅ Phases 1-4: Infrastructure complete (folder rename, self-improvement system, index files)
-- 🔄 Phase 5: Reference updates (22/27 tasks complete, 5 remaining)
+- 🔄 Phase 5: Reference updates (26/27 tasks complete, 1 remaining)
 - ⏳ Phase 6: Protocol wiring (4 tasks)
 - ✅ Phase 7: Validation complete (task 7.1 done, task 7.2 absorbed into Phase 5)
 
-**Progress: 85/93 tasks complete (91%)**
+**Progress: 88/93 tasks complete (95%)**
 
 ---
 
 ## Summary of Changes in This Planning Cycle
 
-### Context Analysis
+### Context Analysis (2026-01-18 16:13)
 1. **THOUGHTS.md**: THUNK Monitor System fully specified and complete
-2. **Current Plan State**: KB→Skills Migration at 78% (73/93 tasks done)
-3. **Git Status**: 6 commits ahead of origin (ready to push)
-4. **Remaining Work**: 20 tasks across 3 phases (Phase 5: 7 tasks, Phase 6: 4 tasks, Phase 7: 1 task)
+2. **Current Plan State**: KB→Skills Migration at 95% (88/93 tasks done)
+3. **Git Status**: 8 commits ahead of origin (ready to push)
+4. **Remaining Work**: 5 tasks across 2 phases (Phase 5: 1 task, Phase 6: 4 tasks)
 
 ### Plan Refinements
-1. **Progress Discovery**: Reviewed recent commits and found 11 additional completed tasks:
-   - Tasks 5.7, 5.8, 5.9 were already completed in previous BUILD iterations
-   - Tasks 5.11-5.22 (all templates) already completed but not marked in summary
-   - Task 7.1 (verify no /kb/ references) already completed
-   - Only 5 reference update tasks remain (5.10, 5.23-5.26)
+1. **Recent BUILD Progress** (since last PLAN cycle):
+   - Completed tasks 5.10, 5.23, 5.24, 5.25 (4 tasks)
+   - Discovered 34 additional THUNK entries (THUNK #41-74)
+   - Only 1 Phase 5 task remains: 5.26 (skills/conventions.md with 9 kb/ references)
    
-2. **Phase 5 Task Renumbering**: Reorganized to reflect actual work:
-   - Added task 5.17 for `templates/ralph/pr-batch.sh` (discovered during grep)
-   - Renumbered templates/backend and templates/python tasks (5.18-5.22)
-   - Added task 5.23 for `test-bootstrap.sh` (3 kb/ references)
-   - Renumbered skills internal tasks to 5.24-5.26
-   
-3. **Phase 7 Absorption**: Merged task 7.2 into Phase 5 verification tasks
-   - Task 7.1 already complete (verified no /kb/ references remain)
-   - Task 7.2 (verify skills/ structure) is implicitly validated by Phase 5.24-5.26
-   - Phase 7 section removed as redundant
-   
-4. **Task Count Correction**: Updated from "27 unchecked tasks" to "9 unchecked tasks"
-   - Phase 5: 5 remaining (down from 21)
+2. **Updated Task Counts**:
+   - Phase 5: 1 remaining (down from 5)
    - Phase 6: 4 remaining (unchanged)
-   - Phase 7: 0 remaining (absorbed into Phase 5)
+   - Total remaining: 5 tasks (down from 8)
+   
+3. **Migration Status**:
+   - All template files updated ✅
+   - All root-level docs updated ✅
+   - All generator scripts updated ✅
+   - Test scripts updated ✅
+   - Skills internal docs: 2/3 complete (conventions.md pending)
+   
+4. **Ready for Protocol Wiring**:
+   - Phase 5 nearly complete (96% - 26/27 tasks done)
+   - Phase 6 will add self-improvement protocol to AGENTS.md and PROMPT.md
+   - Phase 6 will update templates to include protocol in new projects
 
 ### Next Steps
-- **BUILD iterations**: Execute tasks 5.10, 5.23-5.26, then Phase 6 (9 tasks remaining)
-- **Estimated completion**: ~9 BUILD iterations + periodic PLAN cycles
-- **Final push**: After Phase 6 complete, all KB→Skills migration work will be done
+- **BUILD iteration**: Execute task 5.26 (skills/conventions.md - 9 kb/ references)
+- **Then Phase 6**: Wire self-improvement protocol (4 tasks)
+- **Estimated completion**: ~5 BUILD iterations
+- **Final push**: After Phase 6 complete, KB→Skills migration 100% done
 
 ---
 
