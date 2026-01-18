@@ -581,8 +581,9 @@ if [[ -n "$PROMPT_ARG" ]]; then
     fi
     
     run_once "$PROMPT_FILE" "custom" "$i"
+    run_result=$?
     # Check if Ralph signaled completion
-    if [[ $? -eq 42 ]]; then
+    if [[ $run_result -eq 42 ]]; then
       echo ""
       echo "Loop terminated early due to completion."
       break
