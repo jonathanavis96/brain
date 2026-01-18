@@ -86,7 +86,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 **Full specification:** See THOUGHTS.md section "Monitor Display Formatting (Human-Optimized)"
 
-- [ ] **T3.7** Update `current_ralph_tasks.sh` to transform LLM format → human display:
+- [x] **T3.7** Update `current_ralph_tasks.sh` to transform LLM format → human display:
   - Strip technical IDs (T1.1, T2.3) from display
   - Generate short human titles from task descriptions
   - Format as `Task N — <short title>` with bold if terminal supports
