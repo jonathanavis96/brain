@@ -1,17 +1,42 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-RALPH="$ROOT/ralph"
+# ROOT can be overridden via env var for project delegation
+if [[ -n "${RALPH_PROJECT_ROOT:-}" ]]; then
+  ROOT="$RALPH_PROJECT_ROOT"
+  RALPH="$ROOT/ralph"
+  BRAIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+else
+  ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+  RALPH="$ROOT/ralph"
+  BRAIN_DIR="$RALPH"
+fi
 LOGDIR="$RALPH/logs"
 mkdir -p "$LOGDIR"
+
+# Configurable Brain repo for commit trailers
+BRAIN_REPO="${BRAIN_REPO:-jonathanavis96/brain}"
+
+# Derive clean branch name from git repo name
+REPO_NAME=$(basename "$(git rev-parse --show-toplevel)")
+WORK_BRANCH="${REPO_NAME}-work"
+
+# Lock file to prevent concurrent runs
+LOCK_FILE="/tmp/ralph-${REPO_NAME}.lock"
+if [ -f "$LOCK_FILE" ]; then
+  LOCK_PID=$(cat "$LOCK_FILE" 2>/dev/null || echo "unknown")
+  echo "ERROR: Ralph loop already running (lock: $LOCK_FILE, PID: $LOCK_PID)"
+  exit 1
+fi
+echo "$$" >"$LOCK_FILE"
 
 # Interrupt handling: First Ctrl+C = graceful exit, Second Ctrl+C = immediate exit
 INTERRUPT_COUNT=0
 INTERRUPT_RECEIVED=false
 
-# Cleanup function for temp files
+# Cleanup function for temp files and lock
 cleanup() {
+  rm -f "$LOCK_FILE"
   if [[ -n "${TEMP_CONFIG:-}" && -f "${TEMP_CONFIG:-}" ]]; then
     rm -f "$TEMP_CONFIG"
   fi
@@ -41,6 +66,22 @@ handle_interrupt() {
 
 trap 'handle_interrupt' INT TERM
 trap 'cleanup' EXIT
+
+# Safe branch handling - ensures worktree branch exists without resetting history
+ensure_worktree_branch() {
+  if git show-ref --verify --quiet "refs/heads/$WORK_BRANCH"; then
+    git checkout "$WORK_BRANCH"
+  else
+    echo "Creating new worktree branch: $WORK_BRANCH"
+    git checkout -b "$WORK_BRANCH"
+  fi
+  
+  # Set upstream if not already set
+  if ! git rev-parse --abbrev-ref --symbolic-full-name "@{u}" >/dev/null 2>&1; then
+    echo "Setting upstream for $WORK_BRANCH"
+    git push -u origin "$WORK_BRANCH" 2>/dev/null || true
+  fi
+}
 
 usage() {
   cat <<'EOF'
@@ -388,6 +429,14 @@ run_once() {
   
   return 0
 }
+
+# Ensure we're on the worktree branch before starting
+echo ""
+echo "========================================"
+echo "Setting up worktree branch: $WORK_BRANCH"
+echo "========================================"
+ensure_worktree_branch
+echo ""
 
 # Determine prompt strategy
 if [[ -n "$PROMPT_ARG" ]]; then
