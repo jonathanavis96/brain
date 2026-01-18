@@ -553,15 +553,17 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
 
 ## 🟡 LOW PRIORITY: Future Enhancements (Optional)
 
-These tasks are not blocking and have been deferred. They can be implemented on-demand if needed.
+These tasks were considered but explicitly deferred as they provide marginal value. They can be added to a future plan if needed.
 
 - [x] **F1** Add `--no-monitors` flag to loop.sh to skip monitor auto-launch ✅
-- [ ] **F2** Add monitor health check endpoint (touch file to indicate alive) — DEFERRED
-- [ ] **F3** Support custom terminal command via `RALPH_TERMINAL` env var — DEFERRED
-- [ ] **F4** Add `--monitor-only` mode to run just monitors without loop — DEFERRED
-- [ ] **F5** Persist completed task cache to file for faster restart — DEFERRED
 
-**Status:** F1 complete. F2-F5 are low-priority enhancements that provide marginal value and are deferred indefinitely. The current implementation is production-ready without these features.
+**Deferred (removed from active plan):**
+- **F2** Add monitor health check endpoint (touch file to indicate alive)
+- **F3** Support custom terminal command via `RALPH_TERMINAL` env var
+- **F4** Add `--monitor-only` mode to run just monitors without loop
+- **F5** Persist completed task cache to file for faster restart
+
+**Status:** F1 complete. F2-F5 removed from active plan as they are optional enhancements that don't block production use. The current implementation is production-ready without these features.
 
 ---
 
