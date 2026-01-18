@@ -17,7 +17,7 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
 
 **Root Cause:** Parser uses `^###[[:space:]]+` pattern to exit task sections. When it hits `### Phase 4:` under `## HIGH PRIORITY`, it exits extraction even though we're still in a priority section.
 
-- [ ] **1.1** Fix section detection logic in `current_ralph_tasks.sh` `extract_tasks()` function
+- [x] **1.1** Fix section detection logic in `current_ralph_tasks.sh` `extract_tasks()` function
   - Remove the `elif [[ "$line" =~ ^###[[:space:]]+ ]]; then in_task_section=false` block (lines 132-135)
   - Only change state on `##` (double hash) headers, not `###` or `####` subsection headers
   - Test: Tasks under `## HIGH PRIORITY` → `### Phase 4:` → `#### Phase 4A:` must be extracted with HIGH priority
