@@ -95,3 +95,4 @@ Started: 2026-01-18
 | 81 | 5.26 | MEDIUM | **5.26** Update `skills/conventions.md` (2 KB references updated to skills/) | 2026-01-18 |
 | 82 | 6.1 | MEDIUM | **6.1** Add "Skills + Self-Improvement Protocol" section to `AGENTS.md`: | 2026-01-18 |
 | 83 | LEGACY | MEDIUM | Bootstrap NeoQueue project using brain infrastructure | 2026-01-18 |
+| 84 | 6.3 | MEDIUM | **6.3** Add self-improvement protocol to `templates/AGENTS.project.md` | 2026-01-18 |
