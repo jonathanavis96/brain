@@ -40,6 +40,42 @@ get_file_mtime() {
     stat -c %Y "$file" 2>/dev/null || stat -f %m "$file" 2>/dev/null
 }
 
+# Function to generate short human-readable title from task description
+generate_title() {
+    local desc="$1"
+    
+    # Strip technical IDs (T1.1, T2.3, 1.1, 2.3, etc.) from the beginning
+    desc=$(echo "$desc" | sed -E 's/^[[:space:]]*\*\*[T]?[0-9]+(\.[0-9]+)*\*\*[[:space:]]*//')
+    
+    # Strip markdown bold markers
+    desc=$(echo "$desc" | sed -E 's/\*\*//g')
+    
+    # Extract action verb and main object (look for common action verbs)
+    if [[ "$desc" =~ ^(Rename|Update|Create|Verify|Delete|Add|Remove|Test|Implement|Fix|Refactor|Document|Migrate|Copy|Set|Run|If)[[:space:]]+(.+)$ ]]; then
+        local verb="${BASH_REMATCH[1]}"
+        local rest="${BASH_REMATCH[2]}"
+        
+        # For the rest, take up to first colon or period, or first 50 chars
+        if [[ "$rest" =~ ^([^:.]+)[:.] ]]; then
+            rest="${BASH_REMATCH[1]}"
+        else
+            rest=$(echo "$rest" | cut -c1-50)
+        fi
+        
+        # Remove any trailing quotes, backticks, or markdown
+        rest=$(echo "$rest" | sed -E 's/`[[:space:]]*$//; s/[[:space:]]*$//')
+        
+        echo "$verb $rest"
+    else
+        # Fallback: take first 60 chars or up to first colon
+        if [[ "$desc" =~ ^([^:.]+)[:.] ]]; then
+            echo "${BASH_REMATCH[1]}"
+        else
+            echo "$desc" | cut -c1-60 | sed 's/[[:space:]]*$//'
+        fi
+    fi
+}
+
 # Function to get next THUNK number
 get_next_thunk_number() {
     local max_num=0
@@ -230,10 +266,14 @@ display_thunks() {
             
             # Skip header row
             if [[ "$thunk_num" =~ ^[0-9]+$ ]]; then
+                # Generate human-friendly short title
+                local short_title=$(generate_title "$description")
+                
+                # Format as "THUNK N — <short title>" with bold if terminal supports
                 if [[ -t 1 ]]; then
-                    echo -e "  \033[32m✓\033[0m THUNK #$thunk_num ($orig_num $priority): $description"
+                    echo -e "  \033[32m✓\033[0m \033[1mTHUNK #$thunk_num\033[0m — $short_title"
                 else
-                    echo "  ✓ THUNK #$thunk_num ($orig_num $priority): $description"
+                    echo "  ✓ THUNK #$thunk_num — $short_title"
                 fi
                 ((total_count++))
             fi
