@@ -117,15 +117,18 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
 ### Phase 6: Documentation & Cleanup
 
 - [ ] **6.1** Sync templates/ralph/thunk_ralph_tasks.sh with fixed version
-  - Copy changes from root thunk_ralph_tasks.sh to templates/ralph/thunk_ralph_tasks.sh
+  - Replace entire file with root thunk_ralph_tasks.sh (fixed version is 410 lines, template is 564 lines with old auto-sync code)
+  - Remove scan_for_new_completions, task_exists_in_thunk, extract_task_id functions
+  - Remove PLAN_FILE variable and all references
+  - Remove 'f' hotkey functionality
+  - Update header comments to reflect display-only behavior
   - Ensures future projects get the fixed monitor behavior
-  - Both files must stay in sync (same auto-sync removal)
 
 - [ ] **6.2** Update VALIDATION_CRITERIA.md with Bug C test cases
   - Add test case: Monitor displays THUNK.md changes within 1 second
   - Add test case: Monitor ignores IMPLEMENTATION_PLAN.md changes
-  - Add test case: No 'f' hotkey functionality (command does nothing or shows error)
-  - Add test case: Startup shows only "Watching: THUNK.md" message
+  - Add test case: No 'f' hotkey functionality (pressing 'f' does nothing)
+  - Add test case: Startup shows only "Watching: THUNK.md" message (no "Syncing with" message)
 
 ---
 
