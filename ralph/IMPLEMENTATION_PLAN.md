@@ -770,8 +770,8 @@ Last updated: <date>
 These tasks should be tackled when starting the NeoQueue project:
 
 - [x] Bootstrap NeoQueue project using brain infrastructure
-  - [ ] Run `new-project.sh neoqueue` to create project scaffold
-  - [ ] Copy THOUGHTS.md content to neoqueue project as project spec
+  - [x] Run `new-project.sh neoqueue` to create project scaffold
+  - [x] Copy THOUGHTS.md content to neoqueue project as project spec
 
 ### ✅ Recently Completed (Last 7 Days)
 
