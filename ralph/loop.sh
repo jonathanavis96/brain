@@ -527,16 +527,17 @@ launch_monitors() {
   if [[ -f "$monitor_dir/current_ralph_tasks.sh" ]]; then
     if ! pgrep -f "current_ralph_tasks.sh" > /dev/null; then
       # Try to detect available terminal emulator (priority order: tmux, wt.exe, gnome-terminal, konsole, xterm)
+      # Wrap all launches in subshells with error suppression to ensure non-fatal failures
       if [[ -n "${TMUX:-}" ]]; then
-        tmux new-window -n "Current Tasks" "bash $monitor_dir/current_ralph_tasks.sh" && current_tasks_launched=true
+        ( tmux new-window -n "Current Tasks" "bash $monitor_dir/current_ralph_tasks.sh" && current_tasks_launched=true ) || true
       elif command -v wt.exe &>/dev/null; then
-        wt.exe new-tab --title "Current Ralph Tasks" -- wsl bash "$monitor_dir/current_ralph_tasks.sh" & current_tasks_launched=true
+        ( wt.exe new-tab --title "Current Ralph Tasks" -- wsl bash "$monitor_dir/current_ralph_tasks.sh" & current_tasks_launched=true ) || true
       elif command -v gnome-terminal &>/dev/null && timeout 2s gnome-terminal --version &>/dev/null; then
-        gnome-terminal --title="Current Ralph Tasks" -- bash "$monitor_dir/current_ralph_tasks.sh" & current_tasks_launched=true
+        ( gnome-terminal --title="Current Ralph Tasks" -- bash "$monitor_dir/current_ralph_tasks.sh" & current_tasks_launched=true ) || true
       elif command -v konsole &>/dev/null; then
-        konsole --title "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh" & current_tasks_launched=true
+        ( konsole --title "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh" & current_tasks_launched=true ) || true
       elif command -v xterm &>/dev/null; then
-        xterm -T "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh" & current_tasks_launched=true
+        ( xterm -T "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh" & current_tasks_launched=true ) || true
       fi
     else
       current_tasks_launched=true  # Already running
@@ -547,16 +548,17 @@ launch_monitors() {
   if [[ -f "$monitor_dir/thunk_ralph_tasks.sh" ]]; then
     if ! pgrep -f "thunk_ralph_tasks.sh" > /dev/null; then
       # Try to detect available terminal emulator (priority order: tmux, wt.exe, gnome-terminal, konsole, xterm)
+      # Wrap all launches in subshells with error suppression to ensure non-fatal failures
       if [[ -n "${TMUX:-}" ]]; then
-        tmux new-window -n "Thunk Tasks" "bash $monitor_dir/thunk_ralph_tasks.sh" && thunk_tasks_launched=true
+        ( tmux new-window -n "Thunk Tasks" "bash $monitor_dir/thunk_ralph_tasks.sh" && thunk_tasks_launched=true ) || true
       elif command -v wt.exe &>/dev/null; then
-        wt.exe new-tab --title "Thunk Ralph Tasks" -- wsl bash "$monitor_dir/thunk_ralph_tasks.sh" & thunk_tasks_launched=true
+        ( wt.exe new-tab --title "Thunk Ralph Tasks" -- wsl bash "$monitor_dir/thunk_ralph_tasks.sh" & thunk_tasks_launched=true ) || true
       elif command -v gnome-terminal &>/dev/null && timeout 2s gnome-terminal --version &>/dev/null; then
-        gnome-terminal --title="Thunk Ralph Tasks" -- bash "$monitor_dir/thunk_ralph_tasks.sh" & thunk_tasks_launched=true
+        ( gnome-terminal --title="Thunk Ralph Tasks" -- bash "$monitor_dir/thunk_ralph_tasks.sh" & thunk_tasks_launched=true ) || true
       elif command -v konsole &>/dev/null; then
-        konsole --title "Thunk Ralph Tasks" -e bash "$monitor_dir/thunk_ralph_tasks.sh" & thunk_tasks_launched=true
+        ( konsole --title "Thunk Ralph Tasks" -e bash "$monitor_dir/thunk_ralph_tasks.sh" & thunk_tasks_launched=true ) || true
       elif command -v xterm &>/dev/null; then
-        xterm -T "Thunk Ralph Tasks" -e bash "$monitor_dir/thunk_ralph_tasks.sh" & thunk_tasks_launched=true
+        ( xterm -T "Thunk Ralph Tasks" -e bash "$monitor_dir/thunk_ralph_tasks.sh" & thunk_tasks_launched=true ) || true
       fi
     else
       thunk_tasks_launched=true  # Already running
