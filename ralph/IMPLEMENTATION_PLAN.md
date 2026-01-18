@@ -83,11 +83,12 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - **Verified:** loop.sh lines 603, 606, 609 now correctly capture and check return code
   - **Custom prompt path:** Lines 582-588 still have original bug (needs same fix)
 
-- [ ] **P1.1a** Fix same `$?` bug in custom prompt path (loop.sh lines 582-588):
+- [x] **P1.1a** Fix same `$?` bug in custom prompt path (loop.sh lines 582-588): ✅ COMPLETE
   - **Current:** `run_once "$PROMPT_FILE" "custom" "$i"` followed by `if [[ $? -eq 42 ]]; then`
   - **Issue:** No intermediate command, so this one actually works correctly
   - **Action:** Apply same fix for consistency and future-proofing
-  - **Add:** `run_result=$?` after line 584, change line 586 to check `$run_result`
+  - **Implementation:** Added `run_result=$?` after line 583, changed line 585 to check `$run_result`
+  - **Verified:** Syntax validated, consistent with alternating plan/build path fix
 
 - [ ] **P1.2** Test: Simulate `:::COMPLETE:::` in log → verify loop exits
   - Create test script that writes :::COMPLETE::: to mock log
