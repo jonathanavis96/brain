@@ -1,12 +1,12 @@
-# KB Projects
+# Skills Projects
 
 ## Why This Exists
 
-This directory contains **project-specific knowledge** - conventions, decisions, and context specific to individual projects. Project KB files capture lessons learned, project-specific patterns, and contextual information that helps agents work effectively on a particular codebase.
+This directory contains **project-specific knowledge** - conventions, decisions, and context specific to individual projects. Project skill files capture lessons learned, project-specific patterns, and contextual information that helps agents work effectively on a particular codebase.
 
 ## When to Use It
 
-Create a KB file in `kb/projects/` when you:
+Create a skill file in `skills/projects/` when you:
 - Document project-specific conventions (file structure, naming patterns)
 - Capture project context that agents need to know
 - Record project-specific technical decisions or constraints
@@ -26,9 +26,9 @@ Create a KB file in `kb/projects/` when you:
 - Match the **project directory name** when possible
 - Be **specific**: `ecommerce-site.md` not `site.md`
 
-## KB File Format
+## Skill File Format
 
-Every project KB file must follow this structure:
+Every project skill file must follow this structure:
 
 ```markdown
 # [Project Name]
@@ -51,27 +51,27 @@ Every project KB file must follow this structure:
 
 ## Contributing
 
-After creating a new project KB file:
+After creating a new project skill file:
 
 1. Ensure it follows the format above (Why/When/Details)
-2. Update `kb/SUMMARY.md` to link to your new file
+2. Update `skills/SUMMARY.md` to link to your new file
 3. Focus on actionable, relevant information for agents
 4. Keep it updated as the project evolves
 
-## Domain vs Project KB
+## Domain vs Project Skills
 
-**Use `kb/domains/`** when:
+**Use `skills/domains/`** when:
 - ✅ Pattern applies to multiple projects
 - ✅ Technical solution is reusable
 - ✅ Knowledge is architectural or technology-focused
 
-**Use `kb/projects/`** when:
+**Use `skills/projects/`** when:
 - ✅ Specific to one project or codebase
 - ✅ Context about project history or decisions
 - ✅ Project-specific conventions or requirements
 
 ## See Also
 
-- `kb/domains/README.md` - Reusable technical domain knowledge
-- `kb/conventions.md` - Detailed KB authoring guidelines (planned)
-- `kb/SUMMARY.md` - KB index and navigation
+- `skills/domains/README.md` - Reusable technical domain knowledge
+- `skills/conventions.md` - Detailed skill authoring guidelines (planned)
+- `skills/SUMMARY.md` - Skills index and navigation
