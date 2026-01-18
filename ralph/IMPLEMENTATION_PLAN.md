@@ -54,7 +54,7 @@ Complete these tasks in order. Mark each `[x]` when done.
   mv watch_ralph_tasks.sh current_ralph_tasks.sh
   ```
 - [x] **T1.2** Update heading in `current_ralph_tasks.sh` from `RALPH TASK MONITOR` → `CURRENT RALPH TASKS`
-- [ ] **T1.3** Verify `current_ralph_tasks.sh` only shows `[ ]` items (already excludes `[x]` - confirm behavior)
+- [x] **T1.3** Verify `current_ralph_tasks.sh` only shows `[ ]` items (already excludes `[x]` - confirm behavior)
 
 #### Phase T2: Create THUNK.md
 
