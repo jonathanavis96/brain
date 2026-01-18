@@ -764,6 +764,31 @@ These are **not active tasks** - they represent potential future work that shoul
 
 ## Discoveries & Notes
 
+### 2026-01-18 14:42 - PLAN Mode: Progress Update & Push Accumulated Commits
+
+**Planning Actions:**
+- Updated progress metrics: 20/85 tasks complete (24%), 65 remaining
+- THUNK Monitor Phase T3.5 validated complete (all 4 formatting tasks done)
+- Both monitor scripts have generate_title() function for human-friendly display
+- Pushed 7 accumulated commits to origin (commits 1fa45eb through e0c3318)
+- Updated next BUILD iteration targets to Phase T4 (auto-launch integration)
+
+**Commit Summary Pushed:**
+1. `1fa45eb` - fix(ralph): improve thunk_ralph_tasks.sh duplicate detection
+2. `3f698a3` - docs(plan): mark T3.6 complete - thunk monitor validation passed
+3. `e6953b5` - docs(ralph): update kb/ → skills/ reference in AGENTS.md
+4. `c6fb74d` - feat(ralph): add human-friendly formatting to thunk_ralph_tasks.sh
+5. `ce353fc` - docs(plan): mark T3.9 complete - thunk_ralph_tasks.sh formatting
+6. `9988593` - test(ralph): validate display formatting for monitor scripts
+7. `e0c3318` - docs(plan): update progress metrics - Phase T3.5 complete
+
+**Status:**
+- THUNK Monitor: 17/45 complete (38%) - Phases T1, T2, T3, T3.5 all done
+- KB→Skills Migration: 3/40 complete (8%) - Phase 1 done, waiting for THUNK completion
+- Next BUILD iteration: T4.1 (add launch_monitors() to loop.sh)
+
+---
+
 ### 2026-01-18 14:21 - PLAN Mode: Implementation Gap Analysis & Priority Refinement
 
 **Planning Actions:**
