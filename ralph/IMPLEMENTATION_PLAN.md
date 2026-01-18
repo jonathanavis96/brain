@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & NeoQueue
 
-Last updated: 2026-01-18 16:13
+Last updated: 2026-01-18 16:22
 
 ## Current State
 
@@ -16,12 +16,12 @@ The brain repository is **fully mature and production-ready** with comprehensive
 
 **Current Metrics:**
 - PROMPT.md: 95 lines, 2,890 bytes (~722 tokens) ✓
-- AGENTS.md: 50 lines, 1,690 bytes (~422 tokens) ✓
+- AGENTS.md: 57 lines, 2,243 bytes (~560 tokens) ✓
 - Skills domains: 12 files, Skills projects: 2 files
 - React rules: 45 files (validated, unmodified)
 - Templates: 20 files (4 root + 3 backend + 3 python + 10 ralph)
 - All bash scripts pass syntax validation ✓
-- THUNK.md: 74 completed tasks logged (THUNK #1-74)
+- THUNK.md: 80 completed tasks logged (THUNK #1-80)
 - Monitor renamed: `watch_ralph_tasks.sh` → `current_ralph_tasks.sh` ✓
 - Monitor heading updated: `CURRENT RALPH TASKS` ✓
 - current_ralph_tasks.sh: Human-friendly formatting COMPLETE ✓
@@ -36,9 +36,9 @@ A Matrix-inspired desktop app for tracking discussion points with your manager. 
 
 ## 🎯 ACTIVE WORK: KB→Skills Migration - Final Phase
 
-This plan contains **4 unchecked tasks** remaining:
+This plan contains **3 unchecked tasks** remaining:
 
-1. **KB→Skills Migration** (4 remaining) - Complete protocol wiring
+1. **KB→Skills Migration** (3 remaining) - Complete protocol wiring
 
 **Execution Strategy:**
 - ✅ **THUNK Monitor System: 100% COMPLETE** - All 50 tasks done (Phases T1-T6)
@@ -46,64 +46,65 @@ This plan contains **4 unchecked tasks** remaining:
 - ✅ **Phase 2: Folder Rename** - COMPLETE (2 tasks)
 - ✅ **Phase 3: Self-Improvement System** - COMPLETE (6 tasks)
 - ✅ **Phase 4: Update Summary & Create Index** - COMPLETE (2 tasks)
-- ✅ **Phase 5: Reference Updates** - COMPLETE (27/27 complete)
-- ⏳ **Phase 6: Protocol Wiring** - PENDING (4 tasks)
+- ✅ **Phase 5: Reference Updates** - COMPLETE (27/27 tasks)
+- ⏳ **Phase 6: Protocol Wiring** - IN PROGRESS (3 remaining: 6.2, 6.3, 6.4)
 - ✅ **Phase 7: Final Validation** - COMPLETE (1 task already done, 1 task merged into Phase 5)
-- 🔄 **Next: Task 6.1** - Add Skills + Self-Improvement Protocol to AGENTS.md
+- 🔄 **Next: Task 6.2** - Add checkpoints to PROMPT.md
 - Each BUILD iteration: Execute EXACTLY ONE unchecked task in sequence
 
 **THUNK Monitor Status:**
-- ✅ 74 completed tasks logged in THUNK.md (THUNK #1-74)
+- ✅ 80 completed tasks logged in THUNK.md (THUNK #1-80)
 - ✅ Both monitors operational with human-friendly formatting
 - ✅ Auto-launch integration working
 - ✅ Bootstrap integration complete and validated
 - ✅ All validation tests passed (T6.1-T6.5)
 
 **KB→Skills Migration Status:**
-- ✅ Phases 1-4: Infrastructure complete (folder rename, self-improvement system, index files)
-- ✅ Phase 5: Reference updates (27/27 tasks complete)
-- ⏳ Phase 6: Protocol wiring (4 tasks)
+- ✅ Phases 1-5: Complete (infrastructure, folder rename, self-improvement system, index files, all references updated)
+- ⏳ Phase 6: Protocol wiring (3 remaining: PROMPT.md checkpoints, template updates)
 - ✅ Phase 7: Validation complete (task 7.1 done, task 7.2 absorbed into Phase 5)
 
-**Progress: 89/93 tasks complete (96%)**
+**Progress: 90/93 tasks complete (97%)**
 
 ---
 
 ## Summary of Changes in This Planning Cycle
 
-### Context Analysis (2026-01-18 16:13)
+### Context Analysis (2026-01-18 16:22)
 1. **THOUGHTS.md**: THUNK Monitor System fully specified and complete
-2. **Current Plan State**: KB→Skills Migration at 95% (88/93 tasks done)
-3. **Git Status**: 8 commits ahead of origin (ready to push)
-4. **Remaining Work**: 5 tasks across 2 phases (Phase 5: 1 task, Phase 6: 4 tasks)
+2. **Current Plan State**: KB→Skills Migration at 97% (90/93 tasks done)
+3. **Git Status**: 6 commits ahead of origin (ready to push)
+4. **Remaining Work**: 3 tasks in Phase 6 (Protocol wiring)
 
 ### Plan Refinements
 1. **Recent BUILD Progress** (since last PLAN cycle):
-   - Completed tasks 5.10, 5.23, 5.24, 5.25 (4 tasks)
-   - Discovered 34 additional THUNK entries (THUNK #41-74)
-   - Only 1 Phase 5 task remains: 5.26 (skills/conventions.md with 9 kb/ references)
+   - Completed tasks 5.26, 6.1 (2 tasks)
+   - THUNK.md now contains 80 completed tasks (THUNK #1-80)
+   - Phase 5 fully complete - all kb/ references migrated to skills/
+   - Phase 6 started - Skills protocol added to AGENTS.md
    
 2. **Updated Task Counts**:
-   - Phase 5: 1 remaining (down from 5)
-   - Phase 6: 4 remaining (unchanged)
-   - Total remaining: 5 tasks (down from 8)
+   - Phase 5: COMPLETE (27/27 tasks) ✅
+   - Phase 6: 3 remaining (down from 4)
+   - Total remaining: 3 tasks (down from 4)
    
 3. **Migration Status**:
    - All template files updated ✅
    - All root-level docs updated ✅
    - All generator scripts updated ✅
    - Test scripts updated ✅
-   - Skills internal docs: 2/3 complete (conventions.md pending)
+   - Skills internal docs: COMPLETE ✅
+   - Protocol wiring: 1/4 complete (AGENTS.md done)
    
-4. **Ready for Protocol Wiring**:
-   - Phase 5 nearly complete (96% - 26/27 tasks done)
-   - Phase 6 will add self-improvement protocol to AGENTS.md and PROMPT.md
-   - Phase 6 will update templates to include protocol in new projects
+4. **Ready to Complete**:
+   - Phase 5 COMPLETE (all kb/ → skills/ references migrated)
+   - Phase 6 in progress: PROMPT.md checkpoints and template updates remain
+   - Phase 7 already complete
 
 ### Next Steps
-- **BUILD iteration**: Execute task 5.26 (skills/conventions.md - 9 kb/ references)
-- **Then Phase 6**: Wire self-improvement protocol (4 tasks)
-- **Estimated completion**: ~5 BUILD iterations
+- **BUILD iteration**: Execute task 6.2 (Add checkpoints to PROMPT.md)
+- **Then tasks 6.3, 6.4**: Update templates with self-improvement protocol
+- **Estimated completion**: ~3 BUILD iterations
 - **Final push**: After Phase 6 complete, KB→Skills migration 100% done
 
 ---
