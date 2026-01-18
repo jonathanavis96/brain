@@ -553,7 +553,7 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
 
 These tasks are not blocking but would improve the system.
 
-- [ ] **F1** Add `--no-monitors` flag to loop.sh to skip monitor auto-launch
+- [x] **F1** Add `--no-monitors` flag to loop.sh to skip monitor auto-launch
 - [ ] **F2** Add monitor health check endpoint (touch file to indicate alive)
 - [ ] **F3** Support custom terminal command via `RALPH_TERMINAL` env var
 - [ ] **F4** Add `--monitor-only` mode to run just monitors without loop
@@ -612,28 +612,28 @@ All 50 tasks completed. Phases T1-T6 done.
 Before marking this plan complete, ALL must pass:
 
 ### Loop Correctness
-- [ ] `:::COMPLETE:::` in log file stops loop immediately
-- [ ] Return code 42 is captured correctly
-- [ ] Loop continues normally when no completion marker
+- [x] `:::COMPLETE:::` in log file stops loop immediately (P1.1, P1.1a, P1.2)
+- [x] Return code 42 is captured correctly (P1.1, P1.1a, P1.2)
+- [x] Loop continues normally when no completion marker (P1.3)
 
 ### Monitor Launch
-- [ ] Monitors launch in tmux environment
-- [ ] Monitors launch with Windows Terminal in WSL2
-- [ ] Fallback message prints when no terminal available
-- [ ] Ralph loop continues regardless of monitor launch status
+- [x] Monitors launch in tmux environment (P3.3, P3.6)
+- [x] Monitors launch with Windows Terminal in WSL2 (P3.1)
+- [x] Fallback message prints when no terminal available (P3.4, P3.7)
+- [x] Ralph loop continues regardless of monitor launch status (P3.5)
 
 ### Monitor Performance
-- [ ] No blank screen during current_ralph_tasks.sh refresh
-- [ ] Completed tasks cached and not re-parsed
-- [ ] thunk_ralph_tasks.sh uses tail-only parsing
-- [ ] Both monitors update within 1 second of file change
+- [x] No blank screen during current_ralph_tasks.sh refresh (P4A.1, P4A.7)
+- [x] Completed tasks cached and not re-parsed (P4A.2)
+- [x] thunk_ralph_tasks.sh uses tail-only parsing (P4B.2)
+- [x] Both monitors update within 1 second of file change (P2.4, P2.5)
 
 ### Monitor Display
-- [ ] Current task marked with `▶` symbol
-- [ ] Pending tasks marked with `○` symbol
-- [ ] Completed tasks marked with `✓` symbol
-- [ ] Empty line between tasks for readability
-- [ ] "Test:" tasks show full action, not just "Test"
+- [x] Current task marked with `▶` symbol (P4A.4, P4A.9)
+- [x] Pending tasks marked with `○` symbol (P4A.4, P4A.9)
+- [x] Completed tasks marked with `✓` symbol (P4A.4, P4A.9)
+- [x] Empty line between tasks for readability (P4A.5)
+- [x] "Test:" tasks show full action, not just "Test" (P4A.6, P4B.5)
 
 ### Structure Verification
 - [x] `skills/` directory exists with all subdirectories
