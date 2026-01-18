@@ -526,14 +526,14 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - Documented in THOUGHTS.md section H (Test Task Format Standard)
   - Includes rationale, examples, title extraction behavior, and enforcement guidelines
 
-- [ ] **P6.3** Create test scenario checklist for monitors and loop:
-  - [ ] :::COMPLETE::: stops loop deterministically
-  - [ ] Monitors launch at startup OR print manual commands (no silent failure)
-  - [ ] Thunk monitor updates when THUNK.md changes (even without planning)
-  - [ ] Current tasks monitor does not blank screen during refresh
-  - [ ] Current tasks monitor does not re-render completed tasks
-  - [ ] Formatting is readable with proper spacing between tasks
-  - [ ] Current task has distinct `▶` symbol
+- [x] **P6.3** Create test scenario checklist for monitors and loop: ✅ COMPLETE
+  - ✅ Created TEST_SCENARIOS.md with 36 comprehensive test scenarios
+  - ✅ Organized into 8 categories (Loop Correctness, Monitor Launch, File Watching, Performance, Display Format, Integration, Error Handling, Regression)
+  - ✅ Each test includes: description, run instructions, expected outcome, validation criteria
+  - ✅ Coverage summary: 22 automated tests, 14 manual tests
+  - ✅ Test script naming convention documented
+  - ✅ Usage guidelines for manual testing, automated testing, regression testing, CI/CD integration
+  - ✅ References to IMPLEMENTATION_PLAN.md, THOUGHTS.md, VALIDATION_CRITERIA.md
 
 - [ ] **P6.4** Test: Run full integration test of Ralph loop with all fixes
   - Start loop.sh with --iterations 2
