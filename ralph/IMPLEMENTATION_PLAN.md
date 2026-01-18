@@ -305,7 +305,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 - [x] **5.22** Update `templates/python/NEURONS.project.md` (1 kb/ reference)
 
 **Bootstrap & Test Scripts:**
-- [ ] **5.23** Update `test-bootstrap.sh` (3 kb/ references for directory validation)
+- [x] **5.23** Update `test-bootstrap.sh` (3 kb/ references for directory validation)
 
 **Skills Folder Internal:**
 - [ ] **5.24** Update `skills/domains/README.md` (verify kb/ references if any)
