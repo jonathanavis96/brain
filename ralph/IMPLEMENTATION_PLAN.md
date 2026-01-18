@@ -347,10 +347,15 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - **Result:** Completed tasks cached on first parse, subsequent refreshes return cached values without reprocessing
   - **Commit:** f408f04
 
-- [ ] **P4A.3** Implement differential display update:
+- [x] **P4A.3** Implement differential display update: ✅ COMPLETE
   - Track which tasks changed since last display
   - Only redraw changed lines using `tput cup $row 0`
   - Keep stable content (completed tasks) without redraw
+  - **Implementation:** Added TASK_DISPLAY_ROWS and LAST_RENDERED_CONTENT tracking arrays
+  - **Logic:** Build new display state, compare row-by-row with last render
+  - **Differential:** Only redraw rows where content changed or footer/timestamp updates
+  - **Full redraw:** First render, state size changes, or hotkey actions (toggle, archive, clear, refresh, help)
+  - **Result:** Completed tasks remain stable, only changed lines update on file modifications
 
 - [ ] **P4A.4** Add "current task" indicator with distinct symbol:
   - First `[ ]` task encountered = current (mark with `▶`)
