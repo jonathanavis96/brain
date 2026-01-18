@@ -209,7 +209,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 - [x] **3.3** Create `skills/self-improvement/GAP_CAPTURE_RULES.md` with content from File Templates section below
 - [x] **3.4** Create `skills/self-improvement/GAP_BACKLOG.md` with content from File Templates section below
 - [x] **3.5** Create `skills/self-improvement/SKILL_BACKLOG.md` with content from File Templates section below
-- [ ] **3.6** Create `skills/self-improvement/SKILL_TEMPLATE.md` with content from File Templates section below
+- [x] **3.6** Create `skills/self-improvement/SKILL_TEMPLATE.md` with content from File Templates section below
 
 #### Phase 4: Update Summary & Create Index (Iterations 6-7)
 
