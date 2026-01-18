@@ -190,7 +190,8 @@ extract_tasks() {
                         task_label="Task $task_counter"
                     fi
                     
-                    echo "○|$current_section|$task_label|$short_title|$indent_level|pending|$task_desc"
+                    # Use current indicator (▶) for first pending task, pending indicator (○) for others
+                    echo "pending|$current_section|$task_label|$short_title|$indent_level|pending|$task_desc"
                 fi
             fi
         fi
@@ -379,6 +380,7 @@ display_tasks() {
     local current_row=0
     local pending_count=0
     local completed_count=0
+    local first_pending_seen=false
     
     # Header (rows 0-3)
     new_rendered_content[0]="╔════════════════════════════════════════════════════════════════╗"
@@ -436,20 +438,27 @@ display_tasks() {
                 fi
             fi
             
-            # Build task line with color
+            # Build task line with color and appropriate symbol
             local task_line=""
             if [[ "$status" == "completed" ]]; then
                 if [[ -t 1 ]]; then
-                    task_line="  \033[32m${icon}\033[0m ${display_line:2}"
+                    task_line="  \033[32m✓\033[0m ${display_line:2}"
                 else
-                    task_line="  ${icon} ${display_line:2}"
+                    task_line="  ✓ ${display_line:2}"
                 fi
                 ((completed_count++))
             else
+                # Pending task: use ▶ for first pending, ○ for others
+                local symbol="○"
+                if [[ "$first_pending_seen" == "false" ]]; then
+                    symbol="▶"
+                    first_pending_seen=true
+                fi
+                
                 if [[ -t 1 ]]; then
-                    task_line="  \033[33m${icon}\033[0m ${display_line:2}"
+                    task_line="  \033[33m${symbol}\033[0m ${display_line:2}"
                 else
-                    task_line="  ${icon} ${display_line:2}"
+                    task_line="  ${symbol} ${display_line:2}"
                 fi
                 ((pending_count++))
             fi
