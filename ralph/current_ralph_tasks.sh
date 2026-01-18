@@ -32,6 +32,15 @@ SHOW_HELP=false
 # Key: hash of task description, Value: full task line
 declare -A COMPLETED_CACHE
 
+# Display state tracking for differential updates
+# Key: task hash, Value: display row number
+declare -A TASK_DISPLAY_ROWS
+# Last rendered content by row
+declare -A LAST_RENDERED_CONTENT
+# Track last footer stats for differential update
+LAST_FOOTER_COMPLETED=0
+LAST_FOOTER_PENDING=0
+
 # Parse arguments
 if [[ "$1" == "--hide-completed" ]]; then
     HIDE_COMPLETED=true
@@ -354,16 +363,7 @@ wrap_text() {
 
 # Function to display tasks with formatting
 display_tasks() {
-    # Use cursor positioning instead of clear to avoid blank screen
-    # Move cursor to top-left (0,0) and clear from cursor to end of screen
-    tput cup 0 0
-    tput ed
-    
-    # Header
-    echo "╔════════════════════════════════════════════════════════════════╗"
-    echo "║          CURRENT RALPH TASKS - $(date +%H:%M:%S)                  ║"
-    echo "╚════════════════════════════════════════════════════════════════╝"
-    echo ""
+    local force_full_redraw="${1:-false}"
     
     # Extract and group tasks by section
     local tasks
@@ -373,99 +373,191 @@ display_tasks() {
         tasks=$(extract_tasks "true")
     fi
     
-    if [[ -z "$tasks" ]]; then
-        echo "  No tasks found in IMPLEMENTATION_PLAN.md"
-        echo ""
-        return
-    fi
-    
-    local current_section=""
+    # Build new display state
+    declare -A new_task_rows
+    declare -A new_rendered_content
+    local current_row=0
     local pending_count=0
     local completed_count=0
     
-    while IFS='|' read -r icon section task_label short_title indent_level status full_desc; do
-        # Print section header when it changes
-        if [[ "$section" != "$current_section" ]]; then
-            if [[ -n "$current_section" ]]; then
-                echo ""
-            fi
-            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-            echo "  $section"
-            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-            current_section="$section"
-        fi
-        
-        # Calculate base indent (2 spaces per level)
-        local base_indent=""
-        for ((i=0; i<indent_level; i++)); do
-            base_indent="  ${base_indent}"
-        done
-        
-        # Format task display with human-friendly title
-        local display_line=""
-        if [[ "$task_label" == "subtask" ]]; then
-            # Subtask: just show the short title with bullet
-            display_line="${base_indent}  • ${short_title}"
-        else
-            # Main task: show "Task N — <short title>" with bold
-            if [[ -t 1 ]]; then
-                # Terminal supports formatting
-                display_line="${base_indent}  \033[1m${task_label}\033[0m — ${short_title}"
-            else
-                # No terminal formatting
-                display_line="${base_indent}  ${task_label} — ${short_title}"
-            fi
-        fi
-        
-        # Print task with color and wrap if needed
-        local wrap_width=60
-        local continuation_indent="${base_indent}    "
-        
-        if [[ "$status" == "completed" ]]; then
-            if [[ -t 1 ]]; then
-                echo -e "  \033[32m${icon}\033[0m $(wrap_text "${display_line:2}" $wrap_width "$continuation_indent" | head -1)"
-                # Print continuation lines if any
-                wrap_text "${display_line:2}" $wrap_width "$continuation_indent" | tail -n +2 | while IFS= read -r line; do
-                    echo "    $line"
-                done
-            else
-                echo "  ${icon} ${display_line:2}"
-            fi
-            ((completed_count++))
-        else
-            if [[ -t 1 ]]; then
-                echo -e "  \033[33m${icon}\033[0m $(wrap_text "${display_line:2}" $wrap_width "$continuation_indent" | head -1)"
-                # Print continuation lines if any
-                wrap_text "${display_line:2}" $wrap_width "$continuation_indent" | tail -n +2 | while IFS= read -r line; do
-                    echo "    $line"
-                done
-            else
-                echo "  ${icon} ${display_line:2}"
-            fi
-            ((pending_count++))
-        fi
-        
-        # Add empty line after each task for readability
-        echo ""
-    done <<< "$tasks"
+    # Header (rows 0-3)
+    new_rendered_content[0]="╔════════════════════════════════════════════════════════════════╗"
+    new_rendered_content[1]="║          CURRENT RALPH TASKS - $(date +%H:%M:%S)                  ║"
+    new_rendered_content[2]="╚════════════════════════════════════════════════════════════════╝"
+    new_rendered_content[3]=""
+    current_row=4
     
-    # Footer with stats
-    echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  Completed: $completed_count | Pending: $pending_count | Total: $((completed_count + pending_count))"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
+    if [[ -z "$tasks" ]]; then
+        new_rendered_content[$current_row]="  No tasks found in IMPLEMENTATION_PLAN.md"
+        ((current_row++))
+        new_rendered_content[$current_row]=""
+        ((current_row++))
+    else
+        local current_section=""
+        
+        while IFS='|' read -r icon section task_label short_title indent_level status full_desc; do
+            # Generate task hash for tracking
+            local task_hash=$(echo -n "${section}|${task_label}|${short_title}" | md5sum | cut -d' ' -f1)
+            
+            # Print section header when it changes
+            if [[ "$section" != "$current_section" ]]; then
+                if [[ -n "$current_section" ]]; then
+                    new_rendered_content[$current_row]=""
+                    ((current_row++))
+                fi
+                new_rendered_content[$current_row]="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                ((current_row++))
+                new_rendered_content[$current_row]="  $section"
+                ((current_row++))
+                new_rendered_content[$current_row]="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                ((current_row++))
+                current_section="$section"
+            fi
+            
+            # Calculate base indent (2 spaces per level)
+            local base_indent=""
+            for ((i=0; i<indent_level; i++)); do
+                base_indent="  ${base_indent}"
+            done
+            
+            # Format task display with human-friendly title
+            local display_line=""
+            if [[ "$task_label" == "subtask" ]]; then
+                # Subtask: just show the short title with bullet
+                display_line="${base_indent}  • ${short_title}"
+            else
+                # Main task: show "Task N — <short title>" with bold
+                if [[ -t 1 ]]; then
+                    # Terminal supports formatting
+                    display_line="${base_indent}  \033[1m${task_label}\033[0m — ${short_title}"
+                else
+                    # No terminal formatting
+                    display_line="${base_indent}  ${task_label} — ${short_title}"
+                fi
+            fi
+            
+            # Build task line with color
+            local task_line=""
+            if [[ "$status" == "completed" ]]; then
+                if [[ -t 1 ]]; then
+                    task_line="  \033[32m${icon}\033[0m ${display_line:2}"
+                else
+                    task_line="  ${icon} ${display_line:2}"
+                fi
+                ((completed_count++))
+            else
+                if [[ -t 1 ]]; then
+                    task_line="  \033[33m${icon}\033[0m ${display_line:2}"
+                else
+                    task_line="  ${icon} ${display_line:2}"
+                fi
+                ((pending_count++))
+            fi
+            
+            # Store task row and content
+            new_task_rows[$task_hash]=$current_row
+            new_rendered_content[$current_row]="$task_line"
+            ((current_row++))
+            
+            # Add empty line after each task for readability
+            new_rendered_content[$current_row]=""
+            ((current_row++))
+        done <<< "$tasks"
+    fi
+    
+    # Footer with stats (starting at current_row)
+    local footer_start=$current_row
+    new_rendered_content[$current_row]=""
+    ((current_row++))
+    new_rendered_content[$current_row]="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    ((current_row++))
+    new_rendered_content[$current_row]="  Completed: $completed_count | Pending: $pending_count | Total: $((completed_count + pending_count))"
+    ((current_row++))
+    new_rendered_content[$current_row]="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    ((current_row++))
+    new_rendered_content[$current_row]=""
+    ((current_row++))
     
     # Hotkey legend
-    echo "╔════════════════════════════════════════════════════════════════╗"
-    echo "║  HOTKEYS: [h] Hide/Show Done  [r] Reset/Archive  [f] Refresh  ║"
-    echo "║           [c] Clear Done      [?] Help           [q] Quit     ║"
-    echo "╚════════════════════════════════════════════════════════════════╝"
-    echo ""
+    new_rendered_content[$current_row]="╔════════════════════════════════════════════════════════════════╗"
+    ((current_row++))
+    new_rendered_content[$current_row]="║  HOTKEYS: [h] Hide/Show Done  [r] Reset/Archive  [f] Refresh  ║"
+    ((current_row++))
+    new_rendered_content[$current_row]="║           [c] Clear Done      [?] Help           [q] Quit     ║"
+    ((current_row++))
+    new_rendered_content[$current_row]="╚════════════════════════════════════════════════════════════════╝"
+    ((current_row++))
+    new_rendered_content[$current_row]=""
+    ((current_row++))
     
     if [[ "$HIDE_COMPLETED" == "true" ]]; then
-        echo "  Mode: Hiding completed tasks (press 'h' to show)"
+        new_rendered_content[$current_row]="  Mode: Hiding completed tasks (press 'h' to show)"
+        ((current_row++))
     fi
+    
+    # Determine if we need full redraw or differential update
+    local need_full_redraw="$force_full_redraw"
+    
+    # Force full redraw if this is first render or state changed significantly
+    if [[ ${#LAST_RENDERED_CONTENT[@]} -eq 0 ]] || \
+       [[ ${#new_rendered_content[@]} -ne ${#LAST_RENDERED_CONTENT[@]} ]]; then
+        need_full_redraw="true"
+    fi
+    
+    if [[ "$need_full_redraw" == "true" ]]; then
+        # Full redraw: clear screen and render everything
+        tput cup 0 0
+        tput ed
+        
+        for ((row=0; row<current_row; row++)); do
+            if [[ -n "${new_rendered_content[$row]}" ]]; then
+                echo -e "${new_rendered_content[$row]}"
+            else
+                echo ""
+            fi
+        done
+    else
+        # Differential update: only redraw changed rows
+        for ((row=0; row<current_row; row++)); do
+            local new_content="${new_rendered_content[$row]}"
+            local old_content="${LAST_RENDERED_CONTENT[$row]}"
+            
+            # Always update header timestamp (row 1) and footer stats
+            if [[ $row -eq 1 ]] || \
+               [[ $row -ge $footer_start ]] || \
+               [[ "$new_content" != "$old_content" ]]; then
+                tput cup $row 0
+                tput el  # Clear to end of line
+                if [[ -n "$new_content" ]]; then
+                    echo -e "${new_content}"
+                else
+                    echo ""
+                fi
+            fi
+        done
+        
+        # Clear any extra rows from previous render
+        if [[ ${#LAST_RENDERED_CONTENT[@]} -gt current_row ]]; then
+            for ((row=current_row; row<${#LAST_RENDERED_CONTENT[@]}; row++)); do
+                tput cup $row 0
+                tput el
+            done
+        fi
+    fi
+    
+    # Update tracking state
+    TASK_DISPLAY_ROWS=()
+    for task_hash in "${!new_task_rows[@]}"; do
+        TASK_DISPLAY_ROWS[$task_hash]=${new_task_rows[$task_hash]}
+    done
+    
+    LAST_RENDERED_CONTENT=()
+    for row in "${!new_rendered_content[@]}"; do
+        LAST_RENDERED_CONTENT[$row]="${new_rendered_content[$row]}"
+    done
+    
+    LAST_FOOTER_COMPLETED=$completed_count
+    LAST_FOOTER_PENDING=$pending_count
 }
 
 # Main loop - interactive with file watching
@@ -509,28 +601,28 @@ while true; do
                 else
                     HIDE_COMPLETED=true
                 fi
-                display_tasks
+                display_tasks "true"  # Force full redraw on hide/show toggle
                 ;;
             r|R)
                 # Archive completed tasks
                 archive_completed_tasks
                 LAST_MODIFIED=$(get_file_mtime)
-                display_tasks
+                display_tasks "true"  # Force full redraw after archive
                 ;;
             f|F)
                 # Force refresh
-                display_tasks
+                display_tasks "true"  # Force full redraw on manual refresh
                 ;;
             c|C)
                 # Clear completed tasks
                 clear_completed_tasks
                 LAST_MODIFIED=$(get_file_mtime)
-                display_tasks
+                display_tasks "true"  # Force full redraw after clear
                 ;;
             \?)
                 # Show help
                 show_help
-                display_tasks
+                display_tasks "true"  # Force full redraw after help
                 ;;
             q|Q)
                 # Quit
