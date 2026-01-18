@@ -51,12 +51,12 @@ brain/
 This is critical to understand:
 
 **When working IN the brain repository:**
-- KB references use **local paths**: `kb/SUMMARY.md`, `references/react-best-practices/HOTLIST.md`
-- Brain's Ralph prompts use **local paths**: `kb/SUMMARY.md`
-- AGENTS.md references are **local**: `kb/conventions.md`
+- Skill references use **local paths**: `skills/SUMMARY.md`, `references/react-best-practices/HOTLIST.md`
+- Brain's Ralph prompts use **local paths**: `skills/SUMMARY.md`
+- AGENTS.md references are **local**: `skills/conventions.md`
 
 **When in templates (for NEW projects):**
-- KB references use **relative paths from project root**: `../brain/skills/SUMMARY.md`
+- Skill references use **relative paths from project root**: `../brain/skills/SUMMARY.md`
 - Templates assume project is sibling to brain: `../brain/`
 - Template prompts use **relative paths**: `../../brain/skills/SUMMARY.md`
 
@@ -64,13 +64,13 @@ This is critical to understand:
 
 ```markdown
 <!-- In brain/AGENTS.md (local paths) -->
-Read [conventions](kb/conventions.md)
+Read [conventions](skills/conventions.md)
 
 <!-- In brain/templates/AGENTS.project.md (relative paths) -->
 Read [conventions](../brain/skills/conventions.md)
 
-<!-- In brain/ralph/PROMPT.md (local paths, brain's own Ralph) -->
-Read `kb/SUMMARY.md`
+<!-- In brain/PROMPT.md (local paths, brain's own Ralph) -->
+Read `skills/SUMMARY.md`
 
 <!-- In brain/templates/ralph/PROMPT.md (relative paths, for projects) -->
 Read `../../brain/skills/SUMMARY.md`
@@ -212,11 +212,11 @@ When updating templates, ensure consistency:
 
 ### Integration with Other KB Files
 
-- Related: `kb/conventions.md` - KB file authoring guidelines
-- Related: `kb/domains/README.md` - Domain KB explanation
-- Related: `kb/projects/README.md` - Project KB explanation
-- See: `AGENTS.md` - Agent guidance for brain repository
-- See: `README.md` - Developer onboarding guide
+- Related: `../conventions.md` - KB file authoring guidelines
+- Related: `../domains/README.md` - Domain KB explanation
+- Related: `README.md` - Project KB explanation
+- See: `../../AGENTS.md` - Agent guidance for brain repository
+- See: `../../README.md` - Developer onboarding guide
 
 ### Testing Changes to Brain
 
@@ -242,5 +242,5 @@ When contributing new features to brain:
 
 - [AGENTS.md](../../AGENTS.md) - Agent guidance for brain repository
 - [README.md](../../README.md) - Developer onboarding and quickstart guide
-- [kb/conventions.md](../conventions.md) - KB file authoring conventions
-- [fix_plan.md](../../fix_plan.md) - Brain's improvement backlog
+- [conventions.md](../conventions.md) - KB file authoring conventions
+- [templates/fix_plan.md](../../templates/fix_plan.md) - Fix plan template
