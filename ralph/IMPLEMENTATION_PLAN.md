@@ -116,9 +116,9 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 #### Phase T4: Auto-Launch Integration
 
-- [ ] **T4.1** Update `loop.sh` to add `launch_monitors()` function
-- [ ] **T4.2** Make terminal launch command configurable (support gnome-terminal, Windows Terminal, tmux)
-- [ ] **T4.3** Add pgrep check to avoid duplicate monitor launches
+- [x] **T4.1** Update `loop.sh` to add `launch_monitors()` function (includes terminal auto-detection and pgrep checks)
+- [x] **T4.2** Make terminal launch command configurable (support gnome-terminal, Windows Terminal, tmux) - ✅ Implemented in T4.1
+- [x] **T4.3** Add pgrep check to avoid duplicate monitor launches - ✅ Implemented in T4.1
 - [ ] **T4.4** Test auto-launch works when running `loop.sh`
 
 #### Phase T5: Bootstrap Integration
