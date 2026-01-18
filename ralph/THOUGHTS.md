@@ -111,6 +111,70 @@ Current format has alignment issues. New format:
 |   1    | P4B.1   | HIGH     | 2026-01-18 | 21:45:00 | Implement line-count tracking
 ```
 
-
-
 Include both date AND time for completion tracking.
+
+---
+
+## CodeRabbit Review Fixes (2026-01-19)
+
+PR #4 review identified 26 actionable fixes. Analysis in `CODERABBIT_REVIEW_ANALYSIS.md`.
+
+### Bug Fixes Required
+
+1. **render_ac_status.sh:31** - WARN regex `^[0-9]+` won't match `WARN: 6`
+   - Root cause: Regex anchored to start of line but WARN count isn't at start
+   - Fix: Change to `[0-9]+` (unanchored)
+
+2. **render_ac_status.sh:113** - Missing end marker guard
+   - Root cause: awk script assumes `<!-- AC_STATUS_END -->` exists
+   - Risk: If marker missing, awk eats rest of file
+   - Fix: Add guard check before awk
+
+3. **loop.sh:639-655** - Subshell variable assignment bug
+   - Root cause: `( cmd && var=true )` runs in subshell, parent var unchanged
+   - Symptom: Fallback message shown even when monitors launch successfully
+   - Fix: Remove subshells, use direct if statements
+
+### Dead Code Removal
+
+4. **thunk_ralph_tasks.sh:125** - `in_era` variable set but never read
+5. **loop.sh:583-589** - `ready_signal` assigned but never used
+6. **templates/ralph/loop.sh:583-612** - Same `ready_signal` dead code
+
+### Shellcheck SC2155 Fixes
+
+`local var=$(cmd)` masks command exit status. Split declaration and assignment.
+
+7. **thunk_ralph_tasks.sh:165-168**
+8. **current_ralph_tasks.sh:144**
+9. **loop.sh:481**
+10. **templates/ralph/loop.sh:481**
+
+### Terminology Fixes (kb→skills)
+
+11. **pr-batch.sh:116-118** - "Knowledge Base (kb/)" → "Skills (skills/)"
+12. **templates/ralph/pr-batch.sh:117-118** - Same fix
+13. **generators/generate-neurons.sh:431-434** - "Brain KB patterns" → "Brain Skills patterns"
+14. **templates/python/AGENTS.project.md:26-31** - "KB file" → "skill file"
+
+### Documentation/Help Text
+
+15. **loop.sh:162-164** - Model version `20250620` → `20250929`
+16. **templates/ralph/loop.sh:162-164** - Same fix
+17. **loop.sh usage** - Document `--model auto` option
+18. **PROMPT.md:61** - Add markdown fence language tag
+
+### Refactoring (Optional but Recommended)
+
+19. **loop.sh:644-675** - Extract `launch_in_terminal()` helper (DRY)
+20. **current_ralph_tasks.sh:305-320** - Use process substitution `< <(...)` 
+21. **thunk_ralph_tasks.sh:191-206** - Same process substitution fix
+
+### Wording/Style
+
+22-26. Various minor wording tweaks in PROMPT.md, templates, etc.
+
+### Skipped Items (archived code)
+
+- All `old_sh/test-rovodev-integration.sh` issues - archived deprecated code
+- AC.rules "fragility" concerns - intentional pattern testing
