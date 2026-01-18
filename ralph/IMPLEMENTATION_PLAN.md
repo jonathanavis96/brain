@@ -36,9 +36,9 @@ A Matrix-inspired desktop app for tracking discussion points with your manager. 
 
 ## 🎯 ACTIVE WORK: KB→Skills Migration In Progress
 
-This plan contains **37 unchecked tasks** across one major feature:
+This plan contains **36 unchecked tasks** across one major feature:
 
-1. **KB→Skills Migration** (37 remaining) - Complete kb/ → skills/ reference updates
+1. **KB→Skills Migration** (36 remaining) - Complete kb/ → skills/ reference updates
 
 **Execution Strategy:**
 - ✅ **THUNK Monitor System: 100% COMPLETE** - All 50 tasks done (Phases T1-T6)
@@ -52,8 +52,8 @@ This plan contains **37 unchecked tasks** across one major feature:
 - ✅ **Phase 1: Safety Checks & Cleanup** - COMPLETE (3 tasks)
 - ✅ **Phase 2: Folder Rename** - COMPLETE (2 tasks)
 - ✅ **Phase 3: Self-Improvement System** - COMPLETE (6 tasks) ✅
-- ✅ **Phase 4: Update Summary & Create Index** - 1/2 tasks complete (50%)
-- 🔄 **Next: Task 4.2** - Create skills/index.md
+- ✅ **Phase 4: Update Summary & Create Index** - COMPLETE (2 tasks) ✅
+- 🔄 **Next: Task 5.3** - Update NEURONS.md
 - Each BUILD iteration: Execute EXACTLY ONE unchecked task in sequence
 
 **THUNK Monitor Status:**
@@ -164,9 +164,9 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 **Full runbook:** See THOUGHTS.md section "KB→Skills Migration Runbook"
 
-**Progress:** 13/50 tasks complete (26%)
+**Progress:** 14/50 tasks complete (28%)
 
-**Status:** Phases 1-4 partially complete. Phase 4 in progress (1/2). **Ready to continue with task 4.2.**
+**Status:** Phases 1-4 complete. Phase 5 in progress. **Ready to continue with task 5.3.**
 
 Complete these tasks in order. Mark each `[x]` when done.
 
@@ -211,7 +211,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 - [x] **3.5** Create `skills/self-improvement/SKILL_BACKLOG.md` with content from File Templates section below
 - [x] **3.6** Create `skills/self-improvement/SKILL_TEMPLATE.md` with content from File Templates section below
 
-#### Phase 4: Update Summary & Create Index (Iterations 6-7)
+#### Phase 4: Update Summary & Create Index ✅ COMPLETE
 
 - [x] **4.1** Update `skills/SUMMARY.md`:
   - Change all `kb/` references to `skills/`
