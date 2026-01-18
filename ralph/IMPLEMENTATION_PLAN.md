@@ -51,20 +51,20 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 - [ ] **T1.1** Rename `watch_ralph_tasks.sh` → `current_ralph_tasks.sh`:
   ```bash
-  mv brain/ralph/watch_ralph_tasks.sh brain/ralph/current_ralph_tasks.sh
+  mv watch_ralph_tasks.sh current_ralph_tasks.sh
   ```
 - [ ] **T1.2** Update heading in `current_ralph_tasks.sh` from `RALPH TASK MONITOR` → `CURRENT RALPH TASKS`
 - [ ] **T1.3** Verify `current_ralph_tasks.sh` only shows `[ ]` items (already excludes `[x]` - confirm behavior)
 
 #### Phase T2: Create THUNK.md
 
-- [ ] **T2.1** Create `brain/ralph/THUNK.md` with initial structure (see File Templates below)
+- [ ] **T2.1** Create `THUNK.md` with initial structure (see File Templates below)
 - [ ] **T2.2** Set initial Era to "THUNK Monitor + KB→Skills Migration"
 - [ ] **T2.3** Migrate any already-completed `[x]` tasks from IMPLEMENTATION_PLAN.md to THUNK.md
 
 #### Phase T3: Create thunk_ralph_tasks.sh
 
-- [ ] **T3.1** Create `brain/ralph/thunk_ralph_tasks.sh` monitor script
+- [ ] **T3.1** Create `thunk_ralph_tasks.sh` monitor script
 - [ ] **T3.2** Implement THUNK.md parsing and display (show THUNK #, original #, priority, description)
 - [ ] **T3.3** Implement completion detection (compare IMPLEMENTATION_PLAN.md `[x]` items against THUNK.md)
 - [ ] **T3.4** Implement auto-append logic with sequential numbering
@@ -145,18 +145,18 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 - [ ] **2.1** Rename `kb` to `skills`:
   ```bash
-  mv brain/ralph/kb brain/ralph/skills
+  mv kb skills
   ```
 - [ ] **2.2** Verify rename succeeded:
   ```bash
-  ls -la brain/ralph/skills/
+  ls -la skills/
   ```
 
 #### Phase 3: Create Self-Improvement System (Iterations 3-5)
 
 - [ ] **3.1** Create self-improvement directory:
   ```bash
-  mkdir -p brain/ralph/skills/self-improvement
+  mkdir -p skills/self-improvement
   ```
 - [ ] **3.2** Create `skills/self-improvement/README.md` with content from File Templates section below
 - [ ] **3.3** Create `skills/self-improvement/GAP_CAPTURE_RULES.md` with content from File Templates section below
@@ -166,12 +166,12 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 #### Phase 4: Update Summary & Create Index (Iterations 6-7)
 
-- [ ] **4.1** Update `brain/ralph/skills/summary.md`:
+- [ ] **4.1** Update `skills/SUMMARY.md`:
   - Change all `kb/` references to `skills/`
   - Add folder tree showing new structure
   - Add link to `skills/index.md`
   - Add section for `skills/self-improvement/`
-- [ ] **4.2** Create `brain/ralph/skills/index.md` with skill catalog (see File Templates below)
+- [ ] **4.2** Create `skills/index.md` with skill catalog (see File Templates below)
 
 #### Phase 5: Update All References (Iterations 8-15)
 
@@ -187,34 +187,34 @@ Complete these tasks in order. Mark each `[x]` when done.
 | Commit scope `kb` | Commit scope `skills` |
 
 **Core Ralph Files:**
-- [ ] **5.1** Update `brain/ralph/AGENTS.md`
-- [ ] **5.2** Update `brain/ralph/PROMPT.md` (including commit scope on ~line 93)
-- [ ] **5.3** Update `brain/ralph/NEURONS.md`
-- [ ] **5.4** Update `brain/ralph/README.md`
-- [ ] **5.5** Update `brain/ralph/VALIDATION_CRITERIA.md`
-- [ ] **5.6** Update `brain/ralph/EDGE_CASES.md`
-- [ ] **5.7** Update `brain/ralph/CHANGES.md`
-- [ ] **5.8** Update `brain/ralph/HISTORY.md`
-- [ ] **5.9** Update `brain/ralph/IMPLEMENTATION_PLAN.md` (this file - update Future Enhancements section)
+- [ ] **5.1** Update `AGENTS.md`
+- [ ] **5.2** Update `PROMPT.md` (including commit scope on ~line 93)
+- [ ] **5.3** Update `NEURONS.md`
+- [ ] **5.4** Update `README.md`
+- [ ] **5.5** Update `VALIDATION_CRITERIA.md`
+- [ ] **5.6** Update `EDGE_CASES.md`
+- [ ] **5.7** Update `CHANGES.md`
+- [ ] **5.8** Update `HISTORY.md`
+- [ ] **5.9** Update `IMPLEMENTATION_PLAN.md` (this file - update Future Enhancements section)
 
 **Generators:**
-- [ ] **5.10** Update `brain/ralph/generators/generate-neurons.sh`
-- [ ] **5.11** Update `brain/ralph/generators/generate-thoughts.sh`
+- [ ] **5.10** Update `generators/generate-neurons.sh`
+- [ ] **5.11** Update `generators/generate-thoughts.sh`
 
 **Templates:**
-- [ ] **5.12** Update `brain/ralph/templates/AGENTS.project.md`
-- [ ] **5.13** Update `brain/ralph/templates/THOUGHTS.project.md`
-- [ ] **5.14** Update `brain/ralph/templates/NEURONS.project.md`
-- [ ] **5.15** Update `brain/ralph/templates/README.md`
-- [ ] **5.16** Update `brain/ralph/templates/ralph/PROMPT.project.md`
-- [ ] **5.17** Update `brain/ralph/templates/ralph/RALPH.md`
-- [ ] **5.18** Update `brain/ralph/templates/backend/*.md` (all files with kb refs)
-- [ ] **5.19** Update `brain/ralph/templates/python/*.md` (all files with kb refs)
+- [ ] **5.12** Update `templates/AGENTS.project.md`
+- [ ] **5.13** Update `templates/THOUGHTS.project.md`
+- [ ] **5.14** Update `templates/NEURONS.project.md`
+- [ ] **5.15** Update `templates/README.md`
+- [ ] **5.16** Update `templates/ralph/PROMPT.project.md`
+- [ ] **5.17** Update `templates/ralph/RALPH.md`
+- [ ] **5.18** Update `templates/backend/*.md` (all files with kb refs)
+- [ ] **5.19** Update `templates/python/*.md` (all files with kb refs)
 
 **Skills Folder Internal:**
-- [ ] **5.20** Update `brain/ralph/skills/domains/README.md`
-- [ ] **5.21** Update `brain/ralph/skills/projects/README.md`
-- [ ] **5.22** Update `brain/ralph/skills/conventions.md`
+- [ ] **5.20** Update `skills/domains/README.md`
+- [ ] **5.21** Update `skills/projects/README.md`
+- [ ] **5.22** Update `skills/conventions.md`
 
 **External Projects:**
 - [ ] **5.23** Update `rovo-test/AGENTS.md`
@@ -227,12 +227,12 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 #### Phase 6: Wire Self-Improvement Protocol (Iterations 16-18)
 
-- [ ] **6.1** Add "Skills + Self-Improvement Protocol" section to `brain/ralph/AGENTS.md`:
+- [ ] **6.1** Add "Skills + Self-Improvement Protocol" section to `AGENTS.md`:
   ```markdown
   ## Skills + Self-Improvement Protocol
 
   **Start of iteration:**
-  1. Study `skills/summary.md` for overview
+  1. Study `skills/SUMMARY.md` for overview
   2. Check `skills/index.md` for available skills
   3. Review `skills/self-improvement/GAP_CAPTURE_RULES.md` for capture protocol
 
@@ -246,36 +246,36 @@ Complete these tasks in order. Mark each `[x]` when done.
      - Create skill file using `SKILL_TEMPLATE.md`
      - Update `skills/index.md`
   ```
-- [ ] **6.2** Add checkpoints to `brain/ralph/PROMPT.md`:
-  - Before planning: "Study skills/summary.md and skills/index.md"
+- [ ] **6.2** Add checkpoints to `PROMPT.md`: 
+  - Before planning: "Study skills/SUMMARY.md and skills/index.md"
   - After completing work: "Log undocumented knowledge as gap; promote if clear/recurring"
-- [ ] **6.3** Add self-improvement protocol to `brain/ralph/templates/AGENTS.project.md`
-- [ ] **6.4** Add checkpoints to `brain/ralph/templates/ralph/PROMPT.project.md`
+- [ ] **6.3** Add self-improvement protocol to `templates/AGENTS.project.md`
+- [ ] **6.4** Add checkpoints to `templates/ralph/PROMPT.project.md`
 
 #### Phase 7: Final Validation (Iterations 19-20)
 
 - [ ] **7.1** Verify no remaining KB references:
   ```bash
-  grep -rn "ralph/kb" . --include="*.md" --include="*.sh" 2>/dev/null | grep -v HISTORY.md | grep -v "old_md/"
+  grep -rn "ralph/kb" . --include="*.md" --include="*.sh" 2>/dev/null | grep -v "old_md/"
   ```
   Expected: ZERO results
 - [ ] **7.2** Verify no `/kb/` references in active code:
   ```bash
-  grep -rn "/kb/" brain/ralph/*.md brain/ralph/templates/ brain/ralph/generators/ 2>/dev/null
+  grep -rn "/kb/" *.md templates/ generators/ 2>/dev/null
   ```
   Expected: ZERO results
 - [ ] **7.3** Verify new structure exists (all must succeed):
   ```bash
-  ls brain/ralph/skills/summary.md
-  ls brain/ralph/skills/index.md
-  ls brain/ralph/skills/conventions.md
-  ls brain/ralph/skills/domains/README.md
-  ls brain/ralph/skills/projects/README.md
-  ls brain/ralph/skills/self-improvement/README.md
-  ls brain/ralph/skills/self-improvement/GAP_CAPTURE_RULES.md
-  ls brain/ralph/skills/self-improvement/GAP_BACKLOG.md
-  ls brain/ralph/skills/self-improvement/SKILL_BACKLOG.md
-  ls brain/ralph/skills/self-improvement/SKILL_TEMPLATE.md
+  ls skills/SUMMARY.md
+  ls skills/index.md
+  ls skills/conventions.md
+  ls skills/domains/README.md
+  ls skills/projects/README.md
+  ls skills/self-improvement/README.md
+  ls skills/self-improvement/GAP_CAPTURE_RULES.md
+  ls skills/self-improvement/GAP_BACKLOG.md
+  ls skills/self-improvement/SKILL_BACKLOG.md
+  ls skills/self-improvement/SKILL_TEMPLATE.md
   ```
 - [ ] **7.4** Verify deleted directories are gone:
   ```bash
@@ -287,7 +287,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 ## File Templates (Exact Content for New Files)
 
-### THUNK.md (Initial for brain/ralph/)
+### THUNK.md (Initial for repo root)
 
 ```markdown
 # THUNK - Completed Task Log
