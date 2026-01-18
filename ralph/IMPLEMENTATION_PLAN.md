@@ -2,20 +2,67 @@
 
 ## Overview
 
-**Previous project completed:** Monitor bug fixes (Bugs A, B, C) are fully resolved and verified.
+**Status:** Repository in maintenance mode. All monitor bug fixes completed and verified.
 
-**Current status:** All implementation tasks complete. Repository is in maintenance mode.
-
+**Recent achievements (2026-01-18):**
+- Monitor bug fixes (Bugs A, B, C) fully resolved and verified
 - All acceptance criteria passing (21 PASS, 0 FAIL, 0 WARN with gate=block)
 - Monitor scripts synced with templates
-- Documentation updated
+- Documentation updated and consolidated
 - Old scripts archived to old_sh/
+- 256 commits in January 2026 (brain repository modernization)
+
+**Current focus:** Continuous improvement and knowledge base maintenance.
 
 ---
 
 ## HIGH PRIORITY
 
-*No high priority tasks at this time.*
+### Phase 7: Knowledge Base Quality Assurance
+
+- [ ] **7.1** Audit skills/ directory for consistency
+  - Verify all skill files follow conventions.md structure
+  - Check for missing "When to Use" or "Triggers" sections
+  - Ensure all skills are indexed in skills/index.md
+  - Validate cross-references between skills
+
+- [ ] **7.2** Update skills/index.md timestamp
+  - Current: "Last updated: 2026-01-18"
+  - Update to current date after any skill changes
+  - Ensure timestamp accuracy protocol is documented
+
+- [ ] **7.3** Review and consolidate documentation locations
+  - Evaluate docs/REFERENCE_SUMMARY.md (marked as "legacy" in NEURONS.md)
+  - Determine if content should be migrated to skills/ or deprecated
+  - Update NEURONS.md if structure changes
+
+### Phase 8: Template Validation
+
+- [ ] **8.1** Verify template completeness
+  - Check templates/ralph/ has all required files (16 files expected)
+  - Verify templates/backend/ completeness (4 files expected)
+  - Verify templates/python/ completeness (4 files expected)
+  - Cross-check with new-project.sh expectations
+
+- [ ] **8.2** Test template generation workflow
+  - Run generator scripts against test inputs
+  - Verify generate-neurons.sh produces valid NEURONS.md
+  - Verify generate-thoughts.sh produces valid THOUGHTS.md
+  - Verify generate-implementation-plan.sh produces valid plan
+
+### Phase 9: Self-Improvement System Maintenance
+
+- [ ] **9.1** Review GAP_BACKLOG.md for promotion candidates
+  - Check if any P1 or P0 gaps should be promoted to SKILL_BACKLOG.md
+  - Verify existing gap entries have proper status tracking
+  - Archive or consolidate duplicate entries
+
+- [ ] **9.2** Validate SKILL_BACKLOG.md process
+  - Check if any "Pending" or "In-Progress" skills are stale
+  - Verify all "Done" skills have proper file links
+  - Update status for any completed but unlinked skills
+
+*No additional high priority tasks at this time.*
 
 ### Phase 1: Fix Task Extraction Parser (Bug A)
 
@@ -116,7 +163,32 @@
 
 ## MEDIUM PRIORITY
 
-*No medium priority tasks at this time.*
+### Phase 10: Generator Script Enhancements
+
+- [ ] **10.1** Add error handling to generator scripts
+  - Review generators/generate-neurons.sh for edge cases
+  - Review generators/generate-thoughts.sh for edge cases
+  - Review generators/generate-implementation-plan.sh for edge cases
+  - Add validation for missing required fields
+
+- [ ] **10.2** Document generator usage in AGENTS.md
+  - Add "Bootstrapping New Projects" section
+  - Document when to use each generator
+  - Provide examples of typical workflows
+
+### Phase 11: Archive and Cleanup Tasks
+
+- [ ] **11.1** Review old_sh/ archive directory
+  - Verify archived scripts are truly obsolete
+  - Document purpose of each archived script in old_sh/README.md
+  - Consider removing if no historical value
+
+- [ ] **11.2** Evaluate docs/ directory structure
+  - Assess if docs/REFERENCE_SUMMARY.md provides unique value
+  - Consider merging into skills/ if content is still relevant
+  - Update NEURONS.md references if structure changes
+
+*No additional medium priority tasks at this time.*
 
 ### Phase 6: Documentation & Cleanup
 
@@ -218,9 +290,28 @@ _Run `./verifier.sh` to refresh. Do not edit this section manually._
 
 ---
 
+## LOW PRIORITY
+
+### Phase 12: Reference Material Updates
+
+- [ ] **12.1** Validate React best practices references
+  - Verify all 45 rule files are present in references/react-best-practices/rules/
+  - Check INDEX.md and HOTLIST.md are up to date
+  - Ensure no broken cross-references
+
+- [ ] **12.2** Review CHANGES.md for completeness
+  - Document any undocumented changes since 2026-01-18
+  - Ensure migration guides are current
+  - Add entry for any new features or breaking changes
+
+*No additional low priority tasks at this time.*
+
+---
+
 ## Notes
 
 - Keep changes minimal and focused - fix bugs, don't refactor unnecessarily
 - Maintain backwards compatibility with existing IMPLEMENTATION_PLAN.md formats
 - Preserve all existing hotkey functionality
 - All fixes tested individually before integration testing
+- Repository is in maintenance mode - prioritize quality over velocity
