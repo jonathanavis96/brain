@@ -28,6 +28,10 @@ HIDE_COMPLETED=false
 LAST_MODIFIED=""
 SHOW_HELP=false
 
+# Completed task cache - stores hashes of completed task descriptions
+# Key: hash of task description, Value: full task line
+declare -A COMPLETED_CACHE
+
 # Parse arguments
 if [[ "$1" == "--hide-completed" ]]; then
     HIDE_COMPLETED=true
@@ -134,25 +138,49 @@ extract_tasks() {
             
             # If we found a task, process it
             if [[ -n "$status" && -n "$task_desc" ]]; then
-                # Skip completed tasks if --hide-completed is set
-                if [[ "$show_completed" == "false" && "$status" == "x" ]]; then
-                    continue
-                fi
-                
-                # Generate short title from description
-                local short_title=$(generate_title "$task_desc")
-                
-                # Format output with indent level
-                local task_label=""
-                if [[ "$is_subtask" == "true" ]]; then
-                    task_label="subtask"
-                else
-                    task_label="Task $task_counter"
-                fi
-                
+                # For completed tasks, check cache first
                 if [[ "$status" == "x" ]]; then
-                    echo "✓|$current_section|$task_label|$short_title|$indent_level|completed|$task_desc"
+                    # Generate cache key (hash of task description)
+                    local cache_key=$(echo -n "$task_desc" | md5sum | cut -d' ' -f1)
+                    
+                    # If cached, return cached value
+                    if [[ -n "${COMPLETED_CACHE[$cache_key]}" ]]; then
+                        # Skip completed tasks if --hide-completed is set
+                        if [[ "$show_completed" == "false" ]]; then
+                            continue
+                        fi
+                        echo "${COMPLETED_CACHE[$cache_key]}"
+                        continue
+                    fi
+                    
+                    # Not cached - process and cache it
+                    local short_title=$(generate_title "$task_desc")
+                    local task_label=""
+                    if [[ "$is_subtask" == "true" ]]; then
+                        task_label="subtask"
+                    else
+                        task_label="Task $task_counter"
+                    fi
+                    
+                    local output_line="✓|$current_section|$task_label|$short_title|$indent_level|completed|$task_desc"
+                    COMPLETED_CACHE[$cache_key]="$output_line"
+                    
+                    # Skip completed tasks if --hide-completed is set
+                    if [[ "$show_completed" == "false" ]]; then
+                        continue
+                    fi
+                    
+                    echo "$output_line"
                 else
+                    # Pending task - always process (no caching)
+                    local short_title=$(generate_title "$task_desc")
+                    local task_label=""
+                    if [[ "$is_subtask" == "true" ]]; then
+                        task_label="subtask"
+                    else
+                        task_label="Task $task_counter"
+                    fi
+                    
                     echo "○|$current_section|$task_label|$short_title|$indent_level|pending|$task_desc"
                 fi
             fi
