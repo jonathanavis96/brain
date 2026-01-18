@@ -87,6 +87,9 @@ When ZERO unchecked `[ ]` tasks remain in IMPLEMENTATION_PLAN.md:
 - **No destructive commands** (`rm -rf`, deleting directories) unless plan task explicitly says so
 - **Search before creating** - Verify something doesn't exist before adding it
 - **One task per BUILD** - No batching, no "while I'm here" extras
+- **Never remove uncompleted items** - During PLANNING, you may add/reorganize tasks but NEVER delete `[ ]` unchecked items from IMPLEMENTATION_PLAN.md or acceptance criteria from THOUGHTS.md
+- **Never mark criteria complete prematurely** - Acceptance criteria can only be marked `[x]` AFTER the corresponding validation tasks are completed
+- **Acceptance criteria require proof** - Mark `[x]` only with evidence: `<!-- verified: <commit> -->` or `<!-- tested: <output> -->`
 
 ## File Roles
 
