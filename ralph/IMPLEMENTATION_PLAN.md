@@ -376,16 +376,19 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - **Logic:** Tracks first_pending_seen flag, assigns ▶ to first pending, ○ to rest
   - **Result:** Current task clearly visible in monitor display
 
-- [x] **P4A.5** Implement detailed task formatting with spacing:
+- [x] **P4A.5** Implement detailed task formatting with spacing: ✅ COMPLETE
   - Add empty line between each task for readability
   - Add indentation (2 spaces) for task content
   - Keep priority section separators (━━━ lines)
+  - **Implementation:** Empty lines already added at line 470-472 in current_ralph_tasks.sh
+  - **Result:** Tasks have visual spacing for improved readability
 
-- [x] **P4A.6** Fix title extraction for "Test:" tasks:
+- [x] **P4A.6** Fix title extraction for "Test:" tasks: ✅ COMPLETE
   - Current: Truncates at colon, showing just "Test"
   - Fix: For "Test:" prefix, include object being tested
   - Pattern: `Test: <action>` instead of just `Test`
   - Example: "Test: Mark task [x] in plan" not "Test"
+  - **Implementation:** Already implemented in generate_title() function
 
 - [ ] **P4A.7** Test: Refresh display with 50+ tasks → expect no blank screen
   - Screen should show header immediately
