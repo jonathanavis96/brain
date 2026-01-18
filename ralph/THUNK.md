@@ -160,3 +160,8 @@ Started: 2026-01-18
 | 145 | LEGACY | LOW | `brain/ralph/kb/` does NOT exist | 2026-01-18 |
 | 146 | LEGACY | LOW | Templates scaffold with `skills/` not `kb/` | 2026-01-18 |
 | 147 | LEGACY | LOW | No active /kb/ references in code files | 2026-01-18 |
+| 148 | LEGACY | HIGH | Tasks under `## HIGH PRIORITY` → `### Phase X:` → `#### Subphase Y:` are extracted with HIGH priority | 2026-01-18 |
+| 149 | LEGACY | HIGH | Parser does not exit on `###` or `####` headers | 2026-01-18 |
+| 150 | LEGACY | HIGH | Only `##` headers change priority section state | 2026-01-18 |
+| 151 | LEGACY | HIGH | Header appears exactly once after file updates | 2026-01-18 |
+| 152 | LEGACY | HIGH | Footer appears exactly once after file updates | 2026-01-18 |

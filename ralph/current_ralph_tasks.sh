@@ -130,8 +130,9 @@ extract_tasks() {
             current_section="Low Priority"
             in_task_section=true
             task_counter=0
-        elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
-            # Exit task section when we hit any other ### headers
+        elif [[ "$line" =~ ^##[[:space:]]+ ]] && [[ ! "$line_upper" =~ (HIGH|MEDIUM|LOW)[[:space:]]*PRIORITY ]]; then
+            # Exit task section only on ## (major section) headers that aren't priority sections
+            # This allows ### and #### subsection headers to remain within the current priority section
             in_task_section=false
         fi
         
