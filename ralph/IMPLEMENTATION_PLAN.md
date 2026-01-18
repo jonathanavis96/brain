@@ -109,7 +109,7 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
 
 ### Phase 6: Documentation Updates
 
-- [ ] **6.1** Update AGENTS.md monitor documentation
+- [x] **6.1** Update AGENTS.md monitor documentation
   - Clarify that THUNK monitor has auto-sync as safety net (not primary behavior)
   - Document that Ralph should append to THUNK.md directly when completing tasks
   - Update monitor behavior descriptions to reflect Bug A and Bug B fixes
