@@ -120,129 +120,6 @@ normalize_description() {
     echo "$desc"
 }
 
-# Function to check if task already exists in THUNK.md
-task_exists_in_thunk() {
-    local description="$1"
-    local normalized=$(normalize_description "$description")
-    
-    # Search THUNK.md for matching description using regex parsing
-    while IFS= read -r line; do
-        if [[ "$line" =~ ^\|[[:space:]]*([0-9]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|$ ]]; then
-            local thunk_desc=$(normalize_description "${BASH_REMATCH[4]}")
-            if [[ "$thunk_desc" == "$normalized" ]]; then
-                return 0  # Found
-            fi
-        fi
-    done < <(grep -E '^\|[[:space:]]*[0-9]+[[:space:]]*\|' "$THUNK_FILE")
-    
-    return 1  # Not found
-}
-
-# Function to extract task ID from description
-extract_task_id() {
-    local desc="$1"
-    # Match patterns like **T1.1**, **1.1**, T1.1, 1.1 at start
-    if [[ "$desc" =~ ^\*\*([T]?[0-9]+(\.[0-9]+)*)\*\* ]]; then
-        echo "${BASH_REMATCH[1]}"
-    elif [[ "$desc" =~ ^([T]?[0-9]+(\.[0-9]+)*)[[:space:]] ]]; then
-        echo "${BASH_REMATCH[1]}"
-    else
-        echo "LEGACY"
-    fi
-}
-
-# Function to detect priority from section
-get_current_priority() {
-    local section_upper="${1^^}"
-    if [[ "$section_upper" =~ HIGH[[:space:]]*PRIORITY ]]; then
-        echo "HIGH"
-    elif [[ "$section_upper" =~ MEDIUM[[:space:]]*PRIORITY ]]; then
-        echo "MEDIUM"
-    elif [[ "$section_upper" =~ LOW[[:space:]]*PRIORITY ]]; then
-        echo "LOW"
-    else
-        echo "MEDIUM"
-    fi
-}
-
-# Function to scan IMPLEMENTATION_PLAN.md for new completions
-scan_for_new_completions() {
-    local current_section=""
-    local current_priority="MEDIUM"
-    local new_count=0
-    local next_thunk_num=$(get_next_thunk_number)
-    local timestamp=$(date "+%Y-%m-%d")
-    
-    echo "Scanning IMPLEMENTATION_PLAN.md for new completions..."
-    
-    while IFS= read -r line; do
-        # Detect priority sections
-        local line_upper="${line^^}"
-        if [[ "$line_upper" =~ HIGH[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
-            current_section="$line"
-            current_priority="HIGH"
-        elif [[ "$line_upper" =~ MEDIUM[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
-            current_section="$line"
-            current_priority="MEDIUM"
-        elif [[ "$line_upper" =~ LOW[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
-            current_section="$line"
-            current_priority="LOW"
-        fi
-        
-        # Check for completed tasks
-        if [[ "$line" =~ ^[[:space:]]*-[[:space:]]\[x\][[:space:]]*(.*)$ ]]; then
-            local task_desc="${BASH_REMATCH[1]}"
-            
-            # Skip if already in THUNK.md
-            if task_exists_in_thunk "$task_desc"; then
-                continue
-            fi
-            
-            # Extract task ID
-            local task_id=$(extract_task_id "$task_desc")
-            
-            # Append to THUNK.md
-            # Find the last table in the current era
-            local temp_file="${THUNK_FILE}.tmp"
-            local found_table=false
-            local last_table_line=0
-            local line_num=0
-            
-            # Find last table row position
-            while IFS= read -r thunk_line; do
-                ((line_num++))
-                if [[ "$thunk_line" =~ ^\|[[:space:]]*[0-9]+[[:space:]]*\| ]]; then
-                    last_table_line=$line_num
-                    found_table=true
-                fi
-            done < "$THUNK_FILE"
-            
-            if [[ "$found_table" == "true" ]]; then
-                # Insert after last table row
-                {
-                    head -n "$last_table_line" "$THUNK_FILE"
-                    echo "| $next_thunk_num | $task_id | $current_priority | $task_desc | $timestamp |"
-                    tail -n +$((last_table_line + 1)) "$THUNK_FILE"
-                } > "$temp_file"
-                mv "$temp_file" "$THUNK_FILE"
-            else
-                # No table found, append at end
-                echo "| $next_thunk_num | $task_id | $current_priority | $task_desc | $timestamp |" >> "$THUNK_FILE"
-            fi
-            
-            ((new_count++))
-            ((next_thunk_num++))
-        fi
-    done < "$PLAN_FILE"
-    
-    if [[ $new_count -gt 0 ]]; then
-        echo "✓ Added $new_count new completion(s) to THUNK.md"
-    else
-        echo "✓ No new completions found"
-    fi
-    
-    sleep 2
-}
 
 # Function to display THUNK.md contents (full refresh)
 display_thunks() {
@@ -462,11 +339,7 @@ EOF
 # Main loop
 echo "Starting Thunk Ralph Tasks Monitor..."
 echo "Watching: $THUNK_FILE"
-echo "Syncing with: $PLAN_FILE"
 echo ""
-
-# Initial scan for completions
-scan_for_new_completions
 
 # Display thunks immediately
 display_thunks
@@ -503,13 +376,6 @@ while true; do
                 display_thunks
                 LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
                 LAST_LINE_COUNT=$(wc -l < "$THUNK_FILE" 2>/dev/null || echo "0")
-                ;;
-            f|F)
-                # Force sync
-                scan_for_new_completions
-                LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
-                LAST_LINE_COUNT=$(wc -l < "$THUNK_FILE" 2>/dev/null || echo "0")
-                display_thunks
                 ;;
             e|E)
                 # New era
@@ -550,14 +416,6 @@ while true; do
         LAST_LINE_COUNT="$CURRENT_LINE_COUNT"
     fi
     
-    if [[ "$CURRENT_PLAN_MODIFIED" != "$LAST_PLAN_MODIFIED" ]]; then
-        LAST_PLAN_MODIFIED="$CURRENT_PLAN_MODIFIED"
-        # Auto-sync when IMPLEMENTATION_PLAN.md changes
-        scan_for_new_completions
-        LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
-        LAST_LINE_COUNT=$(wc -l < "$THUNK_FILE" 2>/dev/null || echo "0")
-        display_thunks
-    fi
     
     # Small sleep to prevent CPU spinning
     sleep 0.5
