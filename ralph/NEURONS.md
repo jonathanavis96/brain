@@ -32,7 +32,7 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 ├── CHANGES.md                   # Release notes and migration guide
 ├── IMPLEMENTATION_PLAN.md       # Persistent TODO list
 │
-├── kb/                          # Knowledge Base (7 files)
+├── skills/                      # Knowledge Base (7 files)
 │   ├── SUMMARY.md               # KB index and navigation
 │   ├── conventions.md           # KB authoring guidelines
 │   ├── domains/                 # Reusable domain patterns (3 files)
@@ -94,21 +94,21 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 | **Find TODO list** | `IMPLEMENTATION_PLAN.md` |
 | **See commit examples & error recovery** | `EDGE_CASES.md` |
 | **See recent changes** | `CHANGES.md` |
-| **See KB structure** | `kb/SUMMARY.md` |
+| **See KB structure** | `skills/SUMMARY.md` |
 | **Check React performance patterns** | `references/react-best-practices/HOTLIST.md` → `INDEX.md` |
-| **Create new KB file** | `kb/conventions.md` (authoring guide) |
+| **Create new KB file** | `skills/conventions.md` (authoring guide) |
 | **Bootstrap new project** | `templates/README.md` (instructions) |
-| **Understand Ralph patterns** | `kb/domains/ralph-patterns.md` |
-| **Find auth patterns** | `kb/domains/auth-patterns.md` |
-| **Learn brain conventions** | `kb/projects/brain-example.md` |
+| **Understand Ralph patterns** | `skills/domains/ralph-patterns.md` |
+| **Find auth patterns** | `skills/domains/auth-patterns.md` |
+| **Learn brain conventions** | `skills/projects/brain-example.md` |
 | **Check project goals** | `THOUGHTS.md` |
 
 ### "Where do I put..."
 
 | Content Type | Location | Modifiable? |
 |--------------|----------|-------------|
-| **Reusable domain patterns** | `kb/domains/<domain>.md` | ✅ Yes |
-| **Project-specific knowledge** | `kb/projects/<project>.md` | ✅ Yes |
+| **Reusable domain patterns** | `skills/domains/<domain>.md` | ✅ Yes |
+| **Project-specific knowledge** | `skills/projects/<project>.md` | ✅ Yes |
 | **Ralph operational docs** | `AGENTS.md` | ✅ Yes |
 | **Brain structure map** | `NEURONS.md` | ✅ Yes |
 | **React performance rules** | `references/react-best-practices/rules/` | ❌ **READ-ONLY** |
@@ -120,22 +120,22 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 
 ## Knowledge Base Structure
 
-### kb/ (7 total files)
+### skills/ (7 total files)
 
 **Purpose:** Curated knowledge for agents - domain patterns, project conventions, authoring guidelines.
 
 **Navigation:**
-1. Start: `kb/SUMMARY.md` - Overview of all KB content
-2. Authoring: `kb/conventions.md` - How to create/update KB files
-3. Domains: `kb/domains/` - Reusable patterns across projects
-4. Projects: `kb/projects/` - Project-specific knowledge
+1. Start: `skills/SUMMARY.md` - Overview of all KB content
+2. Authoring: `skills/conventions.md` - How to create/update KB files
+3. Domains: `skills/domains/` - Reusable patterns across projects
+4. Projects: `skills/projects/` - Project-specific knowledge
 
 **Key Files:**
-- `kb/SUMMARY.md` - KB index, links to all domains and projects
-- `kb/conventions.md` - Required structure (Why/When/Details), naming, validation
-- `kb/domains/auth-patterns.md` - Authentication patterns (example)
-- `kb/domains/ralph-patterns.md` - Ralph loop architecture details
-- `kb/projects/brain-example.md` - Brain repo conventions (example)
+- `skills/SUMMARY.md` - KB index, links to all domains and projects
+- `skills/conventions.md` - Required structure (Why/When/Details), naming, validation
+- `skills/domains/auth-patterns.md` - Authentication patterns (example)
+- `skills/domains/ralph-patterns.md` - Ralph loop architecture details
+- `skills/projects/brain-example.md` - Brain repo conventions (example)
 
 **All KB files must have:**
 ```markdown
@@ -201,8 +201,8 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 - `templates/ralph/RALPH.md` - Ralph contract documentation
 
 **Path Conventions:**
-- Templates use relative paths: `..\\brain\\kb\\SUMMARY.md` (from project root)
-- Brain's own prompts use local paths: `kb/SUMMARY.md` (from brain/ralph/)
+- Templates use relative paths: `..\\brain\\skills\\SUMMARY.md` (from project root)
+- Brain's own prompts use local paths: `skills/SUMMARY.md` (from brain/ralph/)
 - All paths in templates must be validated before use
 
 **Bootstrap Process:**
@@ -227,7 +227,7 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 - Primary functions: Knowledge repository, project bootstrap, self-evolution
 - Knowledge classification: Global (brain) vs project-specific
 - Knowledge growth process: Determine scope → Create/update KB → Update SUMMARY → Validate
-- Source code definition: templates/, kb/, references/, scripts
+- Source code definition: templates/, skills/, references/, scripts
 - Definition of done: Templates valid, paths correct, indexes current, documentation clear
 
 ---
@@ -309,7 +309,7 @@ Use for:
 ### Quick Checks
 ```bash
 # KB file count
-find kb/ -name "*.md" | wc -l
+find skills/ -name "*.md" | wc -l
 # Should be: 7 (SUMMARY, conventions, 3 in domains/, 2 in projects/)
 
 # React rules count (READ-ONLY - must never change)
@@ -332,11 +332,11 @@ find . -name "*.md" -not -path "./old_md/*" -not -path "./logs/*" | wc -l
 ### Validation Commands (Backpressure)
 ```bash
 # Verify file structure
-ls -la kb/ templates/ references/ specs/
+ls -la skills/ templates/ references/ specs/
 
 # Check KB integrity (all KB files must have required headers)
-grep -r "## Why This Exists" kb/domains/ kb/projects/
-grep -r "## When to Use It" kb/domains/ kb/projects/
+grep -r "## Why This Exists" skills/domains/ skills/projects/
+grep -r "## When to Use It" skills/domains/ skills/projects/
 
 # Verify React rules unchanged
 find references/react-best-practices/rules/ -name "*.md" | wc -l
@@ -361,7 +361,7 @@ ls -lh AGENTS.md NEURONS.md
 ### ✅ MODIFIABLE (Active Development)
 - **AGENTS.md** - Ralph operational guide
 - **NEURONS.md** - This brain map
-- **kb/** - All knowledge base files
+- **skills/** - All knowledge base files
 - **templates/** - Project bootstrap templates
 - **specs/** - Project specifications
 - **PROMPT.md** - Ralph unified prompt
@@ -398,15 +398,15 @@ From `THOUGHTS.md`, the brain is successful when:
 ## Common Workflows
 
 ### Adding New Domain Knowledge
-1. Check if it exists: grep across `kb/domains/`
-2. Create: `kb/domains/new-pattern.md` with Why/When/Details structure
-3. Update: `kb/SUMMARY.md` to link new file
+1. Check if it exists: grep across `skills/domains/`
+2. Create: `skills/domains/new-pattern.md` with Why/When/Details structure
+3. Update: `skills/SUMMARY.md` to link new file
 4. Validate: Check required headers present
 
 ### Adding Project-Specific Knowledge
-1. Create: `kb/projects/project-slug.md`
+1. Create: `skills/projects/project-slug.md`
 2. Follow Why/When/Details structure
-3. Update: `kb/SUMMARY.md`
+3. Update: `skills/SUMMARY.md`
 4. Keep focused: Only project-specific content
 
 ### Using React Best Practices
@@ -426,12 +426,12 @@ bash loop.sh --prompt PROMPT.md        # Use unified prompt
 ### Validating Brain Integrity
 ```bash
 # File counts
-find kb/ -name "*.md" | wc -l              # Should be 7
+find skills/ -name "*.md" | wc -l              # Should be 7
 find references/react-best-practices/rules/ -name "*.md" | wc -l  # Must be 45
 
 # Required headers in KB files
-grep -r "## Why This Exists" kb/domains/ kb/projects/
-grep -r "## When to Use It" kb/domains/ kb/projects/
+grep -r "## Why This Exists" skills/domains/ skills/projects/
+grep -r "## When to Use It" skills/domains/ skills/projects/
 
 # Script syntax
 bash -n loop.sh
@@ -461,6 +461,6 @@ This brain repository contains:
 **For questions about:**
 - **How to run Ralph** → See AGENTS.md
 - **What exists where** → You're reading it (NEURONS.md)
-- **How to create KB files** → See kb/conventions.md
+- **How to create KB files** → See skills/conventions.md
 - **Project goals** → See THOUGHTS.md
 - **React patterns** → See references/react-best-practices/HOTLIST.md
