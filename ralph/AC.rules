@@ -1,0 +1,122 @@
+# Ralph Acceptance Criteria Rules
+# Format: INI-style stanzas
+# Keys: mode, gate, desc, cmd, expect_stdout, expect_stdout_regex, expect_exit, instructions
+#
+# NOTE: Commands run from the ralph/ directory (where verifier.sh lives)
+
+# =============================================================================
+# Bug A: Task Extraction (VERIFIED FIXED)
+# =============================================================================
+
+[BugA.1]
+mode=auto
+gate=block
+desc=Parser uses in_task_section state tracking
+cmd=grep -c 'in_task_section=false' current_ralph_tasks.sh
+expect_stdout_regex=^[1-9][0-9]*$
+expect_exit=0
+
+[BugA.2]
+mode=auto
+gate=block
+desc=Parser checks for ## (major section) not ### subsections
+cmd=grep -E '^\s*elif.*\^\#\#\[' current_ralph_tasks.sh | grep -v '###' | wc -l | tr -d ' '
+expect_stdout_regex=^[1-9][0-9]*$
+expect_exit=0
+
+# =============================================================================
+# Bug B: Display Rendering (VERIFIED FIXED)
+# =============================================================================
+
+[BugB.1]
+mode=auto
+gate=block
+desc=Display function uses clear for full redraw
+cmd=grep -c 'clear' current_ralph_tasks.sh
+expect_stdout_regex=^[1-9][0-9]*$
+expect_exit=0
+
+[BugB.2]
+mode=auto
+gate=block
+desc=No differential update logic (LAST_RENDERED)
+cmd=grep -c 'LAST_RENDERED' current_ralph_tasks.sh
+expect_stdout=0
+
+[BugB.UI.1]
+mode=manual
+gate=warn
+desc=No visual corruption after terminal resize
+instructions=Run current_ralph_tasks.sh, resize terminal, confirm display remains intact
+
+# =============================================================================
+# Bug C: THUNK Monitor Auto-Sync (NOT FIXED - these should FAIL until fixed)
+# =============================================================================
+
+[BugC.1]
+mode=auto
+gate=block
+desc=No scan_for_new_completions function
+cmd=grep -c 'scan_for_new_completions' thunk_ralph_tasks.sh
+expect_stdout=0
+
+[BugC.2]
+mode=auto
+gate=block
+desc=No PLAN_FILE variable
+cmd=grep -c '^PLAN_FILE=' thunk_ralph_tasks.sh
+expect_stdout=0
+
+[BugC.3]
+mode=auto
+gate=block
+desc=No "Scanning IMPLEMENTATION_PLAN" message
+cmd=grep -c 'Scanning IMPLEMENTATION_PLAN' thunk_ralph_tasks.sh
+expect_stdout=0
+
+[BugC.4]
+mode=auto
+gate=block
+desc=Monitor references THUNK.md
+cmd=grep -c 'THUNK\.md' thunk_ralph_tasks.sh
+expect_stdout_regex=^[1-9][0-9]*$
+expect_exit=0
+
+[BugC.5]
+mode=auto
+gate=block
+desc=Monitor does not append/redirect into THUNK.md
+cmd=grep -nE '>>\s*.*THUNK\.md|>\s*.*THUNK\.md' thunk_ralph_tasks.sh | wc -l | tr -d ' '
+expect_stdout=0
+
+[BugC.6]
+mode=auto
+gate=block
+desc=No task_exists_in_thunk function
+cmd=grep -c 'task_exists_in_thunk' thunk_ralph_tasks.sh
+expect_stdout=0
+
+[BugC.7]
+mode=auto
+gate=block
+desc=No extract_task_id function
+cmd=grep -c 'extract_task_id' thunk_ralph_tasks.sh
+expect_stdout=0
+
+[BugC.UI.1]
+mode=manual
+gate=warn
+desc=THUNK monitor only displays, never modifies files
+instructions=Run thunk_ralph_tasks.sh, mark a task [x] in IMPLEMENTATION_PLAN.md, confirm THUNK.md is NOT auto-updated
+
+# =============================================================================
+# Template Sync Checks
+# =============================================================================
+
+[Template.1]
+mode=auto
+gate=warn
+desc=thunk_ralph_tasks.sh matches template
+cmd=diff -q thunk_ralph_tasks.sh templates/ralph/thunk_ralph_tasks.sh 2>/dev/null && echo "match" || echo "differ"
+expect_stdout=match
+expect_exit=0

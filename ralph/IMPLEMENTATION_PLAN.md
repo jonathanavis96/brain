@@ -124,7 +124,7 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
   - Update header comments to reflect display-only behavior
   - Ensures future projects get the fixed monitor behavior
 
-- [ ] **6.2** Update VALIDATION_CRITERIA.md with Bug C test cases
+- [x] **6.2** Update VALIDATION_CRITERIA.md with Bug C test cases
   - Add test case: Monitor displays THUNK.md changes within 1 second
   - Add test case: Monitor ignores IMPLEMENTATION_PLAN.md changes
   - Add test case: No 'f' hotkey functionality (pressing 'f' does nothing)

@@ -438,6 +438,31 @@ fi
 PLAN_PROMPT="$RALPH/PROMPT.md"
 BUILD_PROMPT="$RALPH/PROMPT.md"
 
+# Verifier gate - runs AC.rules checks after BUILD
+VERIFY_SCRIPT="$RALPH/verifier.sh"
+run_verifier() {
+  if [[ ! -x "$VERIFY_SCRIPT" ]]; then
+    echo "⚠️  Verifier not found or not executable: $VERIFY_SCRIPT"
+    return 0  # Don't block if verifier doesn't exist yet
+  fi
+  
+  echo ""
+  echo "========================================"
+  echo "🔍 Running acceptance criteria verifier..."
+  echo "========================================"
+  
+  if "$VERIFY_SCRIPT"; then
+    echo "✅ All acceptance criteria passed!"
+    cat "$RALPH/.verify/latest.txt" 2>/dev/null | tail -10 || true
+    return 0
+  else
+    echo "❌ Acceptance criteria FAILED"
+    echo ""
+    cat "$RALPH/.verify/latest.txt" 2>/dev/null || echo "(no report found)"
+    return 1
+  fi
+}
+
 run_once() {
   local prompt_file="$1"
   local phase="$2"
@@ -511,15 +536,51 @@ run_once() {
     echo "========================================"
   fi
   
-  # Check for completion sentinel (strip ANSI codes, require standalone line)
-  # Only matches when sentinel appears alone on a line (not in validation/discussion)
+  # Check for ready signals (strip ANSI codes, require standalone line)
+  local ready_signal=""
+  if sed 's/\x1b\[[0-9;]*m//g' "$log" | grep -qE '^\s*:::BUILD_READY:::\s*$'; then
+    ready_signal="BUILD"
+  elif sed 's/\x1b\[[0-9;]*m//g' "$log" | grep -qE '^\s*:::PLAN_READY:::\s*$'; then
+    ready_signal="PLAN"
+  fi
+  
+  # Run verifier after BUILD iterations
+  if [[ "$phase" == "build" ]]; then
+    if run_verifier; then
+      echo ""
+      echo "========================================"
+      echo "🎉 BUILD iteration verified successfully!"
+      echo "========================================"
+    else
+      echo ""
+      echo "========================================"
+      echo "⚠️  BUILD completed but verification failed."
+      echo "Review .verify/latest.txt for details."
+      echo "========================================"
+    fi
+  fi
+  
+  # Legacy: also check for :::COMPLETE::: but ignore it (loop.sh owns completion now)
   if sed 's/\x1b\[[0-9;]*m//g' "$log" | grep -qE '^\s*:::COMPLETE:::\s*$'; then
     echo ""
-    echo "========================================"
-    echo "🎉 Ralph signaled completion!"
-    echo "All tasks in IMPLEMENTATION_PLAN.md done."
-    echo "========================================"
-    return 42  # Special return code for completion
+    echo "⚠️  Ralph output :::COMPLETE::: but that token is reserved for loop.sh."
+    echo "Ignoring - use :::BUILD_READY::: or :::PLAN_READY::: instead."
+  fi
+  
+  # Check if all tasks are done (for true completion)
+  if [[ -f "$RALPH/IMPLEMENTATION_PLAN.md" ]]; then
+    local unchecked_count
+    unchecked_count=$(grep -cE '^\s*-\s*\[ \]' "$RALPH/IMPLEMENTATION_PLAN.md" 2>/dev/null || echo "0")
+    if [[ "$unchecked_count" -eq 0 ]]; then
+      # All tasks done - run final verification
+      if run_verifier; then
+        echo ""
+        echo "========================================"
+        echo "🎉 All tasks complete and verified!"
+        echo "========================================"
+        return 42  # Special return code for completion
+      fi
+    fi
   fi
   
   return 0
