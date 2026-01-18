@@ -61,28 +61,40 @@ get_file_mtime() {
 generate_title() {
     local desc="$1"
     
-    # Strip technical IDs (T1.1, T2.3, 1.1, 2.3, etc.) from the beginning
-    desc=$(echo "$desc" | sed -E 's/^[[:space:]]*\*\*[T]?[0-9]+(\.[0-9]+)*\*\*[[:space:]]*//')
+    # Strip technical IDs (T1.1, P4A.7, 1.1, 2.3, etc.) from the beginning
+    desc=$(echo "$desc" | sed -E 's/^[[:space:]]*\*\*[T]?[0-9A-Za-z]+(\.[0-9A-Za-z]+)*\*\*[[:space:]]*//')
     
     # Strip markdown bold markers
     desc=$(echo "$desc" | sed -E 's/\*\*//g')
     
     # Extract action verb and main object (look for common action verbs)
-    if [[ "$desc" =~ ^(Rename|Update|Create|Verify|Delete|Add|Remove|Test|Implement|Fix|Refactor|Document|Migrate|Copy|Set|Run|If)[[:space:]]+(.+)$ ]]; then
+    if [[ "$desc" =~ ^(Rename|Update|Create|Verify|Delete|Add|Remove|Test|Implement|Fix|Refactor|Document|Migrate|Copy|Set|Run|If)([[:space:]]*:[[:space:]]*|[[:space:]]+)(.+)$ ]]; then
         local verb="${BASH_REMATCH[1]}"
-        local rest="${BASH_REMATCH[2]}"
+        local separator="${BASH_REMATCH[2]}"
+        local rest="${BASH_REMATCH[3]}"
         
-        # For the rest, take up to first colon or period, or first 50 chars
-        if [[ "$rest" =~ ^([^:.]+)[:.] ]]; then
-            rest="${BASH_REMATCH[1]}"
+        # For "Test:" prefix, include the object being tested
+        if [[ "$verb" == "Test" ]] && [[ "$separator" =~ : ]]; then
+            # Take up to arrow, period, or first 50 chars
+            if [[ "$rest" =~ ^([^.→]+)[.→] ]]; then
+                rest="${BASH_REMATCH[1]}"
+            else
+                rest=$(echo "$rest" | cut -c1-50)
+            fi
+            # Remove any trailing quotes, backticks, or markdown
+            rest=$(echo "$rest" | sed -E 's/`[[:space:]]*$//; s/[[:space:]]*$//')
+            echo "$verb: $rest"
         else
-            rest=$(echo "$rest" | cut -c1-50)
+            # For other verbs, take up to colon with space (title separator) or first 50 chars
+            if [[ "$rest" =~ ^([^:]+):[[:space:]] ]]; then
+                rest="${BASH_REMATCH[1]}"
+            else
+                rest=$(echo "$rest" | cut -c1-50)
+            fi
+            # Remove any trailing quotes, backticks, or markdown
+            rest=$(echo "$rest" | sed -E 's/`[[:space:]]*$//; s/[[:space:]]*$//')
+            echo "$verb $rest"
         fi
-        
-        # Remove any trailing quotes, backticks, or markdown
-        rest=$(echo "$rest" | sed -E 's/`[[:space:]]*$//; s/[[:space:]]*$//')
-        
-        echo "$verb $rest"
     else
         # Fallback: take first 60 chars or up to first colon
         if [[ "$desc" =~ ^([^:.]+)[:.] ]]; then
