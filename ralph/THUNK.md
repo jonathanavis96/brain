@@ -76,3 +76,17 @@ Started: 2026-01-18
 | 62 | 5.7 | MEDIUM | **5.7** Update `CHANGES.md` (0 kb/ references, verify only) | 2026-01-18 |
 | 63 | 5.8 | MEDIUM | **5.8** Update `HISTORY.md` (2 kb/ references in historical notes) | 2026-01-18 |
 | 64 | 5.9 | MEDIUM | **5.9** Update `generators/generate-neurons.sh` (5 kb/ references) | 2026-01-18 |
+| 65 | 5.10 | MEDIUM | **5.10** Update `generators/generate-thoughts.sh` (3 kb/ references) | 2026-01-18 |
+| 66 | 5.11 | MEDIUM | **5.11** Update `templates/AGENTS.project.md` (2 kb/ references - directory structure only) | 2026-01-18 |
+| 67 | 5.12 | MEDIUM | **5.12** Update `templates/THOUGHTS.project.md` (0 kb/ references - none found) | 2026-01-18 |
+| 68 | 5.13 | MEDIUM | **5.13** Update `templates/NEURONS.project.md` (1 kb/ reference) | 2026-01-18 |
+| 69 | 5.14 | MEDIUM | **5.14** Update `templates/README.md` (2 kb/ references) | 2026-01-18 |
+| 70 | 5.15 | MEDIUM | **5.15** Update `templates/ralph/PROMPT.project.md` (0 kb/ references - none found) | 2026-01-18 |
+| 71 | 5.16 | MEDIUM | **5.16** Update `templates/ralph/RALPH.md` (2 kb/ references) | 2026-01-18 |
+| 72 | 5.17 | MEDIUM | **5.17** Update `templates/ralph/pr-batch.sh` (1 kb/ reference) | 2026-01-18 |
+| 73 | 5.18 | MEDIUM | **5.18** Update `templates/backend/THOUGHTS.project.md` (0 kb/ references - none found) | 2026-01-18 |
+| 74 | 5.19 | MEDIUM | **5.19** Update `templates/backend/AGENTS.project.md` (2 kb/ references - directory structure only) | 2026-01-18 |
+| 75 | 5.20 | MEDIUM | **5.20** Update `templates/python/THOUGHTS.project.md` (0 kb/ references - none found) | 2026-01-18 |
+| 76 | 5.21 | MEDIUM | **5.21** Update `templates/python/AGENTS.project.md` (2 kb/ references - directory structure only) | 2026-01-18 |
+| 77 | 5.22 | MEDIUM | **5.22** Update `templates/python/NEURONS.project.md` (1 kb/ reference) | 2026-01-18 |
+| 78 | 5.23 | MEDIUM | **5.23** Update `test-bootstrap.sh` (3 kb/ references for directory validation) | 2026-01-18 |
