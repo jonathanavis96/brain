@@ -413,6 +413,9 @@ display_tasks() {
             fi
             ((pending_count++))
         fi
+        
+        # Add empty line after each task for readability
+        echo ""
     done <<< "$tasks"
     
     # Footer with stats
