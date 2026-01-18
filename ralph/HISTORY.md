@@ -7,7 +7,7 @@ Archived discovery entries from IMPLEMENTATION_PLAN.md. These entries document c
 ### 2026-01-16 22:41 - BUILD Mode: Fixed QUICKSTART.md References
 
 **Task Completed:**
-Fixed all 4 references to non-existent QUICKSTART.md in kb/projects/brain-example.md:
+Fixed all 4 references to non-existent QUICKSTART.md in skills/projects/brain-example.md:
 - Line 94: Removed from documentation list
 - Line 219: Changed to README.md (developer onboarding guide)
 - Line 238: Changed to README.md in contributing guide
@@ -24,7 +24,7 @@ Fixed all 4 references to non-existent QUICKSTART.md in kb/projects/brain-exampl
 Brain repository is production-ready. One minor documentation inconsistency found that should be fixed for accuracy.
 
 **Gap Identified:**
-- kb/projects/brain-example.md references non-existent QUICKSTART.md file (4 references found)
+- skills/projects/brain-example.md references non-existent QUICKSTART.md file (4 references found)
 - These should be removed or replaced with README.md references
 - Impact: Low (cosmetic issue, doesn't block functionality)
 - Priority: High (maintaining documentation accuracy is important for knowledge base integrity)
