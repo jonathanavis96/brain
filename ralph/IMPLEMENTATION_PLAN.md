@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & NeoQueue
 
-Last updated: 2026-01-18 14:28:30
+Last updated: 2026-01-18 14:41:15
 
 ## Current State
 
@@ -34,24 +34,25 @@ A Matrix-inspired desktop app for tracking discussion points with your manager. 
 
 ## 🎯 ACTIVE WORK: Two Sequential Tracks
 
-This plan contains **67 unchecked tasks** across two major features:
+This plan contains **65 unchecked tasks** across two major features:
 
-1. **THUNK Monitor System** (30 remaining) - Task completion tracking with persistent log
+1. **THUNK Monitor System** (28 remaining) - Task completion tracking with persistent log
 2. **KB→Skills Migration** (37 remaining) - Rename kb/ → skills/ + self-improvement system
 
 **Execution Strategy:**
 - ✅ Phase T1 (Monitor Rename): **COMPLETE** - All 3 tasks done
 - ✅ Phase T2 (THUNK.md): **COMPLETE** - All 3 tasks done
 - ✅ Phase T3 (Core Monitor): **COMPLETE** - All 6 tasks done (thunk_ralph_tasks.sh fully functional)
-- ✅ Phase T3.5 (Human Display): **85% COMPLETE** - current_ralph_tasks.sh formatting done, need thunk_ralph_tasks.sh update
-- 🔄 Next: T3.6 (validate thunk script), then T3.8-T3.10 (formatting improvements), then integration phases
+- ✅ Phase T3.5 (Human Display): **COMPLETE** - All 4 tasks done (both monitors have human-friendly formatting)
+- 🔄 Next: T4.1 (auto-launch integration), then T5.x (bootstrap), then T6.x (validation)
 - Each BUILD iteration: Execute EXACTLY ONE unchecked task in sequence
 
 **Status Update:**
 - current_ralph_tasks.sh displays tasks with human-friendly "Task N — <short title>" format ✓
 - thunk_ralph_tasks.sh has ALL core features: THUNK.md parsing, completion detection, auto-append with sequential numbering, and hotkeys ✓
-- T3.8 is already implemented in current_ralph_tasks.sh (generate_title function, lines 47-80) ✓
-- Ready for validation testing and final polish
+- generate_title() function implemented in both monitor scripts (lines 42-76 in thunk_ralph_tasks.sh) ✓
+- All Phase T3 and T3.5 tasks validated and complete (commits 1fa45eb through 9988593) ✓
+- Ready for Phase T4 auto-launch integration
 
 ---
 
@@ -61,9 +62,9 @@ This plan contains **67 unchecked tasks** across two major features:
 
 **Full specification:** See THOUGHTS.md section "THUNK Monitor System"
 
-**Progress:** 14/45 tasks complete (31%)
+**Progress:** 17/45 tasks complete (38%)
 
-**Status:** Phase T1-T3 complete. current_ralph_tasks.sh has human-friendly display. thunk_ralph_tasks.sh fully functional with all core features. T3.8 already implemented. Ready for validation and thunk_ralph_tasks.sh formatting update.
+**Status:** Phase T1-T3.5 complete. Both monitor scripts (current_ralph_tasks.sh and thunk_ralph_tasks.sh) have human-friendly display formatting with generate_title() function. Core functionality validated and tested. Ready for Phase T4 (auto-launch integration).
 
 Complete these tasks in order. Mark each `[x]` when done.
 
@@ -780,22 +781,23 @@ T3.1 was more comprehensive than plan anticipated. The script includes:
 - ✅ All hotkeys: [r]efresh, [f]orce sync, [e]ra, [q]uit (lines 320-370)
 
 **Current Progress:**
-- **THUNK Monitor:** 8/45 complete (18%)
+- **THUNK Monitor:** 17/45 complete (38%)
   - Phase T1: ✅ 3/3 complete
   - Phase T2: ✅ 3/3 complete
-  - Phase T3: 1/6 complete (core built, needs validation marking)
-  - Phase T3.5-T6: 0/33 tasks started
+  - Phase T3: ✅ 6/6 complete
+  - Phase T3.5: ✅ 4/4 complete
+  - Phase T4-T6: 0/28 tasks started
 - **KB→Skills Migration:** 3/40 complete (8%)
   - Phase 1: ✅ 3/3 complete
   - Phase 2-7: 0/37 tasks started
-- **Total:** 11/85 tasks complete (13%), 74 remaining (87%)
+- **Total:** 20/85 tasks complete (24%), 65 remaining (76%)
 
 **Next BUILD iterations:**
-1. T3.2: Validate THUNK.md parsing/display works
-2. T3.3: Validate completion detection works
-3. T3.4: Validate auto-append numbering works
-4. T3.5: Validate all hotkeys work
-5. T3.6: Comprehensive end-to-end test
+1. T4.1: Update loop.sh to add launch_monitors() function
+2. T4.2: Make terminal launch command configurable
+3. T4.3: Add pgrep check to avoid duplicate launches
+4. T4.4: Test auto-launch integration works
+5. T5.1: Copy monitors to templates/ralph/
 
 ---
 
