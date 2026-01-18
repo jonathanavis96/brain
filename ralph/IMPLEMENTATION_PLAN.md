@@ -83,7 +83,7 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
   - Format: `| <next_thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |`
   - Keep instruction concise (3-4 lines max) - token efficiency
 
-- [ ] **4.2** Test Ralph appends to THUNK.md on task completion
+- [x] **4.2** Test Ralph appends to THUNK.md on task completion
   - Run one BUILD iteration with this IMPLEMENTATION_PLAN.md
   - Verify completed task appears in THUNK.md
   - Verify format matches table structure
