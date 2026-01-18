@@ -30,6 +30,10 @@ WORK_BRANCH="${REPO_NAME}-work"
 # Lock file includes hash of repo path for uniqueness across same-named repos
 REPO_PATH_HASH=$(git rev-parse --show-toplevel | md5sum | cut -c1-8)
 LOCK_FILE="/tmp/ralph-${REPO_NAME}-${REPO_PATH_HASH}.lock"
+
+# Debug output for derived values
+echo "Repo: $REPO_NAME | Branch: $WORK_BRANCH | Lock: $LOCK_FILE"
+
 if [ -f "$LOCK_FILE" ]; then
   LOCK_PID=$(cat "$LOCK_FILE" 2>/dev/null || echo "unknown")
   echo "ERROR: Ralph loop already running (lock: $LOCK_FILE, PID: $LOCK_PID)"
