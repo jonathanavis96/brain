@@ -358,9 +358,10 @@ scan_for_new_completions
 # Display thunks immediately
 display_thunks
 
-# Get initial modification times
+# Get initial modification times and line count
 LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
 LAST_PLAN_MODIFIED=$(get_file_mtime "$PLAN_FILE")
+LAST_LINE_COUNT=$(wc -l < "$THUNK_FILE" 2>/dev/null || echo "0")
 
 # Enable non-blocking input
 if [[ -t 0 ]]; then
@@ -388,17 +389,20 @@ while true; do
                 # Refresh/Clear
                 display_thunks
                 LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
+                LAST_LINE_COUNT=$(wc -l < "$THUNK_FILE" 2>/dev/null || echo "0")
                 ;;
             f|F)
                 # Force sync
                 scan_for_new_completions
                 LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
+                LAST_LINE_COUNT=$(wc -l < "$THUNK_FILE" 2>/dev/null || echo "0")
                 display_thunks
                 ;;
             e|E)
                 # New era
                 create_new_era
                 LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
+                LAST_LINE_COUNT=$(wc -l < "$THUNK_FILE" 2>/dev/null || echo "0")
                 display_thunks
                 ;;
             q|Q)
@@ -414,7 +418,23 @@ while true; do
     
     if [[ "$CURRENT_THUNK_MODIFIED" != "$LAST_THUNK_MODIFIED" ]]; then
         LAST_THUNK_MODIFIED="$CURRENT_THUNK_MODIFIED"
-        display_thunks
+        
+        # Check line count to determine update strategy
+        CURRENT_LINE_COUNT=$(wc -l < "$THUNK_FILE" 2>/dev/null || echo "0")
+        
+        if [[ "$CURRENT_LINE_COUNT" -lt "$LAST_LINE_COUNT" ]]; then
+            # Line count decreased - full refresh needed (rare case: deletions)
+            display_thunks
+        elif [[ "$CURRENT_LINE_COUNT" -gt "$LAST_LINE_COUNT" ]]; then
+            # Line count increased - only new lines added (common case)
+            # For now, still do full refresh (incremental display in P4B.2-P4B.4)
+            display_thunks
+        else
+            # Same line count - content modified (edits)
+            display_thunks
+        fi
+        
+        LAST_LINE_COUNT="$CURRENT_LINE_COUNT"
     fi
     
     if [[ "$CURRENT_PLAN_MODIFIED" != "$LAST_PLAN_MODIFIED" ]]; then
@@ -422,6 +442,7 @@ while true; do
         # Auto-sync when IMPLEMENTATION_PLAN.md changes
         scan_for_new_completions
         LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
+        LAST_LINE_COUNT=$(wc -l < "$THUNK_FILE" 2>/dev/null || echo "0")
         display_thunks
     fi
     
