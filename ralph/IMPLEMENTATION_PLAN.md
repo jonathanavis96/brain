@@ -51,22 +51,38 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
 
 **Required Fix:** Remove auto-sync functionality entirely. Monitor should ONLY watch and display THUNK.md.
 
-- [ ] **3.1** Remove `scan_for_new_completions()` function from thunk_ralph_tasks.sh
-  - Delete the function entirely (lines 169-207)
-  - Remove any calls to this function
+- [ ] **3.1** Remove `scan_for_new_completions()` function and helper functions from thunk_ralph_tasks.sh
+  - Delete `scan_for_new_completions()` function (lines 168-244)
+  - Delete `task_exists_in_thunk()` function (lines 124-140)
+  - Delete `extract_task_id()` function (lines 142-165)
+  - These functions are only used for auto-sync, not needed for display-only monitor
   
-- [ ] **3.2** Remove IMPLEMENTATION_PLAN.md watching
-  - Monitor should only use inotifywait on THUNK.md
-  - Remove any file watches on IMPLEMENTATION_PLAN.md
+- [ ] **3.2** Remove all PLAN_FILE references from thunk_ralph_tasks.sh
+  - Delete `PLAN_FILE` variable declaration (line 19)
+  - Delete PLAN_FILE existence check (lines 31-34)
+  - Delete `LAST_PLAN_MODIFIED` variable (line 22, line 475)
+  - Delete `CURRENT_PLAN_MODIFIED` check in monitor loop (lines 529, 552-559)
+  - Monitor should never reference IMPLEMENTATION_PLAN.md
 
-- [ ] **3.3** Remove "Scanning IMPLEMENTATION_PLAN.md" messages
-  - Delete line 176 and any similar status messages
-  - Monitor should only report THUNK.md activity
+- [ ] **3.3** Remove initial scan and "Syncing with" messages
+  - Delete "Syncing with: $PLAN_FILE" from startup (line 464)
+  - Delete initial `scan_for_new_completions` call (line 468)
+  - Delete 'f' hotkey force sync functionality (lines 506-512)
+  - Only keep 'r' (refresh), 'e' (new era), 'q' (quit) hotkeys
 
-- [ ] **3.4** Test monitor is display-only
-  - Verify monitor never modifies THUNK.md
-  - Verify monitor only reacts to THUNK.md changes
-  - Ralph is responsible for appending to THUNK.md (per PROMPT.md step 4)
+- [ ] **3.4** Update thunk_ralph_tasks.sh header comments
+  - Remove "Auto-detects new completions in IMPLEMENTATION_PLAN.md" from feature list
+  - Remove "Appends new completions to THUNK.md" from feature list
+  - Remove 'f' hotkey from hotkey list
+  - Clarify monitor is display-only, Ralph appends to THUNK.md
+
+- [ ] **3.5** Test monitor is display-only
+  - Start monitor: `bash thunk_ralph_tasks.sh`
+  - Verify no "Scanning IMPLEMENTATION_PLAN.md" messages
+  - Verify startup shows "Watching: THUNK.md" only
+  - Manually append line to THUNK.md - verify display updates
+  - Modify IMPLEMENTATION_PLAN.md - verify monitor does NOT react
+  - Verify 'f' hotkey is removed (no force sync)
 
 ### Phase 4: Update PROMPT.md for Ralph THUNK Logging
 
@@ -98,17 +114,18 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
 
 ## MEDIUM PRIORITY
 
-### Phase 6: Documentation Updates
+### Phase 6: Documentation & Cleanup
 
-- [ ] **6.1** Update AGENTS.md monitor documentation
-  - Update "Task Monitor" section with correct behavior descriptions
-  - Remove any references to auto-sync functionality
-  - Document that Ralph appends to THUNK.md directly
+- [ ] **6.1** Sync templates/ralph/thunk_ralph_tasks.sh with fixed version
+  - Copy changes from root thunk_ralph_tasks.sh to templates/ralph/thunk_ralph_tasks.sh
+  - Ensures future projects get the fixed monitor behavior
+  - Both files must stay in sync (same auto-sync removal)
 
-- [ ] **6.2** Update VALIDATION_CRITERIA.md
-  - Add test cases for hierarchical task extraction (Bug A fix)
-  - Add test cases for display rendering stability (Bug B fix)
-  - Add test cases for THUNK monitor watch-only behavior (Bug C fix)
+- [ ] **6.2** Update VALIDATION_CRITERIA.md with Bug C test cases
+  - Add test case: Monitor displays THUNK.md changes within 1 second
+  - Add test case: Monitor ignores IMPLEMENTATION_PLAN.md changes
+  - Add test case: No 'f' hotkey functionality (command does nothing or shows error)
+  - Add test case: Startup shows only "Watching: THUNK.md" message
 
 ---
 
@@ -125,12 +142,13 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
 - [x] No overlapping text after multiple rapid updates <!-- tested: full clear on every redraw -->
 - [x] No visual corruption after terminal resize <!-- tested: SIGWINCH triggers full redraw -->
 
-### Bug C: THUNK Monitor (NOT FIXED)
-- [ ] Watches THUNK.md as primary source
+### Bug C: THUNK Monitor
+- [ ] Watches THUNK.md as sole source (no PLAN_FILE references)
 - [ ] Updates display when THUNK.md changes
 - [ ] Does NOT auto-sync from IMPLEMENTATION_PLAN.md (monitor should only display, not modify)
 - [ ] Does NOT modify THUNK.md (Ralph appends, monitor only watches)
 - [ ] No "Scanning IMPLEMENTATION_PLAN.md" messages (only watches THUNK.md)
+- [ ] No force sync hotkey 'f' (removed entirely)
 
 ---
 
