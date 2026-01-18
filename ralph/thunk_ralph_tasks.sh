@@ -250,6 +250,7 @@ display_thunks() {
     local current_era=""
     local total_count=0
     local in_era=false
+    local display_row=4  # Track row position (starting after header)
     
     while IFS= read -r line; do
         # Detect Era headers
@@ -257,10 +258,14 @@ display_thunks() {
             current_era="${BASH_REMATCH[1]}"
             in_era=true
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            ((display_row++))
             echo "  Era: $current_era"
+            ((display_row++))
         elif [[ "$line" =~ ^Started:[[:space:]]+(.+)$ ]]; then
             echo "  Started: ${BASH_REMATCH[1]}"
+            ((display_row++))
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            ((display_row++))
         elif [[ "$line" =~ ^\|[[:space:]]*([0-9]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|$ ]]; then
             # Parse table row
             local thunk_num="${BASH_REMATCH[1]}"
@@ -288,37 +293,58 @@ display_thunks() {
                     echo "  ✓ THUNK #$thunk_num — $short_title"
                 fi
                 ((total_count++))
+                ((display_row++))
             fi
         fi
     done < "$THUNK_FILE"
     
     if [[ $total_count -eq 0 ]]; then
         echo "  No completed tasks yet."
+        ((display_row++))
         echo ""
+        ((display_row++))
     fi
     
     # Footer
     echo ""
+    ((display_row++))
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    ((display_row++))
     echo "  Total Thunked: $total_count"
+    ((display_row++))
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    ((display_row++))
     echo ""
+    ((display_row++))
     
     # Hotkey legend
     echo "╔════════════════════════════════════════════════════════════════╗"
+    ((display_row++))
     echo "║  HOTKEYS: [r] Refresh/Clear   [f] Force Sync   [e] New Era    ║"
+    ((display_row++))
     echo "║           [q] Quit                                             ║"
+    ((display_row++))
     echo "╚════════════════════════════════════════════════════════════════╝"
+    ((display_row++))
     echo ""
+    ((display_row++))
+    
+    # Store last display row and total count for incremental updates
+    LAST_DISPLAY_ROW=$display_row
+    LAST_TOTAL_COUNT=$total_count
 }
 
 # Function to parse only new entries from THUNK.md (tail-only parsing)
 # Args: $1 = start_line (line number to start reading from)
-# Returns: Array of parsed task lines ready for display
+# Appends new entries to display and updates footer
 parse_new_thunk_entries() {
     local start_line="$1"
     local line_num=0
-    local new_entries=()
+    local new_count=0
+    
+    # Position cursor at the row where new content should be appended
+    # This is stored from the last full display
+    local append_row=$((LAST_DISPLAY_ROW - 8))  # Back up before footer (8 lines: blank, separator, total, separator, blank, 3 hotkey lines)
     
     while IFS= read -r line; do
         ((line_num++))
@@ -349,23 +375,37 @@ parse_new_thunk_entries() {
                 # Generate human-friendly short title
                 local short_title=$(generate_title "$description")
                 
-                # Format as "THUNK N — <short title>" with bold if terminal supports
-                local formatted_line
+                # Position cursor and append new entry
+                tput cup $append_row 0
                 if [[ -t 1 ]]; then
-                    formatted_line="  \033[32m✓\033[0m \033[1mTHUNK #$thunk_num\033[0m — $short_title"
+                    echo -e "  \033[32m✓\033[0m \033[1mTHUNK #$thunk_num\033[0m — $short_title"
                 else
-                    formatted_line="  ✓ THUNK #$thunk_num — $short_title"
+                    echo "  ✓ THUNK #$thunk_num — $short_title"
                 fi
                 
-                new_entries+=("$formatted_line")
+                ((new_count++))
+                ((append_row++))
             fi
         fi
     done < "$THUNK_FILE"
     
-    # Output new entries (one per line)
-    for entry in "${new_entries[@]}"; do
-        echo -e "$entry"
-    done
+    # Update the total count in footer
+    local new_total=$((LAST_TOTAL_COUNT + new_count))
+    local footer_row=$((append_row + 2))  # Skip blank line, then separator
+    
+    # Clear and redraw footer with updated count
+    tput cup $footer_row 0
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    tput cup $((footer_row + 1)) 0
+    echo "  Total Thunked: $new_total"
+    tput cup $((footer_row + 2)) 0
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    tput cup $((footer_row + 3)) 0
+    echo ""
+    
+    # Update stored state
+    LAST_DISPLAY_ROW=$((footer_row + 9))  # Footer + blank + 3 hotkey lines + blank
+    LAST_TOTAL_COUNT=$new_total
 }
 
 # Function to create new era
