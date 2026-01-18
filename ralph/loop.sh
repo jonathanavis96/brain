@@ -611,8 +611,9 @@ if [[ -n "$PROMPT_ARG" ]]; then
       exit 130
     fi
     
-    run_once "$PROMPT_FILE" "custom" "$i"
-    run_result=$?
+    # Capture exit code without triggering set -e
+    run_result=0
+    run_once "$PROMPT_FILE" "custom" "$i" || run_result=$?
     # Check if Ralph signaled completion
     if [[ $run_result -eq 42 ]]; then
       echo ""
@@ -630,12 +631,12 @@ else
       exit 130
     fi
     
+    # Capture exit code without triggering set -e
+    run_result=0
     if [[ "$i" -eq 1 ]] || (( PLAN_EVERY > 0 && ( (i-1) % PLAN_EVERY == 0 ) )); then
-      run_once "$PLAN_PROMPT" "plan" "$i"
-      run_result=$?
+      run_once "$PLAN_PROMPT" "plan" "$i" || run_result=$?
     else
-      run_once "$BUILD_PROMPT" "build" "$i"
-      run_result=$?
+      run_once "$BUILD_PROMPT" "build" "$i" || run_result=$?
     fi
     # Check if Ralph signaled completion (exit code 42)
     if [[ $run_result -eq 42 ]]; then

@@ -117,3 +117,46 @@ Started: 2026-01-18
 | 102 | LEGACY | HIGH | **P3.5** Ensure launch failures are non-fatal: ✅ COMPLETE | 2026-01-18 |
 | 103 | LEGACY | HIGH | **P3.6** Test: Run loop.sh in tmux → expect tmux windows created for both monitors: ✅ COMPLETE | 2026-01-18 |
 | 104 | LEGACY | HIGH | **P3.7** Test: Run loop.sh outside tmux without display → expect manual commands printed once: ✅ COMPLETE | 2026-01-18 |
+| 105 | LEGACY | LOW | **P4A.1** Implement cursor positioning for top-anchored display: ✅ COMPLETE | 2026-01-18 |
+| 106 | LEGACY | LOW | **P4A.2** Add completed task caching: ✅ COMPLETE | 2026-01-18 |
+| 107 | LEGACY | LOW | **P4A.3** Implement differential display update: ✅ COMPLETE | 2026-01-18 |
+| 108 | LEGACY | LOW | **P4A.4** Add "current task" indicator with distinct symbol: ✅ COMPLETE | 2026-01-18 |
+| 109 | LEGACY | LOW | **P4A.5** Implement detailed task formatting with spacing: ✅ COMPLETE | 2026-01-18 |
+| 110 | LEGACY | LOW | **P4A.6** Fix title extraction for "Test:" tasks: ✅ COMPLETE | 2026-01-18 |
+| 111 | LEGACY | LOW | **P4A.7** Test: Refresh display with 50+ tasks → expect no blank screen: ✅ COMPLETE | 2026-01-18 |
+| 112 | LEGACY | LOW | **P4A.8** Test: Complete a task → expect only that task line updates: ✅ COMPLETE | 2026-01-18 |
+| 113 | LEGACY | LOW | **P4A.9** Test: First unchecked task shows `▶` symbol, others show `○`: ✅ COMPLETE | 2026-01-18 |
+| 114 | LEGACY | LOW | **P4B.1** Implement line-count tracking for THUNK.md: ✅ COMPLETE | 2026-01-18 |
+| 115 | LEGACY | LOW | **P4B.2** Implement tail-only parsing for new entries: ✅ COMPLETE | 2026-01-18 |
+| 116 | LEGACY | LOW | **P4B.3** Implement append-only display mode: ✅ COMPLETE | 2026-01-18 |
+| 117 | LEGACY | LOW | **P4B.4** Add cursor positioning for incremental append: ✅ COMPLETE | 2026-01-18 |
+| 118 | LEGACY | LOW | **P4B.5** Apply same title extraction fix for "Test:" tasks: ✅ COMPLETE | 2026-01-18 |
+| 119 | LEGACY | LOW | **P4B.6** Test: Add entry to THUNK.md → expect new entry appears without full redraw: ✅ COMPLETE | 2026-01-18 |
+| 120 | LEGACY | LOW | **P4B.7** Test: thunk_ralph_tasks.sh startup time < 1 second for 100 entries: ✅ COMPLETE | 2026-01-18 |
+| 121 | LEGACY | LOW | **P5.1** Verify templates scaffold correctly: | 2026-01-18 |
+| 122 | LEGACY | LOW | **P5.2** Verify no remaining /kb/ references in active files: ✅ VERIFIED | 2026-01-18 |
+| 123 | LEGACY | LOW | **P6.1** Audit existing test tasks in THUNK.md: ✅ COMPLETE | 2026-01-18 |
+| 124 | LEGACY | LOW | **P6.2** Update test task format standard: ✅ COMPLETE | 2026-01-18 |
+| 125 | LEGACY | LOW | **P6.3** Create test scenario checklist for monitors and loop: ✅ COMPLETE | 2026-01-18 |
+| 126 | LEGACY | LOW | **P6.4** Test: Run full integration test of Ralph loop with all fixes: ✅ COMPLETE | 2026-01-18 |
+| 127 | LEGACY | LOW | **F1** Add `--no-monitors` flag to loop.sh to skip monitor auto-launch ✅ | 2026-01-18 |
+| 128 | LEGACY | LOW | `:::COMPLETE:::` in log file stops loop immediately (P1.1, P1.1a, P1.2) | 2026-01-18 |
+| 129 | LEGACY | LOW | Return code 42 is captured correctly (P1.1, P1.1a, P1.2) | 2026-01-18 |
+| 130 | LEGACY | LOW | Loop continues normally when no completion marker (P1.3) | 2026-01-18 |
+| 131 | LEGACY | LOW | Monitors launch in tmux environment (P3.3, P3.6) | 2026-01-18 |
+| 132 | LEGACY | LOW | Monitors launch with Windows Terminal in WSL2 (P3.1) | 2026-01-18 |
+| 133 | LEGACY | LOW | Fallback message prints when no terminal available (P3.4, P3.7) | 2026-01-18 |
+| 134 | LEGACY | LOW | Ralph loop continues regardless of monitor launch status (P3.5) | 2026-01-18 |
+| 135 | LEGACY | LOW | No blank screen during current_ralph_tasks.sh refresh (P4A.1, P4A.7) | 2026-01-18 |
+| 136 | LEGACY | LOW | Completed tasks cached and not re-parsed (P4A.2) | 2026-01-18 |
+| 137 | LEGACY | LOW | thunk_ralph_tasks.sh uses tail-only parsing (P4B.2) | 2026-01-18 |
+| 138 | LEGACY | LOW | Both monitors update within 1 second of file change (P2.4, P2.5) | 2026-01-18 |
+| 139 | LEGACY | LOW | Current task marked with `▶` symbol (P4A.4, P4A.9) | 2026-01-18 |
+| 140 | LEGACY | LOW | Pending tasks marked with `○` symbol (P4A.4, P4A.9) | 2026-01-18 |
+| 141 | LEGACY | LOW | Completed tasks marked with `✓` symbol (P4A.4, P4A.9) | 2026-01-18 |
+| 142 | LEGACY | LOW | Empty line between tasks for readability (P4A.5) | 2026-01-18 |
+| 143 | LEGACY | LOW | "Test:" tasks show full action, not just "Test" (P4A.6, P4B.5) | 2026-01-18 |
+| 144 | LEGACY | LOW | `skills/` directory exists with all subdirectories | 2026-01-18 |
+| 145 | LEGACY | LOW | `brain/ralph/kb/` does NOT exist | 2026-01-18 |
+| 146 | LEGACY | LOW | Templates scaffold with `skills/` not `kb/` | 2026-01-18 |
+| 147 | LEGACY | LOW | No active /kb/ references in code files | 2026-01-18 |
