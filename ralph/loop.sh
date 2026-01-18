@@ -18,11 +18,18 @@ mkdir -p "$LOGDIR"
 BRAIN_REPO="${BRAIN_REPO:-jonathanavis96/brain}"
 
 # Derive clean branch name from git repo name
-REPO_NAME=$(basename "$(git rev-parse --show-toplevel)")
+# Derive repo name from git remote (stable across machines) or fall back to folder name
+if git remote get-url origin &>/dev/null; then
+  REPO_NAME=$(basename -s .git "$(git remote get-url origin)")
+else
+  REPO_NAME=$(basename "$(git rev-parse --show-toplevel)")
+fi
 WORK_BRANCH="${REPO_NAME}-work"
 
 # Lock file to prevent concurrent runs
-LOCK_FILE="/tmp/ralph-${REPO_NAME}.lock"
+# Lock file includes hash of repo path for uniqueness across same-named repos
+REPO_PATH_HASH=$(git rev-parse --show-toplevel | md5sum | cut -c1-8)
+LOCK_FILE="/tmp/ralph-${REPO_NAME}-${REPO_PATH_HASH}.lock"
 if [ -f "$LOCK_FILE" ]; then
   LOCK_PID=$(cat "$LOCK_FILE" 2>/dev/null || echo "unknown")
   echo "ERROR: Ralph loop already running (lock: $LOCK_FILE, PID: $LOCK_PID)"

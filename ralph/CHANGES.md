@@ -31,11 +31,13 @@ Reduced per-iteration token load by ~84% through lean prompts and delegation mod
 
 **Branch Handling:**
 - Auto-creates `{repo}-work` branch (e.g., `NeoQueue-work`, `brain-work`)
+- Repo name derived from git remote URL (stable across machines), falls back to folder name
 - Safe checkout (no accidental history resets)
-- Sets upstream automatically
+- Sets upstream automatically on first push
 
 **Lock File:**
-- Prevents concurrent Ralph runs via `/tmp/ralph-{repo}.lock`
+- Prevents concurrent Ralph runs via `/tmp/ralph-{repo}-{hash}.lock`
+- Hash derived from repo path (unique even for same-named repos in different locations)
 - Contains PID for debugging
 - Auto-cleanup on exit
 
