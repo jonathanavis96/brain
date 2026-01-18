@@ -113,3 +113,7 @@ Started: 2026-01-18
 | 98 | LEGACY | HIGH | **P3.1** Add Windows Terminal (wt.exe) detection to launch_monitors(): ✅ COMPLETE | 2026-01-18 |
 | 99 | LEGACY | HIGH | **P3.2** Add functionality test for gnome-terminal: ✅ COMPLETE | 2026-01-18 |
 | 100 | LEGACY | HIGH | **P3.3** Reorder terminal detection priority: ✅ COMPLETE | 2026-01-18 |
+| 101 | LEGACY | HIGH | **P3.4** Implement single-shot fallback message: ✅ COMPLETE | 2026-01-18 |
+| 102 | LEGACY | HIGH | **P3.5** Ensure launch failures are non-fatal: ✅ COMPLETE | 2026-01-18 |
+| 103 | LEGACY | HIGH | **P3.6** Test: Run loop.sh in tmux → expect tmux windows created for both monitors: ✅ COMPLETE | 2026-01-18 |
+| 104 | LEGACY | HIGH | **P3.7** Test: Run loop.sh outside tmux without display → expect manual commands printed once: ✅ COMPLETE | 2026-01-18 |
