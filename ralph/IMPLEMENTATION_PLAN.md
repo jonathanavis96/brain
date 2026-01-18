@@ -315,7 +315,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 #### Phase 6: Wire Self-Improvement Protocol
 
-- [ ] **6.1** Add "Skills + Self-Improvement Protocol" section to `AGENTS.md`:
+- [x] **6.1** Add "Skills + Self-Improvement Protocol" section to `AGENTS.md`:
   ```markdown
   ## Skills + Self-Improvement Protocol
 
