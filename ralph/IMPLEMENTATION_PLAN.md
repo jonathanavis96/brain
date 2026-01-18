@@ -134,24 +134,83 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
 
 ## Acceptance Criteria
 
-### Bug A: Task Extraction
-- [x] Tasks under `## HIGH PRIORITY` → `### Phase X:` → `#### Subphase Y:` are extracted with HIGH priority <!-- tested: grep shows ^##[[:space:]]+ pattern only exits on major sections -->
-- [x] Parser does not exit on `###` or `####` headers <!-- tested: lines 127-130 only match ^## not ^### -->
-- [x] Only `##` headers change priority section state <!-- tested: verified in extract_tasks() function -->
+> **Source of truth:** `AC.rules` — verified by `./verifier.sh`
+> 
+> Do NOT use checkboxes here. AC IDs below link to executable checks.
+> Run `./render_ac_status.sh` for current status.
 
-### Bug B: Display Rendering
-- [x] Header appears exactly once after file updates <!-- tested: display_tasks() calls clear then draws -->
-- [x] Footer appears exactly once after file updates <!-- tested: no differential update logic remains -->
-- [x] No overlapping text after multiple rapid updates <!-- tested: full clear on every redraw -->
-- [x] No visual corruption after terminal resize <!-- tested: SIGWINCH triggers full redraw -->
+### Bug A: Task Extraction
+- **AC:** `BugA.1` (auto, gate=block) — Parser uses in_task_section state tracking
+- **AC:** `BugA.2` (auto, gate=block) — Parser checks for ## (major section) not ### subsections
+
+### Bug B: Display Rendering  
+- **AC:** `BugB.1` (auto, gate=block) — Display function uses clear for full redraw
+- **AC:** `BugB.2` (auto, gate=block) — No differential update logic (LAST_RENDERED)
+- **AC:** `BugB.UI.1` (manual, gate=warn) — No visual corruption after terminal resize
+- **AC:** `BugB.Auto.1` (auto, gate=warn) — Display uses terminal-safe cursor positioning
+- **AC:** `BugB.Auto.2` (auto, gate=warn) — Display has stty handling for terminal state
 
 ### Bug C: THUNK Monitor
-- [x] Watches THUNK.md as sole source (no PLAN_FILE references) <!-- tested: grep shows no PLAN_FILE in thunk_ralph_tasks.sh -->
-- [x] Updates display when THUNK.md changes <!-- tested: monitor startup shows "Watching: THUNK.md" -->
-- [x] Does NOT auto-sync from IMPLEMENTATION_PLAN.md (monitor should only display, not modify) <!-- tested: no scan_for_new_completions function -->
-- [x] Does NOT modify THUNK.md (Ralph appends, monitor only watches) <!-- tested: header documents "Display-only monitor" -->
-- [x] No "Scanning IMPLEMENTATION_PLAN.md" messages (only watches THUNK.md) <!-- tested: grep shows no scanning messages -->
-- [x] No force sync hotkey 'f' (removed entirely) <!-- tested: hotkey documentation shows only r, e, q -->
+- **AC:** `BugC.1` (auto, gate=block) — No scan_for_new_completions function
+- **AC:** `BugC.2` (auto, gate=block) — No PLAN_FILE variable
+- **AC:** `BugC.3` (auto, gate=block) — No "Scanning IMPLEMENTATION_PLAN" message
+- **AC:** `BugC.4` (auto, gate=block) — Monitor references THUNK.md
+- **AC:** `BugC.5` (auto, gate=block) — Monitor does not append/redirect into THUNK.md
+- **AC:** `BugC.6` (auto, gate=block) — No task_exists_in_thunk function
+- **AC:** `BugC.7` (auto, gate=block) — No extract_task_id function
+- **AC:** `BugC.UI.1` (manual, gate=warn) — THUNK monitor only displays, never modifies files
+- **AC:** `BugC.Auto.1` (auto, gate=block) — THUNK monitor has no auto-sync from IMPLEMENTATION_PLAN
+
+### Anti-Cheat & Integrity
+- **AC:** `AntiCheat.1-5` (auto, gate=block) — No fake verification markers or dismissal phrases
+- **AC:** `Protected.1-3` (auto, gate=block) — Protected files (loop.sh, verifier.sh, PROMPT.md) unchanged
+
+<!-- AC_STATUS_START -->
+## Acceptance Criteria Status
+
+> **Auto-generated from verifier** — Last run: 2026-01-19 00:49:00 ( fe39e1c)
+
+| Metric | Value |
+|--------|-------|
+| ✅ PASS | 21 |
+| ❌ FAIL | 0 |
+| ⚠️ WARN | 0 |
+| 🔒 Hash Guard | Hash |
+
+### Check Details
+
+| ID | Status | Description |
+|----|--------|-------------|
+| `BugA.1` | ✅ | Parser uses in_task_section state tracking |
+| `BugA.2` | ✅ | Parser checks for ## (major section) not ### subsections |
+| `BugB.1` | ✅ | Display function uses clear for full redraw |
+| `BugB.2` | ✅ | No differential update logic (LAST_RENDERED) |
+| `BugB.UI.1` | ⚠️ | No visual corruption after terminal resize |
+| `BugC.1` | ✅ | No scan_for_new_completions function |
+| `BugC.2` | ✅ | No PLAN_FILE variable |
+| `BugC.3` | ✅ | No "Scanning IMPLEMENTATION_PLAN" message |
+| `BugC.4` | ✅ | Monitor references THUNK.md |
+| `BugC.5` | ✅ | Monitor does not append/redirect into THUNK.md |
+| `BugC.6` | ✅ | No task_exists_in_thunk function |
+| `BugC.7` | ✅ | No extract_task_id function |
+| `BugC.UI.1` | ⚠️ | THUNK monitor only displays, never modifies files |
+| `Template.1` | ⚠️ | thunk_ralph_tasks.sh matches template |
+| `AntiCheat.1` | ✅ | No fake verification markers in source files |
+| `AntiCheat.2` | ✅ | No dismissal phrases in active source files |
+| `AntiCheat.3` | ✅ | No bug reframing in source files |
+| `AntiCheat.4` | ✅ | No intended behavior dismissals in source files |
+| `AntiCheat.5` | ✅ | No self-certification in source files |
+| `Protected.1` | ✅ | loop.sh unchanged from baseline |
+| `Protected.2` | ✅ | verifier.sh unchanged from baseline |
+| `Protected.3` | ✅ | PROMPT.md unchanged from baseline |
+| `VerifyMeta.1` | ✅ | Verifier run_id.txt exists and is non-empty |
+| `BugB.Auto.1` | ⚠️ | Display uses terminal-safe cursor positioning (tput) |
+| `BugB.Auto.2` | ⚠️ | Display has stty handling for terminal state |
+| `BugC.Auto.1` | ✅ | THUNK monitor has no auto-sync from IMPLEMENTATION_PLAN |
+| `BugC.Auto.2` | ⚠️ | THUNK writes limited to era creation only |
+
+_Run `./verifier.sh` to refresh. Do not edit this section manually._
+<!-- AC_STATUS_END -->
 
 ---
 
