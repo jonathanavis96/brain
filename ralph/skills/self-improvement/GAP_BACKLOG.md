@@ -35,7 +35,8 @@ Rules:
   - Pattern: Replace `clear` command with `tput cup 0 0 && tput ed` for flicker-free updates
   - Other useful commands: `tput cup $row $col`, `tput el` (clear line), `tput sc/rc` (save/restore cursor)
 - **Priority:** P2
-- **Status:** Identified
+- **Status:** Reviewed - Keep as reference
+- **Review notes (2026-01-18):** Does not meet "recurring" criteria. Very specialized for interactive terminal scripts. Only 2 monitor scripts in brain repo use this. Low reuse potential. Keep as reference in GAP_BACKLOG for future monitor script work.
 
 ### 2026-01-18 — Bash Associative Arrays for Caching
 - **Type:** Knowledge / Pattern
@@ -49,4 +50,5 @@ Rules:
   - Pattern useful for caching parsed data, computed results, or any immutable lookups
   - Current use case: Cache completed task display strings to skip title generation on refresh
 - **Priority:** P2
-- **Status:** Identified
+- **Status:** Reviewed - Keep as reference
+- **Review notes (2026-01-18):** Does not meet "recurring" criteria. General caching patterns already documented in skills/domains/caching-patterns.md. This is a bash-specific implementation detail with low reuse potential. Keep as reference for bash caching needs.

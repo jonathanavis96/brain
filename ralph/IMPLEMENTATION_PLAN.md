@@ -34,10 +34,11 @@ Ongoing maintenance and improvement tasks for the brain repository. This plan tr
 
 ### Skills Knowledge Base
 
-- [ ] **2.1** Review GAP_BACKLOG.md entries for promotion
+- [x] **2.1** Review GAP_BACKLOG.md entries for promotion
   - 2 entries: "Bash Terminal Control with tput" and "Bash Associative Arrays for Caching"
   - Both marked P2 priority
-  - Decide: promote to SKILL_BACKLOG.md or keep as reference
+  - Decision: Keep both as reference (do not meet "recurring" criteria per GAP_CAPTURE_RULES.md)
+  - Updated GAP_BACKLOG.md with review notes and status
 
 - [ ] **2.2** Create skill: Ralph Loop Architecture Deep Dive
   - Expand skills/domains/ralph-patterns.md with more detail
