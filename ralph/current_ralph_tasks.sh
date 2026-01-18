@@ -115,7 +115,7 @@ extract_tasks() {
 show_help() {
     clear
     echo "╔════════════════════════════════════════════════════════════════╗"
-    echo "║              RALPH TASK MONITOR - HELP                         ║"
+    echo "║              CURRENT RALPH TASKS - HELP                        ║"
     echo "╚════════════════════════════════════════════════════════════════╝"
     echo ""
     echo "  HOTKEYS:"
@@ -264,7 +264,7 @@ display_tasks() {
     
     # Header
     echo "╔════════════════════════════════════════════════════════════════╗"
-    echo "║          RALPH TASK MONITOR - $(date +%H:%M:%S)                   ║"
+    echo "║          CURRENT RALPH TASKS - $(date +%H:%M:%S)                  ║"
     echo "╚════════════════════════════════════════════════════════════════╝"
     echo ""
     
