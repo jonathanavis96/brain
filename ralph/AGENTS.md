@@ -35,6 +35,23 @@ Ralph outputs when ALL tasks complete:
 :::COMPLETE:::
 ```
 
+## Skills + Self-Improvement Protocol
+
+**Start of iteration:**
+1. Study `skills/SUMMARY.md` for overview
+2. Check `skills/index.md` for available skills
+3. Review `skills/self-improvement/GAP_CAPTURE_RULES.md` for capture protocol
+
+**End of iteration:**
+1. If you used undocumented knowledge/procedure/tooling:
+   - Search `skills/` for existing matching skill
+   - Search `skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
+   - If not found: append new entry to `GAP_BACKLOG.md`
+2. If a gap is clear, specific, and recurring:
+   - Add to `skills/self-improvement/SKILL_BACKLOG.md`
+   - Create skill file using `SKILL_TEMPLATE.md`
+   - Update `skills/index.md`
+
 ## Troubleshooting
 - **acli not found**: Add to PATH in ~/.bashrc
 - **Loop doesn't stop**: Check `:::COMPLETE:::` output
