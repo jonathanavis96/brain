@@ -50,7 +50,7 @@ brain/
 ├── THOUGHTS.md                    # Vision & Ralph's mission
 ├── IMPLEMENTATION_PLAN.md         # Current tasks for brain maintenance
 │
-├── kb/                            # Knowledge Base (7 files)
+├── skills/                        # Skills & Knowledge Base (7 files)
 │   ├── SUMMARY.md                 # KB index
 │   ├── conventions.md             # KB authoring guide
 │   ├── domains/                   # Reusable patterns
@@ -91,7 +91,7 @@ brain/
 Always start broad, drill down only when needed:
 
 ```markdown
-1. kb/SUMMARY.md                          → KB overview
+1. skills/SUMMARY.md                      → Skills overview
 2. references/react-best-practices/HOTLIST.md → Top 10 rules (covers 80% of scenarios)
 3. references/react-best-practices/INDEX.md   → Full categorized index (if needed)
 4. references/react-best-practices/rules/*    → Specific rule deep-dives
@@ -207,12 +207,12 @@ All templates use **bash-style forward slash paths**:
 
 ```markdown
 # Correct ✅
-../../brain/kb/SUMMARY.md
+../../brain/skills/SUMMARY.md
 ../../brain/references/react-best-practices/HOTLIST.md
 
 # Incorrect ❌
 ..\\brain\\kb\\SUMMARY.md                             # Windows backslashes
-/home/grafe/code/brain/kb/SUMMARY.md                 # Absolute paths (breaks portability)
+/home/grafe/code/brain/skills/SUMMARY.md             # Absolute paths (breaks portability)
 ```
 
 **Why:** Cross-platform compatibility (WSL, Linux, macOS, Windows Git Bash)
@@ -224,7 +224,7 @@ All templates use **bash-style forward slash paths**:
 1. **Domain patterns** (reusable across projects):
    ```bash
    # Create new domain KB file
-   cat > kb/domains/my-pattern.md << 'EOF'
+   cat > skills/domains/my-pattern.md << 'EOF'
    # My Pattern
    
    ## Why This Exists
@@ -238,13 +238,13 @@ All templates use **bash-style forward slash paths**:
    EOF
    
    # Update index
-   echo "- [My Pattern](domains/my-pattern.md)" >> kb/SUMMARY.md
+   echo "- [My Pattern](domains/my-pattern.md)" >> skills/SUMMARY.md
    ```
 
 2. **Project-specific knowledge**:
    ```bash
    # Create project KB file
-   cat > kb/projects/my-project.md << 'EOF'
+   cat > skills/projects/my-project.md << 'EOF'
    # My Project
    
    ## Why This Exists
@@ -258,7 +258,7 @@ All templates use **bash-style forward slash paths**:
    EOF
    
    # Update index
-   echo "- [My Project](projects/my-project.md)" >> kb/SUMMARY.md
+   echo "- [My Project](projects/my-project.md)" >> skills/SUMMARY.md
    ```
 
 3. **React rules**: Don't modify `references/react-best-practices/rules/*` (read-only)
@@ -343,10 +343,10 @@ Ensure brain integrity:
 
 ```bash
 # File structure
-ls -la kb/ templates/ references/
+ls -la skills/ templates/ references/
 
 # KB file count (should be 7)
-find kb/ -name "*.md" | wc -l
+find skills/ -name "*.md" | wc -l
 
 # React rules count (should be 45)
 find references/react-best-practices/rules/ -name "*.md" | wc -l
@@ -357,8 +357,8 @@ bash -n watch_ralph_tasks.sh
 bash -n new-project.sh
 
 # KB integrity (all files have required headers)
-grep -r "## Why This Exists" kb/domains/ kb/projects/
-grep -r "## When to Use It" kb/domains/ kb/projects/
+grep -r "## Why This Exists" skills/domains/ skills/projects/
+grep -r "## When to Use It" skills/domains/ skills/projects/
 ```
 
 ## Key Principles
@@ -392,8 +392,8 @@ The brain repository is successful when:
 - **NEURONS.md** - Brain repository map (read this via subagent)
 - **THOUGHTS.md** - Vision, goals, and Ralph's 20 strategic questions
 - **templates/README.md** - Template documentation and path conventions
-- **kb/SUMMARY.md** - Knowledge base index
-- **kb/conventions.md** - KB authoring guidelines
+- **skills/SUMMARY.md** - Skills & knowledge base index
+- **skills/conventions.md** - Skills authoring guidelines
 
 ## Current Status (2026-01-16)
 
