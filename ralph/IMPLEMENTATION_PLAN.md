@@ -311,7 +311,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 **Skills Folder Internal:**
 - [x] **5.24** Update `skills/domains/README.md` (verify kb/ references if any)
 - [x] **5.25** Update `skills/projects/README.md` (7 kb/ references updated)
-- [ ] **5.26** Update `skills/conventions.md` (verify kb/ references if any)
+- [x] **5.26** Update `skills/conventions.md` (9 kb/ references updated to skills/)
 
 #### Phase 6: Wire Self-Improvement Protocol
 
