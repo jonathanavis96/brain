@@ -21,3 +21,6 @@ Started: 2026-01-18
 | 7 | 1.1 | MEDIUM | Run safety check for `brain_staging/` and `brain_promoted/` dependencies | 2026-01-18 |
 | 8 | 1.2 | MEDIUM | Delete stale directories if check passes | 2026-01-18 |
 | 9 | 1.3 | MEDIUM | Verify current KB structure exists | 2026-01-18 |
+| 10 | LEGACY | LOW | Brain repository infrastructure complete and validated | 2026-01-18 |
+| 11 | LEGACY | LOW | Fix documentation references in kb/projects/brain-example.md | 2026-01-18 |
+| 12 | T2.3 | HIGH | Migrate any already-completed `[x]` tasks from IMPLEMENTATION_PLAN.md to THUNK.md | 2026-01-18 |
