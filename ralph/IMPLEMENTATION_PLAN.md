@@ -57,7 +57,7 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
   - Delete `extract_task_id()` function (lines 142-165)
   - These functions are only used for auto-sync, not needed for display-only monitor
   
-- [ ] **3.2** Remove all PLAN_FILE references from thunk_ralph_tasks.sh
+- [x] **3.2** Remove all PLAN_FILE references from thunk_ralph_tasks.sh
   - Delete `PLAN_FILE` variable declaration (line 19)
   - Delete PLAN_FILE existence check (lines 31-34)
   - Delete `LAST_PLAN_MODIFIED` variable (line 22, line 475)

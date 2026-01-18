@@ -209,3 +209,8 @@ Started: 2026-01-18
 | 180 | 4.2 | HIGH | **4.2** Test Ralph appends to THUNK.md on task completion <!-- tested: THUNK.md has entries from Ralph iterations --> | 2026-01-18 |
 | 181 | 5.1 | HIGH | **5.1** Update AGENTS.md monitor documentation <!-- tested: AGENTS.md has Task Monitors section --> | 2026-01-18 |
 | 182 | 3.1 | HIGH | **3.1** Remove `scan_for_new_completions()` function and helper functions from thunk_ralph_tasks.sh | 2026-01-18 |
+| 182 | LEGACY | HIGH | Tasks under `## HIGH PRIORITY` → `### Phase X:` → `#### Subphase Y:` are extracted with HIGH priority <!-- tested: grep shows ^##[[:space:]]+ pattern only exits on major sections --> | 2026-01-18 |
+| 183 | LEGACY | HIGH | Parser does not exit on `###` or `####` headers <!-- tested: lines 127-130 only match ^## not ^### --> | 2026-01-18 |
+| 184 | LEGACY | HIGH | Only `##` headers change priority section state <!-- tested: verified in extract_tasks() function --> | 2026-01-18 |
+| 185 | LEGACY | HIGH | Header appears exactly once after file updates <!-- tested: display_tasks() calls clear then draws --> | 2026-01-18 |
+| 186 | 3.2 | HIGH | **3.2** Remove all PLAN_FILE references from thunk_ralph_tasks.sh | 2026-01-18 |
