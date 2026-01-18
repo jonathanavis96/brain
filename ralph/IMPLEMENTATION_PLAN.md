@@ -71,7 +71,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 - [x] **T2.1** Create `THUNK.md` with initial structure (see File Templates below)
 - [x] **T2.2** Set initial Era to "THUNK Monitor + KB→Skills Migration"
-- [ ] **T2.3** Migrate any already-completed `[x]` tasks from IMPLEMENTATION_PLAN.md to THUNK.md
+- [x] **T2.3** Migrate any already-completed `[x]` tasks from IMPLEMENTATION_PLAN.md to THUNK.md
 
 #### Phase T3: Create thunk_ralph_tasks.sh
 
