@@ -524,8 +524,10 @@ launch_monitors() {
   # Check if current_ralph_tasks.sh exists and launch
   if [[ -f "$monitor_dir/current_ralph_tasks.sh" ]]; then
     if ! pgrep -f "current_ralph_tasks.sh" > /dev/null; then
-      # Try to detect available terminal emulator
-      if command -v wt.exe &>/dev/null; then
+      # Try to detect available terminal emulator (priority order: tmux, wt.exe, gnome-terminal, konsole, xterm)
+      if [[ -n "${TMUX:-}" ]]; then
+        tmux new-window -n "Current Tasks" "bash $monitor_dir/current_ralph_tasks.sh"
+      elif command -v wt.exe &>/dev/null; then
         wt.exe new-tab --title "Current Ralph Tasks" -- wsl bash "$monitor_dir/current_ralph_tasks.sh" &
       elif command -v gnome-terminal &>/dev/null && timeout 2s gnome-terminal --version &>/dev/null; then
         gnome-terminal --title="Current Ralph Tasks" -- bash "$monitor_dir/current_ralph_tasks.sh" &
@@ -533,8 +535,6 @@ launch_monitors() {
         konsole --title "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh" &
       elif command -v xterm &>/dev/null; then
         xterm -T "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh" &
-      elif [[ -n "${TMUX:-}" ]]; then
-        tmux new-window -n "Current Tasks" "bash $monitor_dir/current_ralph_tasks.sh"
       else
         echo "⚠️  No terminal emulator detected. Skipping current_ralph_tasks.sh launch."
       fi
@@ -544,8 +544,10 @@ launch_monitors() {
   # Check if thunk_ralph_tasks.sh exists and launch
   if [[ -f "$monitor_dir/thunk_ralph_tasks.sh" ]]; then
     if ! pgrep -f "thunk_ralph_tasks.sh" > /dev/null; then
-      # Try to detect available terminal emulator
-      if command -v wt.exe &>/dev/null; then
+      # Try to detect available terminal emulator (priority order: tmux, wt.exe, gnome-terminal, konsole, xterm)
+      if [[ -n "${TMUX:-}" ]]; then
+        tmux new-window -n "Thunk Tasks" "bash $monitor_dir/thunk_ralph_tasks.sh"
+      elif command -v wt.exe &>/dev/null; then
         wt.exe new-tab --title "Thunk Ralph Tasks" -- wsl bash "$monitor_dir/thunk_ralph_tasks.sh" &
       elif command -v gnome-terminal &>/dev/null && timeout 2s gnome-terminal --version &>/dev/null; then
         gnome-terminal --title="Thunk Ralph Tasks" -- bash "$monitor_dir/thunk_ralph_tasks.sh" &
@@ -553,8 +555,6 @@ launch_monitors() {
         konsole --title "Thunk Ralph Tasks" -e bash "$monitor_dir/thunk_ralph_tasks.sh" &
       elif command -v xterm &>/dev/null; then
         xterm -T "Thunk Ralph Tasks" -e bash "$monitor_dir/thunk_ralph_tasks.sh" &
-      elif [[ -n "${TMUX:-}" ]]; then
-        tmux new-window -n "Thunk Tasks" "bash $monitor_dir/thunk_ralph_tasks.sh"
       else
         echo "⚠️  No terminal emulator detected. Skipping thunk_ralph_tasks.sh launch."
       fi
