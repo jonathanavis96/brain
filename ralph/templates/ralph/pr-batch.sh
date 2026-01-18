@@ -115,7 +115,7 @@ EOF
 
     # Group changes by directory
     echo "**Knowledge Base (kb/):**"
-    git diff --name-only "$MAIN_BRANCH".."$WORK_BRANCH" -- "ralph/kb/" 2>/dev/null | sed 's/^/- /' || echo "- No changes"
+    git diff --name-only "$MAIN_BRANCH".."$WORK_BRANCH" -- "ralph/skills/" 2>/dev/null | sed 's/^/- /' || echo "- No changes"
     echo ""
     
     echo "**Templates:**"

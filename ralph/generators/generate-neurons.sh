@@ -430,7 +430,7 @@ EOF
     esac
     
     echo "| **Run tests** | See validation commands below |"
-    echo "| **Brain KB patterns** | \`../../brain/kb/SUMMARY.md\` |"
+    echo "| **Brain KB patterns** | \`../../brain/skills/SUMMARY.md\` |"
     echo ""
 }
 
@@ -633,7 +633,7 @@ cat >> "$OUTPUT_FILE" << 'EOF'
 ## Path Conventions
 
 **From Ralph's perspective (in `ralph/` subdirectory):**
-- Brain KB: `../../brain/kb/SUMMARY.md`
+- Brain KB: \`../../brain/skills/SUMMARY.md\`
 - Brain references: `../../brain/references/react-best-practices/HOTLIST.md`
 - Brain templates: `../../brain/templates/`
 - Project root: `../` (one level up from ralph/)
@@ -653,10 +653,10 @@ This project uses the shared **brain** repository for knowledge and patterns:
 **Brain Location:** `/home/grafe/code/brain/`
 
 **Key Brain Resources:**
-- **KB Index:** `../../brain/kb/SUMMARY.md`
+- **KB Index:** \`../../brain/skills/SUMMARY.md\`
 - **React Best Practices:** `../../brain/references/react-best-practices/HOTLIST.md`
-- **Ralph Patterns:** `../../brain/kb/domains/ralph-patterns.md`
-- **Auth Patterns:** `../../brain/kb/domains/auth-patterns.md`
+- **Ralph Patterns:** \`../../brain/skills/domains/ralph-patterns.md\`
+- **Auth Patterns:** \`../../brain/skills/domains/auth-patterns.md\`
 
 **Reading Brain Content:**
 Always use the entry points (SUMMARY.md, HOTLIST.md, INDEX.md) before diving into specific files. The brain uses progressive disclosure.

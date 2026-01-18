@@ -35,7 +35,7 @@ All templates use **bash-style forward slash paths** for brain repository refere
 Templates use **relative paths with forward slashes**:
 
 ```markdown
-1. `../../brain/kb/SUMMARY.md` - Knowledge base overview
+1. `../../brain/skills/SUMMARY.md` - Knowledge base overview
 2. `../../brain/references/react-best-practices/HOTLIST.md` - Top 10 rules
 ```
 
@@ -51,18 +51,18 @@ Templates use **relative paths with forward slashes**:
 Templates are organized at different depths, requiring different numbers of `..` segments:
 
 - **Project root templates** (e.g., `templates/AGENTS.project.md`):
-  - Use: `../../brain/kb/SUMMARY.md`
+  - Use: `../../brain/skills/SUMMARY.md`
   - Depth: One level up from project root to reach brain sibling
 
 - **Ralph subdirectory templates** (e.g., `templates/ralph/PROMPT.md`):
-  - Use: `../../brain/kb/SUMMARY.md`
+  - Use: `../../brain/skills/SUMMARY.md`
   - Depth: Two levels up from ralph/ dir (ralph/ is typically at project root level)
 
 ### Examples
 
 **Correct ✅ (Always use forward slashes)**
 ```markdown
-Read `../../brain/kb/SUMMARY.md` first (always)
+Read `../../brain/skills/SUMMARY.md` first (always)
 Check `../../brain/references/react-best-practices/HOTLIST.md`
 ```
 
@@ -72,7 +72,7 @@ Check `../../brain/references/react-best-practices/HOTLIST.md`
 Read `..\\brain\\kb\\SUMMARY.md`
 
 # DO NOT USE - Absolute paths are not portable across systems
-Check `/home/grafe/code/brain/kb/SUMMARY.md`
+Check `/home/grafe/code/brain/skills/SUMMARY.md`
 ```
 
 ## NEW_PROJECT_IDEA.md Format

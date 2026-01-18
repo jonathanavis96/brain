@@ -82,8 +82,8 @@ For this project, "source code" means:
 **If brain repository is available**, this project can reference:
 
 - **Performance Patterns:** `../../brain/references/react-best-practices/` (if applicable)
-- **Domain Conventions:** `../../brain/kb/domains/[relevant-domain].md` (if applicable)
-- **Project Learnings:** `../../brain/kb/projects/[this-project-slug].md` (project-specific patterns that might benefit other projects)
+- **Domain Conventions:** `../../brain/skills/domains/[relevant-domain].md` (if applicable)
+- **Project Learnings:** `../../brain/skills/projects/[this-project-slug].md` (project-specific patterns that might benefit other projects)
 
 **Standalone mode:** If brain is not present, rely on project-local documentation in `docs/` and standard best practices.
 

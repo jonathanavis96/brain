@@ -53,3 +53,20 @@ Started: 2026-01-18
 | 39 | T6.2 | HIGH | **T6.2** Test: Sequential numbering works (next task gets next THUNK #) | 2026-01-18 |
 | 40 | LEGACY | HIGH | **TEST-SEQ-1** Test sequential numbering validation task | 2026-01-18 |
 | 41 | T6.3 | HIGH | **T6.3** Test: Era sections display correctly in thunk_ralph_tasks.sh | 2026-01-18 |
+| 42 | T6.4 | HIGH | **T6.4** Test: Hotkey `[r]` clears display but preserves THUNK.md | 2026-01-18 |
+| 43 | T6.5 | HIGH | **T6.5** Test: Bootstrap new project → verify monitors exist and work | 2026-01-18 |
+| 44 | 2.1 | MEDIUM | **2.1** Rename `kb` to `skills`: | 2026-01-18 |
+| 45 | 2.2 | MEDIUM | **2.2** Verify rename succeeded: | 2026-01-18 |
+| 46 | 3.1 | MEDIUM | **3.1** Create self-improvement directory: | 2026-01-18 |
+| 47 | 3.2 | MEDIUM | **3.2** Create `skills/self-improvement/README.md` with content from File Templates section below | 2026-01-18 |
+| 48 | 3.3 | MEDIUM | **3.3** Create `skills/self-improvement/GAP_CAPTURE_RULES.md` with content from File Templates section below | 2026-01-18 |
+| 49 | 3.4 | MEDIUM | **3.4** Create `skills/self-improvement/GAP_BACKLOG.md` with content from File Templates section below | 2026-01-18 |
+| 50 | 3.5 | MEDIUM | **3.5** Create `skills/self-improvement/SKILL_BACKLOG.md` with content from File Templates section below | 2026-01-18 |
+| 51 | 3.6 | MEDIUM | **3.6** Create `skills/self-improvement/SKILL_TEMPLATE.md` with content from File Templates section below | 2026-01-18 |
+| 52 | 4.1 | MEDIUM | **4.1** Update `skills/SUMMARY.md`: | 2026-01-18 |
+| 53 | 4.2 | MEDIUM | **4.2** Create `skills/index.md` with skill catalog (see File Templates below) | 2026-01-18 |
+| 54 | 5.2 | MEDIUM | **5.2** Update `PROMPT.md` (including commit scope on ~line 93) | 2026-01-18 |
+| 55 | 5.3 | MEDIUM | **5.3** Update `NEURONS.md` | 2026-01-18 |
+| 56 | 5.4 | MEDIUM | **5.4** Update `README.md` (15 kb/ references found) | 2026-01-18 |
+| 57 | 5.5 | MEDIUM | **5.5** Update `VALIDATION_CRITERIA.md` | 2026-01-18 |
+| 58 | 5.6 | MEDIUM | **5.6** Update `EDGE_CASES.md` | 2026-01-18 |
