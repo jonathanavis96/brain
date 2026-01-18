@@ -202,3 +202,10 @@ Started: 2026-01-18
 | 173 | 3.1 | HIGH | **3.1** Sync current_ralph_tasks.sh updates to template - Copied latest version (22KB) from root to templates/ralph/ | 2026-01-18 |
 | 174 | 3.2 | HIGH | **3.2** Sync thunk_ralph_tasks.sh updates to template - Copied latest version (22.5KB) from root to templates/ralph/ | 2026-01-18 |
 | 175 | 3.3 | HIGH | **3.3** Sync loop.sh updates to template - Copied latest version (21KB) from root to templates/ralph/ | 2026-01-18 |
+| 176 | 2.1 | HIGH | **2.1** Remove differential update complexity from `current_ralph_tasks.sh` `display_tasks()` | 2026-01-18 |
+| 177 | 2.2 | HIGH | **2.2** Simplify display rendering to always clear screen before drawing | 2026-01-18 |
+| 178 | 2.3 | HIGH | **2.3** Test display rendering with multiple file updates | 2026-01-18 |
+| 179 | 4.1 | HIGH | **4.1** Add THUNK logging instruction to PROMPT.md BUILD mode section <!-- tested: PROMPT.md lines 49-52 have THUNK logging step --> | 2026-01-18 |
+| 180 | 4.2 | HIGH | **4.2** Test Ralph appends to THUNK.md on task completion <!-- tested: THUNK.md has entries from Ralph iterations --> | 2026-01-18 |
+| 181 | 5.1 | HIGH | **5.1** Update AGENTS.md monitor documentation <!-- tested: AGENTS.md has Task Monitors section --> | 2026-01-18 |
+| 182 | 3.1 | HIGH | **3.1** Remove `scan_for_new_completions()` function and helper functions from thunk_ralph_tasks.sh | 2026-01-18 |

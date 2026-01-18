@@ -51,7 +51,7 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
 
 **Required Fix:** Remove auto-sync functionality entirely. Monitor should ONLY watch and display THUNK.md.
 
-- [ ] **3.1** Remove `scan_for_new_completions()` function and helper functions from thunk_ralph_tasks.sh
+- [x] **3.1** Remove `scan_for_new_completions()` function and helper functions from thunk_ralph_tasks.sh
   - Delete `scan_for_new_completions()` function (lines 168-244)
   - Delete `task_exists_in_thunk()` function (lines 124-140)
   - Delete `extract_task_id()` function (lines 142-165)
