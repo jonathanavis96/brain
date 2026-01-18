@@ -76,7 +76,7 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
   - Remove 'f' hotkey from hotkey list
   - Clarify monitor is display-only, Ralph appends to THUNK.md
 
-- [ ] **3.5** Test monitor is display-only
+- [x] **3.5** Test monitor is display-only
   - Start monitor: `bash thunk_ralph_tasks.sh`
   - Verify no "Scanning IMPLEMENTATION_PLAN.md" messages
   - Verify startup shows "Watching: THUNK.md" only
