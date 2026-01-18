@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & Ralph System
 
-Last updated: 2026-01-18 19:07 (PLAN iteration - Progress review and strategic prioritization)
+Last updated: 2026-01-18 19:20 (PLAN iteration - Strategic assessment and task prioritization)
 
 ## Current State
 
@@ -41,13 +41,14 @@ The brain repository is **fully mature and production-ready** with comprehensive
 **Phase 3 (Monitor Launch):** 7/7 complete ✅
 - P3.1-P3.7: Terminal detection, functionality tests, priority reordering, fallback messaging, non-fatal launches, tmux integration, headless fallback test ✅
 
-**Phase 4 (Performance & UX):** 15/16 complete (94%)
-- P4A.1-P4A.8: All current_ralph_tasks.sh UX improvements complete ✅
-- P4B.1: Line-count tracking for THUNK.md complete ✅
-- **Remaining:** P4A.9 (symbol validation test) - NEXT PRIORITY
+**Phase 4 (Performance & UX):** 17/22 complete (77%)
+- P4A.1-P4A.9: All current_ralph_tasks.sh UX improvements complete ✅
+- P4B.1-P4B.2: thunk_ralph_tasks.sh line-count tracking and tail-only parsing complete ✅
+- **Remaining:** P4B.3-P4B.7 (5 tasks: append-only display, cursor positioning, title extraction, performance tests)
 
-**Phase 5 (Verification):** 0/2 pending (0%)
-- **Remaining:** Template scaffolding validation, reference audit (2 tasks)
+**Phase 5 (Verification):** 2/2 complete ✅
+- P5.1: Template scaffolding validation complete ✅
+- P5.2: Reference audit complete - no stale /kb/ paths ✅
 
 **Phase 6 (Test Clarity):** 0/21 pending (0%)
 - Need: Update format standards, integration testing
@@ -56,9 +57,9 @@ The brain repository is **fully mature and production-ready** with comprehensive
 
 ### Analysis: Implementation Status
 
-**Current completion rate:** 31/64 tasks = 48%
+**Current completion rate:** 35/64 tasks = 55%
 
-**Completed work (31/64 tasks):**
+**Completed work (35/64 tasks):**
 1. **Phase 1 (Stop Condition):** 3/3 complete ✅
    - :::COMPLETE::: detection bug fixed in both code paths
    - Comprehensive testing validates loop exit behavior
@@ -74,8 +75,8 @@ The brain repository is **fully mature and production-ready** with comprehensive
    - Single-shot fallback message with graceful degradation
    - Non-fatal launch failures ensure Ralph loop continues
    
-4. **Phase 4 (Performance & UX):** 15/16 complete (94%)
-   - P4A.1-P4A.8: All current_ralph_tasks.sh UX improvements complete ✅
+4. **Phase 4 (Performance & UX):** 17/22 complete (77%)
+   - **P4A (current_ralph_tasks.sh):** 9/9 complete ✅
      - Cursor positioning (top-anchored display)
      - Completed task caching (reduces CPU)
      - Differential display update (stable content)
@@ -84,8 +85,11 @@ The brain repository is **fully mature and production-ready** with comprehensive
      - Title extraction for "Test:" tasks
      - Validated: No blank screen with 50+ tasks
      - Validated: Differential update on task completion
-   - P4B.1: Line-count tracking for THUNK.md complete ✅
-   - **Next critical task:** P4A.9 (symbol behavior validation)
+     - Validated: Symbol behavior (▶ for current, ○ for pending)
+   - **P4B (thunk_ralph_tasks.sh):** 2/7 complete (29%)
+     - Line-count tracking for THUNK.md ✅
+     - Tail-only parsing for new entries ✅
+     - **Remaining:** Append-only display, cursor positioning, title extraction, 2 performance tests
 
 5. **Phase 5 (Verification):** 2/2 complete ✅
    - P5.1: Template scaffolding validation complete ✅
@@ -94,16 +98,15 @@ The brain repository is **fully mature and production-ready** with comprehensive
 6. **Phase 6 (Test Clarity):** 1/22 complete (5%)
    - P6.1: Test task audit complete ✅
 
-**Remaining work (33/64 tasks):**
+**Remaining work (29/64 tasks):**
 
-**HIGH PRIORITY - Immediate Next Steps (7 tasks):**
-- **P4A.9:** Symbol behavior validation test (▶ moves to next task when current completes)
-- **P4B.2-P4B.7:** thunk_ralph_tasks.sh performance improvements (6 tasks)
-  - Tail-only parsing for new entries
+**HIGH PRIORITY - Immediate Next Steps (5 tasks):**
+- **P4B.3-P4B.7:** thunk_ralph_tasks.sh performance improvements (5 tasks)
   - Append-only display mode
   - Cursor positioning for incremental append
-  - Title extraction consistency
-  - Performance validation tests
+  - Title extraction consistency with current_ralph_tasks.sh
+  - Performance validation: new entry appears without full redraw
+  - Performance validation: startup time < 1 second for 100 entries
 
 **MEDIUM PRIORITY - Phase 6 Testing (21 tasks):**
 - Format standard documentation
@@ -114,26 +117,27 @@ The brain repository is **fully mature and production-ready** with comprehensive
 - Optional features (--no-monitors flag, health checks, custom terminal support)
 
 **Estimated remaining effort:**
-- Phase 4: ~7 BUILD iterations (1 validation test + 6 thunk monitor optimizations)
+- Phase 4B: ~5 BUILD iterations (thunk monitor display and performance improvements)
 - Phase 5: ✅ COMPLETE
 - Phase 6: ~21 BUILD iterations (comprehensive testing and documentation)
 
-**Total estimate:** ~28 BUILD iterations remaining
+**Total estimate:** ~26 BUILD iterations remaining
 
 **Strategic recommendation for next BUILD iteration:**
-Start with **P4A.9** (symbol behavior validation) - verify ▶ symbol moves to next task when current task is completed. This completes Phase 4A (current_ralph_tasks.sh improvements), allowing focus shift to thunk monitor optimization.
+Start with **P4B.3** (append-only display mode) - implement incremental display updates for thunk monitor to match current_ralph_tasks.sh performance improvements. This builds on P4B.1-P4B.2 (line-count tracking and tail-only parsing).
 
 **Progress velocity:**
-- Last 5 commits added: P4A.7, P4A.8 validation tests + P4B.1 line-count tracking + P6.1 audit
-- Current pace: ~5-7 tasks per PLAN interval
-- On track to complete all high-priority tasks within 10-15 BUILD iterations
+- Last PLAN interval: Completed P4A.9, P4B.2, P5.1, P5.2, P6.1 (5 tasks)
+- Current pace: ~5-7 tasks per PLAN interval (3 iterations)
+- On track to complete all high-priority tasks within 10-12 BUILD iterations
 
-**Ready to push (5 commits since last push):**
-- 9a85798 - docs(plan): audit test tasks in THUNK.md
-- e54e956 - test(ralph): Complete P4A.8 - differential update validation
-- 3e8c284 - docs(plan): mark P4B.1 complete - line-count tracking
-- e051d08 - feat(ralph): implement line-count tracking for THUNK.md
-- 1a987ef - test(ralph): Add P4A.7 validation for display refresh with 50+ tasks
+**Ready to push (6 commits since last push):**
+- 5eeb14d - docs(plan): Complete P5.2 - verify no /kb/ references
+- 7e3050e - docs(plan): mark P5.1 complete - templates now scaffold skills/ correctly
+- 3a820f2 - fix(templates): create skills/ directory instead of kb/ in new projects
+- e400909 - docs(plan): mark P4B.2 complete - tail-only parsing implemented
+- 8ef20a8 - feat(ralph): implement tail-only parsing for thunk monitor
+- 86c6903 - test(ralph): verify current task indicator symbols (P4A.9)
 
 ### Known Issues Requiring Fixes
 
