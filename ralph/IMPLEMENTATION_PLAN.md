@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & Ralph System
 
-Last updated: 2026-01-18 18:02 (BUILD iteration - P3.7 complete, Phase 3 DONE)
+Last updated: 2026-01-18 18:00 (PLAN iteration - Progress analysis and priority review)
 
 ## Current State
 
@@ -41,34 +41,76 @@ The brain repository is **fully mature and production-ready** with comprehensive
 **Phase 3 (Monitor Launch):** 7/7 complete ✅
 - P3.1-P3.7: Terminal detection, functionality tests, priority reordering, fallback messaging, non-fatal launches, tmux integration, headless fallback test ✅
 
-**Phase 4 (Performance & UX):** 0/16 pending
-- Need: Incremental display, caching, cursor positioning, symbol improvements
+**Phase 4 (Performance & UX):** 1/16 complete (6%)
+- P4A.6 complete: Title extraction for "Test:" tasks ✅
+- Remaining: Incremental display, caching, cursor positioning, symbol improvements
 
-**Phase 5 (Verification):** 0/4 pending
+**Phase 5 (Verification):** 0/4 pending (0%)
 - Need: Structure validation, template scaffolding tests
 
-**Phase 6 (Test Clarity):** 0/4 pending
+**Phase 6 (Test Clarity):** 0/22 pending (0%)
 - Need: Audit test tasks, update format standards, integration testing
 
 **Future Enhancements:** 0/5 pending (low priority)
 
 ### Analysis: Implementation Status
 
-**Current completion rate:** 21/82 tasks = 26%
+**Current completion rate:** 17/82 tasks = 21%
 
-**Key observations:**
-1. **Phase 1 is complete** (3/3) - :::COMPLETE::: detection now works reliably ✅
-2. **Phase 2 is complete** (5/5) - Monitors correctly watch files via mtime polling, no coupling to plan mode ✅
-3. **Phase 3 is complete** (7/7) - Terminal detection, functionality tests, fallback messaging, non-fatal launches, tmux integration, headless fallback test ✅
-4. **Phase 4 has 1/16 complete** - Title extraction for "Test:" tasks fixed (P4A.6) ✅
-5. **Phases 5-6 remain untouched** - Structure verification and test clarity improvements pending
+**Completed work (17/82 tasks):**
+1. **Phase 1 (Stop Condition):** 3/3 complete ✅
+   - :::COMPLETE::: detection bug fixed in both code paths
+   - Comprehensive testing validates loop exit behavior
+   
+2. **Phase 2 (Decouple Monitors):** 5/5 complete ✅
+   - Both monitors verified to watch files directly via mtime polling
+   - No coupling to Ralph's planning mode
+   - Cross-platform file watching confirmed
+   
+3. **Phase 3 (Monitor Launch):** 7/7 complete ✅
+   - Terminal detection priority reordered (tmux → wt.exe → gnome-terminal)
+   - Functionality tests prevent silent failures
+   - Single-shot fallback message with graceful degradation
+   - Non-fatal launch failures ensure Ralph loop continues
+   
+4. **Phase 4 (Performance & UX):** 1/16 complete (6%)
+   - P4A.6: Title extraction for "Test:" tasks fixed ✅
+   - **Next critical tasks:**
+     - P4A.1: Cursor positioning (eliminates blank screen)
+     - P4A.2: Completed task caching (reduces CPU)
+     - P4A.4: Current task indicator (UX improvement)
+
+**Remaining work (65/82 tasks):**
+
+**HIGH PRIORITY - Phase 4 Remaining (15 tasks):**
+- **Performance critical (P4A.1-P4A.3, P4B.1-P4B.4):** Incremental display, caching, cursor positioning
+- **UX improvements (P4A.4-P4A.5, P4A.9):** Symbol indicators, spacing, current task highlighting
+- **Validation (P4A.7-P4A.8, P4B.6-P4B.7):** Performance testing, visual verification
+
+**MEDIUM PRIORITY - Phase 5 (4 tasks):**
+- Structure verification post-migration
+- Template scaffolding validation
+- Cleanup verification (deleted directories)
+- Reference audit (no stale /kb/ paths)
+
+**MEDIUM PRIORITY - Phase 6 (22 tasks):**
+- Test description audit and clarification
+- Format standard documentation
+- Comprehensive integration testing
+- Test scenario checklist creation
+
+**LOW PRIORITY - Future Enhancements (5 tasks):**
+- Optional features (--no-monitors flag, health checks, custom terminal support)
 
 **Estimated remaining effort:**
-- Phase 4: 15 BUILD iterations (cursor positioning, caching, incremental display, symbols)
-- Phase 5: 4 BUILD iterations (structure validation)
-- Phase 6: 4 BUILD iterations (test clarity)
+- Phase 4: ~15 BUILD iterations (performance and UX are interconnected)
+- Phase 5: ~4 BUILD iterations (straightforward validation)
+- Phase 6: ~22 BUILD iterations (comprehensive testing and documentation)
 
-Total estimate: 23 BUILD iterations remaining
+**Total estimate:** ~41 BUILD iterations remaining
+
+**Strategic recommendation for next BUILD iteration:**
+Start with **P4A.1** (cursor positioning) - highest impact for eliminating blank screen issue
 
 **Recent progress (last 5 commits):**
 - 4cb6756 - P3.5 complete: Monitor launch failures now non-fatal
@@ -97,7 +139,7 @@ See THOUGHTS.md for detailed root cause analysis and design decisions.
 
 **Full specification:** See THOUGHTS.md
 
-**Progress:** 13/47 tasks complete (28%)
+**Progress:** 17/82 tasks complete (21%)
 
 Complete these tasks in order. Mark each `[x]` when done.
 
