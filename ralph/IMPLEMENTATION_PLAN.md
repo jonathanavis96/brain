@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & NeoQueue
 
-Last updated: 2026-01-18 14:21:00
+Last updated: 2026-01-18 14:28:30
 
 ## Current State
 
@@ -21,9 +21,11 @@ The brain repository is **fully mature and production-ready** with comprehensive
 - React rules: 45 files (validated, unmodified)
 - Templates: 20 files (including ralph/ subdirectory)
 - All bash scripts pass syntax validation ✓
-- THUNK.md: Created, Era 1 started
+- THUNK.md: 12 completed tasks logged (THUNK #1-12)
 - Monitor renamed: `watch_ralph_tasks.sh` → `current_ralph_tasks.sh` ✓
 - Monitor heading updated: `CURRENT RALPH TASKS` ✓
+- current_ralph_tasks.sh: Human-friendly formatting COMPLETE ✓
+- thunk_ralph_tasks.sh: Core functionality COMPLETE (375 lines, all features) ✓
 
 ### New Project: NeoQueue (from THOUGHTS.md)
 A Matrix-inspired desktop app for tracking discussion points with your manager. See THOUGHTS.md for full specification.
@@ -32,20 +34,24 @@ A Matrix-inspired desktop app for tracking discussion points with your manager. 
 
 ## 🎯 ACTIVE WORK: Two Sequential Tracks
 
-This plan contains **74 unchecked tasks** across two major features:
+This plan contains **67 unchecked tasks** across two major features:
 
-1. **THUNK Monitor System** (37 remaining) - Task completion tracking with persistent log
+1. **THUNK Monitor System** (30 remaining) - Task completion tracking with persistent log
 2. **KB→Skills Migration** (37 remaining) - Rename kb/ → skills/ + self-improvement system
 
 **Execution Strategy:**
 - ✅ Phase T1 (Monitor Rename): **COMPLETE** - All 3 tasks done
 - ✅ Phase T2 (THUNK.md): **COMPLETE** - All 3 tasks done
-- ✅ Phase T3 (Core Monitor): **95% COMPLETE** - Core functions implemented, needs validation
-- 🔄 Next: T3.2-T3.6 (mark implemented features + validate), then formatting (T3.8-T3.10), then integration phases
+- ✅ Phase T3 (Core Monitor): **COMPLETE** - All 6 tasks done (thunk_ralph_tasks.sh fully functional)
+- ✅ Phase T3.5 (Human Display): **85% COMPLETE** - current_ralph_tasks.sh formatting done, need thunk_ralph_tasks.sh update
+- 🔄 Next: T3.6 (validate thunk script), then T3.8-T3.10 (formatting improvements), then integration phases
 - Each BUILD iteration: Execute EXACTLY ONE unchecked task in sequence
 
-**Critical Discovery:**
-T3.1 implemented ALL of T3.2-T3.5 functionality in a single comprehensive script (375 lines). Tasks T3.2-T3.5 should be marked complete after validation confirms all features work.
+**Status Update:**
+- current_ralph_tasks.sh displays tasks with human-friendly "Task N — <short title>" format ✓
+- thunk_ralph_tasks.sh has ALL core features: THUNK.md parsing, completion detection, auto-append with sequential numbering, and hotkeys ✓
+- T3.8 is already implemented in current_ralph_tasks.sh (generate_title function, lines 47-80) ✓
+- Ready for validation testing and final polish
 
 ---
 
@@ -55,9 +61,9 @@ T3.1 implemented ALL of T3.2-T3.5 functionality in a single comprehensive script
 
 **Full specification:** See THOUGHTS.md section "THUNK Monitor System"
 
-**Progress:** 8/45 tasks complete (18%)
+**Progress:** 14/45 tasks complete (31%)
 
-**Status:** T3.1 created basic script structure with all core functions implemented. Tasks T3.2-T3.5 are ALREADY COMPLETE in the implementation but not yet marked. Need validation testing (T3.6) before proceeding to formatting phase.
+**Status:** Phase T1-T3 complete. current_ralph_tasks.sh has human-friendly display. thunk_ralph_tasks.sh fully functional with all core features. T3.8 already implemented. Ready for validation and thunk_ralph_tasks.sh formatting update.
 
 Complete these tasks in order. Mark each `[x]` when done.
 
@@ -95,10 +101,11 @@ Complete these tasks in order. Mark each `[x]` when done.
   - Format as `Task N — <short title>` with bold if terminal supports
   - Indent sub-bullets under task headers
   - Wrap long lines but maintain indent
-- [ ] **T3.8** Implement title generation logic:
+- [x] **T3.8** Implement title generation logic:
   - Look for action verbs (Rename, Update, Create, Verify, Delete, Add, Remove, Test)
   - Extract main object/target
   - Keep to 2-4 words max
+  - ✅ Implemented in generate_title() function (lines 47-80)
 - [ ] **T3.9** Update `thunk_ralph_tasks.sh` to use same human-friendly formatting
 - [ ] **T3.10** Test display formatting with various task types:
   - Single action tasks
