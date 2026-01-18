@@ -392,6 +392,23 @@ else
     warn "Template not found: ralph/pr-batch.sh"
 fi
 
+# Copy monitor scripts (THUNK system)
+if [ -f "$TEMPLATES_DIR/ralph/current_ralph_tasks.sh" ]; then
+    cp "$TEMPLATES_DIR/ralph/current_ralph_tasks.sh" "$PROJECT_LOCATION/ralph/current_ralph_tasks.sh"
+    chmod +x "$PROJECT_LOCATION/ralph/current_ralph_tasks.sh"
+    success "Copied ralph/current_ralph_tasks.sh (executable)"
+else
+    warn "Template not found: ralph/current_ralph_tasks.sh"
+fi
+
+if [ -f "$TEMPLATES_DIR/ralph/thunk_ralph_tasks.sh" ]; then
+    cp "$TEMPLATES_DIR/ralph/thunk_ralph_tasks.sh" "$PROJECT_LOCATION/ralph/thunk_ralph_tasks.sh"
+    chmod +x "$PROJECT_LOCATION/ralph/thunk_ralph_tasks.sh"
+    success "Copied ralph/thunk_ralph_tasks.sh (executable)"
+else
+    warn "Template not found: ralph/thunk_ralph_tasks.sh"
+fi
+
 # Generate custom files using HIGH INTELLIGENCE generators
 info "Generating custom project files..."
 
