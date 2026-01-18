@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & NeoQueue
 
-Last updated: 2026-01-18 13:50:00
+Last updated: 2026-01-18 13:56:47
 
 ## Current State
 
@@ -733,26 +733,44 @@ These are **not active tasks** - they represent potential future work that shoul
 
 ## Discoveries & Notes
 
-### 2026-01-18 13:50 - PLAN Mode: THUNK Monitor + KB→Skills Migration Status
+### 2026-01-18 13:56 - PLAN Mode: Task Prioritization & Breakdown Analysis
 
-**Gap Analysis Summary:**
+**Current State Summary:**
+- 82 unchecked tasks remaining across 2 major features
+- 5 completed tasks (Phase 1 of KB→Skills Migration complete)
+- Both features fully specified in THOUGHTS.md with detailed runbooks
 
-Two major features specified in THOUGHTS.md are NOT YET IMPLEMENTED:
+**Task Breakdown Analysis:**
 
-1. **THUNK Monitor System (43 subtasks):**
-   - `watch_ralph_tasks.sh` exists but NOT renamed to `current_ralph_tasks.sh`
-   - `thunk_ralph_tasks.sh` does NOT exist
-   - `THUNK.md` does NOT exist
-   - No monitor templates in `templates/ralph/`
-   - Auto-launch integration NOT done in `loop.sh`
+1. **THUNK Monitor System: 40 subtasks across 6 phases**
+   - Phase T1 (Rename): 3 tasks - Simple file operations
+   - Phase T2 (Create THUNK.md): 3 tasks - File creation with template
+   - Phase T3 (Create monitor): 6 tasks - Core implementation
+   - Phase T3.5 (Display formatting): 4 tasks - Human-friendly UI
+   - Phase T4 (Auto-launch): 4 tasks - Integration with loop.sh
+   - Phase T5 (Bootstrap): 5 tasks - Template integration
+   - Phase T6 (Validation): 5 tasks - End-to-end testing
 
-2. **KB→Skills Migration (41 subtasks):**
-   - Phase 1 (Safety Checks): ✅ COMPLETE - brain_staging/brain_promoted already deleted, kb/ exists
-   - Phase 2-7: NOT STARTED - `kb/` not renamed to `skills/`, no self-improvement system
+2. **KB→Skills Migration: 42 subtasks across 7 phases**
+   - Phase 1: ✅ COMPLETE (3/3 tasks done)
+   - Phase 2 (Rename): 2 tasks - Folder rename operation
+   - Phase 3 (Self-improvement): 5 tasks - Create system files
+   - Phase 4 (Index): 2 tasks - Update summary, create index
+   - Phase 5 (References): 29 tasks - Update all kb→skills refs
+   - Phase 6 (Protocol): 4 tasks - Wire self-improvement into workflow
+   - Phase 7 (Validation): 4 tasks - Final verification
 
-**Prioritization Decision:**
-- THUNK Monitor first (smaller scope, provides visibility into task completion)
-- KB→Skills Migration second (larger scope, depends on having good task tracking)
+**Execution Strategy:**
+- Complete THUNK Monitor first (provides task tracking visibility)
+- Then execute KB→Skills Migration (benefits from improved tracking)
+- Each BUILD iteration executes exactly ONE task in sequence
+- Validation tasks at end of each phase ensure quality gates
+
+**Critical Path Dependencies:**
+- T2.3 depends on having completed KB migration tasks to log
+- T3.7-T3.10 (formatting) can be done after T3.1-T3.6 (core monitor)
+- T5.x (bootstrap) depends on T3.x (monitor creation) being complete
+- KB Phase 5 (references) must happen after Phase 2 (rename) completes
 
 **Next BUILD iteration should:** Execute task T1.1 (rename watch_ralph_tasks.sh → current_ralph_tasks.sh)
 
