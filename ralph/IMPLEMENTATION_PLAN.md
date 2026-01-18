@@ -171,10 +171,12 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - ✅ Poll interval: 0.5s (line 416 `sleep 0.5`)
   - **Documentation:** This is already correct behavior - monitor watches THUNK.md directly via mtime polling, no coupling to Ralph's planning mode
 
-- [ ] **P2.2** Verify current_ralph_tasks.sh watches IMPLEMENTATION_PLAN.md directly:
-  - Confirm file watch at line 507-511
-  - Confirm extract_tasks() reads only from IMPLEMENTATION_PLAN.md
-  - Document: This is already correct behavior
+- [x] **P2.2** Verify current_ralph_tasks.sh watches IMPLEMENTATION_PLAN.md directly: ✅ VERIFIED
+  - ✅ File watch at lines 507-511: Uses `get_file_mtime()` to poll IMPLEMENTATION_PLAN.md modification time
+  - ✅ extract_tasks() reads only from IMPLEMENTATION_PLAN.md: Line 159 `done < "$PLAN_FILE"` reads directly
+  - ✅ PLAN_FILE defined at line 25: `"$RALPH_DIR/IMPLEMENTATION_PLAN.md"`
+  - ✅ Poll interval: 0.5s (line 515 `sleep 0.5`)
+  - **Documentation:** This is already correct behavior - monitor watches IMPLEMENTATION_PLAN.md directly via mtime polling, no coupling to Ralph's planning mode
 
 - [ ] **P2.3** Verify monitors use file mtime polling (not inotify):
   - Current: 0.5s poll interval (line 515 in current_ralph_tasks.sh)
