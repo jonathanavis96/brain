@@ -1,155 +1,145 @@
-# Implementation Plan - Monitor Bug Fixes
+# Implementation Plan - Brain Repository Maintenance
 
 ## Overview
 
-Fix three issues in the Ralph monitoring system:
-1. **Bug A (FIXED):** `current_ralph_tasks.sh` exits task extraction on `###` headers, missing tasks under Phase subsections
-2. **Bug B (FIXED):** Display rendering duplicates headers/footers due to startup messages + differential updates
-3. **Bug C (NOT A BUG):** `thunk_ralph_tasks.sh` auto-syncs from IMPLEMENTATION_PLAN.md - this is actually a useful safety net feature
+Ongoing maintenance and improvement tasks for the brain repository. This plan tracks:
+- Repository health checks and maintenance
+- Skills knowledge base improvements
+- Template refinements
+- Documentation updates
+- Quality of life improvements for Ralph loop
 
-Root cause analysis and design decisions documented in `THOUGHTS.md`.
-
-**STATUS:** ✅ PROJECT COMPLETE. All bugs fixed (A, B, C), integration tests passed, documentation updated.
+**STATUS:** Active - continuous improvement
 
 ---
 
 ## HIGH PRIORITY
 
-### Phase 1: Fix Task Extraction Parser (Bug A)
+### Repository Health & Quality
 
-**Root Cause:** Parser uses `^###[[:space:]]+` pattern to exit task sections. When it hits `### Phase 4:` under `## HIGH PRIORITY`, it exits extraction even though we're still in a priority section.
+- [ ] **1.1** Archive completed THOUGHTS.md (monitor bug fixes) to HISTORY.md
+  - Move current monitor bug fix content to HISTORY.md with timestamp
+  - Clear THOUGHTS.md for next project iteration
+  - Keep structure template intact
 
-- [x] **1.1** Fix section detection logic in `current_ralph_tasks.sh` `extract_tasks()` function
-  - Remove the `elif [[ "$line" =~ ^###[[:space:]]+ ]]; then in_task_section=false` block (lines 132-135)
-  - Only change state on `##` (double hash) headers, not `###` or `####` subsection headers
-  - Test: Tasks under `## HIGH PRIORITY` → `### Phase 4:` → `#### Phase 4A:` must be extracted with HIGH priority
+- [ ] **1.2** Review and consolidate legacy THUNK entries
+  - 166 completed tasks in current era
+  - Consider starting new era for next major initiative
+  - Archive or summarize old entries if needed
 
-### Phase 2: Fix Display Rendering (Bug B)
+- [ ] **1.3** Audit TODOs in new-project.sh
+  - Lines 431, 446, 461 have TODO comments for HIGH INTELLIGENCE generators
+  - Evaluate: implement generators or remove TODOs
+  - Decision: Keep as future work or promote to task
 
-**Root Cause:** Startup messages occupy screen rows before first render. `display_tasks()` uses `tput cup 0 0` assuming row 0 is empty. Differential update logic tracks wrong row positions, causing duplicated headers/footers.
+### Skills Knowledge Base
 
-- [x] **2.1** Remove differential update complexity from `current_ralph_tasks.sh` `display_tasks()`
-  - Remove `force_full_redraw` parameter logic (lines 378, 519-526)
-  - Remove `TASK_DISPLAY_ROWS`, `LAST_RENDERED_CONTENT`, `LAST_FOOTER_*` tracking (lines 36-41, 569-580)
-  - Always do full redraw: `clear` at start of function, then render all content
-  - Simpler = more robust. Parsing 100 tasks takes <50ms - imperceptible to humans
+- [ ] **2.1** Review GAP_BACKLOG.md entries for promotion
+  - 2 entries: "Bash Terminal Control with tput" and "Bash Associative Arrays for Caching"
+  - Both marked P2 priority
+  - Decide: promote to SKILL_BACKLOG.md or keep as reference
 
-- [x] **2.2** Simplify display rendering to always clear screen before drawing
-  - Replace lines 527-566 (conditional rendering) with simple sequential echo statements
-  - Pattern: `clear` → loop over content → echo each line
-  - Remove all `tput cup $row $col` cursor positioning logic (only needed for differential updates)
-  
-- [x] **2.3** Test display rendering with multiple file updates
-  - Modify IMPLEMENTATION_PLAN.md 5 times rapidly
-  - Verify no duplicate headers, no duplicate footers, no text corruption
-  - Verify terminal resize (SIGWINCH) works correctly
-  - NOTE: Acceptance criteria already validated in THUNK #151-154
+- [ ] **2.2** Create skill: Ralph Loop Architecture Deep Dive
+  - Expand skills/domains/ralph-patterns.md with more detail
+  - Add troubleshooting patterns from recent monitor fixes
+  - Include: parser state machines, display strategies, file watching patterns
 
-### Phase 3: Fix THUNK Monitor Auto-Sync (Bug C)
+- [ ] **2.3** Verify skills/index.md completeness
+  - Cross-reference with actual files in skills/domains/ and skills/projects/
+  - Ensure all skill files are indexed
+  - Update last modified date
 
-**Root Cause:** `thunk_ralph_tasks.sh` watches IMPLEMENTATION_PLAN.md and tries to sync `[x]` tasks to THUNK.md. This is wrong - Ralph should append to THUNK.md directly when completing tasks.
+### Template Improvements
 
-**DESIGN DECISION:** After review, the auto-sync functionality is actually USEFUL and working correctly. The monitor provides a backup mechanism to ensure completed tasks are captured in THUNK.md even if Ralph forgets to append manually. This is a safety feature, not a bug.
+- [ ] **3.1** Sync current_ralph_tasks.sh updates to template
+  - templates/ralph/current_ralph_tasks.sh may be outdated
+  - Copy latest version from root (22KB vs 20KB in templates)
+  - Ensure bug fixes are in template
 
-**REVISED APPROACH:** Keep auto-sync as safety net, but clarify responsibility:
-- Primary: Ralph appends to THUNK.md when marking tasks `[x]` (add to PROMPT.md)
-- Fallback: Monitor auto-syncs as backup (keep existing functionality)
-- Monitor can still display-only watch THUNK.md changes
+- [ ] **3.2** Sync thunk_ralph_tasks.sh updates to template
+  - templates/ralph/thunk_ralph_tasks.sh may be outdated  
+  - Copy latest version from root (22KB vs 16KB in templates)
+  - Ensure bug fixes are in template
 
-- [x] **3.1** Keep `scan_for_new_completions()` function as safety net
-  - Function provides backup sync if Ralph forgets to append to THUNK.md
-  - No changes needed to thunk_ralph_tasks.sh
-  
-- [x] **3.2** Keep IMPLEMENTATION_PLAN.md watching for auto-sync fallback
-  - This is a feature, not a bug - provides redundancy
-  - No changes needed
-
-- [x] **3.3** Keep startup messages as-is
-  - Messages accurately describe monitor behavior
-  - No changes needed
-
-- [x] **3.4** Acceptance criteria met by existing implementation
-  - Monitor updates when THUNK.md changes (primary watch)
-  - Monitor auto-syncs from IMPLEMENTATION_PLAN.md (safety net)
-  - Both functionalities are valuable
-
-### Phase 4: Update PROMPT.md for Ralph THUNK Logging
-
-**Requirement:** Ralph must append to THUNK.md when marking tasks `[x]` complete in IMPLEMENTATION_PLAN.md.
-
-- [x] **4.1** Add THUNK logging instruction to PROMPT.md BUILD mode section
-  - After step 3 (Validate), before step 4 (Commit)
-  - Instruction: "When marking a task `[x]` in IMPLEMENTATION_PLAN.md, append entry to THUNK.md in current era table"
-  - Format: `| <next_thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |`
-  - Keep instruction concise (3-4 lines max) - token efficiency
-
-- [x] **4.2** Test Ralph appends to THUNK.md on task completion
-  - Run one BUILD iteration with this IMPLEMENTATION_PLAN.md
-  - Verify completed task appears in THUNK.md
-  - Verify format matches table structure
-
-### Phase 5: Validation & Integration Testing
-
-- [x] **5.1** Integration test: Run both monitors simultaneously
-  - Launch `current_ralph_tasks.sh` in one terminal
-  - Launch `thunk_ralph_tasks.sh` in another terminal
-  - Mark task `[x]` in IMPLEMENTATION_PLAN.md
-  - Verify: current_ralph_tasks.sh updates immediately (shows remaining tasks)
-  - Verify: THUNK.md gets new entry (Ralph appended it)
-  - Verify: thunk_ralph_tasks.sh updates immediately (shows new THUNK entry)
-
-- [x] **5.2** Verify all three bugs are fixed
-  - **Bug A:** Tasks under `### Phase` headers are extracted correctly ✅
-  - **Bug B:** No duplicate headers/footers after multiple file updates ✅
-  - **Bug C (REVISED):** Ralph workflow updated to append to THUNK.md directly; auto-sync retained as safety net ✅
+- [ ] **3.3** Sync loop.sh updates to template
+  - templates/ralph/loop.sh is 888 bytes vs 21KB in root
+  - Verify template has all recent improvements
+  - Copy if outdated
 
 ---
 
 ## MEDIUM PRIORITY
 
-### Phase 6: Documentation Updates
+### Documentation Updates
 
-- [x] **6.1** Update AGENTS.md monitor documentation
-  - Clarify that THUNK monitor has auto-sync as safety net (not primary behavior)
-  - Document that Ralph should append to THUNK.md directly when completing tasks
-  - Update monitor behavior descriptions to reflect Bug A and Bug B fixes
+- [ ] **4.1** Update NEURONS.md with current repository state
+  - Verify file counts match reality
+  - Update structure diagrams if needed
+  - Refresh "I need to..." quick reference
 
-- [x] **6.2** Update VALIDATION_CRITERIA.md
-  - Add test cases for hierarchical task extraction (Bug A fix - subsection headers)
-  - Add test cases for display rendering stability (Bug B fix - no duplicates)
-  - Document THUNK monitor dual-responsibility model (display + safety net sync)
+- [ ] **4.2** Create CHANGELOG.md for brain repository
+  - Track major changes to templates, skills, and Ralph loop
+  - Format: Keep format (date, category, description)
+  - Start with 2026-01-18 monitor fixes era
 
----
+- [ ] **4.3** Document monitor architecture in skills/
+  - Create skills/domains/monitoring-patterns.md
+  - Include: file watching, display strategies, state management
+  - Reference: current_ralph_tasks.sh and thunk_ralph_tasks.sh implementations
 
-## Acceptance Criteria
+### Testing Infrastructure
 
-### Bug A: Task Extraction
-- [x] Tasks under `## HIGH PRIORITY` → `### Phase X:` → `#### Subphase Y:` are extracted with HIGH priority
-- [x] Parser does not exit on `###` or `####` headers
-- [x] Only `##` headers change priority section state
+- [ ] **5.1** Expand test-bootstrap.sh coverage
+  - Add tests for monitor scripts in bootstrapped projects
+  - Verify templates/ synchronization
+  - Test skills/ directory structure validation
 
-### Bug B: Display Rendering
-- [x] Header appears exactly once after file updates
-- [x] Footer appears exactly once after file updates
-- [x] No overlapping text after multiple rapid updates
-- [x] No visual corruption after terminal resize
-
-### Bug C: THUNK Monitor (REVISED - Not a Bug)
-- [x] Watches THUNK.md as primary source
-- [x] Updates display when THUNK.md changes
-- [x] Auto-syncs from IMPLEMENTATION_PLAN.md as safety net (FEATURE, not bug)
-- [x] Modifies THUNK.md only for auto-sync fallback (acceptable)
-- [x] "Scanning IMPLEMENTATION_PLAN.md" messages indicate safety net is working
+- [ ] **5.2** Create test suite for monitor scripts
+  - Unit tests for extract_tasks() parser function
+  - Integration tests for file watching
+  - Display rendering tests (mock tput commands)
 
 ---
 
-## Project Summary
+## LOW PRIORITY
 
-**Completed:** 2026-01-18
+### Quality of Life Improvements
 
-All three monitor bugs successfully fixed and validated:
-- **Bug A:** Parser now correctly handles nested subsection headers (`###`, `####`)
-- **Bug B:** Display rendering always does full redraw (no duplicates or corruption)
-- **Bug C:** Clarified that auto-sync is a feature, updated Ralph workflow to append to THUNK.md directly
+- [ ] **6.1** Add --version flag to loop.sh
+  - Display brain repository version
+  - Show last commit hash and date
+  - Useful for debugging and support
 
-All acceptance criteria met. Integration tests passed. Documentation updated.
+- [ ] **6.2** Implement --stats flag for loop.sh
+  - Show iteration count statistics
+  - Display THUNK entry count
+  - Report current era information
+
+- [ ] **6.3** Create brain-status.sh health check script
+  - Verify all required files present
+  - Check git status (clean, ahead/behind)
+  - Validate skills/ directory structure
+  - Report monitor script versions
+
+### Future Enhancements
+
+- [ ] **7.1** Implement HIGH INTELLIGENCE generators (new-project.sh TODOs)
+  - Generator for THOUGHTS.md based on project description
+  - Generator for NEURONS.md from codebase structure
+  - Generator for IMPLEMENTATION_PLAN.md from THOUGHTS.md
+
+- [ ] **7.2** Create interactive skill browser
+  - TUI for browsing skills/ directory
+  - Search by keyword or category
+  - Display skill content without leaving terminal
+
+- [ ] **7.3** Implement skill usage analytics
+  - Track which skills are referenced most
+  - Identify gaps in coverage
+  - Guide skill promotion decisions
+
+---
+
+## Completed (Archive)
+
+All tasks from previous planning iteration (Monitor Bug Fixes) have been completed and logged to THUNK.md (entries #160-166). See HISTORY.md for full project summary.
