@@ -44,11 +44,14 @@ get_file_mtime() {
 generate_title() {
     local desc="$1"
     
-    # Strip technical IDs (T1.1, P4A.7, 1.1, 2.3, etc.) from the beginning
-    desc=$(echo "$desc" | sed -E 's/^[[:space:]]*\*\*[T]?[0-9A-Za-z]+(\.[0-9A-Za-z]+)*\*\*[[:space:]]*//')
+    # Strip technical IDs (T1.1, P4A.7, 1.1, 2.3, etc.) from the beginning - use bash parameter expansion
+    desc="${desc#"${desc%%[![:space:]]*}"}"  # Trim leading whitespace
+    if [[ "$desc" =~ ^\*\*[T]?[0-9A-Za-z]+(\.[0-9A-Za-z]+)*\*\*[[:space:]]* ]]; then
+        desc="${desc#*\*\* }"  # Remove up to and including "** "
+    fi
     
-    # Strip markdown bold markers
-    desc=$(echo "$desc" | sed -E 's/\*\*//g')
+    # Strip markdown bold markers - use bash parameter expansion
+    desc="${desc//\*\*/}"
     
     # Extract action verb and main object (look for common action verbs)
     if [[ "$desc" =~ ^(Rename|Update|Create|Verify|Delete|Add|Remove|Test|Implement|Fix|Refactor|Document|Migrate|Copy|Set|Run|If)([[:space:]]*:[[:space:]]*|[[:space:]]+)(.+)$ ]]; then
@@ -62,20 +65,22 @@ generate_title() {
             if [[ "$rest" =~ ^([^.→]+)[.→] ]]; then
                 rest="${BASH_REMATCH[1]}"
             else
-                rest=$(echo "$rest" | cut -c1-50)
+                rest="${rest:0:50}"  # Use bash substring instead of cut
             fi
-            # Remove any trailing quotes, backticks, or markdown
-            rest=$(echo "$rest" | sed -E 's/`[[:space:]]*$//; s/[[:space:]]*$//')
+            # Remove trailing whitespace and backticks - use bash parameter expansion
+            rest="${rest%\`}"
+            rest="${rest%"${rest##*[![:space:]]}"}"  # Trim trailing whitespace
             echo "$verb: $rest"
         else
             # For other verbs, take up to colon with space (title separator) or first 50 chars
             if [[ "$rest" =~ ^([^:]+):[[:space:]] ]]; then
                 rest="${BASH_REMATCH[1]}"
             else
-                rest=$(echo "$rest" | cut -c1-50)
+                rest="${rest:0:50}"  # Use bash substring instead of cut
             fi
-            # Remove any trailing quotes, backticks, or markdown
-            rest=$(echo "$rest" | sed -E 's/`[[:space:]]*$//; s/[[:space:]]*$//')
+            # Remove trailing whitespace and backticks - use bash parameter expansion
+            rest="${rest%\`}"
+            rest="${rest%"${rest##*[![:space:]]}"}"  # Trim trailing whitespace
             echo "$verb $rest"
         fi
     else
@@ -83,7 +88,9 @@ generate_title() {
         if [[ "$desc" =~ ^([^:.]+)[:.] ]]; then
             echo "${BASH_REMATCH[1]}"
         else
-            echo "$desc" | cut -c1-60 | sed 's/[[:space:]]*$//'
+            local result="${desc:0:60}"  # Use bash substring instead of cut
+            result="${result%"${result##*[![:space:]]}"}"  # Trim trailing whitespace
+            echo "$result"
         fi
     fi
 }
@@ -237,7 +244,7 @@ scan_for_new_completions() {
     sleep 2
 }
 
-# Function to display THUNK.md contents
+# Function to display THUNK.md contents (full refresh)
 display_thunks() {
     clear
     
@@ -250,6 +257,7 @@ display_thunks() {
     local current_era=""
     local total_count=0
     local in_era=false
+    local display_row=4  # Track row position (starting after header)
     
     while IFS= read -r line; do
         # Detect Era headers
@@ -257,10 +265,14 @@ display_thunks() {
             current_era="${BASH_REMATCH[1]}"
             in_era=true
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            ((display_row++))
             echo "  Era: $current_era"
+            ((display_row++))
         elif [[ "$line" =~ ^Started:[[:space:]]+(.+)$ ]]; then
             echo "  Started: ${BASH_REMATCH[1]}"
+            ((display_row++))
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            ((display_row++))
         elif [[ "$line" =~ ^\|[[:space:]]*([0-9]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|$ ]]; then
             # Parse table row
             local thunk_num="${BASH_REMATCH[1]}"
@@ -269,12 +281,17 @@ display_thunks() {
             local description="${BASH_REMATCH[4]}"
             local completed="${BASH_REMATCH[5]}"
             
-            # Strip whitespace
-            thunk_num=$(echo "$thunk_num" | xargs)
-            orig_num=$(echo "$orig_num" | xargs)
-            priority=$(echo "$priority" | xargs)
-            description=$(echo "$description" | xargs)
-            completed=$(echo "$completed" | xargs)
+            # Strip whitespace using bash parameter expansion (faster than xargs)
+            thunk_num="${thunk_num#"${thunk_num%%[![:space:]]*}"}"  # Trim leading
+            thunk_num="${thunk_num%"${thunk_num##*[![:space:]]}"}"  # Trim trailing
+            orig_num="${orig_num#"${orig_num%%[![:space:]]*}"}"
+            orig_num="${orig_num%"${orig_num##*[![:space:]]}"}"
+            priority="${priority#"${priority%%[![:space:]]*}"}"
+            priority="${priority%"${priority##*[![:space:]]}"}"
+            description="${description#"${description%%[![:space:]]*}"}"
+            description="${description%"${description##*[![:space:]]}"}"
+            completed="${completed#"${completed%%[![:space:]]*}"}"
+            completed="${completed%"${completed##*[![:space:]]}"}"
             
             # Skip header row
             if [[ "$thunk_num" =~ ^[0-9]+$ ]]; then
@@ -288,28 +305,124 @@ display_thunks() {
                     echo "  ✓ THUNK #$thunk_num — $short_title"
                 fi
                 ((total_count++))
+                ((display_row++))
             fi
         fi
     done < "$THUNK_FILE"
     
     if [[ $total_count -eq 0 ]]; then
         echo "  No completed tasks yet."
+        ((display_row++))
         echo ""
+        ((display_row++))
     fi
     
     # Footer
     echo ""
+    ((display_row++))
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    ((display_row++))
     echo "  Total Thunked: $total_count"
+    ((display_row++))
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    ((display_row++))
     echo ""
+    ((display_row++))
     
     # Hotkey legend
     echo "╔════════════════════════════════════════════════════════════════╗"
+    ((display_row++))
     echo "║  HOTKEYS: [r] Refresh/Clear   [f] Force Sync   [e] New Era    ║"
+    ((display_row++))
     echo "║           [q] Quit                                             ║"
+    ((display_row++))
     echo "╚════════════════════════════════════════════════════════════════╝"
+    ((display_row++))
     echo ""
+    ((display_row++))
+    
+    # Store last display row and total count for incremental updates
+    LAST_DISPLAY_ROW=$display_row
+    LAST_TOTAL_COUNT=$total_count
+}
+
+# Function to parse only new entries from THUNK.md (tail-only parsing)
+# Args: $1 = start_line (line number to start reading from)
+# Appends new entries to display and updates footer
+parse_new_thunk_entries() {
+    local start_line="$1"
+    local line_num=0
+    local new_count=0
+    
+    # Position cursor at the row where new content should be appended
+    # This is stored from the last full display
+    local append_row=$((LAST_DISPLAY_ROW - 8))  # Back up before footer (8 lines: blank, separator, total, separator, blank, 3 hotkey lines)
+    
+    while IFS= read -r line; do
+        ((line_num++))
+        
+        # Skip lines before start_line
+        if [[ $line_num -le $start_line ]]; then
+            continue
+        fi
+        
+        # Parse table rows only (skip headers, era markers, etc.)
+        if [[ "$line" =~ ^\|[[:space:]]*([0-9]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|$ ]]; then
+            # Parse table row
+            local thunk_num="${BASH_REMATCH[1]}"
+            local orig_num="${BASH_REMATCH[2]}"
+            local priority="${BASH_REMATCH[3]}"
+            local description="${BASH_REMATCH[4]}"
+            local completed="${BASH_REMATCH[5]}"
+            
+            # Strip whitespace using bash parameter expansion (faster than xargs)
+            thunk_num="${thunk_num#"${thunk_num%%[![:space:]]*}"}"  # Trim leading
+            thunk_num="${thunk_num%"${thunk_num##*[![:space:]]}"}"  # Trim trailing
+            orig_num="${orig_num#"${orig_num%%[![:space:]]*}"}"
+            orig_num="${orig_num%"${orig_num##*[![:space:]]}"}"
+            priority="${priority#"${priority%%[![:space:]]*}"}"
+            priority="${priority%"${priority##*[![:space:]]}"}"
+            description="${description#"${description%%[![:space:]]*}"}"
+            description="${description%"${description##*[![:space:]]}"}"
+            completed="${completed#"${completed%%[![:space:]]*}"}"
+            completed="${completed%"${completed##*[![:space:]]}"}"
+            
+            # Skip header row
+            if [[ "$thunk_num" =~ ^[0-9]+$ ]]; then
+                # Generate human-friendly short title
+                local short_title=$(generate_title "$description")
+                
+                # Position cursor and append new entry
+                tput cup $append_row 0
+                if [[ -t 1 ]]; then
+                    echo -e "  \033[32m✓\033[0m \033[1mTHUNK #$thunk_num\033[0m — $short_title"
+                else
+                    echo "  ✓ THUNK #$thunk_num — $short_title"
+                fi
+                
+                ((new_count++))
+                ((append_row++))
+            fi
+        fi
+    done < "$THUNK_FILE"
+    
+    # Update the total count in footer
+    local new_total=$((LAST_TOTAL_COUNT + new_count))
+    local footer_row=$((append_row + 2))  # Skip blank line, then separator
+    
+    # Clear and redraw footer with updated count
+    tput cup $footer_row 0
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    tput cup $((footer_row + 1)) 0
+    echo "  Total Thunked: $new_total"
+    tput cup $((footer_row + 2)) 0
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    tput cup $((footer_row + 3)) 0
+    echo ""
+    
+    # Update stored state
+    LAST_DISPLAY_ROW=$((footer_row + 9))  # Footer + blank + 3 hotkey lines + blank
+    LAST_TOTAL_COUNT=$new_total
 }
 
 # Function to create new era
@@ -358,9 +471,10 @@ scan_for_new_completions
 # Display thunks immediately
 display_thunks
 
-# Get initial modification times
+# Get initial modification times and line count
 LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
 LAST_PLAN_MODIFIED=$(get_file_mtime "$PLAN_FILE")
+LAST_LINE_COUNT=$(wc -l < "$THUNK_FILE" 2>/dev/null || echo "0")
 
 # Enable non-blocking input
 if [[ -t 0 ]]; then
@@ -388,17 +502,20 @@ while true; do
                 # Refresh/Clear
                 display_thunks
                 LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
+                LAST_LINE_COUNT=$(wc -l < "$THUNK_FILE" 2>/dev/null || echo "0")
                 ;;
             f|F)
                 # Force sync
                 scan_for_new_completions
                 LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
+                LAST_LINE_COUNT=$(wc -l < "$THUNK_FILE" 2>/dev/null || echo "0")
                 display_thunks
                 ;;
             e|E)
                 # New era
                 create_new_era
                 LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
+                LAST_LINE_COUNT=$(wc -l < "$THUNK_FILE" 2>/dev/null || echo "0")
                 display_thunks
                 ;;
             q|Q)
@@ -414,7 +531,23 @@ while true; do
     
     if [[ "$CURRENT_THUNK_MODIFIED" != "$LAST_THUNK_MODIFIED" ]]; then
         LAST_THUNK_MODIFIED="$CURRENT_THUNK_MODIFIED"
-        display_thunks
+        
+        # Check line count to determine update strategy
+        CURRENT_LINE_COUNT=$(wc -l < "$THUNK_FILE" 2>/dev/null || echo "0")
+        
+        if [[ "$CURRENT_LINE_COUNT" -lt "$LAST_LINE_COUNT" ]]; then
+            # Line count decreased - full refresh needed (rare case: deletions)
+            display_thunks
+        elif [[ "$CURRENT_LINE_COUNT" -gt "$LAST_LINE_COUNT" ]]; then
+            # Line count increased - only new lines added (common case: append-only)
+            # Use tail-only parsing for efficiency
+            parse_new_thunk_entries "$LAST_LINE_COUNT"
+        else
+            # Same line count - content modified (edits)
+            display_thunks
+        fi
+        
+        LAST_LINE_COUNT="$CURRENT_LINE_COUNT"
     fi
     
     if [[ "$CURRENT_PLAN_MODIFIED" != "$LAST_PLAN_MODIFIED" ]]; then
@@ -422,6 +555,7 @@ while true; do
         # Auto-sync when IMPLEMENTATION_PLAN.md changes
         scan_for_new_completions
         LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
+        LAST_LINE_COUNT=$(wc -l < "$THUNK_FILE" 2>/dev/null || echo "0")
         display_thunks
     fi
     

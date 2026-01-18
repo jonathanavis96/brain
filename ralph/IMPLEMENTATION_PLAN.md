@@ -58,7 +58,7 @@ Ongoing maintenance and improvement tasks for the brain repository. This plan tr
   - Copy latest version from root
   - Ensure all monitor bug fixes are in template
 
-- [ ] **3.2** Sync thunk_ralph_tasks.sh updates to template
+- [x] **3.2** Sync thunk_ralph_tasks.sh updates to template
   - templates/ralph/thunk_ralph_tasks.sh is outdated (16KB vs 22.5KB in root)
   - Copy latest version from root
   - Ensure all monitor bug fixes are in template
