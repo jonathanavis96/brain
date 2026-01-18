@@ -462,9 +462,11 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - Implementation: parse_new_thunk_entries() uses tput cup for cursor positioning
   - Verified: All cursor positioning logic confirmed via automated test
 
-- [ ] **P4B.5** Apply same title extraction fix for "Test:" tasks:
-  - Use same logic as P4A.6
-  - Ensure consistency between both monitors
+- [x] **P4B.5** Apply same title extraction fix for "Test:" tasks: ✅ COMPLETE
+  - Copied Test: prefix handling from thunk_ralph_tasks.sh to current_ralph_tasks.sh
+  - Both monitors now consistently display "Test: <object>" format
+  - Enhanced ID pattern regex to handle alphanumeric task IDs (P4A.7, T1.1, etc.)
+  - Updated both active script and template version
 
 - [ ] **P4B.6** Test: Add entry to THUNK.md → expect new entry appears without full redraw
   - Manually append a table row to THUNK.md
