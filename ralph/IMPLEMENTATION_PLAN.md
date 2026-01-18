@@ -41,13 +41,14 @@ The brain repository is **fully mature and production-ready** with comprehensive
 **Phase 3 (Monitor Launch):** 7/7 complete ✅
 - P3.1-P3.7: Terminal detection, functionality tests, priority reordering, fallback messaging, non-fatal launches, tmux integration, headless fallback test ✅
 
-**Phase 4 (Performance & UX):** 6/16 complete (38%)
+**Phase 4 (Performance & UX):** 7/16 complete (44%)
 - P4A.1: Cursor positioning (top-anchored display) ✅
 - P4A.2: Completed task caching ✅
 - P4A.3: Differential display update ✅
+- P4A.4: Current task indicator with ▶ symbol ✅
 - P4A.5: Task formatting with spacing ✅
 - P4A.6: Title extraction for "Test:" tasks ✅
-- Remaining: Current task indicator (P4A.4), test validation (P4A.7-9), thunk monitor improvements (P4B)
+- Remaining: test validation (P4A.7-9), thunk monitor improvements (P4B)
 
 **Phase 5 (Verification):** 0/4 pending (0%)
 - Need: Structure validation, template scaffolding tests
@@ -367,10 +368,13 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - **Full redraw:** First render, state size changes, or hotkey actions (toggle, archive, clear, refresh, help)
   - **Result:** Completed tasks remain stable, only changed lines update on file modifications
 
-- [ ] **P4A.4** Add "current task" indicator with distinct symbol:
+- [x] **P4A.4** Add "current task" indicator with distinct symbol: ✅ COMPLETE
   - First `[ ]` task encountered = current (mark with `▶`)
   - All subsequent `[ ]` tasks = pending (mark with `○`)
   - Completed tasks = `✓` (unchanged)
+  - **Implementation:** Modified extract_tasks() and display_tasks() in current_ralph_tasks.sh
+  - **Logic:** Tracks first_pending_seen flag, assigns ▶ to first pending, ○ to rest
+  - **Result:** Current task clearly visible in monitor display
 
 - [x] **P4A.5** Implement detailed task formatting with spacing:
   - Add empty line between each task for readability
