@@ -302,7 +302,7 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - Add indentation (2 spaces) for task content
   - Keep priority section separators (━━━ lines)
 
-- [ ] **P4A.6** Fix title extraction for "Test:" tasks:
+- [x] **P4A.6** Fix title extraction for "Test:" tasks:
   - Current: Truncates at colon, showing just "Test"
   - Fix: For "Test:" prefix, include object being tested
   - Pattern: `Test: <action>` instead of just `Test`
