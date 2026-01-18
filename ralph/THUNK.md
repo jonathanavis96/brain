@@ -226,3 +226,9 @@ Started: 2026-01-18
 | 194 | 3.5 | HIGH | **3.5** Test monitor is display-only | 2026-01-19 |
 | 194 | 6.1 | MEDIUM | **6.1** Sync templates/ralph/thunk_ralph_tasks.sh with fixed version - Replaced 564-line template with 410-line fixed version (no auto-sync code) | 2026-01-19 |
 | 195 | 6.2 | MEDIUM | **6.2** Update VALIDATION_CRITERIA.md with Bug C test cases - Added 4 test cases for display-only behavior, PLAN ignore, no 'f' hotkey, Ralph append workflow | 2026-01-19 |
+| 195 | LEGACY | HIGH | Watches THUNK.md as sole source (no PLAN_FILE references) <!-- tested: grep shows no PLAN_FILE in thunk_ralph_tasks.sh --> | 2026-01-19 |
+| 196 | LEGACY | HIGH | Updates display when THUNK.md changes <!-- tested: monitor startup shows "Watching: THUNK.md" --> | 2026-01-19 |
+| 197 | LEGACY | HIGH | Does NOT auto-sync from IMPLEMENTATION_PLAN.md (monitor should only display, not modify) <!-- tested: no scan_for_new_completions function --> | 2026-01-19 |
+| 198 | LEGACY | HIGH | Does NOT modify THUNK.md (Ralph appends, monitor only watches) <!-- tested: header documents "Display-only monitor" --> | 2026-01-19 |
+| 199 | LEGACY | HIGH | No "Scanning IMPLEMENTATION_PLAN.md" messages (only watches THUNK.md) <!-- tested: grep shows no scanning messages --> | 2026-01-19 |
+| 200 | LEGACY | HIGH | No force sync hotkey 'f' (removed entirely) <!-- tested: hotkey documentation shows only r, e, q --> | 2026-01-19 |

@@ -1,0 +1,80 @@
+Ralph Verifier Report
+Time: 2026-01-19 00:32:24
+Git:  9aa91d0
+AC:   /home/grafe/code/brain/ralph/AC.rules
+Approvals: /home/grafe/code/brain/ralph/MANUAL_APPROVALS.rules
+------------------------------------------------------------
+[PASS] BugA.1
+  desc: Parser uses in_task_section state tracking
+  cmd:  grep -c 'in_task_section=false' current_ralph_tasks.sh
+  exit: 0
+  stdout: 7
+[PASS] BugA.2
+  desc: Parser checks for ## (major section) not ### subsections
+  cmd:  grep -E '^\s*elif.*\^\#\#\[' current_ralph_tasks.sh | grep -v '###' | wc -l | tr -d ' '
+  exit: 0
+  stdout: 1
+[PASS] BugB.1
+  desc: Display function uses clear for full redraw
+  cmd:  grep -c 'clear' current_ralph_tasks.sh
+  exit: 0
+  stdout: 5
+[PASS] BugB.2
+  desc: No differential update logic (LAST_RENDERED)
+  cmd:  grep -c 'LAST_RENDERED' current_ralph_tasks.sh
+  exit: 1
+  stdout: 0
+[WARN] BugB.UI.1 (manual review)
+  desc: No visual corruption after terminal resize
+  instructions: Run current_ralph_tasks.sh, resize terminal, confirm display remains intact
+[PASS] BugC.1
+  desc: No scan_for_new_completions function
+  cmd:  grep -c 'scan_for_new_completions' thunk_ralph_tasks.sh
+  exit: 1
+  stdout: 0
+[PASS] BugC.2
+  desc: No PLAN_FILE variable
+  cmd:  grep -c '^PLAN_FILE=' thunk_ralph_tasks.sh
+  exit: 1
+  stdout: 0
+[PASS] BugC.3
+  desc: No "Scanning IMPLEMENTATION_PLAN" message
+  cmd:  grep -c 'Scanning IMPLEMENTATION_PLAN' thunk_ralph_tasks.sh
+  exit: 1
+  stdout: 0
+[PASS] BugC.4
+  desc: Monitor references THUNK.md
+  cmd:  grep -c 'THUNK\.md' thunk_ralph_tasks.sh
+  exit: 0
+  stdout: 9
+[PASS] BugC.5
+  desc: Monitor does not append/redirect into THUNK.md
+  cmd:  grep -nE '>>\s*.*THUNK\.md|>\s*.*THUNK\.md' thunk_ralph_tasks.sh | wc -l | tr -d ' '
+  exit: 0
+  stdout: 0
+[PASS] BugC.6
+  desc: No task_exists_in_thunk function
+  cmd:  grep -c 'task_exists_in_thunk' thunk_ralph_tasks.sh
+  exit: 1
+  stdout: 0
+[PASS] BugC.7
+  desc: No extract_task_id function
+  cmd:  grep -c 'extract_task_id' thunk_ralph_tasks.sh
+  exit: 1
+  stdout: 0
+[WARN] BugC.UI.1 (manual review)
+  desc: THUNK monitor only displays, never modifies files
+  instructions: Run thunk_ralph_tasks.sh, mark a task [x] in IMPLEMENTATION_PLAN.md, confirm THUNK.md is NOT auto-updated
+[WARN] Template.1 (auto check in warn gate)
+  desc: thunk_ralph_tasks.sh matches template
+  cmd:  diff -q thunk_ralph_tasks.sh templates/ralph/thunk_ralph_tasks.sh 2>/dev/null && echo "match" || echo "differ"
+  exit: 0
+  stdout: match
+------------------------------------------------------------
+SUMMARY
+  PASS: 11
+  FAIL: 0
+  WARN: 3 (manual_warn=2)
+  SKIP: 0
+  Manual gate=block failures: 0
+  Hash guard: OK
