@@ -98,7 +98,7 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
   - Verify: THUNK.md gets new entry (Ralph appended it)
   - Verify: thunk_ralph_tasks.sh updates immediately (shows new THUNK entry)
 
-- [ ] **5.2** Verify all three bugs are fixed
+- [x] **5.2** Verify all three bugs are fixed
   - **Bug A:** Tasks under `### Phase` headers are extracted correctly
   - **Bug B:** No duplicate headers/footers after multiple file updates
   - **Bug C:** THUNK monitor only watches THUNK.md, does not auto-sync from PLAN
