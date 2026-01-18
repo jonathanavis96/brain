@@ -194,3 +194,5 @@ Started: 2026-01-18
 
 | THUNK # | Original # | Priority | Description | Completed |
 |---------|------------|----------|-------------|-----------|
+| 168 | 1.2 | HIGH | Review and consolidate legacy THUNK entries - Started new era for Brain Repository Maintenance | 2026-01-18 |
+| 169 | 1.3 | HIGH | Audit TODOs in new-project.sh - Removed outdated TODO comments (generators already implemented) | 2026-01-18 |

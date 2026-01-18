@@ -22,10 +22,10 @@ Ongoing maintenance and improvement tasks for the brain repository. This plan tr
   - Clear THOUGHTS.md for next project iteration
   - Keep structure template intact
 
-- [ ] **1.2** Review and consolidate legacy THUNK entries
-  - 166 completed tasks in current era
-  - Consider starting new era for next major initiative
-  - Archive or summarize old entries if needed
+- [x] **1.2** Review and consolidate legacy THUNK entries
+  - 167 completed tasks in previous era
+  - Started new era: "Brain Repository Maintenance"
+  - Previous era summarized in THUNK.md
 
 - [ ] **1.3** Audit TODOs in new-project.sh
   - Lines 431, 446, 461 have TODO comments for HIGH INTELLIGENCE generators
