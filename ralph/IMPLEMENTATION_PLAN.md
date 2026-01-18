@@ -70,7 +70,7 @@ Root cause analysis and design decisions documented in `THOUGHTS.md`.
   - Delete 'f' hotkey force sync functionality (lines 506-512)
   - Only keep 'r' (refresh), 'e' (new era), 'q' (quit) hotkeys
 
-- [ ] **3.4** Update thunk_ralph_tasks.sh header comments
+- [x] **3.4** Update thunk_ralph_tasks.sh header comments
   - Remove "Auto-detects new completions in IMPLEMENTATION_PLAN.md" from feature list
   - Remove "Appends new completions to THUNK.md" from feature list
   - Remove 'f' hotkey from hotkey list
