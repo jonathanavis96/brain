@@ -118,7 +118,7 @@ Defaults:
   --iterations 1
   --plan-every 3
   --model       Uses default from ~/.rovodev/config.yml
-  --branch      Current branch (use 'ralph-work' for PR workflow)
+  --branch      Defaults to <repo>-work (e.g., brain-work, NeoQueue-work)
   If --prompt is NOT provided, loop alternates:
     - PLAN on iteration 1 and every N iterations
     - BUILD otherwise
@@ -133,7 +133,7 @@ Model Selection:
 
 Branch Workflow:
   --branch <name>  Work on specified branch (creates if needed, switches to it)
-                   Use --branch ralph-work for PR batch workflow
+                   Default: <repo>-work (derived from git remote, e.g., brain-work)
                    Then run pr-batch.sh to create PRs to main
 
 Safety Features:

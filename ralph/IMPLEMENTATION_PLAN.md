@@ -31,8 +31,8 @@ A Matrix-inspired desktop app for tracking discussion points with your manager. 
 
 - [ ] Commit uncommitted changes to loop.sh, PROMPT.md, EDGE_CASES.md
   - loop.sh: Added `--branch` argument support, refactored ensure_worktree_branch
-  - PROMPT.md: Fixed markdown code block syntax (```text)
-  - EDGE_CASES.md: Fixed markdown code block syntax highlighting
+  - PROMPT.md: Fixed Markdown code block syntax (```text)
+  - EDGE_CASES.md: Fixed Markdown code block syntax highlighting
 
 ### Medium Priority (NeoQueue Bootstrap - When Ready)
 
