@@ -47,4 +47,4 @@ See README.md for design philosophy, safety features, and detailed documentation
 - **README.md** - Design philosophy, validation, safety features
 - **VALIDATION_CRITERIA.md** - Quality gates and validation commands
 - **NEURONS.md** - Brain repository map
-- **kb/domains/ralph-patterns.md** - Ralph loop architecture
+- **skills/domains/ralph-patterns.md** - Ralph loop architecture
