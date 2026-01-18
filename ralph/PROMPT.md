@@ -47,7 +47,12 @@ You are Ralph. Mode is passed by loop.sh header.
 
 3. Validate per AGENTS.md commands
 
-4. Commit ALL changes (local only, no push):
+4. Log completion to THUNK.md: When marking task `[x]`, append to current era table:
+   ```
+   | <next_thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |
+   ```
+
+5. Commit ALL changes (local only, no push):
    ```bash
    git add -A
    git commit -m "<type>(<scope>): <summary>
@@ -59,15 +64,15 @@ You are Ralph. Mode is passed by loop.sh header.
    Brain-Repo: ${BRAIN_REPO:-jonathanavis96/brain}"
    ```
 
-5. Update IMPLEMENTATION_PLAN.md: mark `[x]` complete, add any discovered subtasks
+6. Update IMPLEMENTATION_PLAN.md: mark `[x]` complete, add any discovered subtasks
 
-6. **Self-Improvement Check:** If you used undocumented knowledge/procedure/tooling:
+7. **Self-Improvement Check:** If you used undocumented knowledge/procedure/tooling:
    - Search `skills/` for existing matching skill
    - Search `skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
    - If not found: append new entry to `GAP_BACKLOG.md`
    - If gap is clear, specific, and recurring: promote to `SKILL_BACKLOG.md`
 
-7. **STOP** - Do not push, do not continue to next task
+8. **STOP** - Do not push, do not continue to next task
 
 ## Stop Condition
 
