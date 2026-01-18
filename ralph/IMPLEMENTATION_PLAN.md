@@ -194,7 +194,7 @@ Complete these tasks in order. Mark each `[x]` when done.
   ```bash
   mkdir -p skills/self-improvement
   ```
-- [ ] **3.2** Create `skills/self-improvement/README.md` with content from File Templates section below
+- [x] **3.2** Create `skills/self-improvement/README.md` with content from File Templates section below
 - [ ] **3.3** Create `skills/self-improvement/GAP_CAPTURE_RULES.md` with content from File Templates section below
 - [ ] **3.4** Create `skills/self-improvement/GAP_BACKLOG.md` with content from File Templates section below
 - [ ] **3.5** Create `skills/self-improvement/SKILL_BACKLOG.md` with content from File Templates section below
