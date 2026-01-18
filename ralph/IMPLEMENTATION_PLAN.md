@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & NeoQueue
 
-Last updated: 2026-01-18 15:21:52
+Last updated: 2026-01-18 15:29:57
 
 ## Current State
 
@@ -27,7 +27,7 @@ The brain repository is **fully mature and production-ready** with comprehensive
 - current_ralph_tasks.sh: Human-friendly formatting COMPLETE ✓
 - thunk_ralph_tasks.sh: Core functionality COMPLETE (375 lines, all features) ✓
 - skills/ folder: Renamed from kb/ ✓
-- skills/self-improvement/: 2/5 files created (README.md, GAP_CAPTURE_RULES.md) ✓
+- skills/self-improvement/: 5/5 files COMPLETE ✅
 
 ### New Project: NeoQueue (from THOUGHTS.md)
 A Matrix-inspired desktop app for tracking discussion points with your manager. See THOUGHTS.md for full specification.
@@ -36,9 +36,9 @@ A Matrix-inspired desktop app for tracking discussion points with your manager. 
 
 ## 🎯 ACTIVE WORK: KB→Skills Migration In Progress
 
-This plan contains **44 unchecked tasks** across one major feature:
+This plan contains **37 unchecked tasks** across one major feature:
 
-1. **KB→Skills Migration** (44 remaining) - Rename kb/ → skills/ + self-improvement system
+1. **KB→Skills Migration** (37 remaining) - Complete kb/ → skills/ reference updates
 
 **Execution Strategy:**
 - ✅ **THUNK Monitor System: 100% COMPLETE** - All 50 tasks done (Phases T1-T6)
@@ -51,8 +51,9 @@ This plan contains **44 unchecked tasks** across one major feature:
   - Phase T6 (Validation): ✅ COMPLETE
 - ✅ **Phase 1: Safety Checks & Cleanup** - COMPLETE (3 tasks)
 - ✅ **Phase 2: Folder Rename** - COMPLETE (2 tasks)
-- ✅ **Phase 3: Self-Improvement System** - 3/6 tasks complete (50%)
-- 🔄 **Next: Task 3.4** - Create GAP_BACKLOG.md
+- ✅ **Phase 3: Self-Improvement System** - COMPLETE (6 tasks) ✅
+- ✅ **Phase 4: Update Summary & Create Index** - 1/2 tasks complete (50%)
+- 🔄 **Next: Task 4.2** - Create skills/index.md
 - Each BUILD iteration: Execute EXACTLY ONE unchecked task in sequence
 
 **THUNK Monitor Status:**
@@ -63,10 +64,9 @@ This plan contains **44 unchecked tasks** across one major feature:
 - ✅ All validation tests passed (T6.1-T6.5)
 
 **KB→Skills Migration Status:**
-- ✅ skills/ folder created and verified
-- ✅ skills/self-improvement/ directory created
-- ✅ README.md and GAP_CAPTURE_RULES.md created
-- 🔄 Next: Complete remaining self-improvement files (GAP_BACKLOG, SKILL_BACKLOG, SKILL_TEMPLATE)
+- ✅ Phases 1-3: Infrastructure complete (folder rename, self-improvement system)
+- ✅ Phase 4: skills/SUMMARY.md updated
+- 🔄 Phase 4-7: Reference updates and validation (37 tasks remaining)
 
 ---
 
@@ -164,9 +164,9 @@ Complete these tasks in order. Mark each `[x]` when done.
 
 **Full runbook:** See THOUGHTS.md section "KB→Skills Migration Runbook"
 
-**Progress:** 6/50 tasks complete (12%)
+**Progress:** 13/50 tasks complete (26%)
 
-**Status:** Phases 1-2 complete. Phase 3 in progress (3/6). **Ready to continue with task 3.4.**
+**Status:** Phases 1-4 partially complete. Phase 4 in progress (1/2). **Ready to continue with task 4.2.**
 
 Complete these tasks in order. Mark each `[x]` when done.
 
