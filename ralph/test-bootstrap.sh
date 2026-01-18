@@ -286,7 +286,7 @@ test_bootstrap_ralph_project() {
     # Test 4.5: Directory structure created
     assert_command_succeeds "ralph/ directory exists" test -d "$project_dir/ralph"
     assert_command_succeeds "src/ directory exists" test -d "$project_dir/src"
-    assert_command_succeeds "kb/ directory exists" test -d "$project_dir/kb"
+    assert_command_succeeds "skills/ directory exists" test -d "$project_dir/skills"
 }
 
 # Test Suite 5: Bootstrap backend project
@@ -313,7 +313,7 @@ test_bootstrap_backend_project() {
     
     # Test 5.2: Directory structure created
     assert_command_succeeds "src/ directory exists" test -d "$project_dir/src"
-    assert_command_succeeds "kb/ directory exists" test -d "$project_dir/kb"
+    assert_command_succeeds "skills/ directory exists" test -d "$project_dir/skills"
 }
 
 # Test Suite 6: Bootstrap python project
@@ -340,7 +340,7 @@ test_bootstrap_python_project() {
     
     # Test 6.2: Directory structure created
     assert_command_succeeds "src/ directory exists" test -d "$project_dir/src"
-    assert_command_succeeds "kb/ directory exists" test -d "$project_dir/kb"
+    assert_command_succeeds "skills/ directory exists" test -d "$project_dir/skills"
 }
 
 # Main test execution
