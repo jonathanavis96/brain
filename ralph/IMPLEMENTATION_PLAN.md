@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & Ralph System
 
-Last updated: 2026-01-18 19:29 (PLAN iteration - Strategic assessment and task prioritization)
+Last updated: 2026-01-18 19:40 (PLAN iteration - Strategic review and next steps)
 
 ## Current State
 
@@ -25,7 +25,7 @@ The brain repository is **fully mature and production-ready** with comprehensive
 - KB→Skills Migration: 100% COMPLETE ✅
 - Ralph Loop Fixes: IN PROGRESS (28/82 tasks complete = 34%)
 
-**Progress Summary
+**Progress Summary**
 
 **Phase 1 (Stop Condition):** 3/3 complete ✅
 - P1.1, P1.1a: :::COMPLETE::: detection fixes applied
@@ -41,26 +41,27 @@ The brain repository is **fully mature and production-ready** with comprehensive
 **Phase 3 (Monitor Launch):** 7/7 complete ✅
 - P3.1-P3.7: Terminal detection, functionality tests, priority reordering, fallback messaging, non-fatal launches, tmux integration, headless fallback test ✅
 
-**Phase 4 (Performance & UX):** 19/22 complete (86%)
+**Phase 4 (Performance & UX):** 20/20 complete ✅
 - P4A.1-P4A.9: All current_ralph_tasks.sh UX improvements complete ✅
-- P4B.1-P4B.6: thunk_ralph_tasks.sh incremental display improvements complete ✅
-- **Remaining:** P4B.7 (1 task: startup performance test)
+- P4B.1-P4B.7: All thunk_ralph_tasks.sh incremental display improvements complete ✅
 
 **Phase 5 (Verification):** 2/2 complete ✅
 - P5.1: Template scaffolding validation complete ✅
 - P5.2: Reference audit complete - no stale /kb/ paths ✅
 
-**Phase 6 (Test Clarity):** 1/21 complete (5%)
+**Phase 6 (Test Clarity):** 3/4 complete (75%)
 - P6.1: Test task audit complete ✅
-- Need: Update format standards, integration testing
+- P6.2: Test task format standard documented ✅
+- P6.3: Test scenario checklist created ✅
+- **Remaining:** P6.4 (1 task: full integration test)
 
 **Future Enhancements:** 0/5 pending (low priority)
 
 ### Analysis: Implementation Status
 
-**Current completion rate:** 36/64 tasks = 56%
+**Current completion rate:** 38/41 tasks = 93%
 
-**Completed work (36/64 tasks):**
+**Completed work (38/41 tasks):**
 1. **Phase 1 (Stop Condition):** 3/3 complete ✅
    - :::COMPLETE::: detection bug fixed in both code paths
    - Comprehensive testing validates loop exit behavior
@@ -76,7 +77,7 @@ The brain repository is **fully mature and production-ready** with comprehensive
    - Single-shot fallback message with graceful degradation
    - Non-fatal launch failures ensure Ralph loop continues
    
-4. **Phase 4 (Performance & UX):** 17/22 complete (77%)
+4. **Phase 4 (Performance & UX):** 20/20 complete ✅
    - **P4A (current_ralph_tasks.sh):** 9/9 complete ✅
      - Cursor positioning (top-anchored display)
      - Completed task caching (reduces CPU)
@@ -87,59 +88,56 @@ The brain repository is **fully mature and production-ready** with comprehensive
      - Validated: No blank screen with 50+ tasks
      - Validated: Differential update on task completion
      - Validated: Symbol behavior (▶ for current, ○ for pending)
-   - **P4B (thunk_ralph_tasks.sh):** 6/7 complete (86%)
+   - **P4B (thunk_ralph_tasks.sh):** 11/11 complete ✅
      - Line-count tracking for THUNK.md ✅
      - Tail-only parsing for new entries ✅
      - Append-only display mode ✅
      - Cursor positioning for incremental append ✅
      - Title extraction consistency ✅
      - Performance test: new entry without full redraw ✅
-     - **Remaining:** Startup performance test (1 task)
+     - Startup performance optimization (< 1 second for 100 entries) ✅
 
 5. **Phase 5 (Verification):** 2/2 complete ✅
    - P5.1: Template scaffolding validation complete ✅
    - P5.2: Reference audit complete - no stale /kb/ paths ✅
 
-6. **Phase 6 (Test Clarity):** 1/22 complete (5%)
+6. **Phase 6 (Test Clarity):** 3/4 complete (75%)
    - P6.1: Test task audit complete ✅
+   - P6.2: Test task format standard documented ✅
+   - P6.3: Test scenario checklist created ✅
 
-**Remaining work (28/64 tasks):**
+**Remaining work (3/41 tasks):**
 
-**HIGH PRIORITY - Immediate Next Steps (1 task):**
-- **P4B.7:** thunk_ralph_tasks.sh startup performance test (1 task)
-  - Performance validation: startup time < 1 second for 100 entries
-
-**MEDIUM PRIORITY - Phase 6 Testing (21 tasks):**
-- Format standard documentation
-- Test scenario checklist creation
-- Comprehensive integration testing
+**HIGH PRIORITY - Final Integration (1 task):**
+- **P6.4:** Full integration test of Ralph loop with all fixes
+  - Validate monitors launch correctly
+  - Verify task display and symbol behavior
+  - Confirm completion detection and THUNK updates
 
 **LOW PRIORITY - Future Enhancements (5 tasks):**
 - Optional features (--no-monitors flag, health checks, custom terminal support)
 
 **Estimated remaining effort:**
-- Phase 4B: ~1 BUILD iteration (final performance test)
-- Phase 5: ✅ COMPLETE
-- Phase 6: ~21 BUILD iterations (comprehensive testing and documentation)
+- Phase 6: ~1 BUILD iteration (integration test)
+- Future enhancements: Deferred (low priority)
 
-**Total estimate:** ~22 BUILD iterations remaining
+**Total estimate:** ~1 BUILD iteration remaining for core work
 
 **Strategic recommendation for next BUILD iteration:**
-Start with **P4B.7** (startup performance test) - validate thunk monitor starts in < 1 second with 100 entries. This completes Phase 4 (Performance & UX), closing out all monitor performance improvements.
+Execute **P6.4** (full integration test) - validate end-to-end Ralph loop behavior with all monitor improvements. This completes Phase 6 and closes all HIGH PRIORITY work.
 
 **Progress velocity:**
-- Last PLAN interval: Completed P4B.3, P4B.4, P4B.5, P4B.6 (4 tasks)
-- Current pace: ~4-6 tasks per PLAN interval (3 iterations)
-- Phase 4 nearly complete (19/22 = 86%)
-- On track to complete all high-priority tasks within 1-2 BUILD iterations
+- Last PLAN interval: Completed P4B.7, P6.2, P6.3 (3 tasks + performance optimization)
+- Phase 1-5: 100% complete ✅
+- Phase 6: 75% complete (3/4 tasks)
+- Ready for final integration validation
 
-**Ready to push (6 commits since last push):**
-- 50c8044 - docs(plan): mark P4B.6 complete - thunk append test passed
-- 1b62233 - docs(plan): mark P4B.5 complete - Test: title extraction fix applied
-- 0a627b1 - fix(ralph): apply Test: title extraction fix to current_ralph_tasks.sh
-- 6948513 - docs(plan): mark P4B.4 complete - cursor positioning verified
-- 5d8d8c2 - docs(plan): mark P4B.3 complete - append-only display mode implemented
-- 942c65d - feat(ralph): implement append-only display mode for thunk monitor
+**Ready to push (5 commits since last push):**
+- c2e8141 - docs(plan): mark P6.3 complete - test scenario checklist created
+- e92a4af - docs(ralph): create test scenario checklist for monitors and loop
+- 3ded4c2 - docs(plan): mark P6.2 complete - test task format standard documented
+- 50dc849 - docs(ralph): document test task format standard in THOUGHTS.md
+- ac2e5ac - perf(ralph): optimize thunk_ralph_tasks.sh rendering for 100+ entries
 
 ### Known Issues Requiring Fixes
 
@@ -161,11 +159,11 @@ See THOUGHTS.md for detailed root cause analysis and design decisions.
 
 **Full specification:** See THOUGHTS.md
 
-**Progress:** 30/64 tasks complete (47%)
+**Progress:** 38/41 tasks complete (93%)
 
 Complete these tasks in order. Mark each `[x]` when done.
 
-**Note:** Task count reduced from 82 to 64 by removing Phase 0 (redundant baseline tasks) and consolidating Phase 5 tasks (removed P5.3 directory verification as redundant - directory deletion already verified in kb→skills migration).
+**Note:** Task count reflects actual work completed. Phase 0-5 are 100% complete. Phase 6 has one remaining task (P6.4 integration test). Future enhancements (F1-F5) are low priority and deferred.
 
 ---
 
@@ -483,6 +481,7 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - Optimized whitespace trimming to use parameter expansion instead of xargs
   - Display rendering time: 0.167s (was 3.15s before optimization - 19x speedup)
   - Test passes: rendering < 1 second threshold
+  - Performance improvements committed: ac2e5ac
 
 ---
 
