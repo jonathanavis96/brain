@@ -520,10 +520,11 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - All other test tasks follow proper format or are legacy entries
   - **CONCLUSION**: Current test task format is already compliant with P6.2 standard
 
-- [ ] **P6.2** Update test task format standard:
+- [x] **P6.2** Update test task format standard: ✅ COMPLETE
   - Format: `Test: <action> → expect <observable outcome>`
   - Example: `Test: Mark task [x] in plan → expect task appears in THUNK.md`
-  - Document in THOUGHTS.md as convention
+  - Documented in THOUGHTS.md section H (Test Task Format Standard)
+  - Includes rationale, examples, title extraction behavior, and enforcement guidelines
 
 - [ ] **P6.3** Create test scenario checklist for monitors and loop:
   - [ ] :::COMPLETE::: stops loop deterministically
