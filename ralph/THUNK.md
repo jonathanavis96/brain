@@ -101,3 +101,5 @@ Started: 2026-01-18
 | 86 | LEGACY | MEDIUM | Run `new-project.sh neoqueue` to create project scaffold | 2026-01-18 |
 | 87 | LEGACY | MEDIUM | Copy THOUGHTS.md content to neoqueue project as project spec | 2026-01-18 |
 | 88 | LEGACY | HIGH | **P1.1** Fix `$?` overwrite bug in loop.sh lines 600-610: | 2026-01-18 |
+| 89 | LEGACY | HIGH | **P1.1** Fix `$?` overwrite bug in loop.sh lines 600-610: ✅ COMPLETE | 2026-01-18 |
+| 90 | LEGACY | HIGH | **P1.1a** Fix same `$?` bug in custom prompt path (loop.sh lines 582-588): ✅ COMPLETE | 2026-01-18 |
