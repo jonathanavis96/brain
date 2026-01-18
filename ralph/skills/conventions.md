@@ -169,7 +169,7 @@ When updating skills files:
 - **Use clear hierarchies**: Headers, bullets, numbered lists
 - **Front-load key information**: Most important details first
 - **Use code examples**: Show, don't just tell
-- **Avoid redundancy**: Don't repeat information from other KB files, link instead
+- **Avoid redundancy**: Don't repeat information from other skills files, link instead
 
 ### Formatting
 
@@ -208,7 +208,7 @@ When implementing OAuth2 authentication:
 ## Common Mistakes to Avoid
 
 ❌ **Missing required sections**
-- Every KB file needs Why/When/Details
+- Every skills file needs Why/When/Details
 
 ❌ **Vague "When to Use It" sections**
 - Be specific about scenarios and triggers
