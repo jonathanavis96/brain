@@ -144,7 +144,8 @@ usage() {
   cat <<'EOF'
 Usage:
   loop.sh [--prompt <path>] [--iterations N] [--plan-every N] [--yolo|--no-yolo]
-          [--model <model>] [--branch <name>] [--dry-run] [--rollback [N]] [--resume]
+          [--model <model>] [--branch <name>] [--dry-run] [--no-monitors] 
+          [--rollback [N]] [--resume]
 
 Defaults:
   --iterations 1
@@ -170,6 +171,7 @@ Branch Workflow:
 
 Safety Features:
   --dry-run       Preview changes without committing (appends instruction to prompt)
+  --no-monitors   Skip auto-launching monitor terminals (useful for CI/CD or headless environments)
   --rollback [N]  Undo last N Ralph commits (default: 1). Requires confirmation.
   --resume        Resume from last incomplete iteration (checks for uncommitted changes)
 
@@ -192,6 +194,9 @@ Examples:
   # Dry-run mode (see what would change)
   bash ralph/loop.sh --dry-run --iterations 1
   
+  # Run without monitor terminals (useful for CI/CD)
+  bash ralph/loop.sh --no-monitors --iterations 5
+  
   # Rollback last 2 iterations
   bash ralph/loop.sh --rollback 2
   
@@ -211,6 +216,7 @@ DRY_RUN=false
 ROLLBACK_MODE=false
 ROLLBACK_COUNT=1
 RESUME_MODE=false
+NO_MONITORS=false
 
 # Parse args
 while [[ $# -gt 0 ]]; do
@@ -231,6 +237,8 @@ while [[ $# -gt 0 ]]; do
       BRANCH_ARG="${2:-}"; shift 2 ;;
     --dry-run)
       DRY_RUN=true; shift ;;
+    --no-monitors)
+      NO_MONITORS=true; shift ;;
     --rollback)
       ROLLBACK_MODE=true
       if [[ -n "${2:-}" && "$2" =~ ^[0-9]+$ ]]; then
@@ -587,8 +595,10 @@ echo "========================================"
 ensure_worktree_branch "$TARGET_BRANCH"
 echo ""
 
-# Launch monitors before starting iterations
-launch_monitors
+# Launch monitors before starting iterations (unless --no-monitors flag is set)
+if [[ "$NO_MONITORS" == "false" ]]; then
+  launch_monitors
+fi
 
 # Determine prompt strategy
 if [[ -n "$PROMPT_ARG" ]]; then
