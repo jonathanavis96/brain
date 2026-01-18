@@ -108,3 +108,5 @@ Started: 2026-01-18
 | 93 | LEGACY | HIGH | **P2.1** Verify thunk_ralph_tasks.sh watches THUNK.md directly: ✅ VERIFIED | 2026-01-18 |
 | 94 | P2.2 | HIGH | **P2.2** Verify current_ralph_tasks.sh watches IMPLEMENTATION_PLAN.md directly: ✅ VERIFIED | 2026-01-18 |
 | 95 | LEGACY | HIGH | **P2.3** Verify monitors use file mtime polling (not inotify): ✅ VERIFIED | 2026-01-18 |
+| 96 | LEGACY | HIGH | **P2.4** Test: Modify THUNK.md manually → expect thunk monitor updates within 1 second: ✅ VERIFIED | 2026-01-18 |
+| 97 | LEGACY | HIGH | **P2.5** Test: Modify IMPLEMENTATION_PLAN.md manually → expect current tasks monitor updates within 1 second: ✅ VERIFIED | 2026-01-18 |
