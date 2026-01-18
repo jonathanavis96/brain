@@ -5,11 +5,9 @@ set -euo pipefail
 if [[ -n "${RALPH_PROJECT_ROOT:-}" ]]; then
   ROOT="$RALPH_PROJECT_ROOT"
   RALPH="$ROOT/ralph"
-  BRAIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 else
   ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
   RALPH="$ROOT/ralph"
-  BRAIN_DIR="$RALPH"
 fi
 LOGDIR="$RALPH/logs"
 mkdir -p "$LOGDIR"
@@ -31,15 +29,29 @@ WORK_BRANCH="${REPO_NAME}-work"
 REPO_PATH_HASH=$(git rev-parse --show-toplevel | md5sum | cut -c1-8)
 LOCK_FILE="/tmp/ralph-${REPO_NAME}-${REPO_PATH_HASH}.lock"
 
-# Debug output for derived values
-echo "Repo: $REPO_NAME | Branch: $WORK_BRANCH | Lock: $LOCK_FILE"
+# TARGET_BRANCH will be set after arg parsing (uses BRANCH_ARG if provided, else WORK_BRANCH)
 
-if [ -f "$LOCK_FILE" ]; then
-  LOCK_PID=$(cat "$LOCK_FILE" 2>/dev/null || echo "unknown")
-  echo "ERROR: Ralph loop already running (lock: $LOCK_FILE, PID: $LOCK_PID)"
-  exit 1
-fi
-echo "$$" >"$LOCK_FILE"
+# Atomic lock acquisition using noclobber (portable fallback if flock unavailable)
+acquire_lock() {
+  if command -v flock &>/dev/null; then
+    # Use flock for atomic locking
+    exec 9>"$LOCK_FILE"
+    if ! flock -n 9; then
+      LOCK_PID=$(cat "$LOCK_FILE" 2>/dev/null || echo "unknown")
+      echo "ERROR: Ralph loop already running (lock: $LOCK_FILE, PID: $LOCK_PID)"
+      exit 1
+    fi
+    echo "$$" >"$LOCK_FILE"
+  else
+    # Portable fallback: noclobber atomic create
+    if ! ( set -o noclobber; echo "$$" > "$LOCK_FILE" ) 2>/dev/null; then
+      LOCK_PID=$(cat "$LOCK_FILE" 2>/dev/null || echo "unknown")
+      echo "ERROR: Ralph loop already running (lock: $LOCK_FILE, PID: $LOCK_PID)"
+      exit 1
+    fi
+  fi
+}
+acquire_lock
 
 # Interrupt handling: First Ctrl+C = graceful exit, Second Ctrl+C = immediate exit
 INTERRUPT_COUNT=0
@@ -78,19 +90,21 @@ handle_interrupt() {
 trap 'handle_interrupt' INT TERM
 trap 'cleanup' EXIT
 
-# Safe branch handling - ensures worktree branch exists without resetting history
+# Safe branch handling - ensures target branch exists without resetting history
+# Accepts optional branch name; defaults to WORK_BRANCH
 ensure_worktree_branch() {
-  if git show-ref --verify --quiet "refs/heads/$WORK_BRANCH"; then
-    git checkout "$WORK_BRANCH"
+  local branch="${1:-$WORK_BRANCH}"
+  if git show-ref --verify --quiet "refs/heads/$branch"; then
+    git checkout "$branch"
   else
-    echo "Creating new worktree branch: $WORK_BRANCH"
-    git checkout -b "$WORK_BRANCH"
+    echo "Creating new worktree branch: $branch"
+    git checkout -b "$branch"
   fi
   
   # Set upstream if not already set
   if ! git rev-parse --abbrev-ref --symbolic-full-name "@{u}" >/dev/null 2>&1; then
-    echo "Setting upstream for $WORK_BRANCH"
-    git push -u origin "$WORK_BRANCH" 2>/dev/null || true
+    echo "Setting upstream for $branch"
+    git push -u origin "$branch" 2>/dev/null || true
   fi
 }
 
@@ -240,6 +254,11 @@ EOF
   echo "Using model: $RESOLVED_MODEL"
 fi
 
+# Resolve target branch: user-provided --branch takes precedence over default WORK_BRANCH
+TARGET_BRANCH="${BRANCH_ARG:-$WORK_BRANCH}"
+
+# Debug output for derived values
+echo "Repo: $REPO_NAME | Branch: $TARGET_BRANCH | Lock: $LOCK_FILE"
 
 # Resolve a prompt path robustly (works from repo root or ralph/)
 resolve_prompt() {
@@ -444,9 +463,9 @@ run_once() {
 # Ensure we're on the worktree branch before starting
 echo ""
 echo "========================================"
-echo "Setting up worktree branch: $WORK_BRANCH"
+echo "Setting up worktree branch: $TARGET_BRANCH"
 echo "========================================"
-ensure_worktree_branch
+ensure_worktree_branch "$TARGET_BRANCH"
 echo ""
 
 # Determine prompt strategy

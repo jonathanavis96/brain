@@ -1,58 +1,51 @@
-# Implementation Plan - Brain Repository Maintenance
+# Implementation Plan - Brain Repository & NeoQueue
 
-Last updated: 2026-01-16 22:44:37
+Last updated: 2026-01-18 12:11:00
 
 ## Current State
 
-The brain repository is **fully mature and production-ready** with comprehensive infrastructure:
+### Brain Repository Infrastructure: ✅ COMPLETE
+The brain repository is **fully mature and production-ready** with comprehensive infrastructure.
 
-**✅ Core Systems (All Complete):**
-- **Templates:** 19 files across 3 tech stacks (backend, python, ralph)
-- **Bootstrap:** new-project.sh + 3 HIGH INTELLIGENCE generators (1,761 total lines, ~14 second bootstrap)
-- **Knowledge Base:** 12 domain KB files + 2 project KB files (all with Why/When/Details structure)
+**Core Systems (All Complete):**
+- **Templates:** 18 files across 3 tech stacks (backend, python, ralph)
+- **Knowledge Base:** 16 KB files (12 domains + 2 projects + conventions + SUMMARY)
 - **Ralph Loop:** Fully operational with safety features (dry-run, rollback, resume, task monitor)
 - **React References:** 45 curated performance rules (complete, unmodified reference set)
 - **Documentation:** Comprehensive README.md, AGENTS.md, NEURONS.md, VALIDATION_CRITERIA.md
-- **Diagnostics:** brain-doctor.sh (12KB) + test-bootstrap.sh (13KB) for repository health checks
 
-**Current Metrics (All Excellent):**
-- PROMPT.md: 7,799 bytes (~1,949 tokens) - **2.6% under target** ✓
-- AGENTS.md: 1,719 bytes (~429 tokens) - **14% under target** ✓
-- Total first-load: 9,518 bytes (~2,379 tokens) - **4.8% under target** ✓
-- KB domains: 12 files (100% have Why/When/Details structure)
-- KB projects: 2 files
-- Generators: 3 HIGH INTELLIGENCE bash scripts (1,761 total lines)
+**Current Metrics:**
+- PROMPT.md: 2,890 bytes (~722 tokens) ✓
+- AGENTS.md: 1,690 bytes (~422 tokens) ✓
+- KB domains: 12 files, KB projects: 2 files
 - React rules: 45 files (validated, unmodified)
-- Templates: 19 files using bash paths (`../../brain/`) consistently
-- All validation checks passing ✓
+- Templates: 18 files
 - All bash scripts pass syntax validation ✓
 
-**KB Coverage Status (Complete):**
-- ✅ API Design Patterns (16.9 KB)
-- ✅ Authentication Patterns (9.3 KB)
-- ✅ Bootstrap Patterns (9.6 KB - documents new-project.sh + generators)
-- ✅ Caching Patterns (17.5 KB - Redis, CDN, browser caching)
-- ✅ Database Patterns (21.8 KB - schema design, ORMs, migrations)
-- ✅ Deployment Patterns (18.6 KB - CI/CD, Docker, zero-downtime, rollback)
-- ✅ Error Handling Patterns (25.3 KB - try/catch, error boundaries)
-- ✅ Ralph Loop Architecture (2.1 KB - subagents, tool visibility)
-- ✅ Security Patterns (30.2 KB - OWASP, authentication, authorization)
-- ✅ State Management Patterns (26.8 KB - 11 patterns with decision tree)
-- ✅ Testing Patterns (22.4 KB - Jest, pytest, Go testing)
-
-## Goal
-
-Brain repository is **self-sustaining and complete** - all infrastructure operational. One minor documentation fix remains.
+### New Project: NeoQueue (from THOUGHTS.md)
+A Matrix-inspired desktop app for tracking discussion points with your manager. See THOUGHTS.md for full specification.
 
 ## Prioritized Tasks
 
 ### High Priority
 
-- [x] Fix documentation references in kb/projects/brain-example.md - Remove references to non-existent QUICKSTART.md file (found 4 references)
+- [ ] Commit uncommitted changes to loop.sh, PROMPT.md, EDGE_CASES.md
+  - loop.sh: Added `--branch` argument support, refactored ensure_worktree_branch
+  - PROMPT.md: Fixed markdown code block syntax (```text)
+  - EDGE_CASES.md: Fixed markdown code block syntax highlighting
 
-### ✅ All Other Tasks Complete
+### Medium Priority (NeoQueue Bootstrap - When Ready)
 
-The brain repository has reached production maturity with all infrastructure complete.
+These tasks should be tackled when starting the NeoQueue project:
+
+- [ ] Bootstrap NeoQueue project using brain infrastructure
+  - [ ] Run `new-project.sh neoqueue` to create project scaffold
+  - [ ] Copy THOUGHTS.md content to neoqueue project as project spec
+
+### ✅ Completed Tasks
+
+- [x] Fix documentation references in kb/projects/brain-example.md - Remove references to non-existent QUICKSTART.md file
+- [x] Brain repository infrastructure complete and validated
 
 ### Future Enhancements (Implement When Needed)
 

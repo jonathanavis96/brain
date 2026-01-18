@@ -6,7 +6,7 @@ This file contains detailed examples, error recovery, and edge case handling. Re
 
 ### Conventional Commit Format
 
-```
+```text
 <type>(<scope>): <summary>
 
 - Detail 1
@@ -41,7 +41,7 @@ Brain-Repo: ${BRAIN_REPO}
 ### Examples
 
 **Feature addition:**
-```
+```text
 feat(templates): add lean PROMPT.project.md template
 
 - References brain PROMPT.md instead of duplicating
@@ -53,7 +53,7 @@ Brain-Repo: jonathanavis96/brain
 ```
 
 **Bug fix:**
-```
+```text
 fix(loop): prevent concurrent ralph runs with lock file
 
 - Add PID-based lock in /tmp/ralph-{repo}.lock
@@ -65,7 +65,7 @@ Brain-Repo: jonathanavis96/brain
 ```
 
 **Documentation:**
-```
+```text
 docs(plan): update implementation plan
 
 - Mark token-efficiency tasks complete
@@ -139,7 +139,7 @@ If you're unsure what state the codebase is in:
 ## Subagent Usage Patterns
 
 ### Reading/Discovery (up to 100 parallel)
-```
+```bash
 - grep -r "pattern" . --include="*.ts"
 - Find all files matching criteria
 - Read multiple documentation files
@@ -147,7 +147,7 @@ If you're unsure what state the codebase is in:
 ```
 
 ### Building/Modification (exactly 1)
-```
+```text
 - File creation/modification
 - Git operations
 - Running build/test commands

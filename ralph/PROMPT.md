@@ -64,7 +64,7 @@ You are Ralph. Mode is passed by loop.sh header.
 ## Stop Condition
 
 When ZERO unchecked `[ ]` tasks remain in IMPLEMENTATION_PLAN.md:
-```
+```text
 :::COMPLETE:::
 ```
 
