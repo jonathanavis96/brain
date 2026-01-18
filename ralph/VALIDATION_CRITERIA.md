@@ -100,56 +100,58 @@ pkill -f current_ralph_tasks.sh
 bash current_ralph_tasks.sh 2>&1 | head -20 | grep -E '\[0;[0-9]+m' && echo "FAIL: ANSI leakage" || echo "PASS: Clean output"
 ```
 
-## Bug C: THUNK Monitor Dual-Responsibility Model
+## Bug C: THUNK Monitor Display-Only Behavior
 
-### Test Case C1: Primary Watch (THUNK.md Changes)
-- [x] Monitor displays THUNK.md content on startup
-- [x] Monitor updates display within 1 second when THUNK.md is modified directly
-- [x] Monitor shows all entries in current era table
-- [x] Monitor maintains sequential THUNK numbering
+### Test Case C1: Display THUNK.md Changes
+- [ ] Monitor displays THUNK.md content on startup
+- [ ] Monitor updates display within 1 second when THUNK.md is modified directly
+- [ ] Monitor shows all entries in current era table
+- [ ] Monitor maintains sequential THUNK numbering
 
-### Test Case C2: Safety Net (Auto-Sync from IMPLEMENTATION_PLAN.md)
-- [x] Monitor watches IMPLEMENTATION_PLAN.md as fallback
-- [x] When task marked `[x]` in IMPLEMENTATION_PLAN.md, monitor syncs to THUNK.md
-- [x] Auto-sync message displayed: "Scanning IMPLEMENTATION_PLAN.md"
-- [x] Auto-sync only triggers if Ralph forgets to append manually
+### Test Case C2: Ignore IMPLEMENTATION_PLAN.md Changes
+- [ ] Monitor does NOT watch IMPLEMENTATION_PLAN.md
+- [ ] Modifying IMPLEMENTATION_PLAN.md does NOT trigger monitor updates
+- [ ] No "Scanning IMPLEMENTATION_PLAN.md" messages at any time
+- [ ] Monitor is display-only (does not modify THUNK.md)
 
-### Test Case C3: Ralph Append Workflow
-- [x] Ralph appends to THUNK.md when marking task `[x]` (documented in PROMPT.md)
-- [x] Append format: `| <thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |`
-- [x] Monitor displays Ralph's appended entries immediately
-- [x] No duplicate entries (Ralph append + auto-sync redundancy)
+### Test Case C3: No Force Sync Hotkey
+- [ ] Pressing 'f' does nothing (hotkey removed entirely)
+- [ ] Startup shows only "Watching: THUNK.md" message
+- [ ] No "Syncing with" messages in output
+- [ ] Available hotkeys: 'r' (refresh), 'e' (new era), 'q' (quit) only
 
-### Test Case C4: Hotkey Functionality
-```bash
-# Test hotkeys
-bash thunk_ralph_tasks.sh &
-
-# Press 'r' - manual refresh
-# Press 'f' - force sync from IMPLEMENTATION_PLAN.md
-# Press 'e' - start new era
-# Press 'q' - quit
-
-pkill -f thunk_ralph_tasks.sh
-```
+### Test Case C4: Ralph Append Workflow
+- [ ] Ralph appends to THUNK.md when marking task `[x]` (documented in PROMPT.md)
+- [ ] Append format: `| <thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |`
+- [ ] Monitor displays Ralph's appended entries immediately
+- [ ] No code in monitor that modifies THUNK.md (read-only behavior)
 
 ### Validation Commands
 ```bash
-# Test primary watch
+# Test THUNK.md watch
 bash thunk_ralph_tasks.sh &
 sleep 1
 echo "| 999 | TEST | HIGH | Test entry | 2026-01-18 |" >> THUNK.md
 sleep 2
+# Should see update within 1 second
 pkill -f thunk_ralph_tasks.sh
 git restore THUNK.md
 
-# Test auto-sync fallback
+# Test IMPLEMENTATION_PLAN.md is ignored
 bash thunk_ralph_tasks.sh &
 sleep 1
 # Mark a task [x] in IMPLEMENTATION_PLAN.md manually
+echo "- [x] **TEST** Test task" >> IMPLEMENTATION_PLAN.md
 sleep 2
-grep "Scanning IMPLEMENTATION_PLAN.md" <(ps aux | grep thunk_ralph_tasks.sh)
+# Monitor should NOT react or show any "Scanning" messages
 pkill -f thunk_ralph_tasks.sh
+git restore IMPLEMENTATION_PLAN.md
+
+# Verify no PLAN_FILE references
+grep -n "PLAN_FILE" thunk_ralph_tasks.sh && echo "FAIL: PLAN_FILE found" || echo "PASS: No PLAN_FILE"
+
+# Verify no auto-sync functions
+grep -n "scan_for_new_completions" thunk_ralph_tasks.sh && echo "FAIL: auto-sync found" || echo "PASS: No auto-sync"
 ```
 
 ## Integration Testing
@@ -185,8 +187,8 @@ bash thunk_ralph_tasks.sh
 
 ### Doc-2: AGENTS.md Updated
 - [x] Current Ralph Tasks Monitor section describes Bug A fix (subsection extraction)
-- [x] THUNK Monitor section describes dual-responsibility model
-- [x] THUNK Monitor section clarifies auto-sync as safety net (not primary)
+- [x] THUNK Monitor section describes display-only behavior
+- [x] THUNK Monitor section clarifies: watches THUNK.md only, no auto-sync
 - [x] Ralph workflow documented: append to THUNK.md when marking task complete
 
 ### Doc-3: THOUGHTS.md Reflects Current Project
@@ -197,7 +199,7 @@ bash thunk_ralph_tasks.sh
 ### Doc-4: VALIDATION_CRITERIA.md (This File)
 - [x] Test cases for Bug A (hierarchical task extraction)
 - [x] Test cases for Bug B (display rendering stability)
-- [x] Test cases for Bug C (THUNK monitor dual-responsibility)
+- [ ] Test cases for Bug C (THUNK monitor display-only behavior)
 - [x] Validation commands provided for each bug
 - [x] Integration testing scenarios documented
 
@@ -251,6 +253,6 @@ All three bugs are FIXED and validated:
 
 - ✅ **Bug A:** Task extraction works with nested `###` and `####` headers
 - ✅ **Bug B:** Display rendering has no duplicates or corruption
-- ✅ **Bug C:** THUNK monitor uses dual-responsibility model (display + safety net)
+- ✅ **Bug C:** THUNK monitor is display-only (watches THUNK.md, no auto-sync from IMPLEMENTATION_PLAN.md)
 
 Ralph workflow updated to append to THUNK.md directly when completing tasks (documented in PROMPT.md).
