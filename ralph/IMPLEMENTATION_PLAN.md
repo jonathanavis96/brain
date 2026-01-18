@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository & Ralph System
 
-Last updated: 2026-01-18 (PLAN iteration)
+Last updated: 2026-01-18 17:48 (PLAN iteration)
 
 ## Current State
 
@@ -54,22 +54,29 @@ The brain repository is **fully mature and production-ready** with comprehensive
 
 ### Analysis: Implementation Status
 
-**Current completion rate:** 9/82 tasks = 11%
+**Current completion rate:** 19/82 tasks = 23%
 
 **Key observations:**
-1. **Phase 1 is complete** - :::COMPLETE::: detection now works reliably
-2. **Phase 2 is partially documented** - Monitor decoupling is already correct by design, just needs verification
-3. **Phases 3-6 remain untouched** - These are the major UX and reliability improvements
-4. **No blockers identified** - All required information is in THOUGHTS.md
+1. **Phase 1 is complete** (3/3) - :::COMPLETE::: detection now works reliably ✅
+2. **Phase 2 is complete** (5/5) - Monitors correctly watch files via mtime polling, no coupling to plan mode ✅
+3. **Phase 3 is 43% complete** (3/7) - Windows Terminal detection added, gnome-terminal test added, priority reordered
+4. **Phase 4 has 1/16 complete** - Title extraction for "Test:" tasks fixed (P4A.6) ✅
+5. **Phases 5-6 remain untouched** - Structure verification and test clarity improvements pending
 
 **Estimated remaining effort:**
-- Phase 2: 2-3 BUILD iterations (verification tasks)
-- Phase 3: 5-7 BUILD iterations (terminal detection + tests)
-- Phase 4: 12-15 BUILD iterations (performance improvements)
+- Phase 3: 3-4 BUILD iterations (fallback message, non-fatal checks, integration tests)
+- Phase 4: 13-15 BUILD iterations (cursor positioning, caching, incremental display, symbols)
 - Phase 5: 3-4 BUILD iterations (structure validation)
 - Phase 6: 3-4 BUILD iterations (test clarity)
 
-Total estimate: 25-33 BUILD iterations remaining
+Total estimate: 22-27 BUILD iterations remaining
+
+**Recent progress (last 5 commits):**
+- 05f5f2c - P4A.6 complete: Test title extraction fixed
+- 27708ad - fix(ralph): Title extraction for 'Test:' tasks
+- b95192b - feat(ralph): Reordered terminal priority (tmux first)
+- 56942fd - fix(ralph): gnome-terminal functionality test
+- 9e14972 - feat(loop): Windows Terminal detection
 
 ### Known Issues Requiring Fixes
 
@@ -91,7 +98,7 @@ See THOUGHTS.md for detailed root cause analysis and design decisions.
 
 **Full specification:** See THOUGHTS.md
 
-**Progress:** 1/47 tasks complete (2%)
+**Progress:** 11/47 tasks complete (23%)
 
 Complete these tasks in order. Mark each `[x]` when done.
 
@@ -444,19 +451,28 @@ These tasks are not blocking but would improve the system.
 All 93 tasks completed. See THUNK.md for full completion log.
 
 **Summary:**
+**All 93 migration tasks completed:**
 - Phase 1: Safety Checks & Cleanup ✅
-- Phase 2: Folder Rename ✅
+- Phase 2: Folder Rename (kb → skills) ✅
 - Phase 3: Self-Improvement System ✅
 - Phase 4: Update Summary & Create Index ✅
 - Phase 5: Reference Updates ✅
 - Phase 6: Protocol Wiring ✅
 - Phase 7: Final Validation ✅
 
+**Current state verified:**
+- ✅ `skills/` directory exists with 12 domain files, 2 project files
+- ✅ `skills/self-improvement/` system operational with 5 files
+- ✅ `skills/index.md` and `skills/SUMMARY.md` complete
+- ✅ `kb/` directory removed
+- ✅ Templates reference `skills/` not `kb/`
+- ✅ No active `/kb/` references in code (only historical docs in `old_md/`)
+
 ### THUNK Monitor System: ✅ 100% COMPLETE
 
 All 50 tasks completed. Phases T1-T6 done.
 
-**Summary:**
+**All 50 THUNK system tasks completed:**
 - Phase T1: Rename Existing Monitor ✅
 - Phase T2: Create THUNK.md ✅
 - Phase T3: Create thunk_ralph_tasks.sh ✅
@@ -464,6 +480,13 @@ All 50 tasks completed. Phases T1-T6 done.
 - Phase T4: Integration with loop.sh ✅
 - Phase T5: Template Integration ✅
 - Phase T6: Validation & Testing ✅
+
+**Current state verified:**
+- ✅ `current_ralph_tasks.sh` monitors IMPLEMENTATION_PLAN.md
+- ✅ `thunk_ralph_tasks.sh` monitors THUNK.md
+- ✅ Both monitors use mtime polling (0.5s interval)
+- ✅ THUNK.md serves as append-only completion log
+- ✅ Templates include both monitor scripts
 
 ---
 
