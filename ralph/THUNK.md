@@ -92,3 +92,6 @@ Started: 2026-01-18
 | 78 | 5.23 | MEDIUM | **5.23** Update `test-bootstrap.sh` (3 kb/ references for directory validation) | 2026-01-18 |
 | 79 | 5.24 | MEDIUM | **5.24** Update `skills/domains/README.md` (verify kb/ references if any) | 2026-01-18 |
 | 80 | 5.25 | MEDIUM | **5.25** Update `skills/projects/README.md` (7 kb/ references updated) | 2026-01-18 |
+| 81 | 5.26 | MEDIUM | **5.26** Update `skills/conventions.md` (2 KB references updated to skills/) | 2026-01-18 |
+| 82 | 6.1 | MEDIUM | **6.1** Add "Skills + Self-Improvement Protocol" section to `AGENTS.md`: | 2026-01-18 |
+| 83 | LEGACY | MEDIUM | Bootstrap NeoQueue project using brain infrastructure | 2026-01-18 |
