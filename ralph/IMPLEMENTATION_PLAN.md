@@ -245,7 +245,7 @@ Complete these tasks in order. Mark each `[x]` when done.
 - [x] **5.3** Update `NEURONS.md`
 - [x] **5.4** Update `README.md` (15 kb/ references found)
 - [x] **5.5** Update `VALIDATION_CRITERIA.md`
-- [ ] **5.6** Update `EDGE_CASES.md`
+- [x] **5.6** Update `EDGE_CASES.md`
 - [ ] **5.7** Update `CHANGES.md`
 - [ ] **5.8** Update `HISTORY.md`
 - [ ] **5.9** Update `IMPLEMENTATION_PLAN.md` (this file - update Future Enhancements section)
