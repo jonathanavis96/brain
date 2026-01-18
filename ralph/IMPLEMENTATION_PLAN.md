@@ -386,10 +386,13 @@ Phase 0 tasks would be redundant at this point. Moving directly to Phase 1 valid
   - Example: "Test: Mark task [x] in plan" not "Test"
   - **Implementation:** Already implemented in generate_title() function
 
-- [ ] **P4A.7** Test: Refresh display with 50+ tasks → expect no blank screen
-  - Screen should show header immediately
-  - Content populates progressively
-  - No visible "flash" or blank period
+- [x] **P4A.7** Test: Refresh display with 50+ tasks → expect no blank screen: ✅ COMPLETE
+  - ✅ Screen shows header immediately (tput cup 0 0)
+  - ✅ Content populates progressively (no clear command)
+  - ✅ No visible "flash" or blank period (tput ed for partial clear)
+  - ✅ Verified cursor positioning, differential updates, caching all working
+  - ✅ Test script validates behavior with 65-task plan file
+  - **Test script:** tmp_rovodev_test_p4a7.sh (executed successfully)
 
 - [ ] **P4A.8** Test: Complete a task → expect only that task line updates
   - Other task lines should not redraw
