@@ -1,20 +1,20 @@
-# KB File Authoring Conventions
+# Skills File Authoring Conventions
 
 ## Why This Exists
 
-Knowledge base files in the brain repository follow specific conventions to ensure consistency, discoverability, and optimal token efficiency for AI agents. This document centralizes all KB authoring guidelines that were previously scattered across templates and README files.
+Skills files in the brain repository follow specific conventions to ensure consistency, discoverability, and optimal token efficiency for AI agents. This document centralizes all skills authoring guidelines that were previously scattered across templates and README files.
 
 ## When to Use It
 
 Reference this document when:
-- Creating a new KB file in `kb/domains/` or `kb/projects/`
-- Reviewing or updating existing KB files
+- Creating a new skills file in `skills/domains/` or `skills/projects/`
+- Reviewing or updating existing skills files
 - Contributing knowledge back to the brain repository
-- Ensuring KB files meet quality standards
+- Ensuring skills files meet quality standards
 
 ## Required File Structure
 
-Every KB file **must** follow this three-section structure:
+Every skills file **must** follow this three-section structure:
 
 ```markdown
 # [Title]
@@ -79,20 +79,20 @@ Every KB file **must** follow this three-section structure:
 ### Directory Structure
 
 ```
-kb/
-├── SUMMARY.md              # KB index - always update when adding files
+skills/
+├── SUMMARY.md              # Skills index - always update when adding files
 ├── conventions.md          # This file
 ├── domains/                # Technical domain knowledge (reusable)
 │   ├── README.md
-│   └── [domain-kb-files].md
+│   └── [domain-skills-files].md
 └── projects/               # Project-specific knowledge
     ├── README.md
-    └── [project-kb-files].md
+    └── [project-skills-files].md
 ```
 
-## Domain vs Project KB
+## Domain vs Project Skills
 
-### Use `kb/domains/` when:
+### Use `skills/domains/` when:
 
 ✅ Pattern applies to **multiple projects**  
 ✅ Technical solution is **reusable**  
@@ -105,7 +105,7 @@ kb/
 - API design conventions (REST, error handling, versioning)
 - State management approaches (Context, Zustand, server state)
 
-### Use `kb/projects/` when:
+### Use `skills/projects/` when:
 
 ✅ Specific to **one project or codebase**  
 ✅ Context about **project history or decisions**  
@@ -118,13 +118,13 @@ kb/
 - Project deployment processes
 - Third-party service integration patterns specific to one project
 
-## Creating New KB Files
+## Creating New Skills Files
 
 ### Step-by-Step Process
 
 1. **Choose the right directory**
-   - Domain knowledge → `kb/domains/`
-   - Project-specific → `kb/projects/`
+   - Domain knowledge → `skills/domains/`
+   - Project-specific → `skills/projects/`
 
 2. **Create the file with required structure**
    ```markdown
@@ -140,7 +140,7 @@ kb/
    [Content]
    ```
 
-3. **Update `kb/SUMMARY.md`**
+3. **Update `skills/SUMMARY.md`**
    - Add link under "Domains" or "Projects" section
    - Use descriptive link text
    - Keep alphabetical order within sections
@@ -149,11 +149,11 @@ kb/
    - Check: All three required headers present
    - Check: Content is clear and actionable
    - Check: Linked from SUMMARY.md
-   - Check: No duplicate content with existing KB files
+   - Check: No duplicate content with existing skills files
 
-## Updating Existing KB Files
+## Updating Existing Skills Files
 
-When updating KB files:
+When updating skills files:
 
 - **Preserve structure**: Keep Why/When/Details sections
 - **Maintain focus**: Don't let Details section become unfocused
@@ -217,7 +217,7 @@ When implementing OAuth2 authentication:
 - Always update SUMMARY.md when adding files
 
 ❌ **Duplicating existing content**
-- Check existing KB files first, consider updating instead
+- Check existing skills files first, consider updating instead
 
 ❌ **Using absolute paths**
 - Use relative paths: `../references/...` not `/brain/references/...`
@@ -226,11 +226,11 @@ When implementing OAuth2 authentication:
 - Keep domain knowledge reusable, project knowledge specific
 
 ❌ **Over-engineering**
-- Don't create KB files for trivial or obvious patterns
+- Don't create skills files for trivial or obvious patterns
 
 ## Validation Checklist
 
-Before considering a KB file complete:
+Before considering a skills file complete:
 
 - [ ] File has all three required sections (Why/When/Details)
 - [ ] File name uses kebab-case
@@ -245,15 +245,15 @@ Before considering a KB file complete:
 
 Project templates reference these conventions:
 
-- `templates/AGENTS.project.md` - Points to KB structure
-- `templates/ralph/PROMPT.md` - Includes KB growth instructions
-- `templates/ralph/PROMPT.md` - References KB reading order
+- `templates/AGENTS.project.md` - Points to skills structure
+- `templates/ralph/PROMPT.md` - Includes skills growth instructions
+- `templates/ralph/PROMPT.md` - References skills reading order
 
 When updating conventions, ensure templates remain consistent.
 
 ## See Also
 
-- [kb/SUMMARY.md](SUMMARY.md) - KB index and navigation
-- [kb/domains/README.md](domains/README.md) - Domain KB guidelines
-- [kb/projects/README.md](projects/README.md) - Project KB guidelines
+- [skills/SUMMARY.md](SUMMARY.md) - Skills index and navigation
+- [skills/domains/README.md](domains/README.md) - Domain skills guidelines
+- [skills/projects/README.md](projects/README.md) - Project skills guidelines
 - [AGENTS.md](../AGENTS.md) - Agent guidance for brain repository
