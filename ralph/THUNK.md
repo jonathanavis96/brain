@@ -269,3 +269,4 @@ Started: 2026-01-18
 | 233 | 1.1 | HIGH | **1.1** Update templates/ralph/.verify/ hash baselines to match current protected files - Updated loop.sha256, prompt.sha256, ac.sha256 to match root files (cb54c8a, b355c83, 43ae6db) | 2026-01-19 |
 | 234 | 2.2 | MEDIUM | **2.2** Change "Claude" to "the agent" in SKILL_TEMPLATE.md - Updated 3 occurrences (lines 10, 31, 77) to use agent-agnostic terminology | 2026-01-19 |
 | 235 | 2.3 | MEDIUM | **2.3** Update SKILL_TEMPLATE.md line 67 - Changed "index.md" to "SUMMARY.md" to align with skills system convention where SUMMARY.md is the skills index | 2026-01-19 |
+| 236 | 2.4 | MEDIUM | **2.4** Change "KB Index" label to "Skills Index" in generators/generate-neurons.sh - Updated lines 651 and 671 to align with kb→skills terminology migration | 2026-01-19 |
