@@ -2,9 +2,9 @@
 
 ## Overview
 
-**Status:** Phase 1-2 complete (pushed), Phase 3 in progress - 25/30 tasks complete  
-**Branch:** `brain-work` (4 commits ahead of origin - ready to push)  
-**Last Updated:** 2026-01-19 16:50 (PLAN iteration)
+**Status:** Phase 1-2 complete (pushed), Phase 3 in progress - 26/30 tasks complete  
+**Branch:** `brain-work` (1 commit ahead of origin/brain-work)  
+**Last Updated:** 2026-01-19 16:54 (BUILD iteration)
 
 ### Context
 
@@ -109,8 +109,8 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
   - Fixed: 01af2f4 - Now uses `cut -d' ' -f1` to store only hash
 - [x] **3.24** `templates/ralph/.verify/ac.sha256` - Normalize format to match other baseline files (N-23)
   - Fixed: 0cd141a - Changed from 'hash  filename' to 'hash' only format
-- [ ] **3.25** `templates/ralph/current_ralph_tasks.sh:101-201` - Hash full raw line to prevent cache collisions (N-24)
-  - Complexity: Medium - change cache key generation strategy
+- [x] **3.25** `templates/ralph/current_ralph_tasks.sh:101-201` - Hash full raw line to prevent cache collisions (N-24)
+  - Fixed: Changed cache key from `echo -n "$task_desc"` to `echo -n "$line"` in both root and template files
 - [ ] **3.26** `templates/ralph/current_ralph_tasks.sh:242-349` - Align Archive/Clear parsing with extract logic (N-25)
   - Complexity: Medium - refactor parsing into shared function
 - [x] **3.27** `templates/ralph/verifier.sh:30-34` - Use `grep -F` for literal matching to prevent regex injection (N-26)

@@ -269,8 +269,8 @@ echo -e "\033[33m▶\033[0m"      # Yellow arrow
 ```bash
 declare -A COMPLETED_CACHE
 
-# Generate cache key
-cache_key=$(echo -n "$task_desc" | md5sum | cut -d' ' -f1)
+# Generate cache key (hash full raw line to prevent collisions)
+cache_key=$(echo -n "$line" | md5sum | cut -d' ' -f1)
 
 # Store in cache
 COMPLETED_CACHE[$cache_key]="$output_line"
