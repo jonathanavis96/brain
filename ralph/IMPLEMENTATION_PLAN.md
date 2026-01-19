@@ -145,6 +145,7 @@ Complete the kb→skills terminology migration across all files.
   - **Command:** `./render_ac_status.sh --inline`
   - **Context:** Reflect current verifier state (21 PASS, 0 FAIL, 6 WARN) after Phase 1-4 completion
   - **Priority rationale:** Quick win, shows clean state after major phases complete
+  - **Completed:** 2026-01-19 (commit 4597373)
 
 ### Phase 6: Push & Validation
 
