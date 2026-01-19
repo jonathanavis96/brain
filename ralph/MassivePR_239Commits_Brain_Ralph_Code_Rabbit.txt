@@ -1,0 +1,1391 @@
+coderabbitai bot reviewed 16 minutes ago
+coderabbitai bot
+left a comment
+Actionable comments posted: 3
+
+Note
+
+Due to the large number of review comments, Critical, Major severity comments were prioritized as inline comments.
+
+Caution
+
+Some comments are outside the diff and can’t be posted inline due to platform limitations.
+
+⚠️ Outside diff range comments (6)
+🤖 Fix all issues with AI agents
+In `@ralph/loop.sh`:
+- Around line 464-468: The run_verifier function currently treats a missing or
+non-executable VERIFY_SCRIPT as success; change this to treat it as a failure by
+returning a non-zero exit status (e.g., return 1) or exiting with a non-zero
+code so the verification gate cannot be bypassed; update the branch that checks
+[[ ! -x "$VERIFY_SCRIPT" ]] in run_verifier to echo the existing warning and
+then return 1 (or call exit 1) so callers see a failure when VERIFY_SCRIPT is
+missing or not executable.
+
+In `@ralph/render_ac_status.sh`:
+- Around line 92-113: Check for both START_MARKER and END_MARKER (use grep -q on
+each) before touching the file, run generate_dashboard and verify it succeeded
+and returned non-empty content before continuing, create the temp file with
+mktemp and verify mktemp succeeded, run the awk update and check its exit status
+(only mv the tmp file over PLAN_FILE on success), and surface any errors
+(non-zero exit) from generate_dashboard, mktemp, or awk instead of proceeding;
+reference START_MARKER, END_MARKER, generate_dashboard, mktemp, awk, and
+PLAN_FILE when locating the code to change.
+
+In `@ralph/rovodev-config.yml`:
+- Around line 25-26: The committed ralph/rovodev-config.yml contains
+machine-specific values (e.g., persistenceDir:
+C:\Users\grafe.MASTERRIG\.rovodev\sessions and tenant URL entries referenced at
+lines 55-56, 60-61, 104-105); replace these with portable placeholders or
+generic defaults (e.g., persistenceDir: /path/to/sessions or ${PERSISTENCE_DIR}
+and a placeholder tenant URL) and move the real file to local-only config
+ignored by git (add to .gitignore) or create a template file
+(rovodev-config.yml.template) that documents required env vars; update any code
+that reads this file to support env overrides if necessary and ensure
+sensitive/tenant-specific info is removed from the repo.
+🟡 Minor comments (32)
+ralph/templates/ralph/pr-batch.sh-117-118 (1)
+117-118: Update the template label to match the new skills path.
+
+The header still says “Knowledge Base (kb/)” while the listing is ralph/skills/.
+
+🛠️ Suggested fix
+-    echo "**Knowledge Base (kb/):**"
++    echo "**Skills (skills/):**"
+ralph/pr-batch.sh-116-118 (1)
+116-118: Update the category label to match the new skills path.
+
+The PR body lists ralph/skills/ but the header still says “Knowledge Base (kb/)”, which is confusing for reviewers.
+
+🛠️ Suggested fix
+-    echo "**Knowledge Base (kb/):**"
++    echo "**Skills (skills/):**"
+ralph/rovodev-config.yml-11-12 (1)
+11-12: Override mechanism exists; document the provisioning requirement for direct rovodev usage.
+
+The hardcoded modelId can be overridden via loop.sh --model <model> (shortcuts: sonnet, opus, sonnet4; or --model auto to use global config). However, if rovodev is invoked directly with this config file without an override, it will fail at runtime if the model isn't provisioned in the target environment. The comment "See /models command" provides manual guidance, but add a note that direct usage requires prior verification of model availability, or link to provisioning/fallback documentation.
+
+ralph/generators/generate-neurons.sh-431-434 (1)
+431-434: Rename “Brain KB patterns” label to match skills terminology.
+The path now targets skills, so the label should follow suit.
+
+🩹 Suggested wording update
+-    echo "| **Brain KB patterns** | `../../brain/skills/SUMMARY.md` |"
++    echo "| **Brain skills index** | `../../brain/skills/SUMMARY.md` |"
+ralph/skills/self-improvement/SKILL_TEMPLATE.md-9-12 (1)
+9-12: Replace “Claude” with repo-appropriate agent naming.
+Keeps the template aligned with the Ralph context.
+
+🩹 Suggested wording update
+-What this skill enables Claude to do reliably.
++What this skill enables the agent to do reliably.
+ralph/skills/self-improvement/SKILL_TEMPLATE.md-66-69 (1)
+66-69: Confirm the skills index filename.
+Elsewhere this repo uses SUMMARY.md; consider aligning here.
+
+🩹 Suggested wording update
+-- Update skills index (index.md).
++- Update skills index (SUMMARY.md).
+ralph/generators/generate-neurons.sh-653-660 (1)
+653-660: Update “KB Index” label to “Skills Index”.
+Keeps the label consistent with the skills path.
+
+🩹 Suggested wording update
+-- **KB Index:** `../../brain/skills/SUMMARY.md`
++- **Skills Index:** `../../brain/skills/SUMMARY.md`
+ralph/skills/conventions.md-248-251 (1)
+248-251: Remove the duplicate PROMPT template bullet.
+PROMPT.md appears twice; consolidate to avoid confusion.
+
+💡 Suggested cleanup
+- - `templates/ralph/PROMPT.md` - Includes skills growth instructions
+- - `templates/ralph/PROMPT.md` - References skills reading order
++ - `templates/ralph/PROMPT.md` - Includes skills growth instructions and references skills reading order
+ralph/skills/domains/README.md-61-63 (1)
+61-63: Drop the “planned” qualifier for conventions.
+skills/conventions.md exists in this PR, so the label is now stale.
+
+📝 Suggested edit
+- - `skills/conventions.md` - Detailed skill authoring guidelines (planned)
++ - `skills/conventions.md` - Detailed skill authoring guidelines
+ralph/loop.sh-259-279 (1)
+259-279: Update usage text: model ID is outdated and default-model docs don't match implementation.
+
+The hardcoded model IDs in MODEL_* variables (lines 259-261) are current. However:
+
+The usage text shows outdated Sonnet 4.5 model ID: 20250620 should be 20250929
+The --model defaults description claims Uses default from ~/.rovodev/config.yml, but the code explicitly defaults to sonnet (Sonnet 4.5), overriding the config file
+The --model auto option exists to respect config but isn't documented in usage
+📝 Suggested usage text update
+Defaults:
+  --model       Uses default from ~/.rovodev/config.yml
++  --model       Defaults to Sonnet 4.5. Use --model auto to respect ~/.rovodev/config.yml
+
+Model Selection:
+  --model <model>  Specify the model to use. Shortcuts available:
+-                   sonnet  -> Sonnet 4.5 (anthropic.claude-sonnet-4-5-20250620-v1:0)
++                   sonnet  -> Sonnet 4.5 (anthropic.claude-sonnet-4-5-20250929-v1:0)
+                    opus    -> Opus 4.5 (anthropic.claude-opus-4-5-20251101-v1:0)
+                    sonnet4 -> Sonnet 4 (anthropic.claude-sonnet-4-20250514-v1:0)
++                   auto    -> Uses ~/.rovodev/config.yml modelId
+ralph/loop.sh-639-655 (1)
+639-655: Subshell assignments prevent *_launched variables from updating in parent shell.
+
+Variables assigned inside subshells ( ... ) exist only in the child process scope and don't modify parent shell variables. This causes current_tasks_launched and thunk_tasks_launched to remain false even when monitors launch successfully, triggering the fallback message incorrectly.
+
+Fix by removing the subshell wrapper and using direct if statements to check command success:
+
+🛠️ Suggested fix
+-      if [[ -n "${TMUX:-}" ]]; then
+-        ( tmux new-window -n "Current Tasks" "bash $monitor_dir/current_ralph_tasks.sh" && current_tasks_launched=true ) || true
++      if [[ -n "${TMUX:-}" ]]; then
++        if tmux new-window -n "Current Tasks" "bash $monitor_dir/current_ralph_tasks.sh"; then
++          current_tasks_launched=true
++        fi
+       elif command -v wt.exe &>/dev/null; then
+-        ( wt.exe new-tab --title "Current Ralph Tasks" -- wsl bash "$monitor_dir/current_ralph_tasks.sh" & current_tasks_launched=true ) || true
++        if wt.exe new-tab --title "Current Ralph Tasks" -- wsl bash "$monitor_dir/current_ralph_tasks.sh"; then
++          current_tasks_launched=true
++        fi
+       elif command -v gnome-terminal &>/dev/null && timeout 2s gnome-terminal --version &>/dev/null; then
+-        ( gnome-terminal --title="Current Ralph Tasks" -- bash "$monitor_dir/current_ralph_tasks.sh" & current_tasks_launched=true ) || true
++        if gnome-terminal --title="Current Ralph Tasks" -- bash "$monitor_dir/current_ralph_tasks.sh"; then
++          current_tasks_launched=true
++        fi
+       elif command -v konsole &>/dev/null; then
+-        ( konsole --title "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh" & current_tasks_launched=true ) || true
++        if konsole --title "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh"; then
++          current_tasks_launched=true
++        fi
+       elif command -v xterm &>/dev/null; then
+-        ( xterm -T "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh" & current_tasks_launched=true ) || true
++        if xterm -T "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh"; then
++          current_tasks_launched=true
++        fi
+       fi
+Apply the same pattern to the thunk_tasks_launched section (lines 661–675).
+
+ralph/.verify/verifier.sha256-1-1 (1)
+1-1: Same format inconsistency as prompt.sha256.
+
+This file also lacks the filename suffix. Consider standardizing all .verify/*.sha256 files to use the same format (preferably hash  filename for compatibility with sha256sum -c).
+
+ralph/skills/self-improvement/README.md-20-25 (1)
+20-25: Update Step 5 to reference the correct index file.
+Step 5 currently references skills/index.md, but this file does not exist. The canonical skills index file is skills/SUMMARY.md. Update the workflow step to reference the correct file to avoid broken guidance.
+
+ralph/templates/ralph/PROMPT.project.md-39-41 (1)
+39-41: Fix markdownlint MD050 strong-style.
+The lint rule expects underscores instead of asterisks for strong emphasis.
+
+💡 Suggested fix
+-**End of each BUILD iteration:**
++__End of each BUILD iteration:__
+ralph/AGENTS.md-56-58 (1)
+56-58: Add a language identifier to the fenced code block
+
+This avoids markdownlint MD040 and improves rendering consistency.
+
+📝 Suggested change
+-```
++```text
+ :::COMPLETE:::
+</details>
+
+</blockquote></details>
+<details>
+<summary>ralph/AGENTS.md-30-41 (1)</summary><blockquote>
+
+`30-41`: **Current monitor hotkeys/purpose don’t match the script**
+
+`current_ralph_tasks.sh` supports `h/r/f/c/?/q` and shows completed tasks by default (with hide option). The doc lists only `q` and says it shows unchecked tasks only. Please update this section to reflect the actual behavior.
+
+</blockquote></details>
+<details>
+<summary>ralph/templates/ralph/init_verifier_baselines.sh-43-50 (1)</summary><blockquote>
+
+`43-50`: **.gitignore update can miss run_id.txt**
+
+The script only appends ignore entries when `.verify/latest.txt` is missing. If `latest.txt` is already present but `run_id.txt` is not, the latter won’t be added. Consider checking each entry independently.  
+
+
+<details>
+<summary>🐛 Suggested fix</summary>
+
+```diff
+-if [[ -f ".gitignore" ]]; then
+-  if ! grep -q ".verify/latest.txt" .gitignore; then
+-    echo "" >> .gitignore
+-    echo "# Verifier runtime outputs (do not track)" >> .gitignore
+-    echo ".verify/latest.txt" >> .gitignore
+-    echo ".verify/run_id.txt" >> .gitignore
+-    echo "  ✓ Updated .gitignore"
+-  fi
+-fi
++if [[ -f ".gitignore" ]]; then
++  updated=false
++  if ! grep -q ".verify/latest.txt" .gitignore; then
++    echo "" >> .gitignore
++    echo "# Verifier runtime outputs (do not track)" >> .gitignore
++    echo ".verify/latest.txt" >> .gitignore
++    updated=true
++  fi
++  if ! grep -q ".verify/run_id.txt" .gitignore; then
++    echo ".verify/run_id.txt" >> .gitignore
++    updated=true
++  fi
++  if [[ "$updated" == "true" ]]; then
++    echo "  ✓ Updated .gitignore"
++  fi
++fi
+ralph/templates/ralph/current_ralph_tasks.sh-101-201 (1)
+101-201: Avoid cache collisions for duplicate task descriptions
+
+The completed‑task cache key hashes only task_desc. If the same description appears in multiple sections or tasks, the cached line can show the wrong section/task label/indent. Consider hashing the full raw line (or include section + indent + label) to keep entries distinct.
+
+🐛 Suggested fix (hash the full raw line)
+-                    local cache_key=$(echo -n "$task_desc" | md5sum | cut -d' ' -f1)
++                    local cache_key=$(printf '%s' "$line" | md5sum | cut -d' ' -f1)
+ralph/templates/ralph/current_ralph_tasks.sh-242-349 (1)
+242-349: Archive/Clear parsing diverges from extract logic
+
+archive_completed_tasks and clear_completed_tasks use case‑sensitive “High/Medium/Low Priority” checks and exit the task section on any ### header. That diverges from extract_tasks, so completed tasks under uppercase/emoji headers or nested ###/#### subsections may not be archived/cleared even though they display. Align these functions with the same normalization and ## boundary logic used in extract_tasks.
+
+🐛 Suggested alignment (apply to both loops)
+-        if [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
++        local line_upper="${line^^}"
++        if [[ "$line_upper" =~ HIGH[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
+             in_task_section=true
+-        elif [[ "$line" =~ Medium[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
++        elif [[ "$line_upper" =~ MEDIUM[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
+             in_task_section=true
+-        elif [[ "$line" =~ Low[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
++        elif [[ "$line_upper" =~ LOW[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
+             in_task_section=true
+-        elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
++        elif [[ "$line" =~ ^##[[:space:]]+ ]] && [[ ! "$line_upper" =~ (HIGH|MEDIUM|LOW)[[:space:]]*PRIORITY ]]; then
+             in_task_section=false
+         fi
+ralph/THUNK.md-99-100 (1)
+99-100: Duplicate THUNK numbers detected.
+
+THUNK # 84 appears twice (lines 99-100), and similar duplicates exist later (182, 186, 190, 194, 195). While this is a historical log, sequential unique numbering improves traceability for future audits.
+
+🔧 Suggested approach
+Consider renumbering the duplicates to maintain sequential order, or add a suffix (e.g., 84a, 84b) to distinguish entries while preserving the original association.
+
+ralph/NEURONS.md-204-206 (1)
+204-206: Path example in NEURONS.md contradicts the actual template conventions documented in templates/README.md.
+
+Line 204 shows ..\\brain\\skills\\SUMMARY.md with Windows-style backslashes, but templates/README.md explicitly documents that "Templates use relative paths with forward slashes" and instructs to "Always use ../../brain/ format (bash-style forward slashes)". This inconsistency between NEURONS.md and the authoritative template documentation could mislead developers. Update line 204 to show the correct forward-slash format: ../../brain/skills/SUMMARY.md.
+
+ralph/render_ac_status.sh-57-71 (1)
+57-71: Include SKIP results in the “Check Details” table.
+
+If verifier emits SKIP, those checks won’t appear in the table, which makes the dashboard incomplete.
+
+🛠️ Proposed fix
+-        if [[ "$line" =~ ^\[(PASS|FAIL|WARN)\]\ ([A-Za-z0-9_.]+) ]]; then
++        if [[ "$line" =~ ^\[(PASS|FAIL|WARN|SKIP)\]\ ([A-Za-z0-9_.]+) ]]; then
+@@
+-            case "$current_status" in
+-                PASS) current_status="✅" ;;
+-                FAIL) current_status="❌" ;;
+-                WARN) current_status="⚠️" ;;
+-            esac
++            case "$current_status" in
++                PASS) current_status="✅" ;;
++                FAIL) current_status="❌" ;;
++                WARN) current_status="⚠️" ;;
++                SKIP) current_status="⏭️" ;;
++            esac
+ralph/PROMPT.md-109-110 (1)
+109-110: Protected-files list is missing new hash-guarded artifacts.
+
+The verifier now guards PROMPT.md and additional baseline hashes. List them here to keep instructions aligned with the gate.
+
+🛠️ Proposed fix
+-- **Protected files** - Do NOT modify: `AC.rules`, `.verify/ac.sha256`, `verifier.sh`, `loop.sh`
++- **Protected files** - Do NOT modify: `AC.rules`, `.verify/ac.sha256`, `.verify/loop.sha256`, `.verify/verifier.sha256`, `.verify/prompt.sha256`, `verifier.sh`, `loop.sh`, `PROMPT.md`
+ralph/new-project.sh-412-422 (1)
+412-422: Escape THUNK template substitutions to avoid sed breakage.
+
+PROJECT_NAME or INITIAL_ERA_NAME containing & or / will corrupt the sed replacement. Reuse escape_sed_replacement here.
+
+🛠️ Proposed fix
+-    sed -i "s/{{PROJECT_NAME}}/$PROJECT_NAME/g" "$PROJECT_LOCATION/ralph/THUNK.md"
+-    sed -i "s/{{CREATION_DATE}}/$CREATION_DATE/g" "$PROJECT_LOCATION/ralph/THUNK.md"
+-    sed -i "s/{{INITIAL_ERA_NAME}}/$INITIAL_ERA_NAME/g" "$PROJECT_LOCATION/ralph/THUNK.md"
++    esc_project_name=$(escape_sed_replacement "$PROJECT_NAME")
++    esc_creation_date=$(escape_sed_replacement "$CREATION_DATE")
++    esc_era_name=$(escape_sed_replacement "$INITIAL_ERA_NAME")
++    sed -i "s/{{PROJECT_NAME}}/$esc_project_name/g" "$PROJECT_LOCATION/ralph/THUNK.md"
++    sed -i "s/{{CREATION_DATE}}/$esc_creation_date/g" "$PROJECT_LOCATION/ralph/THUNK.md"
++    sed -i "s/{{INITIAL_ERA_NAME}}/$esc_era_name/g" "$PROJECT_LOCATION/ralph/THUNK.md"
+ralph/skills/domains/ralph-patterns.md-71-76 (1)
+71-76: Commit strategy still says BUILD marks [x].
+
+With verifier gating, BUILD should mark [?] and reserve [x] for post-verification. Please align this sequence with PROMPT.md’s status rules.
+
+ralph/render_ac_status.sh-25-32 (1)
+25-32: Fix WARN count parsing and tighten summary extraction.
+
+WARN uses grep -oE '^[0-9]+', which won’t match lines like WARN: 6, so WARN will show as 0. Also, PASS/FAIL/WARN extraction is safer if it targets the number right after each label.
+
+🛠️ Proposed fix
+-    local pass=$(grep "PASS:" "$LATEST_FILE" | tail -1 | grep -oE '[0-9]+')
+-    local fail=$(grep "FAIL:" "$LATEST_FILE" | tail -1 | grep -oE '[0-9]+')
+-    local warn=$(grep "WARN:" "$LATEST_FILE" | tail -1 | grep -oE '^[0-9]+')
++    local pass=$(grep -oE 'PASS:[[:space:]]*[0-9]+' "$LATEST_FILE" | tail -1 | grep -oE '[0-9]+')
++    local fail=$(grep -oE 'FAIL:[[:space:]]*[0-9]+' "$LATEST_FILE" | tail -1 | grep -oE '[0-9]+')
++    local warn=$(grep -oE 'WARN:[[:space:]]*[0-9]+' "$LATEST_FILE" | tail -1 | grep -oE '[0-9]+')
+ralph/THOUGHTS.md-17-23 (1)
+17-23: Add a language tag to the fenced code block (MD040).
+
+markdownlint flags a fence without a language; add a language (e.g., bash) to the snippet under Bug A.
+
+🛠️ Example fix
+-```
++```bash
+ralph/templates/ralph/AC.rules-52-54 (1)
+52-54: Stale comment about Bug C status.
+
+Line 53 states "NOT FIXED - these should FAIL until fixed", but according to the AC status in IMPLEMENTATION_PLAN.md, all BugC checks are now passing. Update this comment to reflect the current state.
+
+ralph/VALIDATION_CRITERIA.md-106-128 (1)
+106-128: Inconsistency between Bug C test case status and acceptance summary.
+
+Test cases C1-C4 (lines 106-127) and Doc-4 line 202 are marked as unchecked [ ], yet the Acceptance Summary (lines 252-256) claims "All three bugs are FIXED and validated" with Bug C marked as ✅.
+
+Either update the Bug C test cases to [x] if they've been validated, or revise the acceptance summary to reflect the actual verification status.
+
+Also applies to: 250-257
+
+ralph/IMPLEMENTATION_PLAN.md-5-12 (1)
+5-12: Update overview to reflect current status.
+
+The overview states "Bug C (NOT FIXED)" and "Bug C still needs work" (lines 8, 12), but:
+
+All Phase 3 tasks (3.1-3.5) are marked [x] complete
+AC status shows BugC.1-7 and BugC.Auto.1 all passing ✅
+Update the overview to reflect the actual fix status, or if Bug C genuinely isn't fixed, clarify which aspects remain incomplete.
+
+ralph/current_ralph_tasks.sh-354-369 (1)
+354-369: wrap_text function has a subshell scoping bug and appears unused.
+
+The first_line variable is set to false inside the while loop, but the loop runs in a subshell (due to the pipe |), so the assignment never affects the outer scope. Every line will be treated as the first line.
+
+Additionally, this function doesn't appear to be called anywhere in display_tasks.
+
+🔧 Fix the subshell issue if the function is needed
+ wrap_text() {
+     local text="$1"
+     local width="$2"
+     local indent="$3"
+     local first_line=true
+     
+-    echo "$text" | fold -s -w "$width" | while IFS= read -r line; do
++    while IFS= read -r line; do
+         if [[ "$first_line" == "true" ]]; then
+             echo "$line"
+             first_line=false
+         else
+             echo "${indent}${line}"
+         fi
+-    done
++    done < <(echo "$text" | fold -s -w "$width")
+ }
+ralph/templates/ralph/loop.sh-583-612 (1)
+583-612: ready_signal variable is set but never used.
+
+The code detects :::BUILD_READY::: and :::PLAN_READY::: signals from the log and stores them in ready_signal, but the variable is never referenced afterward. Verification logic is triggered only by checking $phase == "build" (line 592), independent of the detected signals.
+
+Either remove the detection code if the signals are not needed, or implement the intended behavior to use ready_signal for controlling phase transitions or verification behavior.
+
+🧹 Nitpick comments (31)
+ralph/templates/backend/AGENTS.project.md (1)
+ralph/loop.sh (2)
+ralph/templates/AGENTS.project.md (1)
+58-74: Consider reiterating standalone-mode applicability.
+Since brain integration is optional, a short note here could prevent confusion when ../../brain/ isn’t present.
+
+💡 Suggested tweak
+ ## Skills + Self-Improvement Protocol
++
++> If `../../brain/` is not present, skip this section and rely on project-local docs.
+ralph/templates/python/AGENTS.project.md (1)
+26-31: Consider renaming “KB file” to “skill file” for terminology consistency
+
+The steps point to skills/, but the text still says “KB file.” Align the wording to reduce confusion for new projects.
+
+♻️ Suggested wording tweak
+-1. **Create a KB file** in the brain repo:
++1. **Create a skill file** in the brain repo:
+ralph/skills/index.md (1)
+1-6: Consider removing or auto‑generating the “Last updated” stamp
+
+Manual dates tend to go stale quickly in docs like this. If you want to keep it, consider generating it during a build/check step.
+
+♻️ Optional change
+-Last updated: 2026-01-18
+ralph/templates/ralph/current_ralph_tasks.sh (3)
+25-35: Remove unused SHOW_HELP flag
+
+It’s declared but never read. Dropping it avoids confusion and silences shellcheck.
+
+♻️ Suggested cleanup
+-SHOW_HELP=false
+354-369: wrap_text is unused
+
+If it’s not needed, consider removing it to keep the script lean.
+
+371-485: Drop unused parsed fields to match actual usage
+
+icon and full_desc are parsed but never used. Either use them or read into _ placeholders to make intent clear.
+
+♻️ Minimal tweak
+-        while IFS='|' read -r icon section task_label short_title indent_level status full_desc; do
++        while IFS='|' read -r _ section task_label short_title indent_level status _; do
+ralph/templates/ralph/init_verifier_baselines.sh (1)
+22-24: Format inconsistency is real but won't break verification
+
+Line 23 stores the full sha256sum output (hash + filename) while other baselines store only the hash. However, verifier.sh line 73 extracts the first field using awk '{print $1}', which correctly handles both formats. Verification will succeed regardless.
+
+That said, the inconsistency should be fixed for clarity:
+
+Suggested normalization
+-if [[ -f "AC.rules" ]]; then
+-  sha256sum AC.rules > .verify/ac.sha256
++if [[ -f "AC.rules" ]]; then
++  sha256sum AC.rules | cut -d' ' -f1 > .verify/ac.sha256
+   echo "  ✓ AC.rules → .verify/ac.sha256"
+ralph/HISTORY.md (1)
+86-86: Minor: Spaces inside inline code spans.
+
+The inline code spans `### ` and `#### ` include trailing spaces, triggering MD038. While the trailing space is intentional to show the markdown header syntax, you could either suppress the lint rule for this file or use an alternative representation.
+
+🔧 Optional fix to avoid lint warning
+-- `### ` or `#### ` → NO STATE CHANGE (subsections stay in parent context)
++- `###` or `####` headers → NO STATE CHANGE (subsections stay in parent context)
+ralph/templates/ralph/PROMPT.md (1)
+50-53: Add language identifier to fenced code block.
+
+Static analysis flagged this code block as missing a language specifier (MD040). Since this shows a markdown table row format, adding a language identifier improves rendering consistency.
+
+🔧 Suggested fix
+ 4. Log completion to THUNK.md: When marking task `[x]`, append to current era table:
+-   ```
++   ```markdown
+    | <next_thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |
+    ```
+ralph/AC.rules (2)
+19-25: Fragile grep pattern for parser check.
+
+The BugA.2 command uses a complex pipeline (grep -E ... | grep -v ... | wc -l | tr -d ' ') that relies on specific code formatting. If the code style changes (e.g., different escaping or whitespace), this check may break or produce false positives/negatives.
+
+Consider a more robust approach using ast-grep or a dedicated test script that validates the actual parser behavior rather than searching for specific string patterns.
+
+222-228: Redundant check with BugC.2.
+
+BugC.Auto.1 checks for IMPLEMENTATION_PLAN|PLAN_FILE patterns, which overlaps with BugC.2 (line 67) that already checks ^PLAN_FILE=. The overlap is minor but could be consolidated.
+
+ralph/templates/ralph/AC.rules (1)
+19-25: Fragile regex pattern for BugA.2 check.
+
+The command on line 23 uses a complex escaped regex pattern \^\#\#\[ which is difficult to maintain and may break if the code formatting changes slightly.
+
+Consider simplifying or documenting the expected pattern more clearly:
+
+-cmd=grep -E '^\s*elif.*\^\#\#\[' current_ralph_tasks.sh | grep -v '###' | wc -l | tr -d ' '
++# Checks that elif statements reference ^## (major section) pattern, excluding ### patterns
++cmd=grep -E 'elif.*\^\#\#' current_ralph_tasks.sh | grep -v '\^\#\#\#' | wc -l | tr -d ' '
+ralph/thunk_ralph_tasks.sh (4)
+125-134: Remove unused in_era variable.
+
+The variable in_era is set to true on line 134 but is never read. This is dead code that should be removed to improve clarity.
+
+♻️ Proposed fix
+     local current_era=""
+     local total_count=0
+-    local in_era=false
+     local display_row=4  # Track row position (starting after header)
+     
+     while IFS= read -r line; do
+         # Detect Era headers
+         if [[ "$line" =~ ^##[[:space:]]+Era:[[:space:]]+(.+)$ ]]; then
+             current_era="${BASH_REMATCH[1]}"
+-            in_era=true
+             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+165-168: Declare and assign separately to avoid masking return values.
+
+Combining local declaration with command substitution masks the exit status of the command. If generate_title fails, you won't be able to detect it.
+
+♻️ Proposed fix
+             # Skip header row
+             if [[ "$thunk_num" =~ ^[0-9]+$ ]]; then
+                 # Generate human-friendly short title
+-                local short_title=$(generate_title "$description")
++                local short_title
++                short_title=$(generate_title "$description")
+The same pattern applies to line 260 in parse_new_thunk_entries and line 311 in create_new_era.
+
+106-112: Remove unused normalize_description function.
+
+This function is defined but never called anywhere in the script. Remove it to reduce code clutter, or if it's intended for future use, add a TODO comment explaining the planned usage.
+
+224-227: Extract magic number 8 into a named constant.
+
+The calculation LAST_DISPLAY_ROW - 8 assumes a specific footer layout. If the footer format changes, this will silently break. Consider defining a constant:
+
+# Footer consists of: blank, separator, total, separator, blank, 3 hotkey lines
+FOOTER_HEIGHT=8
+Then use $((LAST_DISPLAY_ROW - FOOTER_HEIGHT)) for clarity and maintainability.
+
+ralph/templates/ralph/verifier.sh (3)
+30-34: Regex injection risk in read_approval function.
+
+The id variable is interpolated directly into the grep regex pattern. If an AC rule ID contains regex metacharacters (e.g., ., *, [), this could match unintended entries or cause grep errors.
+
+🔧 Suggested fix: use grep -F for literal matching
+ read_approval() {
+   local id="$1"
+   [[ -f "$APPROVALS_FILE" ]] || return 1
+-  grep -E "^${id}=" "$APPROVALS_FILE" >/dev/null 2>&1
++  grep -F "${id}=" "$APPROVALS_FILE" | grep -qE "^${id}=" 2>/dev/null
+ }
+Alternatively, escape the ID before use or validate that IDs contain only safe characters.
+
+222-227: Temp files may leak on early exit within flush_block.
+
+If an error occurs between lines 223-226 (temp file creation) and line 327 (cleanup), the temp files could be orphaned. With set -e, an unexpected failure could leave files in /tmp.
+
+🧹 Consider using trap for temp file cleanup
++    # Setup cleanup trap for temp files
++    trap 'rm -f "$tmp_stdout" "$tmp_stderr" "$tmp_rc"' RETURN
++
+     local tmp_stdout tmp_stderr tmp_rc
+     tmp_stdout="$(mktemp)"
+     tmp_stderr="$(mktemp)"
+     tmp_rc="$(mktemp)"
+     run_cmd "$cmd" "$tmp_stdout" "$tmp_stderr" "$tmp_rc"
+Or wrap the block in a subshell with cleanup.
+
+Also applies to: 327-327
+
+150-329: Nested function definitions inside main.
+
+flush_block and reset_block are defined inside main(). While this works in bash, it's unconventional and makes the functions inaccessible for unit testing. The functions also capture variables from the enclosing scope via closure-like behavior, which can be fragile.
+
+Consider moving these functions to the top level with explicit parameter passing if maintainability becomes a concern.
+
+ralph/current_ralph_tasks.sh (1)
+157-169: Declare and assign separately to avoid masking return values (SC2155).
+
+When md5sum or generate_title fails, the failure is masked because local always returns 0.
+
+🔧 Separate declaration and assignment
+-                    local cache_key=$(echo -n "$task_desc" | md5sum | cut -d' ' -f1)
++                    local cache_key
++                    cache_key=$(echo -n "$task_desc" | md5sum | cut -d' ' -f1)
+                     
+                     # If cached, return cached value
+                     if [[ -n "${COMPLETED_CACHE[$cache_key]}" ]]; then
+Same pattern applies to lines 172 and 191 for short_title.
+
+ralph/templates/ralph/thunk_ralph_tasks.sh (5)
+127-134: Unused variable in_era (SC2034).
+
+The in_era variable is set to true on line 134 but is never read anywhere in the function. This appears to be dead code.
+
+🧹 Remove unused variable
+     local current_era=""
+     local total_count=0
+-    local in_era=false
+     local display_row=4  # Track row position (starting after header)
+     
+     while IFS= read -r line; do
+         # Detect Era headers
+         if [[ "$line" =~ ^##[[:space:]]+Era:[[:space:]]+(.+)$ ]]; then
+             current_era="${BASH_REMATCH[1]}"
+-            in_era=true
+             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+146-162: Parsed but unused variables: orig_num, priority, completed.
+
+In both display_thunks (lines 147-150) and parse_new_thunk_entries (lines 240-243), the table columns for Original #, Priority, and Completed are captured but never used. If these are intentionally reserved for future features, consider adding a comment.
+
+Also applies to: 239-255
+
+262-268: tput cup may fail in non-TTY environments.
+
+The parse_new_thunk_entries function uses tput cup for cursor positioning, which requires a terminal. While the script checks -t 1 for color output, there's no guard around tput cup. If the script is run with stdout redirected, tput will fail.
+
+🔧 Guard tput usage
++            if [[ -t 1 ]]; then
++              tput cup $append_row 0
++            fi
+-            tput cup $append_row 0
+Or fall back to full refresh when not in a TTY.
+
+167-167: Declare and assign separately to avoid masking return values (SC2155).
+
+Same pattern as in current_ralph_tasks.sh - the local declaration masks the return value of the command.
+
+🔧 Example fix for line 167
+-                local short_title=$(generate_title "$description")
++                local short_title
++                short_title=$(generate_title "$description")
+Apply similarly to lines 260 and 311.
+
+Also applies to: 260-260, 311-311
+
+35-87: generate_title is duplicated from current_ralph_tasks.sh.
+
+This function appears in both files with slightly different implementations (this version uses more bash parameter expansion, which is good). Consider extracting to a shared library to avoid drift.
+
+ralph/templates/ralph/loop.sh (3)
+479-481: Declare and assign separately to avoid masking return values (SC2155).
+
+🔧 Separate declaration from assignment
+   # Generate unique run ID for freshness check
+-  export RUN_ID="$(date +%s)-$$"
++  local run_id_val
++  run_id_val="$(date +%s)-$$"
++  export RUN_ID="$run_id_val"
+Note: Since date and $$ are unlikely to fail, this is a minor issue.
+
+299-309: Sed replacement for modelId is fragile.
+
+The sed command assumes modelId: exists in the config file and is at a specific indentation level. If the config structure differs, this could produce invalid YAML.
+
+🔧 Consider using yq for safer YAML manipulation
+If yq is available:
+
+if command -v yq &>/dev/null; then
+  yq e ".agent.modelId = \"$RESOLVED_MODEL\"" "$HOME/.rovodev/config.yml" > "$TEMP_CONFIG"
+else
+  # Fallback to sed with existing logic
+  ...
+fi
+Alternatively, validate the config after generation.
+
+644-654: Monitor launcher has duplicated terminal detection logic.
+
+The terminal emulator detection (tmux → wt.exe → gnome-terminal → konsole → xterm) is duplicated for both monitors. Consider extracting to a helper function.
+
+♻️ Extract terminal launcher helper
+# Launch a script in a new terminal window
+launch_in_terminal() {
+  local title="$1"
+  local script="$2"
+  
+  if [[ -n "${TMUX:-}" ]]; then
+    tmux new-window -n "$title" "bash $script" && return 0
+  elif command -v wt.exe &>/dev/null; then
+    wt.exe new-tab --title "$title" -- wsl bash "$script" & return 0
+  # ... etc
+  fi
+  return 1
+}
+Also applies to: 665-675
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ralph/loop.sh
+Comment on lines +464 to +468
+run_verifier() {
+  if [[ ! -x "$VERIFY_SCRIPT" ]]; then
+    echo "⚠️  Verifier not found or not executable: $VERIFY_SCRIPT"
+    return 0  # Don't block if verifier doesn't exist yet
+  fi
+@coderabbitai
+coderabbitai bot
+20 minutes ago
+⚠️ Potential issue | 🔴 Critical
+
+🧩 Analysis chain
+Return failure when the verifier script is missing or not executable.
+
+The current code returns success (0) when VERIFY_SCRIPT doesn't exist or lacks execute permission. This allows the verification gate to be silently bypassed by removing or de-permissioning the script, undermining its role as a security control. The verifier should be mandatory; if it cannot run, the gate should fail.
+
+Suggested fix
+ if [[ ! -x "$VERIFY_SCRIPT" ]]; then
+-  echo "⚠️  Verifier not found or not executable: $VERIFY_SCRIPT"
+-  return 0  # Don't block if verifier doesn't exist yet
++  echo "❌ Verifier not found or not executable: $VERIFY_SCRIPT"
++  return 1
+ fi
+📝 Committable suggestion
+‼️ IMPORTANT
+Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.
+
+Suggested change
+run_verifier() {
+  if [[ ! -x "$VERIFY_SCRIPT" ]]; then
+    echo "⚠️  Verifier not found or not executable: $VERIFY_SCRIPT"
+    return 0  # Don't block if verifier doesn't exist yet
+  fi
+run_verifier() {
+  if [[ ! -x "$VERIFY_SCRIPT" ]]; then
+    echo "❌ Verifier not found or not executable: $VERIFY_SCRIPT"
+    return 1
+  fi
+🤖 Prompt for AI Agents
+In `@ralph/loop.sh` around lines 464 - 468, The run_verifier function currently
+treats a missing or non-executable VERIFY_SCRIPT as success; change this to
+treat it as a failure by returning a non-zero exit status (e.g., return 1) or
+exiting with a non-zero code so the verification gate cannot be bypassed; update
+the branch that checks [[ ! -x "$VERIFY_SCRIPT" ]] in run_verifier to echo the
+existing warning and then return 1 (or call exit 1) so callers see a failure
+when VERIFY_SCRIPT is missing or not executable.
+@jonathanavis96	Reply...
+ralph/render_ac_status.sh
+Comment on lines +92 to +113
+    # Check if markers exist
+    if ! grep -q "$START_MARKER" "$PLAN_FILE"; then
+        echo "⚠️  Markers not found in IMPLEMENTATION_PLAN.md"
+        echo "Add these markers where you want the dashboard:"
+        echo "  $START_MARKER"
+        echo "  $END_MARKER"
+        return 1
+    fi
+
+    # Generate new content
+    local dashboard=$(generate_dashboard)
+
+    # Create temp file with updated content
+    local tmp_file=$(mktemp)
+    awk -v start="$START_MARKER" -v end="$END_MARKER" -v content="$dashboard" '
+        BEGIN { in_block = 0 }
+        $0 ~ start { print; print content; in_block = 1; next }
+        $0 ~ end { in_block = 0 }
+        !in_block { print }
+    ' "$PLAN_FILE" > "$tmp_file"
+
+    mv "$tmp_file" "$PLAN_FILE"
+@coderabbitai
+coderabbitai bot
+20 minutes ago
+⚠️ Potential issue | 🟠 Major
+
+Prevent plan truncation and propagate dashboard errors.
+
+Only the start marker is validated; if the end marker is missing, awk will drop the rest of the plan. Also, local dashboard=$(generate_dashboard) and local tmp_file=$(mktemp) mask failures under set -e, so a missing latest.txt can still overwrite the plan.
+
+🛠️ Proposed fix
+-    if ! grep -q "$START_MARKER" "$PLAN_FILE"; then
++    if ! grep -q "$START_MARKER" "$PLAN_FILE" || ! grep -q "$END_MARKER" "$PLAN_FILE"; then
+         echo "⚠️  Markers not found in IMPLEMENTATION_PLAN.md"
+         echo "Add these markers where you want the dashboard:"
+         echo "  $START_MARKER"
+         echo "  $END_MARKER"
+         return 1
+     fi
+@@
+-    local dashboard=$(generate_dashboard)
++    local dashboard
++    dashboard=$(generate_dashboard) || return 1
+@@
+-    local tmp_file=$(mktemp)
++    local tmp_file
++    tmp_file=$(mktemp) || return 1
+📝 Committable suggestion
+‼️ IMPORTANT
+Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.
+
+Suggested change
+    # Check if markers exist
+    if ! grep -q "$START_MARKER" "$PLAN_FILE"; then
+        echo "⚠️  Markers not found in IMPLEMENTATION_PLAN.md"
+        echo "Add these markers where you want the dashboard:"
+        echo "  $START_MARKER"
+        echo "  $END_MARKER"
+        return 1
+    fi
+    # Generate new content
+    local dashboard=$(generate_dashboard)
+    
+    # Create temp file with updated content
+    local tmp_file=$(mktemp)
+    awk -v start="$START_MARKER" -v end="$END_MARKER" -v content="$dashboard" '
+        BEGIN { in_block = 0 }
+        $0 ~ start { print; print content; in_block = 1; next }
+        $0 ~ end { in_block = 0 }
+        !in_block { print }
+    ' "$PLAN_FILE" > "$tmp_file"
+    
+    mv "$tmp_file" "$PLAN_FILE"
+    # Check if markers exist
+    if ! grep -q "$START_MARKER" "$PLAN_FILE" || ! grep -q "$END_MARKER" "$PLAN_FILE"; then
+        echo "⚠️  Markers not found in IMPLEMENTATION_PLAN.md"
+        echo "Add these markers where you want the dashboard:"
+        echo "  $START_MARKER"
+        echo "  $END_MARKER"
+        return 1
+    fi
+    # Generate new content
+    local dashboard
+    dashboard=$(generate_dashboard) || return 1
+    
+    # Create temp file with updated content
+    local tmp_file
+    tmp_file=$(mktemp) || return 1
+    awk -v start="$START_MARKER" -v end="$END_MARKER" -v content="$dashboard" '
+        BEGIN { in_block = 0 }
+        $0 ~ start { print; print content; in_block = 1; next }
+        $0 ~ end { in_block = 0 }
+        !in_block { print }
+    ' "$PLAN_FILE" > "$tmp_file"
+    
+    mv "$tmp_file" "$PLAN_FILE"
+🧰 Tools
+🪛 Shellcheck (0.11.0)
+[warning] 102-102: Declare and assign separately to avoid masking return values.
+
+(SC2155)
+
+[warning] 105-105: Declare and assign separately to avoid masking return values.
+
+(SC2155)
+
+🤖 Prompt for AI Agents
+In `@ralph/render_ac_status.sh` around lines 92 - 113, Check for both START_MARKER
+and END_MARKER (use grep -q on each) before touching the file, run
+generate_dashboard and verify it succeeded and returned non-empty content before
+continuing, create the temp file with mktemp and verify mktemp succeeded, run
+the awk update and check its exit status (only mv the tmp file over PLAN_FILE on
+success), and surface any errors (non-zero exit) from generate_dashboard,
+mktemp, or awk instead of proceeding; reference START_MARKER, END_MARKER,
+generate_dashboard, mktemp, awk, and PLAN_FILE when locating the code to change.
+@jonathanavis96	Reply...
+ralph/rovodev-config.yml
+Comment on lines +25 to +26
+  persistenceDir: C:\Users\grafe.MASTERRIG\.rovodev\sessions
+
+@coderabbitai
+coderabbitai bot
+20 minutes ago
+⚠️ Potential issue | 🟠 Major
+
+Avoid committing machine-specific paths and tenant URL.
+
+These values embed a specific Windows user directory and Atlassian tenant, which makes the repo non-portable and may leak internal details. Consider moving this file to a template + .gitignore, or replace with portable defaults/placeholders and keep the real config local.
+
+🛠️ One possible sanitization (if checked in)
+-sessions:
+-  persistenceDir: C:\Users\grafe.MASTERRIG\.rovodev\sessions
++sessions:
++  persistenceDir: .rovodev/sessions
+@@
+-logging:
+-  path: C:\Users\grafe.MASTERRIG\.rovodev\rovodev.log
++logging:
++  path: .rovodev/rovodev.log
+@@
+-mcp:
+-  mcpConfigPath: C:\Users\grafe.MASTERRIG\.rovodev\mcp.json
++mcp:
++  mcpConfigPath: .rovodev/mcp.json
+@@
+-atlassianBillingSite:
+-  siteUrl: https://grafeeti7.atlassian.net
++atlassianBillingSite:
++  siteUrl: https://your-domain.atlassian.net
+Also applies to: 55-56, 60-61, 104-105
+
+🤖 Prompt for AI Agents
+In `@ralph/rovodev-config.yml` around lines 25 - 26, The committed
+ralph/rovodev-config.yml contains machine-specific values (e.g., persistenceDir:
+C:\Users\grafe.MASTERRIG\.rovodev\sessions and tenant URL entries referenced at
+lines 55-56, 60-61, 104-105); replace these with portable placeholders or
+generic defaults (e.g., persistenceDir: /path/to/sessions or ${PERSISTENCE_DIR}
+and a placeholder tenant URL) and move the real file to local-only config
+ignored by git (add to .gitignore) or create a template file
+(rovodev-config.yml.template) that documents required env vars; update any code
+that reads this file to support env overrides if necessary and ensure
+sensitive/tenant-specific info is removed from the repo.
+@jonathanavis96	Reply...
+jonathanavis96 and others added 2 commits 18 minutes ago
+@jonathanavis96
+fix(loop): suppress gnome-terminal dbus errors in monitor launch 
+26eae50
+@jonathanavis96
+docs(plan): add maintenance tasks for Q1 2026 
+3744d8f
+coderabbitai[bot]
+coderabbitai bot reviewed 10 minutes ago
+coderabbitai bot
+left a comment
+Actionable comments posted: 5
+
+🤖 Fix all issues with AI agents
+In `@ralph/IMPLEMENTATION_PLAN.md`:
+- Around line 244-289: The AC status block between the markers <!--
+AC_STATUS_START --> and <!-- AC_STATUS_END --> in IMPLEMENTATION_PLAN.md is
+stale (verified against commit fe39e1c) and must be regenerated for the current
+HEAD; run the verifier script by executing ./verifier.sh from the ralph/
+directory to refresh the auto-generated Acceptance Criteria table and replace
+the entire AC_STATUS block so it matches the current file state before merging.
+- Around line 67-135: The extract_tasks() logic in current_ralph_tasks.sh still
+treats '###' headers as end-of-task-section due to the elif matching
+^###[[:space:]]+ which sets in_task_section=false; remove all branches that
+check that pattern (any occurrences inside extract_tasks()) and ensure only the
+double-hash header detection (lines that match ^##[[:space:]]+) toggles
+in_task_section; keep in_task_section, the main '##' header match, and any logic
+that starts/ends task blocks but eliminate any elif [[ "$line" =~
+^###[[:space:]]+ ]]; then in_task_section=false so subsections (###, ####) do
+not prematurely exit extraction.
+- Around line 7-13: The WARN summary extraction in render_ac_status.sh uses the
+local variable warn and a regex anchored to line start, so it fails when the
+verifier's "  WARN: 6 (...)" has leading spaces; update the extraction for warn
+to use a non-anchored numeric match (i.e., remove the ^ from grep -oE '^[0-9]+'
+so it becomes grep -oE '[0-9]+') when processing the output of grep "WARN:"
+"$LATEST_FILE" | tail -1, ensuring the true WARN count (e.g., 6) is captured.
+
+In `@ralph/old_sh/test-rovodev-integration.sh`:
+- Around line 121-129: The "Test 6: Checking context persistence..." block
+leaves a persistent artifact by creating .opencode/rovodev-context.json; change
+it to avoid side effects by using a temporary directory or by ensuring cleanup:
+create a temp dir (mktemp -d), write the context file there (instead of
+.opencode/rovodev-context.json) or, if you must write to .opencode, add a
+teardown that deletes the file and directory at the end (or wrap creation in a
+conditional controlled by an env var like SKIP_PERSISTENT_TEST); update the test
+block that echoes "Test 6: Checking context persistence..." accordingly and
+ensure any created temp dir/file is removed with trap or explicit rm.
+
+In `@ralph/templates/ralph/loop.sh`:
+- Around line 162-164: The help text in the loop.sh usage block is out of sync
+with the MODEL_SONNET_45 constant: update the displayed model identifier (the
+anthropic.claude-sonnet-4-5-... entry) to match the MODEL_SONNET_45 value used
+in the script, or remove hard-coded version suffixes from the help text so it
+doesn't duplicate version management; locate the usage/help string near the
+sonnet/sonnet4 entries and edit it to either reference MODEL_SONNET_45 symbol or
+replace the concrete version with a generic name (e.g., "Sonnet 4.5") so the
+documentation and the MODEL_SONNET_45 constant remain consistent.
+♻️ Duplicate comments (4)
+ralph/loop.sh (3)
+481-481: Declare and assign separately to avoid masking return values.
+
+Same ShellCheck SC2155 warning as template.
+
+583-589: ready_signal is assigned but never used.
+
+Same dead code as template - variable captures signals but never acts on them.
+
+464-468: Verifier bypass allows security control circumvention.
+
+Same issue as in the template: returning success when VERIFY_SCRIPT is missing allows the verification gate to be bypassed.
+
+Suggested fix
+   if [[ ! -x "$VERIFY_SCRIPT" ]]; then
+-    echo "⚠️  Verifier not found or not executable: $VERIFY_SCRIPT"
+-    return 0  # Don't block if verifier doesn't exist yet
++    echo "❌ Verifier not found or not executable: $VERIFY_SCRIPT"
++    return 1
+   fi
+ralph/templates/ralph/loop.sh (1)
+464-468: Verifier bypass allows security control circumvention.
+
+Returning success when VERIFY_SCRIPT is missing or non-executable allows the verification gate to be bypassed by removing the script. This was flagged in a previous review.
+
+Suggested fix
+🧹 Nitpick comments (10)
+ralph/old_sh/test-rovodev-integration.sh (4)
+1-12: Missing defensive shell options.
+
+The script lacks set -euo pipefail, relying instead on explicit exit 1 after each check. While this works, adding defensive options would catch unexpected failures earlier (e.g., typos in variable names with -u, or failures in pipelines with -o pipefail).
+
+♻️ Suggested improvement
+ #!/bin/bash
++set -euo pipefail
+ 
+ echo "Testing Enhanced RovoDev Integration with OpenCode..."
+78-85: Verify acli command availability.
+
+Test 4 assumes acli is installed and available in PATH. If the command doesn't exist, the test silently fails due to stderr suppression. Consider adding a pre-flight check or documenting the dependency.
+
+94-106: Embedded Python validation swallows errors.
+
+The > /dev/null 2>&1 on line 106 suppresses both stdout and stderr from the Python block, making debugging difficult when validation fails. Consider capturing and conditionally displaying stderr on failure.
+
+Also, the inline Python uses open('/tmp/enhanced-test.json') without a context manager, though for a quick validation script this is acceptable.
+
+140-156: No cleanup of temporary files.
+
+The script creates /tmp/enhanced-test.json (line 80) and .opencode/rovodev-context.json (line 125) but doesn't clean them up. Consider adding a cleanup trap or documenting that these files persist intentionally.
+
+♻️ Suggested cleanup trap
+ #!/bin/bash
++set -euo pipefail
++
++cleanup() {
++    rm -f /tmp/enhanced-test.json
++}
++trap cleanup EXIT
+ 
+ echo "Testing Enhanced RovoDev Integration with OpenCode..."
+ralph/templates/ralph/loop.sh (3)
+481-481: Declare and assign separately to avoid masking return values.
+
+Per ShellCheck SC2155: if date fails, the error is masked because the assignment always succeeds.
+
+Suggested fix
+-  export RUN_ID="$(date +%s)-$$"
++  local run_id_ts
++  run_id_ts="$(date +%s)"
++  export RUN_ID="${run_id_ts}-$$"
+583-589: ready_signal is assigned but never used.
+
+The variable captures BUILD_READY or PLAN_READY signals but is never acted upon. Either implement the intended behavior (e.g., influencing the next iteration's mode) or remove the dead code.
+
+Remove unused variable
+-  # Check for ready signals (strip ANSI codes, require standalone line)
+-  local ready_signal=""
+-  if sed 's/\x1b\[[0-9;]*m//g' "$log" | grep -qE '^\s*:::BUILD_READY:::\s*$'; then
+-    ready_signal="BUILD"
+-  elif sed 's/\x1b\[[0-9;]*m//g' "$log" | grep -qE '^\s*:::PLAN_READY:::\s*$'; then
+-    ready_signal="PLAN"
+-  fi
+641-641: pgrep -f may produce false positives.
+
+Matching the full command line with pgrep -f "current_ralph_tasks.sh" could match unrelated processes like vi current_ralph_tasks.sh or grep current_ralph_tasks.sh. Consider using a more specific pattern or a pidfile approach.
+
+Use a more specific pattern
+-    if ! pgrep -f "current_ralph_tasks.sh" > /dev/null; then
++    if ! pgrep -f "bash.*current_ralph_tasks\.sh$" > /dev/null; then
+ralph/IMPLEMENTATION_PLAN.md (3)
+19-67: Clarify phase ordering or reorder sequentially.
+
+The phases are listed non-sequentially (7→9→1→6), which may confuse readers. Line 65 states "No additional high priority tasks at this time" between Phase 9 and Phase 1, creating ambiguity about which phases are considered "additional."
+
+Consider either:
+
+Reorder phases sequentially (1→12) with a note that 1-6 are complete
+Group by status (incomplete first, complete last) and add a clear separator explaining the grouping strategy
+📋 Suggested reordering with status grouping
+ ## HIGH PRIORITY
++
++### Incomplete Tasks
+ 
+ ### Phase 7: Knowledge Base Quality Assurance
+ ...
+ 
+-*No additional high priority tasks at this time.*
+-
++### Completed Tasks
++
+ ### Phase 1: Fix Task Extraction Parser (Bug A)
+213-217: Consider clarifying the checkbox policy scope.
+
+Line 215 states "Do NOT use checkboxes here" which correctly applies to the Acceptance Criteria section (since ACs are machine-verified). However, phases 1-6 above do use checkboxes for tracking manual task completion.
+
+To prevent confusion, consider adding explicit scope:
+
+-> Do NOT use checkboxes here. AC IDs below link to executable checks.
++> Do NOT use checkboxes in this section. AC IDs below link to executable checks.
++> (Phase tasks above may still use checkboxes for manual tracking.)
+288-288: Optional: Fix markdown emphasis style for consistency.
+
+Static analysis correctly flags underscore emphasis that should use asterisk per markdown style conventions.
+
+🎨 Proposed style fix
+-_Run `./verifier.sh` to refresh. Do not edit this section manually._
++*Run `./verifier.sh` to refresh. Do not edit this section manually.*
+ralph/IMPLEMENTATION_PLAN.md
+Comment on lines +7 to +13
+**Recent achievements (2026-01-18):**
+- Monitor bug fixes (Bugs A, B, C) fully resolved and verified
+- All acceptance criteria passing (21 PASS, 0 FAIL, 0 WARN with gate=block)
+- Monitor scripts synced with templates
+- Documentation updated and consolidated
+- Old scripts archived to old_sh/
+- 256 commits in January 2026 (brain repository modernization)
+@coderabbitai
+coderabbitai bot
+10 minutes ago
+⚠️ Potential issue | 🟠 Major
+
+🧩 Analysis chain
+Fix the WARN count extraction bug in render_ac_status.sh line 31.
+
+The IMPLEMENTATION_PLAN.md shows a real data inconsistency:
+
+Summary table: ⚠️ WARN | 0
+Detail table: 6 entries with ⚠️ status (BugB.UI.1, BugC.UI.1, Template.1, BugB.Auto.1, BugB.Auto.2, BugC.Auto.2)
+Root cause: The regex on line 31 uses grep -oE '^[0-9]+' which fails to extract numbers from the leading-whitespace verifier output (  WARN: 6 (manual_warn=3)). The ^ anchor doesn't match after spaces, so the extraction defaults to 0.
+
+Fix: Change line 31 from:
+
+local warn=$(grep "WARN:" "$LATEST_FILE" | tail -1 | grep -oE '^[0-9]+')
+to:
+
+local warn=$(grep "WARN:" "$LATEST_FILE" | tail -1 | grep -oE '[0-9]+')
+The actual WARN count is 6 (confirmed by AC.rules and verifier.sh output). The detail parsing works correctly; only the summary extraction is broken.
+
+🤖 Prompt for AI Agents
+In `@ralph/IMPLEMENTATION_PLAN.md` around lines 7 - 13, The WARN summary
+extraction in render_ac_status.sh uses the local variable warn and a regex
+anchored to line start, so it fails when the verifier's "  WARN: 6 (...)" has
+leading spaces; update the extraction for warn to use a non-anchored numeric
+match (i.e., remove the ^ from grep -oE '^[0-9]+' so it becomes grep -oE
+'[0-9]+') when processing the output of grep "WARN:" "$LATEST_FILE" | tail -1,
+ensuring the true WARN count (e.g., 6) is captured.
+@jonathanavis96	Reply...
+ralph/IMPLEMENTATION_PLAN.md
+Comment on lines +67 to +135
+### Phase 1: Fix Task Extraction Parser (Bug A)
+
+**Root Cause:** Parser uses `^###[[:space:]]+` pattern to exit task sections. When it hits `### Phase 4:` under `## HIGH PRIORITY`, it exits extraction even though we're still in a priority section.
+
+- [x] **1.1** Fix section detection logic in `current_ralph_tasks.sh` `extract_tasks()` function
+  - Remove the `elif [[ "$line" =~ ^###[[:space:]]+ ]]; then in_task_section=false` block (lines 132-135)
+  - Only change state on `##` (double hash) headers, not `###` or `####` subsection headers
+  - Test: Tasks under `## HIGH PRIORITY` → `### Phase 4:` → `#### Phase 4A:` must be extracted with HIGH priority
+
+### Phase 2: Fix Display Rendering (Bug B)
+
+**Root Cause:** Startup messages occupy screen rows before first render. `display_tasks()` uses `tput cup 0 0` assuming row 0 is empty. Differential update logic tracks wrong row positions, causing duplicated headers/footers.
+
+- [x] **2.1** Remove differential update complexity from `current_ralph_tasks.sh` `display_tasks()`
+  - Remove `force_full_redraw` parameter logic (lines 378, 519-526)
+  - Remove `TASK_DISPLAY_ROWS`, `LAST_RENDERED_CONTENT`, `LAST_FOOTER_*` tracking (lines 36-41, 569-580)
+  - Always do full redraw: `clear` at start of function, then render all content
+  - Simpler = more robust. Parsing 100 tasks takes <50ms - imperceptible to humans
+
+- [x] **2.2** Simplify display rendering to always clear screen before drawing
+  - Replace lines 527-566 (conditional rendering) with simple sequential echo statements
+  - Pattern: `clear` → loop over content → echo each line
+  - Remove all `tput cup $row $col` cursor positioning logic (only needed for differential updates)
+
+- [x] **2.3** Test display rendering with multiple file updates
+  - Modify IMPLEMENTATION_PLAN.md 5 times rapidly
+  - Verify no duplicate headers, no duplicate footers, no text corruption
+  - Verify terminal resize (SIGWINCH) works correctly
+  - NOTE: Acceptance criteria already validated in THUNK #151-154
+
+### Phase 3: Fix THUNK Monitor Auto-Sync (Bug C)
+
+**Root Cause:** `thunk_ralph_tasks.sh` watches IMPLEMENTATION_PLAN.md and tries to sync `[x]` tasks to THUNK.md. This is wrong - Ralph should append to THUNK.md directly when completing tasks.
+
+**Required Fix:** Remove auto-sync functionality entirely. Monitor should ONLY watch and display THUNK.md.
+
+- [x] **3.1** Remove `scan_for_new_completions()` function and helper functions from thunk_ralph_tasks.sh
+  - Delete `scan_for_new_completions()` function (lines 168-244)
+  - Delete `task_exists_in_thunk()` function (lines 124-140)
+  - Delete `extract_task_id()` function (lines 142-165)
+  - These functions are only used for auto-sync, not needed for display-only monitor
+
+- [x] **3.2** Remove all PLAN_FILE references from thunk_ralph_tasks.sh
+  - Delete `PLAN_FILE` variable declaration (line 19)
+  - Delete PLAN_FILE existence check (lines 31-34)
+  - Delete `LAST_PLAN_MODIFIED` variable (line 22, line 475)
+  - Delete `CURRENT_PLAN_MODIFIED` check in monitor loop (lines 529, 552-559)
+  - Monitor should never reference IMPLEMENTATION_PLAN.md
+
+- [x] **3.3** Remove initial scan and "Syncing with" messages
+  - Delete "Syncing with: $PLAN_FILE" from startup (line 464)
+  - Delete initial `scan_for_new_completions` call (line 468)
+  - Delete 'f' hotkey force sync functionality (lines 506-512)
+  - Only keep 'r' (refresh), 'e' (new era), 'q' (quit) hotkeys
+
+- [x] **3.4** Update thunk_ralph_tasks.sh header comments
+  - Remove "Auto-detects new completions in IMPLEMENTATION_PLAN.md" from feature list
+  - Remove "Appends new completions to THUNK.md" from feature list
+  - Remove 'f' hotkey from hotkey list
+  - Clarify monitor is display-only, Ralph appends to THUNK.md
+
+- [x] **3.5** Test monitor is display-only
+  - Start monitor: `bash thunk_ralph_tasks.sh`
+  - Verify no "Scanning IMPLEMENTATION_PLAN.md" messages
+  - Verify startup shows "Watching: THUNK.md" only
+  - Manually append line to THUNK.md - verify display updates
+  - Modify IMPLEMENTATION_PLAN.md - verify monitor does NOT react
+  - Verify 'f' hotkey is removed (no force sync)
+
+@coderabbitai
+coderabbitai bot
+10 minutes ago
+⚠️ Potential issue | 🔴 Critical
+
+🧩 Analysis chain
+Bug A fix is incomplete — the problematic ### pattern is still in the code.
+
+The verification found that the section detection logic in current_ralph_tasks.sh still contains the exact pattern that Phase 1.1 claims was removed:
+
+elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
+    in_task_section=false
+This appears in at least 3 locations (lines 258, 284, 335), still causing task extraction to exit on ### subsection headers rather than only on ## section headers.
+
+Bugs B and C appear to be correctly fixed (no differential update variables or auto-sync code found), but Phase 1.1 requires immediate attention to actually remove this pattern and restore correct section-level detection.
+
+🤖 Prompt for AI Agents
+In `@ralph/IMPLEMENTATION_PLAN.md` around lines 67 - 135, The extract_tasks()
+logic in current_ralph_tasks.sh still treats '###' headers as
+end-of-task-section due to the elif matching ^###[[:space:]]+ which sets
+in_task_section=false; remove all branches that check that pattern (any
+occurrences inside extract_tasks()) and ensure only the double-hash header
+detection (lines that match ^##[[:space:]]+) toggles in_task_section; keep
+in_task_section, the main '##' header match, and any logic that starts/ends task
+blocks but eliminate any elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
+in_task_section=false so subsections (###, ####) do not prematurely exit
+extraction.
+@jonathanavis96	Reply...
+ralph/IMPLEMENTATION_PLAN.md
+Comment on lines +244 to +289
+<!-- AC_STATUS_START -->
+## Acceptance Criteria Status
+
+> **Auto-generated from verifier** — Last run: 2026-01-19 00:49:00 ( fe39e1c)
+| Metric | Value |
+|--------|-------|
+| ✅ PASS | 21 |
+| ❌ FAIL | 0 |
+| ⚠️ WARN | 0 |
+| 🔒 Hash Guard | Hash |
+
+### Check Details
+
+| ID | Status | Description |
+|----|--------|-------------|
+| `BugA.1` | ✅ | Parser uses in_task_section state tracking |
+| `BugA.2` | ✅ | Parser checks for ## (major section) not ### subsections |
+| `BugB.1` | ✅ | Display function uses clear for full redraw |
+| `BugB.2` | ✅ | No differential update logic (LAST_RENDERED) |
+| `BugB.UI.1` | ⚠️ | No visual corruption after terminal resize |
+| `BugC.1` | ✅ | No scan_for_new_completions function |
+| `BugC.2` | ✅ | No PLAN_FILE variable |
+| `BugC.3` | ✅ | No "Scanning IMPLEMENTATION_PLAN" message |
+| `BugC.4` | ✅ | Monitor references THUNK.md |
+| `BugC.5` | ✅ | Monitor does not append/redirect into THUNK.md |
+| `BugC.6` | ✅ | No task_exists_in_thunk function |
+| `BugC.7` | ✅ | No extract_task_id function |
+| `BugC.UI.1` | ⚠️ | THUNK monitor only displays, never modifies files |
+| `Template.1` | ⚠️ | thunk_ralph_tasks.sh matches template |
+| `AntiCheat.1` | ✅ | No fake verification markers in source files |
+| `AntiCheat.2` | ✅ | No dismissal phrases in active source files |
+| `AntiCheat.3` | ✅ | No bug reframing in source files |
+| `AntiCheat.4` | ✅ | No intended behavior dismissals in source files |
+| `AntiCheat.5` | ✅ | No self-certification in source files |
+| `Protected.1` | ✅ | loop.sh unchanged from baseline |
+| `Protected.2` | ✅ | verifier.sh unchanged from baseline |
+| `Protected.3` | ✅ | PROMPT.md unchanged from baseline |
+| `VerifyMeta.1` | ✅ | Verifier run_id.txt exists and is non-empty |
+| `BugB.Auto.1` | ⚠️ | Display uses terminal-safe cursor positioning (tput) |
+| `BugB.Auto.2` | ⚠️ | Display has stty handling for terminal state |
+| `BugC.Auto.1` | ✅ | THUNK monitor has no auto-sync from IMPLEMENTATION_PLAN |
+| `BugC.Auto.2` | ⚠️ | THUNK writes limited to era creation only |
+
+_Run `./verifier.sh` to refresh. Do not edit this section manually._
+<!-- AC_STATUS_END -->
+@coderabbitai
+coderabbitai bot
+10 minutes ago
+⚠️ Potential issue | 🟡 Minor
+
+🧩 Analysis chain
+Regenerate the AC status section before merging—the file has been modified since the last verifier run.
+
+The AC status shows a verification from 2026-01-19 00:49:00 against commit fe39e1c, but the current HEAD is 3744d8f (2026-01-19 01:19:44), which added maintenance tasks to the file. Since the file has changed after the verifier ran, the AC status is stale and should be refreshed to reflect the final PR state.
+
+Run ./verifier.sh in the ralph/ directory to regenerate.
+
+🧰 Tools
+🪛 markdownlint-cli2 (0.18.1)
+🤖 Prompt for AI Agents
+In `@ralph/IMPLEMENTATION_PLAN.md` around lines 244 - 289, The AC status block
+between the markers <!-- AC_STATUS_START --> and <!-- AC_STATUS_END --> in
+IMPLEMENTATION_PLAN.md is stale (verified against commit fe39e1c) and must be
+regenerated for the current HEAD; run the verifier script by executing
+./verifier.sh from the ralph/ directory to refresh the auto-generated Acceptance
+Criteria table and replace the entire AC_STATUS block so it matches the current
+file state before merging.
+@jonathanavis96	Reply...
+ralph/old_sh/test-rovodev-integration.sh
+Comment on lines +121 to +129
+# Test 6: Context persistence setup
+echo "Test 6: Checking context persistence..."
+mkdir -p .opencode
+if [ ! -f ".opencode/rovodev-context.json" ]; then
+    echo "{}" > .opencode/rovodev-context.json
+    echo "✓ Context file initialized"
+else
+    echo "✓ Context file exists"
+fi
+@coderabbitai
+coderabbitai bot
+10 minutes ago
+⚠️ Potential issue | 🟡 Minor
+
+Test 6 has persistent side effects.
+
+This test creates .opencode/rovodev-context.json in the current working directory. Unlike a true validation test, it modifies the environment. If this is intentional setup for subsequent manual usage, consider documenting it; otherwise, tests should avoid leaving artifacts.
+
+🤖 Prompt for AI Agents
+In `@ralph/old_sh/test-rovodev-integration.sh` around lines 121 - 129, The "Test
+6: Checking context persistence..." block leaves a persistent artifact by
+creating .opencode/rovodev-context.json; change it to avoid side effects by
+using a temporary directory or by ensuring cleanup: create a temp dir (mktemp
+-d), write the context file there (instead of .opencode/rovodev-context.json)
+or, if you must write to .opencode, add a teardown that deletes the file and
+directory at the end (or wrap creation in a conditional controlled by an env var
+like SKIP_PERSISTENT_TEST); update the test block that echoes "Test 6: Checking
+context persistence..." accordingly and ensure any created temp dir/file is
+removed with trap or explicit rm.
+@jonathanavis96	Reply...
+ralph/templates/ralph/loop.sh
+Comment on lines +162 to +164
+                   sonnet  -> Sonnet 4.5 (anthropic.claude-sonnet-4-5-20250620-v1:0)
+                   opus    -> Opus 4.5 (anthropic.claude-opus-4-5-20251101-v1:0)
+                   sonnet4 -> Sonnet 4 (anthropic.claude-sonnet-4-20250514-v1:0)
+@coderabbitai
+coderabbitai bot
+10 minutes ago
+⚠️ Potential issue | 🟡 Minor
+
+Documentation shows stale model version.
+
+The usage help references anthropic.claude-sonnet-4-5-20250620-v1:0 but the actual MODEL_SONNET_45 constant at line 262 is anthropic.claude-sonnet-4-5-20250929-v1:0. Update the help text to match the current model IDs or remove the specific version strings from the help text since they're maintained elsewhere.
+
+Suggested fix
+ Model Selection:
+   --model <model>  Specify the model to use. Shortcuts available:
+-                   sonnet  -> Sonnet 4.5 (anthropic.claude-sonnet-4-5-20250620-v1:0)
+-                   opus    -> Opus 4.5 (anthropic.claude-opus-4-5-20251101-v1:0)
+-                   sonnet4 -> Sonnet 4 (anthropic.claude-sonnet-4-20250514-v1:0)
++                   sonnet  -> Sonnet 4.5
++                   opus    -> Opus 4.5
++                   sonnet4 -> Sonnet 4
+                    Or provide a full model ID directly.
+📝 Committable suggestion
+‼️ IMPORTANT
+Carefully review the code before committing. Ensure that it accurately replaces the highlighted code, contains no missing lines, and has no issues with indentation. Thoroughly test & benchmark the code to ensure it meets the requirements.
+
+Suggested change
+                   sonnet  -> Sonnet 4.5 (anthropic.claude-sonnet-4-5-20250620-v1:0)
+                   opus    -> Opus 4.5 (anthropic.claude-opus-4-5-20251101-v1:0)
+                   sonnet4 -> Sonnet 4 (anthropic.claude-sonnet-4-20250514-v1:0)
+                   sonnet  -> Sonnet 4.5
+                   opus    -> Opus 4.5
+                   sonnet4 -> Sonnet 4
+🤖 Prompt for AI Agents
+In `@ralph/templates/ralph/loop.sh` around lines 162 - 164, The help text in the
+loop.sh usage block is out of sync with the MODEL_SONNET_45 constant: update the
+displayed model identifier (the anthropic.claude-sonnet-4-5-... entry) to match
+the MODEL_SONNET_45 value used in the script, or remove hard-coded version
+suffixes from the help text so it doesn't duplicate version management; locate
+the usage/help string near the sonnet/sonnet4 entries and edit it to either
+reference MODEL_SONNET_45 symbol or replace the concrete version with a generic
+name (e.g., "Sonnet 4.5") so the documentation and the MODEL_SONNET_45 constant
+remain consistent.

@@ -28,7 +28,7 @@ generate_dashboard() {
     # Extract summary stats
     local pass=$(grep "PASS:" "$LATEST_FILE" | tail -1 | grep -oE '[0-9]+')
     local fail=$(grep "FAIL:" "$LATEST_FILE" | tail -1 | grep -oE '[0-9]+')
-    local warn=$(grep "WARN:" "$LATEST_FILE" | tail -1 | grep -oE '^[0-9]+')
+    local warn=$(grep "WARN:" "$LATEST_FILE" | tail -1 | grep -oE '[0-9]+')
     local hash_status=$(grep "Hash guard:" "$LATEST_FILE" | cut -d' ' -f3)
 
     cat << EOF
