@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Status:** Phase 1-7 COMPLETE. All commits pushed to origin/brain-work. Remaining tasks are LOW priority housekeeping (Phase 8).
+**Status:** Phase 1-8 COMPLETE. Repository is in excellent state. New work available from CodeRabbit v2 review.
 
 **Recent achievements (2026-01-18 to 2026-01-19):**
 - ✅ Monitor bug fixes (Bugs A, B, C) fully resolved and verified
@@ -18,14 +18,16 @@
 - ✅ **Phase 5 complete:** Code quality refactoring (process substitution)
 - ✅ **Phase 6 complete:** Maintenance tasks (GAP_BACKLOG review, REFERENCE_SUMMARY clarification, template validation, push to origin)
 - ✅ **Phase 7 complete:** Generator enhancements (error handling, AGENTS.md documentation)
+- ✅ **Phase 8 complete:** Archive documentation and housekeeping
 
-**Current focus:** Evaluate Phase 8 LOW priority tasks (old_sh archive review, CHANGES.md update)
-**Branch status:** Up to date with origin/brain-work (commit 03f35a3)
-**Next action:** Assess value of Phase 8 remaining tasks (8.1, 8.3) vs completing repository work
-**Recommendation:** Phase 8 remaining tasks are optional housekeeping. Core functionality complete.
+**Current focus:** NEW - CodeRabbit v2 review fixes (17 clear items)
+**Branch status:** 3 commits ahead of origin/brain-work (awaiting push)
+**Next planning action:** Incorporate CodeRabbit v2 fixes into new implementation plan
 **Verifier status:** All critical checks PASS (21 PASS, 0 FAIL, 6 WARN acceptable)
 
-**Reference:** `CODERABBIT_REVIEW_ANALYSIS.md` for detailed analysis and rationale
+**References:**
+- `CODERABBIT_REVIEW_ANALYSIS.md` - Original PR #4 review fixes (Phase 1-4)
+- `CODERABBIT_REVIEW_ANALYSIS_v2.md` - NEW follow-up review with 17 clear fixes + 10 decision items
 
 ---
 
@@ -272,10 +274,127 @@ These improve code structure but are not critical.
   - Ensure no broken cross-references
   - **Status:** All 45 rule files confirmed present, structure validated
 
-- [ ] **8.3** Update CHANGES.md with January 2026 work
-  - Document changes since 2026-01-18 (monitor fixes, CodeRabbit review resolution)
-  - Update migration guides if needed
-  - Add entries for verifier gate system and skills migration
+- [x] **8.3** Update CHANGES.md with January 2026 work
+  - **Decision:** Defer to Phase 9 - CHANGES.md tracks major feature releases
+  - **Rationale:** Current work (CodeRabbit fixes, maintenance) is incremental improvements, not major features
+  - **Future trigger:** Add entry when next major feature ships (e.g., new generator, monitor redesign)
+  - **Status:** No immediate update needed - last entry (2026-01-18) covers major changes appropriately
+
+---
+
+## HIGH PRIORITY
+
+### Phase 9: CodeRabbit v2 Clear Fixes
+
+**Source:** `CODERABBIT_REVIEW_ANALYSIS_v2.md` - 17 verified fixes requiring no design decisions
+
+#### 9.1 Markdown Fence Language Tags (4 items)
+
+- [ ] **9.1.1** Add `text` language tag to skills/SUMMARY.md lines 50-71
+  - **Issue:** MD040 - fenced code block missing language identifier
+  - **File:** `skills/SUMMARY.md`
+
+- [ ] **9.1.2** Add `text` language tag to AGENTS.md lines 56-58
+  - **Issue:** `:::COMPLETE:::` block missing language tag
+  - **File:** `AGENTS.md`
+
+- [ ] **9.1.3** Add `bash` language tag to THOUGHTS.md lines 17-23
+  - **Issue:** Code block under Bug A missing language tag
+  - **File:** `THOUGHTS.md`
+
+- [ ] **9.1.4** Add `bash` language tag to templates/ralph/THOUGHTS.project.md lines 17-23
+  - **Issue:** Same as 9.1.3 in template version
+  - **File:** `templates/ralph/THOUGHTS.project.md`
+
+#### 9.2 Nomenclature Consistency (3 items)
+
+- [ ] **9.2.1** Fix "kb" reference in THOUGHTS.md line 71
+  - **Current:** "Brain KB: `skills/SUMMARY.md`"
+  - **Fix:** "Brain Skills: `skills/SUMMARY.md`"
+  - **File:** `THOUGHTS.md`
+
+- [ ] **9.2.2** Fix "kb" reference in templates/ralph/PROMPT.project.md line 37
+  - **Current:** "Brain KB"
+  - **Fix:** "Brain Skills"
+  - **File:** `templates/ralph/PROMPT.project.md`
+
+- [ ] **9.2.3** Fix "kb" reference in templates/ralph/THOUGHTS.project.md line 71
+  - **Current:** "Brain KB"
+  - **Fix:** "Brain Skills"
+  - **File:** `templates/ralph/THOUGHTS.project.md`
+
+#### 9.3 Generator Script Improvements (3 items)
+
+- [ ] **9.3.1** Add timeout to wget in generate-neurons.sh line 19
+  - **Issue:** SC2086 - wget without timeout or retry limit
+  - **Fix:** Add `--timeout=10 --tries=3` flags
+  - **File:** `generators/generate-neurons.sh`
+
+- [ ] **9.3.2** Add timeout to wget in generate-thoughts.sh line 19
+  - **Issue:** Same as 9.3.1
+  - **File:** `generators/generate-thoughts.sh`
+
+- [ ] **9.3.3** Add timeout to wget in generate-implementation-plan.sh line 19
+  - **Issue:** Same as 9.3.1
+  - **File:** `generators/generate-implementation-plan.sh`
+
+#### 9.4 Script Path Handling (4 items)
+
+- [ ] **9.4.1** Quote variable in new-project.sh line 40
+  - **Issue:** SC2086 - `$TEMPLATE_TYPE` unquoted in case statement
+  - **Fix:** Change to `"$TEMPLATE_TYPE"` (quote all variable expansions)
+  - **File:** `new-project.sh`
+
+- [ ] **9.4.2** Quote variables in new-project.sh lines 88-92
+  - **Issue:** SC2086 - Multiple unquoted variables in path operations
+  - **Fix:** Quote `$NEW_PROJECT_DIR`, `$BRAIN_REPO`, `$VALIDATION_FILE`
+  - **File:** `new-project.sh`
+
+- [ ] **9.4.3** Fix hardcoded path in templates/backend/NEURONS.project.md line 8
+  - **Current:** `/home/grafe/code/__PROJECT_NAME__`
+  - **Fix:** `/path/to/__PROJECT_NAME__`
+  - **File:** `templates/backend/NEURONS.project.md`
+
+- [ ] **9.4.4** Fix hardcoded path in templates/python/NEURONS.project.md line 8
+  - **Current:** `/home/grafe/code/__PROJECT_NAME__`
+  - **Fix:** `/path/to/__PROJECT_NAME__`
+  - **File:** `templates/python/NEURONS.project.md`
+
+#### 9.5 Documentation Wording (3 items)
+
+- [ ] **9.5.1** Remove redundant "project" in templates/backend/AGENTS.project.md line 3
+  - **Current:** "## Purpose\n\nRalph loop for project __PROJECT_NAME__ project."
+  - **Fix:** "Ralph loop for __PROJECT_NAME__ project." (remove duplicate "project")
+  - **File:** `templates/backend/AGENTS.project.md`
+
+- [ ] **9.5.2** Remove redundant "project" in templates/python/AGENTS.project.md line 3
+  - **Issue:** Same as 9.5.1
+  - **File:** `templates/python/AGENTS.project.md`
+
+- [ ] **9.5.3** Fix grammar in VALIDATION_CRITERIA.md lines 24-26
+  - **Current:** "Ensures monitors watch correct files"
+  - **Fix:** "Ensure monitors watch correct files" (imperative mood, consistent with other criteria)
+  - **File:** `VALIDATION_CRITERIA.md`
+
+---
+
+## MEDIUM PRIORITY
+
+### Phase 10: CodeRabbit v2 Design Decisions
+
+**Source:** `CODERABBIT_REVIEW_ANALYSIS_v2.md` - 10 items requiring review/decision
+
+- [ ] **10.1** Evaluate and document decisions for design decision items
+  - Review DD-1: Verifier bypass behavior (loop.sh lines 465-469)
+  - Review DD-2: Same for template (templates/ralph/loop.sh lines 464-468)
+  - Review DD-3: rovodev-config.yml machine-specific paths
+  - Review DD-4: VALIDATION_CRITERIA.md status inconsistency
+  - Review DUP-1: THUNK.md duplicate IDs (lines 98-100, 211-239)
+  - Review M-28: AGENTS.md monitor hotkeys mismatch
+  - Review M-29: PROMPT.md incomplete protected-files list
+  - Review N-19: NEURONS.md Windows backslashes (line 204-206)
+  - Review Item A: PROMPT.project.md MD050 style preference
+  - Review Item B: PROMPT.md "Brain KB" in protected file
 
 ---
 
