@@ -2,9 +2,9 @@
 
 ## Overview
 
-**Status:** Phase 1-2 complete (pushed), Phase 3 in progress - 14/30 tasks complete  
-**Branch:** `brain-work` (1 commit ahead of origin - ready to push)  
-**Last Updated:** 2026-01-19 16:30 (PLAN iteration)
+**Status:** Phase 1-2 complete (pushed), Phase 3 in progress - 15/30 tasks complete  
+**Branch:** `brain-work` (2 commits ahead of origin - ready to push)  
+**Last Updated:** 2026-01-19 16:38 (BUILD iteration)
 
 ### Context
 
@@ -106,7 +106,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 
 **Goal:** Prevent edge-case failures and improve error handling
 
-- [ ] **3.22** `templates/ralph/init_verifier_baselines.sh:43-50` - Check each .gitignore entry independently (N-22)
+- [x] **3.22** `templates/ralph/init_verifier_baselines.sh:43-50` - Check each .gitignore entry independently (N-22)
   - Complexity: Low - split compound test into loop
 - [ ] **3.23** `templates/ralph/init_verifier_baselines.sh:22-24` - Normalize to store only hash not full sha256sum (N-23)
   - Complexity: Low - adjust cut/awk operation for consistency
