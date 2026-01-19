@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Status:** Phase 1-4 complete (all CodeRabbit PR #4 high-priority fixes). Branch pushed to origin. Ready for optional improvements.
+**Status:** Phase 1-6 COMPLETE. 5 unpushed commits ready to push. Remaining tasks are LOW priority maintenance.
 
 **Recent achievements (2026-01-18 to 2026-01-19):**
 - ✅ Monitor bug fixes (Bugs A, B, C) fully resolved and verified
@@ -15,14 +15,13 @@
   - Terminology consistency (kb→skills)
   - Documentation updates (model versions, --model auto, markdown fences)
   - AC status dashboard regenerated
-- ✅ **All work pushed to origin/brain-work** (task 6.4 complete)
+- ✅ **Phase 5 complete:** Code quality refactoring (process substitution)
+- ✅ **Phase 6 complete:** Maintenance tasks (GAP_BACKLOG review, REFERENCE_SUMMARY clarification, template validation)
 
-**Current focus:** Repository maintenance and optional improvements (Phases 5-8)
-**Branch status:** Clean working tree, all commits pushed to origin/brain-work
-**Next recommended tasks:** 
-  - Phase 6.2: Review GAP_BACKLOG for skill promotion opportunities
-  - Phase 6.3: Evaluate docs/REFERENCE_SUMMARY.md legacy status
-  - Phase 5.2-5.3: Process substitution refactoring (code quality)
+**Current focus:** Push accumulated commits (task 6.5), then evaluate Phase 7-8 LOW priority tasks
+**Branch status:** 5 commits ahead of origin/brain-work (422fe10...d7c49b4)
+**Next action:** Push → then assess Phase 7-8 value (generators, archive, CHANGES.md)
+**Recommendation:** Phase 7-8 tasks are optional maintenance. Consider completing repository work after push.
 **Verifier status:** All critical checks PASS (21 PASS, 0 FAIL, 6 WARN acceptable)
 
 **Reference:** `CODERABBIT_REVIEW_ANALYSIS.md` for detailed analysis and rationale
@@ -152,18 +151,21 @@ Complete the kb→skills terminology migration across all files.
   - **Priority rationale:** Quick win, shows clean state after major phases complete
   - **Completed:** 2026-01-19 (commit 4597373)
 
-### Phase 6: Push & Validation
+### Phase 6: Maintenance & Push
 
-- [x] **6.4** Push accumulated commits to origin
+- [x] **6.4** Push accumulated commits to origin (Phase 1-4)
   - **Context:** 1 commit pushed (95c12bf - push accumulated commits)
   - **Command:** `git push origin brain-work`
   - **Status:** Complete - all Phase 1-4 work now on origin/brain-work
 
+- [ ] **6.5** Push Phase 5-6 commits to origin
+  - **Context:** 5 commits pending (422fe10, 9bd9158, d7c49b4, c27e3de, 402c47c)
+  - **Command:** `git push origin brain-work`
+  - **Priority:** HIGH - needed before Phase 7-8
+
 ---
 
 ## MEDIUM PRIORITY
-
-### Phase 6: Maintenance & Validation
 
 - [x] **6.2** Review GAP_BACKLOG.md for skill promotion
   - Check if P1/P0 gaps meet promotion criteria (currently 2 P2 gaps reviewed, no promotion needed)
@@ -219,13 +221,13 @@ These improve code structure but are not critical.
 
 ---
 
-- [ ] **6.1** Verify template completeness
-  - Audit templates/ralph/ (expect 16 files, currently 17 including .gitignore)
+- [x] **6.1** Verify template completeness
+  - Audit templates/ralph/ (14 files: AC.rules, IMPLEMENTATION_PLAN, MANUAL_APPROVALS, PROMPT x2, RALPH, THUNK, VALIDATION_CRITERIA, current_ralph_tasks.sh, init_verifier_baselines.sh, loop.sh, pr-batch.sh, thunk_ralph_tasks.sh, verifier.sh)
   - Audit templates/backend/ (4 files: AGENTS, NEURONS, THOUGHTS, VALIDATION_CRITERIA)
   - Audit templates/python/ (4 files: AGENTS, NEURONS, THOUGHTS, VALIDATION_CRITERIA)
   - Cross-check with new-project.sh expectations
-  - **Current counts:** ralph=17, backend=4, python=4
-  - **Status:** All templates present and validated
+  - **Verified counts:** ralph=14, backend=4, python=4 (all present)
+  - **Status:** Template structure validated
 
 ---
 
@@ -257,11 +259,11 @@ These improve code structure but are not critical.
   - Document purpose in old_sh/README.md
   - Consider removal if no historical value
 
-- [ ] **8.2** Validate React best practices references
-  - Verify all 45 rule files present (currently: 45 ✓)
+- [x] **8.2** Validate React best practices references
+  - Verify all 45 rule files present (confirmed: 45 ✓)
   - Check INDEX.md and HOTLIST.md are current
   - Ensure no broken cross-references
-  - **Status:** All 45 rule files confirmed present
+  - **Status:** All 45 rule files confirmed present, structure validated
 
 - [ ] **8.3** Update CHANGES.md with January 2026 work
   - Document changes since 2026-01-18 (monitor fixes, CodeRabbit review resolution)
