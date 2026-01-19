@@ -234,3 +234,4 @@ Started: 2026-01-18
 | 200 | LEGACY | HIGH | No force sync hotkey 'f' (removed entirely) <!-- tested: hotkey documentation shows only r, e, q --> | 2026-01-19 |
 | 201 | 7.1 | HIGH | **7.1** Audit skills/ directory for consistency - Structure: 11/12 compliant (ralph-patterns uses descriptive headers), Triggers: 12/12 have usage sections, Index: 12/12 indexed, Cross-refs: All valid after fixing brain-example.md kb/ → skills/ paths | 2026-01-19 |
 | 202 | 7.2 | HIGH | **7.2** Update skills/index.md timestamp - Updated from 2026-01-18 to 2026-01-19 | 2026-01-19 |
+| 192 | 1.1 | HIGH | **1.1** Fix WARN count regex in render_ac_status.sh line 31 - Changed from '^[0-9]+' to '[0-9]+' (unanchored) | 2026-01-19 |
