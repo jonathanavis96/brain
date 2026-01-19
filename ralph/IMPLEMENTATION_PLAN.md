@@ -97,7 +97,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 - [x] **3.17** `HISTORY.md:86` - Remove spaces in inline code spans (N-17) - SKIPPED: Historical records should not be altered
 - [x] **3.18** `templates/ralph/PROMPT.md:50-53` - Add `markdown` fence language tag (N-18)
 - [x] **3.19** `NEURONS.md:204-206` - Change Windows backslashes to forward slashes (N-19)
-- [ ] **3.20** `skills/index.md:1-6` - Remove or auto-generate "Last updated" stamp (N-20)
+- [x] **3.20** `skills/index.md:1-6` - Remove or auto-generate "Last updated" stamp (N-20)
   - Decision: Remove entirely (auto-generation adds complexity for low value)
 - [ ] **3.21** `THUNK.md:99-100,182,186,190,194-195` - Fix duplicate THUNK numbers with suffixes (N-21)
   - Note: Cosmetic only - historical Era 1 numbering artifacts
