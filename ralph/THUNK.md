@@ -262,6 +262,7 @@ Started: 2026-01-18
 | 226 | 5.2 | LOW | **5.2** Use process substitution in current_ralph_tasks.sh - Replaced pipe-to-while with process substitution in wrap_text() function for bash best practices | 2026-01-19 |
 | 227 | 5.3 | MEDIUM | **5.3** Use process substitution in thunk_ralph_tasks.sh - Verified code already uses correct patterns (line 101: process substitution, lines 178/273: input redirection), no pipe-in-loop issues found | 2026-01-19 |
 | 228 | 6.5 | HIGH | **6.5** Push Phase 5-6 commits to origin - All commits already pushed, branch up to date with origin/brain-work | 2026-01-19 |
+| 229 | 2.9 | MEDIUM | **2.9** Update monitor hotkeys documentation to match actual behavior - Current Ralph Tasks: Added h, r, f, c, ? hotkeys; THUNK Monitor: Removed non-existent 'f' hotkey | 2026-01-19 |
 | 229 | 2.1 | MEDIUM | **2.1** Add SKIP pattern to render_ac_status.sh - Added SKIP to regex and case statement with ⏭️ emoji | 2026-01-19 |
 | 230 | 7.2 | LOW | **7.2** Document generator usage in AGENTS.md - Added comprehensive "Bootstrapping New Projects" section with quick start, generator scripts (generate-neurons.sh, generate-thoughts.sh, generate-implementation-plan.sh), workflow examples, template types, manual usage guide, and error handling | 2026-01-19 |
 | 231 | 6.5 | HIGH | **6.5** Push accumulated commits (Phase 7) to origin/brain-work - Pushed 3 commits (c5f4fc3, d1e81ff, 03f35a3) containing generator validation and AGENTS.md documentation | 2026-01-19 |
