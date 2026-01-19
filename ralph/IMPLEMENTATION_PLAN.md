@@ -2,16 +2,17 @@
 
 ## Overview
 
-**Status:** ✅ ALL PHASES COMPLETE - Ready to merge to main  
+**Status:** 🔄 IN PROGRESS - Phase 4 (Outside Diff items)  
 **Branch:** `brain-work` (synced with origin, 375 commits ahead of origin/main)  
-**Last Updated:** 2026-01-19 17:33 (PLAN iteration - final state confirmed)
+**Last Updated:** 2026-01-19 17:44 (PLAN iteration - discovered remaining work)
 
 ### Context
 
-All tasks from CodeRabbit v2 review are complete:
+CodeRabbit v2 review progress:
 - ✅ Phase 1: Template hash baselines updated (1 item)
 - ✅ Phase 2: Minor issues fixed (12 items)
 - ✅ Phase 3: LOW priority nitpicks (29 complete, 1 deferred, 1 skipped)
+- 🔄 Phase 4: Outside Diff items (0 of 5 complete)
 
 **Phase 3 Assessment:**
 - Items are style/optimization improvements, not bugs
@@ -207,12 +208,26 @@ Phase 3 complete when:
 **Next Steps:**
 1. ✅ All commits pushed to origin/brain-work (375 commits ahead of main)
 2. 🔄 **ACTION REQUIRED:** Create PR: `brain-work` → `main` (requires human approval)
-3. 🔄 **ACTION REQUIRED:** Merge PR after review
+---
 
-**Final State:**
-- ✅ All 29/30 active tasks complete
-- ✅ 2 tasks deferred (sed adequate, intentional divergence)
-- ✅ CodeRabbit v2 review fully addressed
-- ✅ Verifier passes cleanly
-- ✅ Branch synced with origin
-- ⏸️ Awaiting human decision: Create PR and merge to main
+## LOW PRIORITY
+
+### Phase 4: Outside Diff Items (5 items - from CodeRabbit v2)
+
+Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items OD-1, OD-2, OD-3, OD-4, OD-6
+
+**Note:** These items were outside the PR diff range but identified during review. All relate to stale `kb/` references that should be `skills/`.
+
+- [ ] **4.1** `generators/generate-thoughts.sh:370-385` - Update wording to "complete skills index" (OD-1)
+- [ ] **4.2** `templates/python/NEURONS.project.md:55-57` - Change `kb/` → `skills/` in Directory Structure (OD-2)
+- [ ] **4.3** `templates/ralph/RALPH.md:123-141,151` - Update File Structure section `kb/` → `skills/` (OD-3)
+- [ ] **4.4** `skills/projects/brain-example.md:58-76` - Update template examples `kb/` → `skills/` or mark as legacy (OD-4)
+- [ ] **4.5** `skills/SUMMARY.md:50-71` - Add `text` fence language tag to repository structure (OD-6)
+
+---
+
+## Next Steps
+
+1. Complete Phase 4 (Outside Diff items)
+2. Update CODERABBIT_REVIEW_ANALYSIS_v2.md to mark all completed items
+3. Final PR review and merge to main

@@ -22,12 +22,12 @@
 
 | # | Status | File | Lines | Issue | Fix |
 |---|--------|------|-------|-------|-----|
-| OD-1 | ⏳ PENDING | `generators/generate-thoughts.sh` | 370-385 | "skills index" wording - should call it "skills index" not just reference | Change wording to "complete skills index" |
-| OD-2 | ⏳ PENDING | `templates/python/NEURONS.project.md` | 55-57 | Directory Structure still references `kb/` while Knowledge Base section uses `skills/` | Change `kb/` → `skills/` in directory structure |
-| OD-3 | ⏳ PENDING | `templates/ralph/RALPH.md` | 123-141, 151 | File Structure section still points to `kb/` | Update to `skills/` |
-| OD-4 | ⏳ PENDING | `skills/projects/brain-example.md` | 58-76 | Template examples reference `kb/` in earlier bullets | Update to `skills/` or mark `kb/` as legacy |
+| OD-1 | ⏳ PENDING | `generators/generate-thoughts.sh` | 370-385 | "skills index" wording - should call it "skills index" not just reference | Change wording to "complete skills index" → Task 4.1 |
+| OD-2 | ⏳ PENDING | `templates/python/NEURONS.project.md` | 55-57 | Directory Structure still references `kb/` while Knowledge Base section uses `skills/` | Change `kb/` → `skills/` in directory structure → Task 4.2 |
+| OD-3 | ⏳ PENDING | `templates/ralph/RALPH.md` | 123-141, 151 | File Structure section still points to `kb/` | Update to `skills/` → Task 4.3 |
+| OD-4 | ⏳ PENDING | `skills/projects/brain-example.md` | 58-76 | Template examples reference `kb/` in earlier bullets | Update to `skills/` or mark `kb/` as legacy → Task 4.4 |
 | OD-5 | ✅ DONE | `PROMPT.md` | 50-74 | BUILD step 4/6 conflicts with verifier-gated status rules (`[x]` vs `[?]`) + missing fence language tag | Add `markdown` fence tag (Task 4 done) |
-| OD-6 | ⏳ PENDING | `skills/SUMMARY.md` | 50-71 | Missing language tag on repository-structure fence (MD040) | Add `text` language tag |
+| OD-6 | ⏳ PENDING | `skills/SUMMARY.md` | 50-71 | Missing language tag on repository-structure fence (MD040) | Add `text` language tag → Task 4.5 |
 
 ---
 
@@ -80,25 +80,25 @@
 
 | # | Status | File | Lines | Issue | Fix |
 |---|--------|------|-------|-------|-----|
-| M-19 | ⏳ PENDING | `render_ac_status.sh` | 57-71 | Missing SKIP results in "Check Details" table | Add SKIP pattern to regex and case statement |
+| M-19 | ✅ DONE | `render_ac_status.sh` | 57-71 | Missing SKIP results in "Check Details" table | Add SKIP pattern to regex and case statement → Task 2.1 |
 | M-20 | ✅ DONE | `IMPLEMENTATION_PLAN.md` | AC section | AC status section out of date | Fixed (Task 5 - regenerate AC) |
 
 ### Additional Minor Items (12 items)
 
 | # | Status | File | Lines | Issue | Fix |
 |---|--------|------|-------|-------|-----|
-| M-21 | ⏳ PENDING | `skills/self-improvement/SKILL_TEMPLATE.md` | 9-12 | "Claude" → "agent" naming | Replace "Claude" with "the agent" |
-| M-22 | ⏳ PENDING | `skills/self-improvement/SKILL_TEMPLATE.md` | 66-69 | References `index.md` but repo uses `SUMMARY.md` | Change to `SUMMARY.md` |
-| M-23 | ⏳ PENDING | `generators/generate-neurons.sh` | 653-660 | "KB Index" label | Change to "Skills Index" |
-| M-24 | ⏳ PENDING | `skills/conventions.md` | 248-251 | Duplicate PROMPT template bullet | Consolidate to single bullet |
-| M-25 | ⏳ PENDING | `skills/domains/README.md` | 61-63 | "planned" qualifier stale - conventions.md exists | Remove "(planned)" |
-| M-26 | ⏳ PENDING | `skills/self-improvement/README.md` | 20-25 | Step 5 references `skills/index.md` - doesn't exist | Change to `skills/SUMMARY.md` |
-| M-27 | ⏳ PENDING | `AGENTS.md` | 56-58 | Missing fence language tag for `:::COMPLETE:::` | Add `text` language tag |
-| M-28 | ⏳ PENDING | `AGENTS.md` | 30-41 | Monitor hotkeys/purpose don't match script | Update to reflect actual `h/r/f/c/?/q` keys |
-| M-29 | ⏳ PENDING | `PROMPT.md` | 109-110 | Protected-files list missing new hash-guarded artifacts | Add `.verify/loop.sha256`, `.verify/verifier.sha256`, `.verify/prompt.sha256`, `PROMPT.md` |
-| M-30 | ⏳ PENDING | `skills/domains/ralph-patterns.md` | 71-76 | Commit strategy says BUILD marks `[x]` - conflicts with verifier gating | Change to `[?]` |
-| M-31 | ⏳ PENDING | `THOUGHTS.md` | 17-23 | Missing fence language tag under Bug A | Add `bash` language tag |
-| M-32 | ⏳ PENDING | `templates/ralph/AC.rules` | 52-54 | Stale comment "NOT FIXED" but Bug C checks passing | Update comment to reflect current state |
+| M-21 | ✅ DONE | `skills/self-improvement/SKILL_TEMPLATE.md` | 9-12 | "Claude" → "agent" naming | Replace "Claude" with "the agent" → Task 2.2 |
+| M-22 | ✅ DONE | `skills/self-improvement/SKILL_TEMPLATE.md` | 66-69 | References `index.md` but repo uses `SUMMARY.md` | Change to `SUMMARY.md` → Task 2.3 |
+| M-23 | ✅ DONE | `generators/generate-neurons.sh` | 653-660 | "KB Index" label | Change to "Skills Index" → Task 2.4 |
+| M-24 | ✅ DONE | `skills/conventions.md` | 248-251 | Duplicate PROMPT template bullet | Consolidate to single bullet → Task 2.5 |
+| M-25 | ✅ DONE | `skills/domains/README.md` | 61-63 | "planned" qualifier stale - conventions.md exists | Remove "(planned)" → Task 2.6 |
+| M-26 | ✅ DONE | `skills/self-improvement/README.md` | 20-25 | Step 5 references `skills/index.md` - doesn't exist | Change to `skills/SUMMARY.md` → Task 2.7 |
+| M-27 | ✅ DONE | `AGENTS.md` | 56-58 | Missing fence language tag for `:::COMPLETE:::` | Add `text` language tag → Task 2.8 |
+| M-28 | ✅ DONE | `AGENTS.md` | 30-41 | Monitor hotkeys/purpose don't match script | Update to reflect actual `h/r/f/c/?/q` keys → Task 2.9 |
+| M-29 | ✅ DONE | `PROMPT.md` | 109-110 | Protected-files list missing new hash-guarded artifacts | Add `.verify/loop.sha256`, `.verify/verifier.sha256`, `.verify/prompt.sha256`, `PROMPT.md` → Task 2.10 |
+| M-30 | ✅ DONE | `skills/domains/ralph-patterns.md` | 71-76 | Commit strategy says BUILD marks `[x]` - conflicts with verifier gating | Change to `[?]` → Task 2.11 |
+| M-31 | ✅ DONE | `THOUGHTS.md` | 17-23 | Missing fence language tag under Bug A | Add `bash` language tag → Task 2.12 (OBSOLETE: section removed) |
+| M-32 | ✅ DONE | `templates/ralph/AC.rules` | 52-54 | Stale comment "NOT FIXED" but Bug C checks passing | Update comment to reflect current state → Task 2.13 (OBSOLETE: resolved in earlier commit) |
 
 ---
 
@@ -108,57 +108,57 @@
 
 | # | Status | File | Lines | Issue | Fix |
 |---|--------|------|-------|-------|-----|
-| N-1 | 🔄 IN PROGRESS | `loop.sh` | 644-675 | Duplicated terminal detection logic | Extract `launch_in_terminal()` helper (Medium Task 3) |
-| N-2 | ⏳ PENDING | `current_ralph_tasks.sh` | pipe in while | Pipe in while loop loses variables | Use process substitution `< <(...)` (Medium Task 4) |
-| N-3 | ⏳ PENDING | `thunk_ralph_tasks.sh` | pipe in while | Same pipe in while loop issue | Use process substitution (Medium Task 5) |
-| N-4 | ⏳ PENDING | `templates/ralph/loop.sh` | 644-654, 665-675 | Same duplicated terminal logic in template | Extract helper or sync with main |
-| N-5 | ⏳ PENDING | `new-project.sh` | 412-422 | Escape sed replacement for THUNK template - `PROJECT_NAME` with `&` or `/` breaks | Use `escape_sed_replacement` function |
-| N-6 | ⏳ PENDING | `templates/ralph/loop.sh` | 299-309 | sed for modelId is fragile - consider yq | Low priority - current approach works |
+| N-1 | ✅ DONE | `loop.sh` | 644-675 | Duplicated terminal detection logic | Extract `launch_in_terminal()` helper → Task 3.1 |
+| N-2 | ✅ DONE | `current_ralph_tasks.sh` | pipe in while | Pipe in while loop loses variables | Use process substitution `< <(...)` → Task 3.3 |
+| N-3 | ✅ DONE | `thunk_ralph_tasks.sh` | pipe in while | Same pipe in while loop issue | Use process substitution → Task 3.4 |
+| N-4 | ✅ DONE | `templates/ralph/loop.sh` | 644-654, 665-675 | Same duplicated terminal logic in template | Extract helper or sync with main → Task 3.2 |
+| N-5 | ✅ DONE | `new-project.sh` | 412-422 | Escape sed replacement for THUNK template - `PROJECT_NAME` with `&` or `/` breaks | Use `escape_sed_replacement` function → Task 3.5 |
+| N-6 | ⏭️ DEFERRED | `templates/ralph/loop.sh` | 299-309 | sed for modelId is fragile - consider yq | Low priority - current approach works → Task 3.6 |
 
 ### Dead Code / Unused Variables (8 items)
 
 | # | Status | File | Lines | Issue | Fix |
 |---|--------|------|-------|-------|-----|
-| N-7 | ⏳ PENDING | `templates/ralph/current_ralph_tasks.sh` | 25-35 | Unused `SHOW_HELP` flag | Remove variable |
-| N-8 | ⏳ PENDING | `templates/ralph/current_ralph_tasks.sh` | 354-369 | `wrap_text` function unused + has subshell bug | Remove or fix function |
-| N-9 | ⏳ PENDING | `templates/ralph/current_ralph_tasks.sh` | 371-485 | `icon` and `full_desc` parsed but unused | Use `_` placeholders |
-| N-10 | ⏳ PENDING | `current_ralph_tasks.sh` | 354-369 | Same `wrap_text` function unused + subshell bug | Remove or fix function |
-| N-11 | ⏳ PENDING | `thunk_ralph_tasks.sh` | 106-112 | Unused `normalize_description` function | Remove or add TODO |
-| N-12 | ⏳ PENDING | `templates/ralph/thunk_ralph_tasks.sh` | 127-134 | Unused `in_era` variable (template) | Remove variable |
-| N-13 | ⏳ PENDING | `templates/ralph/thunk_ralph_tasks.sh` | 146-162, 239-255 | `orig_num`, `priority`, `completed` parsed but unused | Add comment or use `_` |
-| N-14 | ⏳ PENDING | `templates/ralph/thunk_ralph_tasks.sh` | 167, 260, 311 | SC2155 in template | Split declaration and assignment |
+| N-7 | ✅ DONE | `templates/ralph/current_ralph_tasks.sh` | 25-35 | Unused `SHOW_HELP` flag | Remove variable → Task 3.7 |
+| N-8 | ✅ DONE | `templates/ralph/current_ralph_tasks.sh` | 354-369 | `wrap_text` function unused + has subshell bug | Remove or fix function → Task 3.8 |
+| N-9 | ✅ DONE | `templates/ralph/current_ralph_tasks.sh` | 371-485 | `icon` and `full_desc` parsed but unused | Use `_` placeholders → Task 3.9 (resolved with Task 3.8) |
+| N-10 | ✅ DONE | `current_ralph_tasks.sh` | 354-369 | Same `wrap_text` function unused + subshell bug | Remove or fix function → Task 3.10 (resolved with Task 3.8) |
+| N-11 | ✅ DONE | `thunk_ralph_tasks.sh` | 106-112 | Unused `normalize_description` function | Remove or add TODO → Task 3.11 |
+| N-12 | ✅ DONE | `templates/ralph/thunk_ralph_tasks.sh` | 127-134 | Unused `in_era` variable (template) | Remove variable → Task 3.12 |
+| N-13 | ✅ DONE | `templates/ralph/thunk_ralph_tasks.sh` | 146-162, 239-255 | `orig_num`, `priority`, `completed` parsed but unused | Add comment or use `_` → Task 3.13 |
+| N-14 | ✅ DONE | `templates/ralph/thunk_ralph_tasks.sh` | 167, 260, 311 | SC2155 in template | Split declaration and assignment → Task 3.14 |
 
 ### Format/Style Issues (7 items)
 
 | # | Status | File | Lines | Issue | Fix |
 |---|--------|------|-------|-------|-----|
-| N-15 | ⏳ PENDING | `.verify/verifier.sha256` | 1 | Format inconsistency - missing filename suffix | Standardize all `.verify/*.sha256` files |
-| N-16 | ⏳ PENDING | `templates/ralph/PROMPT.project.md` | 39-41 | MD050 strong-style - expects underscores | Change `**text**` to `__text__` |
-| N-17 | ⏳ PENDING | `HISTORY.md` | 86 | Spaces inside inline code spans (MD038) | Remove trailing spaces |
-| N-18 | ⏳ PENDING | `templates/ralph/PROMPT.md` | 50-53 | Missing fence language identifier | Add `markdown` tag |
-| N-19 | ⏳ PENDING | `NEURONS.md` | 204-206 | Windows backslashes `..\\brain\\` should be forward slashes | Change to `../../brain/skills/SUMMARY.md` |
-| N-20 | ⏳ PENDING | `skills/index.md` | 1-6 | "Last updated" manual stamp goes stale | Consider removing or auto-generating |
-| N-21 | ⏳ PENDING | `THUNK.md` | 99-100, 182, 186, 190, 194-195 | Duplicate THUNK numbers | Add suffix (e.g., 84a, 84b) or renumber |
+| N-15 | ✅ DONE | `.verify/verifier.sha256` | 1 | Format inconsistency - missing filename suffix | Standardize all `.verify/*.sha256` files → Task 3.15 |
+| N-16 | ✅ DONE | `templates/ralph/PROMPT.project.md` | 39-41 | MD050 strong-style - expects underscores | Change `**text**` to `__text__` → Task 3.16 |
+| N-17 | ✅ DONE | `HISTORY.md` | 86 | Spaces inside inline code spans (MD038) | Remove trailing spaces → Task 3.17 |
+| N-18 | ✅ DONE | `templates/ralph/PROMPT.md` | 50-53 | Missing fence language identifier | Add `markdown` tag → Task 3.18 |
+| N-19 | ✅ DONE | `NEURONS.md` | 204-206 | Windows backslashes `..\\brain\\` should be forward slashes | Change to `../../brain/skills/SUMMARY.md` → Task 3.19 |
+| N-20 | ⏭️ SKIP | `skills/index.md` | 1-6 | "Last updated" manual stamp goes stale | Consider removing or auto-generating → Task 3.20 (intentional design) |
+| N-21 | ⏭️ SKIP | `THUNK.md` | 99-100, 182, 186, 190, 194-195 | Duplicate THUNK numbers | Add suffix (e.g., 84a, 84b) or renumber → Task 3.21 (historical record) |
 
 ### Robustness/Edge Cases (6 items)
 
 | # | Status | File | Lines | Issue | Fix |
 |---|--------|------|-------|-------|-----|
-| N-22 | ⏳ PENDING | `templates/ralph/init_verifier_baselines.sh` | 43-50 | .gitignore update can miss `run_id.txt` | Check each entry independently |
-| N-23 | ⏳ PENDING | `templates/ralph/init_verifier_baselines.sh` | 22-24 | Format inconsistency - stores full sha256sum output vs just hash | Normalize to `cut -d' ' -f1` |
-| N-24 | ⏳ PENDING | `templates/ralph/current_ralph_tasks.sh` | 101-201 | Cache collision for duplicate task descriptions | Hash full raw line instead of just description |
-| N-25 | ⏳ PENDING | `templates/ralph/current_ralph_tasks.sh` | 242-349 | Archive/Clear parsing diverges from extract logic | Align with same normalization and boundary logic |
-| N-26 | ⏳ PENDING | `templates/ralph/verifier.sh` | 30-34 | Regex injection risk in `read_approval` function | Use `grep -F` for literal matching |
-| N-27 | ⏳ PENDING | `templates/ralph/verifier.sh` | 222-227 | Temp files may leak on early exit | Add trap for cleanup |
+| N-22 | ✅ DONE | `templates/ralph/init_verifier_baselines.sh` | 43-50 | .gitignore update can miss `run_id.txt` | Check each entry independently → Task 3.22 |
+| N-23 | ✅ DONE | `templates/ralph/init_verifier_baselines.sh` | 22-24 | Format inconsistency - stores full sha256sum output vs just hash | Normalize to `cut -d' ' -f1` → Task 3.23 |
+| N-24 | ✅ DONE | `templates/ralph/current_ralph_tasks.sh` | 101-201 | Cache collision for duplicate task descriptions | Hash full raw line instead of just description → Task 3.24 |
+| N-25 | ✅ DONE | `templates/ralph/current_ralph_tasks.sh` | 242-349 | Archive/Clear parsing diverges from extract logic | Align with same normalization and boundary logic → Task 3.25 |
+| N-26 | ✅ DONE | `templates/ralph/verifier.sh` | 30-34 | Regex injection risk in `read_approval` function | Use `grep -F` for literal matching → Task 3.26 |
+| N-27 | ✅ DONE | `templates/ralph/verifier.sh` | 222-227 | Temp files may leak on early exit | Add trap for cleanup → Task 3.27 |
 
 ### Documentation Wording (4 items)
 
 | # | Status | File | Lines | Issue | Fix |
 |---|--------|------|-------|-------|-----|
-| N-28 | ⏳ PENDING | `templates/backend/AGENTS.project.md` | 22-33 | "KB file" → "skill file" terminology | Update wording |
-| N-29 | ⏳ PENDING | `templates/AGENTS.project.md` | 58-74 | Add standalone-mode note when brain not present | Add note about skipping if `../../brain/` missing |
-| N-30 | ⏳ PENDING | `rovodev-config.yml` | 11-12 | Document model provisioning requirement | Add note about verifying model availability |
-| N-31 | ⏳ PENDING | `templates/ralph/thunk_ralph_tasks.sh` | 262-268 | `tput cup` may fail in non-TTY | Add guard `if [[ -t 1 ]]` |
+| N-28 | ✅ DONE | `templates/backend/AGENTS.project.md` | 22-33 | "KB file" → "skill file" terminology | Update wording → Task 3.28 |
+| N-29 | ✅ DONE | `templates/AGENTS.project.md` | 58-74 | Add standalone-mode note when brain not present | Add note about skipping if `../../brain/` missing → Task 3.29 |
+| N-30 | ✅ DONE | `rovodev-config.yml` | 11-12 | Document model provisioning requirement | Add note about verifying model availability → Task 3.30 |
+| N-31 | ✅ DONE | `templates/ralph/thunk_ralph_tasks.sh` | 262-268 | `tput cup` may fail in non-TTY | Add guard `if [[ -t 1 ]]` → Task 3.31 |
 
 ---
 
