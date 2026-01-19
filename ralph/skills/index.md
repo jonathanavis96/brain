@@ -2,8 +2,6 @@
 
 Catalog of all skill files in the brain system.
 
-Last updated: 2026-01-19
-
 ---
 
 ## How to Use This Index
