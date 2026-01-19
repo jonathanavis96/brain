@@ -22,12 +22,12 @@
 
 | # | Status | File | Lines | Issue | Fix |
 |---|--------|------|-------|-------|-----|
-| OD-1 | ⏳ PENDING | `generators/generate-thoughts.sh` | 370-385 | "skills index" wording - should call it "skills index" not just reference | Change wording to "complete skills index" → Task 4.1 |
-| OD-2 | ⏳ PENDING | `templates/python/NEURONS.project.md` | 55-57 | Directory Structure still references `kb/` while Knowledge Base section uses `skills/` | Change `kb/` → `skills/` in directory structure → Task 4.2 |
-| OD-3 | ⏳ PENDING | `templates/ralph/RALPH.md` | 123-141, 151 | File Structure section still points to `kb/` | Update to `skills/` → Task 4.3 |
-| OD-4 | ⏳ PENDING | `skills/projects/brain-example.md` | 58-76 | Template examples reference `kb/` in earlier bullets | Update to `skills/` or mark `kb/` as legacy → Task 4.4 |
+| OD-1 | ✅ DONE | `generators/generate-thoughts.sh` | 370-385 | "skills index" wording - should call it "skills index" not just reference | Change wording to "complete skills index" → Task 4.1 COMPLETE |
+| OD-2 | ✅ DONE | `templates/python/NEURONS.project.md` | 55-57 | Directory Structure still references `kb/` while Knowledge Base section uses `skills/` | Change `kb/` → `skills/` in directory structure → Task 4.2 COMPLETE |
+| OD-3 | ✅ DONE | `templates/ralph/RALPH.md` | 123-141, 151 | File Structure section still points to `kb/` | Update to `skills/` → Task 4.3 COMPLETE |
+| OD-4 | ✅ DONE | `skills/projects/brain-example.md` | 58-76 | Template examples reference `kb/` in earlier bullets | Update to `skills/` or mark `kb/` as legacy → Task 4.4 COMPLETE |
 | OD-5 | ✅ DONE | `PROMPT.md` | 50-74 | BUILD step 4/6 conflicts with verifier-gated status rules (`[x]` vs `[?]`) + missing fence language tag | Add `markdown` fence tag (Task 4 done) |
-| OD-6 | ⏳ PENDING | `skills/SUMMARY.md` | 50-71 | Missing language tag on repository-structure fence (MD040) | Add `text` language tag → Task 4.5 |
+| OD-6 | ✅ DONE | `skills/SUMMARY.md` | 50-71 | Missing language tag on repository-structure fence (MD040) | Add `text` language tag → Task 4.5 COMPLETE |
 
 ---
 
@@ -217,13 +217,13 @@
 
 | Category | Total | ✅ Done | 🔄 In Progress | ⏳ Pending | ⏭️ Skip |
 |----------|-------|---------|----------------|------------|---------|
-| Outside Diff Range | 6 | 1 | 0 | 5 | 0 |
-| Minor Comments | 32 | 20 | 0 | 12 | 0 |
-| Nitpick Comments | 31 | 0 | 1 | 30 | 0 |
+| Outside Diff Range | 6 | 6 | 0 | 0 | 0 |
+| Minor Comments | 32 | 32 | 0 | 0 | 0 |
+| Nitpick Comments | 31 | 29 | 0 | 0 | 2 |
 | Design Decisions | 4 | 0 | 0 | 4 | 0 |
 | Skip | 8 | - | - | - | 8 |
 | **Additional (Latest)** | **6** | **2** | **0** | **4** | **0** |
-| **TOTAL** | **87** | **23** | **1** | **55** | **8** |
+| **TOTAL** | **87** | **69** | **0** | **4** | **14** |
 
 ---
 
@@ -232,15 +232,15 @@
 ### Phase 1: Complete Current Ralph Tasks
 *All High Priority tasks done ✅*
 
-### Phase 2: Quick Documentation Fixes (Low effort, high value)
-1. M-21 to M-32: Fence language tags, wording fixes, stale references
-2. OD-1 to OD-4, OD-6: kb→skills terminology in remaining files
-3. N-15 to N-21: Format/style issues
+### Phase 2: Quick Documentation Fixes (Low effort, high value) ✅ COMPLETE
+1. ✅ M-21 to M-32: Fence language tags, wording fixes, stale references
+2. ✅ OD-1 to OD-6: kb→skills terminology in remaining files
+3. ✅ N-15 to N-21: Format/style issues
 
-### Phase 3: Refactoring (Medium effort)
-1. N-1 to N-6: Extract helpers, process substitution
-2. N-7 to N-14: Remove dead code
-3. N-22 to N-27: Robustness improvements
+### Phase 3: Refactoring (Medium effort) ✅ COMPLETE
+1. ✅ N-1 to N-6: Extract helpers, process substitution (N-6 deferred)
+2. ✅ N-7 to N-14: Remove dead code
+3. ✅ N-22 to N-27: Robustness improvements (N-25 deferred)
 
 ### Phase 4: Design Decisions (Requires human input)
 1. DD-1, DD-2: Verifier bypass behavior
