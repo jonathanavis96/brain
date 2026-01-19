@@ -249,3 +249,4 @@ Started: 2026-01-18
 | 214 | 3.4 | HIGH | **3.4** Update templates/python/AGENTS.project.md lines 25-31 - Changed "KB file" to "skill file" and "KB files" to "skill files", completes Phase 3 terminology migration | 2026-01-19 |
 | 215 | 2.3 | HIGH | **2.3** Regenerate loop.sh baseline hash after all Phase 2 changes - Updated .verify/loop.sha256 with new hash after SC2155 fix | 2026-01-19 |
 | 216 | 4.1 | MEDIUM | **4.1** Update model version in loop.sh line 162 - Changed Sonnet 4.5 model version from 20250620 to 20250929 in both loop.sh and templates/ralph/loop.sh, regenerated loop.sha256 baseline | 2026-01-19 |
+| 217 | 4.2 | MEDIUM | **4.2** Update model version in templates/ralph/loop.sh - Changed sonnet4 model ID from 20250514 to 20250929 to align with current stable version | 2026-01-19 |
