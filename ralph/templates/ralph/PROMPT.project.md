@@ -25,6 +25,20 @@ For patterns and best practices, use progressive disclosure:
 ❌ Never scan all rules by default
 ✅ Use the hierarchy above
 
+## Task Completion Flow
+
+When marking a task `[x]` complete:
+
+1. **Validate** using commands below
+2. **Log to THUNK.md** - Append to current era table (DO NOT overwrite file):
+   ```markdown
+   | <next_thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |
+   ```
+3. **Commit** all changes (local only)
+4. **Update** IMPLEMENTATION_PLAN.md: mark `[x]`, add discovered subtasks
+
+⚠️ **THUNK.md is append-only** - Never rewrite or restructure it. Only append new rows to the existing table.
+
 ## Validation (before marking task complete)
 
 ```bash
