@@ -84,7 +84,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 
 - [x] **3.7** `templates/ralph/current_ralph_tasks.sh:25-35` - Remove unused `SHOW_HELP` flag (N-7)
   - Value: Cleaner code, passes shellcheck SC2034
-- [ ] **3.8** `templates/ralph/current_ralph_tasks.sh:354-369` - Remove unused `wrap_text` function (N-8)
+- [x] **3.8** `templates/ralph/current_ralph_tasks.sh:354-369` - Remove unused `wrap_text` function (N-8)
   - Value: Remove dead code (previously used, now obsolete)
 - [ ] **3.9** `templates/ralph/current_ralph_tasks.sh:371-485` - Use `_` placeholders for unused `icon`, `full_desc` (N-9)
   - Value: Explicit intent for unused loop vars
