@@ -649,7 +649,7 @@ cat >> "$OUTPUT_FILE" << 'EOF'
 ## Path Conventions
 
 **From Ralph's perspective (in `ralph/` subdirectory):**
-- Brain KB: \`../../brain/skills/SUMMARY.md\`
+- Skills Index: \`../../brain/skills/SUMMARY.md\`
 - Brain references: `../../brain/references/react-best-practices/HOTLIST.md`
 - Brain templates: `../../brain/templates/`
 - Project root: `../` (one level up from ralph/)
@@ -669,7 +669,7 @@ This project uses the shared **brain** repository for knowledge and patterns:
 **Brain Location:** `/home/grafe/code/brain/`
 
 **Key Brain Resources:**
-- **KB Index:** \`../../brain/skills/SUMMARY.md\`
+- **Skills Index:** \`../../brain/skills/SUMMARY.md\`
 - **React Best Practices:** `../../brain/references/react-best-practices/HOTLIST.md`
 - **Ralph Patterns:** \`../../brain/skills/domains/ralph-patterns.md\`
 - **Auth Patterns:** \`../../brain/skills/domains/auth-patterns.md\`
