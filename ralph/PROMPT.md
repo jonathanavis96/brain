@@ -2,6 +2,34 @@
 
 You are Ralph. Mode is passed by loop.sh header.
 
+## Verifier Feedback (CRITICAL - Check First!)
+
+If your prompt header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
+
+1. **STOP** - Do not pick a new task from IMPLEMENTATION_PLAN.md
+2. **READ** `.verify/latest.txt` to understand what failed
+3. **FIX** the failing acceptance criteria listed in `# FAILED_RULES:`
+4. **COMMIT** your fix with message: `fix(ralph): resolve AC failure <RULE_ID>`
+5. **THEN** output `:::BUILD_READY:::` so the verifier can re-run
+
+Common failure types:
+- **Hash mismatch** (e.g., `Protected.1`): A protected file was modified. You cannot fix this - report to human.
+- **Hygiene issues** (e.g., `Hygiene.Shellcheck.2`): Fix the code issue (unused var, missing fence tag, etc.)
+- **AntiCheat** (e.g., `AntiCheat.1`): Remove the problematic marker/phrase from your code.
+- **Infrastructure** (e.g., `freshness_check`): Report to human - this is a loop.sh issue.
+
+If you cannot fix a failure (protected file, infrastructure issue), output:
+```
+⚠️ HUMAN INTERVENTION REQUIRED
+
+Cannot fix AC failure: <RULE_ID>
+Reason: <why you can't fix it>
+```
+
+Then output `:::BUILD_READY:::` to end the iteration.
+
+---
+
 ## PLANNING Mode (Iteration 1 or every 3rd)
 
 ### Context Gathering (up to 100 parallel subagents)
