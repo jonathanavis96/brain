@@ -271,3 +271,4 @@ Started: 2026-01-18
 | 235 | 2.3 | MEDIUM | **2.3** Update SKILL_TEMPLATE.md line 67 - Changed "index.md" to "SUMMARY.md" to align with skills system convention where SUMMARY.md is the skills index | 2026-01-19 |
 | 236 | 2.4 | MEDIUM | **2.4** Change "KB Index" label to "Skills Index" in generators/generate-neurons.sh - Updated lines 651 and 671 to align with kb→skills terminology migration | 2026-01-19 |
 | 237 | 2.5 | MEDIUM | **2.5** Remove duplicate PROMPT template bullet in skills/conventions.md - Removed duplicate 'templates/ralph/PROMPT.md' reference at line 249 | 2026-01-19 |
+| 238 | 2.6 | MEDIUM | **2.6** Remove "(planned)" qualifier from conventions.md in skills/domains/README.md - File exists (7.6KB), reference updated on line 61 | 2026-01-19 |
