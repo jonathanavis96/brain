@@ -111,7 +111,7 @@ Complete the kb→skills terminology migration across all files.
   - **Fix:** "Brain Skills patterns"
   - **File:** `generators/generate-neurons.sh`
 
-- [ ] **3.4** Update templates/python/AGENTS.project.md lines 26-31
+- [x] **3.4** Update templates/python/AGENTS.project.md lines 26-31
   - **Current:** References to "KB file"
   - **Fix:** Change to "skill file"
   - **File:** `templates/python/AGENTS.project.md`
