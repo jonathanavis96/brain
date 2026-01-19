@@ -278,3 +278,4 @@ Started: 2026-01-18
 | 241 | 2.10 | MEDIUM | **2.10** Add new hash-guarded files to protected-files list - Updated PROMPT.md and templates/ralph/PROMPT.md to include all hash files: .verify/verifier.sha256, .verify/loop.sha256, .verify/prompt.sha256 | 2026-01-19 |
 | 242 | 2.11 | MEDIUM | **2.11** Update ralph-patterns.md commit strategy to use `[?]` not `[x]` - Changed lines 72-74 to show "Mark [?]" instead of "Mark [x]" to reflect new PROPOSED_DONE status before verifier confirmation | 2026-01-19 |
 | 243 | 2.12 | MEDIUM | **2.12** Add bash fence language tag to THOUGHTS.md - Task obsolete: Bug A section with bash code fence was removed in commit 149e5fe during THOUGHTS.md streamline, no action needed | 2026-01-19 |
+| 244 | 3.1 | LOW | **3.1** Extract `launch_in_terminal()` helper for duplicated terminal detection in loop.sh - Reduced code duplication from 72 lines to 43 lines with reusable function | 2026-01-19 |
