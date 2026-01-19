@@ -80,8 +80,8 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 
 - [x] **3.7** `templates/ralph/current_ralph_tasks.sh:25-35` - Remove unused `SHOW_HELP` flag (N-7)
 - [x] **3.8** `templates/ralph/current_ralph_tasks.sh:354-369` - Remove unused `wrap_text` function (N-8)
-- [ ] **3.9** `templates/ralph/current_ralph_tasks.sh:371-485` - Use `_` placeholders for unused `icon`, `full_desc` (N-9)
-- [ ] **3.10** `current_ralph_tasks.sh:354-369` - Remove unused `wrap_text` function (N-10)
+- [x] **3.9** `templates/ralph/current_ralph_tasks.sh:371-485` - Use `_` placeholders for unused `icon`, `full_desc` (N-9)
+- [x] **3.10** `current_ralph_tasks.sh:354-369` - Remove unused `wrap_text` function (N-10)
   - Note: Root file still has dead function, template already cleaned
 - [ ] **3.11** `thunk_ralph_tasks.sh:106-112` - Remove unused `normalize_description` function (N-11)
 - [ ] **3.12** `templates/ralph/thunk_ralph_tasks.sh:127-134` - Remove unused `in_era` variable (N-12)

@@ -353,23 +353,6 @@ clear_completed_tasks() {
     sleep 2
 }
 
-# Function to wrap text to specified width with indent
-wrap_text() {
-    local text="$1"
-    local width="$2"
-    local indent="$3"
-    local first_line=true
-    
-    while IFS= read -r line; do
-        if [[ "$first_line" == "true" ]]; then
-            echo "$line"
-            first_line=false
-        else
-            echo "${indent}${line}"
-        fi
-    done < <(fold -s -w "$width" <<< "$text")
-}
-
 # Function to display tasks with formatting
 display_tasks() {
     # Always do full redraw - simple and reliable
