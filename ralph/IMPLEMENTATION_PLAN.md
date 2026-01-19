@@ -141,7 +141,7 @@ Complete the kb→skills terminology migration across all files.
   - **File:** `PROMPT.md`
   - **Warning:** Protected file - need to regenerate baseline hash after change
 
-- [ ] **4.5** Regenerate AC status section in IMPLEMENTATION_PLAN.md
+- [x] **4.5** Regenerate AC status section in IMPLEMENTATION_PLAN.md
   - **Command:** `./render_ac_status.sh --inline`
   - **Context:** Reflect current verifier state (21 PASS, 0 FAIL, 6 WARN) after Phase 1-4 completion
   - **Priority rationale:** Quick win, shows clean state after major phases complete
