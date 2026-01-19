@@ -55,7 +55,7 @@ EOF
     local current_desc=""
     
     while IFS= read -r line; do
-        if [[ "$line" =~ ^\[(PASS|FAIL|WARN)\]\ ([A-Za-z0-9_.]+) ]]; then
+        if [[ "$line" =~ ^\[(PASS|FAIL|WARN|SKIP)\]\ ([A-Za-z0-9_.]+) ]]; then
             # Output previous row if exists
             if [[ -n "$current_id" ]]; then
                 echo "| \`$current_id\` | $current_status | $current_desc |"
@@ -68,6 +68,7 @@ EOF
                 PASS) current_status="✅" ;;
                 FAIL) current_status="❌" ;;
                 WARN) current_status="⚠️" ;;
+                SKIP) current_status="⏭️" ;;
             esac
         elif [[ "$line" =~ ^[[:space:]]+desc:[[:space:]]*(.*) ]]; then
             current_desc="${BASH_REMATCH[1]}"
