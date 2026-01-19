@@ -34,9 +34,8 @@
 
 #### 8.2 Dead Code Removal
 
-- [ ] **8.2.1** Remove unused `in_era` variable from thunk_ralph_tasks.sh (line 125)
-- [ ] **8.2.2** Remove unused `ready_signal` from loop.sh (lines 583-589)
-- [ ] **8.2.3** Remove unused `ready_signal` from templates/ralph/loop.sh
+- [ ] **8.2.1** Remove unused `ready_signal` from loop.sh (lines 583-589)
+- [ ] **8.2.2** Remove unused `ready_signal` from templates/ralph/loop.sh
 
 #### 8.3 Shellcheck SC2155 Fixes
 
@@ -211,46 +210,6 @@
 
 _Run `./verifier.sh` to refresh. Do not edit this section manually._
 <!-- AC_STATUS_END -->
-
----
-
-## COMPLETED PHASES (Archive)
-
-<details>
-<summary>Click to expand completed work</summary>
-
-### Phase 1: Fix Task Extraction Parser (Bug A) ✓
-- [x] **1.1** Fix section detection logic in `current_ralph_tasks.sh`
-
-### Phase 2: Fix Display Rendering (Bug B) ✓
-- [x] **2.1** Remove differential update complexity
-- [x] **2.2** Simplify display rendering to always clear screen
-- [x] **2.3** Test display rendering with multiple file updates
-
-### Phase 3: Fix THUNK Monitor (Bug C) ✓
-- [x] **3.1** Remove `scan_for_new_completions()` function
-- [x] **3.2** Remove all PLAN_FILE references
-- [x] **3.3** Remove initial scan and "Syncing with" messages
-- [x] **3.4** Update thunk_ralph_tasks.sh header comments
-- [x] **3.5** Test monitor is display-only
-
-### Phase 4: Update PROMPT.md for Ralph THUNK Logging ✓
-- [x] **4.1** Add THUNK logging instruction to PROMPT.md BUILD mode
-- [x] **4.2** Test Ralph appends to THUNK.md on task completion
-
-### Phase 5: Validation & Integration Testing ✓
-- [x] **5.1** Update AGENTS.md monitor documentation
-- [x] **5.2** Verify all three bugs are fixed
-
-### Phase 6: Documentation & Cleanup ✓
-- [x] **6.1** Sync templates/ralph/thunk_ralph_tasks.sh with fixed version
-- [x] **6.2** Update VALIDATION_CRITERIA.md with Bug C test cases
-
-### Phase 7: Knowledge Base Quality Assurance ✓
-- [x] **7.1** Audit skills/ directory for consistency
-- [x] **7.2** Update skills/index.md timestamp
-
-</details>
 
 ---
 
