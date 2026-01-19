@@ -9,6 +9,8 @@ agent:
   # Temperature setting for AI model responses (0.0-1.0)
   temperature: 0.3
   # Model ID to use for the agent. See /models command to list available models.
+  # NOTE: Verify the model is provisioned in your AWS account before use.
+  # Use 'acli rovodev usage site' to check available models in your Atlassian site.
   modelId: anthropic.claude-sonnet-4-5-20250929-v1:0
   # Enable the deep planning tool for complex task planning
   enableDeepPlanTool: false
