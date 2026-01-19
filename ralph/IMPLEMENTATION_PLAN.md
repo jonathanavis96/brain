@@ -16,8 +16,8 @@
 - ✅ Phase 3.1 complete: pr-batch.sh terminology fix
 
 **Current focus:** Systematic resolution of 26 CodeRabbit review findings from PR #4
-**Ready to push:** 5 commits accumulated from BUILD iterations (on branch brain-work)
-**Next BUILD task:** 2.2.3 - Fix SC2155 in loop.sh line 480
+**Ready to push:** 6 commits accumulated from BUILD iterations (on branch brain-work)
+**Next BUILD task:** 2.2.4 - Fix SC2155 in templates/ralph/loop.sh
 
 **Reference:** `CODERABBIT_REVIEW_ANALYSIS.md` for detailed analysis and rationale
 
@@ -74,7 +74,7 @@ Pattern: `local var=$(cmd)` masks command exit status. Fix: Split declaration an
   - **Pattern:** Same as 2.2.1 (multiple instances with cache_key and short_title)
   - **File:** `current_ralph_tasks.sh`
 
-- [ ] **2.2.3** Fix SC2155 in loop.sh line 480
+- [x] **2.2.3** Fix SC2155 in loop.sh line 480
   - **Current:** `export RUN_ID="$(date +%s)-$$"`
   - **Note:** This is an export, not local, but still masks exit status
   - **Fix:** Split declaration: `RUN_ID=$(date +%s)-$$; export RUN_ID`
