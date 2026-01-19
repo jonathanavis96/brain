@@ -142,22 +142,16 @@ display_thunks() {
         elif [[ "$line" =~ ^\|[[:space:]]*([0-9]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|$ ]]; then
             # Parse table row
             local thunk_num="${BASH_REMATCH[1]}"
-            local orig_num="${BASH_REMATCH[2]}"
-            local priority="${BASH_REMATCH[3]}"
+            local _orig_num="${BASH_REMATCH[2]}"
+            local _priority="${BASH_REMATCH[3]}"
             local description="${BASH_REMATCH[4]}"
-            local completed="${BASH_REMATCH[5]}"
+            local _completed="${BASH_REMATCH[5]}"
             
             # Strip whitespace using bash parameter expansion (faster than xargs)
             thunk_num="${thunk_num#"${thunk_num%%[![:space:]]*}"}"  # Trim leading
             thunk_num="${thunk_num%"${thunk_num##*[![:space:]]}"}"  # Trim trailing
-            orig_num="${orig_num#"${orig_num%%[![:space:]]*}"}"
-            orig_num="${orig_num%"${orig_num##*[![:space:]]}"}"
-            priority="${priority#"${priority%%[![:space:]]*}"}"
-            priority="${priority%"${priority##*[![:space:]]}"}"
             description="${description#"${description%%[![:space:]]*}"}"
             description="${description%"${description##*[![:space:]]}"}"
-            completed="${completed#"${completed%%[![:space:]]*}"}"
-            completed="${completed%"${completed##*[![:space:]]}"}"
             
             # Skip header row
             if [[ "$thunk_num" =~ ^[0-9]+$ ]]; then
@@ -235,22 +229,16 @@ parse_new_thunk_entries() {
         if [[ "$line" =~ ^\|[[:space:]]*([0-9]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|$ ]]; then
             # Parse table row
             local thunk_num="${BASH_REMATCH[1]}"
-            local orig_num="${BASH_REMATCH[2]}"
-            local priority="${BASH_REMATCH[3]}"
+            local _orig_num="${BASH_REMATCH[2]}"
+            local _priority="${BASH_REMATCH[3]}"
             local description="${BASH_REMATCH[4]}"
-            local completed="${BASH_REMATCH[5]}"
+            local _completed="${BASH_REMATCH[5]}"
             
             # Strip whitespace using bash parameter expansion (faster than xargs)
             thunk_num="${thunk_num#"${thunk_num%%[![:space:]]*}"}"  # Trim leading
             thunk_num="${thunk_num%"${thunk_num##*[![:space:]]}"}"  # Trim trailing
-            orig_num="${orig_num#"${orig_num%%[![:space:]]*}"}"
-            orig_num="${orig_num%"${orig_num##*[![:space:]]}"}"
-            priority="${priority#"${priority%%[![:space:]]*}"}"
-            priority="${priority%"${priority##*[![:space:]]}"}"
             description="${description#"${description%%[![:space:]]*}"}"
             description="${description%"${description##*[![:space:]]}"}"
-            completed="${completed#"${completed%%[![:space:]]*}"}"
-            completed="${completed%"${completed##*[![:space:]]}"}"
             
             # Skip header row
             if [[ "$thunk_num" =~ ^[0-9]+$ ]]; then
