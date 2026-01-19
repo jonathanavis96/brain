@@ -11,7 +11,7 @@
 All HIGH and MEDIUM priority tasks from CodeRabbit v2 review are complete:
 - ✅ Phase 1: Template hash baselines updated (1 item)
 - ✅ Phase 2: Minor issues fixed (12 items)
-- 🔄 Phase 3: LOW priority nitpicks - 22 items remaining (8 complete)
+- 🔄 Phase 3: LOW priority nitpicks - 20 items remaining (9 complete, 1 skipped)
 
 **Phase 3 Assessment:**
 - Items are style/optimization improvements, not bugs
@@ -88,14 +88,14 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 - [ ] **3.13** `templates/ralph/thunk_ralph_tasks.sh:146-162,239-255` - Use `_` for unused parsed vars (N-13)
 - [ ] **3.14** `templates/ralph/thunk_ralph_tasks.sh:167,260,311` - Fix SC2155 in template (N-14)
 
-#### Format/Style (7 items - 1 complete, 6 remaining)
+#### Format/Style (7 items - 3 complete, 4 remaining, 1 skipped)
 
 **Goal:** Consistency and markdown linter compliance
 
 - [x] **3.15** `.verify/verifier.sha256:1` - Standardize format with filename suffix (N-15)
 - [x] **3.16** `templates/ralph/PROMPT.project.md:39-41` - Fix MD050 strong-style (N-16)
-- [ ] **3.17** `HISTORY.md:86` - Remove spaces in inline code spans (N-17)
-- [ ] **3.18** `templates/ralph/PROMPT.md:50-53` - Add `markdown` fence language tag (N-18)
+- [x] **3.17** `HISTORY.md:86` - Remove spaces in inline code spans (N-17) - SKIPPED: Historical records should not be altered
+- [x] **3.18** `templates/ralph/PROMPT.md:50-53` - Add `markdown` fence language tag (N-18)
 - [ ] **3.19** `NEURONS.md:204-206` - Change Windows backslashes to forward slashes (N-19)
 - [ ] **3.20** `skills/index.md:1-6` - Remove or auto-generate "Last updated" stamp (N-20)
   - Decision: Remove entirely (auto-generation adds complexity for low value)

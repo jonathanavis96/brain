@@ -48,7 +48,7 @@ You are Ralph. Mode is passed by loop.sh header.
 3. Validate per AGENTS.md commands
 
 4. Log completion to THUNK.md: When marking task `[x]`, append to current era table:
-   ```
+   ```markdown
    | <next_thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |
    ```
 
