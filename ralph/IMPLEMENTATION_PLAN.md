@@ -95,7 +95,7 @@ Complete the kb→skills terminology migration across all files.
   - **Fix:** "Skills (skills/)"
   - **File:** `pr-batch.sh`
 
-- [ ] **3.2** Update templates/ralph/pr-batch.sh line 117 (same fix as 3.1)
+- [x] **3.2** Update templates/ralph/pr-batch.sh line 117 (same fix as 3.1)
   - **Current:** "Knowledge Base (kb/)"
   - **Fix:** "Skills (skills/)"
   - **File:** `templates/ralph/pr-batch.sh`
