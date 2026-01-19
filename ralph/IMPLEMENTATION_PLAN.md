@@ -220,7 +220,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items OD-1, OD-2, OD-3, OD-4, OD-6
 
 - [x] **4.1** `generators/generate-thoughts.sh:370-385` - Update wording to "complete skills index" (OD-1)
 - [x] **4.2** `templates/python/NEURONS.project.md:55-57` - Change `kb/` → `skills/` in Directory Structure (OD-2)
-- [ ] **4.3** `templates/ralph/RALPH.md:140,151` - Change `kb/` → `skills/` in File Structure comments (OD-3)
+- [x] **4.3** `templates/ralph/RALPH.md:140,151` - Change `kb/` → `skills/` in File Structure comments (OD-3)
   - Line 140: `├── kb/` → `├── skills/`
   - Line 151: `kb/, logs/` → `skills/, logs/`
   - Note: Template for NEW projects, but refers to brain's skills/ directory
