@@ -247,7 +247,6 @@ Project templates reference these conventions:
 
 - `templates/AGENTS.project.md` - Points to skills structure
 - `templates/ralph/PROMPT.md` - Includes skills growth instructions
-- `templates/ralph/PROMPT.md` - References skills reading order
 
 When updating conventions, ensure templates remain consistent.
 
