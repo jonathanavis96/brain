@@ -162,7 +162,8 @@ display_thunks() {
             # Skip header row
             if [[ "$thunk_num" =~ ^[0-9]+$ ]]; then
                 # Generate human-friendly short title
-                local short_title=$(generate_title "$description")
+                local short_title
+                short_title=$(generate_title "$description")
                 
                 # Format as "THUNK N — <short title>" with bold if terminal supports
                 if [[ -t 1 ]]; then
