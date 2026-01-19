@@ -2,16 +2,16 @@
 
 ## Overview
 
-**Status:** Phase 1-2 complete and pushed, Phase 3 in progress (LOW priority polish)  
-**Branch:** `brain-work` (up to date with origin)  
-**Last Updated:** 2026-01-19 (PLAN iteration)
+**Status:** Phase 1-2 complete (pushed), Phase 3 in progress - 13/30 tasks complete  
+**Branch:** `brain-work` (5 commits ahead of origin - ready to push)  
+**Last Updated:** 2026-01-19 16:07 (PLAN iteration)
 
 ### Context
 
 All HIGH and MEDIUM priority tasks from CodeRabbit v2 review are complete:
 - ✅ Phase 1: Template hash baselines updated (1 item)
 - ✅ Phase 2: Minor issues fixed (12 items)
-- 🔄 Phase 3: LOW priority nitpicks - 20 items remaining (9 complete, 1 skipped)
+- 🔄 Phase 3: LOW priority nitpicks - 18 active items remaining (12 complete, 1 deferred, 1 skipped)
 
 **Phase 3 Assessment:**
 - Items are style/optimization improvements, not bugs
@@ -60,7 +60,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items M-19, M-21 through M-32
 
 ## LOW PRIORITY
 
-### Phase 3: Nitpicks from CodeRabbit v2 (30 items total, 22 remaining)
+### Phase 3: Nitpicks from CodeRabbit v2 (30 items total, 18 active remaining)
 
 Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 
@@ -74,7 +74,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 - [ ] **3.6** `templates/ralph/loop.sh:299-309` - Consider yq for modelId sed operation (N-6)
   - Status: DEFERRED - sed solution is adequate, yq adds unnecessary dependency
 
-#### Dead Code (8 items - 2 complete, 6 remaining)
+#### Dead Code (8 items - 4 complete, 4 remaining)
 
 **Goal:** Clean up unused variables/functions to pass shellcheck cleanly
 
@@ -88,7 +88,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 - [ ] **3.13** `templates/ralph/thunk_ralph_tasks.sh:146-162,239-255` - Use `_` for unused parsed vars (N-13)
 - [ ] **3.14** `templates/ralph/thunk_ralph_tasks.sh:167,260,311` - Fix SC2155 in template (N-14)
 
-#### Format/Style (7 items - 3 complete, 4 remaining, 1 skipped)
+#### Format/Style (7 items - 4 complete, 2 remaining, 1 skipped)
 
 **Goal:** Consistency and markdown linter compliance
 
@@ -146,27 +146,34 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 
 ### PLAN Mode Actions (This Iteration)
 
-1. ✅ Update IMPLEMENTATION_PLAN.md with accurate task counts and priorities
-2. ✅ Reorganize Phase 3 by execution order (quick wins → dead code → robustness → docs)
-3. ✅ Commit planning updates
-4. ✅ Push ALL accumulated commits (6 commits: tasks 3.5, 3.7, 3.8, 3.15 + planning updates)
+1. ✅ Review current state (13 tasks completed since last plan update)
+2. ✅ Update IMPLEMENTATION_PLAN.md with accurate progress and task counts
+3. 🔄 Commit planning updates
+4. 🔄 Push ALL accumulated commits (5 unpushed: 3.9, 3.10, 3.15, 3.16, 3.18)
 
-### BUILD Iterations (Phase 3) - Recommended Order
+### BUILD Iterations (Phase 3) - Next Execution Order
 
-**Batch 1 - Quick Wins (7 tasks, ~5 iterations):**
-- 3.16, 3.17, 3.18, 3.19, 3.20, 3.21 (format/style fixes)
-- 3.26 (trivial grep -F flag)
+**Batch 1 - Format/Style (2 remaining, ~2 iterations):**
+- 3.19 (NEURONS.md backslash fix)
+- 3.20 (remove "Last updated" from skills/index.md)
+- 3.21 (THUNK.md duplicate numbers - cosmetic only)
 
-**Batch 2 - Dead Code (6 tasks, ~4 iterations):**
-- 3.9, 3.10, 3.11, 3.12, 3.13, 3.14 (cleanup unused code)
+**Batch 2 - Dead Code (4 remaining, ~3 iterations):**
+- 3.11 (remove unused normalize_description)
+- 3.12, 3.13, 3.14 (thunk_ralph_tasks.sh template cleanup)
 
-**Batch 3 - Documentation (4 tasks, ~3 iterations):**
-- 3.28, 3.29, 3.30, 3.31 (terminology and guidance)
+**Batch 3 - Trivial Robustness (2 tasks, ~2 iterations):**
+- 3.26 (grep -F flag - security)
+- 3.31 (tput TTY guard)
 
-**Batch 4 - Robustness (5 tasks, ~7 iterations):**
-- 3.22, 3.23 (init script improvements - trivial)
-- 3.27 (trap handler - low complexity)
-- 3.24, 3.25 (cache/parsing refactors - medium complexity)
+**Batch 4 - Documentation (4 tasks, ~3 iterations):**
+- 3.28, 3.29 (terminology migration)
+- 3.30 (rovodev-config.yml docs)
+
+**Batch 5 - Medium Robustness (3 tasks, ~5 iterations):**
+- 3.22, 3.23 (init script improvements)
+- 3.27 (trap handler for temp cleanup)
+- 3.24, 3.25 (cache/parsing refactors - deferred if time-consuming)
 
 ### Quality Gates
 
@@ -178,8 +185,19 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 ### Success Criteria
 
 Phase 3 complete when:
-- [ ] All 22 remaining tasks marked `[x]`
+- [ ] All 18 active tasks marked `[x]` (12/30 already done, 1 deferred, 1 skipped)
 - [ ] All commits pushed to `origin/brain-work`
 - [ ] `verifier.sh` passes cleanly
 - [ ] No shellcheck warnings in modified scripts
 - [ ] Ready to merge `brain-work` → `main`
+
+### Progress Summary
+
+**Completed this cycle (5 commits unpushed):**
+- ✅ 3.9 - Use `_` placeholders for unused variables (ad1c12a)
+- ✅ 3.10 - Remove unused wrap_text from current_ralph_tasks.sh (0e3b953)
+- ✅ 3.15 - Standardize verifier.sha256 format (f29f0c6)
+- ✅ 3.16 - Fix MD050 strong-style in PROMPT.project.md (28aad50)
+- ✅ 3.18 - Add markdown fence tag in PROMPT.md (4fa993f)
+
+**Total Phase 3 progress: 13/30 tasks (43%)**
