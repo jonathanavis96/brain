@@ -47,7 +47,7 @@ These improve maintainability and eliminate shellcheck warnings.
 
 #### 2.1 Dead Code Removal
 
-- [ ] **2.1.1** Remove unused `in_era` variable from thunk_ralph_tasks.sh (line 126)
+- [x] **2.1.1** Remove unused `in_era` variable from thunk_ralph_tasks.sh (line 126)
   - **Context:** Variable set but never read
   - **File:** `thunk_ralph_tasks.sh`
 
