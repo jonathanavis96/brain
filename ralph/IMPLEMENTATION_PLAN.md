@@ -244,7 +244,7 @@ These improve code structure but are not critical.
   - Review generators/generate-implementation-plan.sh
   - Add validation for missing required fields
 
-- [ ] **7.2** Document generator usage in AGENTS.md
+- [x] **7.2** Document generator usage in AGENTS.md
   - Add "Bootstrapping New Projects" section
   - Document when to use each generator
   - Provide workflow examples
