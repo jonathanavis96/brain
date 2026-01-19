@@ -62,12 +62,12 @@ These improve maintainability and eliminate shellcheck warnings.
 
 Pattern: `local var=$(cmd)` masks command exit status. Fix: Split declaration and assignment.
 
-- [ ] **2.2.1** Fix SC2155 in thunk_ralph_tasks.sh line 167
+- [x] **2.2.1** Fix SC2155 in thunk_ralph_tasks.sh line 167
   - **Current:** `local short_title=$(generate_title "$description")`
   - **Fix:** Split to: `local short_title; short_title=$(generate_title "$description")`
   - **File:** `thunk_ralph_tasks.sh`
 
-- [ ] **2.2.2** Fix SC2155 in current_ralph_tasks.sh line 159, 172, 191
+- [x] **2.2.2** Fix SC2155 in current_ralph_tasks.sh line 159, 172, 191
   - **Pattern:** Same as 2.2.1 (multiple instances with cache_key and short_title)
   - **File:** `current_ralph_tasks.sh`
 

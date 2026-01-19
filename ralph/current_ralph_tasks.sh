@@ -156,7 +156,8 @@ extract_tasks() {
                 # For completed tasks, check cache first
                 if [[ "$status" == "x" ]]; then
                     # Generate cache key (hash of task description)
-                    local cache_key=$(echo -n "$task_desc" | md5sum | cut -d' ' -f1)
+                    local cache_key
+                    cache_key=$(echo -n "$task_desc" | md5sum | cut -d' ' -f1)
                     
                     # If cached, return cached value
                     if [[ -n "${COMPLETED_CACHE[$cache_key]}" ]]; then
@@ -169,7 +170,8 @@ extract_tasks() {
                     fi
                     
                     # Not cached - process and cache it
-                    local short_title=$(generate_title "$task_desc")
+                    local short_title
+                    short_title=$(generate_title "$task_desc")
                     local task_label=""
                     if [[ "$is_subtask" == "true" ]]; then
                         task_label="subtask"
@@ -188,7 +190,8 @@ extract_tasks() {
                     echo "$output_line"
                 else
                     # Pending task - always process (no caching)
-                    local short_title=$(generate_title "$task_desc")
+                    local short_title
+                    short_title=$(generate_title "$task_desc")
                     local task_label=""
                     if [[ "$is_subtask" == "true" ]]; then
                         task_label="subtask"
