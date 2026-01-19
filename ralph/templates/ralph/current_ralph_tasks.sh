@@ -380,7 +380,7 @@ display_tasks() {
     else
         local current_section=""
         
-        while IFS='|' read -r icon section task_label short_title indent_level status full_desc; do
+        while IFS='|' read -r _ section task_label short_title indent_level status _; do
             # Print section header when it changes
             if [[ "$section" != "$current_section" ]]; then
                 if [[ -n "$current_section" ]]; then
