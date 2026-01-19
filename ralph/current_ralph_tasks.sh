@@ -361,14 +361,14 @@ wrap_text() {
     local indent="$3"
     local first_line=true
     
-    echo "$text" | fold -s -w "$width" | while IFS= read -r line; do
+    while IFS= read -r line; do
         if [[ "$first_line" == "true" ]]; then
             echo "$line"
             first_line=false
         else
             echo "${indent}${line}"
         fi
-    done
+    done < <(echo "$text" | fold -s -w "$width")
 }
 
 # Function to display tasks with formatting
