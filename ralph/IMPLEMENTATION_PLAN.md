@@ -71,7 +71,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 - [x] **3.3** `current_ralph_tasks.sh` - Use process substitution `< <(...)` instead of pipe in while loop (N-2)
 - [x] **3.4** `thunk_ralph_tasks.sh` - Use process substitution instead of pipe in while loop (N-3)
 - [x] **3.5** `new-project.sh:412-422` - Add `escape_sed_replacement` function for THUNK template (N-5)
-- [ ] **3.6** `templates/ralph/loop.sh:299-309` - Consider yq for modelId sed operation (N-6)
+- [⏭️] **3.6** `templates/ralph/loop.sh:299-309` - Consider yq for modelId sed operation (N-6)
   - Status: DEFERRED - sed solution is adequate, yq adds unnecessary dependency
 
 #### Dead Code (8 items - 4 complete, 4 remaining)
@@ -111,7 +111,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
   - Fixed: 0cd141a - Changed from 'hash  filename' to 'hash' only format
 - [x] **3.25** `templates/ralph/current_ralph_tasks.sh:101-201` - Hash full raw line to prevent cache collisions (N-24)
   - Fixed: Changed cache key from `echo -n "$task_desc"` to `echo -n "$line"` in both root and template files
-- [ ] **3.26** `templates/ralph/current_ralph_tasks.sh:242-349` - Align Archive/Clear parsing with extract logic (N-25)
+- [⏭️] **3.26** `templates/ralph/current_ralph_tasks.sh:242-349` - Align Archive/Clear parsing with extract logic (N-25)
   - Status: DEFERRED - Extract logic uses uppercase normalization and ## boundary check that Archive/Clear don't need
   - Analysis: Archive/Clear functions (lines 241-350) correctly use case-sensitive matching for High/Medium/Low Priority and ### boundary checks. Extract logic (lines 100-203) has different requirements: case-insensitive detection via uppercase normalization and ## (not ###) boundary to allow subsections. The divergence is intentional and appropriate for their different contexts.
   - Risk: Very low - Both functions work correctly in practice, no bugs reported
