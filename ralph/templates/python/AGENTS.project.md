@@ -23,13 +23,13 @@
 
 When you discover a new convention, architectural decision, or project-specific pattern:
 
-1. **Create a KB file** in the brain repo:
+1. **Create a skill file** in the brain repo:
    - Project-specific: `../../brain/skills/projects/<project-slug>.md`
    - Domain/cross-project: `../../brain/skills/domains/<domain>.md`
 
 2. **Update the index**: Add a link in `../../brain/skills/SUMMARY.md`
 
-3. **Structure new KB files** with:
+3. **Structure new skill files** with:
    ```markdown
    # [Title]
    
