@@ -70,7 +70,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 - [x] **3.2** `templates/ralph/loop.sh:644-675` - Sync with extracted helper (N-4)
 - [x] **3.3** `current_ralph_tasks.sh` - Use process substitution `< <(...)` instead of pipe in while loop (N-2)
 - [x] **3.4** `thunk_ralph_tasks.sh` - Use process substitution instead of pipe in while loop (N-3)
-- [ ] **3.5** `new-project.sh:412-422` - Add `escape_sed_replacement` function for THUNK template (N-5)
+- [x] **3.5** `new-project.sh:412-422` - Add `escape_sed_replacement` function for THUNK template (N-5)
   - Impact: Prevents sed errors if THUNK table content has special chars
   - Complexity: Low - single helper function
 - [ ] **3.6** `templates/ralph/loop.sh:299-309` - Consider yq for modelId sed operation (N-6, low value)
