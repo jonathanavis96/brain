@@ -21,7 +21,7 @@ Capture knowledge gaps discovered during work and promote clear, recurring gaps 
 2. **Evaluate** → Is it clear, specific, and recurring?
 3. **Promote** → If yes, add to `SKILL_BACKLOG.md` and create skill file
 4. **Place** → `skills/domains/<topic>/<skill>.md` or `skills/projects/<project>/<skill>.md`
-5. **Index** → Update `skills/index.md`
+5. **Index** → Update `skills/SUMMARY.md`
 
 ## Placement Rules
 

@@ -36,7 +36,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items M-19, M-21 through M-32
 - [x] **2.4** `generators/generate-neurons.sh:653-660` - Change "KB Index" label to "Skills Index" (M-23)
 - [x] **2.5** `skills/conventions.md:248-251` - Remove duplicate PROMPT template bullet (M-24)
 - [x] **2.6** `skills/domains/README.md:61-63` - Remove "(planned)" qualifier for conventions.md (M-25)
-- [ ] **2.7** `skills/self-improvement/README.md:20-25` - Change `skills/index.md` to `skills/SUMMARY.md` (M-26)
+- [x] **2.7** `skills/self-improvement/README.md:20-25` - Change `skills/index.md` to `skills/SUMMARY.md` (M-26)
 - [ ] **2.8** `AGENTS.md:56-58` - Add fence language tag for `:::COMPLETE:::` block (M-27)
 - [ ] **2.9** `AGENTS.md:30-41` - Update monitor hotkeys documentation to match actual behavior (M-28)
 - [ ] **2.10** `PROMPT.md:109-110` - Add new hash-guarded files to protected-files list (M-29)

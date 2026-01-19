@@ -178,7 +178,7 @@ When a gap qualifies for promotion, these tasks are appended to `IMPLEMENTATION_
   - Broadly reusable → `skills/domains/<topic>/<skill>.md`
   - Project-specific → `skills/projects/<project>/<skill>.md`
 - [ ] Create folder if needed
-- [ ] Update `skills/index.md` with new entry
+- [ ] Update `skills/SUMMARY.md` with new entry
 
 ### Task N.4: Update Backlogs
 - [ ] Update `GAP_BACKLOG.md` entry status to "Promoted to SKILL_BACKLOG"
