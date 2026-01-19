@@ -47,7 +47,7 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
 
 ## Repository Structure
 
-```
+```text
 brain/
 ├── AGENTS.md                    # Agent-specific guidance for this repo
 ├── README.md                    # Human-readable overview
