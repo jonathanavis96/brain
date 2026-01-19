@@ -154,9 +154,9 @@ extract_tasks() {
             if [[ -n "$status" && -n "$task_desc" ]]; then
                 # For completed tasks, check cache first
                 if [[ "$status" == "x" ]]; then
-                    # Generate cache key (hash of task description)
+                    # Generate cache key (hash of full raw line to prevent collisions)
                     local cache_key
-                    cache_key=$(echo -n "$task_desc" | md5sum | cut -d' ' -f1)
+                    cache_key=$(echo -n "$line" | md5sum | cut -d' ' -f1)
                     
                     # If cached, return cached value
                     if [[ -n "${COMPLETED_CACHE[$cache_key]}" ]]; then
