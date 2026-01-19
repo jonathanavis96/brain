@@ -93,7 +93,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 **Goal:** Consistency and markdown linter compliance
 
 - [x] **3.15** `.verify/verifier.sha256:1` - Standardize format with filename suffix (N-15)
-- [ ] **3.16** `templates/ralph/PROMPT.project.md:39-41` - Fix MD050 strong-style (N-16)
+- [x] **3.16** `templates/ralph/PROMPT.project.md:39-41` - Fix MD050 strong-style (N-16)
 - [ ] **3.17** `HISTORY.md:86` - Remove spaces in inline code spans (N-17)
 - [ ] **3.18** `templates/ralph/PROMPT.md:50-53` - Add `markdown` fence language tag (N-18)
 - [ ] **3.19** `NEURONS.md:204-206` - Change Windows backslashes to forward slashes (N-19)
