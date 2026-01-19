@@ -65,7 +65,7 @@ Follow in order:
 
 ### Step 5: Record
 - Update operational signs if needed (AGENTS.md, prompts, conventions).
-- Update skills index (index.md).
+- Update skills index (SUMMARY.md).
 
 ## 8) Output / Deliverables
 
