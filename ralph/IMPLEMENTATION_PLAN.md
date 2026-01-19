@@ -2,22 +2,27 @@
 
 ## Overview
 
-**Status:** Repository in maintenance mode. CodeRabbit PR #4 review fixes complete. Ready to push accumulated work.
+**Status:** Phase 1-4 complete (all CodeRabbit PR #4 high-priority fixes). Branch pushed to origin. Ready for optional improvements.
 
 **Recent achievements (2026-01-18 to 2026-01-19):**
 - ✅ Monitor bug fixes (Bugs A, B, C) fully resolved and verified
 - ✅ Verifier gate system implemented (21 PASS, 0 FAIL, 6 WARN)
 - ✅ KB→Skills migration completed across all files
 - ✅ Templates synced with live versions
-- ✅ **Phase 1-4 complete:** All high-priority CodeRabbit fixes (tasks 1.1-4.4)
+- ✅ **Phase 1-4 complete:** All high-priority CodeRabbit fixes (tasks 1.1-4.5)
   - Critical bug fixes (render_ac_status.sh, loop.sh monitors)
   - Dead code removal + SC2155 shellcheck fixes
   - Terminology consistency (kb→skills)
   - Documentation updates (model versions, --model auto, markdown fences)
+  - AC status dashboard regenerated
+- ✅ **All work pushed to origin/brain-work** (task 6.4 complete)
 
-**Current focus:** Final cleanup and push (Phase 4.5, 6.4), then optional improvements (Phases 5-8)
-**Ready to push:** 3 commits accumulated from BUILD iterations (on branch brain-work)
-**Next BUILD task:** 4.5 - Regenerate AC status section to reflect current verifier state
+**Current focus:** Repository maintenance and optional improvements (Phases 5-8)
+**Branch status:** Clean working tree, all commits pushed to origin/brain-work
+**Next recommended tasks:** 
+  - Phase 6.2: Review GAP_BACKLOG for skill promotion opportunities
+  - Phase 6.3: Evaluate docs/REFERENCE_SUMMARY.md legacy status
+  - Phase 5.2-5.3: Process substitution refactoring (code quality)
 **Verifier status:** All critical checks PASS (21 PASS, 0 FAIL, 6 WARN acceptable)
 
 **Reference:** `CODERABBIT_REVIEW_ANALYSIS.md` for detailed analysis and rationale
@@ -158,6 +163,29 @@ Complete the kb→skills terminology migration across all files.
 
 ## MEDIUM PRIORITY
 
+### Phase 6: Maintenance & Validation
+
+- [ ] **6.2** Review GAP_BACKLOG.md for skill promotion
+  - Check if P1/P0 gaps meet promotion criteria (currently 2 P2 gaps reviewed, no promotion needed)
+  - Update gap statuses if needed
+  - Promote clear, recurring gaps to SKILL_BACKLOG.md
+  - **Current state:** 2 bash-specific P2 gaps in backlog, neither meets promotion criteria
+  - **Priority rationale:** Self-improvement protocol compliance check
+
+- [ ] **6.3** Evaluate docs/REFERENCE_SUMMARY.md legacy status
+  - Marked "legacy" in NEURONS.md
+  - Compare with skills/SUMMARY.md for content overlap/divergence
+  - Decision options:
+    1. Keep both: docs/ for Ralph history/context, skills/ for agent consumption
+    2. Deprecate docs/ version: Add redirect notice to skills/SUMMARY.md
+    3. Merge content: Consolidate Ralph-specific patterns into skills/projects/brain-example.md
+  - **Current analysis:** 
+    - docs/REFERENCE_SUMMARY.md = Ralph Wiggum pattern documentation (2026-01-17)
+    - skills/SUMMARY.md = Skills KB entrypoint for agents (broader scope)
+    - **NOT duplicates** - serve different purposes
+  - **Recommendation:** Keep both, update NEURONS.md to clarify distinction
+  - Update NEURONS.md if structure changes
+
 ---
 
 ### Phase 5: Refactoring for Maintainability (Optional)
@@ -185,26 +213,13 @@ These improve code structure but are not critical.
 
 ---
 
-### Phase 6: Maintenance & Validation (MEDIUM Priority)
-
 - [ ] **6.1** Verify template completeness
-  - Audit templates/ralph/ (expect 16 files)
-  - Audit templates/backend/ (expect 4 files)
-  - Audit templates/python/ (expect 4 files)
+  - Audit templates/ralph/ (expect 16 files, currently 17 including .gitignore)
+  - Audit templates/backend/ (4 files: AGENTS, NEURONS, THOUGHTS, VALIDATION_CRITERIA)
+  - Audit templates/python/ (4 files: AGENTS, NEURONS, THOUGHTS, VALIDATION_CRITERIA)
   - Cross-check with new-project.sh expectations
-  - **Status:** Templates already validated in previous work, verify no regression
-
-- [ ] **6.2** Review GAP_BACKLOG.md for skill promotion
-  - Check if P1/P0 gaps meet promotion criteria (currently 2 P2 gaps reviewed, no promotion needed)
-  - Update gap statuses if needed
-  - Promote clear, recurring gaps to SKILL_BACKLOG.md
-  - **Current state:** No gaps meet promotion criteria yet
-
-- [ ] **6.3** Evaluate docs/REFERENCE_SUMMARY.md legacy status
-  - Marked "legacy" in NEURONS.md
-  - Decide: migrate to skills/ or deprecate
-  - Update NEURONS.md if structure changes
-  - **Context:** May be duplicate of skills/SUMMARY.md
+  - **Current counts:** ralph=17, backend=4, python=4
+  - **Status:** All templates present and validated
 
 ---
 
@@ -237,9 +252,10 @@ These improve code structure but are not critical.
   - Consider removal if no historical value
 
 - [ ] **8.2** Validate React best practices references
-  - Verify all 45 rule files present
+  - Verify all 45 rule files present (currently: 45 ✓)
   - Check INDEX.md and HOTLIST.md are current
   - Ensure no broken cross-references
+  - **Status:** All 45 rule files confirmed present
 
 - [ ] **8.3** Update CHANGES.md with January 2026 work
   - Document changes since 2026-01-18 (monitor fixes, CodeRabbit review resolution)
