@@ -280,3 +280,4 @@ Started: 2026-01-18
 | 243 | 2.12 | MEDIUM | **2.12** Add bash fence language tag to THOUGHTS.md - Task obsolete: Bug A section with bash code fence was removed in commit 149e5fe during THOUGHTS.md streamline, no action needed | 2026-01-19 |
 | 244 | 3.1 | LOW | **3.1** Extract `launch_in_terminal()` helper for duplicated terminal detection in loop.sh - Reduced code duplication from 72 lines to 43 lines with reusable function | 2026-01-19 |
 | 245 | 3.2 | LOW | **3.2** Sync templates/ralph/loop.sh with extracted helper - Added launch_in_terminal() function and updated launch_monitors() to eliminate 40 lines of duplicated terminal detection logic | 2026-01-19 |
+| 246 | 3.3 | LOW | **3.3** Use process substitution in current_ralph_tasks.sh - Eliminated pipe in wrap_text() function by replacing 'echo "$text" | fold | while' with 'done < <(fold <<< "$text")', applied to both root and template versions | 2026-01-19 |
