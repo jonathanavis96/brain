@@ -136,8 +136,8 @@ Complete the kb→skills terminology migration across all files.
   - **File:** `loop.sh`
   - **Warning:** Protected file - need to regenerate baseline hash after change
 
-- [ ] **4.4** Add markdown fence language tag to PROMPT.md line 61
-  - **Context:** Code block missing language identifier for bash
+- [x] **4.4** Add markdown fence language tag to PROMPT.md line 61
+  - **Context:** Code block missing language identifier for markdown table format
   - **File:** `PROMPT.md`
   - **Warning:** Protected file - need to regenerate baseline hash after change
 
