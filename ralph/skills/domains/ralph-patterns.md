@@ -70,9 +70,9 @@ These instructions guide RovoDev's internal behavior. Loop.sh doesn't enforce th
 
 ```
 Iteration 1 (PLAN):  Analyze → Update plan → COMMIT + PUSH all → Stop
-Iteration 2 (BUILD): Implement task → Mark [x] → COMMIT local → Stop
-Iteration 3 (BUILD): Implement task → Mark [x] → COMMIT local → Stop
-Iteration 4 (BUILD): Implement task → Mark [x] → COMMIT local → Stop
+Iteration 2 (BUILD): Implement task → Mark [?] → COMMIT local → Stop
+Iteration 3 (BUILD): Implement task → Mark [?] → COMMIT local → Stop
+Iteration 4 (BUILD): Implement task → Mark [?] → COMMIT local → Stop
 Iteration 5 (PLAN):  Re-analyze → Update plan → COMMIT + PUSH all → Stop
 ```
 

@@ -276,3 +276,4 @@ Started: 2026-01-18
 | 239 | 2.7 | MEDIUM | **2.7** Change `skills/index.md` to `skills/SUMMARY.md` in skills/self-improvement/ - Updated README.md line 23, GAP_CAPTURE_RULES.md line 52, GAP_LOG_AND_AUTO_SKILL_SPEC.md line 180 | 2026-01-19 |
 | 240 | 2.8 | MEDIUM | **2.8** Add fence language tag for `:::COMPLETE:::` block in AGENTS.md - Added `text` language tag to code fence at lines 55-58 | 2026-01-19 |
 | 241 | 2.10 | MEDIUM | **2.10** Add new hash-guarded files to protected-files list - Updated PROMPT.md and templates/ralph/PROMPT.md to include all hash files: .verify/verifier.sha256, .verify/loop.sha256, .verify/prompt.sha256 | 2026-01-19 |
+| 242 | 2.11 | MEDIUM | **2.11** Update ralph-patterns.md commit strategy to use `[?]` not `[x]` - Changed lines 72-74 to show "Mark [?]" instead of "Mark [x]" to reflect new PROPOSED_DONE status before verifier confirmation | 2026-01-19 |
