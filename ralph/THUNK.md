@@ -272,3 +272,4 @@ Started: 2026-01-18
 | 236 | 2.4 | MEDIUM | **2.4** Change "KB Index" label to "Skills Index" in generators/generate-neurons.sh - Updated lines 651 and 671 to align with kb→skills terminology migration | 2026-01-19 |
 | 237 | 2.5 | MEDIUM | **2.5** Remove duplicate PROMPT template bullet in skills/conventions.md - Removed duplicate 'templates/ralph/PROMPT.md' reference at line 249 | 2026-01-19 |
 | 238 | 2.6 | MEDIUM | **2.6** Remove "(planned)" qualifier from conventions.md in skills/domains/README.md - File exists (7.6KB), reference updated on line 61 | 2026-01-19 |
+| 239 | 2.7 | MEDIUM | **2.7** Change `skills/index.md` to `skills/SUMMARY.md` in skills/self-improvement/ - Updated README.md line 23, GAP_CAPTURE_RULES.md line 52, GAP_LOG_AND_AUTO_SKILL_SPEC.md line 180 | 2026-01-19 |

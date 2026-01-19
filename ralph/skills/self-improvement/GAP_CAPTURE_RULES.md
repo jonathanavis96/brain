@@ -50,7 +50,7 @@ When promotion criteria are met:
    - Broadly reusable → `skills/domains/<topic>/<skill>.md`
    - Project-specific → `skills/projects/<project>/<skill>.md`
 4. Create folder if needed (one file per skill)
-5. Update `skills/index.md`
+5. Update `skills/SUMMARY.md`
 6. Mark `SKILL_BACKLOG.md` entry as "Done" with link to new file
 
 ## Rule 5: Update Operational Signs
