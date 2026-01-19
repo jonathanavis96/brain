@@ -1,29 +1,29 @@
 # Brain Repository Project
 
-<!-- This is an EXAMPLE KB file demonstrating project-specific knowledge.
+<!-- This is an EXAMPLE skill file demonstrating project-specific knowledge.
      It shows how to document conventions, decisions, and context for a specific project. -->
 
 ## Why This Exists
 
-The brain repository is a unique project that serves as both a knowledge base AND uses itself for self-improvement via the Ralph loop. This creates special considerations that differ from typical projects. This KB file documents brain-specific conventions, Ralph loop usage, and structural decisions that agents need to understand when working on the brain itself.
+The brain repository is a unique project that serves as both a knowledge base AND uses itself for self-improvement via the Ralph loop. This creates special considerations that differ from typical projects. This skill file documents brain-specific conventions, Ralph loop usage, and structural decisions that agents need to understand when working on the brain itself.
 
 **Problem solved:** Without this documentation, agents working on the brain repository might not understand the distinction between local paths (for brain's own Ralph) vs relative paths (for project templates), or how the brain uses Ralph to improve itself.
 
 ## When to Use It
 
-Reference this KB file when:
+Reference this skill file when:
 - Working on the brain repository itself (not a project created from brain)
-- Running the brain's own Ralph loop (`ralph/ralph.ps1`)
+- Running the brain's own Ralph loop (`loop.sh`)
 - Creating or modifying templates in `templates/`
-- Adding new KB files or updating the knowledge base structure
+- Adding new skill files or updating the knowledge base structure
 - Updating validation scripts or bootstrap scripts
 - Troubleshooting brain-specific issues
 
 **Specific triggers:**
 - Editing files in `brain/templates/`
-- Modifying `brain/ralph/` prompts
-- Running `brain/ralph/ralph.ps1`
-- Updating `brain/fix_plan.md`
+- Modifying `brain/` Ralph prompts (PROMPT.md, loop.sh)
+- Running `brain/loop.sh`
+- Updating `brain/IMPLEMENTATION_PLAN.md`
 - Contributing to the knowledge base
 
 ## Details
@@ -34,14 +34,14 @@ The brain repository has a unique dual role:
 
 ```
 brain/
-├── kb/                    # Knowledge base (the "source code" for knowledge)
+├── skills/                # Knowledge base (the "source code" for knowledge)
 ├── references/            # Read-only reference materials (45 React rules)
 ├── templates/             # Bootstrap templates for new projects
-├── ralph/                 # Brain's OWN Ralph loop for self-improvement
-├── fix_plan.md           # Brain's OWN improvement backlog
-├── new-project.ps1       # Bootstrap script
-├── validate-brain.ps1    # Validation script
-└── AGENTS.md             # Guidance for agents working ON brain
+├── loop.sh                # Brain's OWN Ralph loop for self-improvement
+├── IMPLEMENTATION_PLAN.md # Brain's OWN improvement backlog
+├── new-project.sh         # Bootstrap script
+├── verifier.sh            # Validation script
+└── AGENTS.md              # Guidance for agents working ON brain
 ```
 
 **Key insight:** The brain repository IS a project itself, and uses Ralph to evolve.
@@ -78,73 +78,71 @@ Read `../../brain/skills/SUMMARY.md`
 
 ### Brain Self-Improvement with Ralph
 
-The brain repository has its own Ralph loop at `ralph/ralph.ps1`:
+The brain repository has its own Ralph loop at `loop.sh`:
 
 **How it works:**
-1. Brain's `fix_plan.md` contains improvement tasks for the brain itself
-2. Running `ralph/ralph.ps1` executes the brain's Ralph loop
-3. Ralph reads brain's KB (local paths), implements top task from fix_plan.md
-4. Changes are validated with `validate-brain.ps1`
-5. Progress logged to `ralph/progress.txt`
+1. Brain's `IMPLEMENTATION_PLAN.md` contains improvement tasks for the brain itself
+2. Running `loop.sh` executes the brain's Ralph loop
+3. Ralph reads brain's skills (local paths), implements top task from IMPLEMENTATION_PLAN.md
+4. Changes are validated with `verifier.sh`
+5. Progress logged to `THUNK.md`
 
 **What Ralph considers "source code" for the brain:**
 - Templates in `templates/`
-- KB files in `kb/`
-- Scripts: `new-project.ps1`, `validate-brain.ps1`
+- Skill files in `skills/`
+- Scripts: `new-project.sh`, `verifier.sh`, `loop.sh`
 - Documentation: `AGENTS.md`, `README.md`
-- Ralph infrastructure: `ralph/` directory
+- Ralph infrastructure: root directory files
 
 **Brain's Ralph does NOT modify:**
 - `references/react-best-practices/rules/` (45 files, read-only reference material)
 
-### KB File Categories
+### Skill File Categories
 
 The brain organizes knowledge into two categories:
 
-**Domains (`kb/domains/`):**
+**Domains (`skills/domains/`):**
 - Reusable technical patterns
 - Cross-project knowledge
 - Technology-specific patterns
-- Example: `auth-patterns.md`, `caching-strategies.md`
+- Example: `auth-patterns.md`, `caching-patterns.md`
 
-**Projects (`kb/projects/`):**
+**Projects (`skills/projects/`):**
 - Project-specific conventions
 - Single-project context
 - Deployment specifics
-- Example: `brain-example.md` (this file), `ecommerce-site.md`
+- Example: `brain-example.md` (this file)
 
 ### Validation Script
 
-The brain includes `validate-brain.ps1` to ensure integrity:
+The brain includes `verifier.sh` to ensure integrity:
 
 **What it checks:**
-- KB files have required format (Why/When/Details headers)
-- SUMMARY.md links point to existing files
-- Templates don't have hardcoded absolute paths
-- Rules directory unchanged (45 files)
-- No orphaned KB files (all linked from SUMMARY.md)
+- Acceptance criteria from `AC.rules`
+- Protected file hashes (loop.sh, verifier.sh, PROMPT.md, AC.rules)
+- Shellcheck hygiene gates
+- Markdown formatting
+- Template hash baselines
 
 **Usage:**
-```powershell
-.\validate-brain.ps1          # Run validation
-.\validate-brain.ps1 -Fix     # Attempt to fix issues (planned feature)
+```bash
+./verifier.sh          # Run validation
 ```
 
 ### Bootstrap Script
 
-The `new-project.ps1` script creates sibling projects:
+The `new-project.sh` script creates new projects with intelligent generator inference:
 
 **Enhanced features:**
 - Pre-flight checks (templates exist, name valid, directory available)
-- `-WhatIf` parameter for dry-run preview
-- Post-creation validation (all files created successfully)
-- Clear error messages with actionable guidance
+- Tech stack inference from project idea file
+- Automatic generation of NEURONS.md, THOUGHTS.md, IMPLEMENTATION_PLAN.md
+- GitHub repository creation integration
+- Post-creation validation
 
 **Usage:**
-```powershell
-.\new-project.ps1 -Name my-project                    # Create project
-.\new-project.ps1 -Name my-project -WhatIf            # Preview without creating
-.\new-project.ps1 -Name test -Path C:\Projects        # Custom parent directory
+```bash
+./new-project.sh my-project-idea.md    # Create project from idea file
 ```
 
 ### Template Maintenance
@@ -152,8 +150,8 @@ The `new-project.ps1` script creates sibling projects:
 When updating templates, ensure consistency:
 
 **Path patterns:**
-- Templates use `../brain/` (relative from project root)
-- Ralph prompts in templates use `../../brain/` (relative from project/ralph/)
+- Templates use local paths (copied into project)
+- Skill references remain relative to brain repository
 
 **Progressive disclosure order:**
 1. `../brain/skills/SUMMARY.md`
@@ -161,60 +159,61 @@ When updating templates, ensure consistency:
 3. `../brain/references/react-best-practices/INDEX.md` (only if needed)
 4. `../brain/references/react-best-practices/rules/*` (only specific rules)
 
-**Required sections in KB files:**
+**Required sections in skill files:**
 - `## Why This Exists`
 - `## When to Use It`
 - `## Details`
 
 ### Common Brain-Specific Tasks
 
-**Adding a new KB file:**
-1. Create file in `kb/domains/` or `kb/projects/`
+**Adding a new skill file:**
+1. Create file in `skills/domains/` or `skills/projects/`
 2. Follow Why/When/Details structure
-3. Update `kb/SUMMARY.md` with link
-4. Run `validate-brain.ps1` to verify
+3. Update `skills/SUMMARY.md` and `skills/index.md` with link
+4. Run `./verifier.sh` to verify
 
 **Updating templates:**
 1. Edit files in `templates/`
-2. Ensure relative paths are correct (`../brain/`)
-3. Test with `new-project.ps1 -WhatIf`
-4. Run `validate-brain.ps1`
+2. Ensure template integrity maintained
+3. Test with generators if applicable
+4. Run `./verifier.sh`
 
 **Running brain's Ralph loop:**
-1. Add tasks to `fix_plan.md`
-2. Run `.\ralph\ralph.ps1 -Iterations 10 -PlanEvery 3`
-3. Ralph implements tasks, validates with `validate-brain.ps1`
-4. Check `ralph/progress.txt` for logs
+1. Add tasks to `IMPLEMENTATION_PLAN.md`
+2. Run `./loop.sh --iterations 10`
+3. Ralph implements tasks, validates with `verifier.sh`
+4. Check `THUNK.md` for completed task log
 
 ### Brain-Specific Gotchas
 
 ❌ **Don't modify `references/react-best-practices/rules/`** - These 45 files are read-only reference material  
-❌ **Don't use absolute paths in templates** - Projects are siblings to brain, use relative paths  
-❌ **Don't confuse brain's Ralph paths with template Ralph paths** - Brain uses local, templates use relative  
-❌ **Don't skip validation** - Always run `validate-brain.ps1` after changes
+❌ **Don't modify protected files** - AC.rules, verifier.sh, loop.sh, PROMPT.md are hash-protected  
+❌ **Don't skip validation** - Always run `./verifier.sh` after changes  
+❌ **Don't batch multiple tasks** - Ralph does exactly one task per BUILD iteration
 
 ### Decision History
 
-**Why templates use relative paths:**
-- Projects created by `new-project.ps1` are siblings to brain
-- Relative paths allow projects to reference shared KB
-- Enables multiple projects to share one brain
+**Why templates are copied to projects:**
+- Projects are self-contained with their own Ralph infrastructure
+- Generators intelligently adapt templates to project type
+- Each project has customized NEURONS.md, THOUGHTS.md, IMPLEMENTATION_PLAN.md
 
 **Why brain has its own Ralph loop:**
 - Brain needs to evolve and improve itself
 - Meta-approach: brain uses its own tools for self-improvement
-- fix_plan.md tracks brain's own improvement tasks
+- IMPLEMENTATION_PLAN.md tracks brain's own improvement tasks
 
 **Why validation script is necessary:**
-- Ensures KB integrity (proper format, no broken links)
-- Catches template path errors before they affect new projects
+- Ensures acceptance criteria pass before commits
+- Protects critical files with hash verification
+- Catches hygiene issues (shellcheck, markdown formatting)
 - Verifies references directory unchanged (45 rules - complete Vercel Engineering set)
 
-### Integration with Other KB Files
+### Integration with Other Skill Files
 
-- Related: `../conventions.md` - KB file authoring guidelines
-- Related: `../domains/README.md` - Domain KB explanation
-- Related: `README.md` - Project KB explanation
+- Related: `../conventions.md` - Skill file authoring guidelines
+- Related: `../domains/README.md` - Domain skill explanation
+- Related: `README.md` - Project skill explanation
 - See: `../../AGENTS.md` - Agent guidance for brain repository
 - See: `../../README.md` - Developer onboarding guide
 
@@ -222,25 +221,25 @@ When updating templates, ensure consistency:
 
 Before committing changes to brain repository:
 
-1. **Validate structure:** `.\validate-brain.ps1`
-2. **Test bootstrap:** `.\new-project.ps1 -Name test-project -WhatIf`
-3. **Check KB links:** Verify all links in `kb/SUMMARY.md` work
-4. **Review paths:** Ensure templates use relative paths
+1. **Validate structure:** `./verifier.sh`
+2. **Test bootstrap:** `./new-project.sh` with a test idea file
+3. **Check skill links:** Verify all links in `skills/SUMMARY.md` and `skills/index.md` work
+4. **Review integrity:** Ensure protected files not modified
 5. **Run brain's Ralph:** Test self-improvement loop works
 
 ### Contributing to Brain
 
 When contributing new features to brain:
 
-1. **Add task to fix_plan.md** with rationale and relevant rules
+1. **Add task to IMPLEMENTATION_PLAN.md** with rationale and relevant rules
 2. **Run brain's Ralph loop** to implement the task
-3. **Validate changes** with `validate-brain.ps1`
+3. **Validate changes** with `./verifier.sh`
 4. **Update documentation** (AGENTS.md, README.md, etc.)
-5. **Create KB files** if new patterns discovered
+5. **Create skill files** if new patterns discovered
 
 ## References
 
 - [AGENTS.md](../../AGENTS.md) - Agent guidance for brain repository
 - [README.md](../../README.md) - Developer onboarding and quickstart guide
-- [conventions.md](../conventions.md) - KB file authoring conventions
-- [templates/fix_plan.md](../../templates/fix_plan.md) - Fix plan template
+- [conventions.md](../conventions.md) - Skill file authoring conventions
+- [templates/ralph/IMPLEMENTATION_PLAN.project.md](../../templates/ralph/IMPLEMENTATION_PLAN.project.md) - Implementation plan template
