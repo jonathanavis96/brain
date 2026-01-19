@@ -100,7 +100,7 @@ Complete the kb→skills terminology migration across all files.
   - **Fix:** "Skills (skills/)"
   - **File:** `templates/ralph/pr-batch.sh`
 
-- [ ] **3.3** Update generators/generate-neurons.sh line 433 label
+- [x] **3.3** Update generators/generate-neurons.sh line 433 label
   - **Current:** "Brain KB patterns"
   - **Fix:** "Brain Skills patterns"
   - **File:** `generators/generate-neurons.sh`
