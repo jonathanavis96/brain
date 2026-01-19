@@ -23,7 +23,7 @@
 
 These are functional bugs that could cause incorrect behavior or data loss.
 
-- [ ] **1.1** Fix WARN count regex in render_ac_status.sh line 31
+- [x] **1.1** Fix WARN count regex in render_ac_status.sh line 31
   - **Issue:** Pattern `^[0-9]+` anchored to line start, but "WARN: 6" has text before number
   - **Fix:** Change to unanchored `[0-9]+`
   - **File:** `render_ac_status.sh`
