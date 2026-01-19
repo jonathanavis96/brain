@@ -202,7 +202,7 @@ These improve code structure but are not critical.
   - **Warning:** Protected file - need to regenerate baseline hash after change
   - **Status:** Deferred - refactoring protected file requires careful validation
 
-- [ ] **5.2** Use process substitution in current_ralph_tasks.sh line 305
+- [x] **5.2** Use process substitution in current_ralph_tasks.sh line 305
   - **Issue:** Pipe into while loop creates subshell, loses variable changes
   - **Fix:** Replace `| while` with `while ... < <(...)` pattern
   - **File:** `current_ralph_tasks.sh`
