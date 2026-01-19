@@ -57,6 +57,8 @@ When you discover a new convention, architectural decision, or project-specific 
 
 ## Skills + Self-Improvement Protocol
 
+> **Note:** This protocol requires the brain repository at `../../brain/`. If running standalone (brain not present), skip this section.
+
 **Start of iteration:**
 1. Study `../../brain/skills/SUMMARY.md` for overview
 2. Check `../../brain/skills/index.md` for available skills
