@@ -95,8 +95,8 @@ Started: 2026-01-18
 | 81 | 5.26 | MEDIUM | **5.26** Update `skills/conventions.md` (2 KB references updated to skills/) | 2026-01-18 |
 | 82 | 6.1 | MEDIUM | **6.1** Add "Skills + Self-Improvement Protocol" section to `AGENTS.md`: | 2026-01-18 |
 | 83 | LEGACY | MEDIUM | Bootstrap NeoQueue project using brain infrastructure | 2026-01-18 |
-| 84 | 6.3 | MEDIUM | **6.3** Add self-improvement protocol to `templates/AGENTS.project.md` | 2026-01-18 |
-| 84 | 6.2 | MEDIUM | **6.2** Add checkpoints to `PROMPT.md`:  | 2026-01-18 |
+| 84a | 6.3 | MEDIUM | **6.3** Add self-improvement protocol to `templates/AGENTS.project.md` | 2026-01-18 |
+| 84b | 6.2 | MEDIUM | **6.2** Add checkpoints to `PROMPT.md`:  | 2026-01-18 |
 | 85 | 6.4 | MEDIUM | **6.4** Add checkpoints to `templates/ralph/PROMPT.project.md` | 2026-01-18 |
 | 86 | LEGACY | MEDIUM | Run `new-project.sh neoqueue` to create project scaffold | 2026-01-18 |
 | 87 | LEGACY | MEDIUM | Copy THOUGHTS.md content to neoqueue project as project spec | 2026-01-18 |
@@ -208,25 +208,25 @@ Started: 2026-01-18
 | 179 | 4.1 | HIGH | **4.1** Add THUNK logging instruction to PROMPT.md BUILD mode section <!-- tested: PROMPT.md lines 49-52 have THUNK logging step --> | 2026-01-18 |
 | 180 | 4.2 | HIGH | **4.2** Test Ralph appends to THUNK.md on task completion <!-- tested: THUNK.md has entries from Ralph iterations --> | 2026-01-18 |
 | 181 | 5.1 | HIGH | **5.1** Update AGENTS.md monitor documentation <!-- tested: AGENTS.md has Task Monitors section --> | 2026-01-18 |
-| 182 | 3.1 | HIGH | **3.1** Remove `scan_for_new_completions()` function and helper functions from thunk_ralph_tasks.sh | 2026-01-18 |
-| 182 | LEGACY | HIGH | Tasks under `## HIGH PRIORITY` → `### Phase X:` → `#### Subphase Y:` are extracted with HIGH priority <!-- tested: grep shows ^##[[:space:]]+ pattern only exits on major sections --> | 2026-01-18 |
+| 182a | 3.1 | HIGH | **3.1** Remove `scan_for_new_completions()` function and helper functions from thunk_ralph_tasks.sh | 2026-01-18 |
+| 182b | LEGACY | HIGH | Tasks under `## HIGH PRIORITY` → `### Phase X:` → `#### Subphase Y:` are extracted with HIGH priority <!-- tested: grep shows ^##[[:space:]]+ pattern only exits on major sections --> | 2026-01-18 |
 | 183 | LEGACY | HIGH | Parser does not exit on `###` or `####` headers <!-- tested: lines 127-130 only match ^## not ^### --> | 2026-01-18 |
 | 184 | LEGACY | HIGH | Only `##` headers change priority section state <!-- tested: verified in extract_tasks() function --> | 2026-01-18 |
 | 185 | LEGACY | HIGH | Header appears exactly once after file updates <!-- tested: display_tasks() calls clear then draws --> | 2026-01-18 |
-| 186 | 3.2 | HIGH | **3.2** Remove all PLAN_FILE references from thunk_ralph_tasks.sh | 2026-01-18 |
-| 186 | LEGACY | HIGH | Footer appears exactly once after file updates <!-- tested: no differential update logic remains --> | 2026-01-18 |
+| 186a | 3.2 | HIGH | **3.2** Remove all PLAN_FILE references from thunk_ralph_tasks.sh | 2026-01-18 |
+| 186b | LEGACY | HIGH | Footer appears exactly once after file updates <!-- tested: no differential update logic remains --> | 2026-01-18 |
 | 187 | LEGACY | HIGH | No overlapping text after multiple rapid updates <!-- tested: full clear on every redraw --> | 2026-01-18 |
 | 188 | LEGACY | HIGH | No visual corruption after terminal resize <!-- tested: SIGWINCH triggers full redraw --> | 2026-01-18 |
 | 189 | 3.3 | HIGH | **3.3** Remove initial scan and "Syncing with" messages from thunk_ralph_tasks.sh - Removed auto-sync features from header comments - Removed 'f' hotkey from documentation and display | 2026-01-18 |
-| 190 | 3.4 | HIGH | **3.4** Update thunk_ralph_tasks.sh header comments - Already completed as part of task 3.3 | 2026-01-18 |
+| 190a | 3.4 | HIGH | **3.4** Update thunk_ralph_tasks.sh header comments - Already completed as part of task 3.3 | 2026-01-18 |
 | 191 | 3.5 | HIGH | **3.5** Test monitor is display-only - All 5 tests pass: startup clean, watches THUNK.md only, no PLAN references, no scanning messages, no 'f' hotkey | 2026-01-18 |
-| 190 | 3.3 | HIGH | **3.3** Remove initial scan and "Syncing with" messages | 2026-01-18 |
-| 192 | 5.2 | HIGH | **5.2** Verify all three bugs are fixed - Bug A: Parser handles ### subsections ✓, Bug B: Full clear/redraw (no artifacts) ✓, Bug C: THUNK monitor display-only ✓ | 2026-01-18 |
+| 190b | 3.3 | HIGH | **3.3** Remove initial scan and "Syncing with" messages | 2026-01-18 |
+| 192a | 5.2 | HIGH | **5.2** Verify all three bugs are fixed - Bug A: Parser handles ### subsections ✓, Bug B: Full clear/redraw (no artifacts) ✓, Bug C: THUNK monitor display-only ✓ | 2026-01-18 |
 | 193 | 3.4 | HIGH | **3.4** Update thunk_ralph_tasks.sh header comments | 2026-01-19 |
-| 194 | 3.5 | HIGH | **3.5** Test monitor is display-only | 2026-01-19 |
-| 194 | 6.1 | MEDIUM | **6.1** Sync templates/ralph/thunk_ralph_tasks.sh with fixed version - Replaced 564-line template with 410-line fixed version (no auto-sync code) | 2026-01-19 |
-| 195 | 6.2 | MEDIUM | **6.2** Update VALIDATION_CRITERIA.md with Bug C test cases - Added 4 test cases for display-only behavior, PLAN ignore, no 'f' hotkey, Ralph append workflow | 2026-01-19 |
-| 195 | LEGACY | HIGH | Watches THUNK.md as sole source (no PLAN_FILE references) <!-- tested: grep shows no PLAN_FILE in thunk_ralph_tasks.sh --> | 2026-01-19 |
+| 194a | 3.5 | HIGH | **3.5** Test monitor is display-only | 2026-01-19 |
+| 194b | 6.1 | MEDIUM | **6.1** Sync templates/ralph/thunk_ralph_tasks.sh with fixed version - Replaced 564-line template with 410-line fixed version (no auto-sync code) | 2026-01-19 |
+| 195a | 6.2 | MEDIUM | **6.2** Update VALIDATION_CRITERIA.md with Bug C test cases - Added 4 test cases for display-only behavior, PLAN ignore, no 'f' hotkey, Ralph append workflow | 2026-01-19 |
+| 195b | LEGACY | HIGH | Watches THUNK.md as sole source (no PLAN_FILE references) <!-- tested: grep shows no PLAN_FILE in thunk_ralph_tasks.sh --> | 2026-01-19 |
 | 196 | LEGACY | HIGH | Updates display when THUNK.md changes <!-- tested: monitor startup shows "Watching: THUNK.md" --> | 2026-01-19 |
 | 197 | LEGACY | HIGH | Does NOT auto-sync from IMPLEMENTATION_PLAN.md (monitor should only display, not modify) <!-- tested: no scan_for_new_completions function --> | 2026-01-19 |
 | 198 | LEGACY | HIGH | Does NOT modify THUNK.md (Ralph appends, monitor only watches) <!-- tested: header documents "Display-only monitor" --> | 2026-01-19 |
@@ -234,7 +234,7 @@ Started: 2026-01-18
 | 200 | LEGACY | HIGH | No force sync hotkey 'f' (removed entirely) <!-- tested: hotkey documentation shows only r, e, q --> | 2026-01-19 |
 | 201 | 7.1 | HIGH | **7.1** Audit skills/ directory for consistency - Structure: 11/12 compliant (ralph-patterns uses descriptive headers), Triggers: 12/12 have usage sections, Index: 12/12 indexed, Cross-refs: All valid after fixing brain-example.md kb/ → skills/ paths | 2026-01-19 |
 | 202 | 7.2 | HIGH | **7.2** Update skills/index.md timestamp - Updated from 2026-01-18 to 2026-01-19 | 2026-01-19 |
-| 192 | 1.1 | HIGH | **1.1** Fix WARN count regex in render_ac_status.sh line 31 - Changed from '^[0-9]+' to '[0-9]+' (unanchored) | 2026-01-19 |
+| 192b | 1.1 | HIGH | **1.1** Fix WARN count regex in render_ac_status.sh line 31 - Changed from '^[0-9]+' to '[0-9]+' (unanchored) | 2026-01-19 |
 | 203 | 1.2 | HIGH | **1.2** Add end marker guard in render_ac_status.sh before awk (line 105-110) - Added check for END_MARKER existence to prevent file truncation if marker missing | 2026-01-19 |
 | 204 | 1.3 | HIGH | **1.3** Fix subshell variable assignment in loop.sh launch_monitors() - Replaced inline && assignments with proper if-then blocks, added sleep+pgrep verification for all backgrounded commands | 2026-01-19 |
 | 205 | 2.1.1 | HIGH | **2.1.1** Remove unused `in_era` variable from thunk_ralph_tasks.sh (line 126) - Dead code removed from both thunk_ralph_tasks.sh and templates/ralph/thunk_ralph_tasks.sh | 2026-01-19 |
@@ -243,8 +243,8 @@ Started: 2026-01-18
 | 208 | 2.2.1 | HIGH | **2.2.1** Fix SC2155 in thunk_ralph_tasks.sh line 164 - Split local declaration and command substitution to prevent masking exit status | 2026-01-19 |
 | 209 | 2.2.2 | HIGH | **2.2.2** Fix SC2155 in current_ralph_tasks.sh lines 158, 171, 190 - Split local declarations and command substitutions for cache_key and short_title variables | 2026-01-19 |
 | 210 | 2.2.3 | HIGH | **2.2.3** Fix SC2155 in loop.sh line 480 - Split export RUN_ID declaration to prevent masking date command exit status, regenerated loop.sha256 baseline | 2026-01-19 |
-| 211 | 7.1 | LOW | **7.1** Add error handling to generator scripts - Added validation for required fields (PROJECT_NAME, PROJECT_TECH, PROJECT_PURPOSE) to all three generators | 2026-01-19 |
-| 211 | 2.2.4 | HIGH | **2.2.4** Fix SC2155 in templates/ralph/loop.sh line 480 - Split export RUN_ID declaration (same fix as 2.2.3 for template version) | 2026-01-19 |
+| 211a | 7.1 | LOW | **7.1** Add error handling to generator scripts - Added validation for required fields (PROJECT_NAME, PROJECT_TECH, PROJECT_PURPOSE) to all three generators | 2026-01-19 |
+| 211b | 2.2.4 | HIGH | **2.2.4** Fix SC2155 in templates/ralph/loop.sh line 480 - Split export RUN_ID declaration (same fix as 2.2.3 for template version) | 2026-01-19 |
 | 212 | 3.2 | HIGH | **3.2** Update templates/ralph/pr-batch.sh line 117 - Changed "Knowledge Base (kb/)" to "Skills (skills/)" to complete kb→skills terminology migration | 2026-01-19 |
 | 213 | 3.3 | HIGH | **3.3** Update generators/generate-neurons.sh line 432 - Changed "Brain KB patterns" to "Brain Skills patterns" for kb→skills terminology consistency | 2026-01-19 |
 | 214 | 3.4 | HIGH | **3.4** Update templates/python/AGENTS.project.md lines 25-31 - Changed "KB file" to "skill file" and "KB files" to "skill files", completes Phase 3 terminology migration | 2026-01-19 |
@@ -262,8 +262,8 @@ Started: 2026-01-18
 | 226 | 5.2 | LOW | **5.2** Use process substitution in current_ralph_tasks.sh - Replaced pipe-to-while with process substitution in wrap_text() function for bash best practices | 2026-01-19 |
 | 227 | 5.3 | MEDIUM | **5.3** Use process substitution in thunk_ralph_tasks.sh - Verified code already uses correct patterns (line 101: process substitution, lines 178/273: input redirection), no pipe-in-loop issues found | 2026-01-19 |
 | 228 | 6.5 | HIGH | **6.5** Push Phase 5-6 commits to origin - All commits already pushed, branch up to date with origin/brain-work | 2026-01-19 |
-| 229 | 2.9 | MEDIUM | **2.9** Update monitor hotkeys documentation to match actual behavior - Current Ralph Tasks: Added h, r, f, c, ? hotkeys; THUNK Monitor: Removed non-existent 'f' hotkey | 2026-01-19 |
-| 229 | 2.1 | MEDIUM | **2.1** Add SKIP pattern to render_ac_status.sh - Added SKIP to regex and case statement with ⏭️ emoji | 2026-01-19 |
+| 229a | 2.9 | MEDIUM | **2.9** Update monitor hotkeys documentation to match actual behavior - Current Ralph Tasks: Added h, r, f, c, ? hotkeys; THUNK Monitor: Removed non-existent 'f' hotkey | 2026-01-19 |
+| 229b | 2.1 | MEDIUM | **2.1** Add SKIP pattern to render_ac_status.sh - Added SKIP to regex and case statement with ⏭️ emoji | 2026-01-19 |
 | 230 | 7.2 | LOW | **7.2** Document generator usage in AGENTS.md - Added comprehensive "Bootstrapping New Projects" section with quick start, generator scripts (generate-neurons.sh, generate-thoughts.sh, generate-implementation-plan.sh), workflow examples, template types, manual usage guide, and error handling | 2026-01-19 |
 | 231 | 6.5 | HIGH | **6.5** Push accumulated commits (Phase 7) to origin/brain-work - Pushed 3 commits (c5f4fc3, d1e81ff, 03f35a3) containing generator validation and AGENTS.md documentation | 2026-01-19 |
 | 232 | 8.1 | LOW | **8.1** Review old_sh/ archive directory - Created README.md documenting 3 archived scripts (brain-doctor.sh superseded by verifier.sh, test-bootstrap.sh deprecated, test-rovodev-integration.sh obsolete), established 6-month review policy | 2026-01-19 |
@@ -282,8 +282,8 @@ Started: 2026-01-18
 | 245 | 3.2 | LOW | **3.2** Sync templates/ralph/loop.sh with extracted helper - Added launch_in_terminal() function and updated launch_monitors() to eliminate 40 lines of duplicated terminal detection logic | 2026-01-19 |
 | 246 | 3.3 | LOW | **3.3** Use process substitution in current_ralph_tasks.sh - Eliminated pipe in wrap_text() function by replacing 'echo "$text" | fold | while' with 'done < <(fold <<< "$text")', applied to both root and template versions | 2026-01-19 |
 | 255 | 3.11 | LOW | **3.11** Remove unused normalize_description function from thunk_ralph_tasks.sh - Dead code cleanup | 2026-01-19 |
-| 247 | 3.18 | LOW | **3.18** Add markdown fence language tag in templates/ralph/PROMPT.md - Changed plain fence to ```markdown for THUNK.md log format example at line 50 | 2026-01-19 |
-| 247 | 3.4 | LOW | **3.4** Use process substitution in thunk_ralph_tasks.sh - Verified code already uses correct patterns (line 101: process substitution `< <(...)`, lines 178/273: input redirection `< "$THUNK_FILE\"`), no pipe-in-loop issues found, task already complete | 2026-01-19 |
+| 247a | 3.18 | LOW | **3.18** Add markdown fence language tag in templates/ralph/PROMPT.md - Changed plain fence to ```markdown for THUNK.md log format example at line 50 | 2026-01-19 |
+| 247b | 3.4 | LOW | **3.4** Use process substitution in thunk_ralph_tasks.sh - Verified code already uses correct patterns (line 101: process substitution `< <(...)`, lines 178/273: input redirection `< "$THUNK_FILE\"`), no pipe-in-loop issues found, task already complete | 2026-01-19 |
 | 248 | 3.5 | LOW | **3.5** Add escape_sed_replacement for THUNK template in new-project.sh - Applied escape function to PROJECT_NAME, CREATION_DATE, INITIAL_ERA_NAME to prevent sed corruption from special characters like & or / | 2026-01-19 |
 | 249 | 3.7 | LOW | **3.7** Remove unused SHOW_HELP flag - Removed unused `SHOW_HELP=false` variable from both root and template current_ralph_tasks.sh (line 28), eliminating SC2034 shellcheck warning | 2026-01-19 |
 | 250 | 3.8 | LOW | **3.8** Remove unused wrap_text function - Removed dead wrap_text() function from templates/ralph/current_ralph_tasks.sh (lines 354-367), function was leftover from previous refactor and no longer called | 2026-01-19 |
@@ -294,5 +294,6 @@ Started: 2026-01-18
 | 256 | 3.12 | LOW | **3.12** Remove unused in_era variable - Already completed in commit b71f63c (origin/brain-work), verified task complete | 2026-01-19 |
 | 257 | 3.13 | LOW | **3.13** Use _ placeholders for unused parsed vars in templates/ralph/thunk_ralph_tasks.sh - Prefixed unused variables with underscore (_orig_num, _priority, _completed) and removed their trim operations in both display_thunks() and parse_new_thunk_entries(), eliminating SC2034 warnings | 2026-01-19 |
 | 258 | 3.14 | LOW | **3.14** Fix SC2155 in templates/ralph/thunk_ralph_tasks.sh - Split local command substitutions into two lines: short_title (lines 159, 246) and timestamp (line 297), preventing exit status masking per shellcheck SC2155 | 2026-01-19 |
-| 229 | 3.19 | LOW | **3.19** Change Windows backslashes to forward slashes in NEURONS.md line 203 - Changed `..\\brain\\skills\\SUMMARY.md` to `../brain/skills/SUMMARY.md` for markdown linter compliance | 2026-01-19 |
+| 229c | 3.19 | LOW | **3.19** Change Windows backslashes to forward slashes in NEURONS.md line 203 - Changed `..\\brain\\skills\\SUMMARY.md` to `../brain/skills/SUMMARY.md` for markdown linter compliance | 2026-01-19 |
 | 260 | 3.20 | LOW | **3.20** Remove "Last updated" stamp from skills/index.md - Removed lines 4-5 containing "Last updated: 2026-01-19" per N-20 recommendation (manual timestamps add maintenance burden with low value) | 2026-01-19 |
+| 261 | 3.21 | LOW | **3.21** Fix duplicate THUNK numbers with suffixes - Added alphabetic suffixes (a, b, c) to 10 duplicate THUNK entries: 84, 182, 186, 190, 192, 194, 195, 211, 229, 247 (229 had 3 duplicates) | 2026-01-19 |
