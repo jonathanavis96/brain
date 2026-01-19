@@ -252,3 +252,4 @@ Started: 2026-01-18
 | 217 | 4.2 | MEDIUM | **4.2** Update model version in templates/ralph/loop.sh - Changed sonnet4 model ID from 20250514 to 20250929 to align with current stable version | 2026-01-19 |
 | 218 | 4.3 | HIGH | **4.3** Document --model auto option in loop.sh usage text - Added 'auto' shortcut documentation to Model Selection section, clarifies use of ~/.rovodev/config.yml default | 2026-01-19 |
 | 219 | 4.4 | HIGH | **4.4** Add markdown fence language tag to PROMPT.md line 61 - Added 'markdown' language identifier to code block at line 50 showing THUNK.md table format, regenerated prompt.sha256 baseline | 2026-01-19 |
+| 220 | 4.5 | HIGH | **4.5** Regenerate AC status section in IMPLEMENTATION_PLAN.md - Updated AC status dashboard with current verifier state (21 PASS, 0 FAIL, 6 WARN) after Phase 1-4 completion | 2026-01-19 |

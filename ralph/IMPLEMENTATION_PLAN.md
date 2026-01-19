@@ -285,13 +285,14 @@ These improve code structure but are not critical.
 <!-- AC_STATUS_START -->
 ## Acceptance Criteria Status
 
-> **Auto-generated from verifier** — Last run: 2026-01-19 11:48:06
+> **Auto-generated from verifier** — Last run: 2026-01-19 11:48:31 ( 6efe117)
 
 | Metric | Value |
 |--------|-------|
 | ✅ PASS | 21 |
 | ❌ FAIL | 0 |
-| ⚠️ WARN | 6 |
+| ⚠️ WARN | 6
+2 |
 | 🔒 Hash Guard | Hash |
 
 ### Check Details
