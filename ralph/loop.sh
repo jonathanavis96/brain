@@ -580,13 +580,6 @@ run_once() {
     echo "========================================"
   fi
   
-  # Check for ready signals (strip ANSI codes, require standalone line)
-  local ready_signal=""
-  if sed 's/\x1b\[[0-9;]*m//g' "$log" | grep -qE '^\s*:::BUILD_READY:::\s*$'; then
-    ready_signal="BUILD"
-  elif sed 's/\x1b\[[0-9;]*m//g' "$log" | grep -qE '^\s*:::PLAN_READY:::\s*$'; then
-    ready_signal="PLAN"
-  fi
   
   # Run verifier after BUILD iterations
   if [[ "$phase" == "build" ]]; then
