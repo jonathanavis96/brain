@@ -59,5 +59,5 @@ After creating a new domain skill file:
 ## See Also
 
 - `skills/projects/README.md` - Project-specific knowledge (less reusable)
-- `skills/conventions.md` - Detailed skill authoring guidelines (planned)
+- `skills/conventions.md` - Detailed skill authoring guidelines
 - `skills/SUMMARY.md` - Skills index and navigation
