@@ -28,7 +28,7 @@ These are functional bugs that could cause incorrect behavior or data loss.
   - **Fix:** Change to unanchored `[0-9]+`
   - **File:** `render_ac_status.sh`
 
-- [ ] **1.2** Add end marker guard in render_ac_status.sh before awk (line 105-110)
+- [x] **1.2** Add end marker guard in render_ac_status.sh before awk (line 105-110)
   - **Issue:** Missing `<!-- AC_STATUS_END -->` would cause awk to truncate entire file
   - **Fix:** Add guard check and early return before awk invocation
   - **File:** `render_ac_status.sh`

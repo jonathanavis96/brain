@@ -91,9 +91,17 @@ update_inline() {
 
     # Check if markers exist
     if ! grep -q "$START_MARKER" "$PLAN_FILE"; then
-        echo "⚠️  Markers not found in IMPLEMENTATION_PLAN.md"
+        echo "⚠️  Start marker not found in IMPLEMENTATION_PLAN.md"
         echo "Add these markers where you want the dashboard:"
         echo "  $START_MARKER"
+        echo "  $END_MARKER"
+        return 1
+    fi
+
+    if ! grep -q "$END_MARKER" "$PLAN_FILE"; then
+        echo "⚠️  End marker not found in IMPLEMENTATION_PLAN.md"
+        echo "The start marker exists but end marker is missing."
+        echo "Add the end marker to complete the block:"
         echo "  $END_MARKER"
         return 1
     fi
