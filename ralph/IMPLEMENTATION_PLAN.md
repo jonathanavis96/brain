@@ -149,7 +149,7 @@ Complete the kb→skills terminology migration across all files.
 
 ### Phase 6: Push & Validation
 
-- [ ] **6.4** Push accumulated commits to origin
+- [x] **6.4** Push accumulated commits to origin
   - **Context:** 3 commits ready on brain-work branch (Phase 4 documentation tasks)
   - **Commits:** 6efe117 (markdown fence), 85fbc4a (task 4.3 complete), 71ddcca (--model auto doc)
   - **Command:** `git push origin brain-work`
