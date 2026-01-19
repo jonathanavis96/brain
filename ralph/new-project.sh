@@ -415,10 +415,16 @@ if [ -f "$TEMPLATES_DIR/ralph/THUNK.project.md" ]; then
     CREATION_DATE=$(date +"%Y-%m-%d")
     INITIAL_ERA_NAME="Initial Setup"
     
+    # Escape variables for sed replacement to prevent corruption from special chars
+    local esc_project_name esc_creation_date esc_era_name
+    esc_project_name=$(escape_sed_replacement "$PROJECT_NAME")
+    esc_creation_date=$(escape_sed_replacement "$CREATION_DATE")
+    esc_era_name=$(escape_sed_replacement "$INITIAL_ERA_NAME")
+    
     # Process template placeholders
-    sed -i "s/{{PROJECT_NAME}}/$PROJECT_NAME/g" "$PROJECT_LOCATION/ralph/THUNK.md"
-    sed -i "s/{{CREATION_DATE}}/$CREATION_DATE/g" "$PROJECT_LOCATION/ralph/THUNK.md"
-    sed -i "s/{{INITIAL_ERA_NAME}}/$INITIAL_ERA_NAME/g" "$PROJECT_LOCATION/ralph/THUNK.md"
+    sed -i "s/{{PROJECT_NAME}}/$esc_project_name/g" "$PROJECT_LOCATION/ralph/THUNK.md"
+    sed -i "s/{{CREATION_DATE}}/$esc_creation_date/g" "$PROJECT_LOCATION/ralph/THUNK.md"
+    sed -i "s/{{INITIAL_ERA_NAME}}/$esc_era_name/g" "$PROJECT_LOCATION/ralph/THUNK.md"
     
     success "Copied ralph/THUNK.md (from template)"
 else
