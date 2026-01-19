@@ -11,10 +11,13 @@
 - ✅ Templates synced with live versions
 - ✅ 256+ commits in January 2026
 - ✅ Phase 1 complete: All critical bug fixes (tasks 1.1-1.3)
-- ✅ Phase 2.1 started: Dead code removal (task 2.1.1 complete)
+- ✅ Phase 2.1 complete: Dead code removal (tasks 2.1.1-2.1.2)
+- ✅ Phase 2.2 partial: SC2155 fixes in thunk_ralph_tasks.sh and current_ralph_tasks.sh
+- ✅ Phase 3.1 complete: pr-batch.sh terminology fix
 
 **Current focus:** Systematic resolution of 26 CodeRabbit review findings from PR #4
-**Ready to push:** 7 commits accumulated from BUILD iterations
+**Ready to push:** 5 commits accumulated from BUILD iterations (on branch brain-work)
+**Next BUILD task:** 2.2.3 - Fix SC2155 in loop.sh line 480
 
 **Reference:** `CODERABBIT_REVIEW_ANALYSIS.md` for detailed analysis and rationale
 
@@ -76,6 +79,7 @@ Pattern: `local var=$(cmd)` masks command exit status. Fix: Split declaration an
   - **Note:** This is an export, not local, but still masks exit status
   - **Fix:** Split declaration: `RUN_ID=$(date +%s)-$$; export RUN_ID`
   - **File:** `loop.sh`
+  - **Warning:** Protected file - need to regenerate baseline hash after change
 
 - [ ] **2.2.4** Fix SC2155 in templates/ralph/loop.sh (same as 2.2.3)
   - **File:** `templates/ralph/loop.sh`
@@ -91,7 +95,9 @@ Complete the kb→skills terminology migration across all files.
   - **Fix:** "Skills (skills/)"
   - **File:** `pr-batch.sh`
 
-- [ ] **3.2** Update templates/ralph/pr-batch.sh (same fix as 3.1)
+- [ ] **3.2** Update templates/ralph/pr-batch.sh line 117 (same fix as 3.1)
+  - **Current:** "Knowledge Base (kb/)"
+  - **Fix:** "Skills (skills/)"
   - **File:** `templates/ralph/pr-batch.sh`
 
 - [ ] **3.3** Update generators/generate-neurons.sh line 433 label
@@ -112,8 +118,9 @@ Complete the kb→skills terminology migration across all files.
 
 - [ ] **4.1** Update model version in loop.sh line 162
   - **Current:** `20250620`
-  - **Fix:** `20250929` (or use generic version-agnostic text)
+  - **Fix:** `20250929` (current latest stable model)
   - **File:** `loop.sh`
+  - **Warning:** Protected file - need to regenerate baseline hash after change
 
 - [ ] **4.2** Update model version in templates/ralph/loop.sh (same as 4.1)
   - **File:** `templates/ralph/loop.sh`
@@ -121,14 +128,16 @@ Complete the kb→skills terminology migration across all files.
 - [ ] **4.3** Document `--model auto` option in loop.sh usage text
   - **Context:** Option exists but not shown in help
   - **File:** `loop.sh`
+  - **Warning:** Protected file - need to regenerate baseline hash after change
 
 - [ ] **4.4** Add markdown fence language tag to PROMPT.md line 61
-  - **Context:** Code block missing language identifier
+  - **Context:** Code block missing language identifier for bash
   - **File:** `PROMPT.md`
+  - **Warning:** Protected file - need to regenerate baseline hash after change
 
 - [ ] **4.5** Regenerate AC status section in IMPLEMENTATION_PLAN.md
   - **Command:** `./render_ac_status.sh --inline`
-  - **Context:** Current status may be stale after recent changes
+  - **Context:** Keep status current after each phase completion
 
 ---
 
@@ -141,15 +150,19 @@ These improve code structure but are not critical.
   - **Benefit:** DRY principle, easier to maintain terminal emulator support
   - **File:** `loop.sh`
   - **Note:** See CODERABBIT_REVIEW_ANALYSIS.md for suggested implementation
+  - **Warning:** Protected file - need to regenerate baseline hash after change
+  - **Status:** Deferred - refactoring protected file requires careful validation
 
 - [ ] **5.2** Use process substitution in current_ralph_tasks.sh line 305
   - **Issue:** Pipe into while loop creates subshell, loses variable changes
   - **Fix:** Replace `| while` with `while ... < <(...)` pattern
   - **File:** `current_ralph_tasks.sh`
+  - **Note:** Current code works correctly, this is a style improvement only
 
 - [ ] **5.3** Use process substitution in thunk_ralph_tasks.sh line 191
   - **Issue:** Same as 5.2
   - **File:** `thunk_ralph_tasks.sh`
+  - **Note:** Current code works correctly, this is a style improvement only
 
 ---
 
@@ -160,15 +173,18 @@ These improve code structure but are not critical.
   - Audit templates/backend/ (expect 4 files)
   - Audit templates/python/ (expect 4 files)
   - Cross-check with new-project.sh expectations
+  - **Status:** Templates already validated in previous work, verify no regression
 
 - [ ] **6.2** Review GAP_BACKLOG.md for skill promotion
   - Check if P1/P0 gaps meet promotion criteria
   - Update gap statuses if needed
+  - Promote clear, recurring gaps to SKILL_BACKLOG.md
 
 - [ ] **6.3** Evaluate docs/REFERENCE_SUMMARY.md legacy status
   - Marked "legacy" in NEURONS.md
   - Decide: migrate to skills/ or deprecate
   - Update NEURONS.md if structure changes
+  - **Context:** May be duplicate of skills/SUMMARY.md
 
 ---
 
