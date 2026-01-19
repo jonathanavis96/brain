@@ -2,16 +2,16 @@
 
 ## Overview
 
-**Status:** Phase 1-2 complete (pushed), Phase 3 in progress - 15/30 tasks complete  
-**Branch:** `brain-work` (2 commits ahead of origin - ready to push)  
-**Last Updated:** 2026-01-19 16:38 (BUILD iteration)
+**Status:** Phase 1-2 complete (pushed), Phase 3 in progress - 21/30 tasks complete  
+**Branch:** `brain-work` (6 commits ahead of origin - ready to push)  
+**Last Updated:** 2026-01-19 16:41 (PLAN iteration)
 
 ### Context
 
 All HIGH and MEDIUM priority tasks from CodeRabbit v2 review are complete:
 - ✅ Phase 1: Template hash baselines updated (1 item)
 - ✅ Phase 2: Minor issues fixed (12 items)
-- 🔄 Phase 3: LOW priority nitpicks - 18 active items remaining (12 complete, 1 deferred, 1 skipped)
+- 🔄 Phase 3: LOW priority nitpicks - 9 active items remaining (21 complete, 1 deferred, 1 skipped)
 
 **Phase 3 Assessment:**
 - Items are style/optimization improvements, not bugs
@@ -88,7 +88,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 - [x] **3.13** `templates/ralph/thunk_ralph_tasks.sh:146-162,239-255` - Use `_` for unused parsed vars (N-13)
 - [x] **3.14** `templates/ralph/thunk_ralph_tasks.sh:167,260,311` - Fix SC2155 in template (N-14)
 
-#### Format/Style (7 items - 4 complete, 2 remaining, 1 skipped)
+#### Format/Style (7 items - 7 complete, 0 remaining, 1 skipped)
 
 **Goal:** Consistency and markdown linter compliance
 
@@ -98,16 +98,13 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 - [x] **3.18** `templates/ralph/PROMPT.md:50-53` - Add `markdown` fence language tag (N-18)
 - [x] **3.19** `NEURONS.md:204-206` - Change Windows backslashes to forward slashes (N-19)
 - [x] **3.20** `skills/index.md:1-6` - Remove or auto-generate "Last updated" stamp (N-20)
-  - Decision: Remove entirely (auto-generation adds complexity for low value)
 - [x] **3.21** `THUNK.md:99-100,182,186,190,194-195` - Fix duplicate THUNK numbers with suffixes (N-21)
-  - Note: Cosmetic only - historical Era 1 numbering artifacts
 
-#### Robustness (6 items - 0 complete, 6 remaining)
+#### Robustness (6 items - 1 complete, 5 remaining)
 
 **Goal:** Prevent edge-case failures and improve error handling
 
 - [x] **3.22** `templates/ralph/init_verifier_baselines.sh:43-50` - Check each .gitignore entry independently (N-22)
-  - Complexity: Low - split compound test into loop
 - [ ] **3.23** `templates/ralph/init_verifier_baselines.sh:22-24` - Normalize to store only hash not full sha256sum (N-23)
   - Complexity: Low - adjust cut/awk operation for consistency
 - [ ] **3.24** `templates/ralph/current_ralph_tasks.sh:101-201` - Hash full raw line to prevent cache collisions (N-24)
@@ -153,27 +150,25 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 
 ### BUILD Iterations (Phase 3) - Next Execution Order
 
-**Batch 1 - Format/Style (2 remaining, ~2 iterations):**
-- 3.19 (NEURONS.md backslash fix)
-- 3.20 (remove "Last updated" from skills/index.md)
-- 3.21 (THUNK.md duplicate numbers - cosmetic only)
+**✅ Batch 1 - Format/Style (COMPLETE):**
+- All 7 format/style tasks complete
 
-**Batch 2 - Dead Code (4 remaining, ~3 iterations):**
-- 3.11 (remove unused normalize_description)
-- 3.12, 3.13, 3.14 (thunk_ralph_tasks.sh template cleanup)
+**✅ Batch 2 - Dead Code (COMPLETE):**
+- All 8 dead code cleanup tasks complete
 
 **Batch 3 - Trivial Robustness (2 tasks, ~2 iterations):**
 - 3.26 (grep -F flag - security)
 - 3.31 (tput TTY guard)
 
 **Batch 4 - Documentation (4 tasks, ~3 iterations):**
-- 3.28, 3.29 (terminology migration)
-- 3.30 (rovodev-config.yml docs)
+- 3.28 (terminology: KB file → skill file)
+- 3.29 (standalone-mode note)
+- 3.30 (rovodev-config.yml model provisioning docs)
 
-**Batch 5 - Medium Robustness (3 tasks, ~5 iterations):**
-- 3.22, 3.23 (init script improvements)
+**Batch 5 - Medium Robustness (4 tasks, ~4 iterations):**
+- 3.23 (init script hash normalization)
 - 3.27 (trap handler for temp cleanup)
-- 3.24, 3.25 (cache/parsing refactors - deferred if time-consuming)
+- 3.24, 3.25 (cache/parsing refactors - evaluate complexity)
 
 ### Quality Gates
 
@@ -185,7 +180,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 ### Success Criteria
 
 Phase 3 complete when:
-- [ ] All 18 active tasks marked `[x]` (12/30 already done, 1 deferred, 1 skipped)
+- [ ] All 9 remaining active tasks marked `[x]` (21/30 done, 1 deferred, 1 skipped)
 - [ ] All commits pushed to `origin/brain-work`
 - [ ] `verifier.sh` passes cleanly
 - [ ] No shellcheck warnings in modified scripts
@@ -193,14 +188,17 @@ Phase 3 complete when:
 
 ### Progress Summary
 
-**Completed this cycle (1 commit unpushed):**
-- ✅ 3.14 - Fix SC2155 shellcheck violations in template thunk_ralph_tasks.sh (280faa4)
+**Completed this cycle (6 commits unpushed, ready to push):**
+- ✅ 3.19 - Fix Windows backslashes in NEURONS.md (9cea8a1)
+- ✅ 3.20 - Remove manual timestamp from skills/index.md (576d046)
+- ✅ 3.21 - Fix duplicate THUNK numbers with suffixes (aaddaf4)
+- ✅ 3.22 - Check .gitignore entries independently in init script (b11ae52)
 
-**Previous cycle (5 commits - pushed to origin):**
-- ✅ 3.9 - Use `_` placeholders for unused variables
-- ✅ 3.10 - Remove unused wrap_text from current_ralph_tasks.sh
-- ✅ 3.11 - Remove unused normalize_description function
-- ✅ 3.12 - Remove unused in_era variable in template
-- ✅ 3.13 - Use `_` for unused parsed vars in template
+**Previous cycle (pushed to origin):**
+- ✅ 3.9 through 3.14 - Dead code cleanup and SC2155 fixes
 
-**Total Phase 3 progress: 14/30 tasks (47%)**
+**Total Phase 3 progress: 21/30 tasks (70%)**
+
+**Remaining: 9 active tasks across 3 categories:**
+- Robustness (5): 3.23, 3.24, 3.25, 3.26, 3.27
+- Documentation (4): 3.28, 3.29, 3.30, 3.31
