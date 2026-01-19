@@ -37,7 +37,7 @@ You are Ralph. Mode is passed by loop.sh header.
 - Study THOUGHTS.md and IMPLEMENTATION_PLAN.md
 - Search codebase - **don't assume things are missing**
 - Check NEURONS.md for codebase map
-- Use Brain KB: `skills/SUMMARY.md` → `references/HOTLIST.md` → specific rules only if needed
+- Use Brain Skills: `skills/SUMMARY.md` → `references/HOTLIST.md` → specific rules only if needed
 
 ### Actions
 1. Pick FIRST unchecked `[ ]` task (including subtasks like 1.1)
@@ -74,6 +74,56 @@ You are Ralph. Mode is passed by loop.sh header.
 
 8. **STOP** - Do not push, do not continue to next task
 
+---
+
+## Definition of Done (MANDATORY before :::BUILD_READY:::)
+
+**You MUST complete this checklist before ending any BUILD iteration.**
+
+See `skills/self-improvement/code-hygiene.md` for detailed procedures.
+
+### 1. Repo-Wide Search Done
+```bash
+# Search for any terminology/paths/symbols you changed
+rg "old_term" -n .
+rg "changed_function" -n .
+```
+- [ ] No stale references remain to old names/paths
+
+### 2. Documentation Sync Done
+If you changed behavior, update ALL relevant docs **in same commit**:
+- [ ] `AGENTS.md` - if hotkeys, commands, or features changed
+- [ ] `NEURONS.md` - if file structure, counts, or paths changed
+- [ ] `README.md` - if user-facing behavior changed
+- [ ] Inline comments - if code intent changed
+
+### 3. Status Consistency Check
+If you updated any status/overview text:
+```bash
+rg "Status:|Branch status:|commits ahead|up to date" IMPLEMENTATION_PLAN.md
+```
+- [ ] ALL status mentions say the same thing
+
+### 4. Markdown Validation
+For any `.md` files touched:
+- [ ] Tables have consistent columns (no split rows)
+- [ ] No duplicate headings in same file
+- [ ] Code fences have language tags (```bash, ```markdown, ```text)
+
+### 5. Code Hygiene
+For any `.sh` files touched:
+- [ ] No unused variables left behind (shellcheck SC2034)
+- [ ] No `local var=$(cmd)` - use `local var; var=$(cmd)` (SC2155)
+- [ ] Dead functions removed if feature removed
+
+### 6. Template Sync
+If file has a template counterpart:
+- [ ] `templates/ralph/` version updated too (or explain why not)
+
+**Only after ALL boxes checked may you write `:::BUILD_READY:::`**
+
+---
+
 ## Completion & Verification (Non-negotiable)
 
 - The token `:::COMPLETE:::` is reserved for `loop.sh` ONLY.
@@ -107,7 +157,60 @@ You may mark tasks `[?]` when you've implemented changes. The verifier determine
 - **Search before creating** - Verify something doesn't exist before adding it
 - **One task per BUILD** - No batching, no "while I'm here" extras
 - **Never remove uncompleted items** - NEVER delete `[ ]` tasks from IMPLEMENTATION_PLAN.md
-- **Protected files** - Do NOT modify: `AC.rules`, `.verify/ac.sha256`, `verifier.sh`, `loop.sh`
+- **Protected files** - Do NOT modify: `AC.rules`, `.verify/ac.sha256`, `verifier.sh`, `loop.sh`, `PROMPT.md`
+
+---
+
+## Waiver Protocol (When Gates Fail Legitimately)
+
+If a hygiene gate fails but the failure is a **false positive** (legitimate exception), you may request a waiver. You CANNOT approve waivers - only Jono can.
+
+### Step 1: Create Waiver Request
+```bash
+./.verify/request_waiver.sh <RULE_ID> <FILE_PATH> "<REASON>"
+```
+
+Example:
+```bash
+./.verify/request_waiver.sh Hygiene.MarkdownFenceLang docs/snippets.md \
+  "File intentionally uses plain fences for copy/paste UX"
+```
+
+### Step 2: Prompt Jono to Approve
+Output a clear message:
+```
+⚠️ WAIVER REQUIRED
+
+A hygiene gate failed with a legitimate exception.
+
+Rule:   Hygiene.MarkdownFenceLang
+File:   docs/snippets.md
+Reason: File intentionally uses plain fences for copy/paste UX
+
+Request created: .verify/waiver_requests/WVR-2026-01-19-001.json
+
+To approve, Jono must run:
+  source .venv/bin/activate
+  python .verify/approve_waiver_totp.py .verify/waiver_requests/WVR-2026-01-19-001.json
+
+Then enter the 6-digit OTP from Google Authenticator.
+```
+
+### Step 3: Wait for Approval
+Do NOT continue until `.verify/waivers/<WAIVER_ID>.approved` exists.
+
+### Rules for Waivers:
+- **Explicit paths only** - No wildcards (`*`) or repo-wide (`.`)
+- **Short expiry** - Default 30 days, max 60 days
+- **Clear reason** - Document WHY the rule doesn't apply
+- **Prefer fixing** - Only waive if fixing is not feasible
+- **Max 10 active** - Keep waivers exceptional, not routine
+
+### What You CANNOT Do:
+- Create `.approved` files (requires TOTP)
+- Modify approved waivers (hash verification)
+- Use wildcards in scope
+- Approve your own requests
 
 ## File Roles
 
@@ -119,6 +222,7 @@ You may mark tasks `[?]` when you've implemented changes. The verifier determine
 | NEURONS.md | Codebase map (where things are) |
 | AGENTS.md | Validation commands, operational guide |
 | EDGE_CASES.md | Detailed examples, error recovery (read when needed) |
+| skills/self-improvement/code-hygiene.md | Definition of Done procedures |
 
 ## Commit Types & Scopes
 
