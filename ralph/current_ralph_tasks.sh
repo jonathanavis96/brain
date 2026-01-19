@@ -368,7 +368,7 @@ wrap_text() {
         else
             echo "${indent}${line}"
         fi
-    done < <(echo "$text" | fold -s -w "$width")
+    done < <(fold -s -w "$width" <<< "$text")
 }
 
 # Function to display tasks with formatting
