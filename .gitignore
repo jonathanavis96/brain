@@ -32,3 +32,4 @@ ralph/.opencode/
 ralph/opencode.json
 ralph/ROVODEV_INTEGRATION.md
 ralph/test-rovodev-integration.sh
+.venv/
