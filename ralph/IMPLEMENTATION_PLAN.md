@@ -2,16 +2,16 @@
 
 ## Overview
 
-**Status:** Phase 1-2 complete (pushed), Phase 3 in progress - 26/30 tasks complete  
-**Branch:** `brain-work` (1 commit ahead of origin/brain-work)  
-**Last Updated:** 2026-01-19 16:54 (BUILD iteration)
+**Status:** Phase 1-2 complete (pushed), Phase 3 in progress - 27/30 tasks complete  
+**Branch:** `brain-work` (2 commits ahead of origin/brain-work)  
+**Last Updated:** 2026-01-19 17:00 (BUILD iteration)
 
 ### Context
 
 All HIGH and MEDIUM priority tasks from CodeRabbit v2 review are complete:
 - ✅ Phase 1: Template hash baselines updated (1 item)
 - ✅ Phase 2: Minor issues fixed (12 items)
-- 🔄 Phase 3: LOW priority nitpicks - 5 active items remaining (25 complete, 1 deferred, 1 skipped)
+- 🔄 Phase 3: LOW priority nitpicks - 4 active items remaining (26 complete, 1 deferred, 1 skipped)
 
 **Phase 3 Assessment:**
 - Items are style/optimization improvements, not bugs
@@ -120,7 +120,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 
 **Goal:** Complete terminology migration and improve user guidance
 
-- [ ] **3.28** `templates/backend/AGENTS.project.md:22-33` - Update "KB file" to "skill file" (N-28)
+- [x] **3.28** `templates/backend/AGENTS.project.md:22-33` - Update "KB file" to "skill file" (N-28)
 - [ ] **3.29** `templates/AGENTS.project.md:58-74` - Add standalone-mode note for missing brain (N-29)
 - [ ] **3.30** `rovodev-config.yml:11-12` - Document model provisioning requirement (N-30)
 - [x] **3.31** `templates/ralph/thunk_ralph_tasks.sh:262-268` - Add non-TTY guard for `tput cup` (N-31)
@@ -196,9 +196,9 @@ Phase 3 complete when:
 - ✅ 3.19 through 3.22 - Format fixes and .gitignore robustness
 - ✅ 3.9 through 3.14 - Dead code cleanup and SC2155 fixes
 
-**Total Phase 3 progress: 25/30 tasks (83%)**
+**Total Phase 3 progress: 26/30 tasks (87%)**
 
-**Remaining: 5 active tasks across 2 categories:**
-- Documentation (3): 3.28, 3.29, 3.30
-- Robustness (2): 3.25, 3.26 (cache/parsing refactors)
+**Remaining: 4 active tasks across 2 categories:**
+- Documentation (2): 3.29, 3.30
+- Robustness (1): 3.26 (parsing refactor)
 - Extra (1): 3.28-EXTRA (trap handler)
