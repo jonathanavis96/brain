@@ -256,10 +256,15 @@ These improve code structure but are not critical.
 
 **Rationale:** Housekeeping tasks with no immediate impact on functionality.
 
-- [ ] **8.1** Review old_sh/ archive directory
+- [x] **8.1** Review old_sh/ archive directory
   - Verify scripts are truly obsolete
   - Document purpose in old_sh/README.md
   - Consider removal if no historical value
+  - **Completed:** Created old_sh/README.md documenting 3 archived scripts
+  - **brain-doctor.sh:** Superseded by verifier.sh (historical reference value)
+  - **test-bootstrap.sh:** Deprecated, manual validation sufficient
+  - **test-rovodev-integration.sh:** Obsolete, feature never implemented
+  - **Retention policy:** 6-month review cycle, cleanup criteria documented
 
 - [x] **8.2** Validate React best practices references
   - Verify all 45 rule files present (confirmed: 45 ✓)
