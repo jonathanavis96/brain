@@ -34,32 +34,32 @@ The TOTP Waiver Approval System is fully operational:
 **Source:** `CODERABBIT_REVIEW_ANALYSIS_v2.md`  
 **Total:** 69 items (6 outside-diff + 32 minor + 31 nitpick)
 
-### Completed Items (28)
+### Completed Items (58)
 
-All high-priority fixes from the original PR are done:
+All items from Phases 1-3 complete:
+- ✅ Phase 1: Template hash baselines (1 item)
+- ✅ Phase 2: Minor issues (12 items)
+- ✅ Phase 3: Nitpicks (29 complete, 1 deferred, 1 skipped)
+
+**Major accomplishments:**
 - ✅ Bug A/B/C monitor fixes
 - ✅ SC2155 shellcheck violations (all files)
-- ✅ KB→Skills terminology migration
-- ✅ Dead code removal (unused variables)
+- ✅ KB→Skills terminology migration (in-diff items)
+- ✅ Dead code removal (unused variables/functions)
 - ✅ Model version updates
-- ✅ Fence language tags in PROMPT.md
+- ✅ Fence language tags standardized
 - ✅ AC status dashboard regenerated
+- ✅ Process substitution for pipe-in-while patterns
+- ✅ Verifier failure injection into prompt loop
 
-### Remaining Work (33 items)
+### Remaining Work (5 items)
 
-**Phase 9 - Minor Issues (17):**
-- Unused `update_spinner()` function (M-19, M-20)
-- Debug echo statements left in (M-21, M-22)
-- Unused `summary_line` variable (M-23, M-24)
-- `check_rovo_session()` timing (M-29, M-30)
-- Stale "NOT FIXED" comments in AC.rules (M-31, M-32)
-
-**Phase 10 - Nitpicks (16):**
-- Extract `launch_in_terminal()` helper (N-1, N-4)
-- Process substitution for pipes (N-2, N-3)
-- More unused variables to remove (N-7 through N-14)
-- Format/style fixes (N-15 through N-21)
-- Robustness improvements (N-22, N-23)
+**Phase 4 - Outside Diff Items (5):**
+- OD-1: generators/generate-thoughts.sh wording
+- OD-2: templates/python/NEURONS.project.md kb→skills
+- OD-3: templates/ralph/RALPH.md kb→skills
+- OD-4: skills/projects/brain-example.md kb→skills
+- OD-6: skills/SUMMARY.md fence tag
 
 ### Skipped Items (8)
 
@@ -106,7 +106,7 @@ All high-priority fixes from the original PR are done:
 
 ## Next Actions
 
-1. Execute Phase 9 fixes (minor issues - quick wins)
-2. Execute Phase 10 fixes (nitpicks - lower priority)
+1. Execute Phase 4 (Outside Diff items - kb→skills terminology cleanup)
+2. Update CODERABBIT_REVIEW_ANALYSIS_v2.md completion status
 3. Final PR review and merge to main
-4. Consider hardware-key upgrade path for waivers
+4. Consider hardware-key upgrade path for waivers (future enhancement)
