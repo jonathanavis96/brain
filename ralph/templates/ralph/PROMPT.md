@@ -107,7 +107,7 @@ You may mark tasks `[?]` when you've implemented changes. The verifier determine
 - **Search before creating** - Verify something doesn't exist before adding it
 - **One task per BUILD** - No batching, no "while I'm here" extras
 - **Never remove uncompleted items** - NEVER delete `[ ]` tasks from IMPLEMENTATION_PLAN.md
-- **Protected files** - Do NOT modify: `AC.rules`, `.verify/ac.sha256`, `verifier.sh`, `loop.sh`
+- **Protected files** - Do NOT modify: `AC.rules`, `.verify/ac.sha256`, `verifier.sh`, `.verify/verifier.sha256`, `loop.sh`, `.verify/loop.sha256`, `PROMPT.md`, `.verify/prompt.sha256`
 
 ## File Roles
 

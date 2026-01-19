@@ -275,3 +275,4 @@ Started: 2026-01-18
 | 238 | 2.6 | MEDIUM | **2.6** Remove "(planned)" qualifier from conventions.md in skills/domains/README.md - File exists (7.6KB), reference updated on line 61 | 2026-01-19 |
 | 239 | 2.7 | MEDIUM | **2.7** Change `skills/index.md` to `skills/SUMMARY.md` in skills/self-improvement/ - Updated README.md line 23, GAP_CAPTURE_RULES.md line 52, GAP_LOG_AND_AUTO_SKILL_SPEC.md line 180 | 2026-01-19 |
 | 240 | 2.8 | MEDIUM | **2.8** Add fence language tag for `:::COMPLETE:::` block in AGENTS.md - Added `text` language tag to code fence at lines 55-58 | 2026-01-19 |
+| 241 | 2.10 | MEDIUM | **2.10** Add new hash-guarded files to protected-files list - Updated PROMPT.md and templates/ralph/PROMPT.md to include all hash files: .verify/verifier.sha256, .verify/loop.sha256, .verify/prompt.sha256 | 2026-01-19 |
