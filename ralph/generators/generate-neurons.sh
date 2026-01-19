@@ -430,7 +430,7 @@ EOF
     esac
     
     echo "| **Run tests** | See validation commands below |"
-    echo "| **Brain KB patterns** | \`../../brain/skills/SUMMARY.md\` |"
+    echo "| **Brain Skills patterns** | \`../../brain/skills/SUMMARY.md\` |"
     echo ""
 }
 
