@@ -33,7 +33,7 @@ These are functional bugs that could cause incorrect behavior or data loss.
   - **Fix:** Add guard check and early return before awk invocation
   - **File:** `render_ac_status.sh`
 
-- [ ] **1.3** Fix subshell variable assignment in loop.sh launch_monitors() (lines 639-655)
+- [x] **1.3** Fix subshell variable assignment in loop.sh launch_monitors() (lines 639-655)
   - **Issue:** Assignments like `( cmd && var=true )` run in subshell, parent variables unchanged
   - **Symptom:** False fallback messages shown even when monitors launch successfully
   - **Fix:** Replace subshells with direct if statements
