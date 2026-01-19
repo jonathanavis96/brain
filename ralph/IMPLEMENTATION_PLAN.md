@@ -165,12 +165,13 @@ Complete the kb→skills terminology migration across all files.
 
 ### Phase 6: Maintenance & Validation
 
-- [ ] **6.2** Review GAP_BACKLOG.md for skill promotion
+- [x] **6.2** Review GAP_BACKLOG.md for skill promotion
   - Check if P1/P0 gaps meet promotion criteria (currently 2 P2 gaps reviewed, no promotion needed)
   - Update gap statuses if needed
   - Promote clear, recurring gaps to SKILL_BACKLOG.md
   - **Current state:** 2 bash-specific P2 gaps in backlog, neither meets promotion criteria
   - **Priority rationale:** Self-improvement protocol compliance check
+  - **Result:** Both gaps reviewed 2026-01-18, marked "keep as reference", do not meet recurring criteria
 
 - [ ] **6.3** Evaluate docs/REFERENCE_SUMMARY.md legacy status
   - Marked "legacy" in NEURONS.md
