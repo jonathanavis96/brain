@@ -53,6 +53,9 @@ get_file_mtime() {
 generate_title() {
     local desc="$1"
     
+    # Strip "**Task N:**" or "**Task N.M:**" prefix (common IMPLEMENTATION_PLAN format)
+    desc=$(echo "$desc" | sed -E 's/^\*{0,2}Task[[:space:]]*[0-9]+(\.[0-9]+)?[[:space:]]*:?\*{0,2}[[:space:]]*//')
+    
     # Strip technical IDs (T1.1, P4A.7, 1.1, 2.3, etc.) from the beginning
     desc=$(echo "$desc" | sed -E 's/^[[:space:]]*\*\*[T]?[0-9A-Za-z]+(\.[0-9A-Za-z]+)*\*\*[[:space:]]*//')
     
@@ -60,7 +63,7 @@ generate_title() {
     desc=$(echo "$desc" | sed -E 's/\*\*//g')
     
     # Extract action verb and main object (look for common action verbs)
-    if [[ "$desc" =~ ^(Rename|Update|Create|Verify|Delete|Add|Remove|Test|Implement|Fix|Refactor|Document|Migrate|Copy|Set|Run|If)([[:space:]]*:[[:space:]]*|[[:space:]]+)(.+)$ ]]; then
+    if [[ "$desc" =~ ^(Rename|Update|Create|Verify|Delete|Add|Remove|Test|Implement|Fix|Refactor|Document|Migrate|Copy|Set|Run|If|Bootstrap|Check|Monitor|Handle)([[:space:]]*:[[:space:]]*|[[:space:]]+)(.+)$ ]]; then
         local verb="${BASH_REMATCH[1]}"
         local separator="${BASH_REMATCH[2]}"
         local rest="${BASH_REMATCH[3]}"
