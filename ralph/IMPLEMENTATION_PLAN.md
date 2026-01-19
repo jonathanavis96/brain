@@ -86,7 +86,7 @@ Pattern: `local var=$(cmd)` masks command exit status. Fix: Split declaration an
 
 Complete the kb→skills terminology migration across all files.
 
-- [ ] **3.1** Update pr-batch.sh line 116 header text
+- [x] **3.1** Update pr-batch.sh line 116 header text
   - **Current:** "Knowledge Base (kb/)"
   - **Fix:** "Skills (skills/)"
   - **File:** `pr-batch.sh`
