@@ -267,3 +267,4 @@ Started: 2026-01-18
 | 231 | 6.5 | HIGH | **6.5** Push accumulated commits (Phase 7) to origin/brain-work - Pushed 3 commits (c5f4fc3, d1e81ff, 03f35a3) containing generator validation and AGENTS.md documentation | 2026-01-19 |
 | 232 | 8.1 | LOW | **8.1** Review old_sh/ archive directory - Created README.md documenting 3 archived scripts (brain-doctor.sh superseded by verifier.sh, test-bootstrap.sh deprecated, test-rovodev-integration.sh obsolete), established 6-month review policy | 2026-01-19 |
 | 233 | 1.1 | HIGH | **1.1** Update templates/ralph/.verify/ hash baselines to match current protected files - Updated loop.sha256, prompt.sha256, ac.sha256 to match root files (cb54c8a, b355c83, 43ae6db) | 2026-01-19 |
+| 234 | 2.2 | MEDIUM | **2.2** Change "Claude" to "the agent" in SKILL_TEMPLATE.md - Updated 3 occurrences (lines 10, 31, 77) to use agent-agnostic terminology | 2026-01-19 |

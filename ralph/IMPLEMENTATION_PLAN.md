@@ -31,7 +31,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items M-19, M-21 through M-32
 **Note:** Original Phase 1 tasks (1.1-1.14) were already completed in previous iterations but plan wasn't updated.
 
 - [x] **2.1** `render_ac_status.sh:57-71` - Add SKIP pattern to regex and case statement (M-19)
-- [ ] **2.2** `skills/self-improvement/SKILL_TEMPLATE.md:9-12` - Change "Claude" to "the agent" (M-21)
+- [x] **2.2** `skills/self-improvement/SKILL_TEMPLATE.md:9-12` - Change "Claude" to "the agent" (M-21)
 - [ ] **2.3** `skills/self-improvement/SKILL_TEMPLATE.md:66-69` - Change `index.md` reference to `SUMMARY.md` (M-22)
 - [ ] **2.4** `generators/generate-neurons.sh:653-660` - Change "KB Index" label to "Skills Index" (M-23)
 - [ ] **2.5** `skills/conventions.md:248-251` - Remove duplicate PROMPT template bullet (M-24)
