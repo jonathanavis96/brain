@@ -53,7 +53,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 
 #### Refactoring (6 items)
 
-- [ ] **3.1** `loop.sh:644-675` - Extract `launch_in_terminal()` helper for duplicated terminal detection (N-1)
+- [x] **3.1** `loop.sh:644-675` - Extract `launch_in_terminal()` helper for duplicated terminal detection (N-1)
 - [ ] **3.2** `templates/ralph/loop.sh:644-675` - Sync with extracted helper (N-4)
 - [ ] **3.3** `current_ralph_tasks.sh` - Use process substitution `< <(...)` instead of pipe in while loop (N-2)
 - [ ] **3.4** `thunk_ralph_tasks.sh` - Use process substitution instead of pipe in while loop (N-3)

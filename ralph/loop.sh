@@ -625,6 +625,49 @@ run_once() {
   return 0
 }
 
+# Launch a script in a new terminal window
+# Args: $1 = window title, $2 = script path, $3 = process grep pattern
+# Returns: 0 if launched successfully, 1 otherwise
+launch_in_terminal() {
+  local title="$1"
+  local script_path="$2"
+  local process_pattern="$3"
+  
+  # Try to detect available terminal emulator (priority order: tmux, wt.exe, gnome-terminal, konsole, xterm)
+  # All terminal launches redirect stderr to /dev/null to suppress dbus/X11 errors
+  if [[ -n "${TMUX:-}" ]]; then
+    if tmux new-window -n "$title" "bash $script_path" 2>/dev/null; then
+      return 0
+    fi
+  elif command -v wt.exe &>/dev/null; then
+    wt.exe new-tab --title "$title" -- wsl bash "$script_path" 2>/dev/null &
+    sleep 0.5
+    if pgrep -f "$process_pattern" > /dev/null; then
+      return 0
+    fi
+  elif command -v gnome-terminal &>/dev/null; then
+    gnome-terminal --title="$title" -- bash "$script_path" 2>/dev/null &
+    sleep 0.5  # Give it time to fail
+    if pgrep -f "$process_pattern" > /dev/null; then
+      return 0
+    fi
+  elif command -v konsole &>/dev/null; then
+    konsole --title "$title" -e bash "$script_path" 2>/dev/null &
+    sleep 0.5
+    if pgrep -f "$process_pattern" > /dev/null; then
+      return 0
+    fi
+  elif command -v xterm &>/dev/null; then
+    xterm -T "$title" -e bash "$script_path" 2>/dev/null &
+    sleep 0.5
+    if pgrep -f "$process_pattern" > /dev/null; then
+      return 0
+    fi
+  fi
+  
+  return 1
+}
+
 # Auto-launch monitors in background if not already running
 launch_monitors() {
   local monitor_dir="$RALPH"
@@ -634,36 +677,8 @@ launch_monitors() {
   # Check if current_ralph_tasks.sh exists and launch
   if [[ -f "$monitor_dir/current_ralph_tasks.sh" ]]; then
     if ! pgrep -f "current_ralph_tasks.sh" > /dev/null; then
-      # Try to detect available terminal emulator (priority order: tmux, wt.exe, gnome-terminal, konsole, xterm)
-      # All terminal launches redirect stderr to /dev/null to suppress dbus/X11 errors
-      if [[ -n "${TMUX:-}" ]]; then
-        if tmux new-window -n "Current Tasks" "bash $monitor_dir/current_ralph_tasks.sh" 2>/dev/null; then
-          current_tasks_launched=true
-        fi
-      elif command -v wt.exe &>/dev/null; then
-        wt.exe new-tab --title "Current Ralph Tasks" -- wsl bash "$monitor_dir/current_ralph_tasks.sh" 2>/dev/null &
-        sleep 0.5
-        if pgrep -f "current_ralph_tasks.sh" > /dev/null; then
-          current_tasks_launched=true
-        fi
-      elif command -v gnome-terminal &>/dev/null; then
-        gnome-terminal --title="Current Ralph Tasks" -- bash "$monitor_dir/current_ralph_tasks.sh" 2>/dev/null & 
-        sleep 0.5  # Give it time to fail
-        if pgrep -f "current_ralph_tasks.sh" > /dev/null; then
-          current_tasks_launched=true
-        fi
-      elif command -v konsole &>/dev/null; then
-        konsole --title "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh" 2>/dev/null &
-        sleep 0.5
-        if pgrep -f "current_ralph_tasks.sh" > /dev/null; then
-          current_tasks_launched=true
-        fi
-      elif command -v xterm &>/dev/null; then
-        xterm -T "Current Ralph Tasks" -e bash "$monitor_dir/current_ralph_tasks.sh" 2>/dev/null &
-        sleep 0.5
-        if pgrep -f "current_ralph_tasks.sh" > /dev/null; then
-          current_tasks_launched=true
-        fi
+      if launch_in_terminal "Current Tasks" "$monitor_dir/current_ralph_tasks.sh" "current_ralph_tasks.sh"; then
+        current_tasks_launched=true
       fi
     else
       current_tasks_launched=true  # Already running
@@ -673,36 +688,8 @@ launch_monitors() {
   # Check if thunk_ralph_tasks.sh exists and launch
   if [[ -f "$monitor_dir/thunk_ralph_tasks.sh" ]]; then
     if ! pgrep -f "thunk_ralph_tasks.sh" > /dev/null; then
-      # Try to detect available terminal emulator (priority order: tmux, wt.exe, gnome-terminal, konsole, xterm)
-      # All terminal launches redirect stderr to /dev/null to suppress dbus/X11 errors
-      if [[ -n "${TMUX:-}" ]]; then
-        if tmux new-window -n "Thunk Tasks" "bash $monitor_dir/thunk_ralph_tasks.sh" 2>/dev/null; then
-          thunk_tasks_launched=true
-        fi
-      elif command -v wt.exe &>/dev/null; then
-        wt.exe new-tab --title "Thunk Ralph Tasks" -- wsl bash "$monitor_dir/thunk_ralph_tasks.sh" 2>/dev/null &
-        sleep 0.5
-        if pgrep -f "thunk_ralph_tasks.sh" > /dev/null; then
-          thunk_tasks_launched=true
-        fi
-      elif command -v gnome-terminal &>/dev/null; then
-        gnome-terminal --title="Thunk Ralph Tasks" -- bash "$monitor_dir/thunk_ralph_tasks.sh" 2>/dev/null &
-        sleep 0.5  # Give it time to fail
-        if pgrep -f "thunk_ralph_tasks.sh" > /dev/null; then
-          thunk_tasks_launched=true
-        fi
-      elif command -v konsole &>/dev/null; then
-        konsole --title "Thunk Ralph Tasks" -e bash "$monitor_dir/thunk_ralph_tasks.sh" 2>/dev/null &
-        sleep 0.5
-        if pgrep -f "thunk_ralph_tasks.sh" > /dev/null; then
-          thunk_tasks_launched=true
-        fi
-      elif command -v xterm &>/dev/null; then
-        xterm -T "Thunk Ralph Tasks" -e bash "$monitor_dir/thunk_ralph_tasks.sh" 2>/dev/null &
-        sleep 0.5
-        if pgrep -f "thunk_ralph_tasks.sh" > /dev/null; then
-          thunk_tasks_launched=true
-        fi
+      if launch_in_terminal "Thunk Tasks" "$monitor_dir/thunk_ralph_tasks.sh" "thunk_ralph_tasks.sh"; then
+        thunk_tasks_launched=true
       fi
     else
       thunk_tasks_launched=true  # Already running
