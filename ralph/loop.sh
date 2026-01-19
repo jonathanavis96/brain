@@ -159,7 +159,7 @@ Defaults:
 
 Model Selection:
   --model <model>  Specify the model to use. Shortcuts available:
-                   sonnet  -> Sonnet 4.5 (anthropic.claude-sonnet-4-5-20250620-v1:0)
+                   sonnet  -> Sonnet 4.5 (anthropic.claude-sonnet-4-5-20250929-v1:0)
                    opus    -> Opus 4.5 (anthropic.claude-opus-4-5-20251101-v1:0)
                    sonnet4 -> Sonnet 4 (anthropic.claude-sonnet-4-20250514-v1:0)
                    Or provide a full model ID directly.

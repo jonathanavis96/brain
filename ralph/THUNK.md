@@ -248,3 +248,4 @@ Started: 2026-01-18
 | 213 | 3.3 | HIGH | **3.3** Update generators/generate-neurons.sh line 432 - Changed "Brain KB patterns" to "Brain Skills patterns" for kb→skills terminology consistency | 2026-01-19 |
 | 214 | 3.4 | HIGH | **3.4** Update templates/python/AGENTS.project.md lines 25-31 - Changed "KB file" to "skill file" and "KB files" to "skill files", completes Phase 3 terminology migration | 2026-01-19 |
 | 215 | 2.3 | HIGH | **2.3** Regenerate loop.sh baseline hash after all Phase 2 changes - Updated .verify/loop.sha256 with new hash after SC2155 fix | 2026-01-19 |
+| 216 | 4.1 | MEDIUM | **4.1** Update model version in loop.sh line 162 - Changed Sonnet 4.5 model version from 20250620 to 20250929 in both loop.sh and templates/ralph/loop.sh, regenerated loop.sha256 baseline | 2026-01-19 |
