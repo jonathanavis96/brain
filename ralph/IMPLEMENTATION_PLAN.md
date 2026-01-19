@@ -2,132 +2,206 @@
 
 ## Overview
 
-**Status:** Repository in maintenance mode. Monitor bug fixes completed. CodeRabbit review fixes pending.
+**Status:** Repository in maintenance mode. Monitor bug fixes completed. CodeRabbit PR #4 review fixes in progress.
 
 **Recent achievements (2026-01-18 to 2026-01-19):**
-- Monitor bug fixes (Bugs A, B, C) fully resolved and verified
-- Verifier gate system implemented (21 PASS, 0 FAIL)
-- KB→Skills migration completed
-- Templates synced with live versions
-- 256+ commits in January 2026
+- ✅ Monitor bug fixes (Bugs A, B, C) fully resolved and verified
+- ✅ Verifier gate system implemented (21 PASS, 0 FAIL)
+- ✅ KB→Skills migration completed
+- ✅ Templates synced with live versions
+- ✅ 256+ commits in January 2026
 
-**Current focus:** CodeRabbit PR #4 review fixes (25 actionable items)
+**Current focus:** Systematic resolution of 26 CodeRabbit review findings from PR #4
+
+**Reference:** `CODERABBIT_REVIEW_ANALYSIS.md` for detailed analysis and rationale
 
 ---
 
 ## HIGH PRIORITY
 
-### Phase 1: CodeRabbit Review Fixes (PR #4)
+### Phase 1: Critical Bug Fixes (CodeRabbit PR #4)
 
-> **Reference:** `CODERABBIT_REVIEW_ANALYSIS.md` for full details
+These are functional bugs that could cause incorrect behavior or data loss.
 
-#### 1.1 Bug Fixes (Critical)
+- [ ] **1.1** Fix WARN count regex in render_ac_status.sh line 31
+  - **Issue:** Pattern `^[0-9]+` anchored to line start, but "WARN: 6" has text before number
+  - **Fix:** Change to unanchored `[0-9]+`
+  - **File:** `render_ac_status.sh`
 
-- [ ] **1.1.1** Fix WARN regex in render_ac_status.sh (line 31)
-  - Change `grep -oE '^[0-9]+'` to `grep -oE '[0-9]+'`
-  
-- [ ] **1.1.2** Add end marker guard in render_ac_status.sh (line 113)
-  - Check `<!-- AC_STATUS_END -->` exists before awk
+- [ ] **1.2** Add end marker guard in render_ac_status.sh before awk (line 105-110)
+  - **Issue:** Missing `<!-- AC_STATUS_END -->` would cause awk to truncate entire file
+  - **Fix:** Add guard check and early return before awk invocation
+  - **File:** `render_ac_status.sh`
 
-- [ ] **1.1.3** Fix subshell variable bug in loop.sh (lines 639-655)
-  - Remove subshells, use direct if statements for terminal launch
-
-#### 1.2 Dead Code Removal
-
-- [ ] **1.2.1** Remove unused `ready_signal` from loop.sh (lines 583-589)
-- [ ] **1.2.2** Remove unused `ready_signal` from templates/ralph/loop.sh
-
-#### 1.3 Shellcheck SC2155 Fixes
-
-- [ ] **1.3.1** Split `local var=$(cmd)` in thunk_ralph_tasks.sh (line 165)
-- [ ] **1.3.2** Split `local var=$(cmd)` in current_ralph_tasks.sh (line 144)
-- [ ] **1.3.3** Split `local var=$(cmd)` in loop.sh (line 481)
-- [ ] **1.3.4** Split `local var=$(cmd)` in templates/ralph/loop.sh (line 481)
-
-#### 1.4 Terminology Fixes (kb→skills)
-
-- [ ] **1.4.1** Update pr-batch.sh header "Knowledge Base (kb/)" → "Skills (skills/)"
-- [ ] **1.4.2** Update templates/ralph/pr-batch.sh same fix
-- [ ] **1.4.3** Update generators/generate-neurons.sh "Brain KB patterns" label
-- [ ] **1.4.4** Update templates/python/AGENTS.project.md "KB file" → "skill file"
-
-#### 1.5 Documentation/Help Text
-
-- [ ] **1.5.1** Update loop.sh model version 20250620 → 20250929
-- [ ] **1.5.2** Update templates/ralph/loop.sh model version
-- [ ] **1.5.3** Document `--model auto` option in loop.sh usage
-- [ ] **1.5.4** Add markdown fence language to PROMPT.md (line 61)
-
-#### 1.6 Refactoring (Optional)
-
-- [ ] **1.6.1** Extract `launch_in_terminal()` helper in loop.sh
-- [ ] **1.6.2** Use process substitution in current_ralph_tasks.sh (line 305)
-- [ ] **1.6.3** Use process substitution in thunk_ralph_tasks.sh (line 191)
-
-#### 1.7 Wording/Style
-
-- [ ] **1.7.1** Apply wording tweaks to PROMPT.md
-- [ ] **1.7.2** Add standalone-mode note to templates/AGENTS.project.md
-- [ ] **1.7.3** Regenerate AC status section
+- [ ] **1.3** Fix subshell variable assignment in loop.sh launch_monitors() (lines 639-655)
+  - **Issue:** Assignments like `( cmd && var=true )` run in subshell, parent variables unchanged
+  - **Symptom:** False fallback messages shown even when monitors launch successfully
+  - **Fix:** Replace subshells with direct if statements
+  - **File:** `loop.sh`
 
 ---
 
-### Phase 2: Template & Documentation Validation
+### Phase 2: Code Quality - Dead Code & Shellcheck
 
-- [ ] **2.1** Verify template completeness
-  - Check templates/ralph/ has all required files (16 files expected)
-  - Verify templates/backend/ completeness (4 files expected)
-  - Verify templates/python/ completeness (4 files expected)
-  - Cross-check with new-project.sh expectations
+These improve maintainability and eliminate shellcheck warnings.
 
-- [ ] **2.2** Review and consolidate documentation locations
-  - Evaluate docs/REFERENCE_SUMMARY.md (marked as "legacy" in NEURONS.md)
-  - Determine if content should be migrated to skills/ or deprecated
-  - Update NEURONS.md if structure changes
+#### 2.1 Dead Code Removal
 
-- [ ] **2.3** Review GAP_BACKLOG.md for promotion candidates
-  - Check if any P1 or P0 gaps should be promoted to SKILL_BACKLOG.md
-  - Verify existing gap entries have proper status tracking
+- [ ] **2.1.1** Remove unused `in_era` variable from thunk_ralph_tasks.sh (line 126)
+  - **Context:** Variable set but never read
+  - **File:** `thunk_ralph_tasks.sh`
+
+- [ ] **2.1.2** Remove unused `ready_signal` variable from loop.sh (lines 582-588)
+  - **Context:** Variable assigned but never used (legacy code)
+  - **Files:** `loop.sh`, `templates/ralph/loop.sh`
+
+#### 2.2 Shellcheck SC2155 Fixes (Masked Return Values)
+
+Pattern: `local var=$(cmd)` masks command exit status. Fix: Split declaration and assignment.
+
+- [ ] **2.2.1** Fix SC2155 in thunk_ralph_tasks.sh line 167
+  - **Current:** `local short_title=$(generate_title "$description")`
+  - **Fix:** Split to: `local short_title; short_title=$(generate_title "$description")`
+  - **File:** `thunk_ralph_tasks.sh`
+
+- [ ] **2.2.2** Fix SC2155 in current_ralph_tasks.sh line 159, 172, 191
+  - **Pattern:** Same as 2.2.1 (multiple instances with cache_key and short_title)
+  - **File:** `current_ralph_tasks.sh`
+
+- [ ] **2.2.3** Fix SC2155 in loop.sh line 480
+  - **Current:** `export RUN_ID="$(date +%s)-$$"`
+  - **Note:** This is an export, not local, but still masks exit status
+  - **Fix:** Split declaration: `RUN_ID=$(date +%s)-$$; export RUN_ID`
+  - **File:** `loop.sh`
+
+- [ ] **2.2.4** Fix SC2155 in templates/ralph/loop.sh (same as 2.2.3)
+  - **File:** `templates/ralph/loop.sh`
+
+---
+
+### Phase 3: Terminology Consistency (kb→skills Migration)
+
+Complete the kb→skills terminology migration across all files.
+
+- [ ] **3.1** Update pr-batch.sh line 116 header text
+  - **Current:** "Knowledge Base (kb/)"
+  - **Fix:** "Skills (skills/)"
+  - **File:** `pr-batch.sh`
+
+- [ ] **3.2** Update templates/ralph/pr-batch.sh (same fix as 3.1)
+  - **File:** `templates/ralph/pr-batch.sh`
+
+- [ ] **3.3** Update generators/generate-neurons.sh line 433 label
+  - **Current:** "Brain KB patterns"
+  - **Fix:** "Brain Skills patterns"
+  - **File:** `generators/generate-neurons.sh`
+
+- [ ] **3.4** Update templates/python/AGENTS.project.md lines 26-31
+  - **Current:** References to "KB file"
+  - **Fix:** Change to "skill file"
+  - **File:** `templates/python/AGENTS.project.md`
 
 ---
 
 ## MEDIUM PRIORITY
 
-### Phase 3: Generator Script Enhancements
+### Phase 4: Documentation & Help Text Updates
 
-- [ ] **3.1** Add error handling to generator scripts
-  - Review generators/generate-neurons.sh for edge cases
-  - Review generators/generate-thoughts.sh for edge cases
-  - Review generators/generate-implementation-plan.sh for edge cases
-  - Add validation for missing required fields
+- [ ] **4.1** Update model version in loop.sh line 162
+  - **Current:** `20250620`
+  - **Fix:** `20250929` (or use generic version-agnostic text)
+  - **File:** `loop.sh`
 
-- [ ] **3.2** Document generator usage in AGENTS.md
-  - Add "Bootstrapping New Projects" section
-  - Document when to use each generator
-  - Provide examples of typical workflows
+- [ ] **4.2** Update model version in templates/ralph/loop.sh (same as 4.1)
+  - **File:** `templates/ralph/loop.sh`
 
-### Phase 4: Archive and Cleanup Tasks
+- [ ] **4.3** Document `--model auto` option in loop.sh usage text
+  - **Context:** Option exists but not shown in help
+  - **File:** `loop.sh`
 
-- [ ] **4.1** Review old_sh/ archive directory
-  - Verify archived scripts are truly obsolete
-  - Document purpose of each archived script in old_sh/README.md
-  - Consider removing if no historical value
+- [ ] **4.4** Add markdown fence language tag to PROMPT.md line 61
+  - **Context:** Code block missing language identifier
+  - **File:** `PROMPT.md`
+
+- [ ] **4.5** Regenerate AC status section in IMPLEMENTATION_PLAN.md
+  - **Command:** `./render_ac_status.sh --inline`
+  - **Context:** Current status may be stale after recent changes
+
+---
+
+### Phase 5: Refactoring for Maintainability (Optional)
+
+These improve code structure but are not critical.
+
+- [ ] **5.1** Extract `launch_in_terminal()` helper function in loop.sh
+  - **Issue:** Duplicated terminal detection logic for both monitors (lines 639-680)
+  - **Benefit:** DRY principle, easier to maintain terminal emulator support
+  - **File:** `loop.sh`
+  - **Note:** See CODERABBIT_REVIEW_ANALYSIS.md for suggested implementation
+
+- [ ] **5.2** Use process substitution in current_ralph_tasks.sh line 305
+  - **Issue:** Pipe into while loop creates subshell, loses variable changes
+  - **Fix:** Replace `| while` with `while ... < <(...)` pattern
+  - **File:** `current_ralph_tasks.sh`
+
+- [ ] **5.3** Use process substitution in thunk_ralph_tasks.sh line 191
+  - **Issue:** Same as 5.2
+  - **File:** `thunk_ralph_tasks.sh`
+
+---
+
+### Phase 6: Template Validation & Documentation
+
+- [ ] **6.1** Verify template completeness
+  - Audit templates/ralph/ (expect 16 files)
+  - Audit templates/backend/ (expect 4 files)
+  - Audit templates/python/ (expect 4 files)
+  - Cross-check with new-project.sh expectations
+
+- [ ] **6.2** Review GAP_BACKLOG.md for skill promotion
+  - Check if P1/P0 gaps meet promotion criteria
+  - Update gap statuses if needed
+
+- [ ] **6.3** Evaluate docs/REFERENCE_SUMMARY.md legacy status
+  - Marked "legacy" in NEURONS.md
+  - Decide: migrate to skills/ or deprecate
+  - Update NEURONS.md if structure changes
 
 ---
 
 ## LOW PRIORITY
 
-### Phase 5: Reference Material Updates
+### Phase 7: Generator Script Enhancements
 
-- [ ] **5.1** Validate React best practices references
-  - Verify all 45 rule files are present in references/react-best-practices/rules/
-  - Check INDEX.md and HOTLIST.md are up to date
+- [ ] **7.1** Add error handling to generator scripts
+  - Review generators/generate-neurons.sh
+  - Review generators/generate-thoughts.sh
+  - Review generators/generate-implementation-plan.sh
+  - Add validation for missing required fields
+
+- [ ] **7.2** Document generator usage in AGENTS.md
+  - Add "Bootstrapping New Projects" section
+  - Document when to use each generator
+  - Provide workflow examples
+
+---
+
+### Phase 8: Archive & Reference Material
+
+- [ ] **8.1** Review old_sh/ archive directory
+  - Verify scripts are truly obsolete
+  - Document purpose in old_sh/README.md
+  - Consider removal if no historical value
+
+- [ ] **8.2** Validate React best practices references
+  - Verify all 45 rule files present
+  - Check INDEX.md and HOTLIST.md are current
   - Ensure no broken cross-references
 
-- [ ] **5.2** Review CHANGES.md for completeness
-  - Document any undocumented changes since 2026-01-18
-  - Ensure migration guides are current
-  - Add entry for any new features or breaking changes
+- [ ] **8.3** Update CHANGES.md
+  - Document changes since 2026-01-18
+  - Update migration guides
+  - Add entries for new features
 
 ---
 
