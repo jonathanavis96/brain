@@ -122,7 +122,7 @@ Complete the kb→skills terminology migration across all files.
 
 ### Phase 4: Documentation & Help Text Updates
 
-- [ ] **4.1** Update model version in loop.sh line 162
+- [x] **4.1** Update model version in loop.sh line 162
   - **Current:** `20250620`
   - **Fix:** `20250929` (current latest stable model)
   - **File:** `loop.sh`
