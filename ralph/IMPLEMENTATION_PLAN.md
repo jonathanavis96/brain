@@ -105,8 +105,8 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 **Goal:** Prevent edge-case failures and improve error handling
 
 - [x] **3.22** `templates/ralph/init_verifier_baselines.sh:43-50` - Check each .gitignore entry independently (N-22)
-- [ ] **3.23** `templates/ralph/init_verifier_baselines.sh:22-24` - Normalize to store only hash not full sha256sum (N-23)
-  - Complexity: Low - adjust cut/awk operation for consistency
+- [x] **3.23** `templates/ralph/.verify/ac.sha256` - Normalize to store only hash not full sha256sum output (N-23)
+  - Fixed: ac.sha256 had 'hash  filename' format, normalized to 'hash' only like other baseline files
 - [ ] **3.24** `templates/ralph/current_ralph_tasks.sh:101-201` - Hash full raw line to prevent cache collisions (N-24)
   - Complexity: Medium - change cache key generation strategy
 - [ ] **3.25** `templates/ralph/current_ralph_tasks.sh:242-349` - Align Archive/Clear parsing with extract logic (N-25)
