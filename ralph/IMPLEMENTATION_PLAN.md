@@ -224,13 +224,11 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items OD-1, OD-2, OD-3, OD-4, OD-6
   - Line 140: `├── kb/` → `├── skills/`
   - Line 151: `kb/, logs/` → `skills/, logs/`
   - Note: Template for NEW projects, but refers to brain's skills/ directory
-- [ ] **4.4** `skills/projects/brain-example.md` - Mark as LEGACY or update kb→skills terminology (OD-4)
-  - **Context:** This file documents historical brain structure when kb/ existed
-  - **Analysis:** 8 references to `kb/` (lines 37, 92, 104, 110, 172, 174, 227)
-  - **Decision needed:** Either:
-    - Mark entire file as LEGACY (brain no longer uses this structure)
-    - Update all references to `skills/` (if still applicable)
-  - **Recommendation:** Mark as LEGACY - file describes old brain structure before skills/ migration
+- [x] **4.4** `skills/projects/brain-example.md` - Update kb→skills terminology (OD-4)
+  - Changed all 8 `kb/` references to `skills/`
+  - Updated file references to current structure (loop.sh, IMPLEMENTATION_PLAN.md, verifier.sh, THUNK.md, new-project.sh)
+  - Removed outdated PowerShell references
+  - File remains relevant as example of project-specific skill documentation
 - [ ] **4.5** `skills/SUMMARY.md:49-70` - Add fence language tag to repository structure diagram (OD-6)
   - Current: Plain fence ``` (no language tag)
   - Change to: ```text
