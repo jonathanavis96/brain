@@ -36,7 +36,7 @@ npm test
 
 ## Self-Improvement Protocol
 
-**End of each BUILD iteration:**
+**End of each BUILD iteration**:
 
 If you used undocumented knowledge/procedure/tooling:
 1. Search `../brain/skills/` for existing matching skill
