@@ -162,6 +162,7 @@ Model Selection:
                    sonnet  -> Sonnet 4.5 (anthropic.claude-sonnet-4-5-20250929-v1:0)
                    opus    -> Opus 4.5 (anthropic.claude-opus-4-5-20251101-v1:0)
                    sonnet4 -> Sonnet 4 (anthropic.claude-sonnet-4-20250514-v1:0)
+                   auto    -> Use default from ~/.rovodev/config.yml
                    Or provide a full model ID directly.
 
 Branch Workflow:
