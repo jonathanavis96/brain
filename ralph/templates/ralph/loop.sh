@@ -478,7 +478,8 @@ run_verifier() {
   echo "========================================"
   
   # Generate unique run ID for freshness check
-  export RUN_ID="$(date +%s)-$$"
+  RUN_ID="$(date +%s)-$$"
+  export RUN_ID
   
   if "$VERIFY_SCRIPT"; then
     # Verify freshness: run_id.txt must match our RUN_ID
