@@ -30,7 +30,7 @@ trim_ws() {
 read_approval() {
   local id="$1"
   [[ -f "$APPROVALS_FILE" ]] || return 1
-  grep -E "^${id}=" "$APPROVALS_FILE" >/dev/null 2>&1
+  grep -F "${id}=" "$APPROVALS_FILE" >/dev/null 2>&1
 }
 
 # Check if baselines are initialized (fail fast with clear message)
