@@ -62,7 +62,7 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 │   └── overview.md              # Brain repo purpose and definition of done
 │
 ├── docs/                        # Documentation (1 file)
-│   └── REFERENCE_SUMMARY.md     # Ralph pattern documentation (legacy)
+│   └── REFERENCE_SUMMARY.md     # Ralph Wiggum pattern theory & external references (historical)
 │
 ├── logs/                        # Execution transcripts (timestamped)
 │   └── *.log                    # Ralph iteration logs

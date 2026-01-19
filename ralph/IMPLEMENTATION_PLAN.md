@@ -173,19 +173,20 @@ Complete the kb→skills terminology migration across all files.
   - **Priority rationale:** Self-improvement protocol compliance check
   - **Result:** Both gaps reviewed 2026-01-18, marked "keep as reference", do not meet recurring criteria
 
-- [ ] **6.3** Evaluate docs/REFERENCE_SUMMARY.md legacy status
+- [x] **6.3** Evaluate docs/REFERENCE_SUMMARY.md legacy status
   - Marked "legacy" in NEURONS.md
   - Compare with skills/SUMMARY.md for content overlap/divergence
   - Decision options:
     1. Keep both: docs/ for Ralph history/context, skills/ for agent consumption
     2. Deprecate docs/ version: Add redirect notice to skills/SUMMARY.md
     3. Merge content: Consolidate Ralph-specific patterns into skills/projects/brain-example.md
-  - **Current analysis:** 
-    - docs/REFERENCE_SUMMARY.md = Ralph Wiggum pattern documentation (2026-01-17)
-    - skills/SUMMARY.md = Skills KB entrypoint for agents (broader scope)
-    - **NOT duplicates** - serve different purposes
-  - **Recommendation:** Keep both, update NEURONS.md to clarify distinction
-  - Update NEURONS.md if structure changes
+  - **Analysis complete (2026-01-19):**
+    - docs/REFERENCE_SUMMARY.md = Ralph Wiggum pattern theory & external references (historical)
+    - skills/SUMMARY.md = Skills KB entrypoint for agents (broader scope, operational)
+    - skills/projects/brain-example.md = Brain-specific conventions (practical how-to)
+    - **NOT duplicates** - complementary purposes
+  - **Decision:** Keep all three files, clarified distinction in NEURONS.md
+  - **Action taken:** Updated NEURONS.md line 65 annotation from "legacy" to "historical"
 
 ---
 
