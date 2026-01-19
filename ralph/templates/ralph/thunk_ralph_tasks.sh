@@ -156,7 +156,8 @@ display_thunks() {
             # Skip header row
             if [[ "$thunk_num" =~ ^[0-9]+$ ]]; then
                 # Generate human-friendly short title
-                local short_title=$(generate_title "$description")
+                local short_title
+                short_title=$(generate_title "$description")
                 
                 # Format as "THUNK N — <short title>" with bold if terminal supports
                 if [[ -t 1 ]]; then
@@ -243,7 +244,8 @@ parse_new_thunk_entries() {
             # Skip header row
             if [[ "$thunk_num" =~ ^[0-9]+$ ]]; then
                 # Generate human-friendly short title
-                local short_title=$(generate_title "$description")
+                local short_title
+                short_title=$(generate_title "$description")
                 
                 # Position cursor and append new entry
                 tput cup $append_row 0
@@ -294,7 +296,8 @@ create_new_era() {
         return
     fi
     
-    local timestamp=$(date "+%Y-%m-%d")
+    local timestamp
+    timestamp=$(date "+%Y-%m-%d")
     
     # Append new era section to THUNK.md
     cat >> "$THUNK_FILE" << EOF
