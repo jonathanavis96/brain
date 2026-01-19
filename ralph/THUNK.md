@@ -239,3 +239,4 @@ Started: 2026-01-18
 | 204 | 1.3 | HIGH | **1.3** Fix subshell variable assignment in loop.sh launch_monitors() - Replaced inline && assignments with proper if-then blocks, added sleep+pgrep verification for all backgrounded commands | 2026-01-19 |
 | 205 | 2.1.1 | HIGH | **2.1.1** Remove unused `in_era` variable from thunk_ralph_tasks.sh (line 126) - Dead code removed from both thunk_ralph_tasks.sh and templates/ralph/thunk_ralph_tasks.sh | 2026-01-19 |
 | 206 | 3.1 | HIGH | **3.1** Update pr-batch.sh lines 115-116 - Changed "Knowledge Base (kb/)" to "Skills (skills/)" | 2026-01-19 |
+| 207 | 2.1.2 | HIGH | **2.1.2** Remove unused `ready_signal` variable from loop.sh (lines 582-588) - Dead code removed from both loop.sh and templates/ralph/loop.sh | 2026-01-19 |
