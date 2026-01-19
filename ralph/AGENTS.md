@@ -53,7 +53,7 @@ bash thunk_ralph_tasks.sh       # Shows completed task log from THUNK.md
 
 ## Loop Stop Sentinel
 Ralph outputs when ALL tasks complete:
-```
+```text
 :::COMPLETE:::
 ```
 
