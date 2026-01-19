@@ -409,6 +409,15 @@ else
     warn "Template not found: ralph/thunk_ralph_tasks.sh"
 fi
 
+# Copy verifier.sh
+if [ -f "$TEMPLATES_DIR/ralph/verifier.sh" ]; then
+    cp "$TEMPLATES_DIR/ralph/verifier.sh" "$PROJECT_LOCATION/ralph/verifier.sh"
+    chmod +x "$PROJECT_LOCATION/ralph/verifier.sh"
+    success "Copied ralph/verifier.sh (executable)"
+else
+    warn "Template not found: ralph/verifier.sh"
+fi
+
 # Copy and process THUNK.project.md template
 if [ -f "$TEMPLATES_DIR/ralph/THUNK.project.md" ]; then
     cp "$TEMPLATES_DIR/ralph/THUNK.project.md" "$PROJECT_LOCATION/ralph/THUNK.md"
@@ -416,7 +425,6 @@ if [ -f "$TEMPLATES_DIR/ralph/THUNK.project.md" ]; then
     INITIAL_ERA_NAME="Initial Setup"
     
     # Escape variables for sed replacement to prevent corruption from special chars
-    local esc_project_name esc_creation_date esc_era_name
     esc_project_name=$(escape_sed_replacement "$PROJECT_NAME")
     esc_creation_date=$(escape_sed_replacement "$CREATION_DATE")
     esc_era_name=$(escape_sed_replacement "$INITIAL_ERA_NAME")
