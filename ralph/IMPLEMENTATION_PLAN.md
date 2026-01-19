@@ -54,7 +54,7 @@ These improve maintainability and eliminate shellcheck warnings.
   - **Context:** Variable set but never read
   - **File:** `thunk_ralph_tasks.sh`
 
-- [ ] **2.1.2** Remove unused `ready_signal` variable from loop.sh (lines 582-588)
+- [x] **2.1.2** Remove unused `ready_signal` variable from loop.sh (lines 582-588)
   - **Context:** Variable assigned but never used (legacy code)
   - **Files:** `loop.sh`, `templates/ralph/loop.sh`
 
