@@ -285,3 +285,4 @@ Started: 2026-01-18
 | 248 | 3.5 | LOW | **3.5** Add escape_sed_replacement for THUNK template in new-project.sh - Applied escape function to PROJECT_NAME, CREATION_DATE, INITIAL_ERA_NAME to prevent sed corruption from special characters like & or / | 2026-01-19 |
 | 249 | 3.7 | LOW | **3.7** Remove unused SHOW_HELP flag - Removed unused `SHOW_HELP=false` variable from both root and template current_ralph_tasks.sh (line 28), eliminating SC2034 shellcheck warning | 2026-01-19 |
 | 250 | 3.8 | LOW | **3.8** Remove unused wrap_text function - Removed dead wrap_text() function from templates/ralph/current_ralph_tasks.sh (lines 354-367), function was leftover from previous refactor and no longer called | 2026-01-19 |
+| 251 | 3.15 | LOW | **3.15** Standardize .verify/verifier.sha256 format with filename suffix - Added filename suffix to match format of other .sha256 files (ac.sha256 pattern), updated from hash-only to 'hash  filename' format | 2026-01-19 |
