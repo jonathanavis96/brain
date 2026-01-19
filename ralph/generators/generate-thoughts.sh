@@ -385,7 +385,7 @@ This project references brain repository knowledge:
 
 ${SKILLS_REFS}
 ${SKILLS_REFS:+
-}${SKILLS_REFS:+}Refer to \`../../brain/skills/SUMMARY.md\` for complete knowledge base index.
+}${SKILLS_REFS:+}Refer to \`../../brain/skills/SUMMARY.md\` for complete skills index.
 
 ## Technical Context
 
