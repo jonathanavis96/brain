@@ -80,7 +80,7 @@ You are Ralph. Mode is passed by loop.sh header.
 
 **You MUST complete this checklist before ending any BUILD iteration.**
 
-See `skills/self-improvement/code-hygiene.md` for detailed procedures.
+See `skills/domains/code-hygiene.md` for detailed procedures.
 
 ### 1. Repo-Wide Search Done
 ```bash
@@ -222,7 +222,7 @@ Do NOT continue until `.verify/waivers/<WAIVER_ID>.approved` exists.
 | NEURONS.md | Codebase map (where things are) |
 | AGENTS.md | Validation commands, operational guide |
 | EDGE_CASES.md | Detailed examples, error recovery (read when needed) |
-| skills/self-improvement/code-hygiene.md | Definition of Done procedures |
+| skills/domains/code-hygiene.md | Definition of Done procedures |
 
 ## Commit Types & Scopes
 

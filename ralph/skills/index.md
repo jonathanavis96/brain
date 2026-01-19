@@ -53,6 +53,7 @@ Last updated: 2026-01-19
 
 ### Ralph
 - [ralph-patterns.md](domains/ralph-patterns.md) - Ralph loop operational patterns
+- [code-hygiene.md](domains/code-hygiene.md) - Definition of Done checklists
 
 ### Security
 - [security-patterns.md](domains/security-patterns.md) - Security best practices
