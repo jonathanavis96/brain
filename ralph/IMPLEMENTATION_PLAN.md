@@ -2,16 +2,16 @@
 
 ## Overview
 
-**Status:** Phase 1-2 complete (pushed), Phase 3 in progress - 28/30 tasks complete  
-**Branch:** `brain-work` (4 commits ahead of origin/brain-work)  
-**Last Updated:** 2026-01-19 (BUILD iteration - task 3.29 complete)
+**Status:** Phase 1-2 complete (pushed), Phase 3 in progress - 29/30 tasks complete  
+**Branch:** `brain-work` (6 commits ahead of origin/brain-work)  
+**Last Updated:** 2026-01-19 (BUILD iteration - task 3.30 complete)
 
 ### Context
 
 All HIGH and MEDIUM priority tasks from CodeRabbit v2 review are complete:
 - ✅ Phase 1: Template hash baselines updated (1 item)
 - ✅ Phase 2: Minor issues fixed (12 items)
-- 🔄 Phase 3: LOW priority nitpicks - 2 active items remaining (28 complete, 1 deferred, 1 skipped)
+- 🔄 Phase 3: LOW priority nitpicks - 1 active item remaining (29 complete, 1 deferred, 1 skipped)
 
 **Phase 3 Assessment:**
 - Items are style/optimization improvements, not bugs
@@ -122,7 +122,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 
 - [x] **3.28** `templates/backend/AGENTS.project.md:22-33` - Update "KB file" to "skill file" (N-28)
 - [x] **3.29** `templates/AGENTS.project.md:58-74` - Add standalone-mode note for missing brain (N-29)
-- [ ] **3.30** `rovodev-config.yml:11-12` - Document model provisioning requirement (N-30)
+- [x] **3.30** `rovodev-config.yml:11-12` - Document model provisioning requirement (N-30)
 - [x] **3.31** `templates/ralph/thunk_ralph_tasks.sh:262-268` - Add non-TTY guard for `tput cup` (N-31)
   - Fixed: 942da6a - Added `[[ -t 1 ]]` guard before tput commands
 
@@ -196,8 +196,7 @@ Phase 3 complete when:
 - ✅ 3.19 through 3.22 - Format fixes and .gitignore robustness
 - ✅ 3.9 through 3.14 - Dead code cleanup and SC2155 fixes
 
-**Total Phase 3 progress: 28/30 tasks (93%)**
+**Total Phase 3 progress: 29/30 tasks (97%)**
 
-**Remaining: 2 active tasks:**
-- Documentation (1): 3.30 (rovodev-config.yml model provisioning)
+**Remaining: 1 active task:**
 - Robustness (1): 3.26 (parsing refactor)
