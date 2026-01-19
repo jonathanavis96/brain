@@ -245,3 +245,4 @@ Started: 2026-01-18
 | 210 | 2.2.3 | HIGH | **2.2.3** Fix SC2155 in loop.sh line 480 - Split export RUN_ID declaration to prevent masking date command exit status, regenerated loop.sha256 baseline | 2026-01-19 |
 | 211 | 2.2.4 | HIGH | **2.2.4** Fix SC2155 in templates/ralph/loop.sh line 480 - Split export RUN_ID declaration (same fix as 2.2.3 for template version) | 2026-01-19 |
 | 212 | 3.2 | HIGH | **3.2** Update templates/ralph/pr-batch.sh line 117 - Changed "Knowledge Base (kb/)" to "Skills (skills/)" to complete kb→skills terminology migration | 2026-01-19 |
+| 213 | 3.3 | HIGH | **3.3** Update generators/generate-neurons.sh line 432 - Changed "Brain KB patterns" to "Brain Skills patterns" for kb→skills terminology consistency | 2026-01-19 |
