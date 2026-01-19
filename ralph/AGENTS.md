@@ -32,7 +32,7 @@ Ralph uses two complementary monitors for real-time task tracking:
 bash current_ralph_tasks.sh     # Shows pending tasks from IMPLEMENTATION_PLAN.md
 ```
 **Purpose:** Displays unchecked `[ ]` tasks only, organized by priority (HIGH/MEDIUM/LOW)
-**Hotkeys:** `q` (quit)
+**Hotkeys:** `h` (hide/show completed), `r` (archive), `f` (force refresh), `c` (clear), `?` (help), `q` (quit)
 **Key Features:**
 - Extracts tasks from all priority sections, including nested subsections (`###`, `####`)
 - First unchecked task marked with `▶` symbol (current task Ralph should work on)
@@ -44,10 +44,9 @@ bash current_ralph_tasks.sh     # Shows pending tasks from IMPLEMENTATION_PLAN.m
 bash thunk_ralph_tasks.sh       # Shows completed task log from THUNK.md
 ```
 **Purpose:** Displays completed tasks appended to THUNK.md
-**Hotkeys:** `r` (refresh), `f` (force sync), `e` (new era), `q` (quit)
+**Hotkeys:** `r` (refresh/clear), `e` (new era), `q` (quit)
 **Key Features:**
 - Primary: Watches THUNK.md for Ralph-appended completions
-- Safety net: Auto-syncs from IMPLEMENTATION_PLAN.md if Ralph forgets to append
 - Append-only display (tail parsing for performance)
 - Sequential THUNK numbering across project lifecycle
 
