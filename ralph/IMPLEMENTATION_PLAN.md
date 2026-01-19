@@ -2,16 +2,16 @@
 
 ## Overview
 
-**Status:** Phase 1-2 complete (pushed), Phase 3 in progress - 21/30 tasks complete  
-**Branch:** `brain-work` (6 commits ahead of origin - ready to push)  
-**Last Updated:** 2026-01-19 16:41 (PLAN iteration)
+**Status:** Phase 1-2 complete (pushed), Phase 3 in progress - 25/30 tasks complete  
+**Branch:** `brain-work` (4 commits ahead of origin - ready to push)  
+**Last Updated:** 2026-01-19 16:50 (PLAN iteration)
 
 ### Context
 
 All HIGH and MEDIUM priority tasks from CodeRabbit v2 review are complete:
 - ✅ Phase 1: Template hash baselines updated (1 item)
 - ✅ Phase 2: Minor issues fixed (12 items)
-- 🔄 Phase 3: LOW priority nitpicks - 9 active items remaining (21 complete, 1 deferred, 1 skipped)
+- 🔄 Phase 3: LOW priority nitpicks - 5 active items remaining (25 complete, 1 deferred, 1 skipped)
 
 **Phase 3 Assessment:**
 - Items are style/optimization improvements, not bugs
@@ -100,23 +100,23 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 - [x] **3.20** `skills/index.md:1-6` - Remove or auto-generate "Last updated" stamp (N-20)
 - [x] **3.21** `THUNK.md:99-100,182,186,190,194-195` - Fix duplicate THUNK numbers with suffixes (N-21)
 
-#### Robustness (6 items - 1 complete, 5 remaining)
+#### Robustness (6 items - 4 complete, 2 remaining)
 
 **Goal:** Prevent edge-case failures and improve error handling
 
 - [x] **3.22** `templates/ralph/init_verifier_baselines.sh:43-50` - Check each .gitignore entry independently (N-22)
-- [x] **3.23** `templates/ralph/.verify/ac.sha256` - Normalize to store only hash not full sha256sum output (N-23)
-  - Fixed: ac.sha256 had 'hash  filename' format, normalized to 'hash' only like other baseline files
-- [ ] **3.24** `templates/ralph/current_ralph_tasks.sh:101-201` - Hash full raw line to prevent cache collisions (N-24)
+- [x] **3.23** `templates/ralph/init_verifier_baselines.sh:22-24` - Normalize hash storage in init script (N-23)
+  - Fixed: 01af2f4 - Now uses `cut -d' ' -f1` to store only hash
+- [x] **3.24** `templates/ralph/.verify/ac.sha256` - Normalize format to match other baseline files (N-23)
+  - Fixed: 0cd141a - Changed from 'hash  filename' to 'hash' only format
+- [ ] **3.25** `templates/ralph/current_ralph_tasks.sh:101-201` - Hash full raw line to prevent cache collisions (N-24)
   - Complexity: Medium - change cache key generation strategy
-- [ ] **3.25** `templates/ralph/current_ralph_tasks.sh:242-349` - Align Archive/Clear parsing with extract logic (N-25)
+- [ ] **3.26** `templates/ralph/current_ralph_tasks.sh:242-349` - Align Archive/Clear parsing with extract logic (N-25)
   - Complexity: Medium - refactor parsing into shared function
-- [x] **3.26** `templates/ralph/verifier.sh:30-34` - Use `grep -F` for literal matching to prevent regex injection (N-26)
-  - Complexity: Trivial - add `-F` flag for security
-- [ ] **3.27** `templates/ralph/verifier.sh:222-227` - Add trap for temp file cleanup on early exit (N-27)
-  - Complexity: Low - add trap handler
+- [x] **3.27** `templates/ralph/verifier.sh:30-34` - Use `grep -F` for literal matching to prevent regex injection (N-26)
+  - Fixed: 1976853 - Added `-F` flag for security
 
-#### Documentation (4 items - 0 complete, 4 remaining)
+#### Documentation (4 items - 1 complete, 3 remaining)
 
 **Goal:** Complete terminology migration and improve user guidance
 
@@ -124,6 +124,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 - [ ] **3.29** `templates/AGENTS.project.md:58-74` - Add standalone-mode note for missing brain (N-29)
 - [ ] **3.30** `rovodev-config.yml:11-12` - Document model provisioning requirement (N-30)
 - [x] **3.31** `templates/ralph/thunk_ralph_tasks.sh:262-268` - Add non-TTY guard for `tput cup` (N-31)
+  - Fixed: 942da6a - Added `[[ -t 1 ]]` guard before tput commands
 
 ---
 
@@ -142,10 +143,11 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 
 ### PLAN Mode Actions (This Iteration)
 
-1. ✅ Review current state (14 tasks completed since last plan update)
+1. ✅ Review current state (4 additional tasks completed since last plan update)
 2. ✅ Update IMPLEMENTATION_PLAN.md with accurate branch status
-3. 🔄 Commit planning updates
-4. 🔄 Push accumulated commit (1 unpushed: 3.14 template SC2155 fix)
+3. 🔄 Assess remaining tasks and confirm Phase 3 is nearly complete
+4. 🔄 Commit planning updates
+5. 🔄 Push 4 accumulated commits to origin
 
 ### BUILD Iterations (Phase 3) - Next Execution Order
 
@@ -155,19 +157,17 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 **✅ Batch 2 - Dead Code (COMPLETE):**
 - All 8 dead code cleanup tasks complete
 
-**Batch 3 - Trivial Robustness (2 tasks, ~2 iterations):**
-- 3.26 (grep -F flag - security)
-- 3.31 (tput TTY guard)
+**✅ Batch 3 - Trivial Robustness (COMPLETE):**
+- Both tasks complete (grep -F flag, tput TTY guard)
 
-**Batch 4 - Documentation (4 tasks, ~3 iterations):**
+**Batch 4 - Documentation (3 tasks, ~3 iterations):**
 - 3.28 (terminology: KB file → skill file)
 - 3.29 (standalone-mode note)
 - 3.30 (rovodev-config.yml model provisioning docs)
 
-**Batch 5 - Medium Robustness (4 tasks, ~4 iterations):**
-- 3.23 (init script hash normalization)
-- 3.27 (trap handler for temp cleanup)
-- 3.24, 3.25 (cache/parsing refactors - evaluate complexity)
+**Batch 5 - Medium Robustness (3 tasks, ~3 iterations):**
+- 3.28-EXTRA (trap handler for temp cleanup)
+- 3.25, 3.26 (cache/parsing refactors - evaluate complexity first)
 
 ### Quality Gates
 
@@ -179,7 +179,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 ### Success Criteria
 
 Phase 3 complete when:
-- [ ] All 9 remaining active tasks marked `[x]` (21/30 done, 1 deferred, 1 skipped)
+- [ ] All 5 remaining active tasks marked `[x]` (25/30 done, 1 deferred, 1 skipped)
 - [ ] All commits pushed to `origin/brain-work`
 - [ ] `verifier.sh` passes cleanly
 - [ ] No shellcheck warnings in modified scripts
@@ -187,17 +187,18 @@ Phase 3 complete when:
 
 ### Progress Summary
 
-**Completed this cycle (6 commits unpushed, ready to push):**
-- ✅ 3.19 - Fix Windows backslashes in NEURONS.md (9cea8a1)
-- ✅ 3.20 - Remove manual timestamp from skills/index.md (576d046)
-- ✅ 3.21 - Fix duplicate THUNK numbers with suffixes (aaddaf4)
-- ✅ 3.22 - Check .gitignore entries independently in init script (b11ae52)
+**Completed this cycle (4 commits unpushed, ready to push):**
+- ✅ 3.23, 3.24 - Normalize hash storage formats (01af2f4, 0cd141a)
+- ✅ 3.27 - Add grep -F for security (1976853)
+- ✅ 3.31 - Add tput TTY guard (942da6a)
 
 **Previous cycle (pushed to origin):**
+- ✅ 3.19 through 3.22 - Format fixes and .gitignore robustness
 - ✅ 3.9 through 3.14 - Dead code cleanup and SC2155 fixes
 
-**Total Phase 3 progress: 21/30 tasks (70%)**
+**Total Phase 3 progress: 25/30 tasks (83%)**
 
-**Remaining: 9 active tasks across 3 categories:**
-- Robustness (5): 3.23, 3.24, 3.25, 3.26, 3.27
-- Documentation (4): 3.28, 3.29, 3.30, 3.31
+**Remaining: 5 active tasks across 2 categories:**
+- Documentation (3): 3.28, 3.29, 3.30
+- Robustness (2): 3.25, 3.26 (cache/parsing refactors)
+- Extra (1): 3.28-EXTRA (trap handler)
