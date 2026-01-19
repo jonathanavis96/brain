@@ -238,6 +238,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items OD-1, OD-2, OD-3, OD-4, OD-6
 
 ## Next Steps
 
-1. ✅ Phase 4 complete - All outside diff items resolved
-2. Update CODERABBIT_REVIEW_ANALYSIS_v2.md to mark Phase 4 items as complete
-3. Ready for PR review and merge to main
+1. ✅ All CodeRabbit v2 phases complete (67 of 81 items resolved, 10 skipped, 4 design decisions deferred)
+2. ✅ CODERABBIT_REVIEW_ANALYSIS_v2.md updated with Phase 4 completion status
+3. 🔄 **PLAN MODE:** Document completion state and prepare for human review
+4. ⏳ **REQUIRES HUMAN:** Create PR `brain-work` → `main` (375+ commits ahead)

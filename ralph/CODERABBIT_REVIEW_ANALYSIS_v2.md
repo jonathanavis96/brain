@@ -222,8 +222,9 @@
 | Nitpick Comments | 31 | 29 | 0 | 0 | 2 |
 | Design Decisions | 4 | 0 | 0 | 4 | 0 |
 | Skip | 8 | - | - | - | 8 |
-| **Additional (Latest)** | **6** | **2** | **0** | **4** | **0** |
-| **TOTAL** | **87** | **69** | **0** | **4** | **14** |
+| **TOTAL** | **81** | **67** | **0** | **4** | **10** |
+
+**Note:** Phase 4 (Outside Diff items) completed 2026-01-19 - all 5 kb→skills terminology updates resolved.
 
 ---
 
@@ -242,7 +243,14 @@
 2. ✅ N-7 to N-14: Remove dead code
 3. ✅ N-22 to N-27: Robustness improvements (N-25 deferred)
 
-### Phase 4: Design Decisions (Requires human input)
+### Phase 4: Outside Diff Items (kb→skills cleanup) ✅ COMPLETE
+1. ✅ OD-1: generators/generate-thoughts.sh wording → Task 4.1
+2. ✅ OD-2: templates/python/NEURONS.project.md kb→skills → Task 4.2
+3. ✅ OD-3: templates/ralph/RALPH.md kb→skills → Task 4.3
+4. ✅ OD-4: skills/projects/brain-example.md kb→skills → Task 4.4
+5. ✅ OD-6: skills/SUMMARY.md fence tag → Task 4.5
+
+### Phase 5: Design Decisions (Requires human input)
 1. DD-1, DD-2: Verifier bypass behavior
 2. DD-3: rovodev-config.yml purpose
 3. DD-4: VALIDATION_CRITERIA consistency
