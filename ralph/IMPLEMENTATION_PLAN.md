@@ -219,7 +219,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items OD-1, OD-2, OD-3, OD-4, OD-6
 **Note:** These items were outside the PR diff range but identified during review. All relate to stale `kb/` references that should be `skills/`.
 
 - [x] **4.1** `generators/generate-thoughts.sh:370-385` - Update wording to "complete skills index" (OD-1)
-- [ ] **4.2** `templates/python/NEURONS.project.md:55-57` - Change `kb/` → `skills/` in Directory Structure (OD-2)
+- [x] **4.2** `templates/python/NEURONS.project.md:55-57` - Change `kb/` → `skills/` in Directory Structure (OD-2)
 - [ ] **4.3** `templates/ralph/RALPH.md:123-141,151` - Update File Structure section `kb/` → `skills/` (OD-3)
 - [ ] **4.4** `skills/projects/brain-example.md:58-76` - Update template examples `kb/` → `skills/` or mark as legacy (OD-4)
 - [ ] **4.5** `skills/SUMMARY.md:50-71` - Add `text` fence language tag to repository structure (OD-6)

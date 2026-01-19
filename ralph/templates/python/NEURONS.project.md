@@ -52,7 +52,7 @@ Last updated: [TIMESTAMP]
 │   ├── IMPLEMENTATION_PLAN.md  # Task list
 │   └── VALIDATION_CRITERIA.md  # Quality gates
 │
-└── kb/                         # Project-specific knowledge base
+└── skills/                     # Project-specific knowledge base
     └── [domain].md             # Domain patterns/conventions
 ```
 

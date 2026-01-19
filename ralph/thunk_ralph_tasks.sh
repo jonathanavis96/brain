@@ -17,6 +17,9 @@
 RALPH_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 THUNK_FILE="$RALPH_DIR/THUNK.md"
 LAST_THUNK_MODIFIED=""
+LAST_CONTENT_ROW=0
+LAST_DISPLAY_ROW=0
+LAST_TOTAL_COUNT=0
 
 # Check if required files exist
 if [[ ! -f "$THUNK_FILE" ]]; then
@@ -175,6 +178,9 @@ display_thunks() {
         ((display_row++))
     fi
     
+    # Store content row BEFORE footer (for incremental updates)
+    LAST_CONTENT_ROW=$display_row
+    
     # Footer
     echo ""
     ((display_row++))
@@ -191,7 +197,6 @@ display_thunks() {
     echo "╔════════════════════════════════════════════════════════════════╗"
     ((display_row++))
     echo "║  HOTKEYS: [r] Refresh/Clear   [e] New Era   [q] Quit         ║"
-    ((display_row++))
     ((display_row++))
     echo "╚════════════════════════════════════════════════════════════════╝"
     ((display_row++))
