@@ -15,7 +15,7 @@ Rules:
 
 <!-- Add new entries below this line using the format:
 
-### YYYY-MM-DD — <Suggested Skill Name>
+### YYYY-MM-DD HH:MM — <Suggested Skill Name>
 - **Type:** Knowledge / Procedure / Tooling / Pattern / Debugging / Reference
 - **Why useful:** <1–2 lines>
 - **When triggered:** <what you were trying to do>
