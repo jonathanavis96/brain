@@ -137,7 +137,7 @@ project-root/               ← Application code and config files
     ├── NEURONS.md          # Codebase map (auto-generated)
     ├── loop.sh             # Loop runner script
     ├── logs/               # Iteration logs
-    ├── kb/                 # Project-specific knowledge base
+    ├── skills/             # Project-specific knowledge base
     └── progress.txt        # Iteration log (appended)
 ```
 
@@ -148,7 +148,7 @@ project-root/               ← Application code and config files
 - Source code → `src/` (project root)
 - Config files → project root (`package.json`, `tsconfig.json`, etc.)
 - Entry points → project root (`index.html`, `main.py`, etc.)
-- Ralph files → `ralph/` (PROMPT.md, IMPLEMENTATION_PLAN.md, AGENTS.md, THOUGHTS.md, NEURONS.md, kb/, logs/, etc.)
+- Ralph files → `ralph/` (PROMPT.md, IMPLEMENTATION_PLAN.md, AGENTS.md, THOUGHTS.md, NEURONS.md, skills/, logs/, etc.)
 
 **NEVER create `ralph/src/` or put application code inside `ralph/`.**
 
