@@ -113,7 +113,7 @@ generate_pr_body() {
 EOF
 
     # Group changes by directory
-    echo "**Knowledge Base (kb/):**"
+    echo "**Skills (skills/):**"
     git diff --name-only "$MAIN_BRANCH".."$WORK_BRANCH" -- "ralph/skills/" 2>/dev/null | sed 's/^/- /' || echo "- No changes"
     echo ""
     
