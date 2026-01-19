@@ -20,7 +20,7 @@ mkdir -p .verify
 echo "Generating hash baselines..."
 
 if [[ -f "AC.rules" ]]; then
-  sha256sum AC.rules > .verify/ac.sha256
+  sha256sum AC.rules | cut -d' ' -f1 > .verify/ac.sha256
   echo "  ✓ AC.rules → .verify/ac.sha256"
 fi
 
