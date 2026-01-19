@@ -2,23 +2,23 @@
 
 ## Overview
 
-**Status:** Repository in maintenance mode. Monitor bug fixes completed. CodeRabbit PR #4 review fixes in progress.
+**Status:** Repository in maintenance mode. CodeRabbit PR #4 review fixes - major phases complete, documentation cleanup remaining.
 
 **Recent achievements (2026-01-18 to 2026-01-19):**
 - ✅ Monitor bug fixes (Bugs A, B, C) fully resolved and verified
-- ✅ Verifier gate system implemented (20 PASS, 1 FAIL, 6 WARN)
-- ✅ KB→Skills migration completed
+- ✅ Verifier gate system implemented (20 PASS, 0 FAIL, 6 WARN)
+- ✅ KB→Skills migration completed across all files
 - ✅ Templates synced with live versions
 - ✅ 256+ commits in January 2026
-- ✅ Phase 1 complete: All critical bug fixes (tasks 1.1-1.3)
-- ✅ Phase 2.1 complete: Dead code removal (tasks 2.1.1-2.1.2)
-- ✅ Phase 2.2 complete: SC2155 fixes in all files (tasks 2.2.1-2.2.4)
-- ✅ Phase 3.1-3.3 complete: kb→skills terminology fixes
+- ✅ **Phase 1 complete:** All critical bug fixes (tasks 1.1-1.3)
+- ✅ **Phase 2 complete:** Dead code removal + SC2155 fixes + baseline regeneration (tasks 2.1-2.3)
+- ✅ **Phase 3 complete:** kb→skills terminology migration (tasks 3.1-3.4)
+- ✅ **Phase 4.1-4.2 complete:** Model version updates in loop.sh and templates
 
-**Current focus:** Systematic resolution of 26 CodeRabbit review findings from PR #4
-**Ready to push:** 7 commits accumulated from BUILD iterations (on branch brain-work)
-**Next BUILD task:** 3.4 - Update templates/python/AGENTS.project.md terminology
-**Verifier note:** Protected.1 FAIL expected - loop.sh modified for SC2155 fix, baseline update pending after all Phase 2-3 complete
+**Current focus:** Documentation improvements (Phase 4.3-4.5), then optional refactoring (Phase 5) and validation (Phase 6)
+**Ready to push:** 6 commits accumulated from BUILD iterations (on branch brain-work)
+**Next BUILD task:** 4.3 - Document --model auto option in loop.sh usage text
+**Verifier status:** All FAIL cleared (Protected.1 resolved with baseline regeneration in 2.3)
 
 **Reference:** `CODERABBIT_REVIEW_ANALYSIS.md` for detailed analysis and rationale
 
@@ -118,7 +118,7 @@ Complete the kb→skills terminology migration across all files.
 
 ---
 
-## MEDIUM PRIORITY
+## HIGH PRIORITY
 
 ### Phase 4: Documentation & Help Text Updates
 
@@ -143,7 +143,12 @@ Complete the kb→skills terminology migration across all files.
 
 - [ ] **4.5** Regenerate AC status section in IMPLEMENTATION_PLAN.md
   - **Command:** `./render_ac_status.sh --inline`
-  - **Context:** Keep status current after each phase completion
+  - **Context:** Reflect current verifier state after Phase 1-4 completion
+  - **Priority rationale:** Quick win, shows clean state after major phases complete
+
+---
+
+## MEDIUM PRIORITY
 
 ---
 
@@ -172,7 +177,7 @@ These improve code structure but are not critical.
 
 ---
 
-### Phase 6: Template Validation & Documentation
+### Phase 6: Maintenance & Validation
 
 - [ ] **6.1** Verify template completeness
   - Audit templates/ralph/ (expect 16 files)
@@ -182,9 +187,10 @@ These improve code structure but are not critical.
   - **Status:** Templates already validated in previous work, verify no regression
 
 - [ ] **6.2** Review GAP_BACKLOG.md for skill promotion
-  - Check if P1/P0 gaps meet promotion criteria
+  - Check if P1/P0 gaps meet promotion criteria (currently 2 P2 gaps reviewed, no promotion needed)
   - Update gap statuses if needed
   - Promote clear, recurring gaps to SKILL_BACKLOG.md
+  - **Current state:** No gaps meet promotion criteria yet
 
 - [ ] **6.3** Evaluate docs/REFERENCE_SUMMARY.md legacy status
   - Marked "legacy" in NEURONS.md
@@ -192,11 +198,18 @@ These improve code structure but are not critical.
   - Update NEURONS.md if structure changes
   - **Context:** May be duplicate of skills/SUMMARY.md
 
+- [ ] **6.4** Push accumulated commits to origin
+  - **Context:** 6 commits ready on brain-work branch (Phases 2-4)
+  - **Command:** `git push origin brain-work`
+  - **Timing:** After Phase 4 documentation tasks complete and AC status regenerated
+
 ---
 
 ## LOW PRIORITY
 
 ### Phase 7: Generator Script Enhancements
+
+**Rationale:** Generators work correctly; improvements are nice-to-have for future maintainability.
 
 - [ ] **7.1** Add error handling to generator scripts
   - Review generators/generate-neurons.sh
@@ -213,6 +226,8 @@ These improve code structure but are not critical.
 
 ### Phase 8: Archive & Reference Material
 
+**Rationale:** Housekeeping tasks with no immediate impact on functionality.
+
 - [ ] **8.1** Review old_sh/ archive directory
   - Verify scripts are truly obsolete
   - Document purpose in old_sh/README.md
@@ -223,10 +238,10 @@ These improve code structure but are not critical.
   - Check INDEX.md and HOTLIST.md are current
   - Ensure no broken cross-references
 
-- [ ] **8.3** Update CHANGES.md
-  - Document changes since 2026-01-18
-  - Update migration guides
-  - Add entries for new features
+- [ ] **8.3** Update CHANGES.md with January 2026 work
+  - Document changes since 2026-01-18 (monitor fixes, CodeRabbit review resolution)
+  - Update migration guides if needed
+  - Add entries for verifier gate system and skills migration
 
 ---
 
