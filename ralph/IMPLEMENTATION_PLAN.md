@@ -14,7 +14,7 @@
 
 Source: Discovery during planning - `templates/ralph/.verify/` has stale hash baselines
 
-- [ ] **1.1** Update `templates/ralph/.verify/` hash baselines to match current protected files
+- [x] **1.1** Update `templates/ralph/.verify/` hash baselines to match current protected files
   - `loop.sha256`: Update from `e753d05...` to `cb54c8a...` (matches `loop.sh`)
   - `prompt.sha256`: Update from `b29969...` to `b355c8...` (matches `PROMPT.md`)
   - Verify: `sha256sum loop.sh PROMPT.md verifier.sh AC.rules` and compare to template hashes
