@@ -162,6 +162,7 @@ Model Selection:
                    sonnet  -> Sonnet 4.5 (anthropic.claude-sonnet-4-5-20250929-v1:0)
                    opus    -> Opus 4.5 (anthropic.claude-opus-4-5-20251101-v1:0)
                    sonnet4 -> Sonnet 4 (anthropic.claude-sonnet-4-20250514-v1:0)
+                   auto    -> Use default from ~/.rovodev/config.yml
                    Or provide a full model ID directly.
 
 Branch Workflow:
@@ -461,14 +462,57 @@ init_verifier_if_needed() {
   return 0
 }
 
+# Track last verifier result for prompt injection
+LAST_VERIFIER_STATUS=""
+LAST_VERIFIER_FAILED_RULES=""
+LAST_VERIFIER_FAIL_COUNT=0
+
+# Parse verifier report to extract failed rules
+parse_verifier_failures() {
+  local report_file="$1"
+  [[ -f "$report_file" ]] || return
+  
+  local rules=""
+  local count=0
+  
+  # Extract [FAIL] rule IDs (standard format)
+  local standard_fails
+  standard_fails=$(grep -oE '^\[FAIL\] [A-Za-z0-9_.]+' "$report_file" 2>/dev/null | sed 's/\[FAIL\] //' | tr '\n' ',' | sed 's/,$//' | sed 's/,,*/,/g')
+  local standard_count
+  standard_count=$(grep -c '^\[FAIL\]' "$report_file" 2>/dev/null || echo "0")
+  
+  # Check for hash guard failure (special format: [timestamp] FAIL: AC hash mismatch)
+  if grep -q 'FAIL: AC hash mismatch' "$report_file" 2>/dev/null; then
+    rules="HashGuard"
+    count=1
+  fi
+  
+  # Combine results
+  if [[ -n "$standard_fails" ]]; then
+    if [[ -n "$rules" ]]; then
+      rules="$rules, $standard_fails"
+    else
+      rules="$standard_fails"
+    fi
+    count=$((count + standard_count))
+  fi
+  
+  LAST_VERIFIER_FAILED_RULES="$rules"
+  LAST_VERIFIER_FAIL_COUNT="$count"
+}
+
 run_verifier() {
   if [[ ! -x "$VERIFY_SCRIPT" ]]; then
     echo "⚠️  Verifier not found or not executable: $VERIFY_SCRIPT"
+    LAST_VERIFIER_STATUS="SKIP"
     return 0  # Don't block if verifier doesn't exist yet
   fi
   
   # Auto-init baselines if missing
   if ! init_verifier_if_needed; then
+    LAST_VERIFIER_STATUS="FAIL"
+    LAST_VERIFIER_FAILED_RULES="init_baselines"
+    LAST_VERIFIER_FAIL_COUNT=1
     return 1
   fi
   
@@ -490,20 +534,31 @@ run_verifier() {
         echo "❌ Freshness check FAILED: run_id mismatch"
         echo "   Expected: $RUN_ID"
         echo "   Got: $stored_id"
+        LAST_VERIFIER_STATUS="FAIL"
+        LAST_VERIFIER_FAILED_RULES="freshness_check"
+        LAST_VERIFIER_FAIL_COUNT=1
         return 1
       fi
     else
       echo "❌ Freshness check FAILED: run_id.txt not found"
+      LAST_VERIFIER_STATUS="FAIL"
+      LAST_VERIFIER_FAILED_RULES="freshness_check"
+      LAST_VERIFIER_FAIL_COUNT=1
       return 1
     fi
     
     echo "✅ All acceptance criteria passed! (run_id: $RUN_ID)"
     cat "$RALPH/.verify/latest.txt" 2>/dev/null | tail -10 || true
+    LAST_VERIFIER_STATUS="PASS"
+    LAST_VERIFIER_FAILED_RULES=""
+    LAST_VERIFIER_FAIL_COUNT=0
     return 0
   else
     echo "❌ Acceptance criteria FAILED"
     echo ""
     cat "$RALPH/.verify/latest.txt" 2>/dev/null || echo "(no report found)"
+    LAST_VERIFIER_STATUS="FAIL"
+    parse_verifier_failures "$RALPH/.verify/latest.txt"
     return 1
   fi
 }
@@ -533,6 +588,18 @@ run_once() {
   {
     echo "# MODE: ${phase^^}"
     echo ""
+    
+    # Inject verifier status from previous iteration (if any)
+    if [[ -n "$LAST_VERIFIER_STATUS" ]]; then
+      echo "# LAST_VERIFIER_RESULT: $LAST_VERIFIER_STATUS"
+      if [[ "$LAST_VERIFIER_STATUS" == "FAIL" ]]; then
+        echo "# FAILED_RULES: $LAST_VERIFIER_FAILED_RULES"
+        echo "# FAILURE_COUNT: $LAST_VERIFIER_FAIL_COUNT"
+        echo "# ACTION_REQUIRED: Read .verify/latest.txt and fix AC failures BEFORE picking new tasks."
+      fi
+      echo ""
+    fi
+    
     cat "$prompt_file"
     
     # Append dry-run instruction if enabled
