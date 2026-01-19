@@ -8,7 +8,7 @@ Use this template when creating new skill files. Copy and fill in all sections.
 
 ## 1) Intent (1 sentence)
 
-What this skill enables Claude to do reliably.
+What this skill enables the agent to do reliably.
 
 ## 2) Type
 
@@ -29,7 +29,7 @@ Use this skill when ANY of these are true:
 
 ## 5) Inputs Required (and how to confirm)
 
-Claude must gather/confirm:
+The agent must gather/confirm:
 - <input 1> (where to find it; how to validate)
 - <input 2> (where to find it; how to validate)
 
@@ -75,7 +75,7 @@ This skill is complete when these exist:
 
 ## 9) Gotchas / Failure Modes
 
-Common ways Claude fails here:
+Common ways the agent fails here:
 - <failure mode 1> → mitigation
 - <failure mode 2> → mitigation
 
