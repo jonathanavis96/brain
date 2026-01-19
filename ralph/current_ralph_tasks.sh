@@ -26,7 +26,6 @@ RALPH_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLAN_FILE="$RALPH_DIR/IMPLEMENTATION_PLAN.md"
 HIDE_COMPLETED=false
 LAST_MODIFIED=""
-SHOW_HELP=false
 
 # Completed task cache - stores hashes of completed task descriptions
 # Key: hash of task description, Value: full task line
