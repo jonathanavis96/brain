@@ -111,7 +111,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
   - Complexity: Medium - change cache key generation strategy
 - [ ] **3.25** `templates/ralph/current_ralph_tasks.sh:242-349` - Align Archive/Clear parsing with extract logic (N-25)
   - Complexity: Medium - refactor parsing into shared function
-- [ ] **3.26** `templates/ralph/verifier.sh:30-34` - Use `grep -F` for literal matching to prevent regex injection (N-26)
+- [x] **3.26** `templates/ralph/verifier.sh:30-34` - Use `grep -F` for literal matching to prevent regex injection (N-26)
   - Complexity: Trivial - add `-F` flag for security
 - [ ] **3.27** `templates/ralph/verifier.sh:222-227` - Add trap for temp file cleanup on early exit (N-27)
   - Complexity: Low - add trap handler
