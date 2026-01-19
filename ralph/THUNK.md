@@ -243,3 +243,5 @@ Started: 2026-01-18
 | 208 | 2.2.1 | HIGH | **2.2.1** Fix SC2155 in thunk_ralph_tasks.sh line 164 - Split local declaration and command substitution to prevent masking exit status | 2026-01-19 |
 | 209 | 2.2.2 | HIGH | **2.2.2** Fix SC2155 in current_ralph_tasks.sh lines 158, 171, 190 - Split local declarations and command substitutions for cache_key and short_title variables | 2026-01-19 |
 | 210 | 2.2.3 | HIGH | **2.2.3** Fix SC2155 in loop.sh line 480 - Split export RUN_ID declaration to prevent masking date command exit status, regenerated loop.sha256 baseline | 2026-01-19 |
+| 211 | 2.2.4 | HIGH | **2.2.4** Fix SC2155 in templates/ralph/loop.sh line 480 - Split export RUN_ID declaration (same fix as 2.2.3 for template version) | 2026-01-19 |
+| 212 | 3.2 | HIGH | **3.2** Update templates/ralph/pr-batch.sh line 117 - Changed "Knowledge Base (kb/)" to "Skills (skills/)" to complete kb→skills terminology migration | 2026-01-19 |

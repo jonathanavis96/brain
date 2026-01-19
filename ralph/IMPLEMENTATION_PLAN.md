@@ -81,7 +81,7 @@ Pattern: `local var=$(cmd)` masks command exit status. Fix: Split declaration an
   - **File:** `loop.sh`
   - **Warning:** Protected file - need to regenerate baseline hash after change
 
-- [ ] **2.2.4** Fix SC2155 in templates/ralph/loop.sh (same as 2.2.3)
+- [x] **2.2.4** Fix SC2155 in templates/ralph/loop.sh (same as 2.2.3)
   - **File:** `templates/ralph/loop.sh`
 
 ---
