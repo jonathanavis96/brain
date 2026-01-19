@@ -85,7 +85,7 @@ Pattern: `local var=$(cmd)` masks command exit status. Fix: Split declaration an
 - [x] **2.2.4** Fix SC2155 in templates/ralph/loop.sh (same as 2.2.3)
   - **File:** `templates/ralph/loop.sh`
 
-- [ ] **2.3** Regenerate loop.sh baseline hash after all Phase 2 changes
+- [x] **2.3** Regenerate loop.sh baseline hash after all Phase 2 changes
   - **Command:** `sha256sum loop.sh | cut -d' ' -f1 > .verify/loop.sha256`
   - **Context:** Protected.1 check currently failing due to SC2155 fix in task 2.2.3
   - **Timing:** Run after Phase 3 complete to batch all protected file updates
