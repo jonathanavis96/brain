@@ -52,9 +52,20 @@ DETAILED_DESC=$(extract_section "Detailed Description" "$IDEA_FILE")
 SUCCESS_CRITERIA=$(extract_section "Success Criteria" "$IDEA_FILE")
 TECH_REQS=$(extract_section "Technical Requirements" "$IDEA_FILE")
 
-# Default values
+# Validate required fields
 if [ -z "$PROJECT_NAME" ]; then
-    PROJECT_NAME="Unnamed Project"
+    echo "Error: PROJECT_NAME is required. Add 'Project: <name>' or '# Project: <name>' to $IDEA_FILE"
+    exit 1
+fi
+
+if [ -z "$PROJECT_TECH" ]; then
+    echo "Error: Tech Stack is required. Add 'Tech Stack: <technologies>' to $IDEA_FILE"
+    exit 1
+fi
+
+if [ -z "$PROJECT_PURPOSE" ]; then
+    echo "Error: Purpose is required. Add 'Purpose: <description>' to $IDEA_FILE"
+    exit 1
 fi
 
 # HIGH INTELLIGENCE: Infer project type from tech stack

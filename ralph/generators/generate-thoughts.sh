@@ -49,6 +49,22 @@ PROJECT_PURPOSE=$(extract_field "Purpose" "$IDEA_FILE")
 PROJECT_TECH=$(extract_field "Tech Stack" "$IDEA_FILE")
 PROJECT_GOALS=$(extract_field "Goals" "$IDEA_FILE")
 
+# Validate required fields
+if [ -z "$PROJECT_NAME" ]; then
+    echo "Error: PROJECT_NAME is required. Add 'Project: <name>' or '# Project: <name>' to $IDEA_FILE"
+    exit 1
+fi
+
+if [ -z "$PROJECT_TECH" ]; then
+    echo "Error: Tech Stack is required. Add 'Tech Stack: <technologies>' to $IDEA_FILE"
+    exit 1
+fi
+
+if [ -z "$PROJECT_PURPOSE" ]; then
+    echo "Error: Purpose is required. Add 'Purpose: <description>' to $IDEA_FILE"
+    exit 1
+fi
+
 # Extract optional sections
 DETAILED_DESC=$(extract_section "Detailed Description" "$IDEA_FILE")
 SUCCESS_CRITERIA=$(extract_section "Success Criteria" "$IDEA_FILE")
