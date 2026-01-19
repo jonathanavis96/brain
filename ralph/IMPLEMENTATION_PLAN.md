@@ -131,7 +131,7 @@ Complete the kb→skills terminology migration across all files.
 - [x] **4.2** Update model version in templates/ralph/loop.sh (same as 4.1)
   - **File:** `templates/ralph/loop.sh`
 
-- [ ] **4.3** Document `--model auto` option in loop.sh usage text
+- [x] **4.3** Document `--model auto` option in loop.sh usage text
   - **Context:** Option exists but not shown in help
   - **File:** `loop.sh`
   - **Warning:** Protected file - need to regenerate baseline hash after change
