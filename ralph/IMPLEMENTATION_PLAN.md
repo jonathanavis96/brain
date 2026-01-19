@@ -2,23 +2,23 @@
 
 ## Overview
 
-**Status:** Repository in maintenance mode. CodeRabbit PR #4 review fixes - major phases complete, documentation cleanup remaining.
+**Status:** Repository in maintenance mode. CodeRabbit PR #4 review fixes complete. Ready to push accumulated work.
 
 **Recent achievements (2026-01-18 to 2026-01-19):**
 - ✅ Monitor bug fixes (Bugs A, B, C) fully resolved and verified
-- ✅ Verifier gate system implemented (20 PASS, 0 FAIL, 6 WARN)
+- ✅ Verifier gate system implemented (21 PASS, 0 FAIL, 6 WARN)
 - ✅ KB→Skills migration completed across all files
 - ✅ Templates synced with live versions
-- ✅ 256+ commits in January 2026
-- ✅ **Phase 1 complete:** All critical bug fixes (tasks 1.1-1.3)
-- ✅ **Phase 2 complete:** Dead code removal + SC2155 fixes + baseline regeneration (tasks 2.1-2.3)
-- ✅ **Phase 3 complete:** kb→skills terminology migration (tasks 3.1-3.4)
-- ✅ **Phase 4.1-4.2 complete:** Model version updates in loop.sh and templates
+- ✅ **Phase 1-4 complete:** All high-priority CodeRabbit fixes (tasks 1.1-4.4)
+  - Critical bug fixes (render_ac_status.sh, loop.sh monitors)
+  - Dead code removal + SC2155 shellcheck fixes
+  - Terminology consistency (kb→skills)
+  - Documentation updates (model versions, --model auto, markdown fences)
 
-**Current focus:** Documentation improvements (Phase 4.3-4.5), then optional refactoring (Phase 5) and validation (Phase 6)
-**Ready to push:** 6 commits accumulated from BUILD iterations (on branch brain-work)
-**Next BUILD task:** 4.3 - Document --model auto option in loop.sh usage text
-**Verifier status:** All FAIL cleared (Protected.1 resolved with baseline regeneration in 2.3)
+**Current focus:** Final cleanup and push (Phase 4.5, 6.4), then optional improvements (Phases 5-8)
+**Ready to push:** 3 commits accumulated from BUILD iterations (on branch brain-work)
+**Next BUILD task:** 4.5 - Regenerate AC status section to reflect current verifier state
+**Verifier status:** All critical checks PASS (21 PASS, 0 FAIL, 6 WARN acceptable)
 
 **Reference:** `CODERABBIT_REVIEW_ANALYSIS.md` for detailed analysis and rationale
 
@@ -143,8 +143,17 @@ Complete the kb→skills terminology migration across all files.
 
 - [ ] **4.5** Regenerate AC status section in IMPLEMENTATION_PLAN.md
   - **Command:** `./render_ac_status.sh --inline`
-  - **Context:** Reflect current verifier state after Phase 1-4 completion
+  - **Context:** Reflect current verifier state (21 PASS, 0 FAIL, 6 WARN) after Phase 1-4 completion
   - **Priority rationale:** Quick win, shows clean state after major phases complete
+
+### Phase 6: Push & Validation
+
+- [ ] **6.4** Push accumulated commits to origin
+  - **Context:** 3 commits ready on brain-work branch (Phase 4 documentation tasks)
+  - **Commits:** 6efe117 (markdown fence), 85fbc4a (task 4.3 complete), 71ddcca (--model auto doc)
+  - **Command:** `git push origin brain-work`
+  - **Timing:** After task 4.5 completes and AC status regenerated
+  - **Note:** Moved to HIGH priority - work is done, ready to share
 
 ---
 
@@ -177,7 +186,7 @@ These improve code structure but are not critical.
 
 ---
 
-### Phase 6: Maintenance & Validation
+### Phase 6: Maintenance & Validation (MEDIUM Priority)
 
 - [ ] **6.1** Verify template completeness
   - Audit templates/ralph/ (expect 16 files)
@@ -197,11 +206,6 @@ These improve code structure but are not critical.
   - Decide: migrate to skills/ or deprecate
   - Update NEURONS.md if structure changes
   - **Context:** May be duplicate of skills/SUMMARY.md
-
-- [ ] **6.4** Push accumulated commits to origin
-  - **Context:** 6 commits ready on brain-work branch (Phases 2-4)
-  - **Command:** `git push origin brain-work`
-  - **Timing:** After Phase 4 documentation tasks complete and AC status regenerated
 
 ---
 
@@ -281,14 +285,13 @@ These improve code structure but are not critical.
 <!-- AC_STATUS_START -->
 ## Acceptance Criteria Status
 
-> **Auto-generated from verifier** — Last run: 2026-01-19 11:23:09 ( caa9a6b)
+> **Auto-generated from verifier** — Last run: 2026-01-19 11:48:06
 
 | Metric | Value |
 |--------|-------|
-| ✅ PASS | 20 |
-| ❌ FAIL | 1 |
-| ⚠️ WARN | 6
-2 |
+| ✅ PASS | 21 |
+| ❌ FAIL | 0 |
+| ⚠️ WARN | 6 |
 | 🔒 Hash Guard | Hash |
 
 ### Check Details
@@ -314,7 +317,7 @@ These improve code structure but are not critical.
 | `AntiCheat.3` | ✅ | No bug reframing in source files |
 | `AntiCheat.4` | ✅ | No intended behavior dismissals in source files |
 | `AntiCheat.5` | ✅ | No self-certification in source files |
-| `Protected.1` | ❌ | loop.sh unchanged from baseline |
+| `Protected.1` | ✅ | loop.sh unchanged from baseline |
 | `Protected.2` | ✅ | verifier.sh unchanged from baseline |
 | `Protected.3` | ✅ | PROMPT.md unchanged from baseline |
 | `VerifyMeta.1` | ✅ | Verifier run_id.txt exists and is non-empty |
