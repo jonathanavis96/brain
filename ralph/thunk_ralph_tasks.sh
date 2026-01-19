@@ -103,15 +103,6 @@ get_next_thunk_number() {
     echo $((max_num + 1))
 }
 
-# Function to normalize description for comparison
-normalize_description() {
-    local desc="$1"
-    # Remove markdown bold, backticks, leading/trailing whitespace, task IDs, trailing colons
-    desc=$(echo "$desc" | sed -E 's/\*\*//g; s/`//g; s/^[[:space:]]*//; s/[[:space:]]*$//; s/^[T]?[0-9]+(\.[0-9]+)*[[:space:]]*:?[[:space:]]*//; s/:+[[:space:]]*$//')
-    echo "$desc"
-}
-
-
 # Function to display THUNK.md contents (full refresh)
 display_thunks() {
     clear
