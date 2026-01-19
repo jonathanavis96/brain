@@ -38,7 +38,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items M-19, M-21 through M-32
 - [x] **2.6** `skills/domains/README.md:61-63` - Remove "(planned)" qualifier for conventions.md (M-25)
 - [x] **2.7** `skills/self-improvement/README.md:20-25` - Change `skills/index.md` to `skills/SUMMARY.md` (M-26)
 - [x] **2.8** `AGENTS.md:56-58` - Add fence language tag for `:::COMPLETE:::` block (M-27)
-- [ ] **2.9** `AGENTS.md:30-41` - Update monitor hotkeys documentation to match actual behavior (M-28)
+- [x] **2.9** `AGENTS.md:30-41` - Update monitor hotkeys documentation to match actual behavior (M-28)
 - [ ] **2.10** `PROMPT.md:109-110` - Add new hash-guarded files to protected-files list (M-29)
 - [ ] **2.11** `skills/domains/ralph-patterns.md:71-76` - Update commit strategy to use `[?]` not `[x]` (M-30)
 - [ ] **2.12** `THOUGHTS.md:17-23` - Add `bash` fence language tag (M-31)
