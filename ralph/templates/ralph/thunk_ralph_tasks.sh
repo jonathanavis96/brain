@@ -248,8 +248,8 @@ parse_new_thunk_entries() {
                 short_title=$(generate_title "$description")
                 
                 # Position cursor and append new entry
-                tput cup $append_row 0
                 if [[ -t 1 ]]; then
+                    tput cup $append_row 0
                     echo -e "  \033[32m✓\033[0m \033[1mTHUNK #$thunk_num\033[0m — $short_title"
                 else
                     echo "  ✓ THUNK #$thunk_num — $short_title"
@@ -266,14 +266,22 @@ parse_new_thunk_entries() {
     local footer_row=$((append_row + 2))  # Skip blank line, then separator
     
     # Clear and redraw footer with updated count
-    tput cup $footer_row 0
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    tput cup $((footer_row + 1)) 0
-    echo "  Total Thunked: $new_total"
-    tput cup $((footer_row + 2)) 0
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    tput cup $((footer_row + 3)) 0
-    echo ""
+    if [[ -t 1 ]]; then
+        tput cup $footer_row 0
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        tput cup $((footer_row + 1)) 0
+        echo "  Total Thunked: $new_total"
+        tput cup $((footer_row + 2)) 0
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        tput cup $((footer_row + 3)) 0
+        echo ""
+    else
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "  Total Thunked: $new_total"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo ""
+    fi
     
     # Update stored state
     LAST_DISPLAY_ROW=$((footer_row + 9))  # Footer + blank + 3 hotkey lines + blank
