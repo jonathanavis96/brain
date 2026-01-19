@@ -242,3 +242,4 @@ Started: 2026-01-18
 | 207 | 2.1.2 | HIGH | **2.1.2** Remove unused `ready_signal` variable from loop.sh (lines 582-588) - Dead code removed from both loop.sh and templates/ralph/loop.sh | 2026-01-19 |
 | 208 | 2.2.1 | HIGH | **2.2.1** Fix SC2155 in thunk_ralph_tasks.sh line 164 - Split local declaration and command substitution to prevent masking exit status | 2026-01-19 |
 | 209 | 2.2.2 | HIGH | **2.2.2** Fix SC2155 in current_ralph_tasks.sh lines 158, 171, 190 - Split local declarations and command substitutions for cache_key and short_title variables | 2026-01-19 |
+| 210 | 2.2.3 | HIGH | **2.2.3** Fix SC2155 in loop.sh line 480 - Split export RUN_ID declaration to prevent masking date command exit status, regenerated loop.sha256 baseline | 2026-01-19 |
