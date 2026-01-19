@@ -103,7 +103,7 @@ Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
 
 **Goal:** Consistency and markdown linter compliance
 
-- [ ] **3.15** `.verify/verifier.sha256:1` - Standardize format with filename suffix (N-15)
+- [x] **3.15** `.verify/verifier.sha256:1` - Standardize format with filename suffix (N-15)
   - Value: Consistency with other .sha256 files
 - [ ] **3.16** `templates/ralph/PROMPT.project.md:39-41` - Fix MD050 strong-style (N-16)
   - Value: Markdown linter compliance
