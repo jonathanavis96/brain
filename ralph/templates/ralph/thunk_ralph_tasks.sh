@@ -124,14 +124,12 @@ display_thunks() {
     
     local current_era=""
     local total_count=0
-    local in_era=false
     local display_row=4  # Track row position (starting after header)
     
     while IFS= read -r line; do
         # Detect Era headers
         if [[ "$line" =~ ^##[[:space:]]+Era:[[:space:]]+(.+)$ ]]; then
             current_era="${BASH_REMATCH[1]}"
-            in_era=true
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             ((display_row++))
             echo "  Era: $current_era"
