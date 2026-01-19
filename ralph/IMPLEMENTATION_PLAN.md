@@ -244,13 +244,14 @@ These improve code structure but are not critical.
 <!-- AC_STATUS_START -->
 ## Acceptance Criteria Status
 
-> **Auto-generated from verifier** — Last run: 2026-01-19 01:53:49 ( a57cd46)
+> **Auto-generated from verifier** — Last run: 2026-01-19 11:04:38 ( bd66e41)
 
 | Metric | Value |
 |--------|-------|
 | ✅ PASS | 21 |
 | ❌ FAIL | 0 |
-| ⚠️ WARN | 0 |
+| ⚠️ WARN | 6
+2 |
 | 🔒 Hash Guard | Hash |
 
 ### Check Details
