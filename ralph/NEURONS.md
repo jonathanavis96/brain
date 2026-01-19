@@ -201,7 +201,7 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 - `templates/ralph/RALPH.md` - Ralph contract documentation
 
 **Path Conventions:**
-- Templates use relative paths: `..\\brain\\skills\\SUMMARY.md` (from project root)
+- Templates use relative paths: `../brain/skills/SUMMARY.md` (from project root)
 - Brain's own prompts use local paths: `skills/SUMMARY.md` (from brain/ralph/)
 - All paths in templates must be validated before use
 
