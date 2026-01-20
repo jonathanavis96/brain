@@ -26,7 +26,7 @@ Incorporate any relevant maintenance items into the appropriate priority section
 
 ### 0.A.1 - Create Cortex Folder & Core Files (7 items)
 
-- [ ] **0.A.1.1** Create `brain/cortex/` folder
+- [x] **0.A.1.1** Create `brain/cortex/` folder
   - **AC:** Folder exists at `brain/cortex/`
 
 - [ ] **0.A.1.2** Create `cortex/CORTEX_SYSTEM_PROMPT.md` - Opus identity and rules
