@@ -14,10 +14,12 @@ Check these after completing implementation tasks to ensure the system meets req
 [REPLACE: Define structural requirements - files that must exist, directory layout, configuration files, etc.]
 
 Example structure checks:
-- [ ] Core directory structure exists (src/, tests/, docs/)
+- [ ] Core directory structure exists (src/, bin/, config/, docs/, drivers/)
 - [ ] Configuration files present and valid
 - [ ] Required dependencies installed
 - [ ] Entry points properly configured
+- [ ] Source code in project root src/, NOT ralph/src/
+- [ ] Scripts in project root bin/, NOT ralph/bin/
 
 Example specific checks:
 - [ ] `[critical-file].ext` exists with required sections

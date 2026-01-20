@@ -13,6 +13,58 @@ Ralph is the automated self-improvement loop for brain repositories and projects
 - Implementing file-watching monitors or task tracking systems
 - Troubleshooting display artifacts or parser issues in bash scripts
 
+## Quick Reference
+
+### Ralph Files
+
+| File | Purpose | When Updated |
+|------|---------|--------------|
+| `PROMPT.md` | Instructions for each iteration | Rarely (core behavior) |
+| `IMPLEMENTATION_PLAN.md` | Task list with priorities | Every BUILD (mark progress) |
+| `THUNK.md` | Completed work log | On task completion |
+| `THOUGHTS.md` | Goals, context, decisions | On major decisions |
+| `NEURONS.md` | Codebase map | When structure changes |
+| `AGENTS.md` | Operational commands | When features change |
+| `rules/AC.rules` | Acceptance criteria | When requirements change |
+
+### Execution Modes
+
+| Mode | Trigger | Behavior |
+|------|---------|----------|
+| **PLAN** | New session, major changes | Analyze → Update plan → Commit + Push |
+| **BUILD** | Task implementation | Implement → Mark `[?]` → Commit local |
+| **VERIFY** | After BUILD | Run `verifier.sh` → Pass = `[x]` |
+
+### Task Status Markers
+
+| Marker | Meaning | Next Action |
+|--------|---------|-------------|
+| `[ ]` | Not started | Pick and implement |
+| `[?]` | Implemented, needs verification | Run verifier |
+| `[x]` | Verified complete | Move to THUNK |
+| `[-]` | Blocked/skipped | Document reason |
+
+### Monitor Hotkeys
+
+| Script | Key | Action |
+|--------|-----|--------|
+| `current_ralph_tasks.sh` | `q` | Quit |
+| | `h` | Toggle hide completed |
+| | `r` | Refresh |
+| | `f` | Filter |
+| `thunk_ralph_tasks.sh` | `q` | Quit |
+| | `e` | Create new era |
+| | `r` | Refresh |
+
+### Common Issues
+
+| Symptom | Cause | Fix |
+|---------|-------|-----|
+| Variable lost after pipe | Subshell scoping | Use `< <(cmd)` instead of `cmd \|` |
+| Display artifacts | Missing full redraw | Clear screen before each update |
+| Stale file content | File not re-read | Use `inotifywait` or poll with checksum |
+| Task not detected | Parser boundary issue | Check `##` vs `###` header detection |
+
 ## High-Level Architecture
 
 ### Core Components
@@ -437,4 +489,4 @@ stty -echo -icanon time 0 min 0
 - **AGENTS.md**: Validation commands and operational guide
 - **current_ralph_tasks.sh**: Reference implementation for task parsing
 - **thunk_ralph_tasks.sh**: Reference implementation for tail-only parsing
-- **HISTORY.md**: Monitor bug fixes and architecture evolution
+- **docs/HISTORY.md**: Monitor bug fixes and architecture evolution

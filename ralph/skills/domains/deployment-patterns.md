@@ -26,6 +26,61 @@ Reference this KB file when:
 - Need to rollback a bad deployment quickly
 - Setting up monitoring and alerting for new services
 
+## Quick Reference
+
+### Deployment Strategies
+
+| Strategy | Downtime | Risk | Rollback | Best For |
+|----------|----------|------|----------|----------|
+| **Rolling** | Zero | Low | Slow | Stateless apps, k8s default |
+| **Blue/Green** | Zero | Low | Instant | Critical apps, databases |
+| **Canary** | Zero | Very Low | Instant | High-traffic, gradual rollout |
+| **Recreate** | Yes | Medium | Slow | Dev/staging, breaking changes |
+| **Feature Flags** | Zero | Very Low | Instant | Gradual features, A/B tests |
+
+### CI/CD Pipeline Stages
+
+| Stage | Purpose | Fail = Block? |
+|-------|---------|---------------|
+| **Lint** | Code style, syntax | Yes |
+| **Unit Tests** | Logic correctness | Yes |
+| **Build** | Compile, bundle | Yes |
+| **Integration Tests** | API, database | Yes |
+| **Security Scan** | Vulnerabilities | Yes (critical) |
+| **Deploy to Staging** | Pre-prod validation | Yes |
+| **E2E Tests** | User flows | Yes |
+| **Deploy to Production** | Release | N/A |
+
+### Environment Configuration
+
+| Environment | Purpose | Data | Debug |
+|-------------|---------|------|-------|
+| **Local** | Development | Mock/seed | Full |
+| **Staging** | Testing | Copy of prod | Full |
+| **Production** | Live users | Real | Minimal |
+
+### Common Mistakes
+
+| ❌ Don't | ✅ Do |
+|---------|------|
+| Deploy without tests | Gate on test success |
+| Manual deployments | Automate with CI/CD |
+| Same config everywhere | Environment-specific configs |
+| Deploy database + code together | Migrate DB first, then deploy |
+| No rollback plan | Blue/green or quick revert |
+| Skip staging | Always test in staging first |
+| Deploy on Fridays | Deploy early in week |
+| No health checks | Liveness + readiness probes |
+
+### Health Check Endpoints
+
+| Endpoint | Purpose | Response |
+|----------|---------|----------|
+| `/health` | Basic liveness | `200 OK` |
+| `/health/live` | Is process running? | `200` or `503` |
+| `/health/ready` | Can handle traffic? | `200` or `503` |
+| `/health/detailed` | Debug info (internal only) | JSON with deps status |
+
 ## Details
 
 ### CI/CD Pipeline Patterns

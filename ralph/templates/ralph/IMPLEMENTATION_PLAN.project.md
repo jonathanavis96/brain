@@ -2,6 +2,16 @@
 
 Last updated: [YYYY-MM-DD HH:MM:SS]
 
+## Maintenance Check (Planning Mode Only)
+
+**When in planning mode**, run `bash .maintenance/verify-brain.sh` and review `.maintenance/MAINTENANCE.md`.
+Incorporate any relevant maintenance items into the appropriate priority section below.
+
+> **Note:** When maintenance items are completed:
+> 1. Remove from `.maintenance/MAINTENANCE.md`
+> 2. Log completion in `.maintenance/MAINTENANCE_LOG.md`
+> 3. Remove from the MAINTENANCE section at the bottom of this plan
+
 ## Current State Summary
 
 [REPLACE: Describe what exists today. What has been built so far? What works? What's incomplete?]
@@ -107,3 +117,12 @@ Example entries:
 - **Scoped:** One coherent unit of work
 - **Measurable:** Obvious when it's complete
 - **Independent:** Can be done in one iteration (or dependencies explicitly noted)
+
+---
+
+## MAINTENANCE
+
+<!-- Auto-populated by verify-brain.sh - items below are consistency/housekeeping tasks -->
+<!-- When completed, remove from here AND from .maintenance/MAINTENANCE.md -->
+
+_No maintenance items currently pending._

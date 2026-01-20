@@ -52,3 +52,20 @@ Rules:
 - **Priority:** P2
 - **Status:** Reviewed - Keep as reference
 - **Review notes (2026-01-18):** Does not meet "recurring" criteria. General caching patterns already documented in skills/domains/caching-patterns.md. This is a bash-specific implementation detail with low reuse potential. Keep as reference for bash caching needs.
+
+### 2026-01-19 — Bash/Shell Project Validation Patterns
+- **Type:** Tooling / Pattern
+- **Why useful:** Ralph templates assume npm/TypeScript projects. Need bash-specific validation patterns for shell script projects.
+- **When triggered:** Bootstrapping rovo-account-manager project (pure bash/shell automation)
+- **Evidence:**
+  - Default PROMPT.md template has `npm run type-check`, `npm run lint`, `npm test`
+  - Default VALIDATION_CRITERIA.md has web app examples only
+  - Created custom validation for rovo project:
+    - `bash -n script.sh` for syntax checking
+    - `shellcheck` for static analysis
+    - Executable permission checks (`find -perm`)
+    - JSON validation with `jq`
+    - Security checks for hardcoded credentials
+  - Should add bash/shell template variant or make templates tech-stack aware
+- **Priority:** P1
+- **Status:** Identified

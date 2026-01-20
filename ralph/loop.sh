@@ -439,7 +439,7 @@ fi
 PLAN_PROMPT="$RALPH/PROMPT.md"
 BUILD_PROMPT="$RALPH/PROMPT.md"
 
-# Verifier gate - runs AC.rules checks after BUILD
+# Verifier gate - runs rules/AC.rules checks after BUILD
 VERIFY_SCRIPT="$RALPH/verifier.sh"
 RUN_ID_FILE="$RALPH/.verify/run_id.txt"
 INIT_SCRIPT="$RALPH/init_verifier_baselines.sh"

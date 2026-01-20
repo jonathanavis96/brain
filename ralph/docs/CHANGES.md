@@ -39,8 +39,8 @@ Reduced per-iteration token load by ~84% through lean prompts and delegation mod
 | Project loop.sh | ~450 lines | 25 lines | 95% |
 
 ### New Files
-- **EDGE_CASES.md** - Detailed examples, error recovery, commit formats (read on-demand, not preloaded)
-- **CHANGES.md** - This file
+- **docs/EDGE_CASES.md** - Detailed examples, error recovery, commit formats (read on-demand, not preloaded)
+- **docs/CHANGES.md** - This file
 
 ### New Environment Variables
 | Variable | Default | Purpose |

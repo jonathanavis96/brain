@@ -169,7 +169,7 @@ Prevent recurring mistakes where Ralph fixes code but forgets related documentat
 
 ## Automated Gates
 
-These checks are enforced by `verifier.sh` via `AC.rules`:
+These checks are enforced by `verifier.sh` via `rules/AC.rules`:
 
 | Gate | What it catches |
 |------|-----------------|

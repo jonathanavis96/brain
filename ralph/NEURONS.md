@@ -28,8 +28,8 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 ├── rovodev-config.yml           # RovoDev configuration
 │
 ├── PROMPT.md                    # Lean prompt (~95 lines) - core Ralph mechanics
-├── EDGE_CASES.md                # Detailed examples, error recovery (read on-demand)
-├── CHANGES.md                   # Release notes and migration guide
+├── docs/EDGE_CASES.md           # Detailed examples, error recovery (read on-demand)
+├── docs/CHANGES.md              # Release notes and migration guide
 ├── IMPLEMENTATION_PLAN.md       # Persistent TODO list
 │
 ├── skills/                      # Knowledge Base (7 files)
@@ -92,8 +92,8 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 | **Understand what's in the brain** | `NEURONS.md` (this file) |
 | **Run Ralph loop** | `AGENTS.md` → `bash loop.sh` |
 | **Find TODO list** | `IMPLEMENTATION_PLAN.md` |
-| **See commit examples & error recovery** | `EDGE_CASES.md` |
-| **See recent changes** | `CHANGES.md` |
+| **See commit examples & error recovery** | `docs/EDGE_CASES.md` |
+| **See recent changes** | `docs/CHANGES.md` |
 | **See KB structure** | `skills/SUMMARY.md` |
 | **Check React performance patterns** | `references/react-best-practices/HOTLIST.md` → `INDEX.md` |
 | **Create new KB file** | `skills/conventions.md` (authoring guide) |

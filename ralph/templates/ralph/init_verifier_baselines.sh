@@ -19,9 +19,9 @@ mkdir -p .verify
 # Generate hash baselines for protected files
 echo "Generating hash baselines..."
 
-if [[ -f "AC.rules" ]]; then
-  sha256sum AC.rules | cut -d' ' -f1 > .verify/ac.sha256
-  echo "  ✓ AC.rules → .verify/ac.sha256"
+if [[ -f "rules/AC.rules" ]]; then
+  sha256sum rules/AC.rules | cut -d' ' -f1 > .verify/ac.sha256
+  echo "  ✓ rules/AC.rules → .verify/ac.sha256"
 fi
 
 if [[ -f "loop.sh" ]]; then

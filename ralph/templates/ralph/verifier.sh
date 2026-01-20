@@ -4,8 +4,8 @@ set -euo pipefail
 # Get script directory for relative paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-AC_FILE="${1:-${SCRIPT_DIR}/AC.rules}"
-APPROVALS_FILE="${2:-${SCRIPT_DIR}/MANUAL_APPROVALS.rules}"
+AC_FILE="${1:-${SCRIPT_DIR}/rules/AC.rules}"
+APPROVALS_FILE="${2:-${SCRIPT_DIR}/rules/MANUAL_APPROVALS.rules}"
 
 VERIFY_DIR="${SCRIPT_DIR}/.verify"
 REPORT_FILE="${VERIFY_DIR}/latest.txt"
@@ -74,7 +74,7 @@ hash_guard_check() {
   actual="$(sha256sum "$AC_FILE" | awk '{print $1}')"
   if [[ "$expected" != "$actual" ]]; then
     {
-      echo "[$(timestamp)] FAIL: AC hash mismatch (AC.rules modified)."
+      echo "[$(timestamp)] FAIL: AC hash mismatch (rules/AC.rules modified)."
       echo "Expected: $expected"
       echo "Actual:   $actual"
       echo "Fix: If intentional, update:"
@@ -126,7 +126,7 @@ main() {
     exit 2
   fi
 
-  # Change to script directory so commands in AC.rules use relative paths
+  # Change to script directory so commands in rules/AC.rules use relative paths
   cd "$SCRIPT_DIR"
 
   # Fail fast if baselines not initialized

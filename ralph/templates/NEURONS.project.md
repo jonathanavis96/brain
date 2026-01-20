@@ -28,18 +28,25 @@ This is the **project map** that Ralph and all agents read on-demand when needed
 ├── NEURONS.md                   # This file (project map - what exists where)
 ├── THOUGHTS.md                  # Project vision, goals, and success criteria
 │
-├── ralph/                       # Ralph loop infrastructure
+├── ralph/                       # Ralph loop infrastructure (ONLY loop files here)
 │   ├── loop.sh                  # Ralph loop runner (bash)
+│   ├── verifier.sh              # AC verifier script
 │   ├── PROMPT.md                # Unified prompt (plan + build modes)
 │   ├── IMPLEMENTATION_PLAN.md   # Persistent TODO list
 │   ├── VALIDATION_CRITERIA.md   # Quality gates and acceptance criteria
-│   └── rovodev-config.yml       # RovoDev configuration
+│   ├── rovodev-config.yml       # RovoDev configuration
+│   ├── rules/                   # Acceptance criteria rules
+│   │   ├── AC.rules             # Automated checks
+│   │   └── MANUAL_APPROVALS.rules # Manual approval records
+│   └── .verify/                 # Verifier state/hashes
 │
-├── [src/]                       # [REPLACE: Main source code directory]
+├── [src/]                       # [REPLACE: Main source code directory - NOT ralph/src/!]
 │   ├── [components/]            # [REPLACE: Describe what goes here]
 │   ├── [modules/]               # [REPLACE: Describe what goes here]
 │   └── [utils/]                 # [REPLACE: Describe what goes here]
 │
+├── [bin/]                       # [REPLACE: Executable scripts - NOT ralph/bin/!]
+├── [drivers/]                   # [REPLACE: External binaries like chromedriver]
 ├── [tests/]                     # [REPLACE: Test files location]
 ├── [docs/]                      # [REPLACE: Documentation location]
 ├── [config/]                    # [REPLACE: Configuration files]

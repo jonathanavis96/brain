@@ -25,6 +25,54 @@ Reference this KB file when:
 - Form with complex validation rules or multi-step flows
 - Need to sync client state with server state
 
+## Quick Reference
+
+### State Types and Solutions
+
+| State Type | Examples | Recommended Tool |
+|------------|----------|------------------|
+| **Local UI** | Modal open, input value | `useState` |
+| **Shared UI** | Theme, sidebar open | Context or Zustand |
+| **Server/Cache** | API data, user profile | React Query / SWR |
+| **Form** | Input values, validation | React Hook Form |
+| **URL** | Filters, pagination | `useSearchParams` |
+| **Global App** | Auth, cart, notifications | Zustand or Redux Toolkit |
+
+### Tool Decision Matrix
+
+| Need | useState | Context | Zustand | Redux | React Query |
+|------|----------|---------|---------|-------|-------------|
+| Simple local state | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Avoid prop drilling | ❌ | ✅ | ✅ | ✅ | ❌ |
+| Frequent updates | ✅ | ⚠️ | ✅ | ✅ | ❌ |
+| Server data + cache | ❌ | ❌ | ❌ | ⚠️ | ✅ |
+| Time-travel debug | ❌ | ❌ | ✅ | ✅ | ❌ |
+| Minimal boilerplate | ✅ | ✅ | ✅ | ❌ | ✅ |
+| DevTools | ❌ | ❌ | ✅ | ✅ | ✅ |
+
+### Common Mistakes
+
+| ❌ Don't | ✅ Do |
+|---------|------|
+| Redux for everything | Match tool to state type |
+| Prop drill 4+ levels | Use Context or state library |
+| Store server data in Redux | Use React Query/SWR |
+| Derive state in render | `useMemo` or compute once |
+| Update state in loops | Batch updates |
+| Context for frequent updates | Zustand or split contexts |
+| Controlled inputs always | Uncontrolled for simple forms |
+| Forget cleanup in useEffect | Return cleanup function |
+
+### Performance Patterns
+
+| Problem | Solution |
+|---------|----------|
+| Unnecessary re-renders | `React.memo`, selector functions |
+| Slow context updates | Split into multiple contexts |
+| Stale closures | `useRef` for latest value |
+| Race conditions | Cancel previous requests |
+| Large state object updates | Immer for immutable updates |
+
 ## Details
 
 ### State Classification
