@@ -13,9 +13,9 @@ Incorporate any relevant maintenance items into the appropriate priority section
 ## Overview
 
 **Status:** Active - Phase 0-A in progress (Cortex Manager Pack - Create & Setup)  
-**Branch:** `brain-work` (1 commit ahead of origin)  
+**Branch:** `brain-work` (2 commits ahead of origin)  
 **Last Updated:** 2026-01-20  
-**Progress:** 1 of 65 tasks complete (1.5%)
+**Progress:** 1 of 64 tasks complete (1.6%)
 
 ---
 
@@ -24,12 +24,6 @@ Incorporate any relevant maintenance items into the appropriate priority section
 **Goal:** Create "Cortex" manager layer alongside existing Ralph (no breaking changes).
 
 **Reference:** See `THOUGHTS.md` section "Cortex Manager Pack" for architecture and rationale.
-
-**Note:** Before starting Phase 0-A tasks, commit uncommitted loop.sh changes from previous BUILD iteration:
-```bash
-git add loop.sh
-git commit -m "feat(loop): add human intervention detection via exit code 43"
-```
 
 ### 0.A.1 - Create Cortex Folder & Core Files (7 items)
 
