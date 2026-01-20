@@ -159,7 +159,7 @@ If file has a template counterpart:
 - In PLANNING mode, end your response with: `:::PLAN_READY:::`
 - In BUILD mode, end your response with: `:::BUILD_READY:::`
 
-After BUILD, `loop.sh` runs `verifier.sh` which checks `AC.rules`. Only if all checks pass does the loop continue.
+After BUILD, `loop.sh` runs `verifier.sh` which checks `rules/AC.rules`. Only if all checks pass does the loop continue.
 
 ## Task Status Rules
 
@@ -173,9 +173,9 @@ You may mark tasks `[?]` when you've implemented changes. The verifier determine
 
 ## Acceptance Criteria Source of Truth
 
-- Automated acceptance criteria live in: `AC.rules`
-- `AC.rules` is protected by a hash guard: `.verify/ac.sha256`
-- You MUST NOT modify `AC.rules` or `ac.sha256`.
+- Automated acceptance criteria live in: `rules/AC.rules`
+- `rules/AC.rules` is protected by a hash guard: `.verify/ac.sha256`
+- You MUST NOT modify `rules/AC.rules` or `ac.sha256`.
 - If criteria needs change, create `SPEC_CHANGE_REQUEST.md` and STOP.
 
 ## Safety Rules (Non-Negotiable)
@@ -185,7 +185,7 @@ You may mark tasks `[?]` when you've implemented changes. The verifier determine
 - **Search before creating** - Verify something doesn't exist before adding it
 - **One task per BUILD** - No batching, no "while I'm here" extras
 - **Never remove uncompleted items** - NEVER delete `[ ]` tasks from IMPLEMENTATION_PLAN.md
-- **Protected files** - Do NOT modify: `AC.rules`, `.verify/ac.sha256`, `verifier.sh`, `.verify/verifier.sha256`, `loop.sh`, `.verify/loop.sha256`, `PROMPT.md`, `.verify/prompt.sha256`
+- **Protected files** - Do NOT modify: `rules/AC.rules`, `.verify/ac.sha256`, `verifier.sh`, `.verify/verifier.sha256`, `loop.sh`, `.verify/loop.sha256`, `PROMPT.md`, `.verify/prompt.sha256`
 
 ---
 
@@ -249,7 +249,7 @@ Do NOT continue until `.verify/waivers/<WAIVER_ID>.approved` exists.
 | THOUGHTS.md | Project goals, success criteria |
 | NEURONS.md | Codebase map (where things are) |
 | AGENTS.md | Validation commands, operational guide |
-| EDGE_CASES.md | Detailed examples, error recovery (read when needed) |
+| docs/EDGE_CASES.md | Detailed examples, error recovery (read when needed) |
 | skills/domains/code-hygiene.md | Definition of Done procedures |
 
 ## Commit Types & Scopes
@@ -258,4 +258,4 @@ Do NOT continue until `.verify/waivers/<WAIVER_ID>.approved` exists.
 
 **Scopes:** `ralph`, `templates`, `skills`, `refs`, `plan`, `loop`
 
-For detailed examples and error recovery: see EDGE_CASES.md
+For detailed examples and error recovery: see docs/EDGE_CASES.md

@@ -2,6 +2,11 @@
 
 Use this template when creating new skill files. Copy and fill in all sections.
 
+**Key principle:** Section 9 (Quick Reference Tables) is the most important section for usability.
+Tables enable fast scanning without reading prose. Always include:
+- An "At a Glance" table with key concepts
+- A "Common Mistakes" table with ❌/✅ patterns
+
 ---
 
 # Skill: <skill-short-name>
@@ -73,13 +78,32 @@ This skill is complete when these exist:
 - <deliverable 1>
 - <deliverable 2>
 
-## 9) Gotchas / Failure Modes
+## 9) Quick Reference Tables
+
+### At a Glance
+
+| Concept | Description | Example |
+|---------|-------------|---------|
+| `<key-concept-1>` | <what it means> | <brief example> |
+| `<key-concept-2>` | <what it means> | <brief example> |
+
+### Common Mistakes
+
+| ❌ Don't | ✅ Do | Why |
+|----------|-------|-----|
+| <bad pattern> | <good pattern> | <brief explanation> |
+| <bad pattern> | <good pattern> | <brief explanation> |
+
+## 10) Gotchas / Failure Modes
 
 Common ways the agent fails here:
-- <failure mode 1> → mitigation
-- <failure mode 2> → mitigation
 
-## 10) Minimal Example (repo-specific)
+| Failure Mode | Mitigation |
+|--------------|------------|
+| <failure mode 1> | <how to avoid/fix> |
+| <failure mode 2> | <how to avoid/fix> |
+
+## 11) Minimal Example (repo-specific)
 
 **Context:**
 <describe the situation>

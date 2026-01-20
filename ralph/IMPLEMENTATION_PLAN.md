@@ -1,244 +1,325 @@
-# Implementation Plan - Brain Repository Maintenance
+# Implementation Plan - Brain Repository
+
+## Maintenance Check (Planning Mode Only)
+
+**When in planning mode**, run `bash .maintenance/verify-brain.sh` and review `.maintenance/MAINTENANCE.md`.
+Incorporate any relevant maintenance items into the appropriate priority section below.
+
+> **Note:** When maintenance items are completed:
+> 1. Remove from `.maintenance/MAINTENANCE.md`
+> 2. Log completion in `.maintenance/MAINTENANCE_LOG.md`
+> 3. Remove from the MAINTENANCE section at the bottom of this plan
 
 ## Overview
 
-**Status:** ✅ COMPLETE - All phases finished  
-**Branch:** `brain-work` (synced with origin, 375+ commits ahead of origin/main)  
-**Last Updated:** 2026-01-19 18:00 (PLAN iteration - Phase 4 complete)
-
-### Context
-
-CodeRabbit v2 review progress:
-- ✅ Phase 1: Template hash baselines updated (1 item)
-- ✅ Phase 2: Minor issues fixed (12 items)
-- ✅ Phase 3: LOW priority nitpicks (29 complete, 1 deferred, 1 skipped)
-- ✅ Phase 4: Outside Diff items (5 of 5 complete)
-
-**Phase 3 Assessment:**
-- Items are style/optimization improvements, not bugs
-- Primary value: codebase polish and technical debt reduction
-- Secondary value: learning opportunities for Ralph patterns
-- Execution strategy: Quick wins first (format/docs), then dead code, then robustness
+**Status:** Active  
+**Branch:** `brain-work`  
+**Last Updated:** 2026-01-20
 
 ---
 
-## HIGH PRIORITY
+## Phase 0-A: Cortex Manager Pack - Create & Setup (19 items) - HUMAN APPROVED 2026-01-20
 
-### Phase 1: Template Hash Baselines (1 item)
+**Goal:** Create "Cortex" manager layer alongside existing Ralph (no breaking changes).
 
-Source: Discovery during planning - `templates/ralph/.verify/` has stale hash baselines
+**Reference:** See `THOUGHTS.md` section "Cortex Manager Pack" for architecture and rationale.
 
-- [x] **1.1** Update `templates/ralph/.verify/` hash baselines to match current protected files
-  - `loop.sha256`: Update from `e753d05...` to `cb54c8a...` (matches `loop.sh`)
-  - `prompt.sha256`: Update from `b29969...` to `b355c8...` (matches `PROMPT.md`)
-  - Verify: `sha256sum loop.sh PROMPT.md verifier.sh AC.rules` and compare to template hashes
-  - Reason: Template directory should have correct baselines for new projects
+### 0.A.1 - Create Cortex Folder & Core Files (7 items)
 
----
+- [ ] **0.A.1.1** Create `brain/cortex/` folder
+  - **AC:** Folder exists at `brain/cortex/`
 
-## MEDIUM PRIORITY
+- [ ] **0.A.1.2** Create `cortex/CORTEX_SYSTEM_PROMPT.md` - Opus identity and rules
+  - **AC:** File contains: role definition ("You are Cortex, the Brain's manager"), what Cortex can modify (only IMPLEMENTATION_PLAN.md, THOUGHTS.md, GAP_BACKLOG.md, SKILL_BACKLOG.md), what Cortex cannot modify (PROMPT.md, loop.sh, verifier.sh, source code), workflow (Plan → Review → Delegate), Task Contract format template
 
-### Phase 2: Minor Issues from CodeRabbit v2 (12 items)
+- [ ] **0.A.1.3** Create `cortex/REPO_MAP.md` - Human-friendly repo navigation
+  - **AC:** File contains: folder purposes (cortex/, workers/, skills/, templates/), key files and their roles, where state lives, where skills are, navigation tips
 
-Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items M-19, M-21 through M-32
+- [ ] **0.A.1.4** Create `cortex/DECISIONS.md` - Stability anchor
+  - **AC:** File contains: naming conventions, update cadences, style preferences, architectural decisions (copy from THOUGHTS.md decision log + add Cortex decisions)
 
-**Note:** Original Phase 1 tasks (1.1-1.14) were already completed in previous iterations but plan wasn't updated.
+- [ ] **0.A.1.5** Create `cortex/RUNBOOK.md` - Operations guide
+  - **AC:** File contains: how to start Cortex (`bash cortex/run.sh`), how to start Ralph, troubleshooting steps, what to do if blocked, verification commands
 
-- [x] **2.1** `render_ac_status.sh:57-71` - Add SKIP pattern to regex and case statement (M-19)
-- [x] **2.2** `skills/self-improvement/SKILL_TEMPLATE.md:9-12` - Change "Claude" to "the agent" (M-21)
-- [x] **2.3** `skills/self-improvement/SKILL_TEMPLATE.md:66-69` - Change `index.md` reference to `SUMMARY.md` (M-22)
-- [x] **2.4** `generators/generate-neurons.sh:653-660` - Change "KB Index" label to "Skills Index" (M-23)
-- [x] **2.5** `skills/conventions.md:248-251` - Remove duplicate PROMPT template bullet (M-24)
-- [x] **2.6** `skills/domains/README.md:61-63` - Remove "(planned)" qualifier for conventions.md (M-25)
-- [x] **2.7** `skills/self-improvement/README.md:20-25` - Change `skills/index.md` to `skills/SUMMARY.md` (M-26)
-- [x] **2.8** `AGENTS.md:56-58` - Add fence language tag for `:::COMPLETE:::` block (M-27)
-- [x] **2.9** `AGENTS.md:30-41` - Update monitor hotkeys documentation to match actual behavior (M-28)
-- [x] **2.10** `PROMPT.md:109-110` - Add new hash-guarded files to protected-files list (M-29)
-- [x] **2.11** `skills/domains/ralph-patterns.md:71-76` - Update commit strategy to use `[?]` not `[x]` (M-30)
-- [x] **2.12** `THOUGHTS.md:17-23` - Add `bash` fence language tag (M-31) - OBSOLETE: Bug A section removed in 149e5fe streamline commit
+- [ ] **0.A.1.6** Create `cortex/IMPLEMENTATION_PLAN.md` - Task Contract template
+  - **AC:** File contains: header explaining this is Cortex's plan, example Task Contract with Goal/Subtask/Constraints/Inputs/Acceptance Criteria/If Blocked format, empty "Current Tasks" section
 
----
+- [ ] **0.A.1.7** Create `cortex/THOUGHTS.md` - Cortex thinking space
+  - **AC:** File contains: header explaining purpose ("Cortex's analysis and decisions"), "Current Mission" section (empty), "Decision Log" section (empty)
 
-## LOW PRIORITY
+### 0.A.2 - Create cortex/run.sh and snapshot.sh (4 items)
 
-### Phase 3: Nitpicks from CodeRabbit v2 (30 items total - ALL RESOLVED)
+- [ ] **0.A.2.1** Create `cortex/snapshot.sh` - Generates current state
+  - **AC:** Script outputs: current mission (from cortex/THOUGHTS.md), task progress (X/Y from IMPLEMENTATION_PLAN.md), last 3 THUNK entries, GAP_BACKLOG.md entry count, git status (clean/dirty), last 5 commits (oneline)
+  - **AC:** Script uses strict mode (`set -euo pipefail`)
+  - **AC:** Script is executable (`chmod +x`)
 
-Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items N-1 through N-31
+- [ ] **0.A.2.2** Create `cortex/run.sh` - Main entry point
+  - **AC:** Script concatenates: CORTEX_SYSTEM_PROMPT.md + snapshot output + DECISIONS.md
+  - **AC:** Script pipes to `acli rovodev run` (similar pattern to ralph/loop.sh)
+  - **AC:** Script uses strict mode, has usage help (`--help`)
+  - **AC:** Script is executable
 
-#### Refactoring (6 items - 5 complete, 1 deferred)
+- [ ] **0.A.2.3** Create `cortex/.gitignore` if needed
+  - **AC:** Ignores any local/temp files (e.g., snapshot output cache)
 
-- [x] **3.1** `loop.sh:644-675` - Extract `launch_in_terminal()` helper for duplicated terminal detection (N-1)
-- [x] **3.2** `templates/ralph/loop.sh:644-675` - Sync with extracted helper (N-4)
-- [x] **3.3** `current_ralph_tasks.sh` - Use process substitution `< <(...)` instead of pipe in while loop (N-2)
-- [x] **3.4** `thunk_ralph_tasks.sh` - Use process substitution instead of pipe in while loop (N-3)
-- [x] **3.5** `new-project.sh:412-422` - Add `escape_sed_replacement` function for THUNK template (N-5)
-- [⏭️] **3.6** `templates/ralph/loop.sh:299-309` - Consider yq for modelId sed operation (N-6)
-  - Status: DEFERRED - sed solution is adequate, yq adds unnecessary dependency
+- [ ] **0.A.2.4** Test: Run `bash cortex/run.sh --help` successfully
+  - **AC:** Help text displays without errors
 
-#### Dead Code (8 items - 4 complete, 4 remaining)
+### 0.A.3 - Update Ralph to Read from Cortex Plan (4 items)
 
-**Goal:** Clean up unused variables/functions to pass shellcheck cleanly
+- [ ] **0.A.3.1** Update `ralph/loop.sh` to copy Cortex plan at startup
+  - **AC:** At start of `run_once()`, if `../cortex/IMPLEMENTATION_PLAN.md` exists and is newer than `IMPLEMENTATION_PLAN.md`, copy it
+  - **AC:** Log message: "Syncing from Cortex plan..."
+  - **AC:** Only copy once per loop invocation (not per iteration)
 
-- [x] **3.7** `templates/ralph/current_ralph_tasks.sh:25-35` - Remove unused `SHOW_HELP` flag (N-7)
-- [x] **3.8** `templates/ralph/current_ralph_tasks.sh:354-369` - Remove unused `wrap_text` function (N-8)
-- [x] **3.9** `templates/ralph/current_ralph_tasks.sh:371-485` - Use `_` placeholders for unused `icon`, `full_desc` (N-9)
-- [x] **3.10** `current_ralph_tasks.sh:354-369` - Remove unused `wrap_text` function (N-10)
-  - Note: Root file still has dead function, template already cleaned
-- [x] **3.11** `thunk_ralph_tasks.sh:106-112` - Remove unused `normalize_description` function (N-11)
-- [x] **3.12** `templates/ralph/thunk_ralph_tasks.sh:127-134` - Remove unused `in_era` variable (N-12)
-- [x] **3.13** `templates/ralph/thunk_ralph_tasks.sh:146-162,239-255` - Use `_` for unused parsed vars (N-13)
-- [x] **3.14** `templates/ralph/thunk_ralph_tasks.sh:167,260,311` - Fix SC2155 in template (N-14)
+- [ ] **0.A.3.2** Update `ralph/PROMPT.md` to reference Cortex as source of truth
+  - **AC:** Add section explaining: "Cortex provides high-level tasks in `cortex/IMPLEMENTATION_PLAN.md`. Ralph copies this to his own `IMPLEMENTATION_PLAN.md` and tracks progress there."
 
-#### Format/Style (7 items - 7 complete, 0 remaining, 1 skipped)
+- [ ] **0.A.3.3** Update `ralph/AGENTS.md` to document Cortex → Ralph workflow
+  - **AC:** Add "Manager/Worker Architecture" section explaining the relationship
 
-**Goal:** Consistency and markdown linter compliance
+- [ ] **0.A.3.4** Update `ralph/NEURONS.md` to include cortex/ in the brain map
+  - **AC:** Add cortex/ folder and its files to the map
 
-- [x] **3.15** `.verify/verifier.sha256:1` - Standardize format with filename suffix (N-15)
-- [x] **3.16** `templates/ralph/PROMPT.project.md:39-41` - Fix MD050 strong-style (N-16)
-- [x] **3.17** `HISTORY.md:86` - Remove spaces in inline code spans (N-17) - SKIPPED: Historical records should not be altered
-- [x] **3.18** `templates/ralph/PROMPT.md:50-53` - Add `markdown` fence language tag (N-18)
-- [x] **3.19** `NEURONS.md:204-206` - Change Windows backslashes to forward slashes (N-19)
-- [x] **3.20** `skills/index.md:1-6` - Remove or auto-generate "Last updated" stamp (N-20)
-- [x] **3.21** `THUNK.md:99-100,182,186,190,194-195` - Fix duplicate THUNK numbers with suffixes (N-21)
+### 0.A.4 - Restructure: Copy ralph/ to workers/ralph/ (4 items)
 
-#### Robustness (6 items - 4 complete, 2 remaining)
+**IMPORTANT:** This sub-phase ONLY copies files. Delete happens in Phase 0-B after human verification.
 
-**Goal:** Prevent edge-case failures and improve error handling
+- [ ] **0.A.4.1** Create `brain/workers/` folder
+  - **AC:** Folder exists at `brain/workers/`
 
-- [x] **3.22** `templates/ralph/init_verifier_baselines.sh:43-50` - Check each .gitignore entry independently (N-22)
-- [x] **3.23** `templates/ralph/init_verifier_baselines.sh:22-24` - Normalize hash storage in init script (N-23)
-  - Fixed: 01af2f4 - Now uses `cut -d' ' -f1` to store only hash
-- [x] **3.24** `templates/ralph/.verify/ac.sha256` - Normalize format to match other baseline files (N-23)
-  - Fixed: 0cd141a - Changed from 'hash  filename' to 'hash' only format
-- [x] **3.25** `templates/ralph/current_ralph_tasks.sh:101-201` - Hash full raw line to prevent cache collisions (N-24)
-  - Fixed: Changed cache key from `echo -n "$task_desc"` to `echo -n "$line"` in both root and template files
-- [⏭️] **3.26** `templates/ralph/current_ralph_tasks.sh:242-349` - Align Archive/Clear parsing with extract logic (N-25)
-  - Status: DEFERRED - Extract logic uses uppercase normalization and ## boundary check that Archive/Clear don't need
-  - Analysis: Archive/Clear functions (lines 241-350) correctly use case-sensitive matching for High/Medium/Low Priority and ### boundary checks. Extract logic (lines 100-203) has different requirements: case-insensitive detection via uppercase normalization and ## (not ###) boundary to allow subsections. The divergence is intentional and appropriate for their different contexts.
-  - Risk: Very low - Both functions work correctly in practice, no bugs reported
-  - Effort: Medium - Would require extracting shared primitives while preserving different boundary/case rules
-  - Decision: Not worth refactoring for style alignment alone
-- [x] **3.27** `templates/ralph/verifier.sh:30-34` - Use `grep -F` for literal matching to prevent regex injection (N-26)
-  - Fixed: 1976853 - Added `-F` flag for security
+- [ ] **0.A.4.2** Copy entire `brain/ralph/` to `brain/workers/ralph/`
+  - **AC:** All files and subfolders copied (preserving structure)
+  - **AC:** Original `brain/ralph/` still exists (not moved yet)
+  - **AC:** Verify with: `diff -rq brain/ralph brain/workers/ralph` shows no differences
 
-#### Documentation (4 items - 1 complete, 3 remaining)
+- [ ] **0.A.4.3** Update path references in `workers/ralph/loop.sh`
+  - **AC:** All relative paths updated (e.g., `../cortex/` becomes `../../cortex/`)
+  - **AC:** SCRIPT_DIR detection still works from new location
 
-**Goal:** Complete terminology migration and improve user guidance
-
-- [x] **3.28** `templates/backend/AGENTS.project.md:22-33` - Update "KB file" to "skill file" (N-28)
-- [x] **3.29** `templates/AGENTS.project.md:58-74` - Add standalone-mode note for missing brain (N-29)
-- [x] **3.30** `rovodev-config.yml:11-12` - Document model provisioning requirement (N-30)
-- [x] **3.31** `templates/ralph/thunk_ralph_tasks.sh:262-268` - Add non-TTY guard for `tput cup` (N-31)
-  - Fixed: 942da6a - Added `[[ -t 1 ]]` guard before tput commands
+- [ ] **0.A.4.4** Update path references in `workers/ralph/PROMPT.md`, `workers/ralph/AGENTS.md`, `workers/ralph/NEURONS.md`
+  - **AC:** All file references use correct relative paths from new location
 
 ---
 
-## ⏭️ DEFERRED/SKIPPED
+## ⛔ PHASE 0-A COMPLETE - MANDATORY STOP
 
-| Item | Status | Reason |
-|------|--------|--------|
-| **3.6** - yq for modelId sed | DEFERRED | Sed solution adequate, yq adds unnecessary dependency |
-| **3.26** - Align Archive/Clear parsing | DEFERRED | Intentional divergence for different contexts, no bugs |
-| `old_sh/test-rovodev-integration.sh` issues | SKIPPED | Archived code - not maintaining |
-| `AC.rules` pattern overlap | SKIPPED | Intentional defense-in-depth design |
-| `HISTORY.md` MD038 at line 86 | SKIPPED | Historical records - don't alter |
+**DO NOT PROCEED TO PHASE 0-B.**
 
----
+When all Phase 0-A tasks are checked `[x]`, Ralph MUST:
+1. Output `:::PHASE-0A-COMPLETE:::`
+2. Output `:::COMPLETE:::`
+3. **STOP** - Do not read or execute Phase 0-B tasks
 
-## Execution Strategy
+**Why:** Human must manually verify the copy worked before deleting the original:
+```bash
+cd brain/workers/ralph && bash loop.sh --iterations 1
+```
 
-### PLAN Mode Actions (This Iteration)
-
-1. ✅ Review current state (All phases complete)
-2. ✅ Verify verifier.sh passes cleanly (no output = success)
-3. ✅ Confirm all 29/30 active tasks marked [x] (2 deferred, 1 skipped)
-4. ✅ Update IMPLEMENTATION_PLAN.md with completion status
-5. ✅ All commits already pushed to origin/brain-work
-6. ✅ Branch synced and ready for PR
-
-### BUILD Iterations (Phase 3) - Next Execution Order
-
-**✅ Batch 1 - Format/Style (COMPLETE):**
-- All 7 format/style tasks complete
-
-**✅ Batch 2 - Dead Code (COMPLETE):**
-- All 8 dead code cleanup tasks complete
-
-**✅ Batch 3 - Trivial Robustness (COMPLETE):**
-- Both tasks complete (grep -F flag, tput TTY guard)
-
-**Batch 4 - Documentation (3 tasks, ~3 iterations):**
-- 3.28 (terminology: KB file → skill file)
-- 3.29 (standalone-mode note)
-- 3.30 (rovodev-config.yml model provisioning docs)
-
-**Batch 5 - Medium Robustness (3 tasks, ~3 iterations):**
-- 3.28-EXTRA (trap handler for temp cleanup)
-- 3.25, 3.26 (cache/parsing refactors - evaluate complexity first)
-
-### Quality Gates
-
-- **Shellcheck:** Run after ANY .sh file changes
-- **Template sync:** Changes to root files must sync to `templates/ralph/`
-- **Testing:** Monitor scripts require manual verification with `bash script.sh`
-- **Markdown lint:** Validate .md changes don't break tables/formatting
-
-### Success Criteria
-
-Phase 3 complete when:
-- [x] All active tasks resolved (29/30 done, 2 deferred, 1 skipped)
-- [x] All commits pushed to `origin/brain-work`
-- [x] `verifier.sh` passes cleanly
-- [x] No shellcheck warnings in modified scripts
-- [x] Ready to merge `brain-work` → `main`
-
-### Progress Summary
-
-**Completed this cycle (all commits pushed to origin):**
-- ✅ 3.23, 3.24 - Normalize hash storage formats (01af2f4, 0cd141a)
-- ✅ 3.27 - Add grep -F for security (1976853)
-- ✅ 3.31 - Add tput TTY guard (942da6a)
-
-**Previous cycle (pushed to origin):**
-- ✅ 3.19 through 3.22 - Format fixes and .gitignore robustness
-- ✅ 3.9 through 3.14 - Dead code cleanup and SC2155 fixes
-
-**Total Phase 3 progress: 29/30 active tasks (100% complete)**
-
-**Next Steps:**
-1. ✅ All commits pushed to origin/brain-work (375 commits ahead of main)
-2. 🔄 **ACTION REQUIRED:** Create PR: `brain-work` → `main` (requires human approval)
----
-
-## LOW PRIORITY
-
-### Phase 4: Outside Diff Items (5 items - from CodeRabbit v2)
-
-Source: `CODERABBIT_REVIEW_ANALYSIS_v2.md` - Items OD-1, OD-2, OD-3, OD-4, OD-6
-
-**Note:** These items were outside the PR diff range but identified during review. All relate to stale `kb/` references that should be `skills/`.
-
-- [x] **4.1** `generators/generate-thoughts.sh:370-385` - Update wording to "complete skills index" (OD-1)
-- [x] **4.2** `templates/python/NEURONS.project.md:55-57` - Change `kb/` → `skills/` in Directory Structure (OD-2)
-- [x] **4.3** `templates/ralph/RALPH.md:140,151` - Change `kb/` → `skills/` in File Structure comments (OD-3)
-  - Line 140: `├── kb/` → `├── skills/`
-  - Line 151: `kb/, logs/` → `skills/, logs/`
-  - Note: Template for NEW projects, but refers to brain's skills/ directory
-- [x] **4.4** `skills/projects/brain-example.md` - Update kb→skills terminology (OD-4)
-  - Changed all 8 `kb/` references to `skills/`
-  - Updated file references to current structure (loop.sh, IMPLEMENTATION_PLAN.md, verifier.sh, THUNK.md, new-project.sh)
-  - Removed outdated PowerShell references
-  - File remains relevant as example of project-specific skill documentation
-- [x] **4.5** `skills/SUMMARY.md:49-70` - Add fence language tag to repository structure diagram (OD-6)
-  - Current: Plain fence ``` (no language tag)
-  - Change to: ```text
-  - Fixed: Added `text` language tag to repository structure diagram
+**To continue:** Human will manually unblock Phase 0-B after verification.
 
 ---
 
-## Next Steps
+## Phase 0-B: Cortex Manager Pack - Cleanup & Templates (11 items) - BLOCKED
 
-1. ✅ All CodeRabbit v2 phases complete (67 of 81 items resolved, 10 skipped, 4 design decisions deferred)
-2. ✅ CODERABBIT_REVIEW_ANALYSIS_v2.md updated with Phase 4 completion status
-3. 🔄 **PLAN MODE:** Document completion state and prepare for human review
-4. ⏳ **REQUIRES HUMAN:** Create PR `brain-work` → `main` (375+ commits ahead)
+> **🔒 BLOCKED:** This phase requires human approval after Phase 0-A verification.
+> 
+> **Unblock condition:** Human has run `bash brain/workers/ralph/loop.sh --iterations 1` successfully
+> and confirmed by removing this BLOCKED notice.
+
+### 0.B.1 - Delete Old ralph/ and Update References (5 items) - BLOCKED
+
+**PREREQUISITE:** Human has verified `workers/ralph/loop.sh` works from new location.
+
+- [ ] **0.B.1.1** Update `cortex/snapshot.sh` to read from `workers/ralph/`
+  - **AC:** THUNK.md path updated to `../workers/ralph/THUNK.md`
+
+- [ ] **0.B.1.2** Delete `brain/ralph/` folder (old location)
+  - **AC:** Folder no longer exists
+  - **AC:** Run this task from `workers/ralph/` location (Ralph is running from new location)
+
+- [ ] **0.B.1.3** Update `brain/README.md` with new structure
+  - **AC:** Documents cortex/, workers/ralph/, skills/, templates/ structure
+  - **AC:** Updates any path references
+
+- [ ] **0.B.1.4** Update `brain/.gitignore` if needed
+  - **AC:** No stale references to old ralph/ location
+
+- [ ] **0.B.1.5** Verify skills/ is at correct location (`brain/skills/`)
+  - **AC:** skills/ is peer to cortex/ and workers/ (not nested inside ralph/)
+  - **Note:** If skills/ is currently at `brain/ralph/skills/`, move to `brain/skills/`
+
+### 0.B.2 - Update Templates and new-project.sh (6 items)
+
+- [ ] **0.B.2.1** Create `brain/templates/cortex/` folder
+  - **AC:** Folder exists with template versions of Cortex files
+
+- [ ] **0.B.2.2** Create template Cortex files
+  - **AC:** `CORTEX_SYSTEM_PROMPT.project.md` - generic version for new projects
+  - **AC:** `REPO_MAP.project.md` - template with placeholders
+  - **AC:** `DECISIONS.project.md` - empty template
+  - **AC:** `RUNBOOK.project.md` - generic operations guide
+  - **AC:** `run.sh` - parameterized for project paths
+  - **AC:** `snapshot.sh` - parameterized for project paths
+
+- [ ] **0.B.2.3** Update `new-project.sh` to copy Cortex template
+  - **AC:** Script copies `templates/cortex/` to new project's `cortex/`
+  - **AC:** Script copies `templates/ralph/` to new project's `workers/ralph/`
+
+- [ ] **0.B.2.4** Update existing ralph templates for workers/ structure
+  - **AC:** `templates/ralph/` paths assume `workers/ralph/` location
+  - **AC:** Template references to cortex/ use `../../cortex/` paths
+
+- [ ] **0.B.2.5** Move `brain/ralph/skills/` to `brain/skills/` if not already there
+  - **AC:** skills/ exists at `brain/skills/` (peer to cortex/, workers/)
+  - **AC:** Update any references in templates
+
+- [ ] **0.B.2.6** Test: Full end-to-end verification
+  - **AC:** `bash brain/workers/ralph/loop.sh --iterations 1` completes successfully
+  - **AC:** `bash brain/cortex/run.sh --help` works
+  - **AC:** All paths resolve correctly
+
+---
+
+## Phase 1: Quick Fixes (3 items)
+
+Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - Quick Fixes section
+
+- [ ] **1.1** `PROMPT.md:40` - Change "Brain KB" to "Brain Skills" (NIT-1)
+- [ ] **1.2** Copy `skills/self-improvement/SKILL_TEMPLATE.md` to `templates/ralph/SKILL_TEMPLATE.md`
+- [ ] **1.3** Fix broken links in skills files:
+  - `skills/conventions.md` - `../path/to/file.md` (placeholder link)
+  - `skills/projects/brain-example.md` - incorrect relative paths
+
+---
+
+## Phase 2: Shell Script Cleanup (16 items)
+
+Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - PR #4 Shell Issues (SH-*)
+
+### current_ralph_tasks.sh (10 items)
+
+- [ ] **2.1** Line 4 - Update usage header to reflect current script name (SH-7, SH-13, SH-18)
+- [ ] **2.2** Line 246 - Split declaration and assignment for SC2155 (SH-3, SH-9, SH-16)
+- [ ] **2.3** Lines 276-279 - Remove unused `skip_line` variable (SH-4, SH-10, SH-20)
+- [ ] **2.4** Lines 354-369 - Remove unused `wrap_text` function (SH-6, SH-21)
+- [ ] **2.5** Line 404 - Use `_` placeholders for unused parsed fields (SH-5, SH-12)
+- [ ] **2.6** Lines 156-159 - Fix cache key collision across sections (SH-11, SH-15)
+- [ ] **2.7** Line 283 - Fix table column count (SH-17)
+- [ ] **2.8** Lines 254-262 - Fix Archive/Clear exiting on ### headers (SH-8, SH-14, SH-19)
+
+### thunk_ralph_tasks.sh (6 items)
+
+- [ ] **2.9** Lines 6-15 - Update header to clarify script modifies THUNK.md via hotkey e (SH-28, SH-30, SH-32)
+- [ ] **2.10** Lines 21-22 - Remove unused `LAST_DISPLAY_ROW` state (SH-33)
+- [ ] **2.11** Lines 106-112 - Remove unused `normalize_description` function (SH-25)
+- [ ] **2.12** Lines 125-134 - Remove unused `in_era` variable (SH-23)
+- [ ] **2.13** Line 250 - Split declaration and assignment for SC2155 (SH-24, SH-29, SH-31)
+- [ ] **2.14** Lines 217-227 - Extract magic number 8 into named constant (SH-26, SH-27)
+
+### pr-batch.sh (1 item)
+
+- [ ] **2.15** Lines 116-118 - Update category label to match new skills path (SH-22)
+
+---
+
+## Phase 3: Quick Reference Tables (5 items)
+
+Source: `.maintenance/verify-brain.sh` output
+
+Add Quick Reference tables (per new convention) to:
+
+- [ ] **3.1** `skills/domains/database-patterns.md`
+- [ ] **3.2** `skills/domains/code-hygiene.md`
+- [ ] **3.3** `skills/domains/shell/common-pitfalls.md`
+- [ ] **3.4** `skills/domains/shell/strict-mode.md`
+- [ ] **3.5** `skills/domains/shell/variable-patterns.md`
+
+---
+
+## Phase 4: Template Maintenance (2 items)
+
+Source: `.maintenance/verify-brain.sh` output
+
+- [ ] **4.1** Add `## Maintenance Check` and `## MAINTENANCE` sections to `templates/ralph/PROMPT.md`
+- [ ] **4.2** Add `## Maintenance Check` and `## MAINTENANCE` sections to `templates/ralph/PROMPT.project.md`
+
+---
+
+## Phase 5: Design Decisions (3 items)
+
+Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - Design Decisions (human approved 2026-01-20)
+
+### DD-1 & DD-2: Verifier Soft-Fail During Init Only
+
+- [ ] **5.1** `loop.sh:504-508` - Add `.initialized` marker check to `run_verifier()`:
+  - If `verifier.sh` missing AND `.verify/.initialized` exists → hard-fail (security)
+  - If `verifier.sh` missing AND no `.initialized` → soft-fail (bootstrap mode)
+- [ ] **5.2** `templates/ralph/loop.sh` - Apply same fix to template
+- [ ] **5.3** `init_verifier_baselines.sh` - Create `.verify/.initialized` marker after successful init
+
+### DD-3: Gitignore Personal Config
+
+- [ ] **5.4** Rename `rovodev-config.yml` to `rovodev-config.local.yml`
+- [ ] **5.5** Add `rovodev-config.local.yml` to `.gitignore`
+- [ ] **5.6** Create `rovodev-config.template.yml` with placeholder values for others
+
+---
+
+## Phase 6: Review PR #4 D-Items Against New Plan (22 items)
+
+Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - D-1 to D-22
+
+Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
+- If obsolete (fixed by rewrite) → mark resolved in analysis/CODERABBIT_REVIEW_ANALYSIS.md
+- If still applicable → add to appropriate phase above
+
+| # | File | Issue | Status |
+|---|------|-------|--------|
+| D-1 | `AC-hygiene-additions.rules:74-79` | Process substitution requires bash | [ ] Review |
+| D-2 | `AGENTS.md:56-58` | Add language tag to code fence | [ ] Review |
+| D-3 | `AGENTS.md:56-58` | Add language identifier to fenced code block | [ ] Review |
+| D-4 | `IMPLEMENTATION_PLAN.md:19-67` | Clarify phase ordering | [ ] Review |
+| D-5 | `IMPLEMENTATION_PLAN.md:213-217` | Clarify checkbox policy scope | [ ] Review |
+| D-6 | `IMPLEMENTATION_PLAN.md:288` | Fix markdown emphasis style | [ ] Review |
+| D-7 | `IMPLEMENTATION_PLAN.md:4` | Extraction exits on ## HIGH PRIORITY | [ ] Review |
+| D-8 | `IMPLEMENTATION_PLAN.md:6` | Context persistence block artifact | [ ] Review |
+| D-9 | `IMPLEMENTATION_PLAN.md:173-210` | WARN summary mismatch | [ ] Review |
+| D-10 | `IMPLEMENTATION_PLAN.md:172-209` | WARN summary conflicts | [ ] Review |
+| D-11 | `IMPLEMENTATION_PLAN.md:275-276` | Fix broken WARN row | [ ] Review |
+| D-12 | `IMPLEMENTATION_PLAN.md:239-240` | Use subheading for Rationale | [ ] Review |
+| D-13 | `IMPLEMENTATION_PLAN.md:15-30` | Add completion tracking | [ ] Review |
+| D-14 | `IMPLEMENTATION_PLAN.md:40-42` | Phase 2 source overstates range | [ ] Review |
+| D-15 | `IMPLEMENTATION_PLAN.md:5` | Hyphenate compound adjectives | [ ] Review |
+| D-16 | `IMPLEMENTATION_PLAN.md:40-43` | Phase 2 source overstates range | [ ] Review |
+| D-17 | `IMPLEMENTATION_PLAN.md:41-44` | Phase 2 source doesn't match checklist | [ ] Review |
+| D-18 | `IMPLEMENTATION_PLAN.md:64-131` | Phase 3 totals inconsistent | [ ] Review |
+| D-19 | `IMPLEMENTATION_PLAN.md:159-177` | Next Execution Order implies unfinished | [ ] Review |
+| D-20 | `IMPLEMENTATION_PLAN.md:206-213` | Resolve MD036/MD024 in Progress Summary | [ ] Review |
+| D-21 | `IMPLEMENTATION_PLAN.md:5-12` | Update overview to reflect status | [ ] Review |
+| D-22 | `rovodev-config.yml:11-12` | Document provisioning requirement | [ ] Review |
+
+---
+
+## MAINTENANCE
+
+<!-- Auto-populated by verify-brain.sh - items below are consistency/housekeeping tasks -->
+<!-- When completed, remove from here AND from .maintenance/MAINTENANCE.md -->
+
+### Current Maintenance Items (from verify-brain.sh 2026-01-20)
+
+- [ ] **M.1** Create or sync template: `templates/ralph/SKILL_TEMPLATE.md` from `skills/self-improvement/SKILL_TEMPLATE.md`
+  - **Note:** This is already covered by Phase 1, Task 1.2
+- [ ] **M.2** Add missing sections to `templates/ralph/PROMPT.md`: `## Maintenance Check`, `## MAINTENANCE`
+  - **Note:** This is already covered by Phase 4, Tasks 4.1 and 4.2
+- [ ] **M.3** Fix broken links in skills files
+  - `skills/conventions.md` → `../path/to/file.md` (placeholder link)
+  - `skills/projects/brain-example.md` → incorrect relative paths
+  - **Note:** This is already covered by Phase 1, Task 1.3
+- [ ] **M.4** Add Quick Reference tables to 5 skill files
+  - **Note:** This is already covered by Phase 3, Tasks 3.1-3.5
+
+**Status:** All maintenance items are already incorporated into existing phases. No additional tasks needed.
+
+_Run `bash .maintenance/verify-brain.sh` to check for maintenance items._

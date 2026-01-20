@@ -9,7 +9,7 @@ This directory contains scripts that are no longer actively used but retained fo
 **Purpose:** Comprehensive health checks on brain repository structure  
 **Last Updated:** 2026-01-16  
 **Why Archived:**
-- Replaced by `verifier.sh` (AC.rules-based validation)
+- Replaced by `verifier.sh` (rules/AC.rules-based validation)
 - `verifier.sh` provides more targeted, gate-based checks
 - brain-doctor.sh still references deprecated `kb/` paths (line 223)
 - Checks for features no longer in active use
@@ -53,5 +53,5 @@ This directory contains scripts that are no longer actively used but retained fo
 
 ## See Also
 - `verifier.sh` - Current validation system
-- `AC.rules` - Acceptance criteria source of truth
+- `rules/AC.rules` - Acceptance criteria source of truth
 - `VALIDATION_CRITERIA.md` - Manual validation procedures

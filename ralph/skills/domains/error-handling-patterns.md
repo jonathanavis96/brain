@@ -25,6 +25,54 @@ Reference this KB file when:
 - API returns inconsistent error formats
 - Need to distinguish between user errors vs system errors
 
+## Quick Reference
+
+### Error Types and Handling
+
+| Error Type | HTTP Status | User Message | Log Level |
+|------------|-------------|--------------|-----------|
+| **Validation** | 400 | Show field errors | `warn` |
+| **Authentication** | 401 | "Please log in" | `info` |
+| **Authorization** | 403 | "Access denied" | `warn` |
+| **Not Found** | 404 | "Resource not found" | `info` |
+| **Rate Limited** | 429 | "Too many requests" | `warn` |
+| **Server Error** | 500 | "Something went wrong" | `error` |
+| **Service Unavailable** | 503 | "Try again later" | `error` |
+
+### Error Response Format
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `error` | Yes | Error type/code |
+| `message` | Yes | Human-readable message |
+| `details` | No | Field-level errors for validation |
+| `requestId` | No | For debugging/support |
+| `timestamp` | No | When error occurred |
+
+### Common Mistakes
+
+| ❌ Don't | ✅ Do |
+|---------|------|
+| Expose stack traces to users | Log internally, show generic message |
+| Catch all exceptions silently | Catch specific errors, re-throw unknown |
+| Return 200 with error in body | Use proper HTTP status codes |
+| Log sensitive data | Redact PII, tokens, passwords |
+| Ignore async errors | Always handle Promise rejections |
+| Let errors cascade | Use error boundaries (React) |
+| Generic "Error occurred" | Specific, actionable messages |
+| Retry without backoff | Exponential backoff with jitter |
+
+### Error Handling by Context
+
+| Context | Pattern |
+|---------|---------|
+| React Components | Error Boundaries with fallback UI |
+| API Routes | try/catch + consistent error response |
+| Async/Await | try/catch or `.catch()` |
+| Event Handlers | Wrap in try/catch, don't throw |
+| Background Jobs | Log + retry with backoff |
+| Third-party APIs | Circuit breaker pattern |
+
 ## Details
 
 ### React Error Boundaries

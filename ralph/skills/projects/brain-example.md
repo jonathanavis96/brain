@@ -118,8 +118,8 @@ The brain organizes knowledge into two categories:
 The brain includes `verifier.sh` to ensure integrity:
 
 **What it checks:**
-- Acceptance criteria from `AC.rules`
-- Protected file hashes (loop.sh, verifier.sh, PROMPT.md, AC.rules)
+- Acceptance criteria from `rules/AC.rules`
+- Protected file hashes (loop.sh, verifier.sh, PROMPT.md, rules/AC.rules)
 - Shellcheck hygiene gates
 - Markdown formatting
 - Template hash baselines
@@ -187,7 +187,7 @@ When updating templates, ensure consistency:
 ### Brain-Specific Gotchas
 
 ❌ **Don't modify `references/react-best-practices/rules/`** - These 45 files are read-only reference material  
-❌ **Don't modify protected files** - AC.rules, verifier.sh, loop.sh, PROMPT.md are hash-protected  
+❌ **Don't modify protected files** - rules/AC.rules, verifier.sh, loop.sh, PROMPT.md are hash-protected  
 ❌ **Don't skip validation** - Always run `./verifier.sh` after changes  
 ❌ **Don't batch multiple tasks** - Ralph does exactly one task per BUILD iteration
 

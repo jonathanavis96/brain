@@ -14,7 +14,7 @@ Reference this document when:
 
 ## Required File Structure
 
-Every skills file **must** follow this three-section structure:
+Every skills file **must** follow this four-section structure:
 
 ```markdown
 # [Title]
@@ -29,6 +29,12 @@ Every skills file **must** follow this three-section structure:
 [Specific scenarios, triggers, or conditions where this applies]
 [Include concrete examples or bullet points]
 [Answer: "When should I reference this?"]
+
+## Quick Reference
+
+[Scannable tables for fast lookup - THE MOST IMPORTANT SECTION]
+[Include: key concepts table, common mistakes table, decision matrix if applicable]
+[Answer: "What do I need to know at a glance?"]
 
 ## Details
 
@@ -50,6 +56,14 @@ Every skills file **must** follow this three-section structure:
 - Include concrete triggers or scenarios
 - Use bullet points for clarity
 - Think: "What situations warrant reading this?"
+
+**Quick Reference** ⭐ (Most Important for Usability)
+- Provide scannable tables for fast lookup
+- Include a "key concepts" or "at a glance" table
+- Always include a "Common Mistakes" table with ❌/✅ format
+- Add decision matrices for choosing between options
+- This section enables quick answers without reading the whole file
+- Tables should be self-contained - reader shouldn't need Details section for basic use
 
 **Details**
 - Contains the actual knowledge

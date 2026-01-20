@@ -27,6 +27,34 @@ Reference this KB file when:
 - Need to prevent brute force attacks or API abuse
 - Security audit reveals vulnerabilities
 
+## Quick Reference
+
+| Vulnerability | Prevention | Key Pattern |
+|--------------|------------|-------------|
+| **XSS** | Escape output, CSP headers | Use React's auto-escaping, DOMPurify for raw HTML |
+| **CSRF** | Anti-CSRF tokens, SameSite cookies | `SameSite=Strict`, verify `Origin` header |
+| **SQL Injection** | Parameterized queries | Never concatenate user input in SQL |
+| **CORS Misconfiguration** | Whitelist origins | No `*` with credentials, env-specific origins |
+| **Broken Auth** | Secure token storage | httpOnly cookies, short-lived JWTs |
+| **Sensitive Data Exposure** | Encryption, minimal exposure | HTTPS only, hash passwords with bcrypt |
+| **Rate Limiting** | Throttle requests | 100 req/min per IP, exponential backoff |
+| **SSRF** | URL validation | Whitelist allowed hosts, block internal IPs |
+| **Path Traversal** | Sanitize file paths | Reject `..`, validate against allowed paths |
+| **Secret Management** | Env vars, vaults | Never commit secrets, use `.env` + `.gitignore` |
+
+### Common Mistakes
+
+| ❌ Don't | ✅ Do |
+|---------|------|
+| `Access-Control-Allow-Origin: *` | Whitelist specific origins |
+| Store tokens in localStorage | Use httpOnly cookies |
+| `dangerouslySetInnerHTML` without sanitization | Use DOMPurify or avoid |
+| Concatenate SQL: `"SELECT * WHERE id=" + id` | Parameterized: `WHERE id = ?` |
+| Hardcode secrets in code | Use environment variables |
+| Trust client-side validation alone | Always validate server-side |
+| Long-lived access tokens (days) | Short-lived (15min) + refresh tokens |
+| Log sensitive data | Redact PII in logs |
+
 ## Details
 
 ### CORS (Cross-Origin Resource Sharing)

@@ -26,6 +26,48 @@ Reference this KB file when:
 - Pull requests blocked by failing tests
 - Need to refactor code but afraid to break things
 
+## Quick Reference
+
+### Test Types at a Glance
+
+| Type | Scope | Speed | When to Use |
+|------|-------|-------|-------------|
+| **Unit** | Single function/method | Fast (ms) | Pure logic, utilities, transformations |
+| **Integration** | Multiple modules | Medium (s) | API endpoints, database queries, services |
+| **E2E** | Full user flow | Slow (min) | Critical paths: login, checkout, signup |
+| **Snapshot** | UI output | Fast | Component structure, serialized output |
+| **Contract** | API interfaces | Medium | Microservices, third-party integrations |
+
+### Testing Pyramid Ratio
+
+| Level | Percentage | Characteristics |
+|-------|------------|-----------------|
+| Unit | 70% | Fast, isolated, many tests |
+| Integration | 20% | Module interactions, some mocking |
+| E2E | 10% | Critical paths only, slow but realistic |
+
+### Common Mistakes
+
+| ❌ Don't | ✅ Do |
+|---------|------|
+| Test implementation details | Test behavior and outputs |
+| Mock everything | Mock only external dependencies |
+| Write tests after bugs | Write tests with features (TDD) |
+| Flaky tests with `sleep()` | Wait for specific conditions |
+| Test private methods | Test public API |
+| Huge test files | One test file per module |
+| Skip edge cases | Test boundaries and errors |
+| Ignore test failures | Fix or delete, never ignore |
+
+### File Naming Conventions
+
+| Language | Pattern | Example |
+|----------|---------|---------|
+| JavaScript/TypeScript | `*.test.ts` or `*.spec.ts` | `Button.test.tsx` |
+| Python | `test_*.py` | `test_auth.py` |
+| Go | `*_test.go` | `auth_test.go` |
+| Java | `*Test.java` | `AuthServiceTest.java` |
+
 ## Details
 
 ### Testing Pyramid
