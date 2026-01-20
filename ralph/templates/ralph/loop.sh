@@ -501,6 +501,16 @@ parse_verifier_failures() {
   LAST_VERIFIER_FAIL_COUNT="$count"
 }
 
+# Check if Ralph requested human intervention in the log
+check_human_intervention() {
+  local log_file="$1"
+  # Strip ANSI codes and check for human intervention marker
+  if sed 's/\x1b\[[0-9;]*m//g' "$log_file" | grep -q 'HUMAN INTERVENTION REQUIRED'; then
+    return 0  # intervention needed
+  fi
+  return 1  # no intervention needed
+}
+
 run_verifier() {
   if [[ ! -x "$VERIFY_SCRIPT" ]]; then
     echo "⚠️  Verifier not found or not executable: $VERIFY_SCRIPT"
@@ -672,6 +682,18 @@ run_once() {
     echo "Ignoring - use :::BUILD_READY::: or :::PLAN_READY::: instead."
   fi
   
+  # Check if Ralph requested human intervention
+  if check_human_intervention "$log"; then
+    echo ""
+    echo "========================================"
+    echo "🛑 HUMAN INTERVENTION REQUIRED"
+    echo "========================================"
+    echo "Ralph has indicated it cannot proceed without human help."
+    echo "Review the log above for details."
+    echo ""
+    return 43  # Special return code for human intervention
+  fi
+  
   # Check if all tasks are done (for true completion)
   if [[ -f "$RALPH/IMPLEMENTATION_PLAN.md" ]]; then
     local unchecked_count
@@ -810,6 +832,13 @@ if [[ -n "$PROMPT_ARG" ]]; then
       echo "Loop terminated early due to completion."
       break
     fi
+    # Check if Ralph requested human intervention
+    if [[ $run_result -eq 43 ]]; then
+      echo ""
+      echo "Loop paused - human intervention required."
+      echo "After resolving the issue, re-run the loop to continue."
+      exit 1
+    fi
   done
 else
   # Alternating plan/build
@@ -833,6 +862,13 @@ else
       echo ""
       echo "Loop terminated early due to completion."
       break
+    fi
+    # Check if Ralph requested human intervention (exit code 43)
+    if [[ $run_result -eq 43 ]]; then
+      echo ""
+      echo "Loop paused - human intervention required."
+      echo "After resolving the issue, re-run the loop to continue."
+      exit 1
     fi
   done
 fi
