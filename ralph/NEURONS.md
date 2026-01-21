@@ -21,16 +21,30 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 ## Repository Layout
 
 ```
-/home/grafe/code/brain/ralph/
+/home/grafe/code/brain/
 ├── AGENTS.md                    # Ralph operational guide (how to run)
 ├── NEURONS.md                   # This file (brain map - what exists where)
 ├── loop.sh                      # Ralph loop runner (safe branch handling, lock file)
 ├── rovodev-config.yml           # RovoDev configuration
-│
 ├── PROMPT.md                    # Lean prompt (~95 lines) - core Ralph mechanics
-├── docs/EDGE_CASES.md           # Detailed examples, error recovery (read on-demand)
-├── docs/CHANGES.md              # Release notes and migration guide
 ├── IMPLEMENTATION_PLAN.md       # Persistent TODO list
+├── THOUGHTS.md                  # Project goals and success criteria
+├── THUNK.md                     # Completed task log
+│
+├── cortex/                      # Cortex manager layer (Opus 4.5)
+│   ├── CORTEX_SYSTEM_PROMPT.md  # Cortex identity and rules
+│   ├── REPO_MAP.md              # Human-friendly repo navigation
+│   ├── DECISIONS.md             # Stability anchor (naming, style, architecture)
+│   ├── RUNBOOK.md               # Operations guide (how to start, troubleshoot)
+│   ├── IMPLEMENTATION_PLAN.md   # Task contract template (high-level tasks)
+│   ├── THOUGHTS.md              # Cortex thinking space (mission, decisions)
+│   ├── run.sh                   # Main entry point (concatenates context)
+│   └── snapshot.sh              # Generates current state summary
+│
+├── docs/                        # Documentation
+│   ├── EDGE_CASES.md            # Detailed examples, error recovery (read on-demand)
+│   ├── CHANGES.md               # Release notes and migration guide
+│   └── BOOTSTRAPPING.md         # New project setup guide
 │
 ├── skills/                      # Knowledge Base (33 files)
 │   ├── SUMMARY.md               # KB index and navigation
@@ -89,9 +103,10 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 
 | Task | Check Here |
 |------|------------|
-| **Understand what's in the brain** | `NEURONS.md` (this file) |
+| **Understand what's in the brain** | `NEURONS.md` (this file) or `cortex/REPO_MAP.md` |
 | **Run Ralph loop** | `AGENTS.md` → `bash loop.sh` |
-| **Find TODO list** | `IMPLEMENTATION_PLAN.md` |
+| **Run Cortex manager** | `cortex/RUNBOOK.md` → `bash cortex/run.sh` |
+| **Find TODO list** | `IMPLEMENTATION_PLAN.md` (Ralph) or `cortex/IMPLEMENTATION_PLAN.md` (Cortex) |
 | **See commit examples & error recovery** | `docs/EDGE_CASES.md` |
 | **See recent changes** | `docs/CHANGES.md` |
 | **See KB structure** | `skills/SUMMARY.md` |
@@ -101,7 +116,9 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 | **Understand Ralph patterns** | `skills/domains/ralph-patterns.md` |
 | **Find auth patterns** | `skills/domains/auth-patterns.md` |
 | **Learn brain conventions** | `skills/projects/brain-example.md` |
-| **Check project goals** | `THOUGHTS.md` |
+| **Check Cortex architecture decisions** | `cortex/DECISIONS.md` |
+| **Understand manager/worker workflow** | `AGENTS.md` → "Manager/Worker Architecture" section |
+| **Check project goals** | `THOUGHTS.md` (Ralph) or `cortex/THOUGHTS.md` (Cortex) |
 
 ### "Where do I put..."
 
@@ -109,11 +126,13 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 |--------------|----------|-------------|
 | **Reusable domain patterns** | `skills/domains/<domain>.md` | ✅ Yes |
 | **Project-specific knowledge** | `skills/projects/<project>.md` | ✅ Yes |
-| **Ralph operational docs** | `AGENTS.md` | ✅ Yes |
-| **Brain structure map** | `NEURONS.md` | ✅ Yes |
+| **Ralph operational docs** | `AGENTS.md` | ✅ Yes (Ralph only) |
+| **Brain structure map** | `NEURONS.md` or `cortex/REPO_MAP.md` | ✅ Yes |
+| **Cortex strategic planning** | `cortex/IMPLEMENTATION_PLAN.md`, `cortex/THOUGHTS.md` | ✅ Yes (Cortex only) |
+| **Cortex architecture decisions** | `cortex/DECISIONS.md` | ✅ Yes (Cortex only) |
 | **React performance rules** | `references/react-best-practices/rules/` | ❌ **READ-ONLY** |
 | **Project templates** | `templates/` | ✅ Yes |
-| **TODO backlog** | `IMPLEMENTATION_PLAN.md` | ✅ Yes |
+| **TODO backlog** | `IMPLEMENTATION_PLAN.md` | ✅ Yes (Ralph only) |
 | **Execution logs** | `logs/` | ✅ Auto-generated |
 
 ---
@@ -164,9 +183,9 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 **CRITICAL: READ-ONLY - DO NOT MODIFY ANY FILES IN references/**
 
 **Navigation Hierarchy (Progressive Disclosure):**
-1. **First:** `HOTLIST.md` - Top 10 most applicable rules (start here always)
-2. **Second:** `INDEX.md` - Categorized rule index (8 categories, 45 rules)
-3. **Third:** `rules/*.md` - Individual rule files (only when needed)
+1. **First:** `references/react-best-practices/HOTLIST.md` - Top 10 most applicable rules (start here always)
+2. **Second:** `references/react-best-practices/INDEX.md` - Categorized rule index (8 categories, 45 rules)
+3. **Third:** `references/react-best-practices/rules/*.md` - Individual rule files (only when needed)
 
 **Rule Categories (from INDEX.md):**
 - 🔄 Async & Waterfall Elimination (7 rules)
@@ -212,6 +231,49 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 # From brain repository root (not implemented in bash yet - legacy PowerShell)
 # ./new-project.ps1 -Name my-project
 # Creates: ../my-project/ with AGENTS.md, ralph/, specs/, src/
+```
+
+---
+
+## Cortex Structure
+
+### cortex/ (8 total files)
+
+**Purpose:** Manager layer running Opus 4.5 - creates high-level implementation plans and manages strategic decisions.
+
+**Key Files:**
+- `cortex/CORTEX_SYSTEM_PROMPT.md` - Cortex identity, role definition, what Cortex can/cannot modify
+- `cortex/REPO_MAP.md` - Human-friendly navigation guide for the brain repository
+- `cortex/DECISIONS.md` - Stability anchor for naming, style, architecture decisions
+- `cortex/RUNBOOK.md` - Operations guide (how to start, troubleshoot, verify)
+- `cortex/IMPLEMENTATION_PLAN.md` - Task contract template (high-level tasks for Ralph)
+- `cortex/THOUGHTS.md` - Cortex thinking space (current mission, decision log)
+- `cortex/run.sh` - Main entry point (concatenates context and calls RovoDev)
+- `cortex/snapshot.sh` - Generates current state summary (mission, progress, git status)
+
+**Workflow:**
+1. Cortex creates/updates high-level tasks in `cortex/IMPLEMENTATION_PLAN.md`
+2. Ralph copies these to `IMPLEMENTATION_PLAN.md` (via sync mechanism - to be implemented)
+3. Ralph picks ONE atomic task per BUILD iteration and implements it
+4. Ralph logs completion to `THUNK.md`
+5. Cortex reviews progress via `cortex/snapshot.sh` and adjusts strategy
+
+**What Cortex Can Modify:**
+- ✅ `cortex/IMPLEMENTATION_PLAN.md` - Task contracts
+- ✅ `cortex/THOUGHTS.md` - Strategic thinking
+- ✅ `skills/self-improvement/GAP_BACKLOG.md` - Knowledge gaps
+- ✅ `skills/self-improvement/SKILL_BACKLOG.md` - Skill promotion queue
+
+**What Cortex Cannot Modify:**
+- ❌ `PROMPT.md`, `loop.sh`, `verifier.sh` - Protected Ralph infrastructure
+- ❌ Source code in `ralph/`, `skills/`, `templates/` - Ralph's domain
+- ❌ Acceptance criteria in `rules/AC.rules` - Protected by hash guard
+
+**Running Cortex:**
+```bash
+cd /home/grafe/code/brain/
+bash cortex/run.sh              # Single review cycle
+bash cortex/run.sh --help       # Show usage
 ```
 
 ---
@@ -314,6 +376,10 @@ Use for:
 find skills/ -name "*.md" | wc -l
 # Should be: 33 (SUMMARY, index, conventions, 22 in domains/ including shell/, 2 in projects/, 6 in self-improvement/)
 
+# Cortex file count
+find cortex/ -name "*.md" -o -name "*.sh" | wc -l
+# Should be: 8 (6 .md files + 2 .sh scripts)
+
 # React rules count (READ-ONLY - must never change)
 find references/react-best-practices/rules/ -name "*.md" | wc -l
 # Must always be: 45
@@ -326,9 +392,9 @@ find templates/ -name "*.md" | wc -l
 find specs/ -name "*.md" | wc -l
 # Should be: 1 (overview.md)
 
-# Total .md files in brain/ralph/ (excluding old_md/)
-find . -name "*.md" -not -path "./old_md/*" -not -path "./logs/*" | wc -l
-# Current: ~43 files
+# Total .md files in brain/ root (excluding subdirs)
+find . -maxdepth 1 -name "*.md" | wc -l
+# Current: ~7 files (AGENTS, NEURONS, PROMPT, IMPLEMENTATION_PLAN, THOUGHTS, THUNK, README, VALIDATION_CRITERIA)
 ```
 
 ### Validation Commands (Backpressure)
@@ -363,13 +429,14 @@ ls -lh AGENTS.md NEURONS.md
 ### ✅ MODIFIABLE (Active Development)
 - **AGENTS.md** - Ralph operational guide
 - **NEURONS.md** - This brain map
+- **PROMPT.md** - Ralph unified prompt
+- **IMPLEMENTATION_PLAN.md** - Ralph TODO list
+- **loop.sh** - Ralph loop runner
+- **rovodev-config.yml** - Ralph configuration
+- **cortex/** - All Cortex files (CORTEX_SYSTEM_PROMPT, REPO_MAP, DECISIONS, RUNBOOK, IMPLEMENTATION_PLAN, THOUGHTS, run.sh, snapshot.sh)
 - **skills/** - All knowledge base files
 - **templates/** - Project bootstrap templates
-- **specs/** - Project specifications
-- **PROMPT.md** - Ralph unified prompt
-- **IMPLEMENTATION_PLAN.md** - TODO list
-- **loop.sh** - Ralph loop runner
-- **rovodev-config.yml** - Configuration
+- **docs/** - Documentation files
 
 ---
 
@@ -448,6 +515,7 @@ tree -L 2 -I 'old_md|logs'
 
 This brain repository contains:
 - **33 KB files** (index, conventions, domains with shell/, projects, self-improvement)
+- **8 Cortex files** (manager layer - CORTEX_SYSTEM_PROMPT, REPO_MAP, DECISIONS, RUNBOOK, IMPLEMENTATION_PLAN, THOUGHTS, run.sh, snapshot.sh)
 - **45 React rules** (read-only performance patterns)
 - **4 template files** (project bootstrap)
 - **1 spec file** (project definition)
@@ -459,10 +527,13 @@ This brain repository contains:
 3. Search before creating (don't assume missing)
 4. Follow parallel subagent patterns (100 read, 1 build)
 5. Never modify references/react-best-practices/rules/
+6. Cortex manages strategy, Ralph executes tasks
 
 **For questions about:**
 - **How to run Ralph** → See AGENTS.md
-- **What exists where** → You're reading it (NEURONS.md)
+- **How to run Cortex** → See cortex/RUNBOOK.md
+- **What exists where** → You're reading it (NEURONS.md) or see cortex/REPO_MAP.md
 - **How to create KB files** → See skills/conventions.md
-- **Project goals** → See THOUGHTS.md
+- **Project goals** → See THOUGHTS.md or cortex/THOUGHTS.md
 - **React patterns** → See references/react-best-practices/HOTLIST.md
+- **Manager/worker workflow** → See AGENTS.md "Manager/Worker Architecture" section
