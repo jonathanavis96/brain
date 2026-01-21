@@ -120,15 +120,17 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 
 ## Knowledge Base Structure
 
-### skills/ (7 total files)
+### skills/ (33 total files)
 
 **Purpose:** Curated knowledge for agents - domain patterns, project conventions, authoring guidelines.
 
 **Navigation:**
 1. Start: `skills/SUMMARY.md` - Overview of all KB content
-2. Authoring: `skills/conventions.md` - How to create/update KB files
-3. Domains: `skills/domains/` - Reusable patterns across projects
-4. Projects: `skills/projects/` - Project-specific knowledge
+2. Index: `skills/index.md` - Complete catalog of all skills
+3. Authoring: `skills/conventions.md` - How to create/update KB files
+4. Domains: `skills/domains/` - Reusable patterns across projects (22 files including shell/)
+5. Projects: `skills/projects/` - Project-specific knowledge (2 files)
+6. Self-Improvement: `skills/self-improvement/` - Gap capture system (6 files)
 
 **Key Files:**
 - `skills/SUMMARY.md` - KB index, links to all domains and projects
@@ -310,7 +312,7 @@ Use for:
 ```bash
 # KB file count
 find skills/ -name "*.md" | wc -l
-# Should be: 7 (SUMMARY, conventions, 3 in domains/, 2 in projects/)
+# Should be: 33 (SUMMARY, index, conventions, 22 in domains/ including shell/, 2 in projects/, 6 in self-improvement/)
 
 # React rules count (READ-ONLY - must never change)
 find references/react-best-practices/rules/ -name "*.md" | wc -l
@@ -445,7 +447,7 @@ tree -L 2 -I 'old_md|logs'
 ## Summary
 
 This brain repository contains:
-- **7 KB files** (conventions, domains, projects)
+- **33 KB files** (index, conventions, domains with shell/, projects, self-improvement)
 - **45 React rules** (read-only performance patterns)
 - **4 template files** (project bootstrap)
 - **1 spec file** (project definition)
