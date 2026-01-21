@@ -1,0 +1,304 @@
+import { tool } from "@opencode-ai/plugin"
+import { readFileSync, writeFileSync, existsSync, unlinkSync, mkdirSync } from "fs"
+import { join, dirname } from "path"
+import { execSync } from "child_process"
+
+interface RovoDevContext {
+  conversation_history?: string[]
+  user_preferences?: {
+    safety_mode?: "safe" | "auto" | "aggressive"
+    preferred_approach?: string
+  }
+}
+
+interface ToolResult {
+  execution_method: "rovodev" | "fallback_llm"
+  success: boolean
+  summary: string
+  files_modified?: string[]
+  errors?: string[]
+  next_steps?: string[]
+}
+
+export default tool({
+  description: "Execute coding tasks using RovoDev agent with intelligent safety and conversational interface",
+  args: {
+    task: tool.schema.string().describe("Natural language task description - just describe what you want done"),
+    safety_mode: tool.schema.enum(["safe", "auto", "aggressive"]).default("auto").describe("Safety level: 'safe' (preview changes), 'auto' (smart defaults), 'aggressive' (auto-approve)"),
+    context: tool.schema.string().optional().describe("Additional context for multi-turn conversations"),
+    persist_context: tool.schema.boolean().default(true).describe("Maintain conversation context across invocations")
+  },
+  async execute(args, context) {
+    const { task, safety_mode, context: taskContext, persist_context } = args
+    
+    // Get workspace directory
+    const workspaceDir = process.cwd()
+    const contextPath = join(workspaceDir, '.opencode', 'rovodev-context.json')
+    
+    // Initialize context management
+    let rovodevContext: RovoDevContext = {}
+    if (persist_context && existsSync(contextPath)) {
+      try {
+        rovodevContext = JSON.parse(readFileSync(contextPath, 'utf-8'))
+      } catch {
+        rovodevContext = {}
+      }
+    }
+    
+    // Determine if this is a coding task
+    const isCodingTask = detectCodingTask(task)
+    
+    if (!isCodingTask) {
+      return await handleNonCodingTask(task, rovodevContext)
+    }
+    
+    // Prepare context for RovoDev
+    const fullContext = prepareRovoDevContext(task, taskContext, rovodevContext)
+    
+    // Execute with RovoDev
+    try {
+      const result = await executeRovoDevTask(workspaceDir, task, safety_mode, fullContext)
+      
+      // Update context if successful
+      if (persist_context) {
+        updateContext(contextPath, task, result, rovodevContext)
+      }
+      
+      return formatToolResult("rovodev", result)
+      
+    } catch (error) {
+      // Fallback to LLM for explanation or error recovery
+      if (error.fallback_possible) {
+        return await handleFallbackLLM(task, error, rovodevContext)
+      }
+      
+      return formatToolResult("rovodev", {
+        execution_method: "rovodev",
+        success: false,
+        summary: `RovoDev execution failed: ${error.message}`,
+        errors: [error.message],
+        next_steps: [
+          "Check if acli is installed and authenticated",
+          "Try with safety_mode='safe' for shadow preview",
+          "Use /commands to see available OpenCode commands"
+        ]
+      })
+    }
+  }
+})
+
+function detectCodingTask(task: string): boolean {
+  const codingIndicators = [
+    'create', 'write', 'modify', 'edit', 'delete', 'remove', 'add', 'implement', 'refactor',
+    'fix', 'bug', 'error', 'test', 'build', 'deploy', 'compile', 'run', 'execute',
+    'function', 'class', 'component', 'file', 'code', 'script', 'program'
+  ]
+  
+  const explanationIndicators = [
+    'explain', 'what is', 'how does', 'describe', 'tell me about', 'overview',
+    'summary', 'meaning', 'definition', 'concept', 'theory'
+  ]
+  
+  const lowerTask = task.toLowerCase()
+  
+  // Prioritize explanation detection
+  const hasExplanationKeywords = explanationIndicators.some(keyword => lowerTask.includes(keyword))
+  const hasCodingKeywords = codingIndicators.some(keyword => lowerTask.includes(keyword))
+  
+  return hasCodingKeywords && !hasExplanationKeywords
+}
+
+async function executeRovoDevTask(
+  workspaceDir: string, 
+  task: string, 
+  safetyMode: string, 
+  context: string
+): Promise<ToolResult> {
+  // Ensure directories exist
+  const schemasDir = join(workspaceDir, '.opencode', 'schemas')
+  if (!existsSync(schemasDir)) {
+    mkdirSync(schemasDir, { recursive: true })
+  }
+  
+  const schemaPath = join(schemasDir, 'rovodev-response.json')
+  const outputPath = join(workspaceDir, '.opencode', 'rovodev-result.json')
+  
+  // Read schema
+  if (!existsSync(schemaPath)) {
+    throw new Error("RovoDev response schema not found. Please ensure .opencode/schemas/rovodev-response.json exists.")
+  }
+  
+  const schemaContent = readFileSync(schemaPath, 'utf-8')
+  
+  // Build command based on safety mode
+  const commandArgs = ['acli', 'rovodev', 'run', '--output-schema', schemaContent, '--output-file', outputPath]
+  
+  // Safety mode flags
+  switch (safetyMode) {
+    case 'safe':
+      commandArgs.push('--shadow')  // Preview changes first
+      break
+    case 'aggressive':
+      commandArgs.push('--yolo')   // Auto-approve all changes
+      break
+    case 'auto':
+      // Let RovoDev decide based on content - smart defaults
+      break
+  }
+  
+  // Add task with context if provided
+  const fullTask = context ? `${context}\n\nNew task: ${task}` : task
+  commandArgs.push(fullTask)
+  
+  // Execute command
+  try {
+    const result = execSync(commandArgs.join(' '), {
+      cwd: workspaceDir,
+      env: { ...process.env },
+      encoding: 'utf-8',
+      maxBuffer: 20 * 1024 * 1024, // 20MB buffer
+      timeout: 300000 // 5 minutes
+    })
+    
+    // Parse structured result
+    const structuredResult = JSON.parse(readFileSync(outputPath, 'utf-8'))
+    
+    // Cleanup output file
+    try { unlinkSync(outputPath) } catch {}
+    
+    return {
+      execution_method: "rovodev",
+      success: structuredResult.status === 'success',
+      summary: structuredResult.result?.summary || 'Task completed',
+      files_modified: structuredResult.result?.files_modified || [],
+      errors: structuredResult.result?.errors || [],
+      next_steps: structuredResult.result?.next_steps || []
+    }
+    
+  } catch (execError: any) {
+    // Try to read partial results if available
+    let partialResult: ToolResult | null = null
+    if (existsSync(outputPath)) {
+      try {
+        partialResult = JSON.parse(readFileSync(outputPath, 'utf-8'))
+      } catch {}
+    }
+    
+    if (partialResult) {
+      return {
+        execution_method: "rovodev",
+        success: false,
+        summary: `RovoDev execution partially completed but encountered errors`,
+        files_modified: partialResult.files_modified || [],
+        errors: [execError.message, ...(partialResult.errors || [])],
+        next_steps: ["Review partial changes", "Retry with different safety mode"]
+      }
+    }
+    
+    throw {
+      message: execError.message,
+      fallback_possible: true,
+      exitCode: execError.status,
+      stderr: execError.stderr
+    }
+  }
+}
+
+function prepareRovoDevContext(task: string, taskContext: string, rovodevContext: RovoDevContext): string {
+  const contextParts: string[] = []
+  
+  // Add conversation history context
+  if (rovodevContext.conversation_history && rovodevContext.conversation_history.length > 0) {
+    contextParts.push(`Recent context: ${rovodevContext.conversation_history.slice(-2).join('; ')}`)
+  }
+  
+  // Add user preferences
+  if (rovodevContext.user_preferences) {
+    contextParts.push(`User preferences: ${JSON.stringify(rovodevContext.user_preferences)}`)
+  }
+  
+  // Add explicit task context
+  if (taskContext) {
+    contextParts.push(`Additional context: ${taskContext}`)
+  }
+  
+  return contextParts.join('\n')
+}
+
+function updateContext(contextPath: string, task: string, result: ToolResult, rovodevContext: RovoDevContext): void {
+  // Update conversation history (keep last 5)
+  if (!rovodevContext.conversation_history) {
+    rovodevContext.conversation_history = []
+  }
+  rovodevContext.conversation_history.push(`Task: ${task.slice(0, 100)}...`)
+  rovodevContext.conversation_history = rovodevContext.conversation_history.slice(-5)
+  
+  // Update preferences based on success patterns
+  if (!rovodevContext.user_preferences) {
+    rovodevContext.user_preferences = {}
+  }
+  
+  if (result.success && result.files_modified && result.files_modified.length > 0) {
+    rovodevContext.user_preferences.safety_mode = "auto"
+    rovodevContext.user_preferences.preferred_approach = "rovodev"
+  }
+  
+  // Write updated context
+  try {
+    const dirPath = dirname(contextPath)
+    mkdirSync(dirPath, { recursive: true })
+    writeFileSync(contextPath, JSON.stringify(rovodevContext, null, 2))
+  } catch {
+    // Ignore context write errors
+  }
+}
+
+function formatToolResult(method: "rovodev" | "fallback_llm", result: ToolResult): string {
+  const methodEmoji = method === "rovodev" ? "🤖" : "🧠"
+  const statusEmoji = result.success ? "✅" : "❌"
+  
+  let output = `${methodEmoji} ${method === "rovodev" ? "RovoDev" : "Fallback LLM"} Execution ${statusEmoji}\n\n`
+  output += `**Summary**: ${result.summary}\n\n`
+  
+  if (result.files_modified && result.files_modified.length > 0) {
+    output += `**Files Modified**: ${result.files_modified.join(', ')}\n\n`
+  }
+  
+  if (result.errors && result.errors.length > 0) {
+    output += `**Errors**:\n${result.errors.map(err => `• ${err}`).join('\n')}\n\n`
+  }
+  
+  if (result.next_steps && result.next_steps.length > 0) {
+    output += `**Next Steps**:\n${result.next_steps.map(step => `• ${step}`).join('\n')}`
+  }
+  
+  return output
+}
+
+async function handleNonCodingTask(task: string, rovodevContext: RovoDevContext): Promise<string> {
+  return `🧠 **Fallback LLM Mode** - Non-coding task detected
+
+Since this appears to be an explanation or discussion task rather than a coding task, I recommend using OpenCode's built-in LLM model for better results.
+
+**Task**: ${task}
+
+**Suggestion**: Try rephrasing your request as a coding task if you need code written, or continue with the current model for explanations.
+
+If you specifically want RovoDev to handle this, use: \`Use rovodev tool to "${task}" with safety_mode="auto"\``
+}
+
+async function handleFallbackLLM(task: string, error: any, rovodevContext: RovoDevContext): Promise<string> {
+  return `❌ **RovoDev Unavailable - Fallback Mode**
+
+RovoDev execution failed: ${error.message}
+
+**Using OpenCode LLM fallback** for task: ${task}
+
+**Common fixes**:
+• Ensure \`acli rovodev auth\` is completed
+• Check internet connectivity for RovoDev services  
+• Try with \`safety_mode="safe"\` for shadow mode
+• Use \`/rovodev-safe\` command for safer execution
+
+Once RovoDev is available again, coding tasks will automatically route back to RovoDev for optimal results.`
+}

@@ -1,0 +1,8 @@
+# Archive/backup directories
+old_md/
+
+# Verifier runtime outputs (do not track)
+.verify/latest.txt
+.verify/run_id.txt
+
+# Keep .verify/*.sha256 tracked (baseline hashes)

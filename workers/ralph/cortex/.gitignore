@@ -1,0 +1,13 @@
+# Cortex temporary and cache files
+
+# Snapshot output cache (if cached to file in future)
+snapshot_cache.txt
+*.snapshot
+
+# Local temporary files
+*.tmp
+*.cache
+
+# RovoDev/AI tool temporary outputs
+.rovodev/
+tmp_*
