@@ -8,7 +8,7 @@ ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 AC_FILE="${1:-${ROOT}/rules/AC.rules}"
 APPROVALS_FILE="${2:-${ROOT}/rules/MANUAL_APPROVALS.rules}"
 
-VERIFY_DIR="${ROOT}/.verify"
+VERIFY_DIR="${SCRIPT_DIR}/.verify"
 REPORT_FILE="${VERIFY_DIR}/latest.txt"
 AC_HASH_FILE="${VERIFY_DIR}/ac.sha256"
 

@@ -171,21 +171,21 @@ expect_stdout=0
 mode=auto
 gate=block
 desc=loop.sh unchanged from baseline
-cmd=sha256sum loop.sh | cut -d' ' -f1 | diff -q - ../.verify/loop.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
+cmd=sha256sum loop.sh | cut -d' ' -f1 | diff -q - .verify/loop.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
 expect_stdout=match
 
 [Protected.2]
 mode=auto
 gate=block
 desc=verifier.sh unchanged from baseline
-cmd=sha256sum verifier.sh | cut -d' ' -f1 | diff -q - ../.verify/verifier.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
+cmd=sha256sum verifier.sh | cut -d' ' -f1 | diff -q - .verify/verifier.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
 expect_stdout=match
 
 [Protected.3]
 mode=auto
 gate=block
 desc=PROMPT.md unchanged from baseline
-cmd=sha256sum PROMPT.md | cut -d' ' -f1 | diff -q - ../.verify/prompt.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
+cmd=sha256sum PROMPT.md | cut -d' ' -f1 | diff -q - .verify/prompt.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
 expect_stdout=match
 
 # =============================================================================

@@ -2,12 +2,12 @@
 
 **Status:** PLAN mode - Ready for BUILD execution  
 **Branch:** `brain-work`  
-**Last Updated:** 2026-01-22 01:17:56 (Ralph PLAN iteration)  
-**Progress:** 42/100 tasks complete (42%) - Phase 0-Warn updated with 7 new shellcheck warnings
+**Last Updated:** 2026-01-22 01:23:26 (Ralph PLAN iteration)  
+**Progress:** 42/104 tasks complete (40%) - Phase 0-Warn updated with 4 new Ralph-local shellcheck warnings
 
 **Current Status:**
 - ✅ Phase 0-Sync (Infrastructure) - COMPLETE (2/2 tasks)
-- 📋 Phase 0-Warn (Verifier Warnings) - 9/16 complete, **7 new shellcheck warnings**
+- 📋 Phase 0-Warn (Verifier Warnings) - 9/20 complete, **11 shellcheck warnings remain** (7 external + 4 local)
 - ✅ Phase 0-A (Cortex Manager Pack) - COMPLETE (19/19 tasks)
 - ✅ Phase 0-B (Cleanup & Templates) - COMPLETE (12/12 tasks)
 - 📋 Phase 0-Quick (Quick Wins) - 3/8 complete, **5 HIGH PRIORITY tasks remaining**
@@ -21,11 +21,11 @@
 - 📋 Phase 8 (Pre-commit Linting) - 0/11 complete (LOW priority)
 
 **Task Breakdown:**
-- Total: 100 tasks (42 complete, 58 remaining)
-- Phase 0: 42/57 complete (7 warn + 5 quick wins + 1 sync integration + 2 complete phases pending)
+- Total: 104 tasks (42 complete, 62 remaining)
+- Phase 0: 42/61 complete (11 warn + 5 quick wins + 2 complete phases)
 - Phases 1-8: 0/43 complete (all pending)
 
-**Next Priority:** Phase 0-Warn shellcheck tasks (WARN.Shellcheck.1-7) - Fix linting warnings before continuing quick wins
+**Next Priority:** Phase 0-Warn shellcheck tasks (WARN.Shellcheck.2-11) - Fix linting warnings before continuing quick wins
 
 **Verifier Status:**
 - `.verify/latest.txt` shows all verifier rules passing (BugA.1, BugA.2, BugB.1, BugB.2, BugC.1, BugC.2)
@@ -200,6 +200,36 @@
   - **Fix:** Review setup.sh line 70 for any shellcheck warnings
   - **AC:** `shellcheck ../../setup.sh 2>&1 | grep -c 'line 70'` returns 0
   - **Commit:** `fix(setup): resolve shellcheck warnings if any`
+
+### Ralph Local File Shellcheck Warnings (2026-01-22 PLAN iteration)
+
+- [ ] **WARN.Shellcheck.8** - SC2034 unused variables in current_ralph_tasks.sh (MEDIUM)
+  - **File:** `current_ralph_tasks.sh` lines 107, 299
+  - **Issue:** `is_manual` and `skip_line` appear unused
+  - **Fix:** Remove unused variables or mark as used
+  - **AC:** `shellcheck current_ralph_tasks.sh 2>&1 | grep -c SC2034` returns 0
+  - **Commit:** `fix(ralph): remove unused variables in current_ralph_tasks.sh`
+
+- [ ] **WARN.Shellcheck.9** - SC2155 declare and assign separately in current_ralph_tasks.sh (LOW)
+  - **File:** `current_ralph_tasks.sh` line 267
+  - **Issue:** `local timestamp=$(date ...)` masks return values
+  - **Fix:** Split into `local timestamp; timestamp=$(date ...)`
+  - **AC:** `shellcheck current_ralph_tasks.sh 2>&1 | grep -c SC2155` returns 0
+  - **Commit:** `fix(ralph): separate declaration and assignment for timestamp`
+
+- [ ] **WARN.Shellcheck.10** - SC2002 useless cat in loop.sh (LOW)
+  - **File:** `loop.sh` line 642
+  - **Issue:** `cat file | tail` can be `tail file` or `< file tail`
+  - **Fix:** Replace `cat "$RALPH/.verify/latest.txt" | tail` with `tail "$RALPH/.verify/latest.txt"`
+  - **AC:** `shellcheck loop.sh 2>&1 | grep -c SC2002` returns 0
+  - **Commit:** `refactor(ralph): remove useless cat in loop.sh`
+
+- [ ] **WARN.Shellcheck.11** - SC2086 unquoted variable in loop.sh (LOW)
+  - **File:** `loop.sh` line 732
+  - **Issue:** `${attach_flag}` should be quoted to prevent word splitting
+  - **Fix:** Change `${attach_flag}` to `"${attach_flag}"`
+  - **AC:** `shellcheck loop.sh 2>&1 | grep -c SC2086` returns 0
+  - **Commit:** `fix(ralph): quote attach_flag in loop.sh`
 
 ## Phase 0-Quick: Quick Wins (High Value, Low Effort)
 
