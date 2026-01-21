@@ -500,7 +500,7 @@ This applies to:
 
 ## Additional Reading
 
-- **Task Synchronization:** See `cortex/TASK_SYNC_PROTOCOL.md` for how your plans reach Ralph
+- **Task Synchronization:** See `cortex/docs/TASK_SYNC_PROTOCOL.md` for how your plans reach Ralph
 - **Maintenance Guide:** See `workers/ralph/.maintenance/MAINTENANCE.md` for system health checks
 
 ---

@@ -201,7 +201,7 @@ This document provides a human-friendly overview of the Brain repository structu
 → Read `cortex/DECISIONS.md` (after it's created)
 
 ### "I need operational procedures"
-→ Read `cortex/RUNBOOK.md` (after it's created) or `AGENTS.md`
+→ Read `cortex/docs/RUNBOOK.md` or `AGENTS.md`
 
 ## Workflow Summary
 
