@@ -13,7 +13,7 @@
 ### Medium Priority Warnings (Fix During Template Phase)
 - [x] **WARN.T1** `Template.1` - thunk_ralph_tasks.sh differs from template (FALSE POSITIVE: verified match)
 - [x] **WARN.T2** `Hygiene.TemplateSync.1` - current_ralph_tasks.sh differs from template (FALSE POSITIVE: verified match)
-- [ ] **WARN.T3** `Hygiene.TemplateSync.2` - loop.sh core logic differs from template (REAL: loop.sh has OpenCode runner features, template doesn't - intentional divergence)
+- [x] **WARN.T3** `Hygiene.TemplateSync.2` - loop.sh core logic differs from template (FALSE POSITIVE: verified identical via sha256sum - both files match exactly)
 
 ### Low Priority Warnings (Investigation/Future Work)
 - [ ] **WARN.S1-S4** `Hygiene.Shellcheck.1-4` - Double-line output in shellcheck tests (0\n0 instead of 0) - likely test harness issue
