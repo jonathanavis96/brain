@@ -16,7 +16,7 @@
 - [x] **WARN.T3** `Hygiene.TemplateSync.2` - loop.sh core logic differs from template (FALSE POSITIVE: verified identical via sha256sum - both files match exactly)
 
 ### Low Priority Warnings (Investigation/Future Work)
-- [ ] **WARN.S1-S4** `Hygiene.Shellcheck.1-4` - Double-line output in shellcheck tests (0\n0 instead of 0) - likely test harness issue
+- [x] **WARN.S1-S4** `Hygiene.Shellcheck.1-4` - Double-line output in shellcheck tests (0\n0 instead of 0) - FALSE POSITIVE: grep -c outputs "0" then || echo 0 adds another "0". Actual shellcheck validation passing (no SC2034/SC2155 issues). Cannot fix: AC.rules and verifier.sh are protected files.
 - [ ] **WARN.D1-D2** `Hygiene.DocSync.1-2` - Double-line output in AGENTS.md THUNK monitor checks
 - [ ] **WARN.O1** `BugC.Auto.2` - THUNK writes outside era creation (1 match found) - verify intentional
 - [ ] **WARN.O2-O3** `BugB.Auto.1-2` - Display cursor positioning and stty handling checks
