@@ -157,6 +157,7 @@ When Ralph encounters verifier warnings, he will:
 - DO NOT create the Verifier Warnings section yourself (Ralph creates it during PLAN mode)
 - DO review Ralph's fixes to ensure warnings are resolved correctly
 - DO suggest waivers if warnings are false positives (Ralph requests via `../.verify/request_waiver.sh`)
+- **IMPORTANT:** Waivers are one-time-use - after verifier uses a waiver, it's moved to `.used` and cannot be reused. Only suggest waivers for issues Ralph genuinely cannot fix.
 
 ### 5. Task Numbering Convention
 
