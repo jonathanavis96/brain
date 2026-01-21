@@ -104,7 +104,6 @@ extract_tasks() {
     local in_task_section=false
     local task_counter=0
     local indent_level=0
-    local is_manual=false
 
     while IFS= read -r line; do
         # Detect Manual Review section - skip these tasks entirely
@@ -296,7 +295,6 @@ archive_completed_tasks() {
 
     # Write new file without completed tasks, add archive at end
     {
-        local skip_line=false
         while IFS= read -r line; do
             if [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
                 in_task_section=true
