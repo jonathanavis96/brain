@@ -4,6 +4,8 @@ You are Ralph. Mode is passed by loop.sh header.
 
 ## Verifier Feedback (CRITICAL - Check First!)
 
+**ALWAYS check `.verify/latest.txt` at the start of every iteration** to review PASS/FAIL/WARN status.
+
 If your prompt header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
 1. **STOP** - Do not pick a new task from IMPLEMENTATION_PLAN.md
@@ -11,6 +13,12 @@ If your prompt header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 3. **FIX** the failing acceptance criteria listed in `# FAILED_RULES:`
 4. **COMMIT** your fix with message: `fix(ralph): resolve AC failure <RULE_ID>`
 5. **THEN** output `:::BUILD_READY:::` so the verifier can re-run
+
+If `.verify/latest.txt` contains `[WARN]` lines:
+1. **READ** all warnings carefully
+2. **ADD** a "## Verifier Warnings" section at the TOP of IMPLEMENTATION_PLAN.md (after the header, before tasks)
+3. **LIST** each warning as a checkbox task: `- [ ] Fix warning: <RULE_ID> - <description>`
+4. **PRIORITIZE** these as high-priority tasks to fix in upcoming BUILD iterations
 
 Common failure types:
 - **Hash mismatch** (e.g., `Protected.1`): A protected file was modified. You cannot fix this - report to human.

@@ -4,6 +4,8 @@ You are Ralph. Mode is passed by loop.sh header.
 
 ## Verifier Feedback (CRITICAL - Check First!)
 
+**ALWAYS check `.verify/latest.txt` at the start of every iteration** to review PASS/FAIL/WARN status.
+
 If your prompt header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
 1. **STOP** - Do not pick a new task from IMPLEMENTATION_PLAN.md
@@ -11,6 +13,12 @@ If your prompt header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 3. **FIX** the failing acceptance criteria listed in `# FAILED_RULES:`
 4. **COMMIT** your fix with message: `fix(ralph): resolve AC failure <RULE_ID>`
 5. **THEN** output `:::BUILD_READY:::` so the verifier can re-run
+
+If `.verify/latest.txt` contains `[WARN]` lines:
+1. **READ** all warnings carefully
+2. **ADD** a "## Verifier Warnings" section at the TOP of IMPLEMENTATION_PLAN.md (after the header, before tasks)
+3. **LIST** each warning as a checkbox task: `- [ ] Fix warning: <RULE_ID> - <description>`
+4. **PRIORITIZE** these as high-priority tasks to fix in upcoming BUILD iterations
 
 Common failure types:
 - **Hash mismatch** (e.g., `Protected.1`): A protected file was modified. You cannot fix this - report to human.
@@ -48,9 +56,13 @@ After every major step, print a single-line progress update in this exact format
 PROGRESS | phase=<plan|build> | step=<short> | tasks=<done>/<total> | file=<path>
 
 At the start of your response, always print:
-STATUS | branch=<git branch> | runner=opencode | model=opencode/grok-code
+STATUS | branch=<git branch> | runner=<rovodev|opencode> | model=<actual model ID>
 
 PROGRESS | phase=<...> | step=starting | tasks=<done>/<total> | file=ralph/IMPLEMENTATION_PLAN.md
+
+**Important:** Detect the actual runner and model from your environment/context. Common models:
+- RovoDev: `anthropic.claude-sonnet-4-5-20250929-v1:0`, `anthropic.claude-opus-4-5-20251101-v1:0`
+- OpenCode: `opencode/grok-code`, `opencode/gpt-5-nano`
 
 Then work normally using tools.
 After you read or modify any key file (IMPLEMENTATION_PLAN.md, THOUGHTS.md, NEURONS.md, PROMPT.md, any file under cortex/ or workers/), print a PROGRESS line.
