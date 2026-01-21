@@ -600,6 +600,31 @@ run_once() {
       echo ""
     fi
     
+    # Inject context files (lean prompt pattern)
+    echo "# Context Files"
+    echo ""
+    
+    # AGENTS.md - Quick reference
+    if [[ -f "$RALPH/AGENTS.md" ]]; then
+      echo "# AGENTS.md - Quick Reference"
+      echo ""
+      cat "$RALPH/AGENTS.md"
+      echo ""
+      echo "---"
+      echo ""
+    fi
+    
+    # THOUGHTS.md - Current mission
+    if [[ -f "$RALPH/THOUGHTS.md" ]]; then
+      echo "# THOUGHTS.md - Current Mission"
+      echo ""
+      cat "$RALPH/THOUGHTS.md"
+      echo ""
+      echo "---"
+      echo ""
+    fi
+    
+    # Main prompt
     cat "$prompt_file"
     
     # Append dry-run instruction if enabled
