@@ -254,11 +254,11 @@ if [[ "$RUNNER" == "rovodev" ]]; then
     echo "📋 Cortex has full context of the Brain repository."
     echo "💬 You can now ask questions and have a conversation."
     echo ""
-    acli rovodev run $CONFIG_FLAG --yolo "$(cat "$COMPOSITE_PROMPT")"
+    acli rovodev run "$CONFIG_FLAG" --yolo "$(cat "$COMPOSITE_PROMPT")"
     EXIT_CODE=$?
   else
     # One-shot mode - auto-approve with --yolo
-    acli rovodev run $CONFIG_FLAG --yolo "$(cat "$COMPOSITE_PROMPT")"
+    acli rovodev run "$CONFIG_FLAG" --yolo "$(cat "$COMPOSITE_PROMPT")"
     EXIT_CODE=$?
   fi
 else
