@@ -342,3 +342,4 @@ Started: 2026-01-18
 | 342 | 0.Q.3 | HIGH | **0.Q.3** Copy SKILL_TEMPLATE.md to templates/ralph/ - Copied skills/self-improvement/SKILL_TEMPLATE.md (2751 bytes) to templates/ralph/SKILL_TEMPLATE.md, verified files are identical with diff | 2026-01-22 |
 | 290 | WARN.Shellcheck.1 | MEDIUM | **WARN.Shellcheck.1** - Removed unused waiver_reason variable from .verify/check_waiver.sh get_waiver_info() function, resolves SC2034 | 2026-01-22 |
 | 291 | WARN.Shellcheck.2 | LOW | **WARN.Shellcheck.2** - Quote EXPIRY_DAYS variable in .verify/request_waiver.sh line 131 to prevent globbing, changed `date -v+${EXPIRY_DAYS}d` to `date -v+"${EXPIRY_DAYS}"d`, resolves SC2086 | 2026-01-22 |
+| 291 | WARN.Shellcheck.3 | MEDIUM | **WARN.Shellcheck.3** Remove unused RUNNER and CONFIG_FLAG variables in cortex/cortex.bash - Deleted line 64 (RUNNER="rovodev") and lines 103-109 (CONFIG_FLAG block), verified with shellcheck (SC2034 warnings resolved) | 2026-01-22 |
