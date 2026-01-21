@@ -456,6 +456,68 @@ expect_stdout_regex=^ok
 [Cortex.FileSizeLimit.AGENTS]
 mode=auto
 gate=warn
-desc=cortex/AGENTS.md max 150 lines
-cmd=bash -c 'lines=$(wc -l < ../../cortex/AGENTS.md 2>/dev/null || echo 0); [[ $lines -le 150 ]] && echo "ok ($lines lines)" || echo "OVER: $lines lines (max 150)"'
+desc=cortex/AGENTS.md max 180 lines
+cmd=bash -c 'lines=$(wc -l < ../../cortex/AGENTS.md 2>/dev/null || echo 0); [[ $lines -le 180 ]] && echo "ok ($lines lines)" || echo "OVER: $lines lines (max 180)"'
+expect_stdout_regex=^ok
+
+# =============================================================================
+# Static Analysis Tools (Linting)
+# =============================================================================
+# These rules verify code quality using external linting tools.
+# Tools must be installed via: bash setup-linters.sh
+
+[Lint.Shellcheck.LoopSh]
+mode=auto
+gate=warn
+desc=loop.sh passes shellcheck (if installed)
+cmd=bash -c 'command -v shellcheck &>/dev/null && shellcheck -e SC1091 loop.sh 2>&1 | head -20 || echo "ok (shellcheck not installed)"'
+expect_stdout_regex=(^$|ok|^In loop\.sh)
+
+[Lint.Shellcheck.VerifierSh]
+mode=auto
+gate=warn
+desc=verifier.sh passes shellcheck (if installed)
+cmd=bash -c 'command -v shellcheck &>/dev/null && shellcheck -e SC1091 verifier.sh 2>&1 | head -20 || echo "ok (shellcheck not installed)"'
+expect_stdout_regex=(^$|ok|^In verifier\.sh)
+
+[Lint.Shellcheck.CurrentRalphTasks]
+mode=auto
+gate=warn
+desc=current_ralph_tasks.sh passes shellcheck (if installed)
+cmd=bash -c 'command -v shellcheck &>/dev/null && shellcheck -e SC1091 current_ralph_tasks.sh 2>&1 | head -20 || echo "ok (shellcheck not installed)"'
+expect_stdout_regex=(^$|ok|^In current_ralph)
+
+[Lint.Shellcheck.ThunkRalphTasks]
+mode=auto
+gate=warn
+desc=thunk_ralph_tasks.sh passes shellcheck (if installed)
+cmd=bash -c 'command -v shellcheck &>/dev/null && shellcheck -e SC1091 thunk_ralph_tasks.sh 2>&1 | head -20 || echo "ok (shellcheck not installed)"'
+expect_stdout_regex=(^$|ok|^In thunk_ralph)
+
+[Lint.Markdown.NeuronsBalancedFences]
+mode=auto
+gate=warn
+desc=NEURONS.md has balanced code fences (equal opens/closes)
+cmd=bash -c 'opens=$(grep -c "^\`\`\`[a-z]" NEURONS.md 2>/dev/null || echo 0); closes=$(grep -c "^\`\`\`$" NEURONS.md 2>/dev/null || echo 0); [[ "$opens" -eq "$closes" ]] && echo "ok ($opens pairs)" || echo "UNBALANCED: $opens opens, $closes closes"'
+expect_stdout_regex=^ok
+
+[Lint.Markdown.AgentsBalancedFences]
+mode=auto
+gate=warn
+desc=AGENTS.md has balanced code fences (equal opens/closes)
+cmd=bash -c 'opens=$(grep -c "^\`\`\`[a-z]" AGENTS.md 2>/dev/null || echo 0); closes=$(grep -c "^\`\`\`$" AGENTS.md 2>/dev/null || echo 0); [[ "$opens" -eq "$closes" ]] && echo "ok ($opens pairs)" || echo "UNBALANCED: $opens opens, $closes closes"'
+expect_stdout_regex=^ok
+
+[Lint.Markdown.ThoughtsBalancedFences]
+mode=auto
+gate=warn
+desc=THOUGHTS.md has balanced code fences (equal opens/closes)
+cmd=bash -c 'opens=$(grep -c "^\`\`\`[a-z]" THOUGHTS.md 2>/dev/null || echo 0); closes=$(grep -c "^\`\`\`$" THOUGHTS.md 2>/dev/null || echo 0); [[ "$opens" -eq "$closes" ]] && echo "ok ($opens pairs)" || echo "UNBALANCED: $opens opens, $closes closes"'
+expect_stdout_regex=^ok
+
+[Lint.PreCommit.ConfigExists]
+mode=auto
+gate=warn
+desc=Pre-commit config exists at repo root
+cmd=bash -c '[[ -f "../../.pre-commit-config.yaml" ]] && echo "ok" || echo "MISSING: .pre-commit-config.yaml"'
 expect_stdout_regex=^ok

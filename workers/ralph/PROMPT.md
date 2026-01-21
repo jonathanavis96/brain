@@ -140,6 +140,17 @@ Please complete these manual checks before marking the project as fully done.
 - Compare specs vs current codebase
 - Search for gaps between intent and implementation
 
+### Pre-Planning Lint Check (MANDATORY)
+Before planning tasks, run linting tools to discover issues:
+```bash
+# Run pre-commit if available (catches shell, markdown, python issues)
+pre-commit run --all-files 2>&1 | head -50 || true
+
+# Or run individual checks if pre-commit not installed:
+shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
+```
+**If any issues found:** Add them to the TOP of IMPLEMENTATION_PLAN.md as high-priority tasks in "## Phase 0-Warn: Verifier Warnings" section.
+
 ### Actions
 1. Create/update IMPLEMENTATION_PLAN.md:
    - **⚠️ CRITICAL:** ALL task sections MUST be "## Phase X:" format (e.g., "## Phase 0-Quick: Quick Wins", "## Phase 1: Maintenance")

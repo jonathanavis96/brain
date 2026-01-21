@@ -42,16 +42,16 @@ fi
 # Ensure .gitignore has the right entries
 if [[ -f ".gitignore" ]]; then
   entries_to_add=()
-  
+
   # Check each required entry independently
   if ! grep -q ".verify/latest.txt" .gitignore; then
     entries_to_add+=(".verify/latest.txt")
   fi
-  
+
   if ! grep -q ".verify/run_id.txt" .gitignore; then
     entries_to_add+=(".verify/run_id.txt")
   fi
-  
+
   # Add missing entries if any found
   if [[ ${#entries_to_add[@]} -gt 0 ]]; then
     echo "" >> .gitignore

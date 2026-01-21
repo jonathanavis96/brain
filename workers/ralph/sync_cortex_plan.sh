@@ -56,12 +56,12 @@ fi
 # CASE A: Bootstrap (first time)
 if [[ ! -f "$RALPH_PLAN" ]]; then
     log_info "Bootstrap mode - creating Ralph's plan from Cortex"
-    
+
     if [[ "$DRY_RUN" == "true" ]]; then
         log_info "[DRY RUN] Would copy $CORTEX_PLAN → $RALPH_PLAN with sync markers"
         exit 0
     fi
-    
+
     # Copy cortex plan and add sync markers to each task line
     while IFS= read -r line; do
         echo "$line"
@@ -70,7 +70,7 @@ if [[ ! -f "$RALPH_PLAN" ]]; then
             echo "  $SYNC_MARKER"
         fi
     done < "$CORTEX_PLAN" > "$RALPH_PLAN"
-    
+
     log_info "Bootstrap complete - Ralph's plan created"
     exit 0
 fi
@@ -111,16 +111,16 @@ while IFS= read -r line; do
     # Check if this is a task line
     if [[ "$line" =~ ^[[:space:]]*-[[:space:]]\[[\ x~?]\][[:space:]]\*\*([0-9]+\.[0-9A-Z.]+)\*\* ]]; then
         task_id="${BASH_REMATCH[1]}"
-        
+
         # Check if this task is already synced
         if [[ -z "${synced_tasks[$task_id]:-}" ]]; then
             log_info "New task found: $task_id"
             new_tasks_found=$((new_tasks_found + 1))
-            
+
             # Collect this task and its context (description lines until next task or empty line)
             echo "$line" >> "$tmp_file"
             echo "  $SYNC_MARKER" >> "$tmp_file"
-            
+
             # Read following lines until we hit another task or section header
             while IFS= read -r next_line; do
                 if [[ "$next_line" =~ ^[[:space:]]*-[[:space:]]\[[\ x~?]\][[:space:]]\*\* ]] || \

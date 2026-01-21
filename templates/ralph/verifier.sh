@@ -36,12 +36,12 @@ read_approval() {
 # Check if baselines are initialized (fail fast with clear message)
 check_init_required() {
   local missing=()
-  
+
   [[ ! -f "$AC_HASH_FILE" ]] && missing+=("ac.sha256")
   [[ ! -f "${VERIFY_DIR}/loop.sha256" ]] && missing+=("loop.sha256")
   [[ ! -f "${VERIFY_DIR}/verifier.sha256" ]] && missing+=("verifier.sha256")
   [[ ! -f "${VERIFY_DIR}/prompt.sha256" ]] && missing+=("prompt.sha256")
-  
+
   if [[ ${#missing[@]} -gt 0 ]]; then
     echo ""
     echo "❌ ERROR: Verifier baselines not initialized!"

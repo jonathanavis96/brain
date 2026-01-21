@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # PR Batch Creator - Promotes ralph-work branch to main via PR
-# 
+#
 # Usage:
 #   pr-batch.sh                    # Create PR from ralph-work -> main
 #   pr-batch.sh --weekly           # Create time-based branch (ralph/week-03) then PR
@@ -71,7 +71,7 @@ check_gh() {
         echo "Then run: gh auth login"
         exit 1
     fi
-    
+
     if ! gh auth status &> /dev/null; then
         echo -e "${RED}Error: GitHub CLI not authenticated${NC}"
         echo "Run: gh auth login"
@@ -96,11 +96,11 @@ generate_pr_body() {
     local commit_count
     local file_stats
     local week_num
-    
+
     commit_count=$(get_commit_count)
     file_stats=$(get_file_stats)
     week_num=$(date +%V)
-    
+
     cat <<EOF
 ## Ralph Work Batch - $(date +"%b %d, %Y")
 
@@ -116,19 +116,19 @@ EOF
     echo "**Skills (skills/):**"
     git diff --name-only "$MAIN_BRANCH".."$WORK_BRANCH" -- "ralph/skills/" 2>/dev/null | sed 's/^/- /' || echo "- No changes"
     echo ""
-    
+
     echo "**Templates:**"
     git diff --name-only "$MAIN_BRANCH".."$WORK_BRANCH" -- "ralph/templates/" 2>/dev/null | sed 's/^/- /' || echo "- No changes"
     echo ""
-    
+
     echo "**Scripts:**"
     git diff --name-only "$MAIN_BRANCH".."$WORK_BRANCH" -- "*.sh" 2>/dev/null | sed 's/^/- /' || echo "- No changes"
     echo ""
-    
+
     echo "**References:**"
     git diff --name-only "$MAIN_BRANCH".."$WORK_BRANCH" -- "ralph/references/" 2>/dev/null | sed 's/^/- /' || echo "- No changes"
     echo ""
-    
+
     echo "**Core Docs:**"
     git diff --name-only "$MAIN_BRANCH".."$WORK_BRANCH" -- "ralph/*.md" "README.md" 2>/dev/null | sed 's/^/- /' || echo "- No changes"
     echo ""
@@ -150,41 +150,41 @@ show_status() {
     echo -e "${BLUE}PR Batch Status${NC}"
     echo -e "${BLUE}========================================${NC}"
     echo ""
-    
+
     # Check if ralph-work exists
     if ! git show-ref --verify --quiet "refs/heads/$WORK_BRANCH"; then
         echo -e "${YELLOW}Branch '$WORK_BRANCH' does not exist.${NC}"
         echo "Run: pr-batch.sh --setup"
         return 1
     fi
-    
+
     local commit_count
     commit_count=$(get_commit_count)
-    
+
     if [[ "$commit_count" -eq 0 ]]; then
         echo -e "${GREEN}✓ No pending changes${NC}"
         echo "ralph-work is up to date with main"
         return 0
     fi
-    
+
     echo -e "${YELLOW}Pending changes: $commit_count commits${NC}"
     echo ""
-    
+
     echo "Files changed:"
     git diff --stat "$MAIN_BRANCH".."$WORK_BRANCH" | head -20
     echo ""
-    
+
     echo "Recent commits:"
     git log --oneline "$MAIN_BRANCH".."$WORK_BRANCH" | head -10
     echo ""
-    
+
     echo -e "Run ${GREEN}pr-batch.sh${NC} to create a PR with these changes"
 }
 
 # Setup ralph-work branch
 do_setup() {
     echo -e "${BLUE}Setting up ralph-work branch...${NC}"
-    
+
     if git show-ref --verify --quiet "refs/heads/$WORK_BRANCH"; then
         echo -e "${YELLOW}Branch '$WORK_BRANCH' already exists${NC}"
         read -p "Reset it to current main? (yes/no): " confirm
@@ -195,10 +195,10 @@ do_setup() {
         git checkout main
         git branch -D "$WORK_BRANCH"
     fi
-    
+
     git checkout -b "$WORK_BRANCH"
     git push -u origin "$WORK_BRANCH"
-    
+
     echo ""
     echo -e "${GREEN}✓ Created and pushed '$WORK_BRANCH' branch${NC}"
     echo ""
@@ -212,14 +212,14 @@ do_setup() {
 create_pr() {
     local pr_branch="$1"
     local pr_title="$2"
-    
+
     echo -e "${BLUE}Creating PR: $pr_title${NC}"
     echo ""
-    
+
     # Generate PR body
     local pr_body
     pr_body=$(generate_pr_body)
-    
+
     # If using a snapshot branch, create it first
     if [[ "$pr_branch" != "$WORK_BRANCH" ]]; then
         echo "Creating snapshot branch: $pr_branch"
@@ -227,7 +227,7 @@ create_pr() {
         git checkout -b "$pr_branch"
         git push -u origin "$pr_branch"
     fi
-    
+
     # Create the PR
     local pr_url
     pr_url=$(gh pr create \
@@ -235,12 +235,12 @@ create_pr() {
         --head "$pr_branch" \
         --title "$pr_title" \
         --body "$pr_body")
-    
+
     echo ""
     echo -e "${GREEN}✓ PR created successfully!${NC}"
     echo "$pr_url"
     echo ""
-    
+
     # Return to work branch
     git checkout "$WORK_BRANCH"
 }
@@ -294,36 +294,36 @@ case "$MODE" in
         ;;
     direct)
         check_gh
-        
+
         commit_count=$(get_commit_count)
         if [[ "$commit_count" -eq 0 ]]; then
             echo -e "${GREEN}✓ No pending changes to create PR${NC}"
             exit 0
         fi
-        
+
         create_pr "$WORK_BRANCH" "Ralph batch: $(date +%Y-%m-%d) ($commit_count commits)"
         ;;
     weekly)
         check_gh
-        
+
         commit_count=$(get_commit_count)
         if [[ "$commit_count" -eq 0 ]]; then
             echo -e "${GREEN}✓ No pending changes to create PR${NC}"
             exit 0
         fi
-        
+
         week_branch="ralph/$(date +%Y)-W$(date +%V)"
         create_pr "$week_branch" "Ralph weekly: Week $(date +%V), $(date +%Y) ($commit_count commits)"
         ;;
     snapshot)
         check_gh
-        
+
         commit_count=$(get_commit_count)
         if [[ "$commit_count" -eq 0 ]]; then
             echo -e "${GREEN}✓ No pending changes to create PR${NC}"
             exit 0
         fi
-        
+
         snapshot_branch="ralph/$SNAPSHOT_NAME"
         create_pr "$snapshot_branch" "Ralph: $SNAPSHOT_NAME ($commit_count commits)"
         ;;

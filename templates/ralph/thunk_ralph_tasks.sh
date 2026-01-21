@@ -37,22 +37,22 @@ get_file_mtime() {
 # Function to generate short human-readable title from task description
 generate_title() {
     local desc="$1"
-    
+
     # Strip technical IDs (T1.1, P4A.7, 1.1, 2.3, etc.) from the beginning - use bash parameter expansion
     desc="${desc#"${desc%%[![:space:]]*}"}"  # Trim leading whitespace
     if [[ "$desc" =~ ^\*\*[T]?[0-9A-Za-z]+(\.[0-9A-Za-z]+)*\*\*[[:space:]]* ]]; then
         desc="${desc#*\*\* }"  # Remove up to and including "** "
     fi
-    
+
     # Strip markdown bold markers - use bash parameter expansion
     desc="${desc//\*\*/}"
-    
+
     # Extract action verb and main object (look for common action verbs)
     if [[ "$desc" =~ ^(Rename|Update|Create|Verify|Delete|Add|Remove|Test|Implement|Fix|Refactor|Document|Migrate|Copy|Set|Run|If)([[:space:]]*:[[:space:]]*|[[:space:]]+)(.+)$ ]]; then
         local verb="${BASH_REMATCH[1]}"
         local separator="${BASH_REMATCH[2]}"
         local rest="${BASH_REMATCH[3]}"
-        
+
         # For "Test:" prefix, include the object being tested
         if [[ "$verb" == "Test" ]] && [[ "$separator" =~ : ]]; then
             # Take up to arrow, period, or first 50 chars
@@ -92,7 +92,7 @@ generate_title() {
 # Function to get next THUNK number
 get_next_thunk_number() {
     local max_num=0
-    
+
     # Parse THUNK.md for highest THUNK number using regex
     while IFS= read -r line; do
         if [[ "$line" =~ ^\|[[:space:]]*([0-9]+)[[:space:]]*\| ]]; then
@@ -102,24 +102,24 @@ get_next_thunk_number() {
             fi
         fi
     done < <(grep -E '^\|[[:space:]]*[0-9]+[[:space:]]*\|' "$THUNK_FILE")
-    
+
     echo $((max_num + 1))
 }
 
 # Function to display THUNK.md contents (full refresh)
 display_thunks() {
     clear
-    
+
     # Header
     echo "╔════════════════════════════════════════════════════════════════╗"
     echo "║          THUNK RALPH TASKS - $(date +%H:%M:%S)                     ║"
     echo "╚════════════════════════════════════════════════════════════════╝"
     echo ""
-    
+
     local current_era=""
     local total_count=0
     local display_row=4  # Track row position (starting after header)
-    
+
     while IFS= read -r line; do
         # Detect Era headers
         if [[ "$line" =~ ^##[[:space:]]+Era:[[:space:]]+(.+)$ ]]; then
@@ -140,7 +140,7 @@ display_thunks() {
             local priority="${BASH_REMATCH[3]}"
             local description="${BASH_REMATCH[4]}"
             local completed="${BASH_REMATCH[5]}"
-            
+
             # Strip whitespace using bash parameter expansion (faster than xargs)
             thunk_num="${thunk_num#"${thunk_num%%[![:space:]]*}"}"  # Trim leading
             thunk_num="${thunk_num%"${thunk_num##*[![:space:]]}"}"  # Trim trailing
@@ -152,13 +152,13 @@ display_thunks() {
             description="${description%"${description##*[![:space:]]}"}"
             completed="${completed#"${completed%%[![:space:]]*}"}"
             completed="${completed%"${completed##*[![:space:]]}"}"
-            
+
             # Skip header row
             if [[ "$thunk_num" =~ ^[0-9]+$ ]]; then
                 # Generate human-friendly short title
                 local short_title
                 short_title=$(generate_title "$description")
-                
+
                 # Format as "THUNK N — <short title>" with bold if terminal supports
                 if [[ -t 1 ]]; then
                     echo -e "  \033[32m✓\033[0m \033[1mTHUNK #$thunk_num\033[0m — $short_title"
@@ -170,17 +170,17 @@ display_thunks() {
             fi
         fi
     done < "$THUNK_FILE"
-    
+
     if [[ $total_count -eq 0 ]]; then
         echo "  No completed tasks yet."
         ((display_row++))
         echo ""
         ((display_row++))
     fi
-    
+
     # Store content row BEFORE footer (for incremental updates)
     LAST_CONTENT_ROW=$display_row
-    
+
     # Footer
     echo ""
     ((display_row++))
@@ -192,7 +192,7 @@ display_thunks() {
     ((display_row++))
     echo ""
     ((display_row++))
-    
+
     # Hotkey legend
     echo "╔════════════════════════════════════════════════════════════════╗"
     ((display_row++))
@@ -202,7 +202,7 @@ display_thunks() {
     ((display_row++))
     echo ""
     ((display_row++))
-    
+
     # Store last display row and total count for incremental updates
     LAST_DISPLAY_ROW=$display_row
     LAST_TOTAL_COUNT=$total_count
@@ -215,21 +215,21 @@ parse_new_thunk_entries() {
     local start_line="$1"
     local line_num=0
     local new_count=0
-    
+
     # LAST_CONTENT_ROW tracks the row after the last THUNK entry (before footer)
     # Footer structure is 9 lines:
-    #   blank (1) + separator (1) + total (1) + separator (1) + blank (1) + 
+    #   blank (1) + separator (1) + total (1) + separator (1) + blank (1) +
     #   hotkey top (1) + hotkey text (1) + hotkey bottom (1) + blank (1)
     local append_row=$LAST_CONTENT_ROW
-    
+
     while IFS= read -r line; do
         ((line_num++))
-        
+
         # Skip lines before start_line
         if [[ $line_num -le $start_line ]]; then
             continue
         fi
-        
+
         # Parse table rows only (skip headers, era markers, etc.)
         if [[ "$line" =~ ^\|[[:space:]]*([0-9]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|$ ]]; then
             # Parse table row
@@ -238,7 +238,7 @@ parse_new_thunk_entries() {
             local priority="${BASH_REMATCH[3]}"
             local description="${BASH_REMATCH[4]}"
             local completed="${BASH_REMATCH[5]}"
-            
+
             # Strip whitespace using bash parameter expansion (faster than xargs)
             thunk_num="${thunk_num#"${thunk_num%%[![:space:]]*}"}"  # Trim leading
             thunk_num="${thunk_num%"${thunk_num##*[![:space:]]}"}"  # Trim trailing
@@ -250,12 +250,12 @@ parse_new_thunk_entries() {
             description="${description%"${description##*[![:space:]]}"}"
             completed="${completed#"${completed%%[![:space:]]*}"}"
             completed="${completed%"${completed##*[![:space:]]}"}"
-            
+
             # Skip header row
             if [[ "$thunk_num" =~ ^[0-9]+$ ]]; then
                 # Generate human-friendly short title
                 local short_title=$(generate_title "$description")
-                
+
                 # Position cursor and append new entry (clear line first)
                 if [[ -t 1 ]]; then
                     tput cup $append_row 0
@@ -264,30 +264,30 @@ parse_new_thunk_entries() {
                 else
                     echo "  ✓ THUNK #$thunk_num — $short_title"
                 fi
-                
+
                 ((new_count++))
                 ((append_row++))
             fi
         fi
     done < "$THUNK_FILE"
-    
+
     # Only redraw footer if we added new entries
     if [[ $new_count -eq 0 ]]; then
         return
     fi
-    
+
     # Update the total count
     local new_total=$((LAST_TOTAL_COUNT + new_count))
-    
+
     # Redraw complete footer starting at append_row
     # Footer row is where we insert the blank line before separator
     local footer_start=$append_row
-    
+
     if [[ -t 1 ]]; then
         # Clear everything from footer_start to end of screen to remove old footer
         tput cup $footer_start 0
         tput ed  # Clear from cursor to end of display
-        
+
         # Now draw the footer cleanly
         echo ""
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -304,7 +304,7 @@ parse_new_thunk_entries() {
         # This prevents duplication in non-TTY environments
         :  # No-op - skip footer in non-TTY mode for incremental updates
     fi
-    
+
     # Update stored state
     LAST_CONTENT_ROW=$append_row
     LAST_DISPLAY_ROW=$((footer_start + 9))
@@ -320,15 +320,15 @@ create_new_era() {
     echo ""
     echo -n "  Enter new era name: "
     read -r era_name
-    
+
     if [[ -z "$era_name" ]]; then
         echo "  Cancelled - no name provided."
         sleep 2
         return
     fi
-    
+
     local timestamp=$(date "+%Y-%m-%d")
-    
+
     # Append new era section to THUNK.md
     cat >> "$THUNK_FILE" << EOF  # Era: write operation for new era creation
 
@@ -339,7 +339,7 @@ Started: $timestamp
 |---------|------------|----------|-------------|-----------|
 
 EOF
-    
+
     echo ""
     echo "  ✓ Created new era: $era_name"
     sleep 2
@@ -398,16 +398,16 @@ while true; do
                 ;;
         esac
     fi
-    
+
     # Check for file changes
     CURRENT_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
-    
+
     if [[ "$CURRENT_THUNK_MODIFIED" != "$LAST_THUNK_MODIFIED" ]]; then
         LAST_THUNK_MODIFIED="$CURRENT_THUNK_MODIFIED"
-        
+
         # Check line count to determine update strategy
         CURRENT_LINE_COUNT=$(wc -l < "$THUNK_FILE" 2>/dev/null || echo "0")
-        
+
         if [[ "$CURRENT_LINE_COUNT" -lt "$LAST_LINE_COUNT" ]]; then
             # Line count decreased - full refresh needed (rare case: deletions)
             display_thunks
@@ -419,11 +419,11 @@ while true; do
             # Same line count - content modified (edits)
             display_thunks
         fi
-        
+
         LAST_LINE_COUNT="$CURRENT_LINE_COUNT"
     fi
-    
-    
+
+
     # Small sleep to prevent CPU spinning
     sleep 0.5
 done

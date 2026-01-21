@@ -1,9 +1,14 @@
 Ralph Verifier Report
-Time: 2026-01-21 23:42:33
-Git:  8556749
+Time: 2026-01-22 00:53:46
+Git:  eacf2ef
 AC:   /home/grafe/code/brain/rules/AC.rules
 Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
 ------------------------------------------------------------
+[2026-01-22 00:53:46] FAIL: AC hash mismatch (rules/AC.rules modified).
+Expected: 516de6d60cb9e4d6892480a1d396bb90725945be0d763373a44bcdeeff073918
+Actual:   8d4a8b1c411fd1c68a5d1ad1770e48deacdcd3f60de0364871e96a1c2f69c466
+Fix: If intentional, update:
+  sha256sum "/home/grafe/code/brain/rules/AC.rules" > "/home/grafe/code/brain/.verify/ac.sha256"
 [PASS] BugA.1
   desc: Parser uses in_task_section state tracking
   cmd:  grep -c 'in_task_section=false' current_ralph_tasks.sh
@@ -97,16 +102,20 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
   cmd:  grep -RIn --include='*.sh' --include='*.md' --exclude-dir=.git --exclude-dir=.verify --exclude-dir=logs --exclude-dir=old_md --exclude='AC.rules' --exclude='IMPLEMENTATION_PLAN.md' "verified: this is" . 2>/dev/null | wc -l | tr -d ' '
   exit: 0
   stdout: 0
-[PASS] Protected.1
+[FAIL] Protected.1
   desc: loop.sh unchanged from baseline
   cmd:  sha256sum loop.sh | cut -d' ' -f1 | diff -q - ../.verify/loop.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
   exit: 0
-  stdout: match
-[PASS] Protected.2
+  stdout: mismatch
+  reasons:
+    - stdout mismatch expected='match' got='mismatch'
+[FAIL] Protected.2
   desc: verifier.sh unchanged from baseline
   cmd:  sha256sum verifier.sh | cut -d' ' -f1 | diff -q - ../.verify/verifier.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
   exit: 0
-  stdout: match
+  stdout: mismatch
+  reasons:
+    - stdout mismatch expected='match' got='mismatch'
 [FAIL] Protected.3
   desc: PROMPT.md unchanged from baseline
   cmd:  sha256sum PROMPT.md | cut -d' ' -f1 | diff -q - ../.verify/prompt.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
@@ -139,26 +148,34 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
   cmd:  grep -nE '>>\s*.*THUNK|>\s*.*THUNK' thunk_ralph_tasks.sh | grep -v 'new.*era\|Era:' | wc -l | tr -d ' '
   exit: 0
   stdout: 0
-[WARN] Hygiene.Shellcheck.1 (auto check in warn gate)
+[WARN] Hygiene.Shellcheck.1 (auto check failed but warn gate)
   desc: No unused variables in current_ralph_tasks.sh (SC2034)
   cmd:  shellcheck -f gcc current_ralph_tasks.sh 2>/dev/null | grep -c 'SC2034' || true
   exit: 0
-  stdout: 0
-[WARN] Hygiene.Shellcheck.2 (auto check in warn gate)
+  stdout: 2
+  reasons:
+    - stdout mismatch expected='0' got='2'
+[WARN] Hygiene.Shellcheck.2 (auto check failed but warn gate)
   desc: No SC2155 issues in current_ralph_tasks.sh (local var masking)
   cmd:  shellcheck -f gcc current_ralph_tasks.sh 2>/dev/null | grep -c 'SC2155' || true
   exit: 0
-  stdout: 0
-[WARN] Hygiene.Shellcheck.3 (auto check in warn gate)
+  stdout: 1
+  reasons:
+    - stdout mismatch expected='0' got='1'
+[WARN] Hygiene.Shellcheck.3 (auto check failed but warn gate)
   desc: No unused variables in thunk_ralph_tasks.sh (SC2034)
   cmd:  shellcheck -f gcc thunk_ralph_tasks.sh 2>/dev/null | grep -c 'SC2034' || true
   exit: 0
-  stdout: 0
-[WARN] Hygiene.Shellcheck.4 (auto check in warn gate)
+  stdout: 1
+  reasons:
+    - stdout mismatch expected='0' got='1'
+[WARN] Hygiene.Shellcheck.4 (auto check failed but warn gate)
   desc: No SC2155 issues in thunk_ralph_tasks.sh (local var masking)
   cmd:  shellcheck -f gcc thunk_ralph_tasks.sh 2>/dev/null | grep -c 'SC2155' || true
   exit: 0
-  stdout: 0
+  stdout: 2
+  reasons:
+    - stdout mismatch expected='0' got='2'
 [WARN] Hygiene.TermSync.1 (auto check in warn gate)
   desc: No stale 'kb/' references in active markdown (migration complete)
   cmd:  rg -l '\bkb/' --include='*.md' --glob='!HISTORY.md' --glob='!CHANGES.md' --glob='!old_md/*' . 2>/dev/null | wc -l | tr -d ' '
@@ -185,7 +202,7 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
   desc: loop.sh core logic matches template (excluding hashes)
   cmd:  diff <(grep -v 'sha256\|MODEL_' loop.sh) <(grep -v 'sha256\|MODEL_' templates/ralph/loop.sh) 2>/dev/null && echo "match" || echo "differ"
   exit: 0
-  stdout: 1,1054d0
+  stdout: 1,1127d0
 < #!/usr/bin/env bash
 < set -euo pipefail
 <
@@ -423,6 +440,7 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
 < ROLLBACK_COUNT=1
 < RESUME_MODE=false
 < NO_MONITORS=false
+< CONSECUTIVE_VERIFIER_FAILURES=0
 <
 < # Parse args
 < while [[ $# -gt 0 ]]; do
@@ -937,12 +955,16 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
 <       echo "========================================"
 <       echo "🎉 ${phase^^} iteration verified successfully!"
 <       echo "========================================"
+<       CONSECUTIVE_VERIFIER_FAILURES=0
 <     else
 <       echo ""
 <       echo "========================================"
 <       echo "⚠️  ${phase^^} completed but verification failed."
 <       echo "Review .verify/latest.txt for details."
 <       echo "========================================"
+<       # Return special exit code for verifier failure (not human intervention)
+<       # This allows the main loop to track consecutive failures
+<       return 44
 <     fi
 <   fi
 <
@@ -1174,6 +1196,35 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
 <       echo "After resolving the issue, re-run the loop to continue."
 <       exit 1
 <     fi
+<     # Check if verifier failed (exit code 44) - give one retry then stop
+<     if [[ $run_result -eq 44 ]]; then
+<       CONSECUTIVE_VERIFIER_FAILURES=$((CONSECUTIVE_VERIFIER_FAILURES + 1))
+<       if [[ $CONSECUTIVE_VERIFIER_FAILURES -ge 2 ]]; then
+<         echo ""
+<         echo "========================================"
+<         echo "🛑 LOOP STOPPED: Consecutive verifier failures"
+<         echo "========================================"
+<         echo "Verifier failed $CONSECUTIVE_VERIFIER_FAILURES times in a row."
+<         echo "Ralph was given a retry iteration but could not fix the issues."
+<         echo ""
+<         echo "Review .verify/latest.txt for details."
+<         echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
+<         echo ""
+<         echo "After fixing manually, re-run the loop to continue."
+<         exit 1
+<       else
+<         echo ""
+<         echo "========================================"
+<         echo "⚠️  Verifier failed - giving Ralph one retry iteration"
+<         echo "========================================"
+<         echo "Next iteration will inject LAST_VERIFIER_RESULT: FAIL"
+<         echo "Ralph should fix the AC failures before picking new tasks."
+<         echo ""
+<       fi
+<     else
+<       # Reset counter on successful iteration
+<       CONSECUTIVE_VERIFIER_FAILURES=0
+<     fi
 <   done
 < else
 <   # Alternating plan/build
@@ -1221,6 +1272,16 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
 <     # Capture exit code without triggering set -e
 <     run_result=0
 <     if [[ "$i" -eq 1 ]] || (( PLAN_EVERY > 0 && ( (i-1) % PLAN_EVERY == 0 ) )); then
+<       # Sync tasks from Cortex before PLAN mode
+<       if [[ -f "$RALPH/sync_cortex_plan.sh" ]]; then
+<         echo "Syncing tasks from Cortex..."
+<         if bash "$RALPH/sync_cortex_plan.sh" 2>&1; then
+<           echo "✓ Cortex sync complete"
+<         else
+<           echo "⚠ Cortex sync failed (non-blocking)"
+<         fi
+<         echo ""
+<       fi
 <       run_once "$PLAN_PROMPT" "plan" "$i" || run_result=$?
 <     else
 <       run_once "$BUILD_PROMPT" "build" "$i" || run_result=$?
@@ -1237,12 +1298,41 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
 <       echo "Loop paused - human intervention required."
 <       echo "After resolving the issue, re-run the loop to continue."
 <       exit 1
+<     fi
+<     # Check if verifier failed (exit code 44) - give one retry then stop
+<     if [[ $run_result -eq 44 ]]; then
+<       CONSECUTIVE_VERIFIER_FAILURES=$((CONSECUTIVE_VERIFIER_FAILURES + 1))
+<       if [[ $CONSECUTIVE_VERIFIER_FAILURES -ge 2 ]]; then
+<         echo ""
+<         echo "========================================"
+<         echo "🛑 LOOP STOPPED: Consecutive verifier failures"
+<         echo "========================================"
+<         echo "Verifier failed $CONSECUTIVE_VERIFIER_FAILURES times in a row."
+<         echo "Ralph was given a retry iteration but could not fix the issues."
+<         echo ""
+<         echo "Review .verify/latest.txt for details."
+<         echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
+<         echo ""
+<         echo "After fixing manually, re-run the loop to continue."
+<         exit 1
+<       else
+<         echo ""
+<         echo "========================================"
+<         echo "⚠️  Verifier failed - giving Ralph one retry iteration"
+<         echo "========================================"
+<         echo "Next iteration will inject LAST_VERIFIER_RESULT: FAIL"
+<         echo "Ralph should fix the AC failures before picking new tasks."
+<         echo ""
+<       fi
+<     else
+<       # Reset counter on successful iteration
+<       CONSECUTIVE_VERIFIER_FAILURES=0
 <     fi
 <   done
 < fi
 differ
   reasons:
-    - stdout mismatch expected='match' got='1,1054d0
+    - stdout mismatch expected='match' got='1,1127d0
 < #!/usr/bin/env bash
 < set -euo pipefail
 <
@@ -1480,6 +1570,7 @@ differ
 < ROLLBACK_COUNT=1
 < RESUME_MODE=false
 < NO_MONITORS=false
+< CONSECUTIVE_VERIFIER_FAILURES=0
 <
 < # Parse args
 < while [[ $# -gt 0 ]]; do
@@ -1994,12 +2085,16 @@ differ
 <       echo "========================================"
 <       echo "🎉 ${phase^^} iteration verified successfully!"
 <       echo "========================================"
+<       CONSECUTIVE_VERIFIER_FAILURES=0
 <     else
 <       echo ""
 <       echo "========================================"
 <       echo "⚠️  ${phase^^} completed but verification failed."
 <       echo "Review .verify/latest.txt for details."
 <       echo "========================================"
+<       # Return special exit code for verifier failure (not human intervention)
+<       # This allows the main loop to track consecutive failures
+<       return 44
 <     fi
 <   fi
 <
@@ -2231,6 +2326,35 @@ differ
 <       echo "After resolving the issue, re-run the loop to continue."
 <       exit 1
 <     fi
+<     # Check if verifier failed (exit code 44) - give one retry then stop
+<     if [[ $run_result -eq 44 ]]; then
+<       CONSECUTIVE_VERIFIER_FAILURES=$((CONSECUTIVE_VERIFIER_FAILURES + 1))
+<       if [[ $CONSECUTIVE_VERIFIER_FAILURES -ge 2 ]]; then
+<         echo ""
+<         echo "========================================"
+<         echo "🛑 LOOP STOPPED: Consecutive verifier failures"
+<         echo "========================================"
+<         echo "Verifier failed $CONSECUTIVE_VERIFIER_FAILURES times in a row."
+<         echo "Ralph was given a retry iteration but could not fix the issues."
+<         echo ""
+<         echo "Review .verify/latest.txt for details."
+<         echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
+<         echo ""
+<         echo "After fixing manually, re-run the loop to continue."
+<         exit 1
+<       else
+<         echo ""
+<         echo "========================================"
+<         echo "⚠️  Verifier failed - giving Ralph one retry iteration"
+<         echo "========================================"
+<         echo "Next iteration will inject LAST_VERIFIER_RESULT: FAIL"
+<         echo "Ralph should fix the AC failures before picking new tasks."
+<         echo ""
+<       fi
+<     else
+<       # Reset counter on successful iteration
+<       CONSECUTIVE_VERIFIER_FAILURES=0
+<     fi
 <   done
 < else
 <   # Alternating plan/build
@@ -2278,6 +2402,16 @@ differ
 <     # Capture exit code without triggering set -e
 <     run_result=0
 <     if [[ "$i" -eq 1 ]] || (( PLAN_EVERY > 0 && ( (i-1) % PLAN_EVERY == 0 ) )); then
+<       # Sync tasks from Cortex before PLAN mode
+<       if [[ -f "$RALPH/sync_cortex_plan.sh" ]]; then
+<         echo "Syncing tasks from Cortex..."
+<         if bash "$RALPH/sync_cortex_plan.sh" 2>&1; then
+<           echo "✓ Cortex sync complete"
+<         else
+<           echo "⚠ Cortex sync failed (non-blocking)"
+<         fi
+<         echo ""
+<       fi
 <       run_once "$PLAN_PROMPT" "plan" "$i" || run_result=$?
 <     else
 <       run_once "$BUILD_PROMPT" "build" "$i" || run_result=$?
@@ -2294,6 +2428,35 @@ differ
 <       echo "Loop paused - human intervention required."
 <       echo "After resolving the issue, re-run the loop to continue."
 <       exit 1
+<     fi
+<     # Check if verifier failed (exit code 44) - give one retry then stop
+<     if [[ $run_result -eq 44 ]]; then
+<       CONSECUTIVE_VERIFIER_FAILURES=$((CONSECUTIVE_VERIFIER_FAILURES + 1))
+<       if [[ $CONSECUTIVE_VERIFIER_FAILURES -ge 2 ]]; then
+<         echo ""
+<         echo "========================================"
+<         echo "🛑 LOOP STOPPED: Consecutive verifier failures"
+<         echo "========================================"
+<         echo "Verifier failed $CONSECUTIVE_VERIFIER_FAILURES times in a row."
+<         echo "Ralph was given a retry iteration but could not fix the issues."
+<         echo ""
+<         echo "Review .verify/latest.txt for details."
+<         echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
+<         echo ""
+<         echo "After fixing manually, re-run the loop to continue."
+<         exit 1
+<       else
+<         echo ""
+<         echo "========================================"
+<         echo "⚠️  Verifier failed - giving Ralph one retry iteration"
+<         echo "========================================"
+<         echo "Next iteration will inject LAST_VERIFIER_RESULT: FAIL"
+<         echo "Ralph should fix the AC failures before picking new tasks."
+<         echo ""
+<       fi
+<     else
+<       # Reset counter on successful iteration
+<       CONSECUTIVE_VERIFIER_FAILURES=0
 <     fi
 <   done
 < fi
@@ -2317,9 +2480,9 @@ differ'
   desc: No code fences without language tags in NEURONS.md
   cmd:  grep -cE '^```$' NEURONS.md 2>/dev/null || true
   exit: 0
-  stdout: 1
+  stdout: 10
   reasons:
-    - stdout mismatch expected='0' got='1'
+    - stdout mismatch expected='0' got='10'
 [WARN] Hygiene.DocSync.1 (auto check in warn gate)
   desc: AGENTS.md THUNK monitor docs don't reference removed 'f' hotkey
   cmd:  grep -A5 'THUNK Monitor' AGENTS.md | grep -c 'force sync\|f.*sync' 2>/dev/null || true
@@ -2374,19 +2537,130 @@ differ'
   desc: cortex/CORTEX_SYSTEM_PROMPT.md max 150 lines
   cmd:  bash -c 'lines=$(wc -l < ../../cortex/CORTEX_SYSTEM_PROMPT.md 2>/dev/null || echo 0); [[ $lines -le 150 ]] && echo "ok ($lines lines)" || echo "OVER: $lines lines (max 150)"'
   exit: 0
-  stdout: ok (82 lines)
-[WARN] Cortex.FileSizeLimit.AGENTS (auto check failed but warn gate)
-  desc: cortex/AGENTS.md max 150 lines
-  cmd:  bash -c 'lines=$(wc -l < ../../cortex/AGENTS.md 2>/dev/null || echo 0); [[ $lines -le 150 ]] && echo "ok ($lines lines)" || echo "OVER: $lines lines (max 150)"'
+  stdout: ok (98 lines)
+[WARN] Cortex.FileSizeLimit.AGENTS (auto check in warn gate)
+  desc: cortex/AGENTS.md max 180 lines
+  cmd:  bash -c 'lines=$(wc -l < ../../cortex/AGENTS.md 2>/dev/null || echo 0); [[ $lines -le 180 ]] && echo "ok ($lines lines)" || echo "OVER: $lines lines (max 180)"'
   exit: 0
-  stdout: OVER: 156 lines (max 150)
+  stdout: ok (156 lines)
+[WARN] Lint.Shellcheck.LoopSh (auto check in warn gate)
+  desc: loop.sh passes shellcheck (if installed)
+  cmd:  bash -c 'command -v shellcheck &>/dev/null && shellcheck -e SC1091 loop.sh 2>&1 | head -20 || echo "ok (shellcheck not installed)"'
+  exit: 0
+  stdout: 
+In loop.sh line 433:
+  read -p "⚠️  Revert these $ROLLBACK_COUNT commit(s)? (type 'yes' to confirm): " confirm
+  ^--^ SC2162 (info): read without -r will mangle backslashes.
+
+
+In loop.sh line 474:
+  read -p "Continue from this state? (yes/no): " confirm
+  ^--^ SC2162 (info): read without -r will mangle backslashes.
+
+
+In loop.sh line 642:
+    cat "$RALPH/.verify/latest.txt" 2>/dev/null | tail -10 || true
+        ^-------------------------^ SC2002 (style): Useless cat. Consider 'cmd < file | ..' or 'cmd file | ..' instead.
+
+
+In loop.sh line 730:
+    opencode run ${attach_flag} --model "${RESOLVED_MODEL}" --format "${OPENCODE_FORMAT}" "$(cat "$prompt_with_mode")" 2>&1 | tee "$log"
+                 ^------------^ SC2086 (info): Double quote to prevent globbing and word splitting.
+[WARN] Lint.Shellcheck.VerifierSh (auto check in warn gate)
+  desc: verifier.sh passes shellcheck (if installed)
+  cmd:  bash -c 'command -v shellcheck &>/dev/null && shellcheck -e SC1091 verifier.sh 2>&1 | head -20 || echo "ok (shellcheck not installed)"'
+  exit: 0
+  stdout: 
+In verifier.sh line 393:
+    echo "  Hash guard: $(if grep -q '^\[.*\] FAIL: AC hash mismatch' "$REPORT_FILE"; then echo "FAIL"; else echo "OK"; fi)"
+                                                                      ^------------^ SC2094 (info): Make sure not to read and write the same file in the same pipeline.
+
+
+In verifier.sh line 394:
+  } >>"$REPORT_FILE"
+      ^------------^ SC2094 (info): Make sure not to read and write the same file in the same pipeline.
+
+For more information:
+  https://www.shellcheck.net/wiki/SC2094 -- Make sure not to read and write t...
+[WARN] Lint.Shellcheck.CurrentRalphTasks (auto check in warn gate)
+  desc: current_ralph_tasks.sh passes shellcheck (if installed)
+  cmd:  bash -c 'command -v shellcheck &>/dev/null && shellcheck -e SC1091 current_ralph_tasks.sh 2>&1 | head -20 || echo "ok (shellcheck not installed)"'
+  exit: 0
+  stdout: 
+In current_ralph_tasks.sh line 107:
+    local is_manual=false
+          ^-------^ SC2034 (warning): is_manual appears unused. Verify use (or export if used externally).
+
+
+In current_ralph_tasks.sh line 262:
+    read -n 1 -s
+    ^--^ SC2162 (info): read without -r will mangle backslashes.
+
+
+In current_ralph_tasks.sh line 267:
+    local timestamp=$(date "+%Y-%m-%d %H:%M")
+          ^-------^ SC2155 (warning): Declare and assign separately to avoid masking return values.
+
+
+In current_ralph_tasks.sh line 299:
+        local skip_line=false
+              ^-------^ SC2034 (warning): skip_line appears unused. Verify use (or export if used externally).
+[WARN] Lint.Shellcheck.ThunkRalphTasks (auto check in warn gate)
+  desc: thunk_ralph_tasks.sh passes shellcheck (if installed)
+  cmd:  bash -c 'command -v shellcheck &>/dev/null && shellcheck -e SC1091 thunk_ralph_tasks.sh 2>&1 | head -20 || echo "ok (shellcheck not installed)"'
+  exit: 0
+  stdout: 
+In thunk_ralph_tasks.sh line 257:
+                local short_title=$(generate_title "$description")
+                      ^---------^ SC2155 (warning): Declare and assign separately to avoid masking return values.
+
+
+In thunk_ralph_tasks.sh line 310:
+    LAST_DISPLAY_ROW=$((footer_start + 9))
+    ^--------------^ SC2034 (warning): LAST_DISPLAY_ROW appears unused. Verify use (or export if used externally).
+
+
+In thunk_ralph_tasks.sh line 330:
+    local timestamp=$(date "+%Y-%m-%d")
+          ^-------^ SC2155 (warning): Declare and assign separately to avoid masking return values.
+
+
+In thunk_ralph_tasks.sh line 380:
+    if read -t 0.1 -n 1 key 2>/dev/null; then
+       ^--^ SC2162 (info): read without -r will mangle backslashes.
+[WARN] Lint.Markdown.NeuronsBalancedFences (auto check in warn gate)
+  desc: NEURONS.md has balanced code fences (equal opens/closes)
+  cmd:  bash -c 'opens=$(grep -c "^\`\`\`[a-z]" NEURONS.md 2>/dev/null || echo 0); closes=$(grep -c "^\`\`\`$" NEURONS.md 2>/dev/null || echo 0); [[ "$opens" -eq "$closes" ]] && echo "ok ($opens pairs)" || echo "UNBALANCED: $opens opens, $closes closes"'
+  exit: 0
+  stdout: ok (10 pairs)
+[WARN] Lint.Markdown.AgentsBalancedFences (auto check failed but warn gate)
+  desc: AGENTS.md has balanced code fences (equal opens/closes)
+  cmd:  bash -c 'opens=$(grep -c "^\`\`\`[a-z]" AGENTS.md 2>/dev/null || echo 0); closes=$(grep -c "^\`\`\`$" AGENTS.md 2>/dev/null || echo 0); [[ "$opens" -eq "$closes" ]] && echo "ok ($opens pairs)" || echo "UNBALANCED: $opens opens, $closes closes"'
+  exit: 0
+  stdout: UNBALANCED: 4 opens, 0
+0 closes
   reasons:
-    - stdout regex mismatch expected=/^ok/ got='OVER: 156 lines (max 150)'
+    - stdout regex mismatch expected=/^ok/ got='UNBALANCED: 4 opens, 0
+0 closes'
+[WARN] Lint.Markdown.ThoughtsBalancedFences (auto check failed but warn gate)
+  desc: THOUGHTS.md has balanced code fences (equal opens/closes)
+  cmd:  bash -c 'opens=$(grep -c "^\`\`\`[a-z]" THOUGHTS.md 2>/dev/null || echo 0); closes=$(grep -c "^\`\`\`$" THOUGHTS.md 2>/dev/null || echo 0); [[ "$opens" -eq "$closes" ]] && echo "ok ($opens pairs)" || echo "UNBALANCED: $opens opens, $closes closes"'
+  exit: 0
+  stdout: UNBALANCED: 4 opens, 0
+0 closes
+  reasons:
+    - stdout regex mismatch expected=/^ok/ got='UNBALANCED: 4 opens, 0
+0 closes'
+[WARN] Lint.PreCommit.ConfigExists (auto check in warn gate)
+  desc: Pre-commit config exists at repo root
+  cmd:  bash -c '[[ -f "../../.pre-commit-config.yaml" ]] && echo "ok" || echo "MISSING: .pre-commit-config.yaml"'
+  exit: 0
+  stdout: ok
 ------------------------------------------------------------
 SUMMARY
-  PASS: 23
-  FAIL: 1
-  WARN: 28 (manual_warn=2)
+  PASS: 21
+  FAIL: 3
+  WARN: 36 (manual_warn=2)
   SKIP: 0
   Manual gate=block failures: 0
-  Hash guard: OK
+  Hash guard: FAIL

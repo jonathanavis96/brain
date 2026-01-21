@@ -48,7 +48,7 @@ if [[ ":$PATH:" == *":$HOME/bin:"* ]]; then
   echo -e "${GREEN}✓ ~/bin is already in PATH${NC}"
 else
   echo -e "${YELLOW}⚠ ~/bin is not in PATH${NC}"
-  
+
   # Check which shell config file to update
   SHELL_CONFIG=""
   if [[ -f ~/.bashrc ]]; then
@@ -65,7 +65,7 @@ else
     echo -e "${GREEN}Setup complete!${NC}"
     exit 0
   fi
-  
+
   # Check if we already added it before
   if grep -q 'export PATH="$HOME/bin:$PATH"' "$SHELL_CONFIG" 2>/dev/null; then
     echo -e "${GREEN}✓ PATH entry already exists in $SHELL_CONFIG${NC}"

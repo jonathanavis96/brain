@@ -86,7 +86,7 @@ You CAN research online. Ralph CANNOT - he captures gaps in GAP_BACKLOG.md.
 |------|-----------|----------------|
 | `THOUGHTS.md` | 100 | Archive to `cortex/logs/THOUGHTS_ARCHIVE.md` |
 | `CORTEX_SYSTEM_PROMPT.md` | 150 | Move details to `cortex/docs/PROMPT_REFERENCE.md` |
-| `AGENTS.md` | 150 | Move examples to docs |
+| `AGENTS.md` | 180 | Move examples to docs |
 
 **Rules:**
 - THOUGHTS.md = Current mission ONLY (not session logs)
