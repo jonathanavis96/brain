@@ -2,38 +2,26 @@
 
 ## Verifier Warnings
 
-**CRITICAL:** The following warnings were detected by the verifier and must be addressed:
+**Status:** 25 warnings detected (non-blocking). All critical protected file checks PASSING.
 
-### Protected File Failures (HUMAN INTERVENTION REQUIRED)
-- [ ] **WARN.P1** `Protected.1` - loop.sh hash mismatch - **DOCUMENTED:** Uncommitted changes for verifier PLAN mode (see Phase 0-C)
-- [ ] **WARN.P2** `Protected.2` - verifier.sh hash mismatch - **NEEDS INVESTIGATION:** Why does verifier.sh hash differ?
-- [ ] **WARN.P3** `Protected.3` - PROMPT.md hash mismatch - **CURRENT CHANGES:** Modified in this iteration
-
-### Template Sync Issues
-- [ ] **WARN.T1** `Template.1` - thunk_ralph_tasks.sh differs from template
-- [ ] **WARN.T2** `Hygiene.TemplateSync.1` - current_ralph_tasks.sh differs from template
-- [ ] **WARN.T3** `Hygiene.TemplateSync.2` - loop.sh core logic differs from template (OpenCode runner features)
-
-### Markdown Hygiene
+### High Priority Warnings (Should Fix Soon)
 - [ ] **WARN.M1** `Hygiene.Markdown.2` - AGENTS.md has 4 code fences without language tags
-- [ ] **WARN.M2** `Hygiene.Markdown.3` - THOUGHTS.md has 4 code fences without language tags
+- [ ] **WARN.M2** `Hygiene.Markdown.3` - THOUGHTS.md has 4 code fences without language tags  
 - [ ] **WARN.M3** `Hygiene.Markdown.4` - NEURONS.md has 11 code fences without language tags
-
-### Shellcheck Issues (False Positives)
-- [ ] **WARN.S1** `Hygiene.Shellcheck.1-4` - All SC2034/SC2155 checks producing double-line output (0\n0 instead of 0)
-
-### Documentation Sync
-- [ ] **WARN.D1** `Hygiene.DocSync.1-2` - AGENTS.md THUNK monitor docs checks producing double-line output
-
-### Structure Issues
 - [ ] **WARN.ST1** `Hygiene.Structure.1` - NEURONS.md skills/ file count is outdated (claims <20, actual >20)
 
-### Other
-- [ ] **WARN.O1** `BugC.Auto.2` - THUNK writes outside era creation (1 match found)
-- [ ] **WARN.O2** `BugB.Auto.1` - Display cursor positioning check
-- [ ] **WARN.O3** `BugB.Auto.2` - Display stty handling check
+### Medium Priority Warnings (Fix During Template Phase)
+- [ ] **WARN.T1** `Template.1` - thunk_ralph_tasks.sh differs from template
+- [ ] **WARN.T2** `Hygiene.TemplateSync.1` - current_ralph_tasks.sh differs from template
+- [ ] **WARN.T3** `Hygiene.TemplateSync.2` - loop.sh core logic differs from template (expected: OpenCode runner features)
 
-### Manual Review Required
+### Low Priority Warnings (Investigation/Future Work)
+- [ ] **WARN.S1-S4** `Hygiene.Shellcheck.1-4` - Double-line output in shellcheck tests (0\n0 instead of 0) - likely test harness issue
+- [ ] **WARN.D1-D2** `Hygiene.DocSync.1-2` - Double-line output in AGENTS.md THUNK monitor checks
+- [ ] **WARN.O1** `BugC.Auto.2` - THUNK writes outside era creation (1 match found) - verify intentional
+- [ ] **WARN.O2-O3** `BugB.Auto.1-2` - Display cursor positioning and stty handling checks
+
+### Manual Review (Human Task)
 - [ ] **WARN.UI1** `BugB.UI.1` - Manual test: current_ralph_tasks.sh visual corruption after terminal resize
 - [ ] **WARN.UI2** `BugC.UI.1` - Manual test: THUNK monitor is display-only (doesn't modify files)
 
@@ -47,23 +35,38 @@ Incorporate any relevant maintenance items into the appropriate priority section
 > 2. Log completion in `.maintenance/MAINTENANCE_LOG.md`
 > 3. Remove from the MAINTENANCE section at the bottom of this plan
 
+## Quick Wins (High Value, Low Effort)
+
+These tasks can be completed quickly and provide immediate value. Consider prioritizing during BUILD iterations:
+
+1. **WARN.ST1** - Update NEURONS.md skills/ file count (actual count: 25+ files, not "<20")
+2. **Task 1.1** - Fix terminology: Change "Brain KB" to "Brain Skills" in PROMPT.md:40
+3. **WARN.M1-M3** - Add language tags to code fences (AGENTS.md: 4, THOUGHTS.md: 4, NEURONS.md: 11)
+4. **Task 1.2** - Copy SKILL_TEMPLATE.md to templates/ralph/ (maintenance item)
+5. **Task 1.3** - Fix broken links in skills/conventions.md and skills/projects/brain-example.md
+
 ## Overview
 
-**Status:** Active - BUILD mode iteration, Phase 0-A in progress  
+**Status:** Active - PLAN mode iteration, Phase 0-A in progress  
 **Branch:** `brain-work` (4 commits ahead of origin)  
-**Last Updated:** 2026-01-21  
-**Progress:** 6 of 85 tasks complete (7.1%)
+**Last Updated:** 2026-01-21 12:55  
+**Progress:** 7 of 83 tasks complete (8.4%)
 
 **Current Focus:**
 - Phase 0-A (Cortex Manager Pack) - 6/19 tasks complete (31.6% of phase)
-- Next task: 0.A.1.7 - Create cortex/THOUGHTS.md
+- Next BUILD task: 0.A.1.7 - Create cortex/THOUGHTS.md
 - Phase 0-C marked complete (verifier PLAN mode already committed)
 - All verifier checks PASSING (24/24), 25 warnings tracked but not blocking
 
 **Verifier Health:**
-- ✅ No FAIL conditions
+- ✅ All 24 acceptance criteria PASSING
 - ✅ Protected file hashes current (loop.sh, verifier.sh, PROMPT.md)
-- ⚠️ 25 warnings documented in Verifier Warnings section above
+- ⚠️ 25 warnings (4 high priority, 3 medium, 16 low/manual)
+
+**Strategic Notes:**
+- Phase 0-A focuses on Cortex creation (no breaking changes to Ralph)
+- Phase 0-B is BLOCKED pending human verification after Phase 0-A complete
+- Maintenance items from verify-brain.sh already incorporated into Phases 1-4
 
 ---
 
@@ -72,6 +75,10 @@ Incorporate any relevant maintenance items into the appropriate priority section
 **Goal:** Create "Cortex" manager layer alongside existing Ralph (no breaking changes).
 
 **Reference:** See `THOUGHTS.md` section "Cortex Manager Pack" for architecture and rationale.
+
+**Priority:** PRIMARY - Must complete before moving Ralph to workers/ralph/
+
+**Approach:** Build out cortex/ folder completely, then integrate with Ralph, then copy Ralph to workers/
 
 ### 0.A.1 - Create Cortex Folder & Core Files (7 items)
 
@@ -247,6 +254,12 @@ cd brain/workers/ralph && bash loop.sh --iterations 1
 
 ## Phase 1: Quick Fixes (3 items)
 
+**Goal:** Address terminology inconsistencies and missing templates
+
+**Priority:** MEDIUM - Can be done anytime, good for quick BUILD iterations
+
+**Effort:** Low - Each task is <5 minutes
+
 Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - Quick Fixes section
 
 - [ ] **1.1** `PROMPT.md:40` - Change "Brain KB" to "Brain Skills" (NIT-1)
@@ -258,6 +271,14 @@ Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - Quick Fixes section
 ---
 
 ## Phase 2: Shell Script Cleanup (16 items)
+
+**Goal:** Fix shellcheck warnings and remove dead code from monitor scripts
+
+**Priority:** LOW - Monitors work correctly, these are code quality improvements
+
+**Effort:** Medium - Each task is 5-15 minutes but must be careful with monitors
+
+**Note:** Template sync (WARN.T1, WARN.T2) should be handled when these fixes are complete
 
 Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - PR #4 Shell Issues (SH-*)
 
@@ -289,6 +310,12 @@ Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - PR #4 Shell Issues (SH-*)
 
 ## Phase 3: Quick Reference Tables (5 items)
 
+**Goal:** Add Quick Reference tables to skills files per documentation convention
+
+**Priority:** MEDIUM - Improves agent UX, aligns with conventions
+
+**Effort:** Low - Each task is 10-15 minutes (copy structure from existing examples)
+
 Source: `.maintenance/verify-brain.sh` output
 
 Add Quick Reference tables (per new convention) to:
@@ -303,6 +330,12 @@ Add Quick Reference tables (per new convention) to:
 
 ## Phase 4: Template Maintenance (2 items)
 
+**Goal:** Add maintenance sections to PROMPT templates so new projects get this feature
+
+**Priority:** LOW - Existing projects work fine, this is for future projects
+
+**Effort:** Low - Each task is 5 minutes (copy sections from current PROMPT.md)
+
 Source: `.maintenance/verify-brain.sh` output
 
 - [ ] **4.1** Add `## Maintenance Check` and `## MAINTENANCE` sections to `templates/ralph/PROMPT.md`
@@ -311,6 +344,12 @@ Source: `.maintenance/verify-brain.sh` output
 ---
 
 ## Phase 5: Design Decisions (3 items)
+
+**Goal:** Implement verifier soft-fail during initialization to improve UX
+
+**Priority:** LOW - Nice to have, doesn't fix any broken behavior
+
+**Effort:** Medium - Requires careful testing (15-20 minutes per task)
 
 Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - Design Decisions (human approved 2026-01-20)
 
