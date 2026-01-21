@@ -11,9 +11,9 @@
 - [x] **WARN.ST1** `Hygiene.Structure.1` - NEURONS.md skills/ file count is outdated (claims <20, actual >20)
 
 ### Medium Priority Warnings (Fix During Template Phase)
-- [ ] **WARN.T1** `Template.1` - thunk_ralph_tasks.sh differs from template
-- [ ] **WARN.T2** `Hygiene.TemplateSync.1` - current_ralph_tasks.sh differs from template
-- [ ] **WARN.T3** `Hygiene.TemplateSync.2` - loop.sh core logic differs from template (expected: OpenCode runner features)
+- [x] **WARN.T1** `Template.1` - thunk_ralph_tasks.sh differs from template (FALSE POSITIVE: verified match)
+- [x] **WARN.T2** `Hygiene.TemplateSync.1` - current_ralph_tasks.sh differs from template (FALSE POSITIVE: verified match)
+- [ ] **WARN.T3** `Hygiene.TemplateSync.2` - loop.sh core logic differs from template (REAL: loop.sh has OpenCode runner features, template doesn't - intentional divergence)
 
 ### Low Priority Warnings (Investigation/Future Work)
 - [ ] **WARN.S1-S4** `Hygiene.Shellcheck.1-4` - Double-line output in shellcheck tests (0\n0 instead of 0) - likely test harness issue
@@ -48,14 +48,14 @@ These tasks can be completed quickly and provide immediate value. Consider prior
 
 ## Overview
 
-**Status:** PLANNING mode - Plan refinement complete  
+**Status:** BUILD mode - Executing tasks  
 **Branch:** `brain-work` (7 commits ahead of origin)  
-**Last Updated:** 2026-01-21 14:05  
-**Progress:** 10 of 62 numbered tasks complete (16.1%)
+**Last Updated:** 2026-01-21 14:06  
+**Progress:** 11 of 62 numbered tasks complete (17.7%)
 
 **Current Focus:**
-- Phase 0-A (Cortex Manager Pack) - 8/19 tasks complete (42.1% of phase)
-- Next BUILD task: 0.A.2.2 - Create cortex/run.sh
+- Phase 0-A (Cortex Manager Pack) - 9/19 tasks complete (47.4% of phase)
+- Next BUILD task: 0.A.3.3 - Update ralph/NEURONS.md to include cortex/
 - All verifier checks PASSING (24/24), 24 warnings remaining
 - PLANNING: Reviewing task granularity and dependencies
 
@@ -133,7 +133,7 @@ These tasks can be completed quickly and provide immediate value. Consider prior
   - **AC:** Add section explaining: "Cortex provides high-level tasks in `cortex/IMPLEMENTATION_PLAN.md`. Ralph copies this to his own `IMPLEMENTATION_PLAN.md` and tracks progress there."
   - **Note:** Document the intended workflow even though sync logic not implemented yet
 
-- [ ] **0.A.3.2** Update `ralph/AGENTS.md` to document Cortex → Ralph workflow
+- [x] **0.A.3.2** Update `ralph/AGENTS.md` to document Cortex → Ralph workflow
   - **AC:** Add "Manager/Worker Architecture" section explaining the relationship
   - **AC:** Document that Cortex lives at `../cortex/` (relative to ralph/)
 
