@@ -311,3 +311,4 @@ Started: 2026-01-18
 | 271 | 4.2 | LOW | **4.2** Change kb/ → skills/ in templates/python/NEURONS.project.md - Updated Directory Structure section line 54 from `kb/` to `skills/` for project-specific knowledge base, maintains consistency with terminology migration | 2026-01-19 |
 | 272 | 4.3 | LOW | **4.3** Change kb/ → skills/ in templates/ralph/RALPH.md - Updated File Structure comments at lines 139 and 150, changed directory references from kb/ to skills/ for terminology consistency | 2026-01-19 |
 | 273 | 0.A.1.1 | HIGH | **0.A.1.1** Create `brain/cortex/` folder | 2026-01-20 |
+| 274 | 0.A.1.3 | HIGH | **0.A.1.3** Create `cortex/REPO_MAP.md` - Human-friendly repo navigation with folder purposes, key files, state locations, and navigation tips | 2026-01-21 |
