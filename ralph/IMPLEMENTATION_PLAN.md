@@ -48,14 +48,14 @@ These tasks can be completed quickly and provide immediate value. Consider prior
 
 ## Overview
 
-**Status:** PLAN mode - Reviewing and updating plan  
-**Branch:** `brain-work` (10 commits ahead of origin)  
-**Last Updated:** 2026-01-21 15:02  
-**Progress:** 15 of 62 numbered tasks complete (24.2%)
+**Status:** BUILD mode - Executing tasks  
+**Branch:** `brain-work` (11 commits ahead of origin)  
+**Last Updated:** 2026-01-21 15:05  
+**Progress:** 16 of 62 numbered tasks complete (25.8%)
 
 **Current Focus:**
-- Phase 0-A (Cortex Manager Pack) - 15/19 tasks complete (78.9% of phase)
-- Next BUILD task: 0.A.4.2 - Copy entire brain/ralph/ to brain/workers/ralph/
+- Phase 0-A (Cortex Manager Pack) - 16/19 tasks complete (84.2% of phase)
+- Next BUILD task: 0.A.4.3 - Update path references in workers/ralph/loop.sh
 - All verifier checks PASSING (24/24), 25 warnings remaining
 - 4 more tasks to complete Phase 0-A before mandatory human verification
 
@@ -152,7 +152,7 @@ These tasks can be completed quickly and provide immediate value. Consider prior
 - [x] **0.A.4.1** Create `brain/workers/` folder
   - **AC:** Folder exists at `brain/workers/`
 
-- [ ] **0.A.4.2** Copy entire `brain/ralph/` to `brain/workers/ralph/`
+- [x] **0.A.4.2** Copy entire `brain/ralph/` to `brain/workers/ralph/`
   - **AC:** All files and subfolders copied (preserving structure)
   - **AC:** Original `brain/ralph/` still exists (not moved yet)
   - **AC:** Verify with: `diff -rq brain/ralph brain/workers/ralph` shows no differences
