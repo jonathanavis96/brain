@@ -152,7 +152,32 @@ The `workers/ralph/.maintenance/verify-brain.sh` script reports `skills/index.md
 
 ---
 
-### Phase 0-Quick: Documentation Updates (Priority: HIGH)
+### Phase 0-Rovo: Setup Cortex for Rovo Project (Priority: MEDIUM)
+
+- [ ] **0-R.1** Create cortex/ directory in rovo project
+  - **Goal:** Add Cortex management infrastructure to existing rovo project
+  - **Context:** Rovo project exists at `../rovo/` (sibling to brain)
+  - **Implementation:**
+    1. Create `../rovo/cortex/` directory
+    2. Copy templates from `brain/templates/cortex/` to `../rovo/cortex/`:
+       - All .md files and snapshot.sh
+    3. Replace placeholders:
+       - `{{PROJECT_NAME}}` → `Rovo Account Manager`
+       - `{{PROJECT_PURPOSE}}` → `Autonomous Atlassian account pool management`
+       - `{{TECH_STACK}}` → `Python, Selenium, PowerShell (WSL), Gmail API`
+       - `{{TIMESTAMP}}` → Current timestamp (YYYY-MM-DD HH:MM:SS)
+    4. Copy window fix tasks from `brain/cortex/analysis/ROVO_WINDOW_FIX_PLAN.md` into `../rovo/cortex/IMPLEMENTATION_PLAN.md`
+    5. Make snapshot.sh executable: `chmod +x ../rovo/cortex/snapshot.sh`
+  - **AC:**
+    - [ ] `../rovo/cortex/` directory exists with all template files
+    - [ ] Placeholders replaced with rovo-specific values
+    - [ ] Window fix tasks copied into rovo cortex plan
+    - [ ] snapshot.sh is executable
+  - **If Blocked:** Verify `../rovo/` exists relative to brain repository
+
+---
+
+## Phase 0-Quick: Documentation Updates (Priority: HIGH)
 
 - [ ] **0.1** Update README.md with setup instructions
   - **Goal:** Add installation and quick start documentation
