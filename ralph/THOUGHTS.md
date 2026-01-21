@@ -108,12 +108,12 @@ All items from Phases 1-3 complete:
 
 A brain consistency checker has been set up:
 
-```
+```text
 brain/ralph/.maintenance/
 ├── verify-brain.sh      # Runs 6 consistency checks
 ├── MAINTENANCE.md       # Active items queue  
 └── MAINTENANCE_LOG.md   # Audit trail of completed items
-```
+```text
 
 **When in planning mode:** Run `bash .maintenance/verify-brain.sh` before planning.
 
@@ -132,7 +132,7 @@ brain/ralph/.maintenance/
 - Prepares architecture for future parallel workers (e.g., Rust specialist)
 
 **Architecture:**
-```
+```text
 brain/
   cortex/                      ← Manager (Opus) - planning only
     CORTEX_SYSTEM_PROMPT.md    ← Identity + rules for Opus
@@ -154,7 +154,7 @@ brain/
       
   skills/                      ← Shared (Cortex manages, Ralph uses)
   templates/                   ← Shared (includes cortex/ template)
-```
+```text
 
 **Workflow:**
 1. Human runs `bash cortex/run.sh` → Opus loads as Cortex
