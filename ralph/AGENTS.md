@@ -6,28 +6,6 @@
 ## Purpose
 Ralph loop for brain repository self-improvement. Runs PLAN/BUILD cycles to maintain knowledge base and templates.
 
-## Manager/Worker Architecture
-
-**Brain Repository Structure:**
-- **Cortex** (`../cortex/`) - Manager layer running Opus 4.5
-  - Creates high-level implementation plans
-  - Manages strategic decisions and task contracts
-  - Lives at `brain/cortex/` (one level up from Ralph)
-  
-- **Ralph** (`./`) - Worker layer (this directory)
-  - Executes atomic tasks from implementation plans
-  - Runs PLAN/BUILD cycles for incremental progress
-  - Lives at `brain/ralph/` (current directory)
-
-**Workflow:**
-1. Cortex creates/updates high-level tasks in `cortex/IMPLEMENTATION_PLAN.md`
-2. Ralph copies these to his own `IMPLEMENTATION_PLAN.md` (via sync mechanism)
-3. Ralph picks ONE task per BUILD iteration and implements it
-4. Ralph logs completion to `THUNK.md`
-5. Cortex reviews progress via `cortex/snapshot.sh` and adjusts plan
-
-**Key Principle:** Ralph works autonomously on atomic tasks. Cortex reviews periodically and adjusts strategy.
-
 ## Prerequisites
 - WSL2 Ubuntu + bash
 - Atlassian CLI (`acli`) - https://developer.atlassian.com/cloud/cli/
@@ -41,7 +19,7 @@ bash loop.sh --iterations 10    # Multiple iterations
 bash loop.sh --dry-run          # Preview changes
 bash loop.sh --rollback 2       # Undo last 2 commits
 bash loop.sh --resume           # Resume from interruption
-```
+```bash
 
 Mode: Iteration 1 or every 3rd = PLAN, others = BUILD.
 
@@ -49,72 +27,29 @@ Mode: Iteration 1 or every 3rd = PLAN, others = BUILD.
 
 Ralph uses two complementary monitors for real-time task tracking:
 
-### Current Ralph Tasks Monitor
-```bash
-bash current_ralph_tasks.sh     # Shows pending tasks from IMPLEMENTATION_PLAN.md
-```
-**Purpose:** Displays unchecked `[ ]` tasks only, organized by priority (HIGH/MEDIUM/LOW)
-**Hotkeys:** `h` (hide/show completed), `r` (archive), `f` (force refresh), `c` (clear), `?` (help), `q` (quit)
-**Key Features:**
-- Extracts tasks from all priority sections, including nested subsections (`###`, `####`)
-- First unchecked task marked with `▶` symbol (current task Ralph should work on)
-- Always full screen redraw (no rendering artifacts)
-- Updates within 1 second of IMPLEMENTATION_PLAN.md changes
+**Current Ralph Tasks:** `bash current_ralph_tasks.sh` - Shows pending tasks from IMPLEMENTATION_PLAN.md  
+**THUNK Monitor:** `bash thunk_ralph_tasks.sh` - Shows completed task log from THUNK.md
 
-### THUNK Monitor (Completed Tasks)
-```bash
-bash thunk_ralph_tasks.sh       # Shows completed task log from THUNK.md
-```
-**Purpose:** Displays completed tasks appended to THUNK.md
-**Hotkeys:** `r` (refresh/clear), `e` (new era), `q` (quit)
-**Key Features:**
-- Primary: Watches THUNK.md for Ralph-appended completions
-- Append-only display (tail parsing for performance)
-- Sequential THUNK numbering across project lifecycle
+See README.md for detailed monitor features and hotkeys.
 
 ## Loop Stop Sentinel
 Ralph outputs when ALL tasks complete:
 ```text
 :::COMPLETE:::
-```
-
-## Skills + Self-Improvement Protocol
-
-**Start of iteration:**
-1. Study `skills/SUMMARY.md` for overview
-2. Check `skills/index.md` for available skills
-3. Review `skills/self-improvement/GAP_CAPTURE_RULES.md` for capture protocol
-
-**End of iteration:**
-1. If you used undocumented knowledge/procedure/tooling:
-   - Search `skills/` for existing matching skill
-   - Search `skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
-   - If not found: append new entry to `GAP_BACKLOG.md`
-2. If a gap is clear, specific, and recurring:
-   - Add to `skills/self-improvement/SKILL_BACKLOG.md`
-   - Create skill file using `SKILL_TEMPLATE.md`
-   - Update `skills/index.md`
-
-## Bootstrapping New Projects
-
-See **[docs/BOOTSTRAPPING.md](docs/BOOTSTRAPPING.md)** for detailed documentation on:
-- `new-project.sh` - Bootstrap script for new Ralph-enabled projects
-- Generator scripts (`generate-neurons.sh`, `generate-thoughts.sh`, `generate-implementation-plan.sh`)
-- Template types and manual usage
+```text
 
 ## Troubleshooting
 - **acli not found**: Add to PATH in ~/.bashrc
 - **Loop doesn't stop**: Check `:::COMPLETE:::` output
 - **Ralph batches tasks**: See PROMPT.md "EXACTLY ONE task" emphasis
 - **Wrong mode**: Check iteration number (1 or 3rd = PLAN)
-- **Generator fails**: Check required fields in idea file (Project, Tech Stack, Purpose)
-- **new-project.sh fails**: Verify `gh` CLI installed and authenticated for GitHub integration
 
 See README.md for design philosophy, safety features, and detailed documentation.
 
 ## See Also
-- **README.md** - Design philosophy, validation, safety features
+- **README.md** - Design philosophy, validation, safety features, architecture
 - **VALIDATION_CRITERIA.md** - Quality gates and validation commands
 - **NEURONS.md** - Brain repository map
 - **skills/domains/ralph-patterns.md** - Ralph loop architecture
 - **docs/BOOTSTRAPPING.md** - New project bootstrapping and generators
+- **skills/** - Skills knowledge base and self-improvement protocol
