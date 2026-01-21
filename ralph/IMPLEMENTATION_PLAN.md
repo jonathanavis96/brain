@@ -8,7 +8,7 @@
 - [x] **WARN.M1** `Hygiene.Markdown.2` - AGENTS.md has 4 code fences without language tags (FALSE POSITIVE: verifier counts closing fences; all opening fences have language tags)
 - [x] **WARN.M2** `Hygiene.Markdown.3` - THOUGHTS.md has 4 code fences without language tags (FALSE POSITIVE: verifier counts closing fences; all opening fences have language tags)
 - [x] **WARN.M3** `Hygiene.Markdown.4` - NEURONS.md has 11 code fences without language tags (FALSE POSITIVE: verifier counts closing fences; all opening fences have language tags)
-- [ ] **WARN.ST1** `Hygiene.Structure.1` - NEURONS.md skills/ file count is outdated (claims <20, actual >20)
+- [x] **WARN.ST1** `Hygiene.Structure.1` - NEURONS.md skills/ file count is outdated (claims <20, actual >20)
 
 ### Medium Priority Warnings (Fix During Template Phase)
 - [ ] **WARN.T1** `Template.1` - thunk_ralph_tasks.sh differs from template
@@ -39,34 +39,34 @@ Incorporate any relevant maintenance items into the appropriate priority section
 
 These tasks can be completed quickly and provide immediate value. Consider prioritizing during BUILD iterations:
 
-1. **WARN.ST1** - Update NEURONS.md skills/ file count (actual count: 25+ files, not "<20")
+1. ~~**WARN.ST1** - Update NEURONS.md skills/ file count (actual count: 25+ files, not "<20")~~ ✅ COMPLETE
 2. **Task 1.1** - Fix terminology: Change "Brain KB" to "Brain Skills" in PROMPT.md:40
 3. **Task 1.2** - Copy SKILL_TEMPLATE.md to templates/ralph/ (maintenance item)
 4. **Task 1.3** - Fix broken links in skills/conventions.md and skills/projects/brain-example.md
 
 ## Overview
 
-**Status:** Active - PLAN mode iteration, Phase 0-A in progress  
-**Branch:** `brain-work` (4 commits ahead of origin)  
-**Last Updated:** 2026-01-21 13:30  
-**Progress:** 6 of 82 tasks complete (7.3%)
+**Status:** Active - BUILD mode iteration, Phase 0-A in progress  
+**Branch:** `brain-work` (5 commits ahead of origin)  
+**Last Updated:** 2026-01-21 13:36  
+**Progress:** 7 of 82 tasks complete (8.5%)
 
 **Current Focus:**
 - Phase 0-A (Cortex Manager Pack) - 6/19 tasks complete (31.6% of phase)
 - Next BUILD task: 0.A.1.7 - Create cortex/THOUGHTS.md
 - Phase 0-C marked complete (verifier PLAN mode already committed)
-- All verifier checks PASSING (24/24), 25 warnings tracked but not blocking
+- All verifier checks PASSING (24/24), 24 warnings remaining (4 high-priority warnings resolved)
 
 **Verifier Health:**
 - ✅ All 24 acceptance criteria PASSING
 - ✅ Protected file hashes current (loop.sh, verifier.sh, PROMPT.md)
-- ⚠️ 25 warnings (4 high priority, 3 medium, 16 low/manual) - see Quick Wins
+- ⚠️ 24 warnings (0 high priority, 3 medium, 16 low, 5 manual) - high priority warnings cleared
 
 **Strategic Notes:**
 - Phase 0-A focuses on Cortex creation (no breaking changes to Ralph)
 - Phase 0-B is BLOCKED pending human verification after Phase 0-A complete
 - Maintenance items from verify-brain.sh already incorporated into Phases 1-4
-- Skills directory now has 22+ files (not "<20" as NEURONS.md claims)
+- Skills directory now has 33 files (updated in NEURONS.md)
 
 ---
 
