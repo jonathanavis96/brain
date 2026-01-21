@@ -152,30 +152,6 @@ The `workers/ralph/.maintenance/verify-brain.sh` script reports `skills/index.md
 
 ---
 
-### Phase 0-P1: Critical Bug Fixes (Priority: HIGHEST)
-
-- [ ] **P1.1** Fix login retry logic in account verification flow
-  - **Priority:** P1 (Critical)
-  - **Goal:** Correct the retry flow to match intended behavior
-  - **Current Bug:** 
-    - Code incorrectly labels "Attempt 2" when it should be "Attempt 1"
-    - Retry flow doesn't match specification
-  - **Correct Flow:**
-    1. **Attempt 1**: Try typing account name
-    2. **Attempt 2** (if fail): Manual refresh with **tiny** Chrome window
-    3. **Attempt 3** (if fail): Manual refresh with **large** Chrome window + ask user to type account name and press Enter
-    4. **If still fails**: Mark account as burnt
-  - **Files to Fix:** (Ralph to identify based on codebase search for login/account verification logic)
-  - **AC:**
-    - [ ] Retry attempt numbers are correct (1, 2, 3)
-    - [ ] Attempt 2 uses tiny Chrome window (not large)
-    - [ ] Attempt 3 uses large Chrome window AND asks user to type account name
-    - [ ] Logic flow matches specification exactly
-    - [ ] Tests updated if applicable
-  - **If Blocked:** Report file locations and current logic for review
-
----
-
 ### Phase 0-Quick: Documentation Updates (Priority: HIGH)
 
 - [ ] **0.1** Update README.md with setup instructions
@@ -227,6 +203,37 @@ The `workers/ralph/.maintenance/verify-brain.sh` script reports `skills/index.md
 ### Phase 1: Quick Fixes (Priority: MEDIUM)
 
 These are low-effort tasks that provide immediate value. Ralph should complete these in order.
+
+---
+
+### Task 1.0: Fix KB→Skills terminology in templates
+
+- **Goal:** Replace confusing "KB" (Knowledge Base) terminology with correct "Skills" terminology
+- **Context:** Templates use "KB" inconsistently, which is confusing
+  - "Brain skills repository" = correct (cross-project reusable patterns at `brain/skills/`)
+  - "kb/" = local project knowledge (project-specific, not cross-project)
+  - "KB" is ambiguous and should be replaced
+- **Files to Update:**
+  - `templates/AGENTS.project.md`
+  - `templates/backend/AGENTS.project.md`
+  - `templates/python/AGENTS.project.md`
+  - `templates/cortex/AGENTS.project.md`
+- **Changes:**
+  - Find: "Knowledge Base (MUST USE)"
+  - Replace: "Brain Skills Repository (MUST USE)"
+  - Find: "KB lookups"
+  - Replace: "Skills lookups"
+  - Find: "Create a KB file"
+  - Replace: "Create a skill file" (or "Create a local kb/ file" if referring to project-local knowledge)
+  - Find: "Project knowledge base"
+  - Replace: "Brain skills repository" (when referring to brain/skills/) OR "Project kb/ directory" (when referring to local knowledge)
+- **Important:** Keep "kb/" references when they refer to project-local knowledge directories
+- **AC:**
+  - [ ] "KB" replaced with "Skills" in all 4 template AGENTS files
+  - [ ] "Knowledge Base" → "Brain Skills Repository" or "Brain skills repository"
+  - [ ] Project-local "kb/" references preserved and clarified
+  - [ ] Grep check: `grep -r "Knowledge Base\|KB lookups" templates/` returns no matches (except kb/ directory references)
+- **If Blocked:** Search templates for "KB" to find all occurrences
 
 ---
 
