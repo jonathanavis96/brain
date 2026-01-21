@@ -2,12 +2,12 @@
 
 **Status:** PLAN mode - Ready for BUILD execution  
 **Branch:** `brain-work`  
-**Last Updated:** 2026-01-22 01:23:26 (Ralph PLAN iteration)  
-**Progress:** 42/104 tasks complete (40%) - Phase 0-Warn updated with 4 new Ralph-local shellcheck warnings
+**Last Updated:** 2026-01-22 01:36:30 (Ralph PLAN iteration)  
+**Progress:** 42/111 tasks complete (38%) - Phase 0-Warn updated with 11 new warnings from verifier and shellcheck
 
 **Current Status:**
 - ✅ Phase 0-Sync (Infrastructure) - COMPLETE (2/2 tasks)
-- 📋 Phase 0-Warn (Verifier Warnings) - 9/20 complete, **11 shellcheck warnings remain** (7 external + 4 local)
+- 📋 Phase 0-Warn (Verifier Warnings) - 9/27 complete, **18 warnings remain** (7 shellcheck + 4 local shellcheck + 2 markdown fences + 1 template sync + 4 external)
 - ✅ Phase 0-A (Cortex Manager Pack) - COMPLETE (19/19 tasks)
 - ✅ Phase 0-B (Cleanup & Templates) - COMPLETE (12/12 tasks)
 - 📋 Phase 0-Quick (Quick Wins) - 3/8 complete, **5 HIGH PRIORITY tasks remaining**
@@ -21,11 +21,11 @@
 - 📋 Phase 8 (Pre-commit Linting) - 0/11 complete (LOW priority)
 
 **Task Breakdown:**
-- Total: 104 tasks (42 complete, 62 remaining)
-- Phase 0: 42/61 complete (11 warn + 5 quick wins + 2 complete phases)
+- Total: 111 tasks (42 complete, 69 remaining)
+- Phase 0: 42/68 complete (18 warn + 5 quick wins + 2 complete phases)
 - Phases 1-8: 0/43 complete (all pending)
 
-**Next Priority:** Phase 0-Warn shellcheck tasks (WARN.Shellcheck.2-11) - Fix linting warnings before continuing quick wins
+**Next Priority:** Phase 0-Warn high priority tasks - Fix markdown fences (AGENTS.md, THOUGHTS.md) and critical shellcheck issues before continuing quick wins
 
 **Verifier Status:**
 - `.verify/latest.txt` shows all verifier rules passing (BugA.1, BugA.2, BugB.1, BugB.2, BugC.1, BugC.2)
@@ -230,6 +230,48 @@
   - **Fix:** Change `${attach_flag}` to `"${attach_flag}"`
   - **AC:** `shellcheck loop.sh 2>&1 | grep -c SC2086` returns 0
   - **Commit:** `fix(ralph): quote attach_flag in loop.sh`
+
+- [ ] **WARN.Shellcheck.12** - SC2034 unused LAST_DISPLAY_ROW in thunk_ralph_tasks.sh (MEDIUM)
+  - **File:** `thunk_ralph_tasks.sh` line 310
+  - **Issue:** `LAST_DISPLAY_ROW` appears unused
+  - **Fix:** Remove unused variable or mark as used
+  - **AC:** `shellcheck thunk_ralph_tasks.sh 2>&1 | grep -c 'SC2034.*LAST_DISPLAY_ROW'` returns 0
+  - **Commit:** `fix(ralph): remove unused LAST_DISPLAY_ROW in thunk_ralph_tasks.sh`
+
+- [ ] **WARN.Shellcheck.13** - SC2155 in thunk_ralph_tasks.sh line 257 (LOW)
+  - **File:** `thunk_ralph_tasks.sh` line 257
+  - **Issue:** `local timestamp=$(date ...)` masks return values
+  - **Fix:** Split into `local timestamp; timestamp=$(date ...)`
+  - **AC:** `shellcheck thunk_ralph_tasks.sh 2>&1 | grep 'line 257' | grep -c SC2155` returns 0
+  - **Commit:** `fix(ralph): separate declaration and assignment in thunk_ralph_tasks.sh line 257`
+
+- [ ] **WARN.Shellcheck.14** - SC2155 in thunk_ralph_tasks.sh line 330 (LOW)
+  - **File:** `thunk_ralph_tasks.sh` line 330
+  - **Issue:** `local timestamp=$(date ...)` masks return values
+  - **Fix:** Split into `local timestamp; timestamp=$(date ...)`
+  - **AC:** `shellcheck thunk_ralph_tasks.sh 2>&1 | grep 'line 330' | grep -c SC2155` returns 0
+  - **Commit:** `fix(ralph): separate declaration and assignment in thunk_ralph_tasks.sh line 330`
+
+- [ ] **WARN.Markdown.Fences.1** - AGENTS.md missing closing fences (MEDIUM)
+  - **File:** `AGENTS.md` lines 24-31, 46-48
+  - **Issue:** Code blocks have opening fences (```bash, ```text) but missing closing fences
+  - **Fix:** Add closing ``` after each code block
+  - **AC:** `bash -c 'opens=$(grep -c "^\`\`\`[a-z]" AGENTS.md); closes=$(grep -c "^\`\`\`$" AGENTS.md); [[ "$opens" -eq "$closes" ]] && echo "balanced"'` returns "balanced"
+  - **Commit:** `fix(docs): add missing closing fences in AGENTS.md`
+
+- [ ] **WARN.Markdown.Fences.2** - THOUGHTS.md missing closing fences (MEDIUM)
+  - **File:** `THOUGHTS.md` lines 111-116, 135-157
+  - **Issue:** Code blocks have opening fences (```text) but missing closing fences
+  - **Fix:** Add closing ``` after each code block
+  - **AC:** `bash -c 'opens=$(grep -c "^\`\`\`[a-z]" THOUGHTS.md); closes=$(grep -c "^\`\`\`$" THOUGHTS.md); [[ "$opens" -eq "$closes" ]] && echo "balanced"'` returns "balanced"
+  - **Commit:** `fix(docs): add missing closing fences in THOUGHTS.md`
+
+- [ ] **WARN.Template.Sync.1** - thunk_ralph_tasks.sh differs from template (MEDIUM)
+  - **File:** `thunk_ralph_tasks.sh` vs `templates/ralph/thunk_ralph_tasks.sh`
+  - **Issue:** Files differ (likely due to path changes or improvements)
+  - **Fix:** Review diff and sync working version to template
+  - **AC:** `diff -q thunk_ralph_tasks.sh templates/ralph/thunk_ralph_tasks.sh` returns 0
+  - **Commit:** `chore(templates): sync thunk_ralph_tasks.sh to template`
 
 ## Phase 0-Quick: Quick Wins (High Value, Low Effort)
 
