@@ -137,7 +137,7 @@ These tasks can be completed quickly and provide immediate value. Consider prior
   - **AC:** Add "Manager/Worker Architecture" section explaining the relationship
   - **AC:** Document that Cortex lives at `../cortex/` (relative to ralph/)
 
-- [ ] **0.A.3.3** Update `ralph/NEURONS.md` to include cortex/ in the brain map
+- [x] **0.A.3.3** Update `ralph/NEURONS.md` to include cortex/ in the brain map
   - **AC:** Add cortex/ folder and its files to the map
   - **AC:** Update skills/ file count (currently claims "33", already updated in WARN.ST1)
 
