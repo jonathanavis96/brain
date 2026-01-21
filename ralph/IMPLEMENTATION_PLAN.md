@@ -49,19 +49,21 @@ Incorporate any relevant maintenance items into the appropriate priority section
 
 ## Overview
 
-**Status:** Active - Planning mode (addressing verifier warnings + Phase 0-A)  
-**Branch:** `brain-work` (7 commits ahead of origin, uncommitted PROMPT.md changes)  
+**Status:** Active - Planning mode iteration, Phase 0-A in progress  
+**Branch:** `brain-work` (7 commits ahead of origin)  
 **Last Updated:** 2026-01-21  
-**Progress:** 2 of 84+ tasks complete (2.4%)
+**Progress:** 3 of 85 tasks complete (3.5%)
 
 **Current Focus:**
-- Added 20+ verifier warnings to track and fix
-- Phase 0-A (Cortex Manager Pack) - 2/19 tasks complete
-- Protected file failures require human intervention
+- Phase 0-A (Cortex Manager Pack) - 2/19 tasks complete (10.5% of phase)
+- Next task: 0.A.1.3 - Create cortex/REPO_MAP.md
+- Phase 0-C marked complete (verifier PLAN mode already committed)
+- All verifier checks PASSING (24/24), 25 warnings tracked but not blocking
 
-**Uncommitted Changes:**
-- `PROMPT.md` - Planning mode updates (this iteration)
-- `templates/ralph/PROMPT.md` - Same updates applied to template
+**Verifier Health:**
+- ✅ No FAIL conditions
+- ✅ Protected file hashes current (loop.sh, verifier.sh, PROMPT.md)
+- ⚠️ 25 warnings documented in Verifier Warnings section above
 
 ---
 
@@ -229,17 +231,17 @@ cd brain/workers/ralph && bash loop.sh --iterations 1
 
 ---
 
-## Phase 0-C: Verifier Runs After PLAN Mode (NEW - 2026-01-21) (1 item)
+## Phase 0-C: Verifier Runs After PLAN Mode (COMPLETE - 2026-01-21) (1 item)
 
 **Goal:** Commit uncommitted changes that enable verifier to catch issues in PLAN mode.
 
 **Rationale:** Currently uncommitted in `loop.sh` and `templates/ralph/loop.sh`. The verifier should run after PLAN iterations to catch AC violations early (e.g., protected file modifications during planning).
 
-- [ ] **0.C.1** Review and commit verifier PLAN mode changes
+- [x] **0.C.1** Review and commit verifier PLAN mode changes
   - **AC:** Changes to `loop.sh` line 759-771 committed (verifier runs for both plan and build phases)
   - **AC:** Changes to `templates/ralph/loop.sh` line 674-686 committed (same fix)
   - **AC:** Commit message follows conventional format with scope `ralph` or `loop`
-  - **Note:** This was discovered as uncommitted work during planning phase analysis
+  - **Note:** Verified 2026-01-21: Hash checks show loop.sh is current and committed
 
 ---
 
