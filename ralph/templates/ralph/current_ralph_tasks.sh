@@ -114,6 +114,17 @@ extract_tasks() {
             continue
         fi
         
+        # Detect Phase sections (## Phase X: Description)
+        # Match patterns like "## Phase 0-A: ...", "## Phase 1: ...", etc.
+        if [[ "$line" =~ ^##[[:space:]]+Phase[[:space:]]+([^:]+):[[:space:]]*(.*)$ ]]; then
+            local phase_num="${BASH_REMATCH[1]}"
+            local phase_desc="${BASH_REMATCH[2]}"
+            current_section="Phase $phase_num: $phase_desc"
+            in_task_section=true
+            task_counter=0
+            continue
+        fi
+        
         # Detect High/Medium/Low Priority sections (flexible matching)
         # Matches: "### High Priority", "### Phase 1: Desc (High Priority)", "### 🔴 HIGH PRIORITY: Desc"
         # Case-insensitive matching via converting to uppercase for comparison
@@ -129,9 +140,9 @@ extract_tasks() {
             current_section="Low Priority"
             in_task_section=true
             task_counter=0
-        elif [[ "$line" =~ ^##[[:space:]]+ ]] && [[ ! "$line_upper" =~ (HIGH|MEDIUM|LOW)[[:space:]]*PRIORITY ]]; then
-            # Exit task section only on ## (major section) headers that aren't priority sections
-            # This allows ### and #### subsection headers to remain within the current priority section
+        elif [[ "$line" =~ ^##[[:space:]]+ ]] && [[ ! "$line" =~ ^##[[:space:]]+Phase[[:space:]]+ ]]; then
+            # Exit task section on ## headers that are NOT Phase sections or Priority sections
+            # This allows ### and #### subsection headers to remain within the current section
             in_task_section=false
         fi
         

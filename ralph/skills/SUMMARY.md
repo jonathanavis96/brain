@@ -26,7 +26,7 @@
 |------------|----------|-----------------|
 | **Shell/Bash errors** | Command not found, syntax errors, exit code != 0 | [Shell README](domains/shell/README.md), [Common Pitfalls](domains/shell/common-pitfalls.md) |
 | **ShellCheck warnings** | SC2034, SC2155, SC2086, etc. | [Variable Patterns](domains/shell/variable-patterns.md), [Strict Mode](domains/shell/strict-mode.md) |
-| **Python errors** | ImportError, AttributeError, TypeError | [Python Patterns](domains/python-patterns.md) |
+| **Python errors** | ImportError, AttributeError, TypeError, scope errors ("cannot access local variable") | [Python Patterns](domains/python-patterns.md) |
 | **API/HTTP errors** | 401, 403, 429, 500, timeout | [Error Handling Patterns](domains/error-handling-patterns.md), [API Design Patterns](domains/api-design-patterns.md) |
 | **Git errors** | Merge conflicts, detached HEAD, push rejected | [Deployment Patterns](domains/deployment-patterns.md) |
 | **JSON/Config errors** | Parse errors, missing keys, invalid values | [Config Patterns](domains/config-patterns.md) |
@@ -74,7 +74,7 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
   - [Config Patterns](domains/config-patterns.md) - Portable configs, templates, environment variables
   - [Database Patterns](domains/database-patterns.md) - Schema design, ORMs, query optimization, migrations, transactions
   - [Markdown Patterns](domains/markdown-patterns.md) - Lint rules (MD040, MD024, MD050), documentation accuracy
-  - [Python Patterns](domains/python-patterns.md) - datetime, f-strings, JSON handling, type hints
+  - [Python Patterns](domains/python-patterns.md) - datetime, f-strings, JSON handling, type hints, import scope
   - [Testing Patterns](domains/testing-patterns.md) - Unit, integration, e2e testing across Jest, pytest, Go testing
   - [Ralph Loop Architecture](domains/ralph-patterns.md) - How Ralph works internally (subagents, tool visibility, execution flow)
   - [Bootstrap Patterns](domains/bootstrap-patterns.md) - Project bootstrapping, scaffold templates, initialization flows

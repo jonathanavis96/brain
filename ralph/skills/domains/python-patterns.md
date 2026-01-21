@@ -294,6 +294,58 @@ from .utils import helper_function
 from .config import settings
 ```
 
+## Import Scope Best Practices
+
+### Avoid Importing Inside Try Blocks
+
+```python
+# ❌ Wrong - import inside try block creates local variable
+def my_function():
+    try:
+        import time  # Creates local 'time' variable
+        time.sleep(1)
+    except Exception as e:
+        pass
+    
+    # This will fail with: "cannot access local variable 'time' where it is not associated with a value"
+    time.sleep(2)  # 'time' is out of scope here!
+
+# ✅ Right - import at module level or function start
+import time
+
+def my_function():
+    try:
+        time.sleep(1)
+    except Exception as e:
+        pass
+    
+    time.sleep(2)  # Works fine, 'time' is in scope
+
+# ✅ Also acceptable - import at function start (before try)
+def my_function():
+    import time  # Import before try block
+    
+    try:
+        time.sleep(1)
+    except Exception as e:
+        pass
+    
+    time.sleep(2)  # Works fine
+```
+
+### Why This Happens
+
+When you import inside a try block:
+1. Python creates a local variable in that block's scope
+2. After the try block ends, that local variable is out of scope
+3. References to that name outside the block fail with "cannot access local variable"
+
+### Best Practice
+
+- **Module-level imports** (top of file) for standard libraries and commonly used modules
+- **Function-level imports** (before any control flow) only when needed for circular import resolution or optional dependencies
+- **Never import inside try/except/if blocks** unless you handle the scope correctly
+
 ## Common Mistakes Summary
 
 | Mistake | Problem | Fix |
