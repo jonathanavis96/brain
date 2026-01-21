@@ -187,7 +187,7 @@
   - **AC:** `shellcheck ../../cortex/cortex.bash 2>&1 | grep -c SC2001` returns 0
   - **Commit:** `refactor(cortex): use bash while-read instead of sed for indentation`
 
-- [ ] **WARN.Shellcheck.6** - SC2086 unquoted variable in cortex/one-shot.sh (LOW)
+- [x] **WARN.Shellcheck.6** - SC2086 unquoted variable in cortex/one-shot.sh (LOW)
   - **File:** `../../cortex/one-shot.sh` lines 257, 261
   - **Issue:** `CONFIG_FLAG` should be quoted to prevent word splitting
   - **Fix:** Change `$CONFIG_FLAG` to `"$CONFIG_FLAG"`
