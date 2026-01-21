@@ -68,30 +68,6 @@
 
 ---
 
-### Phase 0-P1: Critical Bug Fixes (Priority: HIGHEST)
-
-- [ ] **P1.1** Fix login retry logic in account verification flow
-  - **Priority:** P1 (Critical)
-  - **Goal:** Correct the retry flow to match intended behavior
-  - **Current Bug:** 
-    - Code incorrectly labels "Attempt 2" when it should be "Attempt 1"
-    - Retry flow doesn't match specification
-  - **Correct Flow:**
-    1. **Attempt 1**: Try typing account name
-    2. **Attempt 2** (if fail): Manual refresh with **tiny** Chrome window
-    3. **Attempt 3** (if fail): Manual refresh with **large** Chrome window + ask user to type account name and press Enter
-    4. **If still fails**: Mark account as burnt
-  - **Files to Fix:** (Ralph to identify based on codebase search for login/account verification logic)
-  - **AC:**
-    - [ ] Retry attempt numbers are correct (1, 2, 3)
-    - [ ] Attempt 2 uses tiny Chrome window (not large)
-    - [ ] Attempt 3 uses large Chrome window AND asks user to type account name
-    - [ ] Logic flow matches specification exactly
-    - [ ] Tests updated if applicable
-  - **If Blocked:** Report file locations and current logic for review
-
----
-
 ## Phase 0-Warn: Verifier Warnings
 
 **Goal:** Address verifier warnings (non-blocking but should be fixed)

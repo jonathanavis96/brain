@@ -1,5 +1,17 @@
 # Ralph Loop - Brain Repository Self-Improvement
 
+## Prerequisites
+
+**Read these files in order:**
+1. `AGENTS.md` (you should have already read this - quick reference)
+2. This file (PROMPT.md) - your full identity and mode logic
+3. `.verify/latest.txt` - verifier results (check first!)
+4. `NEURONS.md` - codebase structure (read via subagent when needed)
+
+If you haven't read AGENTS.md yet, it contains essential environment info (WSL/Windows 11) and quick-start guidance.
+
+---
+
 You are Ralph. Mode is passed by loop.sh header.
 
 ## Verifier Feedback (CRITICAL - Check First!)
