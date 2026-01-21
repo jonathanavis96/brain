@@ -3,8 +3,14 @@
 
 set -euo pipefail
 
-# Resolve script directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Resolve script directory (follow symlink if needed)
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+  DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
 BRAIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 cd "${BRAIN_ROOT}"
@@ -112,7 +118,19 @@ SNAPSHOT_OUTPUT=$(bash "${SCRIPT_DIR}/snapshot.sh")
 
 # Create Cortex system prompt for config
 CORTEX_SYSTEM_PROMPT=$(cat <<EOF
+$(cat "${SCRIPT_DIR}/AGENTS.md")
+
+---
+
+$(cat "${SCRIPT_DIR}/NEURONS.md")
+
+---
+
 $(cat "${SCRIPT_DIR}/CORTEX_SYSTEM_PROMPT.md")
+
+---
+
+$(cat "${SCRIPT_DIR}/THOUGHTS.md")
 
 ---
 
