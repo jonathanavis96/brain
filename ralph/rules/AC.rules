@@ -171,21 +171,21 @@ expect_stdout=0
 mode=auto
 gate=block
 desc=loop.sh unchanged from baseline
-cmd=sha256sum loop.sh | cut -d' ' -f1 | diff -q - .verify/loop.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
+cmd=sha256sum loop.sh | cut -d' ' -f1 | diff -q - ../.verify/loop.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
 expect_stdout=match
 
 [Protected.2]
 mode=auto
 gate=block
 desc=verifier.sh unchanged from baseline
-cmd=sha256sum verifier.sh | cut -d' ' -f1 | diff -q - .verify/verifier.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
+cmd=sha256sum verifier.sh | cut -d' ' -f1 | diff -q - ../.verify/verifier.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
 expect_stdout=match
 
 [Protected.3]
 mode=auto
 gate=block
 desc=PROMPT.md unchanged from baseline
-cmd=sha256sum PROMPT.md | cut -d' ' -f1 | diff -q - .verify/prompt.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
+cmd=sha256sum PROMPT.md | cut -d' ' -f1 | diff -q - ../.verify/prompt.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
 expect_stdout=match
 
 # =============================================================================
@@ -196,7 +196,7 @@ expect_stdout=match
 mode=auto
 gate=block
 desc=Verifier run_id.txt exists and is non-empty
-cmd=test -s .verify/run_id.txt && echo "OK" || echo "FAIL"
+cmd=test -s ../.verify/run_id.txt && echo "OK" || echo "FAIL"
 expect_stdout=OK
 
 # =============================================================================
@@ -404,33 +404,33 @@ expect_stdout=ok
 mode=auto
 gate=warn
 desc=No more than 10 active waivers (keep exceptions exceptional)
-cmd=bash -c 'source .verify/check_waiver.sh 2>/dev/null && count=$(count_active_waivers); if [[ $count -le 10 ]]; then echo "ok ($count active)"; else echo "FAIL: $count active waivers (max 10)"; fi'
+cmd=bash -c 'source ../.verify/check_waiver.sh 2>/dev/null && count=$(count_active_waivers); if [[ $count -le 10 ]]; then echo "ok ($count active)"; else echo "FAIL: $count active waivers (max 10)"; fi'
 expect_stdout_regex=^ok
 
 [Waiver.NoBlanketScope]
 mode=auto
 gate=block
 desc=No waivers with wildcard or repo-wide scope
-cmd=bash -c 'found=0; shopt -s nullglob; for f in .verify/waivers/*.approved; do [[ -f "$f" ]] || continue; if grep -qE "PATHS=(\.|(\*)+|.*\*.*)" "$f"; then found=1; echo "FAIL: $(basename "$f") has wildcard scope"; fi; done; [[ $found -eq 0 ]] && echo "ok"'
+cmd=bash -c 'found=0; shopt -s nullglob; for f in ../.verify/waivers/*.approved; do [[ -f "$f" ]] || continue; if grep -qE "PATHS=(\.|(\*)+|.*\*.*)" "$f"; then found=1; echo "FAIL: $(basename "$f") has wildcard scope"; fi; done; [[ $found -eq 0 ]] && echo "ok"'
 expect_stdout=ok
 
 [Waiver.ExpiryRequired]
 mode=auto
 gate=block
 desc=All approved waivers have valid EXPIRES field
-cmd=bash -c 'shopt -s nullglob; for f in .verify/waivers/*.approved; do [[ -f "$f" ]] || continue; exp=$(grep "^EXPIRES=" "$f" | cut -d= -f2); if [[ -z "$exp" ]]; then echo "FAIL: $(basename "$f") missing EXPIRES"; exit 1; fi; done; echo "ok"'
+cmd=bash -c 'shopt -s nullglob; for f in ../.verify/waivers/*.approved; do [[ -f "$f" ]] || continue; exp=$(grep "^EXPIRES=" "$f" | cut -d= -f2); if [[ -z "$exp" ]]; then echo "FAIL: $(basename "$f") missing EXPIRES"; exit 1; fi; done; echo "ok"'
 expect_stdout=ok
 
 [Waiver.HashIntegrity]
 mode=auto
 gate=block
 desc=Approved waivers match their request hashes (no tampering)
-cmd=bash -c 'shopt -s nullglob; for f in .verify/waivers/*.approved; do [[ -f "$f" ]] || continue; wid=$(grep "^WAIVER_ID=" "$f" | cut -d= -f2); req=".verify/waiver_requests/${wid}.json"; stored=$(grep "^REQUEST_SHA256=" "$f" | cut -d= -f2); if [[ -f "$req" ]]; then actual=$(sha256sum "$req" | cut -d" " -f1); if [[ "$stored" != "$actual" ]]; then echo "FAIL: ${wid} hash mismatch (request modified after approval)"; exit 1; fi; fi; done; echo "ok"'
+cmd=bash -c 'shopt -s nullglob; for f in ../.verify/waivers/*.approved; do [[ -f "$f" ]] || continue; wid=$(grep "^WAIVER_ID=" "$f" | cut -d= -f2); req="../.verify/waiver_requests/${wid}.json"; stored=$(grep "^REQUEST_SHA256=" "$f" | cut -d= -f2); if [[ -f "$req" ]]; then actual=$(sha256sum "$req" | cut -d" " -f1); if [[ "$stored" != "$actual" ]]; then echo "FAIL: ${wid} hash mismatch (request modified after approval)"; exit 1; fi; fi; done; echo "ok"'
 expect_stdout=ok
 
 [Waiver.NoUnapprovedInUse]
 mode=auto
 gate=warn
 desc=No waiver requests referenced without corresponding approval
-cmd=bash -c 'shopt -s nullglob; for req in .verify/waiver_requests/*.json; do [[ -f "$req" ]] || continue; wid=$(basename "$req" .json); if [[ ! -f ".verify/waivers/${wid}.approved" ]]; then echo "PENDING: $wid (not yet approved)"; fi; done; echo "ok"'
+cmd=bash -c 'shopt -s nullglob; for req in ../.verify/waiver_requests/*.json; do [[ -f "$req" ]] || continue; wid=$(basename "$req" .json); if [[ ! -f "../.verify/waivers/${wid}.approved" ]]; then echo "PENDING: $wid (not yet approved)"; fi; done; echo "ok"'
 expect_stdout_regex=ok
