@@ -180,12 +180,12 @@
   - **AC:** `shellcheck ../../cortex/cortex.bash 2>&1 | grep -c SC2034` returns 0
   - **Commit:** Already fixed
 
-- [ ] **WARN.Shellcheck.5** - SC2001 use parameter expansion instead of sed (LOW)
-  - **File:** `../../cortex/cortex.bash` line 179
+- [x] **WARN.Shellcheck.5** - SC2001 use parameter expansion instead of sed (LOW)
+  - **File:** `../../cortex/cortex.bash` line 171
   - **Issue:** Could use `${variable//search/replace}` instead of sed
-  - **Fix:** Replace sed with bash parameter expansion if simpler
+  - **Fix:** Replaced `echo "$CORTEX_SYSTEM_PROMPT" | sed 's/^/    /'` with bash while-read loop for multi-line indentation
   - **AC:** `shellcheck ../../cortex/cortex.bash 2>&1 | grep -c SC2001` returns 0
-  - **Commit:** `refactor(cortex): use parameter expansion instead of sed`
+  - **Commit:** `refactor(cortex): use bash while-read instead of sed for indentation`
 
 - [ ] **WARN.Shellcheck.6** - SC2086 unquoted variable in cortex/one-shot.sh (LOW)
   - **File:** `../../cortex/one-shot.sh` lines 257, 261

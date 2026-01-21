@@ -176,7 +176,9 @@ cat > "$CONFIG_FILE" <<EOF
 version: 1
 agent:
   additionalSystemPrompt: |
-$(echo "$CORTEX_SYSTEM_PROMPT" | sed 's/^/    /')
+$(while IFS= read -r line; do
+    echo "    $line"
+done <<< "$CORTEX_SYSTEM_PROMPT")
   streaming: true
   temperature: 0.3
 EOF
