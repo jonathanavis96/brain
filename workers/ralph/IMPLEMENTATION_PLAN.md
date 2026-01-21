@@ -725,41 +725,112 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
 
 **Source:** `pre-commit run --all-files` output (2026-01-22)
 
-### 8.1 Shellcheck Warnings
-Fix shell script warnings (non-critical style issues):
+**Note:** Most critical warnings already addressed in Phase 0-Warn. These are lower-priority style issues.
 
-- [ ] **8.1.1** Fix SC2034 (unused variables) in `current_ralph_tasks.sh`
-  - Lines: 107 (`is_manual`), 299 (`skip_line`)
-  - **AC:** `shellcheck current_ralph_tasks.sh 2>&1 | grep -c SC2034` returns 0
+### 8.1 Shellcheck Warnings - Templates
+Fix template file warnings:
 
-- [ ] **8.1.2** Fix SC2162 (read without -r) in shell scripts
-  - Files: `current_ralph_tasks.sh`, `pr-batch.sh`
+- [ ] **8.1.1** Fix SC2034 (unused RUNNER) in `templates/cortex/cortex.bash`
+  - Line: 64
+  - **Issue:** `RUNNER="rovodev"` appears unused
+  - **Fix:** Remove or export if used externally
+  - **AC:** `shellcheck ../../templates/cortex/cortex.bash 2>&1 | grep -c 'SC2034.*RUNNER'` returns 0
+  - **Commit:** `fix(templates): remove unused RUNNER in cortex.bash`
+
+- [ ] **8.1.2** Fix SC2034 (unused CONFIG_FLAG) in `templates/cortex/cortex.bash`
+  - Line: 107
+  - **Issue:** `CONFIG_FLAG` appears unused
+  - **Fix:** Remove or export if used externally
+  - **AC:** `shellcheck ../../templates/cortex/cortex.bash 2>&1 | grep -c 'SC2034.*CONFIG_FLAG'` returns 0
+  - **Commit:** `fix(templates): remove unused CONFIG_FLAG in cortex.bash`
+
+- [ ] **8.1.3** Fix SC2155 in `templates/cortex/one-shot.sh`
+  - Lines: 257, 261
+  - **Issue:** `local var=$(cmd)` masks return values
+  - **Fix:** Split into separate declaration and assignment
+  - **AC:** `shellcheck ../../templates/cortex/one-shot.sh 2>&1 | grep -c SC2155` returns 0
+  - **Commit:** `fix(templates): separate declaration and assignment in one-shot.sh`
+
+- [ ] **8.1.4** Fix SC2162 (read without -r) in `templates/ralph/*.sh`
+  - Files: `current_ralph_tasks.sh` (lines 261, 558), `loop.sh` (lines 432, 473), `pr-batch.sh` (line 191)
+  - **Issue:** `read` without `-r` will mangle backslashes
+  - **Fix:** Add `-r` flag to all `read` commands
+  - **AC:** `shellcheck ../../templates/ralph/*.sh 2>&1 | grep -c SC2162` returns 0
+  - **Commit:** `fix(templates): add -r flag to read commands`
+
+- [ ] **8.1.5** Fix SC2002 (useless cat) in `templates/ralph/loop.sh`
+  - Line: 641
+  - **Issue:** `cat file | tail` can be simplified
+  - **Fix:** Replace with `tail file` or `< file tail`
+  - **AC:** `shellcheck ../../templates/ralph/loop.sh 2>&1 | grep -c SC2002` returns 0
+  - **Commit:** `refactor(templates): remove useless cat in loop.sh`
+
+- [ ] **8.1.6** Fix SC2086 (unquoted variable) in `templates/ralph/loop.sh`
+  - Line: 731
+  - **Issue:** `${attach_flag}` should be quoted
+  - **Fix:** Add quotes: `"${attach_flag}"`
+  - **AC:** `shellcheck ../../templates/ralph/loop.sh 2>&1 | grep -c SC2086` returns 0
+  - **Commit:** `fix(templates): quote attach_flag in loop.sh`
+
+- [ ] **8.1.7** Fix SC2034 (unused week_num) in `templates/ralph/pr-batch.sh`
+  - Line: 103
+  - **Issue:** `week_num` appears unused
+  - **Fix:** Remove unused variable
+  - **AC:** `shellcheck ../../templates/ralph/pr-batch.sh 2>&1 | grep -c 'SC2034.*week_num'` returns 0
+  - **Commit:** `fix(templates): remove unused week_num in pr-batch.sh`
+
+- [ ] **8.1.8** Fix SC2155 in `templates/ralph/thunk_ralph_tasks.sh`
+  - Lines: 257, 330
+  - **Issue:** `local timestamp=$(date ...)` masks return values
+  - **Fix:** Split into separate declaration and assignment
+  - **AC:** `shellcheck ../../templates/ralph/thunk_ralph_tasks.sh 2>&1 | grep -c SC2155` returns 0
+  - **Commit:** `fix(templates): separate declaration and assignment in thunk_ralph_tasks.sh`
+
+- [ ] **8.1.9** Fix SC2034 (unused LAST_DISPLAY_ROW) in `templates/ralph/thunk_ralph_tasks.sh`
+  - Line: 310
+  - **Issue:** `LAST_DISPLAY_ROW` appears unused
+  - **Fix:** Remove unused variable
+  - **AC:** `shellcheck ../../templates/ralph/thunk_ralph_tasks.sh 2>&1 | grep -c 'SC2034.*LAST_DISPLAY_ROW'` returns 0
+  - **Commit:** `fix(templates): remove unused LAST_DISPLAY_ROW in thunk_ralph_tasks.sh`
+
+### 8.2 Shellcheck Warnings - Root Scripts
+Fix root-level script warnings:
+
+- [ ] **8.2.1** Fix SC2016 + SC2129 in `setup.sh`
+  - Lines: 70, 75, 77
+  - **Issue:** SC2016 (info) - single quotes in pattern, SC2129 (style) - multiple redirects
+  - **Analysis:** SC2016 is false positive (quotes intentional for literal match). SC2129 is style preference.
+  - **Fix:** Keep SC2016 as-is (correct). Optionally combine redirects for SC2129.
+  - **AC:** `shellcheck ../../setup.sh 2>&1 | grep -c 'SC2129'` returns 0
+  - **Commit:** `style(setup): combine multiple redirects`
+
+- [ ] **8.2.2** Fix SC2162 (read without -r) in root scripts
+  - Files: `current_ralph_tasks.sh` (lines 261, 558), `loop.sh` (lines 433, 474), `new-project.sh` (lines 250, 263, 277, etc.)
+  - **Issue:** `read` without `-r` will mangle backslashes
+  - **Fix:** Add `-r` flag to all `read` commands
   - **AC:** `shellcheck -e SC1091 *.sh 2>&1 | grep -c SC2162` returns 0
+  - **Commit:** `fix(scripts): add -r flag to read commands`
 
-- [ ] **8.1.3** Fix SC2155 (declare and assign separately) in shell scripts
-  - Files: `current_ralph_tasks.sh` line 267
-  - **AC:** `shellcheck -e SC1091 *.sh 2>&1 | grep -c SC2155` returns 0
-
-### 8.2 Markdownlint Warnings
+### 8.3 Markdownlint Warnings
 Fix markdown formatting issues:
 
-- [ ] **8.2.1** Fix MD032 (blank lines around lists) in markdown files
+- [ ] **8.3.1** Fix MD032 (blank lines around lists) in markdown files
   - Files: `cortex/AGENTS.md`, and others
   - **AC:** `markdownlint . 2>&1 | grep -c MD032` returns 0
 
-- [ ] **8.2.2** Fix MD031 (blank lines around fences) in markdown files
+- [ ] **8.3.2** Fix MD031 (blank lines around fences) in markdown files
   - Files: `cortex/AGENTS.md`, and others
   - **AC:** `markdownlint . 2>&1 | grep -c MD031` returns 0
 
-- [ ] **8.2.3** Fix MD022 (blank lines around headings) in markdown files
+- [ ] **8.3.3** Fix MD022 (blank lines around headings) in markdown files
   - **AC:** `markdownlint . 2>&1 | grep -c MD022` returns 0
 
-- [ ] **8.2.4** Fix MD060 (table column style) in markdown files
+- [ ] **8.3.4** Fix MD060 (table column style) in markdown files
   - Files: `cortex/AGENTS.md` line 86
   - **AC:** `markdownlint . 2>&1 | grep -c MD060` returns 0
 
-### 8.3 Final Verification
+### 8.4 Final Verification
 
-- [ ] **8.3.1** Run full pre-commit and verify all pass
+- [ ] **8.4.1** Run full pre-commit and verify all pass
   - **AC:** `pre-commit run --all-files` exits with code 0
   - **Commit:** `style: fix all pre-commit linting warnings`
