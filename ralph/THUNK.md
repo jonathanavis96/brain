@@ -327,3 +327,4 @@ Started: 2026-01-18
 | 287 | 0.A.2.4 | HIGH | **0.A.2.4** Test: Run `bash cortex/run.sh --help` successfully - Executed from ralph/ directory, help text displayed correctly with usage, options (--help, --model, --runner), examples, and description of Cortex's role | 2026-01-21 |
 | 288 | 0.A.4.1 | HIGH | **0.A.4.1** Create `brain/workers/` folder | 2026-01-21 |
 | 289 | 0.A.4.2 | HIGH | **0.A.4.2** Copy entire `brain/ralph/` to `brain/workers/ralph/` - All files and subfolders copied preserving structure, original brain/ralph/ still exists, verified with diff -rq (no differences except logs/) | 2026-01-21 |
+| 290 | WARN.S1-S4 | LOW | **WARN.S1-S4** Investigate and resolve Hygiene.Shellcheck.1-4 warnings - Confirmed FALSE POSITIVE: double-line output (0\n0) caused by grep -c returning "0" plus || echo 0 fallback. Actual shellcheck validation passing with no SC2034/SC2155 issues. Cannot fix: AC.rules and verifier.sh are protected files. | 2026-01-21 |
