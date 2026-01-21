@@ -1,5 +1,58 @@
 # Skills Summary
 
+## 🚨 Error Quick Reference (Check Here First When Errors Occur!)
+
+**When any command/tool fails during your iteration, consult this table immediately.**
+
+### Verifier Rule Failures
+
+| Failed Rule Pattern | What It Means | Where to Find Fix |
+|---------------------|---------------|-------------------|
+| `Protected.*` | Protected file hash mismatch (loop.sh, verifier.sh, PROMPT.md modified) | **HUMAN INTERVENTION REQUIRED** - You cannot fix this. Report to human. |
+| `Hygiene.Shellcheck.1` | SC2034: Unused variables in current_ralph_tasks.sh | [Shell Variable Patterns](domains/shell/variable-patterns.md) - See "SC2034: Unused Variable" |
+| `Hygiene.Shellcheck.2` | SC2155: Declare and assign separately in current_ralph_tasks.sh | [Shell Variable Patterns](domains/shell/variable-patterns.md) - See "SC2155: Masked Return Values" |
+| `Hygiene.Shellcheck.3` | SC2034: Unused variables in thunk_ralph_tasks.sh | [Shell Variable Patterns](domains/shell/variable-patterns.md) |
+| `Hygiene.Shellcheck.4` | SC2155: Declare and assign separately in thunk_ralph_tasks.sh | [Shell Variable Patterns](domains/shell/variable-patterns.md) |
+| `Hygiene.Markdown.*` | Missing code fence language tags, duplicate headings | [Markdown Patterns](domains/markdown-patterns.md) - See MD040, MD024 |
+| `Hygiene.TermSync.*` | Terminology inconsistency in documentation | [Code Consistency](domains/code-consistency.md) |
+| `Hygiene.TemplateSync.*` | Template files out of sync | [Code Consistency](domains/code-consistency.md) |
+| `AntiCheat.*` | Forbidden pattern/marker detected in code | **Remove the flagged marker/phrase from your code** |
+| `freshness_check` | Verifier infrastructure issue (run_id mismatch) | **HUMAN INTERVENTION REQUIRED** - Report to human |
+| `init_baselines` | Verifier baseline initialization failed | **HUMAN INTERVENTION REQUIRED** - Report to human |
+
+### Common Runtime Errors
+
+| Error Type | Symptoms | Skill Reference |
+|------------|----------|-----------------|
+| **Shell/Bash errors** | Command not found, syntax errors, exit code != 0 | [Shell README](domains/shell/README.md), [Common Pitfalls](domains/shell/common-pitfalls.md) |
+| **ShellCheck warnings** | SC2034, SC2155, SC2086, etc. | [Variable Patterns](domains/shell/variable-patterns.md), [Strict Mode](domains/shell/strict-mode.md) |
+| **Python errors** | ImportError, AttributeError, TypeError | [Python Patterns](domains/python-patterns.md) |
+| **API/HTTP errors** | 401, 403, 429, 500, timeout | [Error Handling Patterns](domains/error-handling-patterns.md), [API Design Patterns](domains/api-design-patterns.md) |
+| **Git errors** | Merge conflicts, detached HEAD, push rejected | [Deployment Patterns](domains/deployment-patterns.md) |
+| **JSON/Config errors** | Parse errors, missing keys, invalid values | [Config Patterns](domains/config-patterns.md) |
+| **Test failures** | Assert errors, mock issues, timeout | [Testing Patterns](domains/testing-patterns.md) |
+| **Build/compile errors** | Missing dependencies, syntax errors | Check project-specific docs in [Projects](projects/) |
+
+### Quick Action Guide
+
+**If you see a verifier failure (LAST_VERIFIER_RESULT: FAIL):**
+1. Read `.verify/latest.txt` to identify which rule(s) failed
+2. Look up the rule in the table above
+3. If it says "HUMAN INTERVENTION REQUIRED" - stop and report
+4. Otherwise, consult the linked skill document
+5. Apply the fix and commit with: `fix(ralph): resolve AC failure <RULE_ID>`
+
+**If you encounter a runtime error (command/tool failure):**
+1. Note the error type (shell, Python, API, etc.)
+2. Look up the error type in the "Common Runtime Errors" table above
+3. Read the linked skill document
+4. Apply the minimum fix
+5. Re-run the failing command
+
+**Rule: Only 1 "obvious" quick attempt before consulting skills.**
+
+---
+
 ## Purpose
 
 This repository serves as a **skills knowledge base** for RovoDev and parallel agents. It contains curated performance optimization guidelines, best practices, reusable patterns, and a self-improvement system optimized for agent consumption with minimal token overhead.

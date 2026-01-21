@@ -30,6 +30,37 @@ Then output `:::BUILD_READY:::` to end the iteration.
 
 ---
 
+## Runtime Error Protocol (same iteration)
+
+If a command/tool fails (traceback, syntax error, non-zero exit):
+1. Stop and fix first.
+2. Open `skills/SUMMARY.md` → Error Quick Reference.
+3. Read the single best-matching skill doc.
+4. Apply the minimum fix and re-run the failing command.
+
+Rule: only 1 "obvious" quick attempt before doing the lookup.
+
+---
+
+## Output Format Requirement (Terminal Streaming)
+
+After every major step, print a single-line progress update in this exact format:
+PROGRESS | phase=<plan|build> | step=<short> | tasks=<done>/<total> | file=<path>
+
+At the start of your response, always print:
+STATUS | branch=<git branch> | runner=opencode | model=opencode/grok-code
+
+PROGRESS | phase=<...> | step=starting | tasks=<done>/<total> | file=ralph/IMPLEMENTATION_PLAN.md
+
+Then work normally using tools.
+After you read or modify any key file (IMPLEMENTATION_PLAN.md, THOUGHTS.md, NEURONS.md, PROMPT.md, any file under cortex/ or workers/), print a PROGRESS line.
+
+Before finishing, print exactly one of these markers on its own line:
+:::PLAN_READY::: (if plan phase)
+:::BUILD_READY::: (if build phase)
+
+---
+
 ## PLANNING Mode (Iteration 1 or every 3rd)
 
 ### Context Gathering (up to 100 parallel subagents)
