@@ -29,7 +29,7 @@ These warnings were identified by the verifier but are in the warn gate (non-blo
   - **Issue:** `thunk_ralph_tasks.sh` has 1 write operation outside era creation context
   - **Fix:** Added "Era:" marker comment on line 333 where cat >> writes to THUNK_FILE, applied to both root and template versions
 
-- [ ] **WARN.Hygiene.Markdown.3** - No code fences without language tags in THOUGHTS.md (MEDIUM)
+- [?] **WARN.Hygiene.Markdown.3** - No code fences without language tags in THOUGHTS.md (MEDIUM)
   - **Issue:** THOUGHTS.md contains 4 plain code fences (```)
   - **Fix:** Add language tags to all code fences (```bash, ```text, ```markdown, etc.)
 
