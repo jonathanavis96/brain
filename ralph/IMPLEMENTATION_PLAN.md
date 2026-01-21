@@ -45,30 +45,35 @@ These warnings were identified by the verifier but are in the warn gate (non-blo
 
 **Status:** PLAN mode - Strategic planning  
 **Branch:** `brain-work` (up to date with origin after push)  
-**Last Updated:** 2026-01-21 16:21  
+**Last Updated:** 2026-01-21 17:11  
 **Progress:** 16 of 62 numbered tasks complete (25.8%)
 
 **Current Focus:**
 - Phase 0-A (Cortex Manager Pack) - 16/19 tasks complete (84.2% of phase)
 - Next BUILD task: 0.A.4.3 - Update path references in workers/ralph/loop.sh
-- All verifier checks PASSING (24/24), no critical warnings
+- All verifier checks PASSING (24/24), 2 medium priority warnings remaining
 - 3 more tasks to complete Phase 0-A before mandatory human verification
+
+**Critical Discovery:**
+- ⚠️ workers/ralph/ copy EXISTS but has DIVERGED from source (0.A.4.2 needs re-verification)
+- Files differ: AGENTS.md, IMPLEMENTATION_PLAN.md, PROMPT.md, THUNK.md, loop.sh, AC.rules
+- Source (ralph/) has 17 newer log files since copy was made
+- Path updates (tasks 0.A.4.3-0.A.4.5) were NOT completed after copy
 
 **Verifier Health:**
 - ✅ All 24 acceptance criteria PASSING
 - ✅ Protected file hashes current (loop.sh, verifier.sh, PROMPT.md)
 - ⚠️ 4 maintenance items identified (already in Phase 1-3 below)
-- ✅ No high or medium priority warnings blocking progress
-- ⚠️ Last verifier run: 2026-01-21 14:44:56 (commit 8b00a4e)
+- ⚠️ 2 medium priority warnings (code fence language tags in THOUGHTS.md, NEURONS.md)
+- ✅ Last successful commit: 7ad79ac (2026-01-21 - verifier system transition)
 
 **Strategic Notes:**
-- Phase 0-A focuses on Cortex creation (no breaking changes to Ralph)
-- Phase 0-B is BLOCKED pending human verification after Phase 0-A complete
-- Maintenance items from verify-brain.sh already incorporated into Phases 1-4
+- Phase 0-A NOT truly complete - copy diverged, path updates never done
+- workers/ralph/ exists but NOT functional (paths still reference old locations)
+- Must re-sync or complete 0.A.4.3-0.A.4.5 before attempting dry-run test
 - Skills directory has 33 markdown files
-- Gap backlog has 3 entries (all P1-P2 priority, none promoted yet)
-- No skill backlog items pending (promotion queue is empty)
-- Recent work: 91 commits since 2026-01-19 (heavy development activity)
+- Gap backlog has 3 entries (1 P1, 2 P2 priority, none promoted)
+- Recent activity: 52 commits since 2026-01-20, 73 commits since 2026-01-19
 
 ---
 
@@ -152,6 +157,7 @@ These warnings were identified by the verifier but are in the warn gate (non-blo
   - **AC:** All files and subfolders copied (preserving structure)
   - **AC:** Original `brain/ralph/` still exists (not moved yet)
   - **AC:** Verify with: `diff -rq brain/ralph brain/workers/ralph` shows no differences
+  - **⚠️ DIVERGENCE DETECTED (2026-01-21):** Copy exists but has diverged from source. 19 files differ (AGENTS.md, IMPLEMENTATION_PLAN.md, PROMPT.md, THUNK.md, loop.sh, AC.rules, logs). Must re-sync before proceeding to 0.A.4.3.
 
 - [ ] **0.A.4.3** Update path references in `workers/ralph/loop.sh`
   - **AC:** All relative paths updated (e.g., `../cortex/` becomes `../../cortex/`)
