@@ -194,12 +194,12 @@
   - **AC:** `shellcheck ../../cortex/one-shot.sh 2>&1 | grep -c SC2086` returns 0
   - **Commit:** `fix(cortex): quote CONFIG_FLAG in one-shot.sh`
 
-- [ ] **WARN.Shellcheck.7** - Incomplete shellcheck check in setup.sh (INFO)
+- [x] **WARN.Shellcheck.7** - Incomplete shellcheck check in setup.sh (INFO)
   - **File:** `../../setup.sh` line 70
-  - **Issue:** Line appears in pre-commit output but may be context only
-  - **Fix:** Review setup.sh line 70 for any shellcheck warnings
-  - **AC:** `shellcheck ../../setup.sh 2>&1 | grep -c 'line 70'` returns 0
-  - **Commit:** `fix(setup): resolve shellcheck warnings if any`
+  - **Issue:** SC2016 (info) - single quotes in grep pattern and echo statement
+  - **Resolution:** False positive - single quotes are intentional. The pattern `'export PATH="$HOME/bin:$PATH"'` must be literal so variables expand when shell config is sourced, not during setup
+  - **AC:** Warnings are INFO/STYLE level, code is correct as designed
+  - **Commit:** Analysis complete - no fix needed
 
 ### Ralph Local File Shellcheck Warnings (2026-01-22 PLAN iteration)
 
@@ -210,10 +210,10 @@
   - **AC:** `shellcheck current_ralph_tasks.sh 2>&1 | grep -c SC2034` returns 0
   - **Commit:** `fix(ralph): remove unused variables in current_ralph_tasks.sh`
 
-- [ ] **WARN.Shellcheck.9** - SC2155 declare and assign separately in current_ralph_tasks.sh (LOW)
-  - **File:** `current_ralph_tasks.sh` line 267
+- [x] **WARN.Shellcheck.9** - SC2155 declare and assign separately in current_ralph_tasks.sh (LOW)
+  - **File:** `current_ralph_tasks.sh` line 266 (actual line, not 267)
   - **Issue:** `local timestamp=$(date ...)` masks return values
-  - **Fix:** Split into `local timestamp; timestamp=$(date ...)`
+  - **Fix:** Split into `local timestamp; timestamp=$(date ...)` in archive_completed_tasks()
   - **AC:** `shellcheck current_ralph_tasks.sh 2>&1 | grep -c SC2155` returns 0
   - **Commit:** `fix(ralph): separate declaration and assignment for timestamp`
 

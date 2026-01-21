@@ -263,7 +263,8 @@ show_help() {
 
 # Function to archive completed tasks
 archive_completed_tasks() {
-    local timestamp=$(date "+%Y-%m-%d %H:%M")
+    local timestamp
+    timestamp=$(date "+%Y-%m-%d %H:%M")
     local temp_file="${PLAN_FILE}.tmp"
     local archive_section="### Archive - $timestamp"
     local completed_tasks=""
