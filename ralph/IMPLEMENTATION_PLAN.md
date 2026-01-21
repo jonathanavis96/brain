@@ -39,34 +39,36 @@ Incorporate any relevant maintenance items into the appropriate priority section
 
 These tasks can be completed quickly and provide immediate value. Consider prioritizing during BUILD iterations:
 
-1. ~~**WARN.ST1** - Update NEURONS.md skills/ file count (actual count: 25+ files, not "<20")~~ ✅ COMPLETE
-2. **Task 1.1** - Fix terminology: Change "Brain KB" to "Brain Skills" in PROMPT.md:40
+1. ~~**WARN.ST1** - Update NEURONS.md skills/ file count~~ ✅ COMPLETE
+2. ~~**Task 1.1** - Fix terminology: Change "Brain KB" to "Brain Skills" in PROMPT.md:40~~ ✅ NOT FOUND (already fixed)
 3. **Task 1.2** - Copy SKILL_TEMPLATE.md to templates/ralph/ (maintenance item)
 4. **Task 1.3** - Fix broken links in skills/conventions.md and skills/projects/brain-example.md
 
+**Note:** Task 1.1 appears already complete - no "Brain KB" references found in PROMPT.md.
+
 ## Overview
 
-**Status:** Active - BUILD mode iteration, Phase 0-A in progress  
-**Branch:** `brain-work` (6 commits ahead of origin)  
-**Last Updated:** 2026-01-21 13:41  
-**Progress:** 8 of 82 tasks complete (9.8%)
+**Status:** PLANNING mode - Plan refinement complete  
+**Branch:** `brain-work` (7 commits ahead of origin)  
+**Last Updated:** 2026-01-21 14:05  
+**Progress:** 10 of 62 numbered tasks complete (16.1%)
 
 **Current Focus:**
-- Phase 0-A (Cortex Manager Pack) - 7/19 tasks complete (36.8% of phase)
-- Next BUILD task: 0.A.2.1 - Create cortex/snapshot.sh
-- Phase 0-C marked complete (verifier PLAN mode already committed)
-- All verifier checks PASSING (24/24), 24 warnings remaining (4 high-priority warnings resolved)
+- Phase 0-A (Cortex Manager Pack) - 8/19 tasks complete (42.1% of phase)
+- Next BUILD task: 0.A.2.2 - Create cortex/run.sh
+- All verifier checks PASSING (24/24), 24 warnings remaining
+- PLANNING: Reviewing task granularity and dependencies
 
 **Verifier Health:**
 - ✅ All 24 acceptance criteria PASSING
 - ✅ Protected file hashes current (loop.sh, verifier.sh, PROMPT.md)
-- ⚠️ 24 warnings (0 high priority, 3 medium, 16 low, 5 manual) - high priority warnings cleared
+- ⚠️ 24 warnings (0 high priority, 3 medium, 16 low, 5 manual)
 
 **Strategic Notes:**
 - Phase 0-A focuses on Cortex creation (no breaking changes to Ralph)
 - Phase 0-B is BLOCKED pending human verification after Phase 0-A complete
 - Maintenance items from verify-brain.sh already incorporated into Phases 1-4
-- Skills directory now has 33 files (updated in NEURONS.md)
+- Skills directory has 33 markdown files
 
 ---
 
@@ -106,7 +108,7 @@ These tasks can be completed quickly and provide immediate value. Consider prior
 
 ### 0.A.2 - Create cortex/run.sh and snapshot.sh (4 items)
 
-- [ ] **0.A.2.1** Create `cortex/snapshot.sh` - Generates current state
+- [x] **0.A.2.1** Create `cortex/snapshot.sh` - Generates current state
   - **AC:** Script outputs: current mission (from cortex/THOUGHTS.md), task progress (X/Y from IMPLEMENTATION_PLAN.md), last 3 THUNK entries, GAP_BACKLOG.md entry count, git status (clean/dirty), last 5 commits (oneline)
   - **AC:** Script uses strict mode (`set -euo pipefail`)
   - **AC:** Script is executable (`chmod +x`)
@@ -260,21 +262,24 @@ cd brain/workers/ralph && bash loop.sh --iterations 1
 
 ---
 
-## Phase 1: Quick Fixes (3 items)
+## Phase 1: Quick Fixes & Maintenance (2 items)
 
-**Goal:** Address terminology inconsistencies and missing templates
+**Goal:** Complete missing templates and fix broken documentation links
 
 **Priority:** MEDIUM - Can be done anytime, good for quick BUILD iterations
 
 **Effort:** Low - Each task is <5 minutes
 
-Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - Quick Fixes section
+Source: `.maintenance/verify-brain.sh` output
 
-- [ ] **1.1** `PROMPT.md:40` - Change "Brain KB" to "Brain Skills" (NIT-1)
+- [x] **1.1** ~~`PROMPT.md:40` - Change "Brain KB" to "Brain Skills" (NIT-1)~~ - Already complete
 - [ ] **1.2** Copy `skills/self-improvement/SKILL_TEMPLATE.md` to `templates/ralph/SKILL_TEMPLATE.md`
+  - **AC:** File exists at templates/ralph/SKILL_TEMPLATE.md
+  - **AC:** Content matches source file
 - [ ] **1.3** Fix broken links in skills files:
-  - `skills/conventions.md` - `../path/to/file.md` (placeholder link)
-  - `skills/projects/brain-example.md` - incorrect relative paths
+  - `skills/conventions.md` → Replace placeholder `../path/to/file.md` with actual path
+  - `skills/projects/brain-example.md` → Fix relative paths (should be `../conventions.md`)
+  - **AC:** No broken links reported by verify-brain.sh
 
 ---
 
