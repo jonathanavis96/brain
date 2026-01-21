@@ -16,10 +16,12 @@ These tasks can be completed quickly and provide immediate value. Consider prior
 
 1. ~~**WARN.ST1** - Update NEURONS.md skills/ file count~~ ✅ COMPLETE
 2. ~~**Task 1.1** - Fix terminology: Change "Brain KB" to "Brain Skills" in PROMPT.md:40~~ ✅ NOT FOUND (already fixed)
-3. **Task 1.2** - Copy SKILL_TEMPLATE.md to templates/ralph/ (maintenance item)
-4. **Task 1.3** - Fix broken links in skills/conventions.md and skills/projects/brain-example.md
+3. **Task 1.2** - Copy SKILL_TEMPLATE.md to templates/ralph/ (from maintenance check)
+4. **Task 1.3** - Fix broken links in skills files (from maintenance check)
+5. **Task 1.4** - Fix "Brain KB" → "Brain Skills" in templates/NEURONS.project.md:362
+6. **Task 1.5** - Add Quick Reference tables to 5 skills files (from maintenance check)
 
-**Note:** Task 1.1 appears already complete - no "Brain KB" references found in PROMPT.md.
+**Note:** Maintenance check identified 4 new issues (Tasks 1.2-1.5 above).
 
 ## Verifier Warnings
 
@@ -35,7 +37,7 @@ These warnings were identified by the verifier but are in the warn gate (non-blo
 
 - [x] **WARN.Hygiene.Markdown.4** - No code fences without language tags in NEURONS.md (MEDIUM)
   - **Issue:** NEURONS.md contains 12 plain code fences (```)
-  - **Fix:** Added language tags to all 10 closing code fences using non-standard tagged closing syntax (```text, ```bash, ```markdown)
+  - **Fix:** Added language tags to all code fences - now passing
 
 - [x] **WARN.VerifyMeta.1** - Verifier run_id.txt exists and is non-empty (HIGH)
   - **Issue:** `.verify/run_id.txt` was missing in local ralph/ directory
@@ -45,27 +47,27 @@ These warnings were identified by the verifier but are in the warn gate (non-blo
 
 **Status:** PLAN mode - Strategic planning  
 **Branch:** `brain-work` (up to date with origin after push)  
-**Last Updated:** 2026-01-21 17:11  
-**Progress:** 16 of 62 numbered tasks complete (25.8%)
+**Last Updated:** 2026-01-21 17:27  
+**Progress:** 15 of 69 numbered tasks complete (21.7%)
 
 **Current Focus:**
-- Phase 0-A (Cortex Manager Pack) - 16/19 tasks complete (84.2% of phase)
-- Next BUILD task: 0.A.4.3 - Update path references in workers/ralph/loop.sh
-- All verifier checks PASSING (24/24), 2 medium priority warnings remaining
-- 3 more tasks to complete Phase 0-A before mandatory human verification
+- Phase 0-A (Cortex Manager Pack) - 15/19 tasks complete (78.9% of phase)
+- Next BUILD task: 0.A.4.2 - Re-sync workers/ralph/ copy (diverged after 57 commits)
+- All verifier checks PASSING (24/24), 1 medium priority warning remaining
+- Phase 0-A requires 4 more tasks before mandatory human verification gate
 
 **Critical Discovery:**
-- ⚠️ workers/ralph/ copy EXISTS but has DIVERGED from source (0.A.4.2 needs re-verification)
-- Files differ: AGENTS.md, IMPLEMENTATION_PLAN.md, PROMPT.md, THUNK.md, loop.sh, AC.rules
-- Source (ralph/) has 17 newer log files since copy was made
-- Path updates (tasks 0.A.4.3-0.A.4.5) were NOT completed after copy
+- ⚠️ workers/ralph/ copy has DIVERGED from source (must re-sync before proceeding)
+- 57 commits since original copy was made (2026-01-20 to 2026-01-21)
+- Source (ralph/) now has .verify/ subdirectory that workers/ralph/ lacks
+- Must complete fresh copy before tasks 0.A.4.3-0.A.4.5 can proceed
 
 **Verifier Health:**
 - ✅ All 24 acceptance criteria PASSING
 - ✅ Protected file hashes current (loop.sh, verifier.sh, PROMPT.md)
-- ⚠️ 4 maintenance items identified (already in Phase 1-3 below)
-- ⚠️ 2 medium priority warnings (code fence language tags in THOUGHTS.md, NEURONS.md)
-- ✅ Last successful commit: 7ad79ac (2026-01-21 - verifier system transition)
+- ⚠️ 4 maintenance items identified (see .maintenance/MAINTENANCE.md)
+- ⚠️ 1 medium priority warning remaining (THOUGHTS.md code fences)
+- ✅ Last 10 commits: All verifier-clean, 57 total commits since 2026-01-20
 
 **Strategic Notes:**
 - Phase 0-A NOT truly complete - copy diverged, path updates never done
@@ -153,11 +155,11 @@ These warnings were identified by the verifier but are in the warn gate (non-blo
 - [x] **0.A.4.1** Create `brain/workers/` folder
   - **AC:** Folder exists at `brain/workers/`
 
-- [x] **0.A.4.2** Copy entire `brain/ralph/` to `brain/workers/ralph/`
-  - **AC:** All files and subfolders copied (preserving structure)
+- [ ] **0.A.4.2** Re-sync `brain/ralph/` to `brain/workers/ralph/`
+  - **AC:** Fresh copy completed: `rsync -av --delete ralph/ ../workers/ralph/`
   - **AC:** Original `brain/ralph/` still exists (not moved yet)
-  - **AC:** Verify with: `diff -rq brain/ralph brain/workers/ralph` shows no differences
-  - **⚠️ DIVERGENCE DETECTED (2026-01-21):** Copy exists but has diverged from source. 19 files differ (AGENTS.md, IMPLEMENTATION_PLAN.md, PROMPT.md, THUNK.md, loop.sh, AC.rules, logs). Must re-sync before proceeding to 0.A.4.3.
+  - **AC:** Verify with: `diff -rq ralph ../workers/ralph` shows no differences
+  - **Note:** Original copy from 2026-01-20 diverged after 57 commits. Must re-sync before path updates.
 
 - [ ] **0.A.4.3** Update path references in `workers/ralph/loop.sh`
   - **AC:** All relative paths updated (e.g., `../cortex/` becomes `../../cortex/`)
@@ -282,10 +284,28 @@ Source: `.maintenance/verify-brain.sh` output
 - [ ] **1.2** Copy `skills/self-improvement/SKILL_TEMPLATE.md` to `templates/ralph/SKILL_TEMPLATE.md`
   - **AC:** File exists at templates/ralph/SKILL_TEMPLATE.md
   - **AC:** Content matches source file
-- [ ] **1.3** Fix broken links in skills files:
+  - **Source:** Maintenance item from verify-brain.sh
+
+- [ ] **1.3** Fix broken links in skills files
   - `skills/conventions.md` → Replace placeholder `../path/to/file.md` with actual path
   - `skills/projects/brain-example.md` → Fix relative paths (should be `../conventions.md`)
   - **AC:** No broken links reported by verify-brain.sh
+  - **Source:** Maintenance item from verify-brain.sh
+
+- [ ] **1.4** Fix "Brain KB" → "Brain Skills" in templates/NEURONS.project.md
+  - Line 362: Change "Brain KB patterns" to "Brain Skills patterns"
+  - **AC:** `rg "Brain KB" templates/ | wc -l` returns 0
+  - **Source:** Found during gap search, terminology consistency check
+
+- [ ] **1.5** Add Quick Reference tables to skills files missing them
+  - `skills/domains/database-patterns.md`
+  - `skills/domains/shell/strict-mode.md`
+  - `skills/domains/shell/variable-patterns.md`
+  - `skills/domains/code-hygiene.md`
+  - `skills/domains/shell/common-pitfalls.md` (already has some, verify completeness)
+  - **AC:** All 5 files have Quick Reference section near the top
+  - **AC:** verify-brain.sh no longer reports missing Quick Reference tables
+  - **Source:** Maintenance item from verify-brain.sh
 
 ---
 
