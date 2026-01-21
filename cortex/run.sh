@@ -20,17 +20,23 @@ Cortex Manager - High-level orchestration for the Brain repository.
 
 Options:
   --help, -h           Show this help message
+  --interactive, -i    Enable interactive chat mode (ask questions)
   --model MODEL        Override model (opus, sonnet, auto)
   --runner RUNNER      Use specific runner (rovodev, opencode) [default: rovodev]
 
 Examples:
-  bash cortex/run.sh
-  bash cortex/run.sh --model opus
+  bash cortex/run.sh                    # One-shot planning session
+  bash cortex/run.sh --interactive      # Interactive chat with Cortex
+  bash cortex/run.sh -i --model opus    # Interactive with specific model
   bash cortex/run.sh --runner opencode --model grok
 
 Description:
   Cortex reads the current repository state and provides strategic
   direction by creating Task Contracts for Ralph workers.
+
+  Modes:
+  - Default: One-shot planning session (auto-approve with --yolo)
+  - Interactive (-i): Chat with Cortex, ask questions, get guidance
 
   Context provided to Cortex:
   - CORTEX_SYSTEM_PROMPT.md (identity and rules)
@@ -44,6 +50,7 @@ EOF
 # Defaults
 MODEL_ARG=""
 RUNNER="rovodev"
+INTERACTIVE=false
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -51,6 +58,10 @@ while [[ $# -gt 0 ]]; do
     -h|--help)
       usage
       exit 0
+      ;;
+    -i|--interactive)
+      INTERACTIVE=true
+      shift
       ;;
     --model)
       MODEL_ARG="${2:-}"
@@ -237,10 +248,26 @@ echo ""
 # Run Cortex
 if [[ "$RUNNER" == "rovodev" ]]; then
   # RovoDev runner
-  acli rovodev run $CONFIG_FLAG --yolo "$(cat "$COMPOSITE_PROMPT")"
-  EXIT_CODE=$?
+  if [[ "$INTERACTIVE" == "true" ]]; then
+    # Interactive mode - no --yolo, allows back-and-forth conversation
+    echo "🧠 Cortex Interactive Mode"
+    echo "📋 Cortex has full context of the Brain repository."
+    echo "💬 You can now ask questions and have a conversation."
+    echo ""
+    acli rovodev run $CONFIG_FLAG "$(cat "$COMPOSITE_PROMPT")"
+    EXIT_CODE=$?
+  else
+    # One-shot mode - auto-approve with --yolo
+    acli rovodev run $CONFIG_FLAG --yolo "$(cat "$COMPOSITE_PROMPT")"
+    EXIT_CODE=$?
+  fi
 else
   # OpenCode runner
+  if [[ "$INTERACTIVE" == "true" ]]; then
+    echo "⚠️  Warning: Interactive mode not fully supported with OpenCode runner"
+    echo "    Falling back to default mode"
+    echo ""
+  fi
   if [[ -n "$RESOLVED_MODEL" ]]; then
     opencode run --model "$RESOLVED_MODEL" --format default "$(cat "$COMPOSITE_PROMPT")"
     EXIT_CODE=$?

@@ -57,24 +57,31 @@
   - **Status:** ✅ NOT FOUND (already fixed)
 
 - [ ] **0.Q.3** Copy SKILL_TEMPLATE.md to templates/ralph/
-  - **Source:** From maintenance check
-  - **DRY-RUN ANALYSIS (2026-01-21):**
-    - Source: `skills/self-improvement/SKILL_TEMPLATE.md` (116 lines) ✅ EXISTS
-    - Target: `templates/ralph/SKILL_TEMPLATE.md` ❌ MISSING
-    - Action: Simple file copy, no modifications needed
-    - Risk: LOW (no dependencies, atomic operation)
-    - Command: `cp ../../skills/self-improvement/SKILL_TEMPLATE.md ../../templates/ralph/`
-    - Verification: Check file exists and content matches (116 lines)
-    - Commit: `docs(templates): add SKILL_TEMPLATE.md to ralph templates`
+  - **Goal:** Ensure template directory has the skill template for new projects
+  - **Source:** `skills/self-improvement/SKILL_TEMPLATE.md` (exists, 2751 bytes)
+  - **Target:** `templates/ralph/SKILL_TEMPLATE.md` (missing)
+  - **AC:** File exists and `diff` shows no differences
+  - **Commit:** `docs(templates): add SKILL_TEMPLATE.md to ralph templates`
 
-- [ ] **0.Q.4** Fix broken links in skills files
-  - **Source:** From maintenance check
+- [ ] **0.Q.4** Fix "Brain KB" → "Brain Skills" in templates/NEURONS.project.md
+  - **Goal:** Complete terminology migration from "KB" to "Skills"
+  - **File:** `templates/NEURONS.project.md`
+  - **Line:** `- **Brain KB patterns** → See...`
+  - **AC:** `rg "Brain KB" templates/ | wc -l` returns 0
+  - **Commit:** `docs(templates): fix Brain KB → Brain Skills terminology`
 
-- [ ] **0.Q.5** Fix "Brain KB" → "Brain Skills" in templates/NEURONS.project.md:362
-  - **Source:** From maintenance check
+- [ ] **0.Q.5** Fix maintenance script paths
+  - **Goal:** Fix verify-brain.sh to find skills/ at correct location
+  - **Issue:** Script runs from `workers/ralph/.maintenance/` but skills/ is at repo root
+  - **File:** `workers/ralph/.maintenance/verify-brain.sh`
+  - **AC:** `bash workers/ralph/.maintenance/verify-brain.sh` reports 0 issues
+  - **Commit:** `fix(maintenance): correct skills path resolution in verify-brain.sh`
 
-- [ ] **0.Q.6** Add Quick Reference tables to 5 skills files
-  - **Source:** From maintenance check
+- [x] **0.Q.6** Fix broken links in skills files
+  - **Status:** ✅ COMPLETE - Maintenance check shows "No broken links detected"
+
+- [x] **0.Q.7** Add Quick Reference tables to skills files
+  - **Status:** ✅ COMPLETE - Maintenance check shows "All skills have Quick Reference tables"
 
 
 ## Phase 0-A: Cortex Manager Pack - Create & Setup (19 items) - ✅ COMPLETE 2026-01-21

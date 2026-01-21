@@ -83,7 +83,7 @@ Use this format when creating new Task Contracts:
 
 ## Current Status
 
-**Last Updated:** 2026-01-21 19:30 (by Cortex)
+**Last Updated:** 2026-01-21 19:57 (by Cortex)
 
 ### ✅ Completed Phases
 
@@ -92,14 +92,19 @@ Use this format when creating new Task Contracts:
 | 0-A | Cortex Manager Pack | ✅ Complete |
 | 0-B | Repository Restructure (Option B) | ✅ Complete |
 | 0-Warn | Verifier Warnings | ✅ All resolved |
-| 0-Quick | Quick Wins | ✅ Complete |
 
 ### 📊 Progress Summary
 
-- **Completed:** 39 tasks
-- **Pending:** 37 tasks  
-- **Progress:** 51%
-- **Verifier:** 24/24 PASS (only manual review WARNs)
+- **Completed:** ~40 tasks (Phase 0-A, 0-B, 0-Warn all done)
+- **Pending:** ~35 tasks (Phase 1-7)
+- **Verifier:** 24/24 PASS
+- **Maintenance:** 2 false-positive issues (path bug in verify-brain.sh)
+
+### ⚠️ Maintenance Script Path Issue
+
+The `workers/ralph/.maintenance/verify-brain.sh` script reports `skills/index.md` and `skills/SUMMARY.md` as "not found" because it uses relative paths from `workers/ralph/`. The files exist at `brain/skills/` (root level). This is a **path bug in the maintenance script**, not missing files.
+
+**Recommendation:** Add task to fix verify-brain.sh paths in Phase 2.
 
 ---
 
@@ -107,11 +112,11 @@ Use this format when creating new Task Contracts:
 
 ### Phase 1: Quick Fixes (Priority: HIGH)
 
-These are low-effort tasks that provide immediate value.
+These are low-effort tasks that provide immediate value. Ralph should complete these in order.
 
 ---
 
-### Task 1.2: Copy SKILL_TEMPLATE to templates
+### Task 1.1: Copy SKILL_TEMPLATE to templates
 
 **Goal:** Ensure template directory has the skill template for new projects
 
@@ -124,8 +129,8 @@ These are low-effort tasks that provide immediate value.
 - Preserve exact content (no edits)
 
 **Inputs:**
-- Source: `skills/self-improvement/SKILL_TEMPLATE.md`
-- Destination: `templates/ralph/SKILL_TEMPLATE.md`
+- Source: `skills/self-improvement/SKILL_TEMPLATE.md` (exists, 2751 bytes)
+- Destination: `templates/ralph/SKILL_TEMPLATE.md` (missing)
 
 **Acceptance Criteria:**
 - [ ] File exists at `templates/ralph/SKILL_TEMPLATE.md`
@@ -133,53 +138,63 @@ These are low-effort tasks that provide immediate value.
 
 **If Blocked:** Report to Cortex if source file is missing
 
----
-
-### Task 1.3: Fix broken links in skills files
-
-**Goal:** Ensure all relative links in skills documentation work correctly
-
-**Subtasks:**
-- [ ] Fix `skills/conventions.md` - replace placeholder `../path/to/file.md` with actual paths
-- [ ] Fix `skills/projects/brain-example.md` - update relative paths to use `../` correctly
-
-**Constraints:**
-- Only fix links that are actually broken
-- Preserve link text, only update href
-
-**Inputs:**
-- `skills/conventions.md`
-- `skills/projects/brain-example.md`
-- Run `bash workers/ralph/.maintenance/verify-brain.sh` to identify broken links
-
-**Acceptance Criteria:**
-- [ ] No placeholder paths like `../path/to/file.md` in skills/
-- [ ] Links in `skills/projects/brain-example.md` resolve correctly
-- [ ] `verify-brain.sh` reports no broken link warnings
-
-**If Blocked:** Document which links cannot be fixed and why
+**Estimated Effort:** <2 minutes
 
 ---
 
-### Task 1.4: Fix "Brain KB" terminology
+### Task 1.2: Fix "Brain KB" terminology in templates
 
 **Goal:** Complete terminology migration from "KB" to "Skills"
 
 **Subtasks:**
-- [ ] Find all remaining "Brain KB" references in templates/
-- [ ] Replace with "Brain Skills"
+- [ ] Edit `templates/NEURONS.project.md` line containing "Brain KB patterns"
+- [ ] Replace "Brain KB" with "Brain Skills"
 
 **Constraints:**
 - Only change terminology, not meaning
-- Check templates/ directory only (other areas already fixed)
+- Single file edit required
 
 **Inputs:**
-- `rg "Brain KB" templates/` to find occurrences
+- File: `templates/NEURONS.project.md`
+- Line: `- **Brain KB patterns** → See...`
+- Command to verify: `rg "Brain KB" templates/`
 
 **Acceptance Criteria:**
 - [ ] `rg "Brain KB" templates/ | wc -l` returns 0
+- [ ] Line now reads `- **Brain Skills patterns** → See...`
 
-**If Blocked:** If "Brain KB" is in a protected file, document for human review
+**If Blocked:** If file is protected, document for human review
+
+**Estimated Effort:** <2 minutes
+
+---
+
+### Task 1.3: Fix maintenance script paths (NEW)
+
+**Goal:** Fix verify-brain.sh to find skills/ at correct location
+
+**Subtasks:**
+- [ ] Update `workers/ralph/.maintenance/verify-brain.sh` to use correct paths
+- [ ] Change `skills/index.md` check to use `../../../skills/index.md` or absolute path detection
+- [ ] Change `skills/SUMMARY.md` check similarly
+- [ ] Test script reports 0 issues after fix
+
+**Constraints:**
+- Script must work when run from `workers/ralph/.maintenance/` directory
+- Must also work from repo root if invoked directly
+- Use portable path resolution (not hardcoded absolute paths)
+
+**Inputs:**
+- Script: `workers/ralph/.maintenance/verify-brain.sh`
+- Skills location: `brain/skills/` (3 levels up from .maintenance/)
+
+**Acceptance Criteria:**
+- [ ] `bash workers/ralph/.maintenance/verify-brain.sh` reports 0 issues
+- [ ] Script correctly finds `skills/index.md` and `skills/SUMMARY.md`
+
+**If Blocked:** Document path resolution approach in THUNK.md
+
+**Estimated Effort:** 5-10 minutes
 
 ---
 
@@ -189,21 +204,21 @@ These are low-effort tasks that provide immediate value.
 
 **Note:** Complete Phase 1 first. Phase 2 tasks improve code quality but are lower priority.
 
-Tasks 2.1-2.15 are defined in Ralph's IMPLEMENTATION_PLAN.md. Cortex recommends:
-1. Start with `current_ralph_tasks.sh` fixes (2.1-2.8)
-2. Then `thunk_ralph_tasks.sh` fixes (2.9-2.14)
-3. Finally `pr-batch.sh` (2.15)
-4. After all fixes: sync templates (resolve WARN.T1, WARN.T2)
+Tasks in Ralph's IMPLEMENTATION_PLAN.md. Order of execution:
+1. `current_ralph_tasks.sh` fixes (2.1-2.8)
+2. `thunk_ralph_tasks.sh` fixes (2.9-2.14)
+3. `pr-batch.sh` (2.15)
+4. Template sync (resolve WARN.T1, WARN.T2)
 
 ### Phase 3: Quick Reference Tables (Priority: MEDIUM)
 
-Tasks 3.1-3.5 add documentation convention compliance. Can be done in parallel with Phase 2.
+Maintenance script says all skills have Quick Reference tables. **Verify this is accurate** given the path bug - may be false positive.
 
 ### Phase 5: Design Decisions (Priority: LOW)
 
-**⚠️ Requires Human Approval:** Tasks 5.1-5.3 modify protected files (loop.sh, templates/ralph/loop.sh).
+**⚠️ Requires Human Approval:** Tasks modify protected files (loop.sh).
 
-Cortex recommends deferring until Phases 1-3 are complete.
+Defer until Phases 1-3 complete.
 
 ---
 
@@ -211,12 +226,12 @@ Cortex recommends deferring until Phases 1-3 are complete.
 
 ### Phase 6: PR #4 D-Items Review
 
-**Recommendation:** Many D-items (D-4 through D-21) reference IMPLEMENTATION_PLAN.md issues that may have been resolved during the Phase 0-A/0-B work. 
+**Recommendation:** Many D-items may be obsolete after Phase 0-A/0-B restructure.
 
-**Action:** Ralph should review D-items and mark obsolete ones as resolved before implementing fixes.
+**Action:** Ralph should review D-items and mark obsolete ones as resolved.
 
 ### Phase 7: Maintenance
 
-Ongoing - run `bash workers/ralph/.maintenance/verify-brain.sh` periodically.
+Ongoing - run `bash workers/ralph/.maintenance/verify-brain.sh` after Phase 1.3 fix.
 
 <!-- Cortex will add new Task Contracts above this line -->
