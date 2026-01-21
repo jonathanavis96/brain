@@ -13,9 +13,13 @@ Incorporate any relevant maintenance items into the appropriate priority section
 ## Overview
 
 **Status:** Active - Phase 0-A in progress (Cortex Manager Pack - Create & Setup)  
-**Branch:** `brain-work` (2 commits ahead of origin)  
-**Last Updated:** 2026-01-20  
-**Progress:** 2 of 64 tasks complete (3.1%)
+**Branch:** `brain-work` (7 commits ahead of origin, 2 uncommitted changes)  
+**Last Updated:** 2026-01-21  
+**Progress:** 2 of 65 tasks complete (3.1%)
+
+**Uncommitted Changes:**
+- `loop.sh` - Verifier now runs after PLAN iterations (not just BUILD)
+- `templates/ralph/loop.sh` - Same change applied to template
 
 ---
 
@@ -180,6 +184,20 @@ cd brain/workers/ralph && bash loop.sh --iterations 1
   - **AC:** `bash brain/workers/ralph/loop.sh --iterations 1` completes successfully
   - **AC:** `bash brain/cortex/run.sh --help` works
   - **AC:** All paths resolve correctly
+
+---
+
+## Phase 0-C: Verifier Runs After PLAN Mode (NEW - 2026-01-21) (1 item)
+
+**Goal:** Commit uncommitted changes that enable verifier to catch issues in PLAN mode.
+
+**Rationale:** Currently uncommitted in `loop.sh` and `templates/ralph/loop.sh`. The verifier should run after PLAN iterations to catch AC violations early (e.g., protected file modifications during planning).
+
+- [ ] **0.C.1** Review and commit verifier PLAN mode changes
+  - **AC:** Changes to `loop.sh` line 759-771 committed (verifier runs for both plan and build phases)
+  - **AC:** Changes to `templates/ralph/loop.sh` line 674-686 committed (same fix)
+  - **AC:** Commit message follows conventional format with scope `ralph` or `loop`
+  - **Note:** This was discovered as uncommitted work during planning phase analysis
 
 ---
 
