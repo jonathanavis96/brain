@@ -2,12 +2,20 @@
 
 **Status:** PLAN mode - Strategic planning  
 **Branch:** `brain-work`  
-**Last Updated:** 2026-01-21  
-**Progress:** 15 of 69 numbered tasks complete (21.7%)
+**Last Updated:** 2026-01-21 17:45  
+**Progress:** 15 of 70 numbered tasks complete (21.4%)
 
 **Current Focus:**
 - Phase 0-A (Cortex Manager Pack) - 15/19 tasks complete (78.9%)
+- 4 tasks remaining: Re-sync workers/ralph/ and path updates
 - All verifier checks PASSING (24/24)
+
+**Key Observations:**
+- Cortex folder exists at `brain/ralph/cortex/` (local to current ralph/)
+- Workers folder structure exists: `brain/workers/ralph/`
+- Original copy diverged by 57+ commits - requires full re-sync
+- Skills at `brain/ralph/skills/` - needs to move to `brain/skills/` in Phase 0-B
+- Phase 0-B updated: Added task 0.B.2.1 to move cortex/ to brain root
 
 **Note:** In PLAN mode, run `bash .maintenance/verify-brain.sh` and incorporate maintenance items into appropriate phases.
 
@@ -133,10 +141,11 @@
   - **AC:** Folder exists at `brain/workers/`
 
 - [ ] **0.A.4.2** Re-sync `brain/ralph/` to `brain/workers/ralph/`
-  - **AC:** Fresh copy completed: `rsync -av --delete ralph/ ../workers/ralph/`
+  - **AC:** Fresh copy completed: `cd /home/grafe/code/brain && rsync -av --delete ralph/ workers/ralph/`
   - **AC:** Original `brain/ralph/` still exists (not moved yet)
-  - **AC:** Verify with: `diff -rq ralph ../workers/ralph` shows no differences
-  - **Note:** Original copy from 2026-01-20 diverged after 57 commits. Must re-sync before path updates.
+  - **AC:** Verify with: `cd /home/grafe/code/brain && diff -rq ralph workers/ralph` shows minimal differences
+  - **Note:** Original copy from 2026-01-20 diverged after 57+ commits. Must re-sync before path updates.
+  - **Important:** Run from `/home/grafe/code/brain` (parent directory), not from `ralph/`
 
 - [ ] **0.A.4.3** Update path references in `workers/ralph/loop.sh`
   - **AC:** All relative paths updated (e.g., `../cortex/` becomes `../../cortex/`)
@@ -147,10 +156,11 @@
   - **AC:** All file references use correct relative paths from new location
   - **AC:** Skills path updated from `../skills/` to `../../skills/`
 
-- [ ] **0.A.4.5** Test from new location: `cd brain/workers/ralph && bash loop.sh --dry-run`
+- [ ] **0.A.4.5** Test from new location: `cd /home/grafe/code/brain/workers/ralph && bash loop.sh --dry-run`
   - **AC:** Dry-run completes without errors
   - **AC:** Verifier can locate all required files
   - **Note:** This is a smoke test only, not a full iteration
+  - **Important:** Must be run from absolute path since relative paths change
 
 ---
 
@@ -172,7 +182,7 @@ cd brain/workers/ralph && bash loop.sh --iterations 1
 
 ---
 
-## Phase 0-B: Cortex Manager Pack - Cleanup & Templates (11 items) - BLOCKED
+## Phase 0-B: Cortex Manager Pack - Cleanup & Templates (12 items) - BLOCKED
 
 > **🔒 BLOCKED:** This phase requires human approval after Phase 0-A verification.
 > 
@@ -185,6 +195,7 @@ cd brain/workers/ralph && bash loop.sh --iterations 1
 
 - [ ] **0.B.1.1** Update `cortex/snapshot.sh` to read from `workers/ralph/`
   - **AC:** THUNK.md path updated to `../workers/ralph/THUNK.md`
+  - **Note:** After cortex/ moves to brain root, paths become `workers/ralph/THUNK.md`
 
 - [ ] **0.B.1.2** Delete `brain/ralph/` folder (old location)
   - **AC:** Folder no longer exists
@@ -201,12 +212,18 @@ cd brain/workers/ralph && bash loop.sh --iterations 1
   - **AC:** skills/ is peer to cortex/ and workers/ (not nested inside ralph/)
   - **Note:** If skills/ is currently at `brain/ralph/skills/`, move to `brain/skills/`
 
-### 0.B.2 - Update Templates and new-project.sh (6 items)
+### 0.B.2 - Create cortex/ at Brain Root and Update Templates (7 items)
 
-- [ ] **0.B.2.1** Create `brain/templates/cortex/` folder
+- [ ] **0.B.2.1** Move `brain/ralph/cortex/` to `brain/cortex/`
+  - **AC:** `brain/cortex/` folder exists at brain root level (peer to workers/)
+  - **AC:** `brain/ralph/cortex/` no longer exists
+  - **AC:** Command: `cd /home/grafe/code/brain && mv ralph/cortex .`
+  - **Note:** This makes cortex/ visible to both ralph and future workers
+
+- [ ] **0.B.2.2** Create `brain/templates/cortex/` folder
   - **AC:** Folder exists with template versions of Cortex files
 
-- [ ] **0.B.2.2** Create template Cortex files
+- [ ] **0.B.2.3** Create template Cortex files
   - **AC:** `CORTEX_SYSTEM_PROMPT.project.md` - generic version for new projects
   - **AC:** `REPO_MAP.project.md` - template with placeholders
   - **AC:** `DECISIONS.project.md` - empty template
@@ -214,21 +231,22 @@ cd brain/workers/ralph && bash loop.sh --iterations 1
   - **AC:** `run.sh` - parameterized for project paths
   - **AC:** `snapshot.sh` - parameterized for project paths
 
-- [ ] **0.B.2.3** Update `new-project.sh` to copy Cortex template
+- [ ] **0.B.2.4** Update `new-project.sh` to copy Cortex template
   - **AC:** Script copies `templates/cortex/` to new project's `cortex/`
   - **AC:** Script copies `templates/ralph/` to new project's `workers/ralph/`
 
-- [ ] **0.B.2.4** Update existing ralph templates for workers/ structure
+- [ ] **0.B.2.5** Update existing ralph templates for workers/ structure
   - **AC:** `templates/ralph/` paths assume `workers/ralph/` location
   - **AC:** Template references to cortex/ use `../../cortex/` paths
 
-- [ ] **0.B.2.5** Move `brain/ralph/skills/` to `brain/skills/` if not already there
+- [ ] **0.B.2.6** Move `brain/ralph/skills/` to `brain/skills/` if not already there
   - **AC:** skills/ exists at `brain/skills/` (peer to cortex/, workers/)
   - **AC:** Update any references in templates
+  - **Note:** Currently skills/ is at `brain/ralph/skills/` - needs to move to brain root
 
-- [ ] **0.B.2.6** Test: Full end-to-end verification
-  - **AC:** `bash brain/workers/ralph/loop.sh --iterations 1` completes successfully
-  - **AC:** `bash brain/cortex/run.sh --help` works
+- [ ] **0.B.2.7** Test: Full end-to-end verification
+  - **AC:** `bash /home/grafe/code/brain/workers/ralph/loop.sh --iterations 1` completes successfully
+  - **AC:** `bash /home/grafe/code/brain/cortex/run.sh --help` works
   - **AC:** All paths resolve correctly
 
 ---
