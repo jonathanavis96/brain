@@ -2,15 +2,15 @@
 
 **Status:** PLAN mode - Ready for BUILD execution  
 **Branch:** `brain-work`  
-**Last Updated:** 2026-01-22 00:52:52 (Ralph PLAN iteration)  
-**Progress:** 42/93 tasks complete (45%) - Phase 8 added for pre-commit linting
+**Last Updated:** 2026-01-22 01:17:56 (Ralph PLAN iteration)  
+**Progress:** 42/100 tasks complete (42%) - Phase 0-Warn updated with 7 new shellcheck warnings
 
 **Current Status:**
 - ✅ Phase 0-Sync (Infrastructure) - COMPLETE (2/2 tasks)
-- ✅ Phase 0-Warn (Verifier Warnings) - COMPLETE (9/9 tasks)
+- 📋 Phase 0-Warn (Verifier Warnings) - 9/16 complete, **7 new shellcheck warnings**
 - ✅ Phase 0-A (Cortex Manager Pack) - COMPLETE (19/19 tasks)
 - ✅ Phase 0-B (Cleanup & Templates) - COMPLETE (12/12 tasks)
-- 📋 Phase 0-Quick (Quick Wins) - 2/8 complete, **6 HIGH PRIORITY tasks remaining**
+- 📋 Phase 0-Quick (Quick Wins) - 3/8 complete, **5 HIGH PRIORITY tasks remaining**
 - 📋 Phase 1 (CodeRabbit Outside-Diff) - 0/5 complete
 - 📋 Phase 2 (Shell Script Cleanup) - 0/14 complete
 - 📋 Phase 3 (Quick Reference Tables) - 0/5 complete
@@ -21,15 +21,15 @@
 - 📋 Phase 8 (Pre-commit Linting) - 0/11 complete (LOW priority)
 
 **Task Breakdown:**
-- Total: 93 tasks (42 complete, 51 remaining)
-- Phase 0: 42/50 complete (6 quick wins + 1 sync integration pending)
+- Total: 100 tasks (42 complete, 58 remaining)
+- Phase 0: 42/57 complete (7 warn + 5 quick wins + 1 sync integration + 2 complete phases pending)
 - Phases 1-8: 0/43 complete (all pending)
 
-**Next Priority:** Phase 0-Quick tasks (0.Q.3, 0.Q.4, 0.Q.5, 0.Q.8) - Quick wins with immediate value
+**Next Priority:** Phase 0-Warn shellcheck tasks (WARN.Shellcheck.1-7) - Fix linting warnings before continuing quick wins
 
 **Verifier Status:**
-- `.verify/latest.txt` is empty (no recent verifier run)
-- Previous iteration resolved 9 verifier warnings successfully
+- `.verify/latest.txt` shows all verifier rules passing (BugA.1, BugA.2, BugB.1, BugB.2, BugC.1, BugC.2)
+- Manual review warning: BugB.UI.1 (terminal resize test) - requires human testing
 - No blockers detected in current workspace state
 
 **Key Findings from Planning:**
@@ -107,11 +107,11 @@
 
 ---
 
-## Phase 0-Warn: Verifier Warnings - ✅ COMPLETE
+## Phase 0-Warn: Verifier Warnings
 
 **Goal:** Address verifier warnings (non-blocking but should be fixed)
 
-**Status:** All 9 explicit warnings resolved successfully
+**Status:** 9 original warnings complete, 7 new shellcheck warnings from pre-commit found
 
 - [x] **WARN.BugC.Auto.2** - THUNK writes limited to era creation only (HIGH)
   - **Issue:** `thunk_ralph_tasks.sh` has 1 write operation outside era creation context
@@ -149,6 +149,57 @@
 - [x] **WARN.Cortex.FileSizeLimit.AGENTS** - cortex/AGENTS.md max 150 lines (MEDIUM)
   - **Issue:** cortex/AGENTS.md is 156 lines (max 150)
   - **Resolution:** File is outside Ralph's workspace (managed by Cortex). Cortex should condense this file by 6+ lines. Marked complete from Ralph's perspective.
+
+### New Pre-commit Shellcheck Warnings (2026-01-22)
+
+- [ ] **WARN.Shellcheck.1** - SC2034 unused variable in .verify/check_waiver.sh (MEDIUM)
+  - **File:** `../../.verify/check_waiver.sh` line 123
+  - **Issue:** `waiver_reason` appears unused
+  - **Fix:** Remove variable or mark as used/exported
+  - **AC:** `shellcheck ../../.verify/check_waiver.sh 2>&1 | grep -c SC2034` returns 0
+  - **Commit:** `fix(verify): remove unused waiver_reason variable`
+
+- [ ] **WARN.Shellcheck.2** - SC2086 unquoted variable in .verify/request_waiver.sh (LOW)
+  - **File:** `../../.verify/request_waiver.sh` line 131
+  - **Issue:** `EXPIRY_DAYS` should be quoted to prevent globbing
+  - **Fix:** Change `date -v+${EXPIRY_DAYS}d` to `date -v+"${EXPIRY_DAYS}"d`
+  - **AC:** `shellcheck ../../.verify/request_waiver.sh 2>&1 | grep -c SC2086` returns 0
+  - **Commit:** `fix(verify): quote EXPIRY_DAYS in request_waiver.sh`
+
+- [ ] **WARN.Shellcheck.3** - SC2034 unused variable in cortex/cortex.bash (MEDIUM)
+  - **File:** `../../cortex/cortex.bash` line 64
+  - **Issue:** `RUNNER` appears unused
+  - **Fix:** Remove variable or mark as used/exported
+  - **AC:** `shellcheck ../../cortex/cortex.bash 2>&1 | grep -c SC2034` returns 0
+  - **Commit:** `fix(cortex): remove unused RUNNER variable`
+
+- [ ] **WARN.Shellcheck.4** - SC2034 unused variable in cortex/cortex.bash (MEDIUM)
+  - **File:** `../../cortex/cortex.bash` line 107
+  - **Issue:** `CONFIG_FLAG` appears unused
+  - **Fix:** Remove variable or mark as used/exported
+  - **AC:** `shellcheck ../../cortex/cortex.bash 2>&1 | grep -c SC2034` returns 0
+  - **Commit:** `fix(cortex): remove unused CONFIG_FLAG variable`
+
+- [ ] **WARN.Shellcheck.5** - SC2001 use parameter expansion instead of sed (LOW)
+  - **File:** `../../cortex/cortex.bash` line 179
+  - **Issue:** Could use `${variable//search/replace}` instead of sed
+  - **Fix:** Replace sed with bash parameter expansion if simpler
+  - **AC:** `shellcheck ../../cortex/cortex.bash 2>&1 | grep -c SC2001` returns 0
+  - **Commit:** `refactor(cortex): use parameter expansion instead of sed`
+
+- [ ] **WARN.Shellcheck.6** - SC2086 unquoted variable in cortex/one-shot.sh (LOW)
+  - **File:** `../../cortex/one-shot.sh` lines 257, 261
+  - **Issue:** `CONFIG_FLAG` should be quoted to prevent word splitting
+  - **Fix:** Change `$CONFIG_FLAG` to `"$CONFIG_FLAG"`
+  - **AC:** `shellcheck ../../cortex/one-shot.sh 2>&1 | grep -c SC2086` returns 0
+  - **Commit:** `fix(cortex): quote CONFIG_FLAG in one-shot.sh`
+
+- [ ] **WARN.Shellcheck.7** - Incomplete shellcheck check in setup.sh (INFO)
+  - **File:** `../../setup.sh` line 70
+  - **Issue:** Line appears in pre-commit output but may be context only
+  - **Fix:** Review setup.sh line 70 for any shellcheck warnings
+  - **AC:** `shellcheck ../../setup.sh 2>&1 | grep -c 'line 70'` returns 0
+  - **Commit:** `fix(setup): resolve shellcheck warnings if any`
 
 ## Phase 0-Quick: Quick Wins (High Value, Low Effort)
 
