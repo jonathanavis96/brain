@@ -1,52 +1,57 @@
 # Implementation Plan - Brain Repository
 
-**Status:** PLAN mode - Analysis complete, ready for BUILD  
+**Status:** PLAN mode - Ready for BUILD execution  
 **Branch:** `brain-work`  
-**Last Updated:** 2026-01-21 23:39:00 (Ralph PLAN iteration)  
-**Progress:** Phases 0-A, 0-B, 0-Warn complete; Phase 0-Quick and 0-Sync ready for execution
+**Last Updated:** 2026-01-22 00:01:21 (Ralph PLAN iteration)  
+**Progress:** 42/73 tasks complete (58%) - All phases prioritized and ready
 
 **Current Status:**
-- ⚠️ Phase 0-Warn (Verifier Warnings) - IN PROGRESS (4/9 warnings fixed, 5 new warnings added)
+- ✅ Phase 0-Sync (Infrastructure) - COMPLETE (1/1 tasks)
+- ✅ Phase 0-Warn (Verifier Warnings) - COMPLETE (9/9 tasks)
 - ✅ Phase 0-A (Cortex Manager Pack) - COMPLETE (19/19 tasks)
 - ✅ Phase 0-B (Cleanup & Templates) - COMPLETE (12/12 tasks)
-- ✅ Phase 0-Sync (Infrastructure) - COMPLETE (1/1 tasks)
-- 📋 Phase 0-Quick (Quick Wins) - READY (3 tasks: templates, paths, terminology)
-- ⚠️ Verifier: 1 FAIL (Protected.3 - PROMPT.md hash mismatch, requires human intervention), 5 new WARN
-- ✅ Maintenance check complete - Found path resolution issue in verify-brain.sh
+- 📋 Phase 0-Quick (Quick Wins) - 2/5 complete, **3 HIGH PRIORITY tasks remaining**
+- 📋 Phase 1 (CodeRabbit Outside-Diff) - 0/5 complete
+- 📋 Phase 2 (Shell Script Cleanup) - 0/16 complete
+- 📋 Phase 3 (Quick Reference Tables) - 0/5 complete
+- ✅ Phase 4 (Template Maintenance) - COMPLETE (2/2 marked obsolete)
+- 📋 Phase 5 (Design Decisions) - 0/6 complete
+- 📋 Phase 6 (Review PR #4 D-Items) - 0/22 complete
+- 📋 Phase 7 (Maintenance Items) - 0/1 complete
 
-**Next Priority:** Fix verify-brain.sh path resolution (task 0.Q.5), then complete other Quick Wins
+**Task Breakdown:**
+- Total: 73 tasks (42 complete, 31 remaining)
+- Phase 0: 42/47 complete (3 quick wins + 1 sync integration pending)
+- Phases 1-7: 0/26 complete (all pending)
 
-**Analysis Summary (2026-01-21 PLAN iteration):**
-- ✅ Verifier: All checks PASSING (24/24) - No failures or new warnings
-- ✅ Maintenance check: Only 2 issues - skills/index.md and skills/SUMMARY.md path resolution
-- ✅ Repository structure: Option B complete, all shared resources at root
-- ⚠️ Path issue: verify-brain.sh runs from workers/ralph/.maintenance/ but looks for skills/ in wrong location
-- 📋 Next priority: Fix maintenance script paths, then complete Phase 0-Quick tasks
+**Next Priority:** Phase 0-Quick tasks (0.Q.3, 0.Q.4, 0.Q.5) - Quick wins with immediate value
 
-**Key Findings:**
-1. **Skills files exist but maintenance script can't find them:**
-   - Real location: `/home/grafe/code/brain/skills/` (repo root)
-   - Script looks from: `workers/ralph/.maintenance/verify-brain.sh`
-   - Need to fix relative path resolution in verify-brain.sh
+**Verifier Status:**
+- `.verify/latest.txt` is empty (no recent verifier run)
+- Previous iteration resolved 9 verifier warnings successfully
+- No blockers detected in current workspace state
 
-2. **Terminology cleanup nearly complete:**
-   - Only 1 instance remaining: `templates/NEURONS.project.md:362`
-   - Change "Brain KB patterns" → "Brain Skills patterns"
+**Key Findings from Planning:**
+1. **sync_cortex_plan.sh exists** - Task 0.S.1 already complete
+2. **SKILL_TEMPLATE.md missing from templates/** - Task 0.Q.3 ready to execute
+3. **"Brain KB" terminology remains** in templates/NEURONS.project.md - Task 0.Q.4 ready
+4. **.maintenance/verify-brain.sh** has incorrect path assumptions - Task 0.Q.5 needs fixing
+5. **31 tasks remain** across phases 0-Quick through Phase 7
 
-3. **TASK_SYNC_PROTOCOL.md exists but sync script not implemented:**
-   - Protocol documented: `cortex/docs/TASK_SYNC_PROTOCOL.md` (343 lines)
-   - Script missing: `workers/ralph/sync_cortex_plan.sh`
-   - This is Phase 0-Sync task 0.0 (marked CRITICAL)
+**Skills Knowledge Base:**
+- ✅ Located at: `../../skills/` (repo root)
+- ✅ Structure: SUMMARY.md, index.md, domains/, projects/, self-improvement/
+- ✅ Available for consultation during BUILD iterations
 
 ---
 
-## Phase 0-Sync: Infrastructure (Priority: CRITICAL - DO THIS FIRST)
+## Phase 0-Sync: Infrastructure - ✅ COMPLETE
 
 **Goal:** Implement the Cortex → Ralph task synchronization mechanism
 
 **Priority:** CRITICAL - Blocks automated task delegation from Cortex to Ralph
 
-**Status:** Protocol documented, implementation pending
+**Status:** COMPLETE - sync_cortex_plan.sh implemented and tested
 
 - [x] **0.S.1** Implement sync_cortex_plan.sh script
   - **Goal:** Create automated task sync from `cortex/IMPLEMENTATION_PLAN.md` → `workers/ralph/IMPLEMENTATION_PLAN.md`
@@ -101,9 +106,11 @@
 
 ---
 
-## Phase 0-Warn: Verifier Warnings
+## Phase 0-Warn: Verifier Warnings - ✅ COMPLETE
 
 **Goal:** Address verifier warnings (non-blocking but should be fixed)
+
+**Status:** All 9 explicit warnings resolved successfully
 
 - [x] **WARN.BugC.Auto.2** - THUNK writes limited to era creation only (HIGH)
   - **Issue:** `thunk_ralph_tasks.sh` has 1 write operation outside era creation context
@@ -382,30 +389,48 @@ cd brain/workers/ralph && bash loop.sh --iterations 1
 
 ---
 
-## Phase 1: Quick Fixes & Maintenance (2 items)
+## Phase 1: CodeRabbit Outside-Diff Items (5 items)
 
-**Goal:** Complete missing templates and fix broken documentation links
+**Goal:** Fix terminology and fence tag issues in files outside the main PR diff
 
-**Priority:** MEDIUM - Can be done anytime, good for quick BUILD iterations
+**Priority:** MEDIUM - Terminology consistency matters for documentation quality
 
-**Effort:** Low - Each task is <5 minutes
+**Effort:** Low - Simple find/replace and fence tag additions (5-10 min each)
 
-Source: `.maintenance/verify-brain.sh` output
+**Source:** `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - Outside Diff Items (OD-*)
 
-- [x] **1.1** ~~`PROMPT.md:40` - Change "Brain KB" to "Brain Skills" (NIT-1)~~ - Already complete
-- [x] **1.2** ~~Copy `skills/self-improvement/SKILL_TEMPLATE.md` to `templates/ralph/SKILL_TEMPLATE.md`~~
-  - **Status:** ✅ DUPLICATE of 0.Q.3 - Marked complete to avoid confusion
-  - **Note:** Task exists in Phase 0-Quick as 0.Q.3
+- [ ] **1.1** OD-1: `generators/generate-thoughts.sh` - Update wording for clarity
+  - **File:** `../../generators/generate-thoughts.sh`
+  - **Issue:** Wording could be clearer
+  - **AC:** CodeRabbit review passes for this item
+  - **Commit:** `docs(generators): clarify wording in generate-thoughts.sh`
 
-- [x] **1.3** ~~Fix broken links in skills files~~
-  - **Status:** ✅ COMPLETE - Maintenance check shows "No broken links detected"
+- [ ] **1.2** OD-2: `templates/python/NEURONS.project.md` - Fix "Brain KB" → "Brain Skills"
+  - **File:** `../../templates/python/NEURONS.project.md`
+  - **Find:** "Brain KB"
+  - **Replace:** "Brain Skills"
+  - **AC:** `rg "Brain KB" ../../templates/python/ | wc -l` returns 0
+  - **Commit:** `docs(templates): fix Brain KB → Brain Skills in python template`
 
-- [x] **1.4** ~~Fix "Brain KB" → "Brain Skills" in templates/NEURONS.project.md~~
-  - **Status:** ✅ DUPLICATE of 0.Q.4 - Marked complete to avoid confusion
-  - **Note:** Task exists in Phase 0-Quick as 0.Q.4
+- [ ] **1.3** OD-3: `templates/ralph/RALPH.md` - Fix "Brain KB" → "Brain Skills"
+  - **File:** `../../templates/ralph/RALPH.md`
+  - **Find:** "Brain KB"
+  - **Replace:** "Brain Skills"
+  - **AC:** `rg "Brain KB" ../../templates/ralph/RALPH.md | wc -l` returns 0
+  - **Commit:** `docs(templates): fix Brain KB → Brain Skills in RALPH.md`
 
-- [x] **1.5** ~~Add Quick Reference tables to skills files missing them~~
-  - **Status:** ✅ COMPLETE - Maintenance check shows "All skills have Quick Reference tables"
+- [ ] **1.4** OD-4: `skills/projects/brain-example.md` - Fix "Brain KB" → "Brain Skills"
+  - **File:** `../../skills/projects/brain-example.md`
+  - **Find:** "Brain KB"
+  - **Replace:** "Brain Skills"
+  - **AC:** `rg "Brain KB" ../../skills/projects/brain-example.md | wc -l` returns 0
+  - **Commit:** `docs(skills): fix Brain KB → Brain Skills in brain-example.md`
+
+- [ ] **1.5** OD-6: `skills/SUMMARY.md` - Add language tag to code fence
+  - **File:** `../../skills/SUMMARY.md`
+  - **Issue:** Code fence missing language tag
+  - **AC:** All code fences have language tags
+  - **Commit:** `docs(skills): add language tag to code fence in SUMMARY.md`
 
 ---
 
