@@ -1,5 +1,42 @@
 # Implementation Plan - Brain Repository
 
+## Verifier Warnings
+
+**CRITICAL:** The following warnings were detected by the verifier and must be addressed:
+
+### Protected File Failures (HUMAN INTERVENTION REQUIRED)
+- [ ] **WARN.P1** `Protected.1` - loop.sh hash mismatch - **DOCUMENTED:** Uncommitted changes for verifier PLAN mode (see Phase 0-C)
+- [ ] **WARN.P2** `Protected.2` - verifier.sh hash mismatch - **NEEDS INVESTIGATION:** Why does verifier.sh hash differ?
+- [ ] **WARN.P3** `Protected.3` - PROMPT.md hash mismatch - **CURRENT CHANGES:** Modified in this iteration
+
+### Template Sync Issues
+- [ ] **WARN.T1** `Template.1` - thunk_ralph_tasks.sh differs from template
+- [ ] **WARN.T2** `Hygiene.TemplateSync.1` - current_ralph_tasks.sh differs from template
+- [ ] **WARN.T3** `Hygiene.TemplateSync.2` - loop.sh core logic differs from template (OpenCode runner features)
+
+### Markdown Hygiene
+- [ ] **WARN.M1** `Hygiene.Markdown.2` - AGENTS.md has 4 code fences without language tags
+- [ ] **WARN.M2** `Hygiene.Markdown.3` - THOUGHTS.md has 4 code fences without language tags
+- [ ] **WARN.M3** `Hygiene.Markdown.4` - NEURONS.md has 11 code fences without language tags
+
+### Shellcheck Issues (False Positives)
+- [ ] **WARN.S1** `Hygiene.Shellcheck.1-4` - All SC2034/SC2155 checks producing double-line output (0\n0 instead of 0)
+
+### Documentation Sync
+- [ ] **WARN.D1** `Hygiene.DocSync.1-2` - AGENTS.md THUNK monitor docs checks producing double-line output
+
+### Structure Issues
+- [ ] **WARN.ST1** `Hygiene.Structure.1` - NEURONS.md skills/ file count is outdated (claims <20, actual >20)
+
+### Other
+- [ ] **WARN.O1** `BugC.Auto.2` - THUNK writes outside era creation (1 match found)
+- [ ] **WARN.O2** `BugB.Auto.1` - Display cursor positioning check
+- [ ] **WARN.O3** `BugB.Auto.2` - Display stty handling check
+
+### Manual Review Required
+- [ ] **WARN.UI1** `BugB.UI.1` - Manual test: current_ralph_tasks.sh visual corruption after terminal resize
+- [ ] **WARN.UI2** `BugC.UI.1` - Manual test: THUNK monitor is display-only (doesn't modify files)
+
 ## Maintenance Check (Planning Mode Only)
 
 **When in planning mode**, run `bash .maintenance/verify-brain.sh` and review `.maintenance/MAINTENANCE.md`.
@@ -12,14 +49,19 @@ Incorporate any relevant maintenance items into the appropriate priority section
 
 ## Overview
 
-**Status:** Active - Phase 0-A in progress (Cortex Manager Pack - Create & Setup)  
-**Branch:** `brain-work` (7 commits ahead of origin, 2 uncommitted changes)  
+**Status:** Active - Planning mode (addressing verifier warnings + Phase 0-A)  
+**Branch:** `brain-work` (7 commits ahead of origin, uncommitted PROMPT.md changes)  
 **Last Updated:** 2026-01-21  
-**Progress:** 2 of 65 tasks complete (3.1%)
+**Progress:** 2 of 84+ tasks complete (2.4%)
+
+**Current Focus:**
+- Added 20+ verifier warnings to track and fix
+- Phase 0-A (Cortex Manager Pack) - 2/19 tasks complete
+- Protected file failures require human intervention
 
 **Uncommitted Changes:**
-- `loop.sh` - Verifier now runs after PLAN iterations (not just BUILD)
-- `templates/ralph/loop.sh` - Same change applied to template
+- `PROMPT.md` - Planning mode updates (this iteration)
+- `templates/ralph/PROMPT.md` - Same updates applied to template
 
 ---
 
