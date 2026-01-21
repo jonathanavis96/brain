@@ -639,7 +639,7 @@ run_verifier() {
     fi
 
     echo "✅ All acceptance criteria passed! (run_id: $RUN_ID)"
-    cat "$RALPH/.verify/latest.txt" 2>/dev/null | tail -10 || true
+    tail -10 "$RALPH/.verify/latest.txt" 2>/dev/null || true
     LAST_VERIFIER_STATUS="PASS"
     LAST_VERIFIER_FAILED_RULES=""
     LAST_VERIFIER_FAIL_COUNT=0
