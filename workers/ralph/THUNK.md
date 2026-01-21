@@ -341,3 +341,4 @@ Started: 2026-01-18
 | 341 | 0.S.2 | HIGH | **0.S.2** Integrate sync into loop.sh startup - Added sync call before PLAN mode execution, checks if sync script exists, non-blocking (warns but continues on failure), only runs during PLAN iterations | 2026-01-22 |
 | 342 | 0.Q.3 | HIGH | **0.Q.3** Copy SKILL_TEMPLATE.md to templates/ralph/ - Copied skills/self-improvement/SKILL_TEMPLATE.md (2751 bytes) to templates/ralph/SKILL_TEMPLATE.md, verified files are identical with diff | 2026-01-22 |
 | 290 | WARN.Shellcheck.1 | MEDIUM | **WARN.Shellcheck.1** - Removed unused waiver_reason variable from .verify/check_waiver.sh get_waiver_info() function, resolves SC2034 | 2026-01-22 |
+| 291 | WARN.Shellcheck.2 | LOW | **WARN.Shellcheck.2** - Quote EXPIRY_DAYS variable in .verify/request_waiver.sh line 131 to prevent globbing, changed `date -v+${EXPIRY_DAYS}d` to `date -v+"${EXPIRY_DAYS}"d`, resolves SC2086 | 2026-01-22 |

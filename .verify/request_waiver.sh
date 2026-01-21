@@ -128,7 +128,7 @@ WAIVER_ID="WVR-${TODAY}-$(printf '%03d' $SEQ)"
 # Calculate expiry date
 if [[ "$(uname)" == "Darwin" ]]; then
     # macOS
-    EXPIRES=$(date -v+${EXPIRY_DAYS}d +%Y-%m-%d)
+    EXPIRES=$(date -v+"${EXPIRY_DAYS}"d +%Y-%m-%d)
 else
     # Linux
     EXPIRES=$(date -d "+${EXPIRY_DAYS} days" +%Y-%m-%d)
