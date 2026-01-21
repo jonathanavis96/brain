@@ -88,7 +88,7 @@
     - [ ] Test: Add dummy task to cortex plan, run sync, verify it appears
   - **Commit:** `feat(ralph): implement cortex task sync mechanism`
 
-- [ ] **0.S.2** Integrate sync into loop.sh startup
+- [x] **0.S.2** Integrate sync into loop.sh startup
   - **Goal:** Automatically sync Cortex tasks at start of PLAN mode
   - **Context:** Only run after 0.S.1 is complete and tested
   - **Implementation:**
@@ -98,10 +98,10 @@
     - If sync fails, warn but continue (don't block Ralph)
   - **Location:** `workers/ralph/loop.sh` (around PLAN mode entry point)
   - **AC:**
-    - [ ] loop.sh calls `bash sync_cortex_plan.sh` at startup in PLAN mode
-    - [ ] Sync only runs if cortex plan exists
-    - [ ] Sync failure doesn't block Ralph execution
-    - [ ] Test: Run Ralph in PLAN mode, verify sync executes
+    - [x] loop.sh calls `bash sync_cortex_plan.sh` at startup in PLAN mode
+    - [x] Sync only runs if cortex plan exists
+    - [x] Sync failure doesn't block Ralph execution
+    - [x] Test: Run Ralph in PLAN mode, verify sync executes
   - **Commit:** `feat(ralph): auto-sync cortex tasks in PLAN mode`
 
 ---

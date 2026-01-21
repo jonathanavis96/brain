@@ -338,3 +338,4 @@ Started: 2026-01-18
 | 338 | WARN.TemplateSync.2 | MEDIUM | **WARN.TemplateSync.2** Synced loop.sh template with workers/ralph changes (paths and context injection removal) | 2026-01-21 |
 | 339 | WARN.Markdown.4 | MEDIUM | **WARN.Markdown.4** Documented rule design flaw - flags closing fences which must not have language tags (requires human intervention) | 2026-01-21 |
 | 340 | WARN.Cortex.FileSize | MEDIUM | **WARN.Cortex.FileSize** Delegated cortex/AGENTS.md size limit to Cortex (outside Ralph workspace) | 2026-01-21 |
+| 341 | 0.S.2 | HIGH | **0.S.2** Integrate sync into loop.sh startup - Added sync call before PLAN mode execution, checks if sync script exists, non-blocking (warns but continues on failure), only runs during PLAN iterations | 2026-01-22 |
