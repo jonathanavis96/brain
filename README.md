@@ -17,7 +17,7 @@ The **brain** repository is the shared consciousness for all projects - a centra
 cat > NEW_PROJECT_IDEA.md << 'EOF'
 # Project: My Awesome App
 
-Location: /home/grafe/code/my-awesome-app
+Location: /path/to/your-project
 Purpose: A web application that does amazing things
 Tech Stack: Next.js, TypeScript, PostgreSQL, Docker
 Goals: MVP in 2 weeks, 1000 users in first month
@@ -27,7 +27,7 @@ EOF
 bash ralph/new-project.sh NEW_PROJECT_IDEA.md
 
 # 3. Your project is ready!
-cd /home/grafe/code/my-awesome-app
+cd /path/to/your-project
 bash ralph/loop.sh --iterations 10
 ```
 
@@ -134,7 +134,7 @@ Ralph maintains the brain repository through iterative PLAN/BUILD cycles.
 ### Run Ralph
 
 ```bash
-cd /home/grafe/code/brain/ralph/
+cd /path/to/brain/ralph/
 
 # Single iteration (auto-detects PLAN or BUILD mode)
 bash loop.sh
@@ -225,7 +225,7 @@ All templates use **bash-style forward slash paths**:
 
 # Incorrect ❌
 ..\\brain\\kb\\SUMMARY.md                             # Windows backslashes
-/home/grafe/code/brain/kb/SUMMARY.md                 # Absolute paths (breaks portability)
+/path/to/brain/kb/SUMMARY.md                 # Absolute paths (breaks portability)
 ```
 
 **Why:** Cross-platform compatibility (WSL, Linux, macOS, Windows Git Bash)
@@ -288,7 +288,7 @@ All templates use **bash-style forward slash paths**:
 Brain can improve itself:
 
 ```bash
-cd /home/grafe/code/brain/ralph/
+cd /path/to/brain/ralph/
 
 # Add tasks to IMPLEMENTATION_PLAN.md
 echo "- [ ] **My improvement task**" >> IMPLEMENTATION_PLAN.md

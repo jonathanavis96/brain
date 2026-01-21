@@ -20,69 +20,69 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 
 ## Repository Layout
 
-```
-/home/grafe/code/brain/
-├── AGENTS.md                    # Ralph operational guide (how to run)
-├── NEURONS.md                   # This file (brain map - what exists where)
-├── loop.sh                      # Ralph loop runner (safe branch handling, lock file)
-├── rovodev-config.yml           # RovoDev configuration
-├── PROMPT.md                    # Lean prompt (~95 lines) - core Ralph mechanics
-├── IMPLEMENTATION_PLAN.md       # Persistent TODO list
-├── THOUGHTS.md                  # Project goals and success criteria
-├── THUNK.md                     # Completed task log
+```text
+brain/ (repository root)
+├── README.md                    # Human-readable overview
+├── IMPLEMENTATION_PLAN.md       # High-level task list (managed by Cortex)
 │
-├── cortex/                      # Cortex manager layer (Opus 4.5)
+├── cortex/                      # Manager layer (Opus 4.5)
 │   ├── CORTEX_SYSTEM_PROMPT.md  # Cortex identity and rules
 │   ├── REPO_MAP.md              # Human-friendly repo navigation
 │   ├── DECISIONS.md             # Stability anchor (naming, style, architecture)
 │   ├── RUNBOOK.md               # Operations guide (how to start, troubleshoot)
-│   ├── IMPLEMENTATION_PLAN.md   # Task contract template (high-level tasks)
+│   ├── IMPLEMENTATION_PLAN.md   # Task contracts for workers
 │   ├── THOUGHTS.md              # Cortex thinking space (mission, decisions)
 │   ├── run.sh                   # Main entry point (concatenates context)
 │   └── snapshot.sh              # Generates current state summary
 │
-├── docs/                        # Documentation
-│   ├── EDGE_CASES.md            # Detailed examples, error recovery (read on-demand)
+├── workers/                     # Execution layer
+│   └── ralph/                   # Ralph worker (Sonnet 4.5)
+│       ├── AGENTS.md            # Ralph operational guide
+│       ├── NEURONS.md           # This file (Ralph's codebase map)
+│       ├── PROMPT.md            # Ralph's instructions (protected)
+│       ├── IMPLEMENTATION_PLAN.md  # Ralph's local task list
+│       ├── THOUGHTS.md          # Ralph's working context
+│       ├── THUNK.md             # Completed task log
+│       ├── VALIDATION_CRITERIA.md  # Quality gates
+│       ├── loop.sh              # Main execution loop (protected)
+│       ├── verifier.sh          # Acceptance criteria validator (protected)
+│       ├── current_ralph_tasks.sh  # Real-time task monitor
+│       ├── thunk_ralph_tasks.sh    # Completed task viewer
+│       ├── .maintenance/        # Repository health checks
+│       ├── .verify/             # Worker-level verification (links to root)
+│       └── logs/                # Execution transcripts
+│
+├── skills/                      # Knowledge base (shared, 30+ files)
+│   ├── SUMMARY.md               # Start here - overview and error reference
+│   ├── index.md                 # Complete skills catalog
+│   ├── conventions.md           # Skills authoring guidelines
+│   ├── domains/                 # Technical domain knowledge
+│   ├── projects/                # Project-specific conventions
+│   └── self-improvement/        # Gap capture and skill promotion
+│
+├── templates/                   # Project scaffolding (shared)
+│   ├── AGENTS.project.md        # Operational guide template
+│   ├── NEURONS.project.md       # Repository map template
+│   ├── THOUGHTS.project.md      # Project goals template
+│   ├── ralph/                   # Ralph-specific templates
+│   └── ...                      # Backend, Python templates
+│
+├── rules/                       # Acceptance criteria (shared)
+│   ├── AC.rules                 # Core acceptance criteria (protected)
+│   ├── AC-hygiene-additions.rules  # Extended hygiene checks
+│   └── MANUAL_APPROVALS.rules   # Human-gated changes
+│
+├── docs/                        # Project documentation (shared)
+│   ├── BOOTSTRAPPING.md         # New project setup guide
 │   ├── CHANGES.md               # Release notes and migration guide
-│   └── BOOTSTRAPPING.md         # New project setup guide
+│   ├── EDGE_CASES.md            # Detailed examples, error recovery
+│   └── ...                      # History, test scenarios
 │
-├── skills/                      # Knowledge Base (33 files)
-│   ├── SUMMARY.md               # KB index and navigation
-│   ├── conventions.md           # KB authoring guidelines
-│   ├── domains/                 # Reusable domain patterns (3 files)
-│   │   ├── README.md
-│   │   ├── auth-patterns.md     # OAuth2, JWT, session management
-│   │   └── ralph-patterns.md    # Ralph loop architecture
-│   └── projects/                # Project-specific knowledge (2 files)
-│       ├── README.md
-│       └── brain-example.md     # Brain repo conventions
-│
-├── references/                  # External best practices (READ-ONLY)
-│   └── react-best-practices/    # React/Next.js optimization (47 files)
-│       ├── HOTLIST.md           # Top 10 most applicable rules
-│       ├── INDEX.md             # Categorized rule index
-│       └── rules/               # 45 individual rule files (DO NOT MODIFY)
-│
-├── templates/                   # Project bootstrap templates
-│   ├── README.md                # Template usage and path conventions
-│   ├── AGENTS.project.md        # Project AGENTS.md template
-│   ├── fix_plan.md              # Task checklist template
-│   └── ralph/                   # Ralph loop templates
-│       ├── PROMPT.project.md    # Lean project prompt (~39 lines, references brain)
-│       ├── loop.sh              # Thin wrapper (~25 lines, delegates to brain)
-│       └── RALPH.md             # Ralph contract template
-│
-├── specs/                       # Project specifications (1 file)
-│   └── overview.md              # Brain repo purpose and definition of done
-│
-├── docs/                        # Documentation (1 file)
-│   └── REFERENCE_SUMMARY.md     # Ralph Wiggum pattern theory & external references (historical)
-│
-├── logs/                        # Execution transcripts (timestamped)
-│   └── *.log                    # Ralph iteration logs
-│
-└── old_md/                      # Archived plans and reports
-    └── 2026-01-**/              # Timestamped archives
+└── .verify/                     # Validation infrastructure (shared)
+    ├── latest.txt               # Most recent verifier output
+    ├── *.sha256                 # Hash guards for protected files
+    ├── waivers/                 # Approved waivers (TOTP-protected)
+    └── waiver_requests/         # Pending waiver requests
 ```
 
 ---
@@ -91,9 +91,11 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 
 | Variable | Default | Purpose |
 |----------|---------|---------|
-| `BRAIN_ROOT` | `../brain` (sibling dir) | Path to brain repository |
+| `BRAIN_ROOT` | `../..` (from workers/ralph/) | Path to brain repository root |
 | `BRAIN_REPO` | `jonathanavis96/brain` | GitHub repo for commit trailers |
 | `RALPH_PROJECT_ROOT` | (auto) | Set by thin wrapper for project delegation |
+
+**Note:** All paths in this file are relative to the brain repository root for portability.
 
 ---
 
@@ -170,7 +172,7 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 
 ## Details
 [The actual knowledge]
-```
+```markdown
 
 ---
 
@@ -201,7 +203,7 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 ```bash
 find references/react-best-practices/rules/ -name "*.md" | wc -l
 # Must always output: 45 (rule files only, excludes _template.md and _sections.md)
-```
+```bash
 
 **Usage Pattern:**
 - ❌ Don't scan all 45 rules (token-inefficient)
@@ -219,11 +221,11 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 - `templates/README.md` - Usage instructions, path conventions, validation
 - `templates/AGENTS.project.md` - Becomes AGENTS.md in new projects
 - `templates/fix_plan.md` - Task checklist template
-- `templates/ralph/RALPH.md` - Ralph contract documentation
+- `../../templates/ralph/RALPH.md` - Ralph contract documentation (from workers/ralph/)
 
 **Path Conventions:**
 - Templates use relative paths: `../brain/skills/SUMMARY.md` (from project root)
-- Brain's own prompts use local paths: `skills/SUMMARY.md` (from brain/ralph/)
+- Brain's own prompts use local paths: `../../skills/SUMMARY.md` (relative to workers/ralph/)
 - All paths in templates must be validated before use
 
 **Bootstrap Process:**
@@ -231,7 +233,7 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 # From brain repository root (not implemented in bash yet - legacy PowerShell)
 # ./new-project.ps1 -Name my-project
 # Creates: ../my-project/ with AGENTS.md, ralph/, specs/, src/
-```
+```bash
 
 ---
 
@@ -271,10 +273,10 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 
 **Running Cortex:**
 ```bash
-cd /home/grafe/code/brain/
+cd /path/to/brain/
 bash cortex/run.sh              # Single review cycle
 bash cortex/run.sh --help       # Show usage
-```
+```bash
 
 ---
 
@@ -310,9 +312,10 @@ bash cortex/run.sh --help       # Show usage
 - `PROMPT_verify.md` - Verification prompt (validation checks)
 
 **Stop Sentinel:**
-```
+```text
 :::COMPLETE:::
-```
+```text
+
 Only output when ALL tasks in IMPLEMENTATION_PLAN.md are 100% complete.
 
 ---
@@ -395,7 +398,7 @@ find specs/ -name "*.md" | wc -l
 # Total .md files in brain/ root (excluding subdirs)
 find . -maxdepth 1 -name "*.md" | wc -l
 # Current: ~7 files (AGENTS, NEURONS, PROMPT, IMPLEMENTATION_PLAN, THOUGHTS, THUNK, README, VALIDATION_CRITERIA)
-```
+```bash
 
 ### Validation Commands (Backpressure)
 ```bash
@@ -415,7 +418,7 @@ bash -n loop.sh
 
 # Check AGENTS.md and NEURONS.md exist
 ls -lh AGENTS.md NEURONS.md
-```
+```bash
 
 ---
 
@@ -446,7 +449,7 @@ ls -lh AGENTS.md NEURONS.md
 
 **Status:** Legacy Windows-based brain repository. Contains PowerShell scripts and older structure.
 
-**Usage:** Reference only. Do NOT modify files in Windows repo from WSL. All active development happens in WSL2 at `/home/grafe/code/brain/ralph/`.
+**Usage:** Reference only. Do NOT modify files in Windows repo from WSL. All active development happens in WSL2 in the brain repository at `workers/ralph/` (use relative paths for portability).
 
 **Note:** PowerShell prerequisites removed from Ralph. All Ralph operations now use bash in WSL2.
 
@@ -486,11 +489,11 @@ From `THOUGHTS.md`, the brain is successful when:
 
 ### Running Ralph Loop
 ```bash
-cd /home/grafe/code/brain/ralph/
+cd /path/to/brain/workers/ralph/
 bash loop.sh                           # Single iteration
 bash loop.sh --iterations 10           # Multiple iterations
 bash loop.sh --prompt PROMPT.md        # Use unified prompt
-```
+```bash
 
 ### Validating Brain Integrity
 ```bash
@@ -507,7 +510,7 @@ bash -n loop.sh
 
 # Directory structure
 tree -L 2 -I 'old_md|logs'
-```
+```bash
 
 ---
 
