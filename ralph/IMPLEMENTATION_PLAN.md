@@ -50,13 +50,13 @@ Incorporate any relevant maintenance items into the appropriate priority section
 ## Overview
 
 **Status:** Active - BUILD mode iteration, Phase 0-A in progress  
-**Branch:** `brain-work` (3 commits ahead of origin)  
+**Branch:** `brain-work` (4 commits ahead of origin)  
 **Last Updated:** 2026-01-21  
-**Progress:** 5 of 85 tasks complete (5.9%)
+**Progress:** 6 of 85 tasks complete (7.1%)
 
 **Current Focus:**
-- Phase 0-A (Cortex Manager Pack) - 4/19 tasks complete (21.1% of phase)
-- Next task: 0.A.1.5 - Create cortex/RUNBOOK.md
+- Phase 0-A (Cortex Manager Pack) - 6/19 tasks complete (31.6% of phase)
+- Next task: 0.A.1.7 - Create cortex/THOUGHTS.md
 - Phase 0-C marked complete (verifier PLAN mode already committed)
 - All verifier checks PASSING (24/24), 25 warnings tracked but not blocking
 
@@ -90,7 +90,7 @@ Incorporate any relevant maintenance items into the appropriate priority section
 - [x] **0.A.1.5** Create `cortex/RUNBOOK.md` - Operations guide
   - **AC:** File contains: how to start Cortex (`bash cortex/run.sh`), how to start Ralph, troubleshooting steps, what to do if blocked, verification commands
 
-- [ ] **0.A.1.6** Create `cortex/IMPLEMENTATION_PLAN.md` - Task Contract template
+- [x] **0.A.1.6** Create `cortex/IMPLEMENTATION_PLAN.md` - Task Contract template
   - **AC:** File contains: header explaining this is Cortex's plan, example Task Contract with Goal/Subtask/Constraints/Inputs/Acceptance Criteria/If Blocked format, empty "Current Tasks" section
 
 - [ ] **0.A.1.7** Create `cortex/THOUGHTS.md` - Cortex thinking space
