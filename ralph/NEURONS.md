@@ -20,7 +20,7 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 
 ## Repository Layout
 
-```
+```text
 /home/grafe/code/brain/
 ├── AGENTS.md                    # Ralph operational guide (how to run)
 ├── NEURONS.md                   # This file (brain map - what exists where)
@@ -83,7 +83,7 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 │
 └── old_md/                      # Archived plans and reports
     └── 2026-01-**/              # Timestamped archives
-```
+```text
 
 ---
 
@@ -170,7 +170,7 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 
 ## Details
 [The actual knowledge]
-```
+```markdown
 
 ---
 
@@ -201,7 +201,7 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 ```bash
 find references/react-best-practices/rules/ -name "*.md" | wc -l
 # Must always output: 45 (rule files only, excludes _template.md and _sections.md)
-```
+```bash
 
 **Usage Pattern:**
 - ❌ Don't scan all 45 rules (token-inefficient)
@@ -231,7 +231,7 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 # From brain repository root (not implemented in bash yet - legacy PowerShell)
 # ./new-project.ps1 -Name my-project
 # Creates: ../my-project/ with AGENTS.md, ralph/, specs/, src/
-```
+```bash
 
 ---
 
@@ -274,7 +274,7 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 cd /home/grafe/code/brain/
 bash cortex/run.sh              # Single review cycle
 bash cortex/run.sh --help       # Show usage
-```
+```bash
 
 ---
 
@@ -310,9 +310,10 @@ bash cortex/run.sh --help       # Show usage
 - `PROMPT_verify.md` - Verification prompt (validation checks)
 
 **Stop Sentinel:**
-```
+```text
 :::COMPLETE:::
-```
+```text
+
 Only output when ALL tasks in IMPLEMENTATION_PLAN.md are 100% complete.
 
 ---
@@ -395,7 +396,7 @@ find specs/ -name "*.md" | wc -l
 # Total .md files in brain/ root (excluding subdirs)
 find . -maxdepth 1 -name "*.md" | wc -l
 # Current: ~7 files (AGENTS, NEURONS, PROMPT, IMPLEMENTATION_PLAN, THOUGHTS, THUNK, README, VALIDATION_CRITERIA)
-```
+```bash
 
 ### Validation Commands (Backpressure)
 ```bash
@@ -415,7 +416,7 @@ bash -n loop.sh
 
 # Check AGENTS.md and NEURONS.md exist
 ls -lh AGENTS.md NEURONS.md
-```
+```bash
 
 ---
 
@@ -490,7 +491,7 @@ cd /home/grafe/code/brain/ralph/
 bash loop.sh                           # Single iteration
 bash loop.sh --iterations 10           # Multiple iterations
 bash loop.sh --prompt PROMPT.md        # Use unified prompt
-```
+```bash
 
 ### Validating Brain Integrity
 ```bash
@@ -507,7 +508,7 @@ bash -n loop.sh
 
 # Directory structure
 tree -L 2 -I 'old_md|logs'
-```
+```bash
 
 ---
 
