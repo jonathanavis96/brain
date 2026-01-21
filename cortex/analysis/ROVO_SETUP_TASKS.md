@@ -61,7 +61,7 @@ Add these tasks to `workers/ralph/IMPLEMENTATION_PLAN.md` AFTER Phase 0-Sync:
   - **Goal:** Give Cortex a starting plan that Ralph can sync from
   - **Files:** `../rovo/cortex/IMPLEMENTATION_PLAN.md`
   - **Changes:**
-    1. Copy window management tasks from `brain/cortex/ROVO_WINDOW_FIX_PLAN.md`
+    1. Copy window management tasks from `brain/cortex/analysis/ROVO_WINDOW_FIX_PLAN.md`
     2. Create Phase 0-Window section with 4 tasks (0-W.1 through 0-W.4)
     3. Add note: "Synced from brain/cortex analysis (2026-01-21)"
     4. Remove any brain-specific tasks (no Phase 0-Sync for rovo!)

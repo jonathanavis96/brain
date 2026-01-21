@@ -26,6 +26,55 @@ Build and maintain an autonomous Atlassian account pool management system with i
 
 ## Active Task Contracts
 
+### Phase 0-Setup: Bootstrap Cortex Management (Priority: SETUP FIRST)
+
+**Context:** This rovo plan is currently just analysis files in brain/cortex/rovo/. Need to copy to actual rovo project.
+
+---
+
+#### **Task 0-S.1:** Copy cortex management files to rovo project
+
+- **Goal:** Setup cortex/ directory structure in actual rovo repository
+- **Context:** User has analyzed rovo project, created THOUGHTS.md and IMPLEMENTATION_PLAN.md in brain/cortex/rovo/
+- **Implementation:**
+  ```bash
+  # From brain repository root
+  
+  # 1. Create cortex directory in rovo
+  mkdir -p ../rovo/cortex
+  
+  # 2. Copy analysis files to rovo
+  cp cortex/rovo/THOUGHTS.md ../rovo/cortex/
+  cp cortex/rovo/IMPLEMENTATION_PLAN.md ../rovo/cortex/
+  
+  # 3. Copy cortex infrastructure from templates
+  cp templates/cortex/CORTEX_SYSTEM_PROMPT.project.md ../rovo/cortex/CORTEX_SYSTEM_PROMPT.md
+  cp templates/cortex/DECISIONS.project.md ../rovo/cortex/DECISIONS.md
+  cp templates/cortex/AGENTS.project.md ../rovo/cortex/AGENTS.md
+  cp templates/cortex/snapshot.sh ../rovo/cortex/
+  chmod +x ../rovo/cortex/snapshot.sh
+  
+  # 4. Replace placeholders in copied templates
+  cd ../rovo/cortex/
+  sed -i 's/{{PROJECT_NAME}}/Rovo Account Manager/g' *.md
+  sed -i 's/{{PROJECT_PURPOSE}}/Autonomous Atlassian account pool management/g' *.md
+  sed -i 's/{{TECH_STACK}}/Python, Selenium, PowerShell (WSL), Gmail API/g' *.md
+  sed -i "s/{{TIMESTAMP}}/$(date '+%Y-%m-%d %H:%M:%S')/g" *.md snapshot.sh
+  
+  echo "Cortex management setup complete for rovo project"
+  ```
+- **AC:**
+  - [ ] `../rovo/cortex/` directory exists
+  - [ ] THOUGHTS.md and IMPLEMENTATION_PLAN.md copied with window fix tasks
+  - [ ] CORTEX_SYSTEM_PROMPT.md, DECISIONS.md, AGENTS.md, snapshot.sh present
+  - [ ] Placeholders replaced with rovo-specific values
+  - [ ] snapshot.sh is executable
+- **If Blocked:** Verify `../rovo/` exists relative to brain repository
+
+**NOTE:** This is a ONE-TIME setup task. Once cortex/ exists in rovo, this task can be removed and rovo Ralph will work directly with his own cortex/IMPLEMENTATION_PLAN.md.
+
+---
+
 ### Phase 3-Backup: Safety First (Priority: CRITICAL - DO THIS FIRST)
 
 **Context:** Window management fix will modify 3 critical files. MUST backup before ANY changes.

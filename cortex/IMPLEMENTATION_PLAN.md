@@ -114,7 +114,7 @@ The `workers/ralph/.maintenance/verify-brain.sh` script reports `skills/index.md
 
 - [ ] **0.0** Implement sync_cortex_plan.sh script
   - **Priority:** CRITICAL (blocks all other Cortex → Ralph task delegation)
-  - **Goal:** Implement the task synchronization mechanism described in `cortex/TASK_SYNC_PROTOCOL.md`
+  - **Goal:** Implement the task synchronization mechanism described in `cortex/docs/TASK_SYNC_PROTOCOL.md`
   - **Context:**
     - Currently, there is NO automatic sync from `cortex/IMPLEMENTATION_PLAN.md` → `workers/ralph/IMPLEMENTATION_PLAN.md`
     - The protocol is documented but the script doesn't exist yet
@@ -134,7 +134,7 @@ The `workers/ralph/.maintenance/verify-brain.sh` script reports `skills/index.md
            bash sync_cortex_plan.sh
        fi
        ```
-  - **Reference Implementation:** See `cortex/TASK_SYNC_PROTOCOL.md` sections:
+  - **Reference Implementation:** See `cortex/docs/TASK_SYNC_PROTOCOL.md` sections:
     - "Sync Mechanism" (lines 60-85)
     - "Workflow Example" (lines 87-150)
     - "Pseudocode" (lines 200-230)
@@ -152,32 +152,7 @@ The `workers/ralph/.maintenance/verify-brain.sh` script reports `skills/index.md
 
 ---
 
-### Phase 0-Rovo: Setup Cortex for Rovo Project (Priority: MEDIUM)
-
-- [ ] **0-R.1** Create cortex/ directory in rovo project
-  - **Goal:** Add Cortex management infrastructure to existing rovo project
-  - **Context:** Rovo project exists at `../rovo/` (sibling to brain)
-  - **Implementation:**
-    1. Create `../rovo/cortex/` directory
-    2. Copy templates from `brain/templates/cortex/` to `../rovo/cortex/`:
-       - All .md files and snapshot.sh
-    3. Replace placeholders:
-       - `{{PROJECT_NAME}}` → `Rovo Account Manager`
-       - `{{PROJECT_PURPOSE}}` → `Autonomous Atlassian account pool management`
-       - `{{TECH_STACK}}` → `Python, Selenium, PowerShell (WSL), Gmail API`
-       - `{{TIMESTAMP}}` → Current timestamp (YYYY-MM-DD HH:MM:SS)
-    4. Copy window fix tasks from `brain/cortex/analysis/ROVO_WINDOW_FIX_PLAN.md` into `../rovo/cortex/IMPLEMENTATION_PLAN.md`
-    5. Make snapshot.sh executable: `chmod +x ../rovo/cortex/snapshot.sh`
-  - **AC:**
-    - [ ] `../rovo/cortex/` directory exists with all template files
-    - [ ] Placeholders replaced with rovo-specific values
-    - [ ] Window fix tasks copied into rovo cortex plan
-    - [ ] snapshot.sh is executable
-  - **If Blocked:** Verify `../rovo/` exists relative to brain repository
-
----
-
-## Phase 0-Quick: Documentation Updates (Priority: HIGH)
+### Phase 0-Quick: Documentation Updates (Priority: HIGH)
 
 - [ ] **0.1** Update README.md with setup instructions
   - **Goal:** Add installation and quick start documentation

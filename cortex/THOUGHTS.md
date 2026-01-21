@@ -209,7 +209,7 @@ The P1 item (Bash/Shell validation patterns) is the strongest candidate for prom
 - Documented in DEC-2026-01-21-003
 
 **Q: Does Ralph sync from cortex/IMPLEMENTATION_PLAN.md?**
-- A: Yes, Ralph's `loop.sh` should sync at startup (see `cortex/TASK_SYNC_PROTOCOL.md`)
+- A: Yes, Ralph's `loop.sh` should sync at startup (see `cortex/docs/TASK_SYNC_PROTOCOL.md`)
 - Ralph pulls from `cortex/IMPLEMENTATION_PLAN.md` → `IMPLEMENTATION_PLAN.md` (his working copy)
 
 **Impact:**
