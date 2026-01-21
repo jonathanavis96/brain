@@ -129,7 +129,7 @@ These tasks can be completed quickly and provide immediate value. Consider prior
 
 **Note:** These changes document the architecture but do NOT implement the sync mechanism yet. Actual sync logic will be implemented in Phase 0-B after human verification of the workers/ralph/ copy.
 
-- [ ] **0.A.3.1** Update `ralph/PROMPT.md` to reference Cortex as source of truth
+- [x] **0.A.3.1** Update `ralph/PROMPT.md` to reference Cortex as source of truth
   - **AC:** Add section explaining: "Cortex provides high-level tasks in `cortex/IMPLEMENTATION_PLAN.md`. Ralph copies this to his own `IMPLEMENTATION_PLAN.md` and tracks progress there."
   - **Note:** Document the intended workflow even though sync logic not implemented yet
 
