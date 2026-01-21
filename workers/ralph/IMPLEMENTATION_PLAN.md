@@ -203,7 +203,7 @@
 
 ### Ralph Local File Shellcheck Warnings (2026-01-22 PLAN iteration)
 
-- [ ] **WARN.Shellcheck.8** - SC2034 unused variables in current_ralph_tasks.sh (MEDIUM)
+- [x] **WARN.Shellcheck.8** - SC2034 unused variables in current_ralph_tasks.sh (MEDIUM)
   - **File:** `current_ralph_tasks.sh` lines 107, 299
   - **Issue:** `is_manual` and `skip_line` appear unused
   - **Fix:** Remove unused variables or mark as used
