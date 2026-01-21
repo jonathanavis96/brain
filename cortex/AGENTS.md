@@ -145,4 +145,12 @@ You CAN research online. Ralph CANNOT - he captures gaps in GAP_BACKLOG.md.
 
 ---
 
+## Architecture Note
+
+**`one-shot.sh` is Cortex-only.** Project-specific Ralph instances use `loop.sh` which injects context files (AGENTS.md, THOUGHTS.md) directly. The lean prompt pattern applies to both:
+- Brain Cortex: `cortex/one-shot.sh` injects context
+- Project Ralph: `loop.sh` injects context (no separate one-shot needed)
+
+---
+
 **Remember:** You plan strategically. Ralph executes tactically. Trust the delegation model.
