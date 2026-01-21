@@ -1,14 +1,9 @@
 Ralph Verifier Report
-Time: 2026-01-21 23:23:09
-Git:  7e5bdb7
+Time: 2026-01-21 23:42:33
+Git:  8556749
 AC:   /home/grafe/code/brain/rules/AC.rules
 Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
 ------------------------------------------------------------
-[2026-01-21 23:23:09] FAIL: AC hash mismatch (rules/AC.rules modified).
-Expected: 5e79a1275011ea0d6779db110040d72232325130a60d43e5eb892a12dcd265c2
-Actual:   516de6d60cb9e4d6892480a1d396bb90725945be0d763373a44bcdeeff073918
-Fix: If intentional, update:
-  sha256sum "/home/grafe/code/brain/rules/AC.rules" > "/home/grafe/code/brain/.verify/ac.sha256"
 [PASS] BugA.1
   desc: Parser uses in_task_section state tracking
   cmd:  grep -c 'in_task_section=false' current_ralph_tasks.sh
@@ -2380,11 +2375,13 @@ differ'
   cmd:  bash -c 'lines=$(wc -l < ../../cortex/CORTEX_SYSTEM_PROMPT.md 2>/dev/null || echo 0); [[ $lines -le 150 ]] && echo "ok ($lines lines)" || echo "OVER: $lines lines (max 150)"'
   exit: 0
   stdout: ok (82 lines)
-[WARN] Cortex.FileSizeLimit.AGENTS (auto check in warn gate)
+[WARN] Cortex.FileSizeLimit.AGENTS (auto check failed but warn gate)
   desc: cortex/AGENTS.md max 150 lines
   cmd:  bash -c 'lines=$(wc -l < ../../cortex/AGENTS.md 2>/dev/null || echo 0); [[ $lines -le 150 ]] && echo "ok ($lines lines)" || echo "OVER: $lines lines (max 150)"'
   exit: 0
-  stdout: ok (148 lines)
+  stdout: OVER: 156 lines (max 150)
+  reasons:
+    - stdout regex mismatch expected=/^ok/ got='OVER: 156 lines (max 150)'
 ------------------------------------------------------------
 SUMMARY
   PASS: 23
@@ -2392,4 +2389,4 @@ SUMMARY
   WARN: 28 (manual_warn=2)
   SKIP: 0
   Manual gate=block failures: 0
-  Hash guard: FAIL
+  Hash guard: OK

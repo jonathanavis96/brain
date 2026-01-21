@@ -67,6 +67,7 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
   - [Authentication Patterns](domains/auth-patterns.md) - OAuth2, JWT, session management
   - [Caching Patterns](domains/caching-patterns.md) - Redis, in-memory, CDN, and browser caching strategies
   - [API Design Patterns](domains/api-design-patterns.md) - REST, GraphQL, versioning, error handling
+  - [Change Propagation](domains/change-propagation.md) - Template sync, knowledge persistence, verification checklists
   - [Code Consistency](domains/code-consistency.md) - Documentation accuracy, terminology, parsing consistency
   - [Config Patterns](domains/config-patterns.md) - Portable configs, templates, environment variables
   - [Database Patterns](domains/database-patterns.md) - Schema design, ORMs, query optimization, migrations, transactions

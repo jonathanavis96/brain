@@ -48,7 +48,7 @@
 
 **Status:** Protocol documented, implementation pending
 
-- [ ] **0.S.1** Implement sync_cortex_plan.sh script
+- [x] **0.S.1** Implement sync_cortex_plan.sh script
   - **Goal:** Create automated task sync from `cortex/IMPLEMENTATION_PLAN.md` → `workers/ralph/IMPLEMENTATION_PLAN.md`
   - **Context:**
     - Protocol fully documented: `cortex/docs/TASK_SYNC_PROTOCOL.md` (343 lines)
