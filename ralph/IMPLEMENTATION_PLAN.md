@@ -122,7 +122,7 @@ These tasks can be completed quickly and provide immediate value. Consider prior
   - **AC:** Script uses strict mode, has usage help (`--help`)
   - **AC:** Script is executable
 
-- [ ] **0.A.2.3** Create `cortex/.gitignore` if needed
+- [x] **0.A.2.3** Create `cortex/.gitignore` if needed
   - **AC:** Ignores any local/temp files (e.g., snapshot output cache)
 
 - [ ] **0.A.2.4** Test: Run `bash cortex/run.sh --help` successfully
