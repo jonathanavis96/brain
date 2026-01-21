@@ -83,7 +83,7 @@ Use this format when creating new Task Contracts:
 
 ## Current Status
 
-**Last Updated:** 2026-01-21 19:57 (by Cortex)
+**Last Updated:** 2026-01-21 19:57:00 (by Cortex)
 
 ### ✅ Completed Phases
 
@@ -110,7 +110,79 @@ The `workers/ralph/.maintenance/verify-brain.sh` script reports `skills/index.md
 
 ## Active Task Contracts
 
-### Phase 1: Quick Fixes (Priority: HIGH)
+### Phase 0-P1: Critical Bug Fixes (Priority: HIGHEST)
+
+- [ ] **P1.1** Fix login retry logic in account verification flow
+  - **Priority:** P1 (Critical)
+  - **Goal:** Correct the retry flow to match intended behavior
+  - **Current Bug:** 
+    - Code incorrectly labels "Attempt 2" when it should be "Attempt 1"
+    - Retry flow doesn't match specification
+  - **Correct Flow:**
+    1. **Attempt 1**: Try typing account name
+    2. **Attempt 2** (if fail): Manual refresh with **tiny** Chrome window
+    3. **Attempt 3** (if fail): Manual refresh with **large** Chrome window + ask user to type account name and press Enter
+    4. **If still fails**: Mark account as burnt
+  - **Files to Fix:** (Ralph to identify based on codebase search for login/account verification logic)
+  - **AC:**
+    - [ ] Retry attempt numbers are correct (1, 2, 3)
+    - [ ] Attempt 2 uses tiny Chrome window (not large)
+    - [ ] Attempt 3 uses large Chrome window AND asks user to type account name
+    - [ ] Logic flow matches specification exactly
+    - [ ] Tests updated if applicable
+  - **If Blocked:** Report file locations and current logic for review
+
+---
+
+### Phase 0-Quick: Documentation Updates (Priority: HIGH)
+
+- [ ] **0.1** Update README.md with setup instructions
+  - **Goal:** Add installation and quick start documentation
+  - **Context:**
+    - New `setup.sh` script installs `cortex` and `ralph` commands globally
+    - Users need clear instructions on getting started
+    - **DO NOT merge to main** - there's a pending PR that needs fixing first
+  - **Implementation:** Add these sections to `README.md`:
+  
+    ```markdown
+    ## Quick Start
+    
+    ```bash
+    git clone https://github.com/jonathanavis96/brain
+    cd brain
+    bash setup.sh
+    source ~/.bashrc  # Or open a new terminal
+    cortex            # Ready to use!
+    ```
+    
+    ## What setup.sh Does
+    
+    - ✅ Detects brain location automatically
+    - ✅ Creates ~/bin/cortex and ~/bin/ralph symlinks
+    - ✅ Ensures ~/bin is in PATH
+    - ✅ Adds PATH to shell config if needed
+    - ✅ Works across different systems/users
+    
+    ## Available Commands
+    
+    ```bash
+    cortex              # Chat with Cortex (Opus 4.5)
+    cortex -h           # Help
+    ralph -i20 -p5      # Run Ralph (Sonnet 4.5)
+    ralph -h            # Help
+    ```
+    ```
+  
+  - **AC:**
+    - [ ] README.md updated with Quick Start section
+    - [ ] Setup instructions are clear and accurate
+    - [ ] Command examples are included
+    - [ ] Changes committed to current branch (NOT main)
+  - **If Blocked:** Ask for clarification on setup.sh location or behavior
+
+---
+
+### Phase 1: Quick Fixes (Priority: MEDIUM)
 
 These are low-effort tasks that provide immediate value. Ralph should complete these in order.
 

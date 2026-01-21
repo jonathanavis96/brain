@@ -86,7 +86,7 @@ The Cortex manager layer is operational and the repository restructure (Option B
 
 ## Strategic Analysis
 
-### Brain Repository Health (2026-01-21 19:30)
+### Brain Repository Health (2026-01-21 19:30:00)
 
 **Strengths:**
 - ✅ Strong verifier system (24/24 AC passing, only manual review WARNs)
@@ -163,7 +163,7 @@ The P1 item (Bash/Shell validation patterns) is the strongest candidate for prom
 
 ## Planning Session Log
 
-### 2026-01-21 19:57 - Phase 1 Task Refinement
+### 2026-01-21 19:57:00 - Phase 1 Task Refinement
 
 **Context:** Second Cortex planning session - refining Phase 1 tasks based on actual repository state.
 
@@ -196,7 +196,7 @@ The P1 item (Bash/Shell validation patterns) is the strongest candidate for prom
 
 ---
 
-### 2026-01-21 19:30 - Post-Restructure Planning
+### 2026-01-21 19:30:00 - Post-Restructure Planning
 
 **Context:** First Cortex planning session after successful Option B restructure.
 
