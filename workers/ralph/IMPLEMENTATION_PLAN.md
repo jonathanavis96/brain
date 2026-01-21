@@ -173,12 +173,12 @@
   - **AC:** `shellcheck ../../cortex/cortex.bash 2>&1 | grep -c SC2034` returns 0
   - **Commit:** `fix(cortex): remove unused RUNNER variable`
 
-- [ ] **WARN.Shellcheck.4** - SC2034 unused variable in cortex/cortex.bash (MEDIUM)
+- [x] **WARN.Shellcheck.4** - SC2034 unused variable in cortex/cortex.bash (MEDIUM)
   - **File:** `../../cortex/cortex.bash` line 107
   - **Issue:** `CONFIG_FLAG` appears unused
-  - **Fix:** Remove variable or mark as used/exported
+  - **Fix:** Variable already removed in previous commit (THUNK #344)
   - **AC:** `shellcheck ../../cortex/cortex.bash 2>&1 | grep -c SC2034` returns 0
-  - **Commit:** `fix(cortex): remove unused CONFIG_FLAG variable`
+  - **Commit:** Already fixed
 
 - [ ] **WARN.Shellcheck.5** - SC2001 use parameter expansion instead of sed (LOW)
   - **File:** `../../cortex/cortex.bash` line 179
