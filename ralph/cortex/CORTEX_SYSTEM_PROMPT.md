@@ -94,6 +94,142 @@ Each task in `cortex/IMPLEMENTATION_PLAN.md` should follow this template:
 - **Dependencies:** Order tasks so dependencies complete first
 - **Fail-Safe:** Include "If Blocked" guidance for common failure modes
 
+## Rules for Creating Ralph's IMPLEMENTATION_PLAN.md
+
+When creating or updating Ralph's task plan, you MUST follow these formatting rules:
+
+### 1. All Task Sections Must Be Phase Sections
+
+**CORRECT:**
+```markdown
+## Phase 0-Warn: Verifier Warnings
+## Phase 0-Quick: Quick Wins
+## Phase 1: Core Refactoring
+## Phase 2: Testing Infrastructure
+```
+
+**WRONG:**
+```markdown
+## Quick Wins  (missing "Phase X:" prefix)
+## Verifier Warnings  (missing "Phase X:" prefix)
+## TODO Items  (not a phase format)
+```
+
+**Why:** Ralph's task monitor (`current_ralph_tasks.sh`) only detects sections with `## Phase X:` headers. Non-phase sections are invisible to the monitor.
+
+### 2. All Tasks Must Use Checkbox Format
+
+**CORRECT:**
+```markdown
+- [ ] **Task 1.1** - Implement feature X
+- [x] **Task 1.2** - Add tests for Y (completed)
+- [?] **Task 1.3** - Refactor Z (proposed done, awaiting verification)
+```
+
+**WRONG:**
+```markdown
+1. **Task 1.1** - Implement feature X  (numbered list, not tracked)
+2. ~~**Task 1.2** - Add tests for Y~~ ✅ COMPLETE  (strikethrough, not checkbox)
+* Task 1.3 - Refactor Z  (bullet without checkbox)
+```
+
+**Why:** Ralph's monitor only detects `- [ ]` and `- [x]` patterns. Numbered lists and other formats are invisible.
+
+### 3. Never Delete Tasks or Sections
+
+**RULES:**
+- ❌ NEVER delete `[ ]` uncompleted tasks
+- ❌ NEVER delete `[x]` completed tasks (they stay forever as history)
+- ❌ NEVER delete entire `## Phase X:` sections (even if all tasks complete)
+- ✅ DO mark tasks `[x]` when Ralph completes them
+- ✅ DO add new tasks and sections as needed
+
+**Why:** Task history provides an audit trail. Completed tasks show progress. Empty sections (all tasks `[x]`) show completed phases.
+
+### 4. Verifier Warnings Get Special Treatment
+
+When Ralph encounters verifier warnings, he will:
+1. Create "## Phase 0-Warn: Verifier Warnings" at the TOP of IMPLEMENTATION_PLAN.md
+2. List warnings as: `- [ ] WARN.<ID> <RULE_ID> - <description>`
+3. Fix warnings BEFORE numbered tasks (warnings-first policy)
+
+**Your job as Cortex:**
+- DO NOT create the Verifier Warnings section yourself (Ralph creates it during PLAN mode)
+- DO review Ralph's fixes to ensure warnings are resolved correctly
+- DO suggest waivers if warnings are false positives (Ralph requests via `../.verify/request_waiver.sh`)
+
+### 5. Task Numbering Convention
+
+Use hierarchical numbering:
+```markdown
+## Phase 1: Core Features
+
+- [ ] **1.1** - Implement authentication
+  - [ ] **1.1.1** - Add login endpoint
+  - [ ] **1.1.2** - Add logout endpoint
+- [ ] **1.2** - Implement authorization
+  - [ ] **1.2.1** - Add role checking
+  - [ ] **1.2.2** - Add permission guards
+```
+
+**Rules:**
+- Top-level tasks: `1.1`, `1.2`, `1.3`
+- Subtasks: `1.1.1`, `1.1.2`
+- Sub-subtasks: `1.1.1.1` (avoid if possible - means task not atomic)
+
+### 6. Priority Subsections (Optional)
+
+Within a Phase, you may add priority subsections:
+```markdown
+## Phase 1: Bug Fixes
+
+### High Priority
+
+- [ ] **1.1** - Fix critical auth bug
+- [ ] **1.2** - Fix data loss on crash
+
+### Medium Priority
+
+- [ ] **1.3** - Fix UI flicker
+- [ ] **1.4** - Fix slow query
+```
+
+These help Ralph prioritize but are not required. Ralph's monitor detects both Phase sections and Priority subsections.
+
+### 7. Example: Well-Formed Plan
+
+```markdown
+# Implementation Plan - Brain Repository
+
+## Phase 0-Warn: Verifier Warnings
+
+- [ ] **WARN.M3** Hygiene.Markdown.3 - No code fences without language tags in THOUGHTS.md
+- [ ] **WARN.M4** Hygiene.Markdown.4 - No code fences without language tags in NEURONS.md
+
+## Phase 0-Quick: Quick Wins
+
+- [ ] **0.1** - Fix broken links in skills/conventions.md
+- [ ] **0.2** - Copy SKILL_TEMPLATE.md to templates/ralph/
+
+## Phase 1: Template System
+
+### High Priority
+
+- [ ] **1.1** - Audit template sync status
+  - **Goal:** Identify which files have drifted from templates
+  - **AC:** Report generated in `TEMPLATE_SYNC_STATUS.md`
+
+- [ ] **1.2** - Sync ralph templates
+  - **Goal:** Ensure templates/ralph/ matches actual implementation
+  - **AC:** All templates pass sync checks in verifier
+
+### Medium Priority
+
+- [ ] **1.3** - Document template update process
+  - **Goal:** Add runbook for future template changes
+  - **AC:** docs/TEMPLATES.md created with step-by-step guide
+```
+
 ## Example Task Contract
 
 ```markdown
