@@ -7,9 +7,18 @@
 Ralph loop for brain repository self-improvement. Runs PLAN/BUILD cycles to maintain knowledge base and templates.
 
 ## Prerequisites
-- WSL2 Ubuntu + bash
-- Atlassian CLI (`acli`) - https://developer.atlassian.com/cloud/cli/
-- RovoDev: `acli rovodev auth && acli rovodev usage site`
+- **Environment:** WSL (Windows Subsystem for Linux) on Windows 11 with Ubuntu
+- **Shell:** bash (comes with WSL Ubuntu)
+- **Atlassian CLI:** `acli` - https://developer.atlassian.com/cloud/cli/
+- **RovoDev:** `acli rovodev auth && acli rovodev usage site`
+
+## Environment Notes
+
+**WSL/Windows 11 Specifics:**
+- Working directory: `/mnt/c/...` or `/home/...` depending on where repository is cloned
+- Git line endings: Use `core.autocrlf=input` to avoid CRLF issues
+- File permissions: WSL handles Unix permissions on Windows filesystem
+- Path separators: Use Unix-style `/` paths (WSL translates automatically)
 
 ## How to Run
 ```bash

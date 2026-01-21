@@ -97,10 +97,11 @@ Located in `templates/`:
 | Template | Purpose | Files Included |
 |----------|---------|----------------|
 | `ralph/` | Full Ralph loop infrastructure | 14 files: loop.sh, monitors, verifier, rules/AC.rules, PROMPT.md, etc. |
+| `cortex/` | Cortex manager infrastructure | 5 files: CORTEX_SYSTEM_PROMPT.md, IMPLEMENTATION_PLAN.md, THOUGHTS.md, DECISIONS.md, snapshot.sh |
 | `backend/` | Backend project baseline | AGENTS.md, NEURONS.md, THOUGHTS.md, VALIDATION_CRITERIA.md |
 | `python/` | Python project baseline | Same as backend with Python-specific guidance |
 
-**Note:** `new-project.sh` automatically selects the correct template based on tech stack inference.
+**Note:** `new-project.sh` automatically selects the correct template based on tech stack inference and creates both Ralph and Cortex infrastructure.
 
 ## Manual Generator Usage (Advanced)
 

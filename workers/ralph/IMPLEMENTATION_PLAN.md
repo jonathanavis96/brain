@@ -26,6 +26,72 @@
 
 ---
 
+### Phase 0-Sync: Infrastructure (Priority: CRITICAL - DO THIS FIRST)
+
+- [ ] **0.0** Implement sync_cortex_plan.sh script
+  - **Priority:** CRITICAL (blocks all other Cortex → Ralph task delegation)
+  - **Goal:** Implement the task synchronization mechanism described in `cortex/TASK_SYNC_PROTOCOL.md`
+  - **Context:**
+    - Currently, there is NO automatic sync from `cortex/IMPLEMENTATION_PLAN.md` → `workers/ralph/IMPLEMENTATION_PLAN.md`
+    - The protocol is documented but the script doesn't exist yet
+    - Without this, Cortex must manually copy tasks or user must do it
+  - **Implementation:**
+    1. Create `workers/ralph/sync_cortex_plan.sh`
+    2. Implement logic from TASK_SYNC_PROTOCOL.md:
+       - Read `cortex/IMPLEMENTATION_PLAN.md`
+       - Extract tasks from Phase sections
+       - Check if task already synced (via `<!-- SYNCED_FROM_CORTEX: YYYY-MM-DD -->` marker)
+       - Append new tasks to `workers/ralph/IMPLEMENTATION_PLAN.md`
+       - Add sync markers to newly synced tasks
+    3. Integrate into `workers/ralph/loop.sh` startup sequence:
+       ```bash
+       # At start of PLAN mode, before task selection
+       if [[ -f "../cortex/IMPLEMENTATION_PLAN.md" ]]; then
+           bash sync_cortex_plan.sh
+       fi
+       ```
+  - **Reference Implementation:** See `cortex/TASK_SYNC_PROTOCOL.md` sections:
+    - "Sync Mechanism" (lines 60-85)
+    - "Workflow Example" (lines 87-150)
+    - "Pseudocode" (lines 200-230)
+  - **AC:**
+    - [ ] `workers/ralph/sync_cortex_plan.sh` exists and is executable
+    - [ ] Script reads from `cortex/IMPLEMENTATION_PLAN.md`
+    - [ ] Script appends new tasks to `workers/ralph/IMPLEMENTATION_PLAN.md`
+    - [ ] Synced tasks have `<!-- SYNCED_FROM_CORTEX: YYYY-MM-DD -->` markers
+    - [ ] Duplicate tasks are NOT created (check for existing markers)
+    - [ ] `loop.sh` calls sync script at startup in PLAN mode
+    - [ ] Test: Add a dummy task to cortex plan, run sync, verify it appears in Ralph's plan
+  - **If Blocked:** 
+    - Reference TASK_SYNC_PROTOCOL.md for detailed algorithm
+    - Ask user for clarification on sync timing or marker format
+
+---
+
+### Phase 0-P1: Critical Bug Fixes (Priority: HIGHEST)
+
+- [ ] **P1.1** Fix login retry logic in account verification flow
+  - **Priority:** P1 (Critical)
+  - **Goal:** Correct the retry flow to match intended behavior
+  - **Current Bug:** 
+    - Code incorrectly labels "Attempt 2" when it should be "Attempt 1"
+    - Retry flow doesn't match specification
+  - **Correct Flow:**
+    1. **Attempt 1**: Try typing account name
+    2. **Attempt 2** (if fail): Manual refresh with **tiny** Chrome window
+    3. **Attempt 3** (if fail): Manual refresh with **large** Chrome window + ask user to type account name and press Enter
+    4. **If still fails**: Mark account as burnt
+  - **Files to Fix:** (Ralph to identify based on codebase search for login/account verification logic)
+  - **AC:**
+    - [ ] Retry attempt numbers are correct (1, 2, 3)
+    - [ ] Attempt 2 uses tiny Chrome window (not large)
+    - [ ] Attempt 3 uses large Chrome window AND asks user to type account name
+    - [ ] Logic flow matches specification exactly
+    - [ ] Tests updated if applicable
+  - **If Blocked:** Report file locations and current logic for review
+
+---
+
 ## Phase 0-Warn: Verifier Warnings
 
 **Goal:** Address verifier warnings (non-blocking but should be fixed)

@@ -163,6 +163,72 @@ The P1 item (Bash/Shell validation patterns) is the strongest candidate for prom
 
 ## Planning Session Log
 
+### 2026-01-21 20:09:00 - Chat Session: System Improvements & P1 Bug
+
+**Context:** User reported P1 login retry logic bug and provided extensive guidance on Cortex operations.
+
+**Session Type:** Chat mode (not planning mode)
+
+**Key Actions Taken:**
+
+1. **P1 Bug Task Created:**
+   - Task P1.1: Fix login retry logic in account verification flow
+   - Correct flow documented: Attempt 1 → tiny window (Attempt 2) → large window + manual input (Attempt 3)
+   - Added to `cortex/IMPLEMENTATION_PLAN.md` as highest priority
+
+2. **Timestamp Format Violations Fixed:**
+   - Audited all `.md` files for `YYYY-MM-DD HH:MM` format (missing seconds)
+   - Fixed 6+ timestamp violations across:
+     - `IMPLEMENTATION_PLAN.md`
+     - `cortex/IMPLEMENTATION_PLAN.md`
+     - `cortex/THOUGHTS.md`
+     - `workers/ralph/IMPLEMENTATION_PLAN.md`
+
+3. **System Prompt Enhanced:**
+   - Added "Performance Best Practices" section to `CORTEX_SYSTEM_PROMPT.md`
+   - Documented: NEVER call interactive scripts (loop.sh, current_ralph_tasks.sh, etc.)
+   - Added "Timestamp Format Standard" section
+   - Added "Additional Reading" references
+
+4. **snapshot.sh Enhanced:**
+   - Added "Ralph Worker Status" section (#6)
+   - Shows Ralph task completion ratio, next 3 pending tasks, last 3 completions
+   - Eliminates need to call interactive Ralph scripts
+
+5. **Decisions Documented:**
+   - DEC-2026-01-21-001: Cortex Performance - No Interactive Scripts
+   - DEC-2026-01-21-002: Timestamp Format Standard (YYYY-MM-DD HH:MM:SS)
+   - DEC-2026-01-21-003: Cortex File Access Boundaries
+
+6. **README Task Created:**
+   - Task 0.1: Update README.md with setup instructions
+   - Priority: HIGH (after P1 bug fix)
+   - Warning: DO NOT merge to main (pending PR)
+
+**User Questions Addressed:**
+
+**Q: Can Cortex code things it shouldn't?**
+- A: Yes, technically I can use `create_file`/`find_and_replace_code`
+- Current prevention: Trust-based (system prompt)
+- Recommended enforcement: Verifier rule checking git commits post-facto
+- Documented in DEC-2026-01-21-003
+
+**Q: Does Ralph sync from cortex/IMPLEMENTATION_PLAN.md?**
+- A: Yes, Ralph's `loop.sh` should sync at startup (see `cortex/TASK_SYNC_PROTOCOL.md`)
+- Ralph pulls from `cortex/IMPLEMENTATION_PLAN.md` → `IMPLEMENTATION_PLAN.md` (his working copy)
+
+**Impact:**
+- Cortex now has clear performance guidelines (no more 56+ second hangs)
+- All timestamps are now consistent across documentation
+- Ralph has P1 bug fix task ready to execute
+- System boundaries documented and enforcement strategy defined
+
+**Next Steps:**
+- Commit changes to git
+- Ralph will pull cortex/IMPLEMENTATION_PLAN.md and execute P1.1 first
+
+---
+
 ### 2026-01-21 19:57:00 - Phase 1 Task Refinement
 
 **Context:** Second Cortex planning session - refining Phase 1 tasks based on actual repository state.
