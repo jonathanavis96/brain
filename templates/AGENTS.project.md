@@ -125,6 +125,19 @@ project-root/           ← Working directory for application files
 - Keep project goals and vision in `ralph/THOUGHTS.md`
 - Maintain `ralph/IMPLEMENTATION_PLAN.md` as a prioritized task list
 
+## Environment Prerequisites
+
+- **Environment:** WSL (Windows Subsystem for Linux) on Windows 11 with Ubuntu
+- **Shell:** bash (comes with WSL Ubuntu)
+- **Atlassian CLI:** `acli` - https://developer.atlassian.com/cloud/cli/
+- **RovoDev:** `acli rovodev auth && acli rovodev usage site`
+
+### WSL/Windows 11 Specifics
+- Working directory: `/mnt/c/...` or `/home/...` depending on where repository is cloned
+- Git line endings: Use `core.autocrlf=input` to avoid CRLF issues
+- File permissions: WSL handles Unix permissions on Windows filesystem
+- Path separators: Use Unix-style `/` paths (WSL translates automatically)
+
 ## Ralph Integration
 
 This project uses the Ralph Wiggum iterative loop for systematic development:
