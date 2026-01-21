@@ -15,7 +15,7 @@ Incorporate any relevant maintenance items into the appropriate priority section
 **Status:** Active - Phase 0-A in progress (Cortex Manager Pack - Create & Setup)  
 **Branch:** `brain-work` (2 commits ahead of origin)  
 **Last Updated:** 2026-01-20  
-**Progress:** 1 of 64 tasks complete (1.6%)
+**Progress:** 2 of 64 tasks complete (3.1%)
 
 ---
 
@@ -30,7 +30,7 @@ Incorporate any relevant maintenance items into the appropriate priority section
 - [x] **0.A.1.1** Create `brain/cortex/` folder
   - **AC:** Folder exists at `brain/cortex/`
 
-- [ ] **0.A.1.2** Create `cortex/CORTEX_SYSTEM_PROMPT.md` - Opus identity and rules
+- [x] **0.A.1.2** Create `cortex/CORTEX_SYSTEM_PROMPT.md` - Opus identity and rules
   - **AC:** File contains: role definition ("You are Cortex, the Brain's manager"), what Cortex can modify (only IMPLEMENTATION_PLAN.md, THOUGHTS.md, GAP_BACKLOG.md, SKILL_BACKLOG.md), what Cortex cannot modify (PROMPT.md, loop.sh, verifier.sh, source code), workflow (Plan → Review → Delegate), Task Contract format template
 
 - [ ] **0.A.1.3** Create `cortex/REPO_MAP.md` - Human-friendly repo navigation
