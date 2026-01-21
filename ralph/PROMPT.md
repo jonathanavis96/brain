@@ -111,19 +111,28 @@ Before finishing, print exactly one of these markers on its own line:
 - Use Brain Skills: `skills/SUMMARY.md` → `references/HOTLIST.md` → specific rules only if needed
 
 ### Actions
-1. Pick FIRST unchecked `[ ]` task (including subtasks like 1.1)
+1. **CHECK FOR VERIFIER WARNINGS FIRST:**
+   - If `IMPLEMENTATION_PLAN.md` has a "## Verifier Warnings" section with unchecked `- [ ]` tasks:
+     - Pick ONE warning task (prioritize High > Medium > Low)
+     - Fix that warning
+     - Mark it complete `- [x]` in the Verifier Warnings section
+     - Commit with message: `fix(ralph): resolve verifier warning <RULE_ID>`
+     - Skip to step 3 (validate), then proceed to steps 4-8
+   - If all warnings are checked `- [x]` or section doesn't exist, proceed to step 2
+
+2. Pick FIRST unchecked `[ ]` numbered task (e.g., `0.A.1.1`, including subtasks like 1.1)
    - **This is your ONLY task this iteration**
 
-2. Implement using exactly 1 subagent for modifications
+3. Implement using exactly 1 subagent for modifications
 
-3. Validate per AGENTS.md commands
+4. Validate per AGENTS.md commands
 
-4. Log completion to THUNK.md: When marking task `[x]`, append to current era table:
+5. Log completion to THUNK.md: When marking task `[x]`, append to current era table:
    ```markdown
    | <next_thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |
    ```
 
-5. Commit ALL changes (local only, no push):
+6. Commit ALL changes (local only, no push):
    ```bash
    git add -A
    git commit -m "<type>(<scope>): <summary>
@@ -135,15 +144,17 @@ Before finishing, print exactly one of these markers on its own line:
    Brain-Repo: ${BRAIN_REPO:-jonathanavis96/brain}"
    ```
 
-6. Update IMPLEMENTATION_PLAN.md: mark `[x]` complete, add any discovered subtasks
+7. Update IMPLEMENTATION_PLAN.md: mark `[x]` complete, add any discovered subtasks
 
-7. **Self-Improvement Check:** If you used undocumented knowledge/procedure/tooling:
+8. **Self-Improvement Check:** If you used undocumented knowledge/procedure/tooling:
    - Search `skills/` for existing matching skill
    - Search `skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
    - If not found: append new entry to `GAP_BACKLOG.md`
    - If gap is clear, specific, and recurring: promote to `SKILL_BACKLOG.md`
 
-8. **STOP** - Do not push, do not continue to next task
+9. **STOP** - Do not push, do not continue to next task
+
+**Important:** Warnings-first policy - Always check and fix verifier warnings before numbered tasks.
 
 ---
 
