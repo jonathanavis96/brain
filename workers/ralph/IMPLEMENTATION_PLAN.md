@@ -48,23 +48,30 @@ These tasks can be completed quickly and provide immediate value. Consider prior
 
 ## Overview
 
-**Status:** PLAN mode - Comprehensive planning review  
+**Status:** PLAN mode - Repository context analysis  
 **Branch:** `brain-work` (10 commits ahead of origin)  
-**Last Updated:** 2026-01-21 17:31  
-**Progress:** 15 of 62 numbered tasks complete (24.2%)
+**Last Updated:** 2026-01-21 18:46  
+**Progress:** 17 of 62 numbered tasks complete (27.4%)
+
+**Current Environment:**
+- Location: `/home/grafe/code/brain_backup_20260121_175506/workers/ralph/`
+- This is a **backup directory** created during Phase 0-A restructuring
+- Repository shows post-restructure state with workers/ralph/ as new Ralph location
+- Tasks 0.A.4.1-0.A.4.3 appear completed (commits ccbf26f, b742eb6)
 
 **Current Focus:**
-- Phase 0-A (Cortex Manager Pack) - 15/19 tasks complete (78.9% of phase)
-- Next BUILD task: 0.A.4.2 - Copy entire brain/ralph/ to brain/workers/ralph/
-- All verifier checks PASSING (24/24), 25 warnings remaining
-- 4 more tasks to complete Phase 0-A before mandatory human verification
+- Phase 0-A (Cortex Manager Pack) - 17/19 tasks complete (89.5% of phase)
+- Next BUILD task: 0.A.4.4 - Update path references in workers/ralph/ documentation files
+- 2 more tasks to complete Phase 0-A before mandatory human verification
 
 **Verifier Health:**
-- ✅ All 24 acceptance criteria PASSING
-- ✅ Protected file hashes current (loop.sh, verifier.sh, PROMPT.md)
+- ❌ 1 FAILURE: Protected.1 (loop.sh hash mismatch) - **EXPECTED during Phase 0-A restructuring**
+- ✅ 23 of 24 acceptance criteria PASSING
 - ⚠️ 25 warnings (4 high complete, 3 medium complete, 18 low/manual remaining)
-- ⚠️ Last verifier run: 2026-01-21 15:03:54 (commit 1c7b7f9)
-- ⚠️ Maintenance check shows 4 known issues (already tracked in plan)
+- ⚠️ Last verifier run: 2026-01-21 17:33:11 (commit 59d1d76)
+
+**Protected.1 Failure Context:**
+The `loop.sh` hash mismatch is **expected behavior** during Phase 0-A. The file was modified in `workers/ralph/` to update path references (commit b742eb6), but `.verify/loop.sha256` still references the original `brain/ralph/loop.sh` baseline. This will be resolved in Phase 0-B after human verification.
 
 **Strategic Notes:**
 - Phase 0-A focuses on Cortex creation (no breaking changes to Ralph)
@@ -152,15 +159,17 @@ These tasks can be completed quickly and provide immediate value. Consider prior
 - [x] **0.A.4.1** Create `brain/workers/` folder
   - **AC:** Folder exists at `brain/workers/`
 
-- [ ] **0.A.4.2** Copy entire `brain/ralph/` to `brain/workers/ralph/`
+- [x] **0.A.4.2** Copy entire `brain/ralph/` to `brain/workers/ralph/`
   - **AC:** All files and subfolders copied (preserving structure)
   - **AC:** Original `brain/ralph/` still exists (not moved yet)
   - **AC:** Verify with: `diff -rq brain/ralph brain/workers/ralph` shows no differences
+  - **Completed:** Commit ccbf26f
 
-- [ ] **0.A.4.3** Update path references in `workers/ralph/loop.sh`
+- [x] **0.A.4.3** Update path references in `workers/ralph/loop.sh`
   - **AC:** All relative paths updated (e.g., `../cortex/` becomes `../../cortex/`)
   - **AC:** SCRIPT_DIR detection still works from new location
   - **AC:** Path to `.verify/` updated if needed
+  - **Completed:** Commit b742eb6 (causes expected Protected.1 failure until Phase 0-B)
 
 - [ ] **0.A.4.4** Update path references in `workers/ralph/PROMPT.md`, `workers/ralph/AGENTS.md`, `workers/ralph/NEURONS.md`
   - **AC:** All file references use correct relative paths from new location
