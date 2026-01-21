@@ -50,7 +50,7 @@ brain/
 ├── THOUGHTS.md                    # Vision & Ralph's mission
 ├── IMPLEMENTATION_PLAN.md         # Current tasks for brain maintenance
 │
-├── skills/                        # Skills & Knowledge Base (7 files)
+├── skills/                        # Skills & Knowledge Base (33 files)
 │   ├── SUMMARY.md                 # KB index
 │   ├── conventions.md             # KB authoring guide
 │   ├── domains/                   # Reusable patterns
