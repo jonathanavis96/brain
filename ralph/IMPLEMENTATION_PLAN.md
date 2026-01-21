@@ -50,13 +50,13 @@ Incorporate any relevant maintenance items into the appropriate priority section
 ## Overview
 
 **Status:** Active - BUILD mode iteration, Phase 0-A in progress  
-**Branch:** `brain-work` (8 commits ahead of origin)  
+**Branch:** `brain-work` (9 commits ahead of origin)  
 **Last Updated:** 2026-01-21  
-**Progress:** 4 of 85 tasks complete (4.7%)
+**Progress:** 5 of 85 tasks complete (5.9%)
 
 **Current Focus:**
-- Phase 0-A (Cortex Manager Pack) - 3/19 tasks complete (15.8% of phase)
-- Next task: 0.A.1.4 - Create cortex/DECISIONS.md
+- Phase 0-A (Cortex Manager Pack) - 4/19 tasks complete (21.1% of phase)
+- Next task: 0.A.1.5 - Create cortex/RUNBOOK.md
 - Phase 0-C marked complete (verifier PLAN mode already committed)
 - All verifier checks PASSING (24/24), 25 warnings tracked but not blocking
 
