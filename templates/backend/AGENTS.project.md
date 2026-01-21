@@ -101,6 +101,19 @@ When you discover a new convention, architectural decision, or project-specific 
 - **Monitoring**: Expose health check and metrics endpoints
 - **Security**: Sanitize inputs, use HTTPS, protect against common attacks (CSRF, XSS, SQL injection)
 
+## Environment Prerequisites
+
+- **Environment:** WSL (Windows Subsystem for Linux) on Windows 11 with Ubuntu
+- **Shell:** bash (comes with WSL Ubuntu)
+- **Atlassian CLI:** `acli` - https://developer.atlassian.com/cloud/cli/
+- **RovoDev:** `acli rovodev auth && acli rovodev usage site`
+
+### WSL/Windows 11 Specifics
+- Working directory: `/mnt/c/...` or `/home/...` depending on where repository is cloned
+- Git line endings: Use `core.autocrlf=input` to avoid CRLF issues
+- File permissions: WSL handles Unix permissions on Windows filesystem
+- Path separators: Use Unix-style `/` paths (WSL translates automatically)
+
 ## Ralph Integration
 
 This project uses the Ralph Wiggum iterative loop for systematic development:
