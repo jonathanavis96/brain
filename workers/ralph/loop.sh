@@ -236,6 +236,7 @@ ROLLBACK_MODE=false
 ROLLBACK_COUNT=1
 RESUME_MODE=false
 NO_MONITORS=false
+CONSECUTIVE_VERIFIER_FAILURES=0
 
 # Parse args
 while [[ $# -gt 0 ]]; do
@@ -763,12 +764,16 @@ run_once() {
       echo "========================================"
       echo "🎉 ${phase^^} iteration verified successfully!"
       echo "========================================"
+      CONSECUTIVE_VERIFIER_FAILURES=0
     else
       echo ""
       echo "========================================"
       echo "⚠️  ${phase^^} completed but verification failed."
       echo "Review .verify/latest.txt for details."
       echo "========================================"
+      # Return special exit code for verifier failure (not human intervention)
+      # This allows the main loop to track consecutive failures
+      return 44
     fi
   fi
   
@@ -1004,6 +1009,35 @@ if [[ -n "$PROMPT_ARG" ]]; then
       echo "After resolving the issue, re-run the loop to continue."
       exit 1
     fi
+    # Check if verifier failed (exit code 44) - give one retry then stop
+    if [[ $run_result -eq 44 ]]; then
+      CONSECUTIVE_VERIFIER_FAILURES=$((CONSECUTIVE_VERIFIER_FAILURES + 1))
+      if [[ $CONSECUTIVE_VERIFIER_FAILURES -ge 2 ]]; then
+        echo ""
+        echo "========================================"
+        echo "🛑 LOOP STOPPED: Consecutive verifier failures"
+        echo "========================================"
+        echo "Verifier failed $CONSECUTIVE_VERIFIER_FAILURES times in a row."
+        echo "Ralph was given a retry iteration but could not fix the issues."
+        echo ""
+        echo "Review .verify/latest.txt for details."
+        echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
+        echo ""
+        echo "After fixing manually, re-run the loop to continue."
+        exit 1
+      else
+        echo ""
+        echo "========================================"
+        echo "⚠️  Verifier failed - giving Ralph one retry iteration"
+        echo "========================================"
+        echo "Next iteration will inject LAST_VERIFIER_RESULT: FAIL"
+        echo "Ralph should fix the AC failures before picking new tasks."
+        echo ""
+      fi
+    else
+      # Reset counter on successful iteration
+      CONSECUTIVE_VERIFIER_FAILURES=0
+    fi
   done
 else
   # Alternating plan/build
@@ -1055,6 +1089,16 @@ else
     # Capture exit code without triggering set -e
     run_result=0
     if [[ "$i" -eq 1 ]] || (( PLAN_EVERY > 0 && ( (i-1) % PLAN_EVERY == 0 ) )); then
+      # Sync tasks from Cortex before PLAN mode
+      if [[ -f "$RALPH/sync_cortex_plan.sh" ]]; then
+        echo "Syncing tasks from Cortex..."
+        if bash "$RALPH/sync_cortex_plan.sh" 2>&1; then
+          echo "✓ Cortex sync complete"
+        else
+          echo "⚠ Cortex sync failed (non-blocking)"
+        fi
+        echo ""
+      fi
       run_once "$PLAN_PROMPT" "plan" "$i" || run_result=$?
     else
       run_once "$BUILD_PROMPT" "build" "$i" || run_result=$?
@@ -1071,6 +1115,35 @@ else
       echo "Loop paused - human intervention required."
       echo "After resolving the issue, re-run the loop to continue."
       exit 1
+    fi
+    # Check if verifier failed (exit code 44) - give one retry then stop
+    if [[ $run_result -eq 44 ]]; then
+      CONSECUTIVE_VERIFIER_FAILURES=$((CONSECUTIVE_VERIFIER_FAILURES + 1))
+      if [[ $CONSECUTIVE_VERIFIER_FAILURES -ge 2 ]]; then
+        echo ""
+        echo "========================================"
+        echo "🛑 LOOP STOPPED: Consecutive verifier failures"
+        echo "========================================"
+        echo "Verifier failed $CONSECUTIVE_VERIFIER_FAILURES times in a row."
+        echo "Ralph was given a retry iteration but could not fix the issues."
+        echo ""
+        echo "Review .verify/latest.txt for details."
+        echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
+        echo ""
+        echo "After fixing manually, re-run the loop to continue."
+        exit 1
+      else
+        echo ""
+        echo "========================================"
+        echo "⚠️  Verifier failed - giving Ralph one retry iteration"
+        echo "========================================"
+        echo "Next iteration will inject LAST_VERIFIER_RESULT: FAIL"
+        echo "Ralph should fix the AC failures before picking new tasks."
+        echo ""
+      fi
+    else
+      # Reset counter on successful iteration
+      CONSECUTIVE_VERIFIER_FAILURES=0
     fi
   done
 fi
