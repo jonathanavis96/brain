@@ -2,6 +2,17 @@
 
 > Rules for ensuring changes propagate to all required locations.
 
+## Integrity Rules (Canonical Source: `cortex/CORTEX_SYSTEM_PROMPT.md`)
+
+| Rule | Description |
+|------|-------------|
+| **Say-Do Rule** | NEVER claim "I updated X" without actually writing to a file. Show file and line numbers. |
+| **Propagation Rule** | When updating any file, check if `templates/` needs the same update. |
+| **Templates First Rule** | Before making any change, run `ls templates/` to see what might need sync. |
+| **Link Integrity Rule** | When creating/updating files, verify all referenced paths exist. |
+| **Verify Before Done Rule** | Before saying "complete", run syntax checks, link checks, confirm changes exist. |
+| **Rule Proposal Rule** | When you notice repeated user feedback, ASK if it should become a rule. |
+
 ## Quick Reference
 
 | Change Type | Must Also Update |
@@ -20,24 +31,29 @@ Agent: "I've updated my knowledge that one-shot.sh is Cortex-only"
 Reality: Never wrote this to any file
 
 ✅ RIGHT - Write to persistent location
-Agent: "I've documented this in cortex/AGENTS.md under Architecture Note"
+Agent: "I've documented this in cortex/AGENTS.md lines 145-155"
 Then actually write it to the file
 ```
 
 ## Verification Checklist
 
-Before marking any change complete, ask:
+Before marking any change complete:
 
-1. **Templates?** - Does this change apply to `templates/` for new projects?
-2. **Skills?** - Is this a reusable pattern that belongs in `skills/domains/`?
-3. **DECISIONS.md?** - Is this an architectural decision to document?
-4. **Written proof?** - Did I actually write it, or just say I did?
+1. **Templates First** - Run `ls templates/` - what needs sync?
+2. **Propagation** - Did I update all related templates?
+3. **Skills?** - Is this a reusable pattern for `skills/domains/`?
+4. **Link Integrity** - Do all file references exist?
+5. **Verify** - Run `bash -n`, `python -m py_compile`, link checks
+6. **Written Proof** - Show file:lines for each claim
 
 ## Template Sync Rule
 
 **When updating project-specific files, always check if the template needs the same update.**
 
 ```bash
+# Before ANY change:
+ls templates/
+
 # Example: Updated cortex/rovo/loop.sh with context injection
 # Must also update:
 templates/ralph/loop.sh
