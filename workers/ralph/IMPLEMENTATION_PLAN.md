@@ -2,29 +2,30 @@
 
 **Status:** PLAN mode - Ready for BUILD execution  
 **Branch:** `brain-work`  
-**Last Updated:** 2026-01-22 00:01:21 (Ralph PLAN iteration)  
-**Progress:** 42/73 tasks complete (58%) - All phases prioritized and ready
+**Last Updated:** 2026-01-22 00:52:52 (Ralph PLAN iteration)  
+**Progress:** 42/93 tasks complete (45%) - Phase 8 added for pre-commit linting
 
 **Current Status:**
-- ✅ Phase 0-Sync (Infrastructure) - COMPLETE (1/1 tasks)
+- ✅ Phase 0-Sync (Infrastructure) - COMPLETE (2/2 tasks)
 - ✅ Phase 0-Warn (Verifier Warnings) - COMPLETE (9/9 tasks)
 - ✅ Phase 0-A (Cortex Manager Pack) - COMPLETE (19/19 tasks)
 - ✅ Phase 0-B (Cleanup & Templates) - COMPLETE (12/12 tasks)
-- 📋 Phase 0-Quick (Quick Wins) - 2/5 complete, **3 HIGH PRIORITY tasks remaining**
+- 📋 Phase 0-Quick (Quick Wins) - 2/8 complete, **6 HIGH PRIORITY tasks remaining**
 - 📋 Phase 1 (CodeRabbit Outside-Diff) - 0/5 complete
-- 📋 Phase 2 (Shell Script Cleanup) - 0/16 complete
+- 📋 Phase 2 (Shell Script Cleanup) - 0/14 complete
 - 📋 Phase 3 (Quick Reference Tables) - 0/5 complete
 - ✅ Phase 4 (Template Maintenance) - COMPLETE (2/2 marked obsolete)
 - 📋 Phase 5 (Design Decisions) - 0/6 complete
 - 📋 Phase 6 (Review PR #4 D-Items) - 0/22 complete
 - 📋 Phase 7 (Maintenance Items) - 0/1 complete
+- 📋 Phase 8 (Pre-commit Linting) - 0/11 complete (LOW priority)
 
 **Task Breakdown:**
-- Total: 73 tasks (42 complete, 31 remaining)
-- Phase 0: 42/47 complete (3 quick wins + 1 sync integration pending)
-- Phases 1-7: 0/26 complete (all pending)
+- Total: 93 tasks (42 complete, 51 remaining)
+- Phase 0: 42/50 complete (6 quick wins + 1 sync integration pending)
+- Phases 1-8: 0/43 complete (all pending)
 
-**Next Priority:** Phase 0-Quick tasks (0.Q.3, 0.Q.4, 0.Q.5) - Quick wins with immediate value
+**Next Priority:** Phase 0-Quick tasks (0.Q.3, 0.Q.4, 0.Q.5, 0.Q.8) - Quick wins with immediate value
 
 **Verifier Status:**
 - `.verify/latest.txt` is empty (no recent verifier run)
@@ -185,6 +186,15 @@
 
 - [x] **0.Q.7** Add Quick Reference tables to skills files
   - **Status:** ✅ COMPLETE - Maintenance check shows "All skills have Quick Reference tables"
+
+- [ ] **0.Q.8** Install linting tools and enable pre-commit hooks
+  - **Goal:** Set up static analysis infrastructure for code quality
+  - **Steps:**
+    1. Run `bash setup-linters.sh` to install shellcheck, markdownlint, ruff, mypy, jq, yq, pre-commit
+    2. Run `pre-commit install` to enable git hooks
+    3. Run `pre-commit run --all-files` to verify all files pass
+  - **AC:** `pre-commit run --all-files` exits with code 0 (or only warnings)
+  - **Commit:** `chore(tools): enable pre-commit hooks for static analysis`
 
 
 ## Phase 0-A: Cortex Manager Pack - Create & Setup (19 items) - ✅ COMPLETE 2026-01-21
@@ -583,3 +593,49 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
   - **AC:** All maintenance items incorporated into appropriate phases
   - **AC:** Completed items logged in `.maintenance/MAINTENANCE_LOG.md`
 
+---
+
+## Phase 8: Pre-commit Linting Cleanup (LOW PRIORITY)
+
+**Goal:** Fix all pre-commit hook warnings for clean commits
+
+**Source:** `pre-commit run --all-files` output (2026-01-22)
+
+### 8.1 Shellcheck Warnings
+Fix shell script warnings (non-critical style issues):
+
+- [ ] **8.1.1** Fix SC2034 (unused variables) in `current_ralph_tasks.sh`
+  - Lines: 107 (`is_manual`), 299 (`skip_line`)
+  - **AC:** `shellcheck current_ralph_tasks.sh 2>&1 | grep -c SC2034` returns 0
+
+- [ ] **8.1.2** Fix SC2162 (read without -r) in shell scripts
+  - Files: `current_ralph_tasks.sh`, `pr-batch.sh`
+  - **AC:** `shellcheck -e SC1091 *.sh 2>&1 | grep -c SC2162` returns 0
+
+- [ ] **8.1.3** Fix SC2155 (declare and assign separately) in shell scripts
+  - Files: `current_ralph_tasks.sh` line 267
+  - **AC:** `shellcheck -e SC1091 *.sh 2>&1 | grep -c SC2155` returns 0
+
+### 8.2 Markdownlint Warnings
+Fix markdown formatting issues:
+
+- [ ] **8.2.1** Fix MD032 (blank lines around lists) in markdown files
+  - Files: `cortex/AGENTS.md`, and others
+  - **AC:** `markdownlint . 2>&1 | grep -c MD032` returns 0
+
+- [ ] **8.2.2** Fix MD031 (blank lines around fences) in markdown files
+  - Files: `cortex/AGENTS.md`, and others
+  - **AC:** `markdownlint . 2>&1 | grep -c MD031` returns 0
+
+- [ ] **8.2.3** Fix MD022 (blank lines around headings) in markdown files
+  - **AC:** `markdownlint . 2>&1 | grep -c MD022` returns 0
+
+- [ ] **8.2.4** Fix MD060 (table column style) in markdown files
+  - Files: `cortex/AGENTS.md` line 86
+  - **AC:** `markdownlint . 2>&1 | grep -c MD060` returns 0
+
+### 8.3 Final Verification
+
+- [ ] **8.3.1** Run full pre-commit and verify all pass
+  - **AC:** `pre-commit run --all-files` exits with code 0
+  - **Commit:** `style: fix all pre-commit linting warnings`
