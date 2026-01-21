@@ -15,12 +15,13 @@ If your prompt header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 5. **THEN** output `:::BUILD_READY:::` so the verifier can re-run
 
 If `.verify/latest.txt` contains `[WARN]` lines with `(auto check failed but warn gate)`:
-1. **ADD** "## Verifier Warnings" section at TOP of IMPLEMENTATION_PLAN.md (after header, before phases)
+1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of IMPLEMENTATION_PLAN.md (after header, before other phases)
 2. **LIST** each as: `- [ ] WARN.<ID> <RULE_ID> - <description>`
-3. **IGNORE** warnings marked `(auto check in warn gate)` - already passing
-4. **NEVER** mark `[x]` until verifier confirms fix (re-run shows `[PASS]`)
-5. **NEVER** add "FALSE POSITIVE" notes - request waiver instead via `.verify/request_waiver.sh`
-6. In BUILD mode: Fix ONE warning, mark `[?]`, commit. Verifier determines `[x]`.
+3. **NEVER use numbered lists (1. 2. 3.)** - ALWAYS use checkbox format `- [ ]`
+4. **IGNORE** warnings marked `(auto check in warn gate)` - already passing
+5. **NEVER** mark `[x]` until verifier confirms fix (re-run shows `[PASS]`)
+6. **NEVER** add "FALSE POSITIVE" notes - request waiver instead via `../.verify/request_waiver.sh`
+7. In BUILD mode: Fix ONE warning, mark `[?]`, commit. Verifier determines `[x]`.
 
 Common failure types:
 - **Hash mismatch** (e.g., `Protected.1`): A protected file was modified. You cannot fix this - report to human.
@@ -127,6 +128,9 @@ Please complete these manual checks before marking the project as fully done.
 
 ### Actions
 1. Create/update IMPLEMENTATION_PLAN.md:
+   - ALL task sections MUST be "## Phase X:" format (e.g., "## Phase 0-Quick: Quick Wins", "## Phase 1: Maintenance")
+   - ALL tasks MUST use checkbox format: `- [ ]` or `- [x]`
+   - NEVER use numbered lists (1. 2. 3.) for tasks
    - Prioritize: High → Medium → Low
    - Break down complex tasks hierarchically (1.1, 1.2, 1.3)
    - A task is "atomic" when completable in ONE BUILD iteration
@@ -282,7 +286,10 @@ You may mark tasks `[?]` when you've implemented changes. The verifier determine
 - **Search before creating** - Verify something doesn't exist before adding it
 - **One task per BUILD** - No batching, no "while I'm here" extras
 - **Never remove uncompleted items** - NEVER delete `[ ]` tasks from IMPLEMENTATION_PLAN.md
-- **Protected files** - Do NOT modify: `rules/AC.rules`, `.verify/ac.sha256`, `verifier.sh`, `.verify/verifier.sha256`, `loop.sh`, `.verify/loop.sha256`, `PROMPT.md`, `.verify/prompt.sha256`
+- **Never delete completed tasks** - Mark tasks `[x]` complete but NEVER delete them (they stay forever as history)
+- **Never delete sections** - NEVER remove entire sections (## Phase X:, ## Verifier Warnings, etc.) even if all tasks are complete
+- **Never use numbered lists** - ALL tasks must use checkbox format `- [ ]` or `- [x]`, NEVER `1. 2. 3.`
+- **Protected files** - Do NOT modify: `rules/AC.rules`, `../.verify/ac.sha256`, `verifier.sh`, `../.verify/verifier.sha256`, `loop.sh`, `../.verify/loop.sha256`, `PROMPT.md`, `../.verify/prompt.sha256`
 
 ---
 
