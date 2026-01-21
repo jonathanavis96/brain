@@ -6,12 +6,12 @@
 **Progress:** Phases 0-A, 0-B, 0-Warn complete; Phase 0-Quick and 0-Sync ready for execution
 
 **Current Status:**
-- ✅ Phase 0-Warn (Verifier Warnings) - COMPLETE (4/4 warnings fixed)
+- ⚠️ Phase 0-Warn (Verifier Warnings) - IN PROGRESS (4/9 warnings fixed, 5 new warnings added)
 - ✅ Phase 0-A (Cortex Manager Pack) - COMPLETE (19/19 tasks)
 - ✅ Phase 0-B (Cleanup & Templates) - COMPLETE (12/12 tasks)
-- 📋 Phase 0-Sync (Infrastructure) - READY (2 tasks: sync script + integration)
+- ✅ Phase 0-Sync (Infrastructure) - COMPLETE (1/1 tasks)
 - 📋 Phase 0-Quick (Quick Wins) - READY (3 tasks: templates, paths, terminology)
-- ✅ All verifier checks PASSING (24/24) - No failures, no new warnings
+- ⚠️ Verifier: 1 FAIL (Protected.3 - PROMPT.md hash mismatch, requires human intervention), 5 new WARN
 - ✅ Maintenance check complete - Found path resolution issue in verify-brain.sh
 
 **Next Priority:** Fix verify-brain.sh path resolution (task 0.Q.5), then complete other Quick Wins
@@ -120,6 +120,26 @@
 - [x] **WARN.VerifyMeta.1** - Verifier run_id.txt exists and is non-empty (HIGH)
   - **Issue:** `.verify/run_id.txt` was missing
   - **Fix:** Copied from `../.verify/run_id.txt` - now passing
+
+- [ ] **WARN.Template.1** - thunk_ralph_tasks.sh matches template (MEDIUM)
+  - **Issue:** thunk_ralph_tasks.sh differs from templates/ralph/thunk_ralph_tasks.sh
+  - **Fix:** Sync changes from working version to template or vice versa
+
+- [ ] **WARN.Hygiene.TemplateSync.1** - current_ralph_tasks.sh matches template (MEDIUM)
+  - **Issue:** current_ralph_tasks.sh differs from templates/ralph/current_ralph_tasks.sh
+  - **Fix:** Sync changes from working version to template or vice versa
+
+- [ ] **WARN.Hygiene.TemplateSync.2** - loop.sh core logic matches template (MEDIUM)
+  - **Issue:** loop.sh core logic differs from templates/ralph/loop.sh (excluding hashes)
+  - **Fix:** Review differences and sync if appropriate
+
+- [ ] **WARN.Hygiene.Markdown.4** - No code fences without language tags in NEURONS.md (MEDIUM)
+  - **Issue:** NEURONS.md contains 1 plain code fence (was fixed before, regressed)
+  - **Fix:** Find and add language tag to the plain code fence
+
+- [ ] **WARN.Cortex.FileSizeLimit.AGENTS** - cortex/AGENTS.md max 150 lines (MEDIUM)
+  - **Issue:** cortex/AGENTS.md is 156 lines (max 150)
+  - **Fix:** Reduce file size by condensing or moving content
 
 ## Phase 0-Quick: Quick Wins (High Value, Low Effort)
 
