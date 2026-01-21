@@ -4,10 +4,10 @@ set -euo pipefail
 # ROOT can be overridden via env var for project delegation
 if [[ -n "${RALPH_PROJECT_ROOT:-}" ]]; then
   ROOT="$RALPH_PROJECT_ROOT"
-  RALPH="$ROOT/ralph"
+  RALPH="$ROOT/workers/ralph"
 else
-  ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-  RALPH="$ROOT/ralph"
+  ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+  RALPH="$ROOT/workers/ralph"
 fi
 LOGDIR="$RALPH/logs"
 mkdir -p "$LOGDIR"
