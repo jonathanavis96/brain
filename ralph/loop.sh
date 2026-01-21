@@ -144,13 +144,15 @@ usage() {
   cat <<'EOF'
 Usage:
   loop.sh [--prompt <path>] [--iterations N] [--plan-every N] [--yolo|--no-yolo]
-          [--model <model>] [--branch <name>] [--dry-run] [--no-monitors] 
+          [--runner rovodev|opencode] [--model <model>] [--branch <name>] [--dry-run] [--no-monitors]
+          [--opencode-serve] [--opencode-port N] [--opencode-attach <url>] [--opencode-format json|text]
           [--rollback [N]] [--resume]
 
 Defaults:
   --iterations 1
   --plan-every 3
-  --model       Uses default from ~/.rovodev/config.yml
+  --runner      rovodev
+  --model       Sonnet 4.5 (rovodev) or Grok Code (opencode). Use --model auto for rovodev config.
   --branch      Defaults to <repo>-work (e.g., brain-work, NeoQueue-work)
   If --prompt is NOT provided, loop alternates:
     - PLAN on iteration 1 and every N iterations
@@ -162,8 +164,13 @@ Model Selection:
                    sonnet  -> Sonnet 4.5 (anthropic.claude-sonnet-4-5-20250929-v1:0)
                    opus    -> Opus 4.5 (anthropic.claude-opus-4-5-20251101-v1:0)
                    sonnet4 -> Sonnet 4 (anthropic.claude-sonnet-4-20250514-v1:0)
-                   auto    -> Use default from ~/.rovodev/config.yml
-                   Or provide a full model ID directly.
+                    auto    -> Use default from ~/.rovodev/config.yml
+                    Or provide a full model ID directly.
+
+Runner Selection:
+  --runner rovodev|opencode
+                   rovodev: uses acli rovodev run (default)
+                   opencode: uses opencode run (provider/model). See: opencode models
 
 Branch Workflow:
   --branch <name>  Work on specified branch (creates if needed, switches to it)
@@ -175,6 +182,12 @@ Safety Features:
   --no-monitors   Skip auto-launching monitor terminals (useful for CI/CD or headless environments)
   --rollback [N]  Undo last N Ralph commits (default: 1). Requires confirmation.
   --resume        Resume from last incomplete iteration (checks for uncommitted changes)
+
+OpenCode Options:
+  --opencode-serve      Start local OpenCode server for faster runs (implies --opencode-attach localhost:4096)
+  --opencode-port N     Port for OpenCode server (default: 4096)
+  --opencode-attach <url> Attach to running OpenCode server at <url> (e.g., http://localhost:4096)
+  --opencode-format default|json  Format for OpenCode output (default: default; use default for grep-based verifiers)
 
 Examples:
   # Run BUILD once (from anywhere)
@@ -210,10 +223,15 @@ EOF
 ITERATIONS=1
 PLAN_EVERY=3
 YOLO_FLAG="--yolo"
+RUNNER="rovodev"
 PROMPT_ARG=""
 MODEL_ARG=""
 BRANCH_ARG=""
 DRY_RUN=false
+OPENCODE_SERVE=false
+OPENCODE_PORT=4096
+OPENCODE_ATTACH=""
+OPENCODE_FORMAT="default"
 ROLLBACK_MODE=false
 ROLLBACK_COUNT=1
 RESUME_MODE=false
@@ -232,6 +250,16 @@ while [[ $# -gt 0 ]]; do
       YOLO_FLAG="--yolo"; shift ;;
     --no-yolo)
       YOLO_FLAG=""; shift ;;
+    --runner)
+      RUNNER="${2:-}"; shift 2 ;;
+    --opencode-serve)
+      OPENCODE_SERVE=true; shift ;;
+    --opencode-port)
+      OPENCODE_PORT="${2:-4096}"; shift 2 ;;
+    --opencode-attach)
+      OPENCODE_ATTACH="${2:-}"; shift 2 ;;
+    --opencode-format)
+      OPENCODE_FORMAT="${2:-default}"; shift 2 ;;
     --model)
       MODEL_ARG="${2:-}"; shift 2 ;;
     --branch)
@@ -282,33 +310,73 @@ resolve_model() {
   esac
 }
 
+# Resolve model shortcut to OpenCode provider/model.
+# IMPORTANT: Replace placeholder IDs below with the *exact* IDs from: opencode models
+resolve_model_opencode() {
+  local model="$1"
+  case "$model" in
+    grok|grokfast|grok-code-fast-1)
+      # Confirmed via opencode models
+      echo "opencode/grok-code" ;;
+    opus|opus4.5|opus45)
+      # Placeholder - anthropic not available in current setup
+      echo "opencode/gpt-5-nano" ;;  # Fallback to available model
+    sonnet|sonnet4.5|sonnet45)
+      # Placeholder - anthropic not available
+      echo "opencode/gpt-5-nano" ;;  # Fallback
+    latest|auto)
+      # Let OpenCode decide its own default if user explicitly asked for auto/latest
+      echo "" ;;
+    *)
+      # Pass through (user provided provider/model already, or an OpenCode alias)
+      echo "$model" ;;
+  esac
+}
+
 # Setup model config - default to Sonnet 4.5 for Ralph loops
 CONFIG_FLAG=""
 TEMP_CONFIG=""
 
-# Use provided model or default to Sonnet 4.5
+# Use provided model or default based on runner
 if [[ -z "$MODEL_ARG" ]]; then
-  MODEL_ARG="sonnet"  # Default for Ralph loops
+  if [[ "$RUNNER" == "opencode" ]]; then
+    MODEL_ARG="grok"   # Default for OpenCode (confirm mapping via: opencode models)
+  else
+    MODEL_ARG="sonnet" # Default for RovoDev Ralph loops
+  fi
 fi
 
-RESOLVED_MODEL="$(resolve_model "$MODEL_ARG")"
+if [[ "$RUNNER" == "opencode" ]]; then
+  RESOLVED_MODEL="$(resolve_model_opencode "$MODEL_ARG")"
+else
+  RESOLVED_MODEL="$(resolve_model "$MODEL_ARG")"
+fi
 
-# Only create temp config if we have a model to set
-if [[ -n "$RESOLVED_MODEL" ]]; then
-  TEMP_CONFIG="/tmp/rovodev_config_$$_$(date +%s).yml"
-  
-  # Copy base config and override modelId
-  if [[ -f "$HOME/.rovodev/config.yml" ]]; then
-    sed "s|^  modelId:.*|  modelId: $RESOLVED_MODEL|" "$HOME/.rovodev/config.yml" > "$TEMP_CONFIG"
-  else
-    cat > "$TEMP_CONFIG" <<EOFCONFIG
+# Only create RovoDev temp config when runner=rovodev and we have a model to set
+if [[ "$RUNNER" == "rovodev" ]]; then
+  if [[ -n "$RESOLVED_MODEL" ]]; then
+    TEMP_CONFIG="/tmp/rovodev_config_$$_$(date +%s).yml"
+    
+    # Copy base config and override modelId
+    if [[ -f "$HOME/.rovodev/config.yml" ]]; then
+      sed "s|^  modelId:.*|  modelId: $RESOLVED_MODEL|" "$HOME/.rovodev/config.yml" > "$TEMP_CONFIG"
+    else
+      cat > "$TEMP_CONFIG" <<EOFCONFIG
 version: 1
 agent:
   modelId: $RESOLVED_MODEL
 EOFCONFIG
+    fi
+    CONFIG_FLAG="--config-file $TEMP_CONFIG"
+    echo "Using model: $RESOLVED_MODEL"
   fi
-  CONFIG_FLAG="--config-file $TEMP_CONFIG"
-  echo "Using model: $RESOLVED_MODEL"
+else
+  # OpenCode runner uses provider/model directly; no temp config needed.
+  if [[ -n "$RESOLVED_MODEL" ]]; then
+    echo "Using model: $RESOLVED_MODEL"
+  else
+    echo "Using model: (OpenCode default)"
+  fi
 fi
 
 # Resolve target branch:
@@ -511,6 +579,18 @@ check_human_intervention() {
   return 1  # no intervention needed
 }
 
+# Check if previous verifier found protected file failures (requires human intervention)
+check_protected_file_failures() {
+  # If no failed rules, nothing to check
+  [[ -z "$LAST_VERIFIER_FAILED_RULES" ]] && return 1
+  
+  # Check if any Protected.* rules failed
+  if echo "$LAST_VERIFIER_FAILED_RULES" | grep -qE 'Protected\.[0-9]+'; then
+    return 0  # protected file failures found
+  fi
+  return 1  # no protected file failures
+}
+
 run_verifier() {
   if [[ ! -x "$VERIFY_SCRIPT" ]]; then
     echo "⚠️  Verifier not found or not executable: $VERIFY_SCRIPT"
@@ -638,8 +718,25 @@ run_once() {
     fi
   } > "$prompt_with_mode"
 
-  # Feed prompt into RovoDev
-  script -q -c "cat \"$prompt_with_mode\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG}" "$log"
+  # Feed prompt into selected runner
+  if [[ "$RUNNER" == "opencode" ]]; then
+    # NOTE: Passing full prompt as CLI arg can hit shell/argv limits if prompt is huge.
+    # If that happens, pivot to a file-based approach after validating basic integration.
+    attach_flag=""
+    if [[ -n "${OPENCODE_ATTACH:-}" ]]; then
+      attach_flag="--attach ${OPENCODE_ATTACH}"
+    fi
+    opencode run ${attach_flag} --model "${RESOLVED_MODEL}" --format "${OPENCODE_FORMAT}" "$(cat "$prompt_with_mode")" 2>&1 | tee "$log"
+    rc=$?
+    if [[ $rc -ne 0 ]]; then
+      echo "❌ OpenCode failed (exit $rc). See: $log"
+      tail -n 80 "$log" || true
+      return 1
+    fi
+  else
+    # Default: RovoDev
+    script -q -c "cat \"$prompt_with_mode\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG}" "$log"
+  fi
 
   # Clean up temporary prompt
   rm -f "$prompt_with_mode"
@@ -796,8 +893,39 @@ launch_monitors() {
     echo "    bash $monitor_dir/thunk_ralph_tasks.sh"
     echo "═══════════════════════════════════════════════════════════════"
     echo ""
-  fi
+   fi
 }
+
+# Start OpenCode server if requested
+if [[ "$RUNNER" == "opencode" ]]; then
+  if $OPENCODE_SERVE; then
+    OPENCODE_ATTACH="http://localhost:${OPENCODE_PORT}"
+    opencode serve --port "$OPENCODE_PORT" >/tmp/opencode_serve.log 2>&1 &
+    OPENCODE_SERVE_PID=$!
+    trap '[[ -n "${OPENCODE_SERVE_PID:-}" ]] && kill "$OPENCODE_SERVE_PID" 2>/dev/null' EXIT
+  fi
+fi
+
+# Fail fast if opencode runner but command not found
+if [[ "$RUNNER" == "opencode" ]]; then
+  command -v opencode >/dev/null 2>&1 || { echo "ERROR: opencode not found in PATH"; exit 1; }
+fi
+
+# Health check for attach endpoint (TCP port check)
+if [[ -n "${OPENCODE_ATTACH:-}" ]]; then
+  hostport="${OPENCODE_ATTACH#http://}"
+  hostport="${hostport#https://}"
+  hostport="${hostport%%/*}"
+  h="${hostport%%:*}"
+  p="${hostport##*:}"
+  if ! (echo > /dev/tcp/"$h"/"$p") >/dev/null 2>&1; then
+    echo "WARN: OpenCode attach endpoint not reachable; running without --attach"
+    OPENCODE_ATTACH=""
+  fi
+fi
+
+# Print effective config for debugging
+echo "Runner=${RUNNER} Model=${RESOLVED_MODEL:-<default>} Format=${OPENCODE_FORMAT:-<default>} Attach=${OPENCODE_ATTACH:-<none>} Serve=${OPENCODE_SERVE:-false}"
 
 # Ensure we're on the worktree branch before starting
 echo ""
@@ -821,6 +949,22 @@ if [[ -n "$PROMPT_ARG" ]]; then
       echo ""
       echo "Exiting gracefully after iteration $((i-1))."
       exit 130
+    fi
+    
+    # Check for protected file failures before starting LLM (requires human intervention)
+    if check_protected_file_failures; then
+      echo ""
+      echo "========================================"
+      echo "🛑 HUMAN INTERVENTION REQUIRED"
+      echo "========================================"
+      echo "Protected file hash mismatches detected: $LAST_VERIFIER_FAILED_RULES"
+      echo ""
+      echo "These files are protected and cannot be fixed by Ralph."
+      echo "Please regenerate baselines manually:"
+      echo "  sha256sum <file> | cut -d' ' -f1 > .verify/<file>.sha256"
+      echo ""
+      echo "After resolving, re-run the loop to continue."
+      exit 1
     fi
     
     # Capture exit code without triggering set -e
@@ -848,6 +992,22 @@ else
       echo ""
       echo "Exiting gracefully after iteration $((i-1))."
       exit 130
+    fi
+    
+    # Check for protected file failures before starting LLM (requires human intervention)
+    if check_protected_file_failures; then
+      echo ""
+      echo "========================================"
+      echo "🛑 HUMAN INTERVENTION REQUIRED"
+      echo "========================================"
+      echo "Protected file hash mismatches detected: $LAST_VERIFIER_FAILED_RULES"
+      echo ""
+      echo "These files are protected and cannot be fixed by Ralph."
+      echo "Please regenerate baselines manually:"
+      echo "  sha256sum <file> | cut -d' ' -f1 > .verify/<file>.sha256"
+      echo ""
+      echo "After resolving, re-run the loop to continue."
+      exit 1
     fi
     
     # Capture exit code without triggering set -e
