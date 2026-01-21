@@ -82,7 +82,12 @@ check_waiver() {
             fi
         fi
         
-        # Valid waiver found
+        # Valid waiver found - move to .used (one-time-use)
+        local used_file="${approved_file%.approved}.used"
+        mv "$approved_file" "$used_file" 2>/dev/null || {
+            echo "WARNING: Failed to move waiver ${waiver_id} to .used" >&2
+        }
+        echo "INFO: Waiver ${waiver_id} consumed (moved to .used)" >&2
         return 0
     done
     

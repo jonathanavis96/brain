@@ -21,7 +21,8 @@ If `.verify/latest.txt` contains `[WARN]` lines with `(auto check failed but war
 4. **IGNORE** warnings marked `(auto check in warn gate)` - already passing
 5. **NEVER** mark `[x]` until verifier confirms fix (re-run shows `[PASS]`)
 6. **NEVER** add "FALSE POSITIVE" notes - request waiver instead via `../.verify/request_waiver.sh`
-7. In BUILD mode: Fix ONE warning, mark `[?]`, commit. Verifier determines `[x]`.
+7. **Waivers are one-time-use** - After verifier uses a waiver, it's moved to `.used` and deleted. Only request waivers for issues you genuinely cannot fix.
+8. In BUILD mode: Fix ONE warning, mark `[?]`, commit. Verifier determines `[x]`.
 
 Common failure types:
 - **Hash mismatch** (e.g., `Protected.1`): A protected file was modified. You cannot fix this - report to human.
