@@ -330,7 +330,7 @@ create_new_era() {
     local timestamp=$(date "+%Y-%m-%d")
     
     # Append new era section to THUNK.md
-    cat >> "$THUNK_FILE" << EOF
+    cat >> "$THUNK_FILE" << EOF  # Era: write operation for new era creation
 
 ## Era: $era_name
 Started: $timestamp
