@@ -112,7 +112,6 @@ get_waiver_info() {
         local waiver_paths=""
         local waiver_expires=""
         local waiver_id=""
-        local waiver_reason=""
 
         while IFS='=' read -r key value; do
             case "$key" in
@@ -120,7 +119,6 @@ get_waiver_info() {
                 RULE_ID) waiver_rule="$value" ;;
                 PATHS) waiver_paths="$value" ;;
                 EXPIRES) waiver_expires="$value" ;;
-                REASON) waiver_reason="$value" ;;
             esac
         done < "$approved_file"
 
