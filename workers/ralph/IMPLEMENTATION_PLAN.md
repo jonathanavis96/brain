@@ -129,9 +129,9 @@
   - **Issue:** current_ralph_tasks.sh differs from templates/ralph/current_ralph_tasks.sh
   - **Resolution:** Files are identical - false positive (likely stale warning)
 
-- [ ] **WARN.Hygiene.TemplateSync.2** - loop.sh core logic matches template (MEDIUM)
-  - **Issue:** loop.sh core logic differs from templates/ralph/loop.sh (excluding hashes)
-  - **Fix:** Review differences and sync if appropriate
+- [x] **WARN.Hygiene.TemplateSync.2** - loop.sh core logic matches template (MEDIUM)
+  - **Issue:** loop.sh core logic differs from templates/ralph/loop.sh (path changes and removed context injection)
+  - **Fix:** Synced working version to template (updated paths ralph/ → workers/ralph/, removed AGENTS.md/THOUGHTS.md injection)
 
 - [x] **WARN.Hygiene.Markdown.4** - No code fences without language tags in NEURONS.md (MEDIUM)
   - **Issue:** Rule design flaw - checks for any `^```$` pattern which matches closing fences (correct markdown)
