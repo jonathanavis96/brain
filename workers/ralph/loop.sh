@@ -678,6 +678,8 @@ run_once() {
   local prompt_with_mode="/tmp/rovodev_prompt_with_mode_$$_${iter}.md"
   {
     echo "# MODE: ${phase^^}"
+    echo "# REPOSITORY: $REPO_NAME"
+    echo "# ROOT: $ROOT"
     echo ""
 
     # Inject verifier status from previous iteration (if any)
