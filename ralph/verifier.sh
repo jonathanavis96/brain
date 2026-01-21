@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 AC_FILE="${1:-${SCRIPT_DIR}/rules/AC.rules}"
 APPROVALS_FILE="${2:-${SCRIPT_DIR}/rules/MANUAL_APPROVALS.rules}"
 
-VERIFY_DIR="${SCRIPT_DIR}/.verify"
+VERIFY_DIR="${SCRIPT_DIR}/../.verify"
 REPORT_FILE="${VERIFY_DIR}/latest.txt"
 AC_HASH_FILE="${VERIFY_DIR}/ac.sha256"
 

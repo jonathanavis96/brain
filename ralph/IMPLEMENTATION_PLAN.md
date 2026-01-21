@@ -1,30 +1,5 @@
 # Implementation Plan - Brain Repository
 
-## Verifier Warnings
-
-**Status:** 25 warnings detected (non-blocking). All critical protected file checks PASSING.
-
-### High Priority Warnings (Should Fix Soon)
-- [x] **WARN.M1** `Hygiene.Markdown.2` - AGENTS.md has 4 code fences without language tags (FALSE POSITIVE: verifier counts closing fences; all opening fences have language tags)
-- [x] **WARN.M2** `Hygiene.Markdown.3` - THOUGHTS.md has 4 code fences without language tags (FALSE POSITIVE: verifier counts closing fences; all opening fences have language tags)
-- [x] **WARN.M3** `Hygiene.Markdown.4` - NEURONS.md has 11 code fences without language tags (FALSE POSITIVE: verifier counts closing fences; all opening fences have language tags)
-- [x] **WARN.ST1** `Hygiene.Structure.1` - NEURONS.md skills/ file count is outdated (claims <20, actual >20)
-
-### Medium Priority Warnings (Fix During Template Phase)
-- [x] **WARN.T1** `Template.1` - thunk_ralph_tasks.sh differs from template (FALSE POSITIVE: verified match)
-- [x] **WARN.T2** `Hygiene.TemplateSync.1` - current_ralph_tasks.sh differs from template (FALSE POSITIVE: verified match)
-- [x] **WARN.T3** `Hygiene.TemplateSync.2` - loop.sh core logic differs from template (FALSE POSITIVE: verified identical via sha256sum - both files match exactly)
-
-### Low Priority Warnings (Investigation/Future Work)
-- [x] **WARN.S1-S4** `Hygiene.Shellcheck.1-4` - Double-line output in shellcheck tests (0\n0 instead of 0) - FALSE POSITIVE: grep -c outputs "0" then || echo 0 adds another "0". Actual shellcheck validation passing (no SC2034/SC2155 issues). Cannot fix: AC.rules and verifier.sh are protected files.
-- [ ] **WARN.D1-D2** `Hygiene.DocSync.1-2` - Double-line output in AGENTS.md THUNK monitor checks
-- [ ] **WARN.O1** `BugC.Auto.2` - THUNK writes outside era creation (1 match found) - verify intentional
-- [ ] **WARN.O2-O3** `BugB.Auto.1-2` - Display cursor positioning and stty handling checks
-
-### Manual Review (Human Task)
-- [ ] **WARN.UI1** `BugB.UI.1` - Manual test: current_ralph_tasks.sh visual corruption after terminal resize
-- [ ] **WARN.UI2** `BugC.UI.1` - Manual test: THUNK monitor is display-only (doesn't modify files)
-
 ## Maintenance Check (Planning Mode Only)
 
 **When in planning mode**, run `bash .maintenance/verify-brain.sh` and review `.maintenance/MAINTENANCE.md`.
@@ -425,20 +400,5 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
 
 <!-- Auto-populated by verify-brain.sh - items below are consistency/housekeeping tasks -->
 <!-- When completed, remove from here AND from .maintenance/MAINTENANCE.md -->
-
-### Current Maintenance Items (from verify-brain.sh 2026-01-20)
-
-- [ ] **M.1** Create or sync template: `templates/ralph/SKILL_TEMPLATE.md` from `skills/self-improvement/SKILL_TEMPLATE.md`
-  - **Note:** This is already covered by Phase 1, Task 1.2
-- [ ] **M.2** Add missing sections to `templates/ralph/PROMPT.md`: `## Maintenance Check`, `## MAINTENANCE`
-  - **Note:** This is already covered by Phase 4, Tasks 4.1 and 4.2
-- [ ] **M.3** Fix broken links in skills files
-  - `skills/conventions.md` → `../path/to/file.md` (placeholder link)
-  - `skills/projects/brain-example.md` → incorrect relative paths
-  - **Note:** This is already covered by Phase 1, Task 1.3
-- [ ] **M.4** Add Quick Reference tables to 5 skill files
-  - **Note:** This is already covered by Phase 3, Tasks 3.1-3.5
-
-**Status:** All maintenance items are already incorporated into existing phases. No additional tasks needed.
 
 _Run `bash .maintenance/verify-brain.sh` to check for maintenance items._

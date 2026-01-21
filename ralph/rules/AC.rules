@@ -247,29 +247,33 @@ expect_stdout=0
 mode=auto
 gate=warn
 desc=No unused variables in current_ralph_tasks.sh (SC2034)
-cmd=shellcheck -f gcc current_ralph_tasks.sh 2>/dev/null | grep -c 'SC2034' || echo 0
+cmd=shellcheck -f gcc current_ralph_tasks.sh 2>/dev/null | grep -c 'SC2034' || true
 expect_stdout=0
+expect_exit=0
 
 [Hygiene.Shellcheck.2]
 mode=auto
 gate=warn
 desc=No SC2155 issues in current_ralph_tasks.sh (local var masking)
-cmd=shellcheck -f gcc current_ralph_tasks.sh 2>/dev/null | grep -c 'SC2155' || echo 0
+cmd=shellcheck -f gcc current_ralph_tasks.sh 2>/dev/null | grep -c 'SC2155' || true
 expect_stdout=0
+expect_exit=0
 
 [Hygiene.Shellcheck.3]
 mode=auto
 gate=warn
 desc=No unused variables in thunk_ralph_tasks.sh (SC2034)
-cmd=shellcheck -f gcc thunk_ralph_tasks.sh 2>/dev/null | grep -c 'SC2034' || echo 0
+cmd=shellcheck -f gcc thunk_ralph_tasks.sh 2>/dev/null | grep -c 'SC2034' || true
 expect_stdout=0
+expect_exit=0
 
 [Hygiene.Shellcheck.4]
 mode=auto
 gate=warn
 desc=No SC2155 issues in thunk_ralph_tasks.sh (local var masking)
-cmd=shellcheck -f gcc thunk_ralph_tasks.sh 2>/dev/null | grep -c 'SC2155' || echo 0
+cmd=shellcheck -f gcc thunk_ralph_tasks.sh 2>/dev/null | grep -c 'SC2155' || true
 expect_stdout=0
+expect_exit=0
 
 # -----------------------------------------------------------------------------
 # Terminology Consistency (kb → skills migration)
@@ -329,22 +333,25 @@ expect_stdout=0
 mode=auto
 gate=warn
 desc=No code fences without language tags in AGENTS.md
-cmd=grep -cE '^```$' AGENTS.md 2>/dev/null || echo 0
+cmd=grep -cE '^```$' AGENTS.md 2>/dev/null || true
 expect_stdout=0
+expect_exit=0
 
 [Hygiene.Markdown.3]
 mode=auto
 gate=warn
 desc=No code fences without language tags in THOUGHTS.md
-cmd=grep -cE '^```$' THOUGHTS.md 2>/dev/null || echo 0
+cmd=grep -cE '^```$' THOUGHTS.md 2>/dev/null || true
 expect_stdout=0
+expect_exit=0
 
 [Hygiene.Markdown.4]
 mode=auto
 gate=warn
 desc=No code fences without language tags in NEURONS.md
-cmd=grep -cE '^```$' NEURONS.md 2>/dev/null || echo 0
+cmd=grep -cE '^```$' NEURONS.md 2>/dev/null || true
 expect_stdout=0
+expect_exit=0
 
 # -----------------------------------------------------------------------------
 # Documentation Sync (THUNK Monitor specific - Bug C)
@@ -354,15 +361,17 @@ expect_stdout=0
 mode=auto
 gate=warn
 desc=AGENTS.md THUNK monitor docs don't reference removed 'f' hotkey
-cmd=grep -A5 'THUNK Monitor' AGENTS.md | grep -c 'force sync\|f.*sync' 2>/dev/null || echo 0
+cmd=grep -A5 'THUNK Monitor' AGENTS.md | grep -c 'force sync\|f.*sync' 2>/dev/null || true
 expect_stdout=0
+expect_exit=0
 
 [Hygiene.DocSync.2]
 mode=auto
 gate=warn
 desc=AGENTS.md THUNK monitor docs don't claim auto-sync
-cmd=grep -A10 'THUNK Monitor' AGENTS.md | grep -c 'Auto-sync\|auto-sync' 2>/dev/null || echo 0
+cmd=grep -A10 'THUNK Monitor' AGENTS.md | grep -c 'Auto-sync\|auto-sync' 2>/dev/null || true
 expect_stdout=0
+expect_exit=0
 
 # -----------------------------------------------------------------------------
 # Status Consistency

@@ -14,11 +14,13 @@ If your prompt header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 4. **COMMIT** your fix with message: `fix(ralph): resolve AC failure <RULE_ID>`
 5. **THEN** output `:::BUILD_READY:::` so the verifier can re-run
 
-If `.verify/latest.txt` contains `[WARN]` lines:
-1. **READ** all warnings carefully
-2. **ADD** a "## Verifier Warnings" section at the TOP of IMPLEMENTATION_PLAN.md (after the header, before tasks)
-3. **LIST** each warning as a checkbox task: `- [ ] Fix warning: <RULE_ID> - <description>`
-4. **PRIORITIZE** these as high-priority tasks to fix in upcoming BUILD iterations
+If `.verify/latest.txt` contains `[WARN]` lines with `(auto check failed but warn gate)`:
+1. **ADD** "## Verifier Warnings" section at TOP of IMPLEMENTATION_PLAN.md (after header, before phases)
+2. **LIST** each as: `- [ ] WARN.<ID> <RULE_ID> - <description>`
+3. **IGNORE** warnings marked `(auto check in warn gate)` - already passing
+4. **NEVER** mark `[x]` until verifier confirms fix (re-run shows `[PASS]`)
+5. **NEVER** add "FALSE POSITIVE" notes - request waiver instead via `.verify/request_waiver.sh`
+6. In BUILD mode: Fix ONE warning, mark `[?]`, commit. Verifier determines `[x]`.
 
 Common failure types:
 - **Hash mismatch** (e.g., `Protected.1`): A protected file was modified. You cannot fix this - report to human.
