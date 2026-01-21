@@ -40,17 +40,17 @@ Incorporate any relevant maintenance items into the appropriate priority section
 These tasks can be completed quickly and provide immediate value. Consider prioritizing during BUILD iterations:
 
 1. ~~**WARN.ST1** - Update NEURONS.md skills/ file count~~ ✅ COMPLETE
-2. ~~**Task 1.1** - Fix terminology: Change "Brain KB" to "Brain Skills" in PROMPT.md:40~~ ✅ NOT FOUND (already fixed)
-3. **Task 1.2** - Copy SKILL_TEMPLATE.md to templates/ralph/ (maintenance item)
-4. **Task 1.3** - Fix broken links in skills/conventions.md and skills/projects/brain-example.md
+2. ~~**Task 1.1** - Fix terminology: Change "Brain KB" to "Brain Skills" in PROMPT.md:40~~ ✅ VERIFIED (not found - already fixed)
+3. **Task 1.2** - Copy SKILL_TEMPLATE.md to templates/ralph/ (maintenance item M.1)
+4. **Task 1.3** - Fix broken links in skills files (maintenance item M.3)
 
-**Note:** Task 1.1 appears already complete - no "Brain KB" references found in PROMPT.md.
+**Note:** Task 1.1 verified complete - no "Brain KB" references found in PROMPT.md.
 
 ## Overview
 
-**Status:** PLAN mode - Reviewing and updating plan  
+**Status:** PLAN mode - Comprehensive planning review  
 **Branch:** `brain-work` (10 commits ahead of origin)  
-**Last Updated:** 2026-01-21 15:02  
+**Last Updated:** 2026-01-21 17:31  
 **Progress:** 15 of 62 numbered tasks complete (24.2%)
 
 **Current Focus:**
@@ -62,9 +62,9 @@ These tasks can be completed quickly and provide immediate value. Consider prior
 **Verifier Health:**
 - ✅ All 24 acceptance criteria PASSING
 - ✅ Protected file hashes current (loop.sh, verifier.sh, PROMPT.md)
-- ⚠️ 25 warnings (0 high priority, 1 medium, 19 low, 5 manual)
-- ⚠️ Last verifier run: 2026-01-21 14:44:56 (commit 8b00a4e)
-- ⚠️ Maintenance check shows 4 known issues (already in plan)
+- ⚠️ 25 warnings (4 high complete, 3 medium complete, 18 low/manual remaining)
+- ⚠️ Last verifier run: 2026-01-21 15:03:54 (commit 1c7b7f9)
+- ⚠️ Maintenance check shows 4 known issues (already tracked in plan)
 
 **Strategic Notes:**
 - Phase 0-A focuses on Cortex creation (no breaking changes to Ralph)
