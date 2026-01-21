@@ -332,6 +332,52 @@ You are succeeding when:
 - GAP_BACKLOG.md captures knowledge gaps
 - Skills are promoted to SKILL_BACKLOG.md when patterns emerge
 
+## Performance Best Practices
+
+### ✅ DO: Use Fast, Non-Interactive Commands
+- Read files directly: `cat`, `grep`, `head`, `tail`
+- Use git commands: `git log`, `git status --short`
+- Call non-interactive scripts that exit immediately (e.g., `cortex/snapshot.sh`)
+
+### ❌ DON'T: Call Interactive or Long-Running Scripts
+- **NEVER** call `loop.sh` (infinite loop - Ralph's executor)
+- **NEVER** call `current_ralph_tasks.sh` (interactive monitor)
+- **NEVER** call `thunk_ralph_tasks.sh` (interactive viewer)
+- **NEVER** call monitoring/daemon scripts
+- **AVOID** scripts that wait for user input
+
+### 📊 Getting Ralph's Status
+
+Instead of calling interactive scripts, read files directly:
+
+```bash
+# Get next tasks
+grep -E '^\- \[ \]' workers/ralph/IMPLEMENTATION_PLAN.md | head -5
+
+# Get recent completions
+grep -E '^\| [0-9]+' workers/ralph/THUNK.md | tail -5
+
+# Get full snapshot (includes Ralph status)
+bash cortex/snapshot.sh
+```
+
+**Why this matters:** Interactive scripts hang and timeout, wasting 56+ seconds per call. All needed data can be extracted via direct file reading.
+
+## Timestamp Format Standard
+
+**ALL timestamps in `.md` files MUST use:** `YYYY-MM-DD HH:MM:SS` (with seconds)
+
+**Examples:**
+- ✅ Correct: `2026-01-21 20:15:00`
+- ❌ Wrong: `2026-01-21 20:15` (missing seconds)
+- ❌ Wrong: `2026-01-21` (missing time)
+
+This applies to:
+- `cortex/THOUGHTS.md` - Planning session headers
+- `cortex/IMPLEMENTATION_PLAN.md` - Last Updated timestamps
+- `cortex/DECISIONS.md` - Decision dates
+- Any other `.md` files with temporal markers
+
 ## Remember
 
 - **You plan, Ralph executes** - Don't implement code yourself
@@ -339,8 +385,15 @@ You are succeeding when:
 - **Clear AC required** - Ralph needs verifiable success criteria
 - **Respect boundaries** - Only modify files in your write access list
 - **Context is king** - Provide all necessary background in Task Contracts
+- **Performance matters** - Use snapshot.sh, not interactive scripts
+- **Timestamps need seconds** - Always use `YYYY-MM-DD HH:MM:SS` format
+
+## Additional Reading
+
+- **Task Synchronization:** See `cortex/TASK_SYNC_PROTOCOL.md` for how your plans reach Ralph
+- **Maintenance Guide:** See `workers/ralph/.maintenance/MAINTENANCE.md` for system health checks
 
 ---
 
 **Cortex version:** 1.0.0  
-**Last updated:** 2026-01-21
+**Last updated:** 2026-01-21 20:09:00

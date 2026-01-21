@@ -100,7 +100,33 @@ else
 fi
 echo ""
 
-# 6. Last 5 commits (oneline)
+# 6. Ralph Worker Status
+echo "## Ralph Worker Status"
+echo ""
+if [[ -f "workers/ralph/IMPLEMENTATION_PLAN.md" ]]; then
+    ralph_total=$(grep -cE '^\- \[(x|~| |\?)\] \*\*[0-9]' workers/ralph/IMPLEMENTATION_PLAN.md || echo "0")
+    ralph_done=$(grep -cE '^\- \[x\] \*\*[0-9]' workers/ralph/IMPLEMENTATION_PLAN.md || echo "0")
+    echo "**Ralph Tasks:** ${ralph_done}/${ralph_total} complete"
+    
+    # Show next 3 pending tasks
+    echo ""
+    echo "**Next Ralph Tasks:**"
+    grep -E '^\- \[ \] \*\*[0-9]' workers/ralph/IMPLEMENTATION_PLAN.md | head -3 || echo "None pending"
+    
+    # Show last 3 completions from THUNK
+    echo ""
+    echo "**Recent Ralph Completions:**"
+    if [[ -f "workers/ralph/THUNK.md" ]]; then
+        grep -E '^\| [0-9]+' workers/ralph/THUNK.md | tail -3 || echo "No completions yet"
+    else
+        echo "⚠️  workers/ralph/THUNK.md not found"
+    fi
+else
+    echo "⚠️  workers/ralph/IMPLEMENTATION_PLAN.md not found"
+fi
+echo ""
+
+# 7. Last 5 commits (oneline)
 echo "## Recent Commits (Last 5)"
 echo ""
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then

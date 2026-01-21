@@ -263,3 +263,80 @@ brain/
 - Personal preferences without rationale
 
 **Review cadence:** During planning mode, check if recent decisions should be promoted from `THOUGHTS.md` → `DECISIONS.md`
+
+---
+
+## Recent Decisions
+
+### DEC-2026-01-21-001: Cortex Performance - No Interactive Scripts
+
+**Date:** 2026-01-21 20:09:00
+
+**Decision:** Cortex must never call interactive or long-running scripts directly.
+
+**Rationale:**
+- Interactive scripts (`loop.sh`, `current_ralph_tasks.sh`, `thunk_ralph_tasks.sh`) hang and timeout
+- Wastes 56+ seconds per call when Cortex attempts to execute them
+- All needed data can be extracted via direct file reading
+- `snapshot.sh` already provides comprehensive state information
+
+**Implementation:**
+- Added performance guidance to `CORTEX_SYSTEM_PROMPT.md`
+- Enhanced `cortex/snapshot.sh` to include Ralph worker status section
+- Cortex uses `bash cortex/snapshot.sh` instead of calling worker scripts directly
+- Cortex reads files directly with `grep`, `cat`, `head`, `tail` when needed
+
+**Impact:** Improved Cortex response time and reliability.
+
+---
+
+### DEC-2026-01-21-002: Timestamp Format Standard
+
+**Date:** 2026-01-21 20:09:00
+
+**Decision:** ALL timestamps in `.md` files MUST use `YYYY-MM-DD HH:MM:SS` format (with seconds).
+
+**Rationale:**
+- Consistency across all documentation
+- Enables precise temporal tracking
+- Prevents ambiguity in planning sessions and decision logs
+- Supports automation and parsing
+
+**Examples:**
+- ✅ Correct: `2026-01-21 20:15:00`
+- ❌ Wrong: `2026-01-21 20:15` (missing seconds)
+- ❌ Wrong: `2026-01-21` (missing time)
+
+**Applies to:**
+- `cortex/THOUGHTS.md` - Planning session headers
+- `cortex/IMPLEMENTATION_PLAN.md` - Last Updated timestamps
+- `cortex/DECISIONS.md` - Decision dates
+- Any other `.md` files with temporal markers
+
+**Impact:** Improved temporal precision and documentation consistency.
+
+---
+
+### DEC-2026-01-21-003: Cortex File Access Boundaries
+
+**Date:** 2026-01-21 20:09:00
+
+**Decision:** Cortex may only modify files within approved directories. Violations should be detected by verifier.
+
+**Approved Write Access:**
+- `cortex/*.md` - Cortex's planning and analysis files
+- `skills/self-improvement/GAP_BACKLOG.md` - Knowledge gap tracking
+- `skills/self-improvement/SKILL_BACKLOG.md` - Skill promotion queue
+
+**Forbidden Actions:**
+- Modifying source code directly (Ralph's responsibility)
+- Modifying protected infrastructure (`PROMPT.md`, `loop.sh`, `verifier.sh`, `rules/AC.rules`)
+- Modifying Ralph's working copy of `IMPLEMENTATION_PLAN.md` (Cortex writes to `cortex/IMPLEMENTATION_PLAN.md` instead)
+
+**Enforcement:**
+- System prompt guidance (trust-based)
+- Future: Add verifier rule `Cortex.FileAccess.1` to check git history
+
+**Rationale:** Clear separation of concerns - Cortex plans, Ralph executes.
+
+**Impact:** Prevents Cortex from overstepping boundaries and maintains clean delegation model.
