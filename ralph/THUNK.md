@@ -313,3 +313,4 @@ Started: 2026-01-18
 | 273 | 0.A.1.1 | HIGH | **0.A.1.1** Create `brain/cortex/` folder | 2026-01-20 |
 | 274 | 0.A.1.3 | HIGH | **0.A.1.3** Create `cortex/REPO_MAP.md` - Human-friendly repo navigation with folder purposes, key files, state locations, and navigation tips | 2026-01-21 |
 | 275 | 0.A.1.4 | HIGH | **0.A.1.4** Create `cortex/DECISIONS.md` - Stability anchor with naming conventions, update cadences, style preferences, and architectural decisions (copied from THOUGHTS.md decision log + Cortex-specific decisions) | 2026-01-21 |
+| 276 | 0.A.1.5 | HIGH | **0.A.1.5** Create `cortex/RUNBOOK.md` - Operations guide with how to start Cortex (`bash cortex/run.sh`), how to start Ralph, troubleshooting steps (Ralph issues, Cortex issues, general issues), what to do if blocked (Ralph/Cortex/verifier blockers), and verification commands (verifier status, manual run, maintenance check) | 2026-01-21 |

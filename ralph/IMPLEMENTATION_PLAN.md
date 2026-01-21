@@ -87,7 +87,7 @@ Incorporate any relevant maintenance items into the appropriate priority section
 - [x] **0.A.1.4** Create `cortex/DECISIONS.md` - Stability anchor
   - **AC:** File contains: naming conventions, update cadences, style preferences, architectural decisions (copy from THOUGHTS.md decision log + add Cortex decisions)
 
-- [ ] **0.A.1.5** Create `cortex/RUNBOOK.md` - Operations guide
+- [x] **0.A.1.5** Create `cortex/RUNBOOK.md` - Operations guide
   - **AC:** File contains: how to start Cortex (`bash cortex/run.sh`), how to start Ralph, troubleshooting steps, what to do if blocked, verification commands
 
 - [ ] **0.A.1.6** Create `cortex/IMPLEMENTATION_PLAN.md` - Task Contract template
