@@ -152,7 +152,7 @@
 
 ### New Pre-commit Shellcheck Warnings (2026-01-22)
 
-- [ ] **WARN.Shellcheck.1** - SC2034 unused variable in .verify/check_waiver.sh (MEDIUM)
+- [x] **WARN.Shellcheck.1** - SC2034 unused variable in .verify/check_waiver.sh (MEDIUM)
   - **File:** `../../.verify/check_waiver.sh` line 123
   - **Issue:** `waiver_reason` appears unused
   - **Fix:** Remove variable or mark as used/exported
