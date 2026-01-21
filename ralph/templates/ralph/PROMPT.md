@@ -27,7 +27,7 @@ Common failure types:
 - **Infrastructure** (e.g., `freshness_check`): Report to human - this is a loop.sh issue.
 
 If you cannot fix a failure (protected file, infrastructure issue), output:
-```
+```text
 ⚠️ HUMAN INTERVENTION REQUIRED
 
 Cannot fix AC failure: <RULE_ID>
@@ -35,6 +35,31 @@ Reason: <why you can't fix it>
 ```
 
 Then output `:::BUILD_READY:::` to end the iteration.
+
+---
+
+## Manager/Worker Architecture (Cortex → Ralph)
+
+**Cortex** (the manager) provides high-level implementation plans:
+- Lives at: `../cortex/` (relative to Ralph's location)
+- Creates strategic tasks in `cortex/IMPLEMENTATION_PLAN.md`
+- Reviews progress via `cortex/snapshot.sh`
+- Makes high-level decisions and adjusts strategy
+
+**Ralph** (the worker) executes atomic tasks:
+- Copies tasks from Cortex's plan to his own `IMPLEMENTATION_PLAN.md`
+- Picks ONE task per BUILD iteration
+- Tracks completion in `THUNK.md`
+- Works autonomously without waiting for Cortex review
+
+**Workflow:**
+1. Cortex creates/updates high-level tasks in `cortex/IMPLEMENTATION_PLAN.md`
+2. Ralph copies these to his own `IMPLEMENTATION_PLAN.md` (via sync mechanism)
+3. Ralph picks ONE task per BUILD iteration and implements it
+4. Ralph logs completion to `THUNK.md`
+5. Cortex reviews progress periodically and adjusts plan
+
+**Note:** The sync logic is not yet implemented. Currently, Ralph maintains his own `IMPLEMENTATION_PLAN.md` directly. The above describes the intended workflow once sync is built.
 
 ---
 
