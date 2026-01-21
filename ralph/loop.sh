@@ -756,17 +756,17 @@ run_once() {
   fi
   
   
-  # Run verifier after BUILD iterations
-  if [[ "$phase" == "build" ]]; then
+  # Run verifier after both PLAN and BUILD iterations
+  if [[ "$phase" == "plan" ]] || [[ "$phase" == "build" ]]; then
     if run_verifier; then
       echo ""
       echo "========================================"
-      echo "🎉 BUILD iteration verified successfully!"
+      echo "🎉 ${phase^^} iteration verified successfully!"
       echo "========================================"
     else
       echo ""
       echo "========================================"
-      echo "⚠️  BUILD completed but verification failed."
+      echo "⚠️  ${phase^^} completed but verification failed."
       echo "Review .verify/latest.txt for details."
       echo "========================================"
     fi
