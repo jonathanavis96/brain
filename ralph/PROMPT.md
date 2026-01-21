@@ -27,7 +27,7 @@ Common failure types:
 - **Infrastructure** (e.g., `freshness_check`): Report to human - this is a loop.sh issue.
 
 If you cannot fix a failure (protected file, infrastructure issue), output:
-```
+```text
 ⚠️ HUMAN INTERVENTION REQUIRED
 
 Cannot fix AC failure: <RULE_ID>
@@ -285,7 +285,7 @@ Example:
 
 ### Step 2: Prompt Jono to Approve
 Output a clear message:
-```
+```text
 ⚠️ WAIVER REQUIRED
 
 A hygiene gate failed with a legitimate exception.
