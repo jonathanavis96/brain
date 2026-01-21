@@ -71,6 +71,22 @@ Before finishing, print exactly one of these markers on its own line:
 :::PLAN_READY::: (if plan phase)
 :::BUILD_READY::: (if build phase)
 
+**When ALL automated tasks are complete** (100% progress on automated tasks):
+1. Check IMPLEMENTATION_PLAN.md for any "Manual Review" or "Manual test:" tasks
+2. If manual tasks exist, output this alert:
+
+```text
+🎉 ALL AUTOMATED TASKS COMPLETE! 🎉
+
+However, the following manual verification tasks remain:
+
+<list each manual task here>
+
+Please complete these manual checks before marking the project as fully done.
+```
+
+3. Then output :::BUILD_READY::: to end the iteration
+
 ---
 
 ## Manager/Worker Architecture (Cortex → Ralph)

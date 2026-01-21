@@ -104,12 +104,19 @@ extract_tasks() {
     local in_task_section=false
     local task_counter=0
     local indent_level=0
+    local is_manual=false
     
     while IFS= read -r line; do
+        # Detect Manual Review section - skip these tasks entirely
+        local line_upper="${line^^}"
+        if [[ "$line_upper" =~ ^###[[:space:]]*MANUAL[[:space:]]*REVIEW ]]; then
+            in_task_section=false
+            continue
+        fi
+        
         # Detect High/Medium/Low Priority sections (flexible matching)
         # Matches: "### High Priority", "### Phase 1: Desc (High Priority)", "### 🔴 HIGH PRIORITY: Desc"
         # Case-insensitive matching via converting to uppercase for comparison
-        local line_upper="${line^^}"
         if [[ "$line_upper" =~ HIGH[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
             current_section="High Priority"
             in_task_section=true
@@ -137,6 +144,9 @@ extract_tasks() {
                 local leading_spaces="${BASH_REMATCH[1]}"
                 status="${BASH_REMATCH[2]}"
                 task_desc="${BASH_REMATCH[3]}"
+                
+                # Skip manual review tasks (only those explicitly in "Manual Review" section)
+                # WARN tasks are automated and should be included
                 
                 # Calculate indent level (2 spaces = 1 level, 4 spaces = 2 levels, etc.)
                 indent_level=$((${#leading_spaces} / 2))
@@ -459,11 +469,36 @@ display_tasks() {
         done <<< "$tasks"
     fi
     
-    # Footer with stats
+    # Footer with stats and progress bar
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "  Completed: $completed_count | Pending: $pending_count | Total: $((completed_count + pending_count))"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    
+    # Calculate progress percentage
+    local total=$((completed_count + pending_count))
+    local percentage=0
+    if [[ $total -gt 0 ]]; then
+        percentage=$(( (completed_count * 100) / total ))
+    fi
+    
+    # Progress bar (64 chars wide total: "  Progress: XX% [" = 18 chars, "] N/Total" varies)
+    # Calculate bar width: 64 - 18 - length("] N/Total") = available for bar
+    local fraction_text="] $completed_count/$total"
+    local bar_width=$((64 - 18 - ${#fraction_text}))
+    
+    # Calculate filled and empty blocks
+    local filled=$(( (bar_width * completed_count) / (total > 0 ? total : 1) ))
+    local empty=$((bar_width - filled))
+    
+    # Build the bar
+    local bar=""
+    for ((i=0; i<filled; i++)); do bar="${bar}█"; done
+    for ((i=0; i<empty; i++)); do bar="${bar}░"; done
+    
+    # Display progress bar
+    printf "  Progress: %3d%% [%s%s\n" "$percentage" "$bar" "$fraction_text"
     echo ""
     
     # Hotkey legend

@@ -38,6 +38,57 @@ Then output `:::BUILD_READY:::` to end the iteration.
 
 ---
 
+## Runtime Error Protocol (same iteration)
+
+If a command/tool fails (traceback, syntax error, non-zero exit):
+1. Stop and fix first.
+2. Open `skills/SUMMARY.md` → Error Quick Reference.
+3. Read the single best-matching skill doc.
+4. Apply the minimum fix and re-run the failing command.
+
+Rule: only 1 "obvious" quick attempt before doing the lookup.
+
+---
+
+## Output Format Requirement (Terminal Streaming)
+
+After every major step, print a single-line progress update in this exact format:
+PROGRESS | phase=<plan|build> | step=<short> | tasks=<done>/<total> | file=<path>
+
+At the start of your response, always print:
+STATUS | branch=<git branch> | runner=<rovodev|opencode> | model=<actual model ID>
+
+PROGRESS | phase=<...> | step=starting | tasks=<done>/<total> | file=ralph/IMPLEMENTATION_PLAN.md
+
+**Important:** Detect the actual runner and model from your environment/context. Common models:
+- RovoDev: `anthropic.claude-sonnet-4-5-20250929-v1:0`, `anthropic.claude-opus-4-5-20251101-v1:0`
+- OpenCode: `opencode/grok-code`, `opencode/gpt-5-nano`
+
+Then work normally using tools.
+After you read or modify any key file (IMPLEMENTATION_PLAN.md, THOUGHTS.md, NEURONS.md, PROMPT.md, any file under cortex/ or workers/), print a PROGRESS line.
+
+Before finishing, print exactly one of these markers on its own line:
+:::PLAN_READY::: (if plan phase)
+:::BUILD_READY::: (if build phase)
+
+**When ALL automated tasks are complete** (100% progress on automated tasks):
+1. Check IMPLEMENTATION_PLAN.md for any "Manual Review" or "Manual test:" tasks
+2. If manual tasks exist, output this alert:
+
+```text
+🎉 ALL AUTOMATED TASKS COMPLETE! 🎉
+
+However, the following manual verification tasks remain:
+
+<list each manual task here>
+
+Please complete these manual checks before marking the project as fully done.
+```
+
+3. Then output :::BUILD_READY::: to end the iteration
+
+---
+
 ## Manager/Worker Architecture (Cortex → Ralph)
 
 **Cortex** (the manager) provides high-level implementation plans:
@@ -107,7 +158,7 @@ Then output `:::BUILD_READY:::` to end the iteration.
      - Fix that warning
      - Mark it complete `- [x]` in the Verifier Warnings section
      - Commit with message: `fix(ralph): resolve verifier warning <RULE_ID>`
-     - Skip to step 4 (validate), then proceed to steps 5-9
+     - Skip to step 3 (validate), then proceed to steps 4-8
    - If all warnings are checked `- [x]` or section doesn't exist, proceed to step 2
 
 2. Pick FIRST unchecked `[ ]` numbered task (e.g., `0.A.1.1`, including subtasks like 1.1)
@@ -250,7 +301,7 @@ Example:
 
 ### Step 2: Prompt Jono to Approve
 Output a clear message:
-```
+```text
 ⚠️ WAIVER REQUIRED
 
 A hygiene gate failed with a legitimate exception.

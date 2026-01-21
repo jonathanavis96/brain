@@ -960,8 +960,29 @@ if [[ -n "$PROMPT_ARG" ]]; then
       echo "Protected file hash mismatches detected: $LAST_VERIFIER_FAILED_RULES"
       echo ""
       echo "These files are protected and cannot be fixed by Ralph."
-      echo "Please regenerate baselines manually:"
-      echo "  sha256sum <file> | cut -d' ' -f1 > .verify/<file>.sha256"
+      echo ""
+      # Show which specific files failed
+      if [[ -f "$VERIFY_REPORT" ]]; then
+        echo "Failed protected files:"
+        grep "^\[FAIL\] Protected\." "$VERIFY_REPORT" | while read -r line; do
+          if echo "$line" | grep -q "Protected.1"; then
+            echo "  - loop.sh"
+          elif echo "$line" | grep -q "Protected.2"; then
+            echo "  - verifier.sh"
+          elif echo "$line" | grep -q "Protected.3"; then
+            echo "  - PROMPT.md"
+          elif echo "$line" | grep -q "Protected.4"; then
+            echo "  - rules/AC.rules"
+          fi
+        done
+        echo ""
+      fi
+      echo "To regenerate baselines for these files:"
+      echo "  cd brain/ralph"
+      echo "  sha256sum loop.sh | cut -d' ' -f1 > .verify/loop.sha256"
+      echo "  sha256sum PROMPT.md | cut -d' ' -f1 > .verify/prompt.sha256"
+      echo "  sha256sum verifier.sh | cut -d' ' -f1 > .verify/verifier.sha256"
+      echo "  sha256sum rules/AC.rules | cut -d' ' -f1 > .verify/ac.sha256"
       echo ""
       echo "After resolving, re-run the loop to continue."
       exit 1
@@ -1003,8 +1024,29 @@ else
       echo "Protected file hash mismatches detected: $LAST_VERIFIER_FAILED_RULES"
       echo ""
       echo "These files are protected and cannot be fixed by Ralph."
-      echo "Please regenerate baselines manually:"
-      echo "  sha256sum <file> | cut -d' ' -f1 > .verify/<file>.sha256"
+      echo ""
+      # Show which specific files failed
+      if [[ -f "$VERIFY_REPORT" ]]; then
+        echo "Failed protected files:"
+        grep "^\[FAIL\] Protected\." "$VERIFY_REPORT" | while read -r line; do
+          if echo "$line" | grep -q "Protected.1"; then
+            echo "  - loop.sh"
+          elif echo "$line" | grep -q "Protected.2"; then
+            echo "  - verifier.sh"
+          elif echo "$line" | grep -q "Protected.3"; then
+            echo "  - PROMPT.md"
+          elif echo "$line" | grep -q "Protected.4"; then
+            echo "  - rules/AC.rules"
+          fi
+        done
+        echo ""
+      fi
+      echo "To regenerate baselines for these files:"
+      echo "  cd brain/ralph"
+      echo "  sha256sum loop.sh | cut -d' ' -f1 > .verify/loop.sha256"
+      echo "  sha256sum PROMPT.md | cut -d' ' -f1 > .verify/prompt.sha256"
+      echo "  sha256sum verifier.sh | cut -d' ' -f1 > .verify/verifier.sha256"
+      echo "  sha256sum rules/AC.rules | cut -d' ' -f1 > .verify/ac.sha256"
       echo ""
       echo "After resolving, re-run the loop to continue."
       exit 1
