@@ -160,12 +160,13 @@
 - [x] **0.Q.2** Fix terminology: Change "Brain KB" to "Brain Skills" in PROMPT.md:40
   - **Status:** ✅ NOT FOUND (already fixed)
 
-- [ ] **0.Q.3** Copy SKILL_TEMPLATE.md to templates/ralph/
+- [x] **0.Q.3** Copy SKILL_TEMPLATE.md to templates/ralph/
   - **Goal:** Ensure template directory has the skill template for new projects
   - **Source:** `skills/self-improvement/SKILL_TEMPLATE.md` (exists, 2751 bytes)
   - **Target:** `templates/ralph/SKILL_TEMPLATE.md` (missing)
   - **AC:** File exists and `diff` shows no differences
   - **Commit:** `docs(templates): add SKILL_TEMPLATE.md to ralph templates`
+  - **Status:** ✅ COMPLETE - File copied and verified identical
 
 - [ ] **0.Q.4** Fix "Brain KB" → "Brain Skills" in templates/NEURONS.project.md
   - **Goal:** Complete terminology migration from "KB" to "Skills"
