@@ -6,6 +6,28 @@
 ## Purpose
 Ralph loop for brain repository self-improvement. Runs PLAN/BUILD cycles to maintain knowledge base and templates.
 
+## Manager/Worker Architecture
+
+**Brain Repository Structure:**
+- **Cortex** (`../cortex/`) - Manager layer running Opus 4.5
+  - Creates high-level implementation plans
+  - Manages strategic decisions and task contracts
+  - Lives at `brain/cortex/` (one level up from Ralph)
+  
+- **Ralph** (`./`) - Worker layer (this directory)
+  - Executes atomic tasks from implementation plans
+  - Runs PLAN/BUILD cycles for incremental progress
+  - Lives at `brain/ralph/` (current directory)
+
+**Workflow:**
+1. Cortex creates/updates high-level tasks in `cortex/IMPLEMENTATION_PLAN.md`
+2. Ralph copies these to his own `IMPLEMENTATION_PLAN.md` (via sync mechanism)
+3. Ralph picks ONE task per BUILD iteration and implements it
+4. Ralph logs completion to `THUNK.md`
+5. Cortex reviews progress via `cortex/snapshot.sh` and adjusts plan
+
+**Key Principle:** Ralph works autonomously on atomic tasks. Cortex reviews periodically and adjusts strategy.
+
 ## Prerequisites
 - WSL2 Ubuntu + bash
 - Atlassian CLI (`acli`) - https://developer.atlassian.com/cloud/cli/
