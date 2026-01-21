@@ -125,7 +125,7 @@ These tasks can be completed quickly and provide immediate value. Consider prior
 - [x] **0.A.2.3** Create `cortex/.gitignore` if needed
   - **AC:** Ignores any local/temp files (e.g., snapshot output cache)
 
-- [ ] **0.A.2.4** Test: Run `bash cortex/run.sh --help` successfully
+- [x] **0.A.2.4** Test: Run `bash cortex/run.sh --help` successfully
   - **AC:** Help text displays without errors
 
 ### 0.A.3 - Update Ralph to Integrate with Cortex (3 items)
