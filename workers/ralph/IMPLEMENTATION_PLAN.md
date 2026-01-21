@@ -252,7 +252,7 @@
   - **AC:** `shellcheck thunk_ralph_tasks.sh 2>&1 | grep 'line 330' | grep -c SC2155` returns 0
   - **Commit:** `fix(ralph): separate declaration and assignment in thunk_ralph_tasks.sh line 330`
 
-- [ ] **WARN.Markdown.Fences.1** - AGENTS.md missing closing fences (MEDIUM)
+- [x] **WARN.Markdown.Fences.1** - AGENTS.md missing closing fences (MEDIUM)
   - **File:** `AGENTS.md` lines 24-31, 46-48
   - **Issue:** Code blocks have opening fences (```bash, ```text) but missing closing fences
   - **Fix:** Add closing ``` after each code block

@@ -28,7 +28,7 @@ bash loop.sh --iterations 10    # Multiple iterations
 bash loop.sh --dry-run          # Preview changes
 bash loop.sh --rollback 2       # Undo last 2 commits
 bash loop.sh --resume           # Resume from interruption
-```bash
+```
 
 Mode: Iteration 1 or every 3rd = PLAN, others = BUILD.
 
@@ -45,7 +45,7 @@ See README.md for detailed monitor features and hotkeys.
 Ralph outputs when ALL tasks complete:
 ```text
 :::COMPLETE:::
-```text
+```
 
 ## Troubleshooting
 - **acli not found**: Add to PATH in ~/.bashrc
