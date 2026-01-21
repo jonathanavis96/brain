@@ -8,31 +8,39 @@
 
 ## Current Mission
 
-**Status:** Initializing Cortex Manager Layer  
-**Phase:** 0-A (Cortex creation and setup)  
-**Last Updated:** 2026-01-21
+**Status:** Post-Restructure Maintenance Mode  
+**Phase:** 1+ (Ongoing maintenance and improvements)  
+**Last Updated:** 2026-01-21 19:30
 
 ### Mission Statement
 
-Create a stable "Cortex" manager layer to handle high-level strategic planning and task delegation, while Ralph (Sonnet) focuses on tactical execution. This separation of concerns allows:
+The Cortex manager layer is operational and the repository restructure (Option B) is complete. Ralph now runs from `workers/ralph/` with shared resources at root level. Focus shifts to:
 
-- **Cortex (Opus):** Strategic thinking, gap analysis, skills development, long-term planning
-- **Ralph (Sonnet):** Fast, reliable task execution within well-defined contracts
+- **Code quality:** Shell script cleanup, template sync
+- **Documentation:** Quick reference tables, skills maintenance
+- **Stability:** Verifier improvements, design decisions implementation
+
+### Completed Milestones
+
+- ✅ **Phase 0-A:** Cortex manager pack created (cortex/ folder with all core files)
+- ✅ **Phase 0-B:** Repository restructured to Option B (workers/ralph/ with shared root resources)
+- ✅ **Phase 0-C:** Human verified new structure works correctly
+- ✅ **Verifier:** All 24 AC checks passing (only WARN items remain)
 
 ### Current Objectives
 
-1. **Phase 0-A:** Build out cortex/ folder with core files and operational scripts
-2. **Phase 0-B:** Integrate Cortex with Ralph workflow (sync mechanism, runbooks)
-3. **Phase 0-C:** Restructure repository (move ralph/ to workers/ralph/)
-4. **Phase 1+:** Ongoing brain repository maintenance and self-improvement
+1. **Phase 1:** Quick fixes & maintenance (templates, broken links)
+2. **Phase 2:** Shell script cleanup (shellcheck, dead code removal)
+3. **Phase 3:** Quick reference tables (documentation convention)
+4. **Phase 4-7:** Lower priority improvements
 
 ### Success Criteria
 
-- [ ] Cortex can run independently (`bash cortex/run.sh`)
-- [ ] Ralph can sync tasks from `cortex/IMPLEMENTATION_PLAN.md`
-- [ ] Clear separation: Cortex plans, Ralph builds
-- [ ] Skills system captures gaps and promotes knowledge
-- [ ] Both agents respect protected files and safety rules
+- [x] Cortex can run independently (`bash cortex/run.sh`)
+- [x] Ralph can sync tasks from `cortex/IMPLEMENTATION_PLAN.md`
+- [x] Clear separation: Cortex plans, Ralph builds
+- [ ] Skills system captures gaps and promotes knowledge (ongoing)
+- [x] Both agents respect protected files and safety rules
 
 ---
 
@@ -78,39 +86,48 @@ Create a stable "Cortex" manager layer to handle high-level strategic planning a
 
 ## Strategic Analysis
 
-### Brain Repository Health
+### Brain Repository Health (2026-01-21 19:30)
 
 **Strengths:**
-- Strong verifier system (24/24 AC passing)
-- Comprehensive skills system with 33+ documented patterns
-- Ralph loop proven stable and reliable
-- Good separation of concerns (PROMPT, IMPLEMENTATION_PLAN, THOUGHTS, NEURONS)
+- ✅ Strong verifier system (24/24 AC passing, only manual review WARNs)
+- ✅ Successful repository restructure (Option B implemented)
+- ✅ Cortex manager layer fully operational
+- ✅ Clear separation: Cortex plans, Ralph executes
+- ✅ 39 tasks completed, 37 pending (51% progress)
+
+**Current State:**
+- Ralph's IMPLEMENTATION_PLAN.md has well-organized phases (0-7)
+- Phase 0-A and 0-B fully complete (restructure done)
+- Template sync warnings exist (WARN.T1, WARN.T2) - templates lag behind implementation
+- GAP_BACKLOG has 3 items, 1 at P1 priority (bash/shell validation patterns)
 
 **Opportunities:**
-- Add Cortex layer for strategic planning
-- Improve template sync (3 warnings outstanding)
-- Expand skills based on GAP_BACKLOG captures
-- Better documentation of workflows and decision rationale
+- Phase 1 quick fixes are low-effort, high-value (template copy, link fixes)
+- Shell script cleanup (Phase 2) improves code quality but lower priority
+- Quick reference tables (Phase 3) improve agent UX
+- Design decisions (Phase 5) add robustness but require protected file changes
 
 **Risks:**
-- Transition to workers/ structure could break existing workflows
-- Template drift between workers/ralph/ and templates/ralph/
-- Skills documentation lagging behind actual practices
-- Human approval gates could block progress
-
-**Mitigations:**
-- Phase 0-A complete before any structural changes
-- Human verification required before deleting original ralph/
-- Keep both paths working during transition
-- Document all breaking changes and migration steps
+- Template drift increasing (monitor scripts differ from templates)
+- Phase 6 D-items may be obsolete after IMPLEMENTATION_PLAN.md rewrite
+- Some Phase 5 items require modifying protected files (human approval needed)
 
 ### Next Strategic Focus
 
-Once Phase 0-A completes:
-1. Review Ralph's progress on Cortex integration
-2. Plan Phase 0-B task contracts (sync mechanism)
-3. Assess skills system gaps from recent work
-4. Consider promoting high-value gaps to SKILL_BACKLOG
+**Immediate (this session):**
+1. ✅ Update THOUGHTS.md with current state analysis
+2. Create clear task contracts for Ralph's next iterations
+3. Prioritize Phase 1 quick wins (fastest path to completion)
+
+**Short-term:**
+1. Complete Phase 1 quick fixes (template copy, link fixes)
+2. Address Phase 2 shell cleanup (code quality)
+3. Sync templates after shell scripts are clean
+
+**Medium-term:**
+1. Review Phase 6 D-items for obsolete entries
+2. Promote P1 gap (bash validation patterns) if recurring
+3. Consider Phase 5 design decisions (requires human approval)
 
 ---
 
@@ -123,3 +140,47 @@ Once Phase 0-A completes:
 - Template sync warnings indicate need for better sync automation
 - Skills system working well but underutilized for gap capture
 - THUNK.md logging provides good audit trail of completed work
+
+### Gap Backlog Review (2026-01-21)
+
+Reviewed 3 items in GAP_BACKLOG.md:
+
+| Gap | Priority | Promotion Decision |
+|-----|----------|-------------------|
+| Bash Terminal Control (tput) | P2 | Keep as reference - specialized, not recurring |
+| Bash Associative Arrays | P2 | Keep as reference - general caching patterns already exist |
+| **Bash/Shell Validation Patterns** | P1 | **Watch list** - promote if needed again |
+
+The P1 item (Bash/Shell validation patterns) is the strongest candidate for promotion:
+- **Clear:** Yes - specific validation commands documented
+- **Specific:** Yes - bash -n, shellcheck, jq, perm checks
+- **Recurring:** Not yet proven - only triggered once (rovo-account-manager bootstrap)
+- **LLM-executable:** Yes - clear triggers + steps
+
+**Action:** Keep as P1 in GAP_BACKLOG. If Ralph or other agents need bash project validation again, promote immediately.
+
+---
+
+## Planning Session Log
+
+### 2026-01-21 19:30 - Post-Restructure Planning
+
+**Context:** First Cortex planning session after successful Option B restructure.
+
+**Actions Taken:**
+1. Updated THOUGHTS.md mission status (Phase 0 → Phase 1+)
+2. Updated strategic analysis with current repository health
+3. Created detailed task contracts for Phase 1 quick fixes (1.2, 1.3, 1.4)
+4. Documented phase prioritization and dependencies
+5. Reviewed GAP_BACKLOG - no promotions needed yet
+
+**Recommendations for Ralph:**
+1. Start with Task 1.2 (copy SKILL_TEMPLATE) - simplest, <2 min
+2. Then Task 1.3 (fix broken links) - requires investigation
+3. Then Task 1.4 (KB→Skills terminology) - simple find/replace
+4. After Phase 1: proceed to Phase 2 shell cleanup
+
+**Next Cortex Session:**
+- Review Ralph's Phase 1 completion
+- Assess Phase 2 progress
+- Re-evaluate Phase 6 D-items for obsolete entries

@@ -237,7 +237,7 @@ echo ""
 # Run Cortex
 if [[ "$RUNNER" == "rovodev" ]]; then
   # RovoDev runner
-  acli rovodev run $CONFIG_FLAG --yolo --format markdown "$(cat "$COMPOSITE_PROMPT")"
+  acli rovodev run $CONFIG_FLAG --yolo "$(cat "$COMPOSITE_PROMPT")"
   EXIT_CODE=$?
 else
   # OpenCode runner
