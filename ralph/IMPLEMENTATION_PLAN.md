@@ -49,8 +49,8 @@ These tasks can be completed quickly and provide immediate value. Consider prior
 
 **Status:** Active - PLAN mode iteration, Phase 0-A in progress  
 **Branch:** `brain-work` (4 commits ahead of origin)  
-**Last Updated:** 2026-01-21 12:55  
-**Progress:** 7 of 83 tasks complete (8.4%)
+**Last Updated:** 2026-01-21 13:30  
+**Progress:** 6 of 82 tasks complete (7.3%)
 
 **Current Focus:**
 - Phase 0-A (Cortex Manager Pack) - 6/19 tasks complete (31.6% of phase)
@@ -61,12 +61,13 @@ These tasks can be completed quickly and provide immediate value. Consider prior
 **Verifier Health:**
 - ✅ All 24 acceptance criteria PASSING
 - ✅ Protected file hashes current (loop.sh, verifier.sh, PROMPT.md)
-- ⚠️ 25 warnings (4 high priority, 3 medium, 16 low/manual)
+- ⚠️ 25 warnings (4 high priority, 3 medium, 16 low/manual) - see Quick Wins
 
 **Strategic Notes:**
 - Phase 0-A focuses on Cortex creation (no breaking changes to Ralph)
 - Phase 0-B is BLOCKED pending human verification after Phase 0-A complete
 - Maintenance items from verify-brain.sh already incorporated into Phases 1-4
+- Skills directory now has 22+ files (not "<20" as NEURONS.md claims)
 
 ---
 
@@ -101,7 +102,8 @@ These tasks can be completed quickly and provide immediate value. Consider prior
   - **AC:** File contains: header explaining this is Cortex's plan, example Task Contract with Goal/Subtask/Constraints/Inputs/Acceptance Criteria/If Blocked format, empty "Current Tasks" section
 
 - [ ] **0.A.1.7** Create `cortex/THOUGHTS.md` - Cortex thinking space
-  - **AC:** File contains: header explaining purpose ("Cortex's analysis and decisions"), "Current Mission" section (empty), "Decision Log" section (empty)
+  - **AC:** File contains: header explaining purpose ("Cortex's analysis and decisions"), "Current Mission" section, "Decision Log" section
+  - **Content:** Should follow similar structure to ralph/THOUGHTS.md but focused on Cortex's high-level planning concerns
 
 ### 0.A.2 - Create cortex/run.sh and snapshot.sh (4 items)
 
@@ -122,23 +124,23 @@ These tasks can be completed quickly and provide immediate value. Consider prior
 - [ ] **0.A.2.4** Test: Run `bash cortex/run.sh --help` successfully
   - **AC:** Help text displays without errors
 
-### 0.A.3 - Update Ralph to Read from Cortex Plan (4 items)
+### 0.A.3 - Update Ralph to Integrate with Cortex (3 items)
 
-- [ ] **0.A.3.1** Update `ralph/loop.sh` to copy Cortex plan at startup
-  - **AC:** At start of `run_once()`, if `../cortex/IMPLEMENTATION_PLAN.md` exists and is newer than `IMPLEMENTATION_PLAN.md`, copy it
-  - **AC:** Log message: "Syncing from Cortex plan..."
-  - **AC:** Only copy once per loop invocation (not per iteration)
+**Note:** These changes document the architecture but do NOT implement the sync mechanism yet. Actual sync logic will be implemented in Phase 0-B after human verification of the workers/ralph/ copy.
 
-- [ ] **0.A.3.2** Update `ralph/PROMPT.md` to reference Cortex as source of truth
+- [ ] **0.A.3.1** Update `ralph/PROMPT.md` to reference Cortex as source of truth
   - **AC:** Add section explaining: "Cortex provides high-level tasks in `cortex/IMPLEMENTATION_PLAN.md`. Ralph copies this to his own `IMPLEMENTATION_PLAN.md` and tracks progress there."
+  - **Note:** Document the intended workflow even though sync logic not implemented yet
 
-- [ ] **0.A.3.3** Update `ralph/AGENTS.md` to document Cortex → Ralph workflow
+- [ ] **0.A.3.2** Update `ralph/AGENTS.md` to document Cortex → Ralph workflow
   - **AC:** Add "Manager/Worker Architecture" section explaining the relationship
+  - **AC:** Document that Cortex lives at `../cortex/` (relative to ralph/)
 
-- [ ] **0.A.3.4** Update `ralph/NEURONS.md` to include cortex/ in the brain map
+- [ ] **0.A.3.3** Update `ralph/NEURONS.md` to include cortex/ in the brain map
   - **AC:** Add cortex/ folder and its files to the map
+  - **AC:** Update skills/ file count (currently claims "<20", actual is 22+)
 
-### 0.A.4 - Restructure: Copy ralph/ to workers/ralph/ (4 items)
+### 0.A.4 - Restructure: Copy ralph/ to workers/ralph/ (5 items)
 
 **IMPORTANT:** This sub-phase ONLY copies files. Delete happens in Phase 0-B after human verification.
 
@@ -153,9 +155,16 @@ These tasks can be completed quickly and provide immediate value. Consider prior
 - [ ] **0.A.4.3** Update path references in `workers/ralph/loop.sh`
   - **AC:** All relative paths updated (e.g., `../cortex/` becomes `../../cortex/`)
   - **AC:** SCRIPT_DIR detection still works from new location
+  - **AC:** Path to `.verify/` updated if needed
 
 - [ ] **0.A.4.4** Update path references in `workers/ralph/PROMPT.md`, `workers/ralph/AGENTS.md`, `workers/ralph/NEURONS.md`
   - **AC:** All file references use correct relative paths from new location
+  - **AC:** Skills path updated from `../skills/` to `../../skills/`
+
+- [ ] **0.A.4.5** Test from new location: `cd brain/workers/ralph && bash loop.sh --dry-run`
+  - **AC:** Dry-run completes without errors
+  - **AC:** Verifier can locate all required files
+  - **Note:** This is a smoke test only, not a full iteration
 
 ---
 
