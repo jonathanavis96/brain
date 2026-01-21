@@ -32,7 +32,7 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 ├── docs/CHANGES.md              # Release notes and migration guide
 ├── IMPLEMENTATION_PLAN.md       # Persistent TODO list
 │
-├── skills/                      # Knowledge Base (7 files)
+├── skills/                      # Knowledge Base (33 files)
 │   ├── SUMMARY.md               # KB index and navigation
 │   ├── conventions.md           # KB authoring guidelines
 │   ├── domains/                 # Reusable domain patterns (3 files)
