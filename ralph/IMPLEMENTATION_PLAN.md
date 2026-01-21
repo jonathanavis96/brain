@@ -81,7 +81,7 @@ Incorporate any relevant maintenance items into the appropriate priority section
 - [x] **0.A.1.2** Create `cortex/CORTEX_SYSTEM_PROMPT.md` - Opus identity and rules
   - **AC:** File contains: role definition ("You are Cortex, the Brain's manager"), what Cortex can modify (only IMPLEMENTATION_PLAN.md, THOUGHTS.md, GAP_BACKLOG.md, SKILL_BACKLOG.md), what Cortex cannot modify (PROMPT.md, loop.sh, verifier.sh, source code), workflow (Plan → Review → Delegate), Task Contract format template
 
-- [ ] **0.A.1.3** Create `cortex/REPO_MAP.md` - Human-friendly repo navigation
+- [x] **0.A.1.3** Create `cortex/REPO_MAP.md` - Human-friendly repo navigation
   - **AC:** File contains: folder purposes (cortex/, workers/, skills/, templates/), key files and their roles, where state lives, where skills are, navigation tips
 
 - [ ] **0.A.1.4** Create `cortex/DECISIONS.md` - Stability anchor
