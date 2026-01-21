@@ -78,6 +78,25 @@ You CAN research online. Ralph CANNOT - he captures gaps in GAP_BACKLOG.md.
 
 ---
 
+## 📏 File Size Limits
+
+**Injected context is expensive. Every line costs tokens.**
+
+| File | Max Lines | Action if Over |
+|------|-----------|----------------|
+| `THOUGHTS.md` | 100 | Archive to `cortex/logs/THOUGHTS_ARCHIVE.md` |
+| `CORTEX_SYSTEM_PROMPT.md` | 150 | Move details to `cortex/docs/PROMPT_REFERENCE.md` |
+| `AGENTS.md` | 150 | Move examples to docs |
+
+**Rules:**
+- THOUGHTS.md = Current mission ONLY (not session logs)
+- Session logs → `cortex/logs/` (dated files)
+- Decisions → `DECISIONS.md` (separate file)
+- Before adding content, ask: "Is this current or historical?"
+- Historical content → archive immediately
+
+---
+
 ## ⚠️ Critical Rules
 
 1. **NEVER mix projects** - This is Brain repository ONLY
