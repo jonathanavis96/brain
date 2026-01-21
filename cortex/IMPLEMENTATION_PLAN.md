@@ -83,51 +83,140 @@ Use this format when creating new Task Contracts:
 
 ## Current Status
 
-**Last Updated:** 2026-01-21 18:52 (by Cortex)
+**Last Updated:** 2026-01-21 19:30 (by Cortex)
 
-### ✅ Completed: Repository Restructuring (Phase 0-A & 0-B)
+### ✅ Completed Phases
 
-**What was accomplished:**
-- ✅ Created Cortex manager layer at `brain/cortex/`
-- ✅ Moved Ralph worker to `brain/workers/ralph/`
-- ✅ Moved shared resources to root: `skills/`, `templates/`, `rules/`, `docs/`
-- ✅ Updated all path references for portability
-- ✅ Fixed verifier Hash Guard false positive
-- ✅ All 24 AC checks passing
+| Phase | Description | Status |
+|-------|-------------|--------|
+| 0-A | Cortex Manager Pack | ✅ Complete |
+| 0-B | Repository Restructure (Option B) | ✅ Complete |
+| 0-Warn | Verifier Warnings | ✅ All resolved |
+| 0-Quick | Quick Wins | ✅ Complete |
 
-**Commits:**
-- 962d75d "feat(brain): implement Option B structure with proper separation"
-- 3cd7ca5 "fix(paths): update all paths to reflect Option B structure and ensure portability"
+### 📊 Progress Summary
 
-### 🔄 Next Task: Validate Ralph's Full Workflow
-
-**Goal:** Confirm Ralph can execute normally from new location
-
-**Test Plan:**
-```bash
-cd brain/workers/ralph
-bash loop.sh --iterations 1
-```
-
-**Success Criteria:**
-- Ralph completes one full iteration
-- No path errors in logs
-- Can access skills/, templates/, rules/
-- Verifier runs successfully
-- Can commit changes
-
-**If Blocked:** Report specific error to human for Cortex analysis
+- **Completed:** 39 tasks
+- **Pending:** 37 tasks  
+- **Progress:** 51%
+- **Verifier:** 24/24 PASS (only manual review WARNs)
 
 ---
 
-## Future Tasks (Pending)
+## Active Task Contracts
 
-Cortex will create new Task Contracts after Ralph validation completes.
+### Phase 1: Quick Fixes (Priority: HIGH)
 
-Potential areas:
-- Documentation improvements
-- Shell script cleanup
-- Quick reference tables
-- Template maintenance
+These are low-effort tasks that provide immediate value.
 
-<!-- Cortex will add Task Contracts below this line -->
+---
+
+### Task 1.2: Copy SKILL_TEMPLATE to templates
+
+**Goal:** Ensure template directory has the skill template for new projects
+
+**Subtasks:**
+- [ ] Copy `skills/self-improvement/SKILL_TEMPLATE.md` to `templates/ralph/SKILL_TEMPLATE.md`
+- [ ] Verify content matches source
+
+**Constraints:**
+- Do not modify the source file
+- Preserve exact content (no edits)
+
+**Inputs:**
+- Source: `skills/self-improvement/SKILL_TEMPLATE.md`
+- Destination: `templates/ralph/SKILL_TEMPLATE.md`
+
+**Acceptance Criteria:**
+- [ ] File exists at `templates/ralph/SKILL_TEMPLATE.md`
+- [ ] `diff skills/self-improvement/SKILL_TEMPLATE.md templates/ralph/SKILL_TEMPLATE.md` returns no differences
+
+**If Blocked:** Report to Cortex if source file is missing
+
+---
+
+### Task 1.3: Fix broken links in skills files
+
+**Goal:** Ensure all relative links in skills documentation work correctly
+
+**Subtasks:**
+- [ ] Fix `skills/conventions.md` - replace placeholder `../path/to/file.md` with actual paths
+- [ ] Fix `skills/projects/brain-example.md` - update relative paths to use `../` correctly
+
+**Constraints:**
+- Only fix links that are actually broken
+- Preserve link text, only update href
+
+**Inputs:**
+- `skills/conventions.md`
+- `skills/projects/brain-example.md`
+- Run `bash workers/ralph/.maintenance/verify-brain.sh` to identify broken links
+
+**Acceptance Criteria:**
+- [ ] No placeholder paths like `../path/to/file.md` in skills/
+- [ ] Links in `skills/projects/brain-example.md` resolve correctly
+- [ ] `verify-brain.sh` reports no broken link warnings
+
+**If Blocked:** Document which links cannot be fixed and why
+
+---
+
+### Task 1.4: Fix "Brain KB" terminology
+
+**Goal:** Complete terminology migration from "KB" to "Skills"
+
+**Subtasks:**
+- [ ] Find all remaining "Brain KB" references in templates/
+- [ ] Replace with "Brain Skills"
+
+**Constraints:**
+- Only change terminology, not meaning
+- Check templates/ directory only (other areas already fixed)
+
+**Inputs:**
+- `rg "Brain KB" templates/` to find occurrences
+
+**Acceptance Criteria:**
+- [ ] `rg "Brain KB" templates/ | wc -l` returns 0
+
+**If Blocked:** If "Brain KB" is in a protected file, document for human review
+
+---
+
+## Queued Task Contracts
+
+### Phase 2: Shell Script Cleanup (Priority: MEDIUM)
+
+**Note:** Complete Phase 1 first. Phase 2 tasks improve code quality but are lower priority.
+
+Tasks 2.1-2.15 are defined in Ralph's IMPLEMENTATION_PLAN.md. Cortex recommends:
+1. Start with `current_ralph_tasks.sh` fixes (2.1-2.8)
+2. Then `thunk_ralph_tasks.sh` fixes (2.9-2.14)
+3. Finally `pr-batch.sh` (2.15)
+4. After all fixes: sync templates (resolve WARN.T1, WARN.T2)
+
+### Phase 3: Quick Reference Tables (Priority: MEDIUM)
+
+Tasks 3.1-3.5 add documentation convention compliance. Can be done in parallel with Phase 2.
+
+### Phase 5: Design Decisions (Priority: LOW)
+
+**⚠️ Requires Human Approval:** Tasks 5.1-5.3 modify protected files (loop.sh, templates/ralph/loop.sh).
+
+Cortex recommends deferring until Phases 1-3 are complete.
+
+---
+
+## Deferred Items
+
+### Phase 6: PR #4 D-Items Review
+
+**Recommendation:** Many D-items (D-4 through D-21) reference IMPLEMENTATION_PLAN.md issues that may have been resolved during the Phase 0-A/0-B work. 
+
+**Action:** Ralph should review D-items and mark obsolete ones as resolved before implementing fixes.
+
+### Phase 7: Maintenance
+
+Ongoing - run `bash workers/ralph/.maintenance/verify-brain.sh` periodically.
+
+<!-- Cortex will add new Task Contracts above this line -->
