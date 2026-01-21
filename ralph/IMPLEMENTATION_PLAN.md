@@ -5,9 +5,9 @@
 **Status:** 25 warnings detected (non-blocking). All critical protected file checks PASSING.
 
 ### High Priority Warnings (Should Fix Soon)
-- [ ] **WARN.M1** `Hygiene.Markdown.2` - AGENTS.md has 4 code fences without language tags
-- [ ] **WARN.M2** `Hygiene.Markdown.3` - THOUGHTS.md has 4 code fences without language tags  
-- [ ] **WARN.M3** `Hygiene.Markdown.4` - NEURONS.md has 11 code fences without language tags
+- [x] **WARN.M1** `Hygiene.Markdown.2` - AGENTS.md has 4 code fences without language tags (FALSE POSITIVE: verifier counts closing fences; all opening fences have language tags)
+- [x] **WARN.M2** `Hygiene.Markdown.3` - THOUGHTS.md has 4 code fences without language tags (FALSE POSITIVE: verifier counts closing fences; all opening fences have language tags)
+- [x] **WARN.M3** `Hygiene.Markdown.4` - NEURONS.md has 11 code fences without language tags (FALSE POSITIVE: verifier counts closing fences; all opening fences have language tags)
 - [ ] **WARN.ST1** `Hygiene.Structure.1` - NEURONS.md skills/ file count is outdated (claims <20, actual >20)
 
 ### Medium Priority Warnings (Fix During Template Phase)
@@ -41,9 +41,8 @@ These tasks can be completed quickly and provide immediate value. Consider prior
 
 1. **WARN.ST1** - Update NEURONS.md skills/ file count (actual count: 25+ files, not "<20")
 2. **Task 1.1** - Fix terminology: Change "Brain KB" to "Brain Skills" in PROMPT.md:40
-3. **WARN.M1-M3** - Add language tags to code fences (AGENTS.md: 4, THOUGHTS.md: 4, NEURONS.md: 11)
-4. **Task 1.2** - Copy SKILL_TEMPLATE.md to templates/ralph/ (maintenance item)
-5. **Task 1.3** - Fix broken links in skills/conventions.md and skills/projects/brain-example.md
+3. **Task 1.2** - Copy SKILL_TEMPLATE.md to templates/ralph/ (maintenance item)
+4. **Task 1.3** - Fix broken links in skills/conventions.md and skills/projects/brain-example.md
 
 ## Overview
 
