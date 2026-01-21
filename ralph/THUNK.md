@@ -325,3 +325,4 @@ Started: 2026-01-18
 | 285 | 0.A.2.3 | HIGH | **0.A.2.3** Create `cortex/.gitignore` if needed - Created cortex/.gitignore to ignore temporary/cache files (snapshot_cache.txt, *.snapshot, *.tmp, *.cache, .rovodev/, tmp_*) for future snapshot caching and local tool outputs | 2026-01-21 |
 | 286 | WARN.T3 | MEDIUM | **WARN.T3** Fix `Hygiene.TemplateSync.2` warning - loop.sh differs from template - Investigated and verified loop.sh and templates/ralph/loop.sh are identical via sha256sum comparison, updated IMPLEMENTATION_PLAN.md to mark as false positive | 2026-01-21 |
 | 287 | 0.A.2.4 | HIGH | **0.A.2.4** Test: Run `bash cortex/run.sh --help` successfully - Executed from ralph/ directory, help text displayed correctly with usage, options (--help, --model, --runner), examples, and description of Cortex's role | 2026-01-21 |
+| 288 | 0.A.4.1 | HIGH | **0.A.4.1** Create `brain/workers/` folder | 2026-01-21 |

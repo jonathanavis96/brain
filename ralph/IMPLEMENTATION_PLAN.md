@@ -148,7 +148,7 @@ These tasks can be completed quickly and provide immediate value. Consider prior
 
 **IMPORTANT:** This sub-phase ONLY copies files. Delete happens in Phase 0-B after human verification.
 
-- [ ] **0.A.4.1** Create `brain/workers/` folder
+- [x] **0.A.4.1** Create `brain/workers/` folder
   - **AC:** Folder exists at `brain/workers/`
 
 - [ ] **0.A.4.2** Copy entire `brain/ralph/` to `brain/workers/ralph/`
