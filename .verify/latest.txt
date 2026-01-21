@@ -1,6 +1,6 @@
 Ralph Verifier Report
-Time: 2026-01-21 17:26:23
-Git:  0fed5a8
+Time: 2026-01-21 17:30:36
+Git:  c99e3fa
 AC:   /home/grafe/code/brain/ralph/rules/AC.rules
 Approvals: /home/grafe/code/brain/ralph/rules/MANUAL_APPROVALS.rules
 ------------------------------------------------------------
@@ -47,55 +47,3 @@ Approvals: /home/grafe/code/brain/ralph/rules/MANUAL_APPROVALS.rules
   cmd:  grep -c 'THUNK\.md' thunk_ralph_tasks.sh
   exit: 0
   stdout: 9
-[PASS] BugC.5
-  desc: Monitor does not append/redirect into THUNK.md
-  cmd:  grep -nE '>>\s*.*THUNK\.md|>\s*.*THUNK\.md' thunk_ralph_tasks.sh | wc -l | tr -d ' '
-  exit: 0
-  stdout: 0
-[PASS] BugC.6
-  desc: No task_exists_in_thunk function
-  cmd:  grep -c 'task_exists_in_thunk' thunk_ralph_tasks.sh
-  exit: 1
-  stdout: 0
-[PASS] BugC.7
-  desc: No extract_task_id function
-  cmd:  grep -c 'extract_task_id' thunk_ralph_tasks.sh
-  exit: 1
-  stdout: 0
-[WARN] BugC.UI.1 (manual review)
-  desc: THUNK monitor only displays, never modifies files
-  instructions: Run thunk_ralph_tasks.sh, mark a task [x] in IMPLEMENTATION_PLAN.md, confirm THUNK.md is NOT auto-updated
-[WARN] Template.1 (auto check in warn gate)
-  desc: thunk_ralph_tasks.sh matches template
-  cmd:  diff -q thunk_ralph_tasks.sh templates/ralph/thunk_ralph_tasks.sh 2>/dev/null && echo "match" || echo "differ"
-  exit: 0
-  stdout: match
-[PASS] AntiCheat.1
-  desc: No fake verification markers in source files
-  cmd:  grep -RIn --include='*.sh' --include='*.md' --exclude-dir=.git --exclude-dir=.verify --exclude-dir=logs --exclude-dir=old_md --exclude='AC.rules' --exclude='IMPLEMENTATION_PLAN.md' "<!-- verified" . 2>/dev/null | wc -l | tr -d ' '
-  exit: 0
-  stdout: 0
-[PASS] AntiCheat.2
-  desc: No dismissal phrases in active source files
-  cmd:  grep -RIn --include='*.sh' --include='*.md' --exclude-dir=.git --exclude-dir=.verify --exclude-dir=logs --exclude-dir=old_md --exclude='AC.rules' --exclude='PROMPT.md' --exclude='IMPLEMENTATION_PLAN.md' "by design" . 2>/dev/null | wc -l | tr -d ' '
-  exit: 0
-  stdout: 0
-[PASS] AntiCheat.3
-  desc: No bug reframing in source files
-  cmd:  grep -RIn --include='*.sh' --include='*.md' --exclude-dir=.git --exclude-dir=.verify --exclude-dir=logs --exclude-dir=old_md --exclude='AC.rules' --exclude='IMPLEMENTATION_PLAN.md' "feature, not a bug" . 2>/dev/null | wc -l | tr -d ' '
-  exit: 0
-  stdout: 0
-[PASS] AntiCheat.4
-  desc: No intended behavior dismissals in source files
-  cmd:  grep -RIn --include='*.sh' --include='*.md' --exclude-dir=.git --exclude-dir=.verify --exclude-dir=logs --exclude-dir=old_md --exclude='AC.rules' --exclude='IMPLEMENTATION_PLAN.md' "works as intended" . 2>/dev/null | wc -l | tr -d ' '
-  exit: 0
-  stdout: 0
-[PASS] AntiCheat.5
-  desc: No self-certification in source files
-  cmd:  grep -RIn --include='*.sh' --include='*.md' --exclude-dir=.git --exclude-dir=.verify --exclude-dir=logs --exclude-dir=old_md --exclude='AC.rules' --exclude='IMPLEMENTATION_PLAN.md' "verified: this is" . 2>/dev/null | wc -l | tr -d ' '
-  exit: 0
-  stdout: 0
-[PASS] Protected.1
-  desc: loop.sh unchanged from baseline
-  cmd:  sha256sum loop.sh | cut -d' ' -f1 | diff -q - ../.verify/loop.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
-  exit: 0

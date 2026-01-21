@@ -16,13 +16,14 @@ If your prompt header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
 If `.verify/latest.txt` contains `[WARN]` lines with `(auto check failed but warn gate)`:
 1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of IMPLEMENTATION_PLAN.md (after header, before other phases)
-2. **LIST** each as: `- [ ] WARN.<ID> <RULE_ID> - <description>`
-3. **NEVER use numbered lists (1. 2. 3.)** - ALWAYS use checkbox format `- [ ]`
-4. **IGNORE** warnings marked `(auto check in warn gate)` - already passing
-5. **NEVER** mark `[x]` until verifier confirms fix (re-run shows `[PASS]`)
-6. **NEVER** add "FALSE POSITIVE" notes - request waiver instead via `../.verify/request_waiver.sh`
-7. **Waivers are one-time-use** - After verifier uses a waiver, it's moved to `.used` and deleted. Only request waivers for issues you genuinely cannot fix.
-8. In BUILD mode: Fix ONE warning, mark `[?]`, commit. Verifier determines `[x]`.
+2. **⚠️ DO NOT create "## Verifier Warnings" without the "Phase 0-Warn:" prefix** - This breaks the task monitor!
+3. **LIST** each as: `- [ ] WARN.<ID> <RULE_ID> - <description>`
+4. **NEVER use numbered lists (1. 2. 3.)** - ALWAYS use checkbox format `- [ ]`
+5. **IGNORE** warnings marked `(auto check in warn gate)` - already passing
+6. **NEVER** mark `[x]` until verifier confirms fix (re-run shows `[PASS]`)
+7. **NEVER** add "FALSE POSITIVE" notes - request waiver instead via `../.verify/request_waiver.sh`
+8. **Waivers are one-time-use** - After verifier uses a waiver, it's moved to `.used` and deleted. Only request waivers for issues you genuinely cannot fix.
+9. In BUILD mode: Fix ONE warning, mark `[?]`, commit. Verifier determines `[x]`.
 
 Common failure types:
 - **Hash mismatch** (e.g., `Protected.1`): A protected file was modified. You cannot fix this - report to human.
@@ -129,7 +130,9 @@ Please complete these manual checks before marking the project as fully done.
 
 ### Actions
 1. Create/update IMPLEMENTATION_PLAN.md:
-   - ALL task sections MUST be "## Phase X:" format (e.g., "## Phase 0-Quick: Quick Wins", "## Phase 1: Maintenance")
+   - **⚠️ CRITICAL:** ALL task sections MUST be "## Phase X:" format (e.g., "## Phase 0-Quick: Quick Wins", "## Phase 1: Maintenance")
+   - **⚠️ NEVER create these non-phase sections:** "## Overview", "## Quick Wins" (without Phase prefix), "## Verifier Warnings" (without Phase prefix), "## Maintenance Check", "## TODO Items"
+   - **⚠️ CORRECT format:** "## Phase 0-Warn: Verifier Warnings", "## Phase 0-Quick: Quick Wins", "## Phase 1: Core Features"
    - ALL tasks MUST use checkbox format: `- [ ]` or `- [x]`
    - NEVER use numbered lists (1. 2. 3.) for tasks
    - Prioritize: High → Medium → Low

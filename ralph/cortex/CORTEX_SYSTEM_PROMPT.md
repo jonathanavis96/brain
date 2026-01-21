@@ -113,9 +113,13 @@ When creating or updating Ralph's task plan, you MUST follow these formatting ru
 ## Quick Wins  (missing "Phase X:" prefix)
 ## Verifier Warnings  (missing "Phase X:" prefix)
 ## TODO Items  (not a phase format)
+## Overview  (not a phase format)
+## Maintenance Check  (not a phase format)
 ```
 
 **Why:** Ralph's task monitor (`current_ralph_tasks.sh`) only detects sections with `## Phase X:` headers. Non-phase sections are invisible to the monitor.
+
+**⚠️ CRITICAL:** If you find Ralph has recreated non-phase sections (Overview, Quick Wins without Phase prefix, Maintenance Check, etc.), you MUST convert them to Phase format immediately. Ralph sometimes recreates these sections despite being instructed not to.
 
 ### 2. All Tasks Must Use Checkbox Format
 
@@ -149,9 +153,11 @@ When creating or updating Ralph's task plan, you MUST follow these formatting ru
 ### 4. Verifier Warnings Get Special Treatment
 
 When Ralph encounters verifier warnings, he will:
-1. Create "## Phase 0-Warn: Verifier Warnings" at the TOP of IMPLEMENTATION_PLAN.md
+1. Create "## Phase 0-Warn: Verifier Warnings" at the TOP of IMPLEMENTATION_PLAN.md (NOT "## Verifier Warnings")
 2. List warnings as: `- [ ] WARN.<ID> <RULE_ID> - <description>`
 3. Fix warnings BEFORE numbered tasks (warnings-first policy)
+
+**⚠️ Ralph may create "## Verifier Warnings" without the Phase prefix - if so, rename it to "## Phase 0-Warn: Verifier Warnings"**
 
 **Your job as Cortex:**
 - DO NOT create the Verifier Warnings section yourself (Ralph creates it during PLAN mode)

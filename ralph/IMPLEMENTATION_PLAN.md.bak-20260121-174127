@@ -1,60 +1,83 @@
 # Implementation Plan - Brain Repository
 
-**Status:** PLAN mode - Strategic planning  
-**Branch:** `brain-work`  
-**Last Updated:** 2026-01-21  
-**Progress:** 15 of 69 numbered tasks complete (21.7%)
+## Maintenance Check (Planning Mode Only)
 
-**Current Focus:**
-- Phase 0-A (Cortex Manager Pack) - 15/19 tasks complete (78.9%)
-- All verifier checks PASSING (24/24)
+**When in planning mode**, run `bash .maintenance/verify-brain.sh` and review `.maintenance/MAINTENANCE.md`.
+Incorporate any relevant maintenance items into the appropriate priority section below.
 
-**Note:** In PLAN mode, run `bash .maintenance/verify-brain.sh` and incorporate maintenance items into appropriate phases.
+> **Note:** When maintenance items are completed:
+> 1. Remove from `.maintenance/MAINTENANCE.md`
+> 2. Log completion in `.maintenance/MAINTENANCE_LOG.md`
+> 3. Remove from the MAINTENANCE section at the bottom of this plan
 
----
+## Quick Wins (High Value, Low Effort)
 
-## Phase 0-Warn: Verifier Warnings
+These tasks can be completed quickly and provide immediate value. Consider prioritizing during BUILD iterations:
 
-**Goal:** Address verifier warnings (non-blocking but should be fixed)
+1. ~~**WARN.ST1** - Update NEURONS.md skills/ file count~~ ✅ COMPLETE
+2. ~~**Task 1.1** - Fix terminology: Change "Brain KB" to "Brain Skills" in PROMPT.md:40~~ ✅ NOT FOUND (already fixed)
+3. **Task 1.2** - Copy SKILL_TEMPLATE.md to templates/ralph/ (from maintenance check)
+4. **Task 1.3** - Fix broken links in skills files (from maintenance check)
+5. **Task 1.4** - Fix "Brain KB" → "Brain Skills" in templates/NEURONS.project.md:362
+6. **Task 1.5** - Add Quick Reference tables to 5 skills files (from maintenance check)
+
+**Note:** Maintenance check identified 4 new issues (Tasks 1.2-1.5 above).
+
+## Verifier Warnings
+
+These warnings were identified by the verifier but are in the warn gate (non-blocking). Address during BUILD iterations:
 
 - [x] **WARN.BugC.Auto.2** - THUNK writes limited to era creation only (HIGH)
   - **Issue:** `thunk_ralph_tasks.sh` has 1 write operation outside era creation context
-  - **Fix:** Added "Era:" marker comment on line 333 where cat >> writes to THUNK_FILE
+  - **Fix:** Added "Era:" marker comment on line 333 where cat >> writes to THUNK_FILE, applied to both root and template versions
 
-- [x] **WARN.Hygiene.Markdown.3** - No code fences without language tags in THOUGHTS.md (MEDIUM)
-  - **Issue:** THOUGHTS.md contains 4 plain code fences
-  - **Fix:** Add language tags to all code fences
+- [?] **WARN.Hygiene.Markdown.3** - No code fences without language tags in THOUGHTS.md (MEDIUM)
+  - **Issue:** THOUGHTS.md contains 4 plain code fences (```)
+  - **Fix:** Add language tags to all code fences (```bash, ```text, ```markdown, etc.)
 
 - [x] **WARN.Hygiene.Markdown.4** - No code fences without language tags in NEURONS.md (MEDIUM)
-  - **Issue:** NEURONS.md contains 12 plain code fences
-  - **Fix:** Added language tags - now passing
+  - **Issue:** NEURONS.md contains 12 plain code fences (```)
+  - **Fix:** Added language tags to all code fences - now passing
 
 - [x] **WARN.VerifyMeta.1** - Verifier run_id.txt exists and is non-empty (HIGH)
-  - **Issue:** `.verify/run_id.txt` was missing
-  - **Fix:** Copied from `../.verify/run_id.txt` - now passing
+  - **Issue:** `.verify/run_id.txt` was missing in local ralph/ directory
+  - **Fix:** Copied from `../.verify/run_id.txt` to `.verify/run_id.txt` - now passing
 
-## Phase 0-Quick: Quick Wins (High Value, Low Effort)
+## Overview
 
-**Goal:** Complete quick tasks that provide immediate value
+**Status:** PLAN mode - Strategic planning  
+**Branch:** `brain-work` (up to date with origin after push)  
+**Last Updated:** 2026-01-21 17:27  
+**Progress:** 15 of 69 numbered tasks complete (21.7%)
 
-- [x] **0.Q.1** Update NEURONS.md skills/ file count
-  - **Status:** ✅ COMPLETE
+**Current Focus:**
+- Phase 0-A (Cortex Manager Pack) - 15/19 tasks complete (78.9% of phase)
+- Next BUILD task: 0.A.4.2 - Re-sync workers/ralph/ copy (diverged after 57 commits)
+- All verifier checks PASSING (24/24), 1 medium priority warning remaining
+- Phase 0-A requires 4 more tasks before mandatory human verification gate
 
-- [x] **0.Q.2** Fix terminology: Change "Brain KB" to "Brain Skills" in PROMPT.md:40
-  - **Status:** ✅ NOT FOUND (already fixed)
+**Critical Discovery:**
+- ⚠️ workers/ralph/ copy has DIVERGED from source (must re-sync before proceeding)
+- 57 commits since original copy was made (2026-01-20 to 2026-01-21)
+- Source (ralph/) now has .verify/ subdirectory that workers/ralph/ lacks
+- Must complete fresh copy before tasks 0.A.4.3-0.A.4.5 can proceed
 
-- [ ] **0.Q.3** Copy SKILL_TEMPLATE.md to templates/ralph/
-  - **Source:** From maintenance check
+**Verifier Health:**
+- ✅ All 24 acceptance criteria PASSING
+- ✅ Protected file hashes current (loop.sh, verifier.sh, PROMPT.md)
+- ⚠️ 4 maintenance items identified (see .maintenance/MAINTENANCE.md)
+- ⚠️ 1 medium priority warning remaining (THOUGHTS.md code fences)
+- ✅ Last 10 commits: All verifier-clean, 57 total commits since 2026-01-20
 
-- [ ] **0.Q.4** Fix broken links in skills files
-  - **Source:** From maintenance check
+**Strategic Notes:**
+- Phase 0-A NOT truly complete - copy diverged, path updates never done
+- workers/ralph/ exists but NOT functional (paths still reference old locations)
+- Must re-sync or complete 0.A.4.3-0.A.4.5 before attempting dry-run test
+- Skills directory has 33 markdown files
+- Gap backlog has 3 entries (1 P1, 2 P2 priority, none promoted)
+- Recent activity: 52 commits since 2026-01-20, 73 commits since 2026-01-19
 
-- [ ] **0.Q.5** Fix "Brain KB" → "Brain Skills" in templates/NEURONS.project.md:362
-  - **Source:** From maintenance check
-
-- [ ] **0.Q.6** Add Quick Reference tables to 5 skills files
-  - **Source:** From maintenance check
-
+---
 
 ## Phase 0-A: Cortex Manager Pack - Create & Setup (19 items) - HUMAN APPROVED 2026-01-20
 
@@ -420,13 +443,9 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
 
 ---
 
+## MAINTENANCE
 
-## Phase 7: Maintenance Items
+<!-- Auto-populated by verify-brain.sh - items below are consistency/housekeeping tasks -->
+<!-- When completed, remove from here AND from .maintenance/MAINTENANCE.md -->
 
-**Goal:** Address items from maintenance check
-
-- [ ] **7.1** Maintenance item tracking
-  - **Note:** Run `bash .maintenance/verify-brain.sh` periodically
-  - **AC:** All maintenance items incorporated into appropriate phases
-  - **AC:** Completed items logged in `.maintenance/MAINTENANCE_LOG.md`
-
+_Run `bash .maintenance/verify-brain.sh` to check for maintenance items._
