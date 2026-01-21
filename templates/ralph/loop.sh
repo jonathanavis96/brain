@@ -99,7 +99,7 @@ cleanup() {
 
 handle_interrupt() {
   INTERRUPT_COUNT=$((INTERRUPT_COUNT + 1))
-  
+
   if [[ $INTERRUPT_COUNT -eq 1 ]]; then
     echo ""
     echo "========================================"
@@ -132,7 +132,7 @@ ensure_worktree_branch() {
     echo "Creating new worktree branch: $branch"
     git checkout -b "$branch"
   fi
-  
+
   # Set upstream if not already set
   if ! git rev-parse --abbrev-ref --symbolic-full-name "@{u}" >/dev/null 2>&1; then
     echo "Setting upstream for $branch"
@@ -198,22 +198,22 @@ Examples:
 
   # Alternate plan/build for 10 iters, plan every 3
   bash ralph/loop.sh --iterations 10 --plan-every 3
-  
+
   # Use Sonnet model for faster iterations
   bash ralph/loop.sh --model sonnet --iterations 20 --plan-every 5
-  
+
   # Use Opus for careful planning
   bash ralph/loop.sh --model opus --iterations 1
-  
+
   # Dry-run mode (see what would change)
   bash ralph/loop.sh --dry-run --iterations 1
-  
+
   # Run without monitor terminals (useful for CI/CD)
   bash ralph/loop.sh --no-monitors --iterations 5
-  
+
   # Rollback last 2 iterations
   bash ralph/loop.sh --rollback 2
-  
+
   # Resume after error
   bash ralph/loop.sh --resume
 EOF
@@ -356,7 +356,7 @@ fi
 if [[ "$RUNNER" == "rovodev" ]]; then
   if [[ -n "$RESOLVED_MODEL" ]]; then
     TEMP_CONFIG="/tmp/rovodev_config_$$_$(date +%s).yml"
-    
+
     # Copy base config and override modelId
     if [[ -f "$HOME/.rovodev/config.yml" ]]; then
       sed "s|^  modelId:.*|  modelId: $RESOLVED_MODEL|" "$HOME/.rovodev/config.yml" > "$TEMP_CONFIG"
@@ -421,20 +421,20 @@ if [[ "$ROLLBACK_MODE" == "true" ]]; then
   echo "🔄 Rollback Mode"
   echo "========================================"
   echo ""
-  
+
   # Show last N commits
   echo "Last $ROLLBACK_COUNT commit(s) to be reverted:"
   echo ""
   git log --oneline -n "$ROLLBACK_COUNT"
   echo ""
-  
+
   # Confirmation
   read -p "⚠️  Revert these $ROLLBACK_COUNT commit(s)? (type 'yes' to confirm): " confirm
   if [[ "$confirm" != "yes" ]]; then
     echo "Rollback cancelled."
     exit 0
   fi
-  
+
   # Perform rollback
   echo ""
   echo "Reverting last $ROLLBACK_COUNT commit(s)..."
@@ -447,7 +447,7 @@ if [[ "$ROLLBACK_MODE" == "true" ]]; then
     echo "❌ Rollback failed!"
     exit 1
   fi
-  
+
   exit 0
 fi
 
@@ -457,25 +457,25 @@ if [[ "$RESUME_MODE" == "true" ]]; then
   echo "🔄 Resume Mode"
   echo "========================================"
   echo ""
-  
+
   # Check for uncommitted changes
   if git diff --quiet && git diff --cached --quiet; then
     echo "No uncommitted changes found."
     echo "Nothing to resume. Repository is clean."
     exit 0
   fi
-  
+
   echo "Uncommitted changes detected:"
   echo ""
   git status --short
   echo ""
-  
+
   read -p "Continue from this state? (yes/no): " confirm
   if [[ "$confirm" != "yes" ]]; then
     echo "Resume cancelled."
     exit 0
   fi
-  
+
   echo "✅ Continuing with existing changes..."
   echo ""
 fi
@@ -487,7 +487,7 @@ if [[ -n "$BRANCH_ARG" ]]; then
     echo "========================================"
     echo "🌿 Branch: $BRANCH_ARG"
     echo "========================================"
-    
+
     # Check if branch exists
     if git show-ref --verify --quiet "refs/heads/$BRANCH_ARG"; then
       git checkout "$BRANCH_ARG"
@@ -539,22 +539,22 @@ LAST_VERIFIER_FAIL_COUNT=0
 parse_verifier_failures() {
   local report_file="$1"
   [[ -f "$report_file" ]] || return
-  
+
   local rules=""
   local count=0
-  
+
   # Extract [FAIL] rule IDs (standard format)
   local standard_fails
   standard_fails=$(grep -oE '^\[FAIL\] [A-Za-z0-9_.]+' "$report_file" 2>/dev/null | sed 's/\[FAIL\] //' | tr '\n' ',' | sed 's/,$//' | sed 's/,,*/,/g')
   local standard_count
   standard_count=$(grep -c '^\[FAIL\]' "$report_file" 2>/dev/null || echo "0")
-  
+
   # Check for hash guard failure (special format: [timestamp] FAIL: AC hash mismatch)
   if grep -q 'FAIL: AC hash mismatch' "$report_file" 2>/dev/null; then
     rules="HashGuard"
     count=1
   fi
-  
+
   # Combine results
   if [[ -n "$standard_fails" ]]; then
     if [[ -n "$rules" ]]; then
@@ -564,7 +564,7 @@ parse_verifier_failures() {
     fi
     count=$((count + standard_count))
   fi
-  
+
   LAST_VERIFIER_FAILED_RULES="$rules"
   LAST_VERIFIER_FAIL_COUNT="$count"
 }
@@ -583,7 +583,7 @@ check_human_intervention() {
 check_protected_file_failures() {
   # If no failed rules, nothing to check
   [[ -z "$LAST_VERIFIER_FAILED_RULES" ]] && return 1
-  
+
   # Check if any Protected.* rules failed
   if echo "$LAST_VERIFIER_FAILED_RULES" | grep -qE 'Protected\.[0-9]+'; then
     return 0  # protected file failures found
@@ -597,7 +597,7 @@ run_verifier() {
     LAST_VERIFIER_STATUS="SKIP"
     return 0  # Don't block if verifier doesn't exist yet
   fi
-  
+
   # Auto-init baselines if missing
   if ! init_verifier_if_needed; then
     LAST_VERIFIER_STATUS="FAIL"
@@ -605,16 +605,16 @@ run_verifier() {
     LAST_VERIFIER_FAIL_COUNT=1
     return 1
   fi
-  
+
   echo ""
   echo "========================================"
   echo "🔍 Running acceptance criteria verifier..."
   echo "========================================"
-  
+
   # Generate unique run ID for freshness check
   RUN_ID="$(date +%s)-$$"
   export RUN_ID
-  
+
   if "$VERIFY_SCRIPT"; then
     # Verify freshness: run_id.txt must match our RUN_ID
     if [[ -f "$RUN_ID_FILE" ]]; then
@@ -636,7 +636,7 @@ run_verifier() {
       LAST_VERIFIER_FAIL_COUNT=1
       return 1
     fi
-    
+
     echo "✅ All acceptance criteria passed! (run_id: $RUN_ID)"
     cat "$RALPH/.verify/latest.txt" 2>/dev/null | tail -10 || true
     LAST_VERIFIER_STATUS="PASS"
@@ -678,7 +678,7 @@ run_once() {
   {
     echo "# MODE: ${phase^^}"
     echo ""
-    
+
     # Inject verifier status from previous iteration (if any)
     if [[ -n "$LAST_VERIFIER_STATUS" ]]; then
       echo "# LAST_VERIFIER_RESULT: $LAST_VERIFIER_STATUS"
@@ -689,9 +689,9 @@ run_once() {
       fi
       echo ""
     fi
-    
+
     cat "$prompt_file"
-    
+
     # Append dry-run instruction if enabled
     if [[ "$DRY_RUN" == "true" ]]; then
       echo ""
@@ -744,7 +744,7 @@ run_once() {
   echo
   echo "Run complete."
   echo "Transcript: $log"
-  
+
   # In dry-run mode, remind user no commits were made
   if [[ "$DRY_RUN" == "true" ]]; then
     echo ""
@@ -754,8 +754,8 @@ run_once() {
     echo "Review the transcript above for analysis."
     echo "========================================"
   fi
-  
-  
+
+
   # Run verifier after both PLAN and BUILD iterations
   if [[ "$phase" == "plan" ]] || [[ "$phase" == "build" ]]; then
     if run_verifier; then
@@ -771,14 +771,14 @@ run_once() {
       echo "========================================"
     fi
   fi
-  
+
   # Legacy: also check for :::COMPLETE::: but ignore it (loop.sh owns completion now)
   if sed 's/\x1b\[[0-9;]*m//g' "$log" | grep -qE '^\s*:::COMPLETE:::\s*$'; then
     echo ""
     echo "⚠️  Ralph output :::COMPLETE::: but that token is reserved for loop.sh."
     echo "Ignoring - use :::BUILD_READY::: or :::PLAN_READY::: instead."
   fi
-  
+
   # Check if Ralph requested human intervention
   if check_human_intervention "$log"; then
     echo ""
@@ -790,7 +790,7 @@ run_once() {
     echo ""
     return 43  # Special return code for human intervention
   fi
-  
+
   # Check if all tasks are done (for true completion)
   if [[ -f "$RALPH/IMPLEMENTATION_PLAN.md" ]]; then
     local unchecked_count
@@ -807,7 +807,7 @@ run_once() {
       fi
     fi
   fi
-  
+
   return 0
 }
 
@@ -818,7 +818,7 @@ launch_in_terminal() {
   local title="$1"
   local script_path="$2"
   local process_pattern="$3"
-  
+
   # Try to detect available terminal emulator (priority order: tmux, wt.exe, gnome-terminal, konsole, xterm)
   # All terminal launches redirect stderr to /dev/null to suppress dbus/X11 errors
   if [[ -n "${TMUX:-}" ]]; then
@@ -850,7 +850,7 @@ launch_in_terminal() {
       return 0
     fi
   fi
-  
+
   return 1
 }
 
@@ -859,7 +859,7 @@ launch_monitors() {
   local monitor_dir="$RALPH"
   local current_tasks_launched=false
   local thunk_tasks_launched=false
-  
+
   # Check if current_ralph_tasks.sh exists and launch
   if [[ -f "$monitor_dir/current_ralph_tasks.sh" ]]; then
     if ! pgrep -f "current_ralph_tasks.sh" > /dev/null; then
@@ -870,7 +870,7 @@ launch_monitors() {
       current_tasks_launched=true  # Already running
     fi
   fi
-  
+
   # Check if thunk_ralph_tasks.sh exists and launch
   if [[ -f "$monitor_dir/thunk_ralph_tasks.sh" ]]; then
     if ! pgrep -f "thunk_ralph_tasks.sh" > /dev/null; then
@@ -881,7 +881,7 @@ launch_monitors() {
       thunk_tasks_launched=true  # Already running
     fi
   fi
-  
+
   # If both monitors failed to launch, print consolidated fallback message
   if [[ "$current_tasks_launched" == "false" && "$thunk_tasks_launched" == "false" ]]; then
     echo ""
@@ -950,7 +950,7 @@ if [[ -n "$PROMPT_ARG" ]]; then
       echo "Exiting gracefully after iteration $((i-1))."
       exit 130
     fi
-    
+
     # Check for protected file failures before starting LLM (requires human intervention)
     if check_protected_file_failures; then
       echo ""
@@ -987,7 +987,7 @@ if [[ -n "$PROMPT_ARG" ]]; then
       echo "After resolving, re-run the loop to continue."
       exit 1
     fi
-    
+
     # Capture exit code without triggering set -e
     run_result=0
     run_once "$PROMPT_FILE" "custom" "$i" || run_result=$?
@@ -1014,7 +1014,7 @@ else
       echo "Exiting gracefully after iteration $((i-1))."
       exit 130
     fi
-    
+
     # Check for protected file failures before starting LLM (requires human intervention)
     if check_protected_file_failures; then
       echo ""
@@ -1051,7 +1051,7 @@ else
       echo "After resolving, re-run the loop to continue."
       exit 1
     fi
-    
+
     # Capture exit code without triggering set -e
     run_result=0
     if [[ "$i" -eq 1 ]] || (( PLAN_EVERY > 0 && ( (i-1) % PLAN_EVERY == 0 ) )); then

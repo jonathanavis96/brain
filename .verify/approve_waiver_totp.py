@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
-import json, os, sys, hashlib, datetime
+import json
+import os
+import sys
+import hashlib
+import datetime
 import pyotp
+
 
 def sha256_file(path: str) -> str:
     h = hashlib.sha256()
@@ -9,9 +14,13 @@ def sha256_file(path: str) -> str:
             h.update(chunk)
     return h.hexdigest()
 
+
 def main():
     if len(sys.argv) != 2:
-        print("Usage: .verify/approve_waiver_totp.py <path-to-waiver-request.json>", file=sys.stderr)
+        print(
+            "Usage: .verify/approve_waiver_totp.py <path-to-waiver-request.json>",
+            file=sys.stderr,
+        )
         sys.exit(2)
 
     req_path = sys.argv[1]
@@ -56,17 +65,23 @@ def main():
     approved_path = os.path.join(approved_dir, f"{waiver_id}.approved")
     now = datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
 
-    content = "\n".join([
-        f"WAIVER_ID={waiver_id}",
-        f"REQUEST_SHA256={req_hash}",
-        f"APPROVED_AT={now}",
-        f"METHOD=TOTP",
-    ]) + "\n"
+    content = (
+        "\n".join(
+            [
+                f"WAIVER_ID={waiver_id}",
+                f"REQUEST_SHA256={req_hash}",
+                f"APPROVED_AT={now}",
+                "METHOD=TOTP",
+            ]
+        )
+        + "\n"
+    )
 
     with open(approved_path, "w", encoding="utf-8") as f:
         f.write(content)
 
     print(f"\nAPPROVED ✅  wrote {approved_path}")
+
 
 if __name__ == "__main__":
     main()

@@ -969,4 +969,3 @@ const response = await fetch(url);
 - **api-design-patterns.md** - HTTP status codes, error responses, versioning
 - **error-handling-patterns.md** - Secure error logging without exposing internals
 - **caching-patterns.md** - Cache security considerations (don't cache sensitive data)
-

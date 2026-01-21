@@ -52,19 +52,19 @@ get_file_mtime() {
 # Function to generate short human-readable title from task description
 generate_title() {
     local desc="$1"
-    
+
     # Strip technical IDs (T1.1, P4A.7, 1.1, 2.3, etc.) from the beginning
     desc=$(echo "$desc" | sed -E 's/^[[:space:]]*\*\*[T]?[0-9A-Za-z]+(\.[0-9A-Za-z]+)*\*\*[[:space:]]*//')
-    
+
     # Strip markdown bold markers
     desc=$(echo "$desc" | sed -E 's/\*\*//g')
-    
+
     # Extract action verb and main object (look for common action verbs)
     if [[ "$desc" =~ ^(Rename|Update|Create|Verify|Delete|Add|Remove|Test|Implement|Fix|Refactor|Document|Migrate|Copy|Set|Run|If)([[:space:]]*:[[:space:]]*|[[:space:]]+)(.+)$ ]]; then
         local verb="${BASH_REMATCH[1]}"
         local separator="${BASH_REMATCH[2]}"
         local rest="${BASH_REMATCH[3]}"
-        
+
         # For "Test:" prefix, include the object being tested
         if [[ "$verb" == "Test" ]] && [[ "$separator" =~ : ]]; then
             # Take up to arrow, period, or first 50 chars
@@ -105,7 +105,7 @@ extract_tasks() {
     local task_counter=0
     local indent_level=0
     local is_manual=false
-    
+
     while IFS= read -r line; do
         # Detect Manual Review section - skip these tasks entirely
         local line_upper="${line^^}"
@@ -113,7 +113,7 @@ extract_tasks() {
             in_task_section=false
             continue
         fi
-        
+
         # Detect Phase sections (## Phase X: Description)
         # Match patterns like "## Phase 0-A: ...", "## Phase 1: ...", etc.
         if [[ "$line" =~ ^##[[:space:]]+Phase[[:space:]]+([^:]+):[[:space:]]*(.*)$ ]]; then
@@ -124,7 +124,7 @@ extract_tasks() {
             task_counter=0
             continue
         fi
-        
+
         # Detect High/Medium/Low Priority sections (flexible matching)
         # Matches: "### High Priority", "### Phase 1: Desc (High Priority)", "### 🔴 HIGH PRIORITY: Desc"
         # Case-insensitive matching via converting to uppercase for comparison
@@ -145,23 +145,23 @@ extract_tasks() {
             # This allows ### and #### subsection headers to remain within the current section
             in_task_section=false
         fi
-        
+
         # Only process tasks in valid sections
         if [[ "$in_task_section" == "true" ]]; then
             local status="" task_desc="" is_subtask=false
-            
+
             # Detect indentation level (count leading spaces)
             if [[ "$line" =~ ^([[:space:]]*)-[[:space:]]\[([ x])\][[:space:]]*(.*)$ ]]; then
                 local leading_spaces="${BASH_REMATCH[1]}"
                 status="${BASH_REMATCH[2]}"
                 task_desc="${BASH_REMATCH[3]}"
-                
+
                 # Skip manual review tasks (only those explicitly in "Manual Review" section)
                 # WARN tasks are automated and should be included
-                
+
                 # Calculate indent level (2 spaces = 1 level, 4 spaces = 2 levels, etc.)
                 indent_level=$((${#leading_spaces} / 2))
-                
+
                 # Determine if this is a subtask (indented)
                 if [[ $indent_level -gt 0 ]]; then
                     is_subtask=true
@@ -170,7 +170,7 @@ extract_tasks() {
                     ((task_counter++))
                 fi
             fi
-            
+
             # If we found a task, process it
             if [[ -n "$status" && -n "$task_desc" ]]; then
                 # For completed tasks, check cache first
@@ -178,7 +178,7 @@ extract_tasks() {
                     # Generate cache key (hash of full raw line to prevent collisions)
                     local cache_key
                     cache_key=$(echo -n "$line" | md5sum | cut -d' ' -f1)
-                    
+
                     # If cached, return cached value
                     if [[ -n "${COMPLETED_CACHE[$cache_key]}" ]]; then
                         # Skip completed tasks if --hide-completed is set
@@ -188,7 +188,7 @@ extract_tasks() {
                         echo "${COMPLETED_CACHE[$cache_key]}"
                         continue
                     fi
-                    
+
                     # Not cached - process and cache it
                     local short_title
                     short_title=$(generate_title "$task_desc")
@@ -198,15 +198,15 @@ extract_tasks() {
                     else
                         task_label="Task $task_counter"
                     fi
-                    
+
                     local output_line="✓|$current_section|$task_label|$short_title|$indent_level|completed|$task_desc"
                     COMPLETED_CACHE[$cache_key]="$output_line"
-                    
+
                     # Skip completed tasks if --hide-completed is set
                     if [[ "$show_completed" == "false" ]]; then
                         continue
                     fi
-                    
+
                     echo "$output_line"
                 else
                     # Pending task - always process (no caching)
@@ -218,7 +218,7 @@ extract_tasks() {
                     else
                         task_label="Task $task_counter"
                     fi
-                    
+
                     # Use current indicator (▶) for first pending task, pending indicator (○) for others
                     echo "pending|$current_section|$task_label|$short_title|$indent_level|pending|$task_desc"
                 fi
@@ -269,7 +269,7 @@ archive_completed_tasks() {
     local archive_section="### Archive - $timestamp"
     local completed_tasks=""
     local in_task_section=false
-    
+
     # Extract completed tasks
     while IFS= read -r line; do
         if [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
@@ -281,19 +281,19 @@ archive_completed_tasks() {
         elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
             in_task_section=false
         fi
-        
+
         if [[ "$in_task_section" == "true" && "$line" =~ ^[[:space:]]*-[[:space:]]\[x\] ]]; then
             completed_tasks+="$line"$'\n'
         fi
     done < "$PLAN_FILE"
-    
+
     if [[ -z "$completed_tasks" ]]; then
         echo ""
         echo "  No completed tasks to archive."
         sleep 2
         return
     fi
-    
+
     # Write new file without completed tasks, add archive at end
     {
         local skip_line=false
@@ -307,22 +307,22 @@ archive_completed_tasks() {
             elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
                 in_task_section=false
             fi
-            
+
             # Skip completed tasks in active sections
             if [[ "$in_task_section" == "true" && "$line" =~ ^[[:space:]]*-[[:space:]]\[x\] ]]; then
                 continue
             fi
-            
+
             echo "$line"
         done < "$PLAN_FILE"
-        
+
         # Add archive section
         echo ""
         echo "$archive_section"
         echo ""
         echo "$completed_tasks"
     } > "$temp_file"
-    
+
     # Atomic replace
     mv "$temp_file" "$PLAN_FILE"
     echo ""
@@ -336,16 +336,16 @@ clear_completed_tasks() {
     echo -n "  ⚠️  Clear all completed tasks permanently? [y/N]: "
     read -n 1 -r confirm
     echo ""
-    
+
     if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
         echo "  Cancelled."
         sleep 1
         return
     fi
-    
+
     local temp_file="${PLAN_FILE}.tmp"
     local in_task_section=false
-    
+
     # Write new file without completed tasks
     {
         while IFS= read -r line; do
@@ -358,16 +358,16 @@ clear_completed_tasks() {
             elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
                 in_task_section=false
             fi
-            
+
             # Skip completed tasks in active sections
             if [[ "$in_task_section" == "true" && "$line" =~ ^[[:space:]]*-[[:space:]]\[x\] ]]; then
                 continue
             fi
-            
+
             echo "$line"
         done < "$PLAN_FILE"
     } > "$temp_file"
-    
+
     # Atomic replace
     mv "$temp_file" "$PLAN_FILE"
     echo "  ✓ Cleared all completed tasks."
@@ -378,7 +378,7 @@ clear_completed_tasks() {
 display_tasks() {
     # Always do full redraw - simple and reliable
     clear
-    
+
     # Extract and group tasks by section
     local tasks
     if [[ "$HIDE_COMPLETED" == "true" ]]; then
@@ -386,24 +386,24 @@ display_tasks() {
     else
         tasks=$(extract_tasks "true")
     fi
-    
+
     # Build display content
     local pending_count=0
     local completed_count=0
     local first_pending_seen=false
-    
+
     # Header
     echo "╔════════════════════════════════════════════════════════════════╗"
     echo "║          CURRENT RALPH TASKS - $(date +%H:%M:%S)                  ║"
     echo "╚════════════════════════════════════════════════════════════════╝"
     echo ""
-    
+
     if [[ -z "$tasks" ]]; then
         echo "  No tasks found in IMPLEMENTATION_PLAN.md"
         echo ""
     else
         local current_section=""
-        
+
         while IFS='|' read -r _ section task_label short_title indent_level status full_desc; do
             # Print section header when it changes
             if [[ "$section" != "$current_section" ]]; then
@@ -415,22 +415,22 @@ display_tasks() {
                 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
                 current_section="$section"
             fi
-            
+
             # Calculate base indent (2 spaces per level)
             local base_indent=""
             for ((i=0; i<indent_level; i++)); do
                 base_indent="  ${base_indent}"
             done
-            
+
             # Determine what to display: use full description for warnings, short title otherwise
             local display_text="$short_title"
-            
+
             # Check if this is a warning task (WARN.* in full description)
             if [[ "$full_desc" =~ WARN\.[A-Z0-9]+ ]]; then
                 # For warnings, use the full description for better context
                 display_text="$full_desc"
             fi
-            
+
             # Format task display with human-friendly title
             local display_line=""
             if [[ "$task_label" == "subtask" ]]; then
@@ -446,7 +446,7 @@ display_tasks() {
                     display_line="${base_indent}  ${task_label} — ${display_text}"
                 fi
             fi
-            
+
             # Build task line with color and appropriate symbol
             local task_line=""
             if [[ "$status" == "completed" ]]; then
@@ -463,7 +463,7 @@ display_tasks() {
                     symbol="▶"
                     first_pending_seen=true
                 fi
-                
+
                 if [[ -t 1 ]]; then
                     task_line="  \033[33m${symbol}\033[0m ${display_line:2}"
                 else
@@ -471,54 +471,54 @@ display_tasks() {
                 fi
                 ((pending_count++))
             fi
-            
+
             # Display task line
             echo -e "$task_line"
-            
+
             # Add empty line after each task for readability
             echo ""
         done <<< "$tasks"
     fi
-    
+
     # Footer with stats and progress bar
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "  Completed: $completed_count | Pending: $pending_count | Total: $((completed_count + pending_count))"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
-    
+
     # Calculate progress percentage
     local total=$((completed_count + pending_count))
     local percentage=0
     if [[ $total -gt 0 ]]; then
         percentage=$(( (completed_count * 100) / total ))
     fi
-    
+
     # Progress bar (64 chars wide total: "  Progress: XX% [" = 18 chars, "] N/Total" varies)
     # Calculate bar width: 64 - 18 - length("] N/Total") = available for bar
     local fraction_text="] $completed_count/$total"
     local bar_width=$((64 - 18 - ${#fraction_text}))
-    
+
     # Calculate filled and empty blocks
     local filled=$(( (bar_width * completed_count) / (total > 0 ? total : 1) ))
     local empty=$((bar_width - filled))
-    
+
     # Build the bar
     local bar=""
     for ((i=0; i<filled; i++)); do bar="${bar}█"; done
     for ((i=0; i<empty; i++)); do bar="${bar}░"; done
-    
+
     # Display progress bar
     printf "  Progress: %3d%% [%s%s\n" "$percentage" "$bar" "$fraction_text"
     echo ""
-    
+
     # Hotkey legend
     echo "╔════════════════════════════════════════════════════════════════╗"
     echo "║  HOTKEYS: [h] Hide/Show Done  [r] Reset/Archive  [f] Refresh  ║"
     echo "║           [c] Clear Done      [?] Help           [q] Quit     ║"
     echo "╚════════════════════════════════════════════════════════════════╝"
     echo ""
-    
+
     if [[ "$HIDE_COMPLETED" == "true" ]]; then
         echo "  Mode: Hiding completed tasks (press 'h' to show)"
     fi
@@ -594,14 +594,14 @@ while true; do
                 ;;
         esac
     fi
-    
+
     # Check for file changes
     CURRENT_MODIFIED=$(get_file_mtime)
     if [[ "$CURRENT_MODIFIED" != "$LAST_MODIFIED" ]]; then
         LAST_MODIFIED="$CURRENT_MODIFIED"
         display_tasks
     fi
-    
+
     # Small sleep to prevent CPU spinning
     sleep 0.5
 done

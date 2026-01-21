@@ -36,7 +36,7 @@ if [[ -f "IMPLEMENTATION_PLAN.md" ]]; then
     total_tasks=$(grep -cE '^\- \[(x|~| |\?)\] \*\*[0-9]' IMPLEMENTATION_PLAN.md || echo "0")
     completed_tasks=$(grep -cE '^\- \[x\] \*\*[0-9]' IMPLEMENTATION_PLAN.md || echo "0")
     echo "**Tasks:** ${completed_tasks}/${total_tasks} complete"
-    
+
     # Show next uncompleted task
     next_task=$(grep -m 1 -E '^\- \[ \] \*\*[0-9]' IMPLEMENTATION_PLAN.md || echo "")
     if [[ -n "${next_task}" ]]; then
@@ -65,7 +65,7 @@ echo ""
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     current_branch=$(git branch --show-current)
     echo "**Branch:** ${current_branch}"
-    
+
     # Check if working directory is clean
     if git diff-index --quiet HEAD -- 2>/dev/null; then
         echo "**Status:** Clean (no uncommitted changes)"

@@ -234,4 +234,3 @@ instructions="Run main workflow end-to-end and verify expected behavior"
 # desc="All tests pass"
 # cmd="cd .. && npm test && echo pass"
 # expect_stdout=pass
-

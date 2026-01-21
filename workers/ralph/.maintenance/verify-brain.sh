@@ -55,27 +55,27 @@ add_maintenance_item() {
 # =============================================================================
 check_skills_index() {
     log_info "Checking skills index completeness..."
-    
+
     local index_file="skills/index.md"
     if [[ ! -f "$index_file" ]]; then
         log_error "skills/index.md not found"
         add_maintenance_item "Create skills/index.md"
         return
     fi
-    
+
     # Find all skill files in domains/ and projects/
     local missing_from_index=()
     while IFS= read -r skill_file; do
         local basename=$(basename "$skill_file")
         # Skip README files and index files
         [[ "$basename" == "README.md" || "$basename" == "index.md" ]] && continue
-        
+
         # Check if file is referenced in index.md
         if ! grep -q "$basename" "$index_file" 2>/dev/null; then
             missing_from_index+=("$skill_file")
         fi
     done < <(find skills/domains skills/projects -name "*.md" -type f 2>/dev/null)
-    
+
     if [[ ${#missing_from_index[@]} -gt 0 ]]; then
         log_warn "Skills missing from index.md:"
         for f in "${missing_from_index[@]}"; do
@@ -92,24 +92,24 @@ check_skills_index() {
 # =============================================================================
 check_summary_completeness() {
     log_info "Checking SUMMARY.md completeness..."
-    
+
     local summary_file="skills/SUMMARY.md"
     if [[ ! -f "$summary_file" ]]; then
         log_error "skills/SUMMARY.md not found"
         add_maintenance_item "Create skills/SUMMARY.md"
         return
     fi
-    
+
     local missing_from_summary=()
     while IFS= read -r skill_file; do
         local basename=$(basename "$skill_file")
         [[ "$basename" == "README.md" || "$basename" == "SUMMARY.md" || "$basename" == "index.md" ]] && continue
-        
+
         if ! grep -q "$basename" "$summary_file" 2>/dev/null; then
             missing_from_summary+=("$skill_file")
         fi
     done < <(find skills/domains skills/projects -name "*.md" -type f 2>/dev/null)
-    
+
     if [[ ${#missing_from_summary[@]} -gt 0 ]]; then
         log_warn "Skills missing from SUMMARY.md:"
         for f in "${missing_from_summary[@]}"; do
@@ -126,7 +126,7 @@ check_summary_completeness() {
 # =============================================================================
 check_template_sync() {
     log_info "Checking template synchronization..."
-    
+
     # Define source -> template mappings
     # Format: "source_file:template_file:check_type"
     # check_type: "hash" = full file match, "structure" = key sections only
@@ -135,22 +135,22 @@ check_template_sync() {
         "PROMPT.md:templates/ralph/PROMPT.md:structure"
         "IMPLEMENTATION_PLAN.md:templates/ralph/IMPLEMENTATION_PLAN.project.md:structure"
     )
-    
+
     # Required structural sections for templates
     local required_sections=(
         "## Maintenance Check"
         "## MAINTENANCE"
     )
-    
+
     for mapping in "${mappings[@]}"; do
         local source="${mapping%%:*}"
         local rest="${mapping#*:}"
         local template="${rest%%:*}"
         local check_type="${rest##*:}"
-        
+
         # Skip if source doesn't exist
         [[ ! -f "$source" ]] && continue
-        
+
         # Skip if template doesn't exist (might be intentional)
         if [[ ! -f "$template" ]]; then
             # Only warn if template directory exists
@@ -161,12 +161,12 @@ check_template_sync() {
             fi
             continue
         fi
-        
+
         if [[ "$check_type" == "hash" ]]; then
             # Full file comparison
             local source_hash=$(sha256sum "$source" 2>/dev/null | cut -d' ' -f1)
             local template_hash=$(sha256sum "$template" 2>/dev/null | cut -d' ' -f1)
-            
+
             if [[ "$source_hash" != "$template_hash" ]]; then
                 log_warn "Template out of sync: $template differs from $source"
                 add_maintenance_item "Sync template $template with source $source"
@@ -179,14 +179,14 @@ check_template_sync() {
                     missing_sections+=("$section")
                 fi
             done
-            
+
             if [[ ${#missing_sections[@]} -gt 0 ]]; then
                 log_warn "Template $template missing required sections: ${missing_sections[*]}"
                 add_maintenance_item "Add missing sections to $template: ${missing_sections[*]}"
             fi
         fi
     done
-    
+
     log_info "Template sync check complete"
 }
 
@@ -195,12 +195,12 @@ check_template_sync() {
 # =============================================================================
 check_recently_modified() {
     log_info "Checking recently modified files..."
-    
+
     local modified_files=()
     while IFS= read -r file; do
         modified_files+=("$file")
     done < <(find . -name "*.md" -type f -mtime -7 ! -path "./.git/*" ! -name "MAINTENANCE.md" 2>/dev/null | head -20)
-    
+
     if [[ ${#modified_files[@]} -gt 0 ]]; then
         log_info "Recently modified files (last 7 days):"
         for f in "${modified_files[@]}"; do
@@ -214,21 +214,21 @@ check_recently_modified() {
 # =============================================================================
 check_broken_links() {
     log_info "Checking for broken links in skills..."
-    
+
     local broken_links=()
     while IFS= read -r skill_file; do
         # Extract markdown links: [text](path)
         while IFS= read -r link; do
             # Skip external links and anchors
             [[ "$link" =~ ^https?:// || "$link" =~ ^# || -z "$link" ]] && continue
-            
+
             # Resolve relative path from skill file location
             local skill_dir=$(dirname "$skill_file")
             local target="$skill_dir/$link"
-            
+
             # Normalize path
             target=$(realpath -m "$target" 2>/dev/null || echo "$target")
-            
+
             # Check if target exists (strip any #anchor)
             local target_file="${target%%#*}"
             if [[ ! -e "$target_file" && ! -e "$SCRIPT_DIR/$link" ]]; then
@@ -236,7 +236,7 @@ check_broken_links() {
             fi
         done < <(grep -oP '\[.*?\]\(\K[^)]+' "$skill_file" 2>/dev/null || true)
     done < <(find skills -name "*.md" -type f 2>/dev/null)
-    
+
     if [[ ${#broken_links[@]} -gt 0 ]]; then
         log_warn "Broken links detected:"
         for link in "${broken_links[@]}"; do
@@ -253,19 +253,19 @@ check_broken_links() {
 # =============================================================================
 check_quick_reference_tables() {
     log_info "Checking skills for Quick Reference tables..."
-    
+
     local missing_tables=()
     while IFS= read -r skill_file; do
         local basename=$(basename "$skill_file")
         # Skip meta files
         [[ "$basename" == "README.md" || "$basename" == "SUMMARY.md" || "$basename" == "index.md" || "$basename" == "conventions.md" ]] && continue
-        
+
         # Check for Quick Reference section
         if ! grep -qi "## Quick Reference\|## At a Glance\|### Common Mistakes" "$skill_file" 2>/dev/null; then
             missing_tables+=("$skill_file")
         fi
     done < <(find skills/domains -name "*.md" -type f 2>/dev/null)
-    
+
     if [[ ${#missing_tables[@]} -gt 0 ]]; then
         log_warn "Skills missing Quick Reference tables:"
         for f in "${missing_tables[@]}"; do
@@ -285,10 +285,10 @@ update_maintenance_file() {
         log_info "No new maintenance items to add"
         return
     fi
-    
+
     echo ""
     echo -e "${YELLOW}Adding ${#new_maintenance_items[@]} items to MAINTENANCE.md${NC}"
-    
+
     # Create MAINTENANCE.md if it doesn't exist
     if [[ ! -f "$MAINTENANCE_FILE" ]]; then
         cat > "$MAINTENANCE_FILE" << 'EOF'
@@ -309,12 +309,12 @@ Run `bash verify-brain.sh` daily to update this file.
 - [ ] Verify skills have Quick Reference tables
 EOF
     fi
-    
+
     # Append new items to Triggered Items section
     # Find the line number of "## Triggered Items" and insert after the comment
     local temp_file=$(mktemp)
     local inserted=false
-    
+
     while IFS= read -r line; do
         echo "$line" >> "$temp_file"
         if [[ "$line" == "<!-- Auto-populated by verify-brain.sh -->" && "$inserted" == false ]]; then
@@ -324,9 +324,9 @@ EOF
             inserted=true
         fi
     done < "$MAINTENANCE_FILE"
-    
+
     mv "$temp_file" "$MAINTENANCE_FILE"
-    
+
     echo ""
     echo "New maintenance items added:"
     for item in "${new_maintenance_items[@]}"; do
@@ -342,26 +342,26 @@ main() {
     echo "Brain Consistency Check - $TODAY"
     echo "=================================="
     echo ""
-    
+
     check_skills_index
     check_summary_completeness
     check_template_sync
     check_broken_links
     check_quick_reference_tables
     check_recently_modified
-    
+
     echo ""
     echo "=================================="
-    
+
     if [[ $issues_found -eq 0 ]]; then
         echo -e "${GREEN}All checks passed!${NC}"
     else
         echo -e "${YELLOW}Found $issues_found issue(s)${NC}"
         update_maintenance_file
     fi
-    
+
     echo "=================================="
-    
+
     # Exit with appropriate code
     [[ $issues_found -gt 0 ]] && exit 1 || exit 0
 }

@@ -22,22 +22,22 @@ REQUESTS_DIR="${VERIFY_DIR}/waiver_requests"
 check_waiver() {
     local rule_id="$1"
     local file_path="$2"
-    
+
     # No waivers directory = no waivers
     [[ -d "$WAIVERS_DIR" ]] || return 1
-    
+
     # Search all approved waivers
     shopt -s nullglob
     for approved_file in "${WAIVERS_DIR}"/*.approved; do
         [[ -f "$approved_file" ]] || continue
-        
+
         # Parse the approved file
         local waiver_rule=""
         local waiver_paths=""
         local waiver_expires=""
         local waiver_id=""
         local request_hash=""
-        
+
         while IFS='=' read -r key value; do
             case "$key" in
                 WAIVER_ID) waiver_id="$value" ;;
@@ -47,10 +47,10 @@ check_waiver() {
                 REQUEST_SHA256) request_hash="$value" ;;
             esac
         done < "$approved_file"
-        
+
         # Check rule matches
         [[ "$waiver_rule" == "$rule_id" ]] || continue
-        
+
         # Check file is in scope (comma-separated paths)
         local path_match=false
         IFS=',' read -ra paths_array <<< "$waiver_paths"
@@ -61,7 +61,7 @@ check_waiver() {
             fi
         done
         [[ "$path_match" == "true" ]] || continue
-        
+
         # Check not expired
         local today
         today=$(date +%Y-%m-%d)
@@ -69,7 +69,7 @@ check_waiver() {
             # Expired waiver
             continue
         fi
-        
+
         # Verify request hash (if request file exists)
         local request_file="${REQUESTS_DIR}/${waiver_id}.json"
         if [[ -f "$request_file" ]]; then
@@ -81,7 +81,7 @@ check_waiver() {
                 continue
             fi
         fi
-        
+
         # Valid waiver found - move to .used (one-time-use)
         local used_file="${approved_file%.approved}.used"
         mv "$approved_file" "$used_file" 2>/dev/null || {
@@ -90,7 +90,7 @@ check_waiver() {
         echo "INFO: Waiver ${waiver_id} consumed (moved to .used)" >&2
         return 0
     done
-    
+
     # No valid waiver found
     return 1
 }
@@ -101,19 +101,19 @@ check_waiver() {
 get_waiver_info() {
     local rule_id="$1"
     local file_path="$2"
-    
+
     [[ -d "$WAIVERS_DIR" ]] || return 1
-    
+
     shopt -s nullglob
     for approved_file in "${WAIVERS_DIR}"/*.approved; do
         [[ -f "$approved_file" ]] || continue
-        
+
         local waiver_rule=""
         local waiver_paths=""
         local waiver_expires=""
         local waiver_id=""
         local waiver_reason=""
-        
+
         while IFS='=' read -r key value; do
             case "$key" in
                 WAIVER_ID) waiver_id="$value" ;;
@@ -123,9 +123,9 @@ get_waiver_info() {
                 REASON) waiver_reason="$value" ;;
             esac
         done < "$approved_file"
-        
+
         [[ "$waiver_rule" == "$rule_id" ]] || continue
-        
+
         IFS=',' read -ra paths_array <<< "$waiver_paths"
         for waiver_path in "${paths_array[@]}"; do
             if [[ "$waiver_path" == "$file_path" ]]; then
@@ -134,7 +134,7 @@ get_waiver_info() {
             fi
         done
     done
-    
+
     return 1
 }
 
@@ -143,23 +143,23 @@ count_active_waivers() {
     local count=0
     local today
     today=$(date +%Y-%m-%d)
-    
+
     [[ -d "$WAIVERS_DIR" ]] || { echo 0; return; }
-    
+
     shopt -s nullglob
     for approved_file in "${WAIVERS_DIR}"/*.approved; do
         [[ -f "$approved_file" ]] || continue
-        
+
         local waiver_expires=""
         while IFS='=' read -r key value; do
             [[ "$key" == "EXPIRES" ]] && waiver_expires="$value"
         done < "$approved_file"
-        
+
         if [[ -n "$waiver_expires" && ! "$waiver_expires" < "$today" ]]; then
             ((count++))
         fi
     done
-    
+
     echo "$count"
 }
 
@@ -167,17 +167,17 @@ count_active_waivers() {
 list_active_waivers() {
     local today
     today=$(date +%Y-%m-%d)
-    
+
     [[ -d "$WAIVERS_DIR" ]] || return
-    
+
     echo "Active Waivers:"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    
+
     local found=false
     shopt -s nullglob
     for approved_file in "${WAIVERS_DIR}"/*.approved; do
         [[ -f "$approved_file" ]] || continue
-        
+
         local waiver_id="" waiver_rule="" waiver_paths="" waiver_expires=""
         while IFS='=' read -r key value; do
             case "$key" in
@@ -187,7 +187,7 @@ list_active_waivers() {
                 EXPIRES) waiver_expires="$value" ;;
             esac
         done < "$approved_file"
-        
+
         if [[ -n "$waiver_expires" && ! "$waiver_expires" < "$today" ]]; then
             found=true
             echo "  ${waiver_id}"
@@ -197,7 +197,7 @@ list_active_waivers() {
             echo ""
         fi
     done
-    
+
     if [[ "$found" == "false" ]]; then
         echo "  (none)"
     fi

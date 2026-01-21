@@ -61,7 +61,7 @@ get_github_username() {
             return 0
         fi
     fi
-    
+
     # Try to detect from gh CLI
     if command -v gh &>/dev/null && gh auth status &>/dev/null; then
         gh api user --jq '.login' 2>/dev/null || true
@@ -102,11 +102,11 @@ substitute_placeholders() {
     local file="$1"
     local repo_name="$2"
     local work_branch="$3"
-    
+
     local escaped_repo escaped_branch
     escaped_repo=$(escape_sed_replacement "$repo_name")
     escaped_branch=$(escape_sed_replacement "$work_branch")
-    
+
     sed -i "s/__REPO_NAME__/$escaped_repo/g" "$file"
     sed -i "s/__WORK_BRANCH__/$escaped_branch/g" "$file"
 }
@@ -250,7 +250,7 @@ echo ""
 read -p "Create GitHub repository? (y/n): " create_repo_answer
 if [[ "$create_repo_answer" =~ ^[Yy] ]]; then
     CREATE_REPO=true
-    
+
     # Check if gh CLI is available
     if ! check_gh; then
         warn "GitHub CLI (gh) not installed or not authenticated"
@@ -268,7 +268,7 @@ if [[ "$create_repo_answer" =~ ^[Yy] ]]; then
             die "Please install and authenticate gh CLI first"
         fi
     fi
-    
+
     if [[ "$CREATE_REPO" == "true" ]]; then
         # Get/confirm GitHub username
         detected_username=$(get_github_username)
@@ -284,13 +284,13 @@ if [[ "$create_repo_answer" =~ ^[Yy] ]]; then
             fi
         fi
         save_github_username "$GITHUB_USERNAME"
-        
+
         # Get repo name
         echo ""
         read -p "Repository name [$SUGGESTED_REPO]: " input_repo
         REPO_NAME="${input_repo:-$SUGGESTED_REPO}"
         WORK_BRANCH="${REPO_NAME}-work"
-        
+
         # Show summary
         echo ""
         echo -e "${CYAN}----------------------------------------${NC}"
@@ -423,17 +423,17 @@ if [ -f "$TEMPLATES_DIR/ralph/THUNK.project.md" ]; then
     cp "$TEMPLATES_DIR/ralph/THUNK.project.md" "$PROJECT_LOCATION/ralph/THUNK.md"
     CREATION_DATE=$(date +"%Y-%m-%d")
     INITIAL_ERA_NAME="Initial Setup"
-    
+
     # Escape variables for sed replacement to prevent corruption from special chars
     esc_project_name=$(escape_sed_replacement "$PROJECT_NAME")
     esc_creation_date=$(escape_sed_replacement "$CREATION_DATE")
     esc_era_name=$(escape_sed_replacement "$INITIAL_ERA_NAME")
-    
+
     # Process template placeholders
     sed -i "s/{{PROJECT_NAME}}/$esc_project_name/g" "$PROJECT_LOCATION/ralph/THUNK.md"
     sed -i "s/{{CREATION_DATE}}/$esc_creation_date/g" "$PROJECT_LOCATION/ralph/THUNK.md"
     sed -i "s/{{INITIAL_ERA_NAME}}/$esc_era_name/g" "$PROJECT_LOCATION/ralph/THUNK.md"
-    
+
     success "Copied ralph/THUNK.md (from template)"
 else
     warn "Template not found: ralph/THUNK.project.md"
@@ -567,12 +567,12 @@ git branch -M main
 
 if [[ "$CREATE_REPO" == "true" ]]; then
     info "Creating GitHub repository..."
-    
+
     # Loop for handling name conflicts
     while true; do
         create_output=$(gh repo create "$REPO_NAME" --public --source=. --remote=origin 2>&1)
         create_exit=$?
-        
+
         if [[ $create_exit -eq 0 ]]; then
             success "GitHub repo created: $GITHUB_USERNAME/$REPO_NAME"
             break
@@ -603,17 +603,17 @@ if [[ "$CREATE_REPO" == "true" ]]; then
             fi
         fi
     done
-    
+
     if [[ "$LOCAL_ONLY" != "true" ]]; then
         # Push main
         info "Pushing main branch..."
         git push -u origin main
-        
+
         # Create and push work branch
         info "Creating work branch: $WORK_BRANCH"
         git checkout -b "$WORK_BRANCH"
         git push -u origin "$WORK_BRANCH"
-        
+
         success "Repository setup complete!"
     fi
 fi
@@ -629,7 +629,7 @@ if [[ "$LOCAL_ONLY" == "true" ]]; then
     echo "  git checkout -b $WORK_BRANCH"
     echo "  git push -u origin $WORK_BRANCH"
     echo ""
-    
+
     # Still create local work branch
     git checkout -b "$WORK_BRANCH"
 fi

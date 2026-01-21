@@ -24,7 +24,7 @@ generate_dashboard() {
 
     local timestamp=$(grep "^Time:" "$LATEST_FILE" | cut -d' ' -f2-)
     local git_ref=$(grep "^Git:" "$LATEST_FILE" | cut -d' ' -f2-)
-    
+
     # Extract summary stats
     local pass=$(grep "PASS:" "$LATEST_FILE" | tail -1 | grep -oE '[0-9]+')
     local fail=$(grep "FAIL:" "$LATEST_FILE" | tail -1 | grep -oE '[0-9]+')
@@ -53,7 +53,7 @@ EOF
     local current_id=""
     local current_status=""
     local current_desc=""
-    
+
     while IFS= read -r line; do
         if [[ "$line" =~ ^\[(PASS|FAIL|WARN|SKIP)\]\ ([A-Za-z0-9_.]+) ]]; then
             # Output previous row if exists
@@ -74,7 +74,7 @@ EOF
             current_desc="${BASH_REMATCH[1]}"
         fi
     done < "$LATEST_FILE"
-    
+
     # Output last row
     if [[ -n "$current_id" ]]; then
         echo "| \`$current_id\` | $current_status | $current_desc |"
@@ -109,7 +109,7 @@ update_inline() {
 
     # Generate new content
     local dashboard=$(generate_dashboard)
-    
+
     # Create temp file with updated content
     local tmp_file=$(mktemp)
     awk -v start="$START_MARKER" -v end="$END_MARKER" -v content="$dashboard" '
@@ -118,7 +118,7 @@ update_inline() {
         $0 ~ end { in_block = 0 }
         !in_block { print }
     ' "$PLAN_FILE" > "$tmp_file"
-    
+
     mv "$tmp_file" "$PLAN_FILE"
     echo "✅ Updated IMPLEMENTATION_PLAN.md with AC status dashboard"
 }

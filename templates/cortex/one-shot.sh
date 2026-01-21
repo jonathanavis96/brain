@@ -140,7 +140,7 @@ TEMP_CONFIG=""
 if [[ "$RUNNER" == "rovodev" ]]; then
   if [[ -n "$RESOLVED_MODEL" ]]; then
     TEMP_CONFIG="/tmp/rovodev_cortex_config_$$_$(date +%s).yml"
-
+    
     # Copy base config and override modelId
     if [[ -f "$HOME/.rovodev/config.yml" ]]; then
       sed "s|^  modelId:.*|  modelId: $RESOLVED_MODEL|" "$HOME/.rovodev/config.yml" > "$TEMP_CONFIG"
@@ -206,36 +206,36 @@ COMPOSITE_PROMPT="/tmp/cortex_prompt_$$_$(date +%s).md"
   echo ""
   echo "You are Cortex, the high-level manager for the Brain repository."
   echo ""
-
+  
   echo "---"
   echo ""
-
+  
   cat cortex/CORTEX_SYSTEM_PROMPT.md
-
+  
   echo ""
   echo "---"
   echo ""
   echo "# Current Repository State"
   echo ""
-
+  
   cat "$SNAPSHOT_FILE"
-
+  
   echo ""
   echo "---"
   echo ""
   echo "# Architectural Decisions"
   echo ""
-
+  
   cat cortex/DECISIONS.md
-
+  
   echo ""
   echo "---"
   echo ""
   echo "# Repository Map"
   echo ""
-
+  
   cat cortex/REPO_MAP.md
-
+  
 } > "$COMPOSITE_PROMPT"
 
 echo "Composite prompt prepared: $COMPOSITE_PROMPT"
