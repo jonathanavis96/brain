@@ -61,7 +61,6 @@ EOF
 
 # Defaults
 MODEL_ARG="opus"  # Default to Opus 4.5 for Cortex strategic planning
-RUNNER="rovodev"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -101,13 +100,6 @@ if [[ -n "$MODEL_ARG" ]]; then
   esac
 fi
 
-CONFIG_FLAG=""
-if [[ -n "$RESOLVED_MODEL" ]]; then
-  echo -e "${GREEN}Using model: ${RESOLVED_MODEL}${NC}"
-  CONFIG_FLAG="--config-file /dev/stdin"
-else
-  echo -e "${GREEN}Using default model${NC}"
-fi
 
 echo ""
 

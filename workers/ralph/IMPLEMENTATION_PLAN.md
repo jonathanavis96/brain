@@ -159,14 +159,14 @@
   - **AC:** `shellcheck ../../.verify/check_waiver.sh 2>&1 | grep -c SC2034` returns 0
   - **Commit:** `fix(verify): remove unused waiver_reason variable`
 
-- [ ] **WARN.Shellcheck.2** - SC2086 unquoted variable in .verify/request_waiver.sh (LOW)
+- [x] **WARN.Shellcheck.2** - SC2086 unquoted variable in .verify/request_waiver.sh (LOW)
   - **File:** `../../.verify/request_waiver.sh` line 131
   - **Issue:** `EXPIRY_DAYS` should be quoted to prevent globbing
   - **Fix:** Change `date -v+${EXPIRY_DAYS}d` to `date -v+"${EXPIRY_DAYS}"d`
   - **AC:** `shellcheck ../../.verify/request_waiver.sh 2>&1 | grep -c SC2086` returns 0
   - **Commit:** `fix(verify): quote EXPIRY_DAYS in request_waiver.sh`
 
-- [ ] **WARN.Shellcheck.3** - SC2034 unused variable in cortex/cortex.bash (MEDIUM)
+- [x] **WARN.Shellcheck.3** - SC2034 unused variable in cortex/cortex.bash (MEDIUM)
   - **File:** `../../cortex/cortex.bash` line 64
   - **Issue:** `RUNNER` appears unused
   - **Fix:** Remove variable or mark as used/exported
