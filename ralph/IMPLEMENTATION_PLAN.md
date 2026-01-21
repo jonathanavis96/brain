@@ -49,14 +49,14 @@ Incorporate any relevant maintenance items into the appropriate priority section
 
 ## Overview
 
-**Status:** Active - Planning mode iteration, Phase 0-A in progress  
-**Branch:** `brain-work` (7 commits ahead of origin)  
+**Status:** Active - BUILD mode iteration, Phase 0-A in progress  
+**Branch:** `brain-work` (8 commits ahead of origin)  
 **Last Updated:** 2026-01-21  
-**Progress:** 3 of 85 tasks complete (3.5%)
+**Progress:** 4 of 85 tasks complete (4.7%)
 
 **Current Focus:**
-- Phase 0-A (Cortex Manager Pack) - 2/19 tasks complete (10.5% of phase)
-- Next task: 0.A.1.3 - Create cortex/REPO_MAP.md
+- Phase 0-A (Cortex Manager Pack) - 3/19 tasks complete (15.8% of phase)
+- Next task: 0.A.1.4 - Create cortex/DECISIONS.md
 - Phase 0-C marked complete (verifier PLAN mode already committed)
 - All verifier checks PASSING (24/24), 25 warnings tracked but not blocking
 
@@ -84,7 +84,7 @@ Incorporate any relevant maintenance items into the appropriate priority section
 - [x] **0.A.1.3** Create `cortex/REPO_MAP.md` - Human-friendly repo navigation
   - **AC:** File contains: folder purposes (cortex/, workers/, skills/, templates/), key files and their roles, where state lives, where skills are, navigation tips
 
-- [ ] **0.A.1.4** Create `cortex/DECISIONS.md` - Stability anchor
+- [x] **0.A.1.4** Create `cortex/DECISIONS.md` - Stability anchor
   - **AC:** File contains: naming conventions, update cadences, style preferences, architectural decisions (copy from THOUGHTS.md decision log + add Cortex decisions)
 
 - [ ] **0.A.1.5** Create `cortex/RUNBOOK.md` - Operations guide
