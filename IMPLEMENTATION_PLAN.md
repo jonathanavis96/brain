@@ -47,7 +47,7 @@ This implementation plan outlines the tasks to fully set up the brain repository
 - Include goals: comprehensive skill catalog, self-improvement via Ralph loop, validation integrity
 - Success criteria: complete domains coverage, gap capture system, working Ralph loop, quality validation
 - Content structure: Project Goals section, Success Criteria section, Key Objectives
-- File location: /home/grafe/code/brain/THOUGHTS.md (new file)
+- File location: /path/to/brain/THOUGHTS.md (new file)
 - Dependencies: None
 - Estimated complexity: Low (simple markdown file)
 
@@ -55,12 +55,12 @@ This implementation plan outlines the tasks to fully set up the brain repository
 - NEURONS.md should map the brain repository structure, including ralph/ subdirectory
 - Include quick reference lookup table, file counts, validation commands
 - Follow structure similar to ralph/NEURONS.md but focused on brain root
-- File location: /home/grafe/code/brain/NEURONS.md (new file)
+- File location: /path/to/brain/NEURONS.md (new file)
 
 ### Task 3: Create AGENTS.md
 - AGENTS.md should provide operational guidance for maintaining the brain repository
 - Include how to run Ralph on brain, task monitors, troubleshooting
-- File location: /home/grafe/code/brain/AGENTS.md (new file)
+- File location: /path/to/brain/AGENTS.md (new file)
 
 ### Task 4: Ensure templates/ directory
 - Create templates/ in brain root for project bootstrapping

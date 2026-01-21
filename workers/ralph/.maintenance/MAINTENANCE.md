@@ -5,6 +5,8 @@ Run `bash .maintenance/verify-brain.sh` daily to update this file.
 
 ## Triggered Items
 <!-- Auto-populated by verify-brain.sh -->
+- [ ] 2026-01-21: Create skills/index.md
+- [ ] 2026-01-21: Create skills/SUMMARY.md
 - [ ] 2026-01-20: Create or sync template: templates/ralph/SKILL_TEMPLATE.md from skills/self-improvement/SKILL_TEMPLATE.md
 - [ ] 2026-01-20: Add missing sections to templates/ralph/PROMPT.md: ## Maintenance Check ## MAINTENANCE
 - [ ] 2026-01-20: Fix broken links in skills files

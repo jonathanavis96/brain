@@ -3,11 +3,12 @@ set -euo pipefail
 
 # Get script directory for relative paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-AC_FILE="${1:-${SCRIPT_DIR}/rules/AC.rules}"
-APPROVALS_FILE="${2:-${SCRIPT_DIR}/rules/MANUAL_APPROVALS.rules}"
+AC_FILE="${1:-${ROOT}/rules/AC.rules}"
+APPROVALS_FILE="${2:-${ROOT}/rules/MANUAL_APPROVALS.rules}"
 
-VERIFY_DIR="${SCRIPT_DIR}/.verify"
+VERIFY_DIR="${ROOT}/.verify"
 REPORT_FILE="${VERIFY_DIR}/latest.txt"
 AC_HASH_FILE="${VERIFY_DIR}/ac.sha256"
 
@@ -389,7 +390,7 @@ main() {
     echo "  WARN: $warn (manual_warn=$manual_warn)"
     echo "  SKIP: $skip"
     echo "  Manual gate=block failures: $manual_block_fail"
-    echo "  Hash guard: $(if grep -q 'AC hash mismatch' "$REPORT_FILE"; then echo "FAIL"; else echo "OK"; fi)"
+    echo "  Hash guard: $(if grep -q '^\[.*\] FAIL: AC hash mismatch' "$REPORT_FILE"; then echo "FAIL"; else echo "OK"; fi)"
   } >>"$REPORT_FILE"
 
   if [[ $overall_fail -eq 1 ]]; then
