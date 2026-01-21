@@ -383,7 +383,7 @@ display_tasks() {
     else
         local current_section=""
         
-        while IFS='|' read -r _ section task_label short_title indent_level status _; do
+        while IFS='|' read -r _ section task_label short_title indent_level status full_desc; do
             # Print section header when it changes
             if [[ "$section" != "$current_section" ]]; then
                 if [[ -n "$current_section" ]]; then
@@ -401,19 +401,28 @@ display_tasks() {
                 base_indent="  ${base_indent}"
             done
             
+            # Determine what to display: use full description for warnings, short title otherwise
+            local display_text="$short_title"
+            
+            # Check if this is a warning task (WARN.* in full description)
+            if [[ "$full_desc" =~ WARN\.[A-Z0-9]+ ]]; then
+                # For warnings, use the full description for better context
+                display_text="$full_desc"
+            fi
+            
             # Format task display with human-friendly title
             local display_line=""
             if [[ "$task_label" == "subtask" ]]; then
-                # Subtask: just show the short title with bullet
-                display_line="${base_indent}  • ${short_title}"
+                # Subtask: just show the display text with bullet
+                display_line="${base_indent}  • ${display_text}"
             else
-                # Main task: show "Task N — <short title>" with bold
+                # Main task: show "Task N — <display text>" with bold
                 if [[ -t 1 ]]; then
                     # Terminal supports formatting
-                    display_line="${base_indent}  \033[1m${task_label}\033[0m — ${short_title}"
+                    display_line="${base_indent}  \033[1m${task_label}\033[0m — ${display_text}"
                 else
                     # No terminal formatting
-                    display_line="${base_indent}  ${task_label} — ${short_title}"
+                    display_line="${base_indent}  ${task_label} — ${display_text}"
                 fi
             fi
             

@@ -284,55 +284,25 @@ parse_new_thunk_entries() {
     local footer_start=$append_row
     
     if [[ -t 1 ]]; then
-        # Row 0: blank line
+        # Clear everything from footer_start to end of screen to remove old footer
         tput cup $footer_start 0
-        tput el
+        tput ed  # Clear from cursor to end of display
+        
+        # Now draw the footer cleanly
         echo ""
-        # Row 1: separator
-        tput cup $((footer_start + 1)) 0
-        tput el
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-        # Row 2: total count
-        tput cup $((footer_start + 2)) 0
-        tput el
         echo "  Total Thunked: $new_total"
-        # Row 3: separator
-        tput cup $((footer_start + 3)) 0
-        tput el
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-        # Row 4: blank line
-        tput cup $((footer_start + 4)) 0
-        tput el
         echo ""
-        # Row 5: hotkey box top
-        tput cup $((footer_start + 5)) 0
-        tput el
         echo "╔════════════════════════════════════════════════════════════════╗"
-        # Row 6: hotkey text
-        tput cup $((footer_start + 6)) 0
-        tput el
         echo "║  HOTKEYS: [r] Refresh/Clear   [e] New Era   [q] Quit         ║"
-        # Row 7: hotkey box bottom
-        tput cup $((footer_start + 7)) 0
-        tput el
         echo "╚════════════════════════════════════════════════════════════════╝"
-        # Row 8: trailing blank
-        tput cup $((footer_start + 8)) 0
-        tput el
         echo ""
-        # Position cursor after footer
-        tput cup $((footer_start + 9)) 0
     else
-        # Non-TTY fallback: just append (will look messy but functional)
-        echo ""
-        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-        echo "  Total Thunked: $new_total"
-        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-        echo ""
-        echo "╔════════════════════════════════════════════════════════════════╗"
-        echo "║  HOTKEYS: [r] Refresh/Clear   [e] New Era   [q] Quit         ║"
-        echo "╚════════════════════════════════════════════════════════════════╝"
-        echo ""
+        # Non-TTY fallback: DO NOT append footer on incremental updates
+        # Footer only gets printed during full refresh (display_thunks)
+        # This prevents duplication in non-TTY environments
+        :  # No-op - skip footer in non-TTY mode for incremental updates
     fi
     
     # Update stored state

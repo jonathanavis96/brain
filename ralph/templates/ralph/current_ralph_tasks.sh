@@ -53,9 +53,6 @@ get_file_mtime() {
 generate_title() {
     local desc="$1"
     
-    # Strip "**Task N:**" or "**Task N.M:**" prefix (common IMPLEMENTATION_PLAN format)
-    desc=$(echo "$desc" | sed -E 's/^\*{0,2}Task[[:space:]]*[0-9]+(\.[0-9]+)?[[:space:]]*:?\*{0,2}[[:space:]]*//')
-    
     # Strip technical IDs (T1.1, P4A.7, 1.1, 2.3, etc.) from the beginning
     desc=$(echo "$desc" | sed -E 's/^[[:space:]]*\*\*[T]?[0-9A-Za-z]+(\.[0-9A-Za-z]+)*\*\*[[:space:]]*//')
     
@@ -63,7 +60,7 @@ generate_title() {
     desc=$(echo "$desc" | sed -E 's/\*\*//g')
     
     # Extract action verb and main object (look for common action verbs)
-    if [[ "$desc" =~ ^(Rename|Update|Create|Verify|Delete|Add|Remove|Test|Implement|Fix|Refactor|Document|Migrate|Copy|Set|Run|If|Bootstrap|Check|Monitor|Handle)([[:space:]]*:[[:space:]]*|[[:space:]]+)(.+)$ ]]; then
+    if [[ "$desc" =~ ^(Rename|Update|Create|Verify|Delete|Add|Remove|Test|Implement|Fix|Refactor|Document|Migrate|Copy|Set|Run|If)([[:space:]]*:[[:space:]]*|[[:space:]]+)(.+)$ ]]; then
         local verb="${BASH_REMATCH[1]}"
         local separator="${BASH_REMATCH[2]}"
         local rest="${BASH_REMATCH[3]}"
@@ -158,7 +155,8 @@ extract_tasks() {
                 # For completed tasks, check cache first
                 if [[ "$status" == "x" ]]; then
                     # Generate cache key (hash of full raw line to prevent collisions)
-                    local cache_key=$(echo -n "$line" | md5sum | cut -d' ' -f1)
+                    local cache_key
+                    cache_key=$(echo -n "$line" | md5sum | cut -d' ' -f1)
                     
                     # If cached, return cached value
                     if [[ -n "${COMPLETED_CACHE[$cache_key]}" ]]; then
@@ -171,7 +169,8 @@ extract_tasks() {
                     fi
                     
                     # Not cached - process and cache it
-                    local short_title=$(generate_title "$task_desc")
+                    local short_title
+                    short_title=$(generate_title "$task_desc")
                     local task_label=""
                     if [[ "$is_subtask" == "true" ]]; then
                         task_label="subtask"
@@ -190,7 +189,8 @@ extract_tasks() {
                     echo "$output_line"
                 else
                     # Pending task - always process (no caching)
-                    local short_title=$(generate_title "$task_desc")
+                    local short_title
+                    short_title=$(generate_title "$task_desc")
                     local task_label=""
                     if [[ "$is_subtask" == "true" ]]; then
                         task_label="subtask"
@@ -383,7 +383,7 @@ display_tasks() {
     else
         local current_section=""
         
-        while IFS='|' read -r _ section task_label short_title indent_level status _; do
+        while IFS='|' read -r _ section task_label short_title indent_level status full_desc; do
             # Print section header when it changes
             if [[ "$section" != "$current_section" ]]; then
                 if [[ -n "$current_section" ]]; then
@@ -401,19 +401,28 @@ display_tasks() {
                 base_indent="  ${base_indent}"
             done
             
+            # Determine what to display: use full description for warnings, short title otherwise
+            local display_text="$short_title"
+            
+            # Check if this is a warning task (WARN.* in full description)
+            if [[ "$full_desc" =~ WARN\.[A-Z0-9]+ ]]; then
+                # For warnings, use the full description for better context
+                display_text="$full_desc"
+            fi
+            
             # Format task display with human-friendly title
             local display_line=""
             if [[ "$task_label" == "subtask" ]]; then
-                # Subtask: just show the short title with bullet
-                display_line="${base_indent}  • ${short_title}"
+                # Subtask: just show the display text with bullet
+                display_line="${base_indent}  • ${display_text}"
             else
-                # Main task: show "Task N — <short title>" with bold
+                # Main task: show "Task N — <display text>" with bold
                 if [[ -t 1 ]]; then
                     # Terminal supports formatting
-                    display_line="${base_indent}  \033[1m${task_label}\033[0m — ${short_title}"
+                    display_line="${base_indent}  \033[1m${task_label}\033[0m — ${display_text}"
                 else
                     # No terminal formatting
-                    display_line="${base_indent}  ${task_label} — ${short_title}"
+                    display_line="${base_indent}  ${task_label} — ${display_text}"
                 fi
             fi
             
