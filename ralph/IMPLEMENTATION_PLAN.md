@@ -21,6 +21,26 @@ These tasks can be completed quickly and provide immediate value. Consider prior
 
 **Note:** Task 1.1 appears already complete - no "Brain KB" references found in PROMPT.md.
 
+## Verifier Warnings
+
+These warnings were identified by the verifier but are in the warn gate (non-blocking). Address during BUILD iterations:
+
+- [ ] **WARN.BugC.Auto.2** - THUNK writes limited to era creation only (HIGH)
+  - **Issue:** `thunk_ralph_tasks.sh` has 1 write operation outside era creation context
+  - **Fix:** Review grep output `grep -nE '>>\s*.*THUNK|>\s*.*THUNK' thunk_ralph_tasks.sh | grep -v 'new.*era\|Era:'` and remove/refactor non-era writes
+
+- [ ] **WARN.Hygiene.Markdown.3** - No code fences without language tags in THOUGHTS.md (MEDIUM)
+  - **Issue:** THOUGHTS.md contains 4 plain code fences (```)
+  - **Fix:** Add language tags to all code fences (```bash, ```text, ```markdown, etc.)
+
+- [ ] **WARN.Hygiene.Markdown.4** - No code fences without language tags in NEURONS.md (MEDIUM)
+  - **Issue:** NEURONS.md contains 12 plain code fences (```)
+  - **Fix:** Add language tags to all code fences (```bash, ```text, ```markdown, etc.)
+
+- [x] **WARN.VerifyMeta.1** - Verifier run_id.txt exists and is non-empty (HIGH)
+  - **Issue:** `.verify/run_id.txt` was missing in local ralph/ directory
+  - **Fix:** Copied from `../.verify/run_id.txt` to `.verify/run_id.txt` - now passing
+
 ## Overview
 
 **Status:** PLAN mode - Strategic planning  

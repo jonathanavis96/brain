@@ -1,6 +1,6 @@
 Ralph Verifier Report
-Time: 2026-01-21 16:14:29
-Git:  b742eb6
+Time: 2026-01-21 16:22:53
+Git:  c142497
 AC:   /home/grafe/code/brain/ralph/rules/AC.rules
 Approvals: /home/grafe/code/brain/ralph/rules/MANUAL_APPROVALS.rules
 ------------------------------------------------------------
@@ -95,27 +95,21 @@ Approvals: /home/grafe/code/brain/ralph/rules/MANUAL_APPROVALS.rules
   cmd:  grep -RIn --include='*.sh' --include='*.md' --exclude-dir=.git --exclude-dir=.verify --exclude-dir=logs --exclude-dir=old_md --exclude='AC.rules' --exclude='IMPLEMENTATION_PLAN.md' "verified: this is" . 2>/dev/null | wc -l | tr -d ' '
   exit: 0
   stdout: 0
-[FAIL] Protected.1
+[PASS] Protected.1
   desc: loop.sh unchanged from baseline
   cmd:  sha256sum loop.sh | cut -d' ' -f1 | diff -q - .verify/loop.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
   exit: 0
-  stdout: mismatch
-  reasons:
-    - stdout mismatch expected='match' got='mismatch'
-[FAIL] Protected.2
+  stdout: match
+[PASS] Protected.2
   desc: verifier.sh unchanged from baseline
   cmd:  sha256sum verifier.sh | cut -d' ' -f1 | diff -q - .verify/verifier.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
   exit: 0
-  stdout: mismatch
-  reasons:
-    - stdout mismatch expected='match' got='mismatch'
-[FAIL] Protected.3
+  stdout: match
+[PASS] Protected.3
   desc: PROMPT.md unchanged from baseline
   cmd:  sha256sum PROMPT.md | cut -d' ' -f1 | diff -q - .verify/prompt.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
   exit: 0
-  stdout: mismatch
-  reasons:
-    - stdout mismatch expected='match' got='mismatch'
+  stdout: match
 [FAIL] VerifyMeta.1
   desc: Verifier run_id.txt exists and is non-empty
   cmd:  test -s .verify/run_id.txt && echo "OK" || echo "FAIL"
@@ -261,8 +255,8 @@ Approvals: /home/grafe/code/brain/ralph/rules/MANUAL_APPROVALS.rules
   stdout: ok
 ------------------------------------------------------------
 SUMMARY
-  PASS: 20
-  FAIL: 4
+  PASS: 23
+  FAIL: 1
   WARN: 25 (manual_warn=2)
   SKIP: 0
   Manual gate=block failures: 0
