@@ -163,6 +163,39 @@ The P1 item (Bash/Shell validation patterns) is the strongest candidate for prom
 
 ## Planning Session Log
 
+### 2026-01-21 19:57 - Phase 1 Task Refinement
+
+**Context:** Second Cortex planning session - refining Phase 1 tasks based on actual repository state.
+
+**Key Discovery:** The maintenance script `verify-brain.sh` has a **path bug** - it runs from `workers/ralph/.maintenance/` and uses relative paths that don't reach `brain/skills/` at root. This caused false "not found" errors for `skills/index.md` and `skills/SUMMARY.md`.
+
+**Actions Taken:**
+1. Investigated actual state: `skills/` exists at root with index.md and SUMMARY.md
+2. Found `SKILL_TEMPLATE.md` source exists (2751 bytes), target missing
+3. Found single "Brain KB" occurrence in `templates/NEURONS.project.md`
+4. Confirmed broken links and Quick Reference tables are FALSE POSITIVES (path bug)
+5. Updated `cortex/IMPLEMENTATION_PLAN.md` with refined Task Contracts
+6. Synced `workers/ralph/IMPLEMENTATION_PLAN.md` Phase 0-Quick section
+7. Added new task 0.Q.5 to fix maintenance script paths
+8. Marked 0.Q.6 and 0.Q.7 as COMPLETE (false positives from path bug)
+
+**Refined Phase 1 Tasks (in order):**
+1. **0.Q.3** Copy SKILL_TEMPLATE.md - atomic file copy, <2 min
+2. **0.Q.4** Fix "Brain KB" terminology - single line edit, <2 min  
+3. **0.Q.5** Fix maintenance script paths - 5-10 min, path resolution
+
+**Recommendations for Ralph:**
+- Execute tasks 0.Q.3, 0.Q.4, 0.Q.5 in order
+- After 0.Q.5, verify `bash workers/ralph/.maintenance/verify-brain.sh` reports 0 issues
+- Then proceed to Phase 2 shell script cleanup
+
+**Next Cortex Session:**
+- Verify Phase 1 completion
+- Review Phase 2 shell cleanup progress
+- Re-evaluate Phase 6 D-items for obsolete entries
+
+---
+
 ### 2026-01-21 19:30 - Post-Restructure Planning
 
 **Context:** First Cortex planning session after successful Option B restructure.
