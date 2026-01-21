@@ -113,7 +113,7 @@ These tasks can be completed quickly and provide immediate value. Consider prior
   - **AC:** Script uses strict mode (`set -euo pipefail`)
   - **AC:** Script is executable (`chmod +x`)
 
-- [ ] **0.A.2.2** Create `cortex/run.sh` - Main entry point
+- [x] **0.A.2.2** Create `cortex/run.sh` - Main entry point
   - **AC:** Script concatenates: CORTEX_SYSTEM_PROMPT.md + snapshot output + DECISIONS.md
   - **AC:** Script pipes to `acli rovodev run` (similar pattern to ralph/loop.sh)
   - **AC:** Script uses strict mode, has usage help (`--help`)
