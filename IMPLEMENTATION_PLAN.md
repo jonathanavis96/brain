@@ -56,14 +56,14 @@ This implementation plan outlines the tasks to fully set up the brain repository
 - [x] Update skills/SUMMARY.md and skills/index.md if new files added
   - [x] Verify skills/SUMMARY.md completeness (exists in skills/)
   - [x] Create skills/index.md if missing (not found in search)
-- [ ] Create docs/EDGE_CASES.md with detailed examples and error recovery procedures
+- [ ] **DOCS.1** Create docs/EDGE_CASES.md with detailed examples and error recovery procedures
 - [x] Ensure THUNK.md exists for logging completed tasks (exists in workers/ralph/ for Ralph loop logging)
 
 ## Phase 3: Low Priority - Optimization & Testing
 
-- [ ] Review and optimize self-improvement system (GAP_BACKLOG.md, SKILL_BACKLOG.md)
-- [ ] Add any missing skill files based on gaps identified
-- [ ] Test full Ralph loop execution with verifier integration
+- [ ] **OPT.1** Review and optimize self-improvement system (GAP_BACKLOG.md, SKILL_BACKLOG.md)
+- [ ] **OPT.2** Add any missing skill files based on gaps identified
+- [ ] **TEST.1** Test full Ralph loop execution with verifier integration
 
 ## Phase 4: Reference Notes
 
