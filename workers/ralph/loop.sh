@@ -672,7 +672,8 @@ run_verifier() {
   else
     echo "❌ Acceptance criteria FAILED"
     echo ""
-    cat "$RALPH/.verify/latest.txt" 2>/dev/null || echo "(no report found)"
+    # Show header and summary, skip individual check results
+    sed -n '1,/^----/p; /^SUMMARY$/,$ p' "$RALPH/.verify/latest.txt" 2>/dev/null || echo "(no report found)"
     LAST_VERIFIER_STATUS="FAIL"
     parse_verifier_failures "$RALPH/.verify/latest.txt"
     return 1
