@@ -3,9 +3,10 @@ set -euo pipefail
 
 # Get script directory for relative paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-AC_FILE="${1:-${SCRIPT_DIR}/rules/AC.rules}"
-APPROVALS_FILE="${2:-${SCRIPT_DIR}/rules/MANUAL_APPROVALS.rules}"
+AC_FILE="${1:-${ROOT}/rules/AC.rules}"
+APPROVALS_FILE="${2:-${ROOT}/rules/MANUAL_APPROVALS.rules}"
 
 VERIFY_DIR="${SCRIPT_DIR}/.verify"
 REPORT_FILE="${VERIFY_DIR}/latest.txt"
@@ -189,12 +190,22 @@ main() {
           fail=$((fail+1)); overall_fail=1; manual_block_fail=$((manual_block_fail+1))
         fi
       elif [[ "$gate" == "warn" ]]; then
-        {
-          echo "[WARN] $id (manual review)"
-          echo "  desc: $desc"
-          echo "  instructions: $instructions"
-        } >>"$REPORT_FILE"
-        warn=$((warn+1)); manual_warn=$((manual_warn+1))
+        # For warn gate: if approved, PASS; if not approved, WARN (not FAIL)
+        if read_approval "$id"; then
+          {
+            echo "[PASS] $id (manual approved)"
+            echo "  desc: $desc"
+            echo "  gate: $gate"
+          } >>"$REPORT_FILE"
+          pass=$((pass+1))
+        else
+          {
+            echo "[WARN] $id (manual review)"
+            echo "  desc: $desc"
+            echo "  instructions: $instructions"
+          } >>"$REPORT_FILE"
+          warn=$((warn+1)); manual_warn=$((manual_warn+1))
+        fi
       else
         {
           echo "[SKIP] $id (manual ignored)"
@@ -381,7 +392,7 @@ main() {
     echo "  WARN: $warn (manual_warn=$manual_warn)"
     echo "  SKIP: $skip"
     echo "  Manual gate=block failures: $manual_block_fail"
-    echo "  Hash guard: $(if grep -q 'AC hash mismatch' "$REPORT_FILE"; then echo "FAIL"; else echo "OK"; fi)"
+    echo "  Hash guard: $(if grep -q '^\[.*\] FAIL: AC hash mismatch' "$REPORT_FILE"; then echo "FAIL"; else echo "OK"; fi)"
   } >>"$REPORT_FILE"
 
   if [[ $overall_fail -eq 1 ]]; then
