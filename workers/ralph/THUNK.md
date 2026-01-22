@@ -353,3 +353,6 @@ Started: 2026-01-18
 | 351 | WARN.Shellcheck.11 | LOW | **WARN.Shellcheck.11** Quote attach_flag in loop.sh line 756 - Changed ${attach_flag} to "${attach_flag}" to prevent word splitting, resolves SC2086 shellcheck warning | 2026-01-22 |
 | 292 | 1.2 | MEDIUM | **1.2** OD-2: Fix "Brain KB" → "Brain Skills" in templates/NEURONS.project.md line 362 | 2026-01-22 |
 | 345 | WARN.Shellcheck.12 | MEDIUM | **WARN.Shellcheck.12** Remove unused LAST_DISPLAY_ROW variable in thunk_ralph_tasks.sh line 310 - Deleted all 3 references (lines 21, 205, 308) as variable was never read, only assigned | 2026-01-22 |
+| 292 | WARN.Shellcheck.13 | LOW | **WARN.Shellcheck.13** Fix SC2155 in thunk_ralph_tasks.sh line 255 - Split `local short_title=$(generate_title "$description")` into separate declaration and assignment | 2026-01-22 |
+| 293 | WARN.Shellcheck.14 | LOW | **WARN.Shellcheck.14** Fix SC2155 in thunk_ralph_tasks.sh line 327 - Split `local timestamp=$(date "+%Y-%m-%d")` into separate declaration and assignment | 2026-01-22 |
+| 294 | WARN.Template.Sync.1 | MEDIUM | **WARN.Template.Sync.1** Sync thunk_ralph_tasks.sh to template after SC2155 fixes - Copied worker version to ../../templates/ralph/ | 2026-01-22 |
