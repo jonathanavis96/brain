@@ -375,6 +375,13 @@ diff file1 template1 && diff file2 template2 && diff file3 template3
 
 If a hygiene gate fails but the failure is a **false positive** (legitimate exception), you may request a waiver. You CANNOT approve waivers - only Jono can.
 
+
+### CRITICAL: Notify Human After Creating Waiver
+After creating ANY waiver request, you MUST notify the human with the waiver file path:
+```bash
+bash .verify/notify_human.sh "Waiver Request" "RULE_ID: Brief reason\n\nFile: path/to/file" "../.verify/waiver_requests/WVR-XXXX-XX-XX-XXX.json"
+```
+This triggers a sound + popup. If user clicks OK, the waiver is auto-approved. Do NOT continue until notified.
 ### Step 1: Create Waiver Request
 ```bash
 ./.verify/request_waiver.sh <RULE_ID> <FILE_PATH> "<REASON>"
