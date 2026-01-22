@@ -23,7 +23,7 @@ This implementation plan outlines the tasks to fully set up the brain repository
 - [x] **WARN.SC.15** Fix SC2034 in `workers/ralph/.maintenance/verify-brain.sh` line 16 - Remove unused MAINTENANCE_LOG variable or mark with underscore
 - [x] **WARN.SC.16** Fix SC2034 in `workers/ralph/.maintenance/verify-brain.sh` lines 83, 86 - Remove unused CORTEX_EXISTS and WORKERS_EXISTS variables
 - [x] **WARN.SC.17** Fix SC2162 in `workers/ralph/current_ralph_tasks.sh` line 558 - Add -r flag to read command
-- [ ] **WARN.SC.18** Fix SC2162 in `workers/ralph/loop.sh` lines 458, 499 - Add -r flag to read commands
+- [x] **WARN.SC.18** Fix SC2162 in `workers/ralph/loop.sh` lines 458, 499 - Add -r flag to read commands
 - [ ] **WARN.SC.19** Fix SC2162 in `workers/ralph/new-project.sh` lines 250, 263, 277, 281, 290, 302 - Add -r flag to all read commands
 - [ ] **WARN.SC.20** Fix SC2155 in `workers/ralph/render_ac_status.sh` lines 29-32, 111 - Declare and assign separately to avoid masking return values
 
