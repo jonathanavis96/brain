@@ -2,10 +2,11 @@
 
 **Status:** PLAN mode - Ready for BUILD execution  
 **Branch:** `brain-work`  
-**Last Updated:** 2026-01-22 02:54:51 (Ralph PLAN iteration)  
-**Progress:** 43/111 tasks complete (39%) - All verifier warnings triaged, Phase 8 captures remaining LOW priority linting
+**Last Updated:** 2026-01-22 04:25:26 (Ralph PLAN iteration)  
+**Progress:** 43/117 tasks complete (37%) - All verifier warnings triaged, Phase 8 captures remaining linting issues (3 HIGH setup.sh + 11 LOW templates)
 
 **Current Status:**
+
 - ✅ Phase 0-Sync (Infrastructure) - COMPLETE (2/2 tasks)
 - 📋 Phase 0-Warn (Verifier Warnings) - 27/27 complete, **6 awaiting waiver approval** (4 markdown fences + 2 template sync false positives)
 - ✅ Phase 0-A (Cortex Manager Pack) - COMPLETE (19/19 tasks)
@@ -18,22 +19,27 @@
 - 📋 Phase 5 (Design Decisions) - 0/6 complete
 - 📋 Phase 6 (Review PR #4 D-Items) - 0/22 complete
 - 📋 Phase 7 (Maintenance Items) - 0/1 complete
-- 📋 Phase 8 (Pre-commit Linting) - 0/11 complete (LOW priority - templates only)
+- 📋 Phase 8 (Pre-commit Linting) - 0/17 complete (3 HIGH setup.sh + 14 LOW templates)
 
 **Task Breakdown:**
-- Total: 111 tasks (43 complete, 68 remaining)
+
+- Total: 117 tasks (43 complete, 74 remaining)
 - Phase 0: 43/68 complete (27 warn + 6 quick wins + 2 complete phases)
-- Phases 1-8: 0/43 complete (all pending)
+- Phases 1-8: 0/49 complete (all pending)
 - **6 tasks awaiting human waiver approval** (markdown fence + template sync false positives)
+- **New:** 6 pre-commit issues discovered (3 HIGH in setup.sh + 3 additional LOW in templates)
 
 **Next Priority:** Phase 1 task 1.1 - OD-1: Update wording for clarity in generators/generate-thoughts.sh (all Phase 0-Quick high-priority tasks complete)
 
 **Verifier Status:**
+
+
 - `.verify/latest.txt` shows all verifier rules passing (BugA.1, BugA.2, BugB.1, BugB.2, BugC.1, BugC.2)
 - Manual review warning: BugB.UI.1 (terminal resize test) - requires human testing
 - No blockers detected in current workspace state
 
 **Key Findings from Planning:**
+
 1. **sync_cortex_plan.sh exists** - Task 0.S.1 already complete
 2. **SKILL_TEMPLATE.md missing from templates/** - Task 0.Q.3 ready to execute
 3. **"Brain KB" terminology remains** in templates/NEURONS.project.md - Task 0.Q.4 ready
@@ -41,11 +47,13 @@
 5. **31 tasks remain** across phases 0-Quick through Phase 7
 
 **Skills Knowledge Base:**
+
 - ✅ Located at: `../../skills/` (repo root)
 - ✅ Structure: SUMMARY.md, index.md, domains/, projects/, self-improvement/
 - ✅ Available for consultation during BUILD iterations
 
 ---
+
 
 ## Phase 0-Sync: Infrastructure - ✅ COMPLETE
 
@@ -265,7 +273,7 @@
 
 - [x] **WARN.Markdown.Fences.1** - AGENTS.md missing closing fences (MEDIUM)
   - **File:** `AGENTS.md` lines 24-31, 46-48
-  - **Issue:** Code blocks have opening fences (```bash, ```text) but missing closing fences
+  - **Issue:** Code blocks have opening fences (bash/text) but missing closing fences
   - **Fix:** Add closing ``` after each code block
   - **AC:** `bash -c 'opens=$(grep -c "^\`\`\`[a-z]" AGENTS.md); closes=$(grep -c "^\`\`\`$" AGENTS.md); [[ "$opens" -eq "$closes" ]] && echo "balanced"'` returns "balanced"
   - **Commit:** `fix(docs): add missing closing fences in AGENTS.md`
@@ -470,11 +478,13 @@
 **DO NOT PROCEED TO PHASE 0-B.**
 
 When all Phase 0-A tasks are checked `[x]`, Ralph MUST:
+
 1. Output `:::PHASE-0A-COMPLETE:::`
 2. Output `:::COMPLETE:::`
 3. **STOP** - Do not read or execute Phase 0-B tasks
 
 **Why:** Human must manually verify the copy worked before deleting the original:
+
 ```bash
 cd brain/workers/ralph && bash loop.sh --iterations 1
 ```
@@ -720,6 +730,7 @@ Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - Design Decisions (human appro
 Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - D-1 to D-22
 
 Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
+
 - If obsolete (fixed by rewrite) → mark resolved in analysis/CODERABBIT_REVIEW_ANALYSIS.md
 - If still applicable → add to appropriate phase above
 
@@ -789,15 +800,40 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
 
 ---
 
-## Phase 8: Pre-commit Linting Cleanup (LOW PRIORITY)
+## Phase 8: Pre-commit Linting Cleanup (17 items)
 
 **Goal:** Fix all pre-commit hook warnings for clean commits
+
+**Priority:** MEDIUM (setup.sh) / LOW (templates)
 
 **Source:** `pre-commit run --all-files` output (2026-01-22)
 
 **Note:** Most critical warnings already addressed in Phase 0-Warn. These are lower-priority style issues.
 
-## Phase 8-1: Shellcheck Warnings - Templates
+## Phase 8-A: setup.sh Issues (MEDIUM - Human-facing script)
+
+- [ ] **8.0.1** Fix SC2016 in `setup.sh` line 70 - grep pattern with literal $HOME
+  - **Issue:** SC2016 (info) - Expressions don't expand in single quotes
+  - **Analysis:** False positive - single quotes intentional to search for literal string
+  - **Fix:** Add shellcheck disable comment with explanation
+  - **AC:** Document as intended behavior
+  - **Commit:** `docs(setup): add shellcheck disable for SC2016 literal match`
+
+- [ ] **8.0.2** Fix SC2129 in `setup.sh` line 75 - consolidate multiple redirects to $SHELL_CONFIG
+  - **Issue:** SC2129 (style) - Consider using { cmd1; cmd2; } >> file instead of individual redirects
+  - **Fix:** Combine echo statements into single redirect block
+  - **AC:** `shellcheck setup.sh 2>&1 | grep -c 'SC2129'` returns 0
+  - **Commit:** `style(setup): consolidate redirects to shell config`
+
+- [ ] **8.0.3** Fix SC2016 in `setup.sh` line 77 - echo with literal $HOME in single quotes
+  - **Issue:** SC2016 (info) - Expressions don't expand in single quotes
+  - **Analysis:** Intentional - we want literal $HOME in .bashrc so it expands at shell load time
+  - **Fix:** Add shellcheck disable comment with explanation
+  - **AC:** Document as intended behavior
+  - **Commit:** `docs(setup): add shellcheck disable for SC2016 deferred expansion`
+
+## Phase 8-B: Template Shellcheck Issues (LOW)
+
 Fix template file warnings:
 
 - [ ] **8.1.1** Fix SC2034 (unused RUNNER) in `templates/cortex/cortex.bash`
@@ -814,93 +850,66 @@ Fix template file warnings:
   - **AC:** `shellcheck ../../templates/cortex/cortex.bash 2>&1 | grep -c 'SC2034.*CONFIG_FLAG'` returns 0
   - **Commit:** `fix(templates): remove unused CONFIG_FLAG in cortex.bash`
 
-- [ ] **8.1.3** Fix SC2155 in `templates/cortex/one-shot.sh`
-  - Lines: 257, 261
-  - **Issue:** `local var=$(cmd)` masks return values
-  - **Fix:** Split into separate declaration and assignment
-  - **AC:** `shellcheck ../../templates/cortex/one-shot.sh 2>&1 | grep -c SC2155` returns 0
-  - **Commit:** `fix(templates): separate declaration and assignment in one-shot.sh`
+- [ ] **8.1.3** Fix SC2086 (unquoted CONFIG_FLAG) in `templates/cortex/one-shot.sh` lines 257, 261
+  - **Fix:** Add quotes around $CONFIG_FLAG
+  - **AC:** `shellcheck templates/cortex/one-shot.sh 2>&1 | grep -c SC2086` returns 0
+  - **Commit:** `fix(templates): quote CONFIG_FLAG in one-shot.sh`
 
-- [ ] **8.1.4** Fix SC2162 (read without -r) in `templates/ralph/*.sh`
-  - Files: `current_ralph_tasks.sh` (lines 261, 558), `loop.sh` (lines 432, 473), `pr-batch.sh` (line 191)
-  - **Issue:** `read` without `-r` will mangle backslashes
-  - **Fix:** Add `-r` flag to all `read` commands
-  - **AC:** `shellcheck ../../templates/ralph/*.sh 2>&1 | grep -c SC2162` returns 0
-  - **Commit:** `fix(templates): add -r flag to read commands`
+- [ ] **8.1.4** Fix SC2162 (read without -r) in `templates/ralph/current_ralph_tasks.sh` lines 261, 558
+  - **Fix:** Add `-r` flag to read commands
+  - **AC:** `shellcheck templates/ralph/current_ralph_tasks.sh 2>&1 | grep -c SC2162` returns 0
+  - **Commit:** `fix(templates): add -r flag to read in current_ralph_tasks.sh`
 
-- [ ] **8.1.5** Fix SC2002 (useless cat) in `templates/ralph/loop.sh`
-  - Line: 641
-  - **Issue:** `cat file | tail` can be simplified
-  - **Fix:** Replace with `tail file` or `< file tail`
-  - **AC:** `shellcheck ../../templates/ralph/loop.sh 2>&1 | grep -c SC2002` returns 0
+- [ ] **8.1.5** Fix SC2162 (read without -r) in `templates/ralph/loop.sh` lines 457, 498
+  - **Fix:** Add `-r` flag to read commands
+  - **AC:** `shellcheck templates/ralph/loop.sh 2>&1 | grep -c SC2162` returns 0
+  - **Commit:** `fix(templates): add -r flag to read in loop.sh`
+
+- [ ] **8.1.6** Fix SC2002 (useless cat) in `templates/ralph/loop.sh` line 666
+  - **Fix:** Replace `cat "$RALPH/.verify/latest.txt" | tail -10` with `tail -10 "$RALPH/.verify/latest.txt"`
+  - **AC:** `shellcheck templates/ralph/loop.sh 2>&1 | grep -c SC2002` returns 0
   - **Commit:** `refactor(templates): remove useless cat in loop.sh`
 
-- [ ] **8.1.6** Fix SC2086 (unquoted variable) in `templates/ralph/loop.sh`
-  - Line: 731
-  - **Issue:** `${attach_flag}` should be quoted
-  - **Fix:** Add quotes: `"${attach_flag}"`
-  - **AC:** `shellcheck ../../templates/ralph/loop.sh 2>&1 | grep -c SC2086` returns 0
+- [ ] **8.1.7** Fix SC2086 (unquoted attach_flag) in `templates/ralph/loop.sh` line 765
+  - **Fix:** Add quotes around ${attach_flag}
+  - **AC:** `shellcheck templates/ralph/loop.sh 2>&1 | grep -c SC2086` returns 0
   - **Commit:** `fix(templates): quote attach_flag in loop.sh`
 
-- [ ] **8.1.7** Fix SC2034 (unused week_num) in `templates/ralph/pr-batch.sh`
-  - Line: 103
-  - **Issue:** `week_num` appears unused
+- [ ] **8.1.8** Fix SC2034 (unused week_num) in `templates/ralph/pr-batch.sh` line 103
   - **Fix:** Remove unused variable
-  - **AC:** `shellcheck ../../templates/ralph/pr-batch.sh 2>&1 | grep -c 'SC2034.*week_num'` returns 0
+  - **AC:** `shellcheck templates/ralph/pr-batch.sh 2>&1 | grep -c 'SC2034.*week_num'` returns 0
   - **Commit:** `fix(templates): remove unused week_num in pr-batch.sh`
 
-- [ ] **8.1.8** Fix SC2155 in `templates/ralph/thunk_ralph_tasks.sh`
-  - Lines: 257, 330
-  - **Issue:** `local timestamp=$(date ...)` masks return values
-  - **Fix:** Split into separate declaration and assignment
-  - **AC:** `shellcheck ../../templates/ralph/thunk_ralph_tasks.sh 2>&1 | grep -c SC2155` returns 0
-  - **Commit:** `fix(templates): separate declaration and assignment in thunk_ralph_tasks.sh`
+- [ ] **8.1.9** Fix SC2162 (read without -r) in `templates/ralph/pr-batch.sh` line 191
+  - **Fix:** Add `-r` flag to read command
+  - **AC:** `shellcheck templates/ralph/pr-batch.sh 2>&1 | grep -c SC2162` returns 0
+  - **Commit:** `fix(templates): add -r flag to read in pr-batch.sh`
 
-- [ ] **8.1.9** Fix SC2034 (unused LAST_DISPLAY_ROW) in `templates/ralph/thunk_ralph_tasks.sh`
-  - Line: 310
-  - **Issue:** `LAST_DISPLAY_ROW` appears unused
-  - **Fix:** Remove unused variable
-  - **AC:** `shellcheck ../../templates/ralph/thunk_ralph_tasks.sh 2>&1 | grep -c 'SC2034.*LAST_DISPLAY_ROW'` returns 0
-  - **Commit:** `fix(templates): remove unused LAST_DISPLAY_ROW in thunk_ralph_tasks.sh`
+- [ ] **8.1.10** Fix SC2162 (read without -r) in `templates/ralph/thunk_ralph_tasks.sh` line 379
+  - **Fix:** Add `-r` flag to read command
+  - **AC:** `shellcheck templates/ralph/thunk_ralph_tasks.sh 2>&1 | grep -c SC2162` returns 0
+  - **Commit:** `fix(templates): add -r flag to read in thunk_ralph_tasks.sh`
 
-## Phase 8-2: Shellcheck Warnings - Root Scripts
-Fix root-level script warnings:
+- [ ] **8.1.11** Fix SC2094 (same file read/write) in `templates/ralph/verifier.sh` lines 395-396
+  - **Fix:** Reorder pipeline or use temp file to avoid reading/writing same file
+  - **AC:** `shellcheck templates/ralph/verifier.sh 2>&1 | grep -c SC2094` returns 0
+  - **Commit:** `fix(templates): avoid same file read/write in verifier.sh`
 
-- [ ] **8.2.1** Fix SC2016 + SC2129 in `setup.sh`
-  - Lines: 70, 75, 77
-  - **Issue:** SC2016 (info) - single quotes in pattern, SC2129 (style) - multiple redirects
-  - **Analysis:** SC2016 is false positive (quotes intentional for literal match). SC2129 is style preference.
-  - **Fix:** Keep SC2016 as-is (correct). Optionally combine redirects for SC2129.
-  - **AC:** `shellcheck ../../setup.sh 2>&1 | grep -c 'SC2129'` returns 0
-  - **Commit:** `style(setup): combine multiple redirects`
+## Phase 8-C: Markdownlint Issues (LOW)
 
-- [ ] **8.2.2** Fix SC2162 (read without -r) in root scripts
-  - Files: `current_ralph_tasks.sh` (lines 261, 558), `loop.sh` (lines 433, 474), `new-project.sh` (lines 250, 263, 277, etc.)
-  - **Issue:** `read` without `-r` will mangle backslashes
-  - **Fix:** Add `-r` flag to all `read` commands
-  - **AC:** `shellcheck -e SC1091 *.sh 2>&1 | grep -c SC2162` returns 0
-  - **Commit:** `fix(scripts): add -r flag to read commands`
+Fix markdown formatting issues (deferred - low impact):
 
-## Phase 8-3: Markdownlint Warnings
-Fix markdown formatting issues:
-
-- [ ] **8.3.1** Fix MD032 (blank lines around lists) in markdown files
-  - Files: `cortex/AGENTS.md`, and others
+- [ ] **8.2.1** Fix MD032 (blank lines around lists) in markdown files
   - **AC:** `markdownlint . 2>&1 | grep -c MD032` returns 0
 
-- [ ] **8.3.2** Fix MD031 (blank lines around fences) in markdown files
-  - Files: `cortex/AGENTS.md`, and others
+- [ ] **8.2.2** Fix MD031 (blank lines around fences) in markdown files
   - **AC:** `markdownlint . 2>&1 | grep -c MD031` returns 0
 
-- [ ] **8.3.3** Fix MD022 (blank lines around headings) in markdown files
+- [ ] **8.2.3** Fix MD022 (blank lines around headings) in markdown files
   - **AC:** `markdownlint . 2>&1 | grep -c MD022` returns 0
 
-- [ ] **8.3.4** Fix MD060 (table column style) in markdown files
-  - Files: `cortex/AGENTS.md` line 86
-  - **AC:** `markdownlint . 2>&1 | grep -c MD060` returns 0
+## Phase 8-D: Final Verification
 
-## Phase 8-4: Final Verification
-
-- [ ] **8.4.1** Run full pre-commit and verify all pass
+- [ ] **8.3.1** Run full pre-commit and verify all pass
   - **AC:** `pre-commit run --all-files` exits with code 0
   - **Commit:** `style: fix all pre-commit linting warnings`
