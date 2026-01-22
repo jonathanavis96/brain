@@ -58,7 +58,7 @@
 
 **Goal:** Resolve new auto-detected verifier warnings from `.verify/latest.txt`
 
-- [ ] **WARN.TemplateSync.1** - current_ralph_tasks.sh differs from template (HIGH)
+- [x] **WARN.TemplateSync.1** - current_ralph_tasks.sh differs from template (HIGH)
 - [ ] **WARN.TemplateSync.2** - loop.sh core logic differs from template (line 63: "return 1" comment) (MEDIUM)
 
 ---
