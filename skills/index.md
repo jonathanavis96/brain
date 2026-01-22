@@ -29,6 +29,7 @@ Catalog of all skill files in the brain system.
 ## Domains (Broadly Reusable)
 
 ### Backend
+
 - [api-design-patterns.md](domains/backend/api-design-patterns.md) - REST API design patterns and conventions
 - [auth-patterns.md](domains/backend/auth-patterns.md) - Authentication and authorization patterns
 - [caching-patterns.md](domains/backend/caching-patterns.md) - Caching strategies and patterns
@@ -37,12 +38,15 @@ Catalog of all skill files in the brain system.
 - [error-handling-patterns.md](domains/backend/error-handling-patterns.md) - Error handling strategies
 
 ### Code Quality
+
 - [code-consistency.md](domains/code-quality/code-consistency.md) - Documentation accuracy, terminology, parsing consistency
 - [code-hygiene.md](domains/code-quality/code-hygiene.md) - Definition of Done checklists
 - [markdown-patterns.md](domains/code-quality/markdown-patterns.md) - Lint rules (MD040, MD024, MD050), documentation accuracy
 - [testing-patterns.md](domains/code-quality/testing-patterns.md) - Testing strategies and patterns
+- [token-efficiency.md](domains/code-quality/token-efficiency.md) - Token optimization strategies for AI agents
 
 ### Infrastructure
+
 - [deployment-patterns.md](domains/infrastructure/deployment-patterns.md) - Deployment and CI/CD patterns
 - [security-patterns.md](domains/infrastructure/security-patterns.md) - Security best practices
 - [state-management-patterns.md](domains/infrastructure/state-management-patterns.md) - State management patterns
@@ -50,9 +54,11 @@ Catalog of all skill files in the brain system.
 ### Languages
 
 #### Python
+
 - [python-patterns.md](domains/languages/python/python-patterns.md) - datetime, f-strings, JSON handling, type hints
 
 #### Shell
+
 - [README.md](domains/languages/shell/README.md) - Shell scripting overview and quick reference
 - [strict-mode.md](domains/languages/shell/strict-mode.md) - Strict mode (`set -euo pipefail`) patterns
 - [variable-patterns.md](domains/languages/shell/variable-patterns.md) - SC2155, SC2034, scoping
@@ -60,19 +66,66 @@ Catalog of all skill files in the brain system.
 - [common-pitfalls.md](domains/languages/shell/common-pitfalls.md) - ShellCheck errors and gotchas
 
 ### Ralph
+
 - [ralph-patterns.md](domains/ralph/ralph-patterns.md) - Ralph loop operational patterns
 - [bootstrap-patterns.md](domains/ralph/bootstrap-patterns.md) - Project bootstrapping patterns
 - [change-propagation.md](domains/ralph/change-propagation.md) - Change propagation and template sync
 
 ### Websites
+
 - [README.md](domains/websites/README.md) - Website development overview
-- See `domains/websites/` for full structure (architecture, build, copywriting, design, discovery, launch, qa)
+
+#### Architecture
+
+- [section-composer.md](domains/websites/architecture/section-composer.md) - Section-based page composition
+- [sitemap-builder.md](domains/websites/architecture/sitemap-builder.md) - Sitemap planning and structure
+- [tech-stack-chooser.md](domains/websites/architecture/tech-stack-chooser.md) - Technology selection guidance
+
+#### Build
+
+- [analytics-tracking.md](domains/websites/build/analytics-tracking.md) - Analytics integration patterns
+- [component-development.md](domains/websites/build/component-development.md) - Component development workflow
+- [forms-integration.md](domains/websites/build/forms-integration.md) - Form handling and integration
+- [mobile-first.md](domains/websites/build/mobile-first.md) - Mobile-first development approach
+- [performance.md](domains/websites/build/performance.md) - Performance optimization strategies
+- [seo-foundations.md](domains/websites/build/seo-foundations.md) - SEO fundamentals
+
+#### Copywriting
+
+- [cta-optimizer.md](domains/websites/copywriting/cta-optimizer.md) - Call-to-action optimization
+- [objection-handler.md](domains/websites/copywriting/objection-handler.md) - Objection handling in copy
+- [value-proposition.md](domains/websites/copywriting/value-proposition.md) - Value proposition development
+
+#### Design
+
+- [color-system.md](domains/websites/design/color-system.md) - Color system design
+- [design-direction.md](domains/websites/design/design-direction.md) - Design direction and vision
+- [spacing-layout.md](domains/websites/design/spacing-layout.md) - Spacing and layout systems
+- [typography-system.md](domains/websites/design/typography-system.md) - Typography system design
+
+#### Discovery
+
+- [audience-mapping.md](domains/websites/discovery/audience-mapping.md) - Audience research and mapping
+- [requirements-distiller.md](domains/websites/discovery/requirements-distiller.md) - Requirements gathering and distillation
+- [scope-control.md](domains/websites/discovery/scope-control.md) - Scope management
+
+#### Launch
+
+- [deployment.md](domains/websites/launch/deployment.md) - Deployment procedures
+- [finishing-pass.md](domains/websites/launch/finishing-pass.md) - Final QA and polish
+
+#### QA
+
+- [acceptance-criteria.md](domains/websites/qa/acceptance-criteria.md) - Acceptance criteria definition
+- [accessibility.md](domains/websites/qa/accessibility.md) - Accessibility testing and compliance
+- [visual-qa.md](domains/websites/qa/visual-qa.md) - Visual quality assurance
 
 ---
 
 ## Projects (Project-Specific)
 
 ### Brain
+
 - [brain-example.md](projects/brain-example.md) - Brain repository patterns and conventions
 
 ---
