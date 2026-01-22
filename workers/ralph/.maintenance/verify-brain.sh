@@ -9,6 +9,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RALPH_DIR="$(dirname "$SCRIPT_DIR")"
+BRAIN_ROOT="$(cd "$RALPH_DIR/../.." && pwd)"
 cd "$RALPH_DIR"
 
 MAINTENANCE_FILE=".maintenance/MAINTENANCE.md"
@@ -56,7 +57,7 @@ add_maintenance_item() {
 check_skills_index() {
     log_info "Checking skills index completeness..."
 
-    local index_file="skills/index.md"
+    local index_file="$BRAIN_ROOT/skills/index.md"
     if [[ ! -f "$index_file" ]]; then
         log_error "skills/index.md not found"
         add_maintenance_item "Create skills/index.md"
@@ -74,7 +75,7 @@ check_skills_index() {
         if ! grep -q "$basename" "$index_file" 2>/dev/null; then
             missing_from_index+=("$skill_file")
         fi
-    done < <(find skills/domains skills/projects -name "*.md" -type f 2>/dev/null)
+    done < <(find "$BRAIN_ROOT/skills/domains" "$BRAIN_ROOT/skills/projects" -name "*.md" -type f 2>/dev/null)
 
     if [[ ${#missing_from_index[@]} -gt 0 ]]; then
         log_warn "Skills missing from index.md:"
@@ -93,7 +94,7 @@ check_skills_index() {
 check_summary_completeness() {
     log_info "Checking SUMMARY.md completeness..."
 
-    local summary_file="skills/SUMMARY.md"
+    local summary_file="$BRAIN_ROOT/skills/SUMMARY.md"
     if [[ ! -f "$summary_file" ]]; then
         log_error "skills/SUMMARY.md not found"
         add_maintenance_item "Create skills/SUMMARY.md"
@@ -108,7 +109,7 @@ check_summary_completeness() {
         if ! grep -q "$basename" "$summary_file" 2>/dev/null; then
             missing_from_summary+=("$skill_file")
         fi
-    done < <(find skills/domains skills/projects -name "*.md" -type f 2>/dev/null)
+    done < <(find "$BRAIN_ROOT/skills/domains" "$BRAIN_ROOT/skills/projects" -name "*.md" -type f 2>/dev/null)
 
     if [[ ${#missing_from_summary[@]} -gt 0 ]]; then
         log_warn "Skills missing from SUMMARY.md:"
@@ -131,9 +132,9 @@ check_template_sync() {
     # Format: "source_file:template_file:check_type"
     # check_type: "hash" = full file match, "structure" = key sections only
     local mappings=(
-        "skills/self-improvement/SKILL_TEMPLATE.md:templates/ralph/SKILL_TEMPLATE.md:hash"
-        "PROMPT.md:templates/ralph/PROMPT.md:structure"
-        "IMPLEMENTATION_PLAN.md:templates/ralph/IMPLEMENTATION_PLAN.project.md:structure"
+        "$BRAIN_ROOT/skills/self-improvement/SKILL_TEMPLATE.md:$BRAIN_ROOT/templates/ralph/SKILL_TEMPLATE.md:hash"
+        "PROMPT.md:$BRAIN_ROOT/templates/ralph/PROMPT.md:structure"
+        "IMPLEMENTATION_PLAN.md:$BRAIN_ROOT/templates/ralph/IMPLEMENTATION_PLAN.project.md:structure"
     )
 
     # Required structural sections for templates
@@ -235,7 +236,7 @@ check_broken_links() {
                 broken_links+=("$skill_file -> $link")
             fi
         done < <(grep -oP '\[.*?\]\(\K[^)]+' "$skill_file" 2>/dev/null || true)
-    done < <(find skills -name "*.md" -type f 2>/dev/null)
+    done < <(find "$BRAIN_ROOT/skills" -name "*.md" -type f 2>/dev/null)
 
     if [[ ${#broken_links[@]} -gt 0 ]]; then
         log_warn "Broken links detected:"
@@ -264,7 +265,7 @@ check_quick_reference_tables() {
         if ! grep -qi "## Quick Reference\|## At a Glance\|### Common Mistakes" "$skill_file" 2>/dev/null; then
             missing_tables+=("$skill_file")
         fi
-    done < <(find skills/domains -name "*.md" -type f 2>/dev/null)
+    done < <(find "$BRAIN_ROOT/skills/domains" -name "*.md" -type f 2>/dev/null)
 
     if [[ ${#missing_tables[@]} -gt 0 ]]; then
         log_warn "Skills missing Quick Reference tables:"
