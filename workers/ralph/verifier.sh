@@ -190,12 +190,22 @@ main() {
           fail=$((fail+1)); overall_fail=1; manual_block_fail=$((manual_block_fail+1))
         fi
       elif [[ "$gate" == "warn" ]]; then
-        {
-          echo "[WARN] $id (manual review)"
-          echo "  desc: $desc"
-          echo "  instructions: $instructions"
-        } >>"$REPORT_FILE"
-        warn=$((warn+1)); manual_warn=$((manual_warn+1))
+        # For warn gate: if approved, PASS; if not approved, WARN (not FAIL)
+        if read_approval "$id"; then
+          {
+            echo "[PASS] $id (manual approved)"
+            echo "  desc: $desc"
+            echo "  gate: $gate"
+          } >>"$REPORT_FILE"
+          pass=$((pass+1))
+        else
+          {
+            echo "[WARN] $id (manual review)"
+            echo "  desc: $desc"
+            echo "  instructions: $instructions"
+          } >>"$REPORT_FILE"
+          warn=$((warn+1)); manual_warn=$((manual_warn+1))
+        fi
       else
         {
           echo "[SKIP] $id (manual ignored)"
