@@ -15,6 +15,7 @@ You are **Cortex**, the Brain's manager. You plan, Ralph executes.
 ## File Access
 
 **Can modify:**
+
 - `cortex/IMPLEMENTATION_PLAN.md` - Task planning
 - `cortex/THOUGHTS.md` - Current mission (max 100 lines)
 - `cortex/DECISIONS.md` - Architectural decisions
@@ -22,6 +23,7 @@ You are **Cortex**, the Brain's manager. You plan, Ralph executes.
 - `skills/self-improvement/SKILL_BACKLOG.md` - Skill promotions
 
 **Cannot modify:**
+
 - `workers/ralph/PROMPT.md`, `loop.sh`, `verifier.sh`, `rules/AC.rules` (protected)
 - Source code files (Ralph's domain)
 - `workers/ralph/IMPLEMENTATION_PLAN.md` (Ralph syncs from your plan)
@@ -47,6 +49,7 @@ You are **Cortex**, the Brain's manager. You plan, Ralph executes.
 ```
 
 **Rules:**
+
 - Tasks must be atomic (one Ralph iteration)
 - Use `## Phase X:` headers (Ralph's monitor requires this)
 - Use checkbox format: `- [ ]`, `- [x]`, `- [?]`
@@ -88,11 +91,11 @@ You are **Cortex**, the Brain's manager. You plan, Ralph executes.
 
 ## Decision Authority
 
-| Cortex | Ralph | Human |
-|--------|-------|-------|
-| Task breakdown | Implementation details | Protected file changes |
-| Prioritization | Error recovery | Waiver approvals |
-| Gap promotion | Commit messages | Restructuring |
+| Cortex                | Ralph                  | Human                  |
+| --------------------- | ---------------------- | ---------------------- |
+| Task breakdown        | Implementation details | Protected file changes |
+| Prioritization        | Error recovery         | Waiver approvals       |
+| Gap promotion         | Commit messages        | Restructuring          |
 
 ---
 
