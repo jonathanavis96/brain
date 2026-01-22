@@ -14,6 +14,7 @@ The TOTP Waiver Approval System is fully operational:
 | `request_waiver.sh` | `.verify/` | Helper for Ralph to create waiver requests |
 
 **Security Properties:**
+
 - Ralph can create requests but CANNOT approve them
 - TOTP secret stored outside repo (not accessible to Ralph)
 - Hash verification prevents post-approval tampering
@@ -21,6 +22,7 @@ The TOTP Waiver Approval System is fully operational:
 - No wildcards or repo-wide scope allowed
 
 **Waiver Meta-Gates in AC.rules:**
+
 - `Waiver.CountLimit` (warn) - Max 10 active
 - `Waiver.NoBlanketScope` (block) - No wildcards
 - `Waiver.ExpiryRequired` (block) - Must have expiry
@@ -37,11 +39,13 @@ The TOTP Waiver Approval System is fully operational:
 ### Completed Items (58)
 
 All items from Phases 1-3 complete:
+
 - ✅ Phase 1: Template hash baselines (1 item)
 - ✅ Phase 2: Minor issues (12 items)
 - ✅ Phase 3: Nitpicks (29 complete, 1 deferred, 1 skipped)
 
 **Major accomplishments:**
+
 - ✅ Bug A/B/C monitor fixes
 - ✅ SC2155 shellcheck violations (all files)
 - ✅ KB→Skills terminology migration (in-diff items)
@@ -55,6 +59,7 @@ All items from Phases 1-3 complete:
 ### Remaining Work (5 items)
 
 **Phase 4 - Outside Diff Items (5):**
+
 - OD-1: generators/generate-thoughts.sh wording
 - OD-2: templates/python/NEURONS.project.md kb→skills
 - OD-3: templates/ralph/RALPH.md kb→skills
@@ -79,6 +84,7 @@ All items from Phases 1-3 complete:
 **Decision:** Use TOTP as temporary bridge until hardware-key signing is available.
 
 **Rationale:**
+
 - Hardware keys (YubiKey) require additional setup and tooling
 - TOTP provides "good enough" human verification for now
 - System designed to be swappable to hardware keys later
@@ -89,6 +95,7 @@ All items from Phases 1-3 complete:
 **Decision:** Keep canonical waiver system at repo root `.verify/`
 
 **Rationale:**
+
 - One source of truth avoids sync issues
 - Scripts copied to `ralph/.verify/` for template completeness
 - All waiver requests/approvals stored at root level
@@ -98,6 +105,7 @@ All items from Phases 1-3 complete:
 **Decision:** Keep Sonnet 4.5 as hardcoded default, don't read from config.yml
 
 **Rationale:**
+
 - Predictable behavior
 - Config.yml for user overrides, not defaults
 - Usage text updated to reflect this
@@ -126,12 +134,14 @@ brain/ralph/.maintenance/
 **What:** Create a manager role ("Cortex") that plans and delegates to Ralph (worker).
 
 **Why:**
+
 - Ensures all planning sessions produce **atomic, actionable, testable** subtasks
 - Separates planning (Cortex) from execution (Ralph)
 - Provides consistent context bootstrapping for Opus sessions
 - Prepares architecture for future parallel workers (e.g., Rust specialist)
 
 **Architecture:**
+
 ```text
 brain/
   cortex/                      ← Manager (Opus) - planning only
@@ -157,6 +167,7 @@ brain/
 ```
 
 **Workflow:**
+
 1. Human runs `bash cortex/run.sh` → Opus loads as Cortex
 2. Cortex writes `cortex/IMPLEMENTATION_PLAN.md` (atomic tasks)
 3. Human runs `bash workers/ralph/loop.sh`
@@ -165,6 +176,7 @@ brain/
 6. Cortex can compare both plans to check alignment
 
 **Restructure Strategy (Copy-Verify-Delete):**
+
 - Phase A: Create Cortex alongside existing Ralph (no breaking changes)
 - Phase B: Copy `brain/ralph/` → `brain/workers/ralph/`
 - Phase C: Human verifies new location works
@@ -196,6 +208,7 @@ This avoids Ralph breaking his own loop mid-execution.
 **Priority order:** Execute Phase 0-A first, STOP for human verification, then Phase 0-B, then phases 1-6.
 
 **Safety layers for Phase 0-A → 0-B transition:**
+
 1. Phase split: 0-A ends with copy, 0-B starts with delete (separate phases)
 2. Mandatory stop sentinel: `:::PHASE-0A-COMPLETE:::` + `:::COMPLETE:::`
 3. BLOCKED marker: Phase 0-B has visible "🔒 BLOCKED" notice

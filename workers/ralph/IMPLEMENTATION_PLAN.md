@@ -299,7 +299,7 @@
   - **Resolution:** Waiver requested (WVR-2026-01-22-001) - rule design flaw, closing fences must not have language tags
   - **AC:** Waiver approval required
 
-- [?] **WARN.Hygiene.Markdown.3** - No code fences without language tags in THOUGHTS.md (MEDIUM)
+- [x] **WARN.Hygiene.Markdown.3** - No code fences without language tags in THOUGHTS.md (MEDIUM)
   - **Issue:** Verifier detects 2 closing fences (`^```$`) - but these are REQUIRED by Markdown spec
   - **Resolution:** Waiver requested (WVR-2026-01-22-002) - rule design flaw, closing fences must not have language tags
   - **AC:** Waiver approval required
