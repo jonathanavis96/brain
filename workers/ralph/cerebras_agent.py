@@ -1877,12 +1877,16 @@ class Agent:
         print_divider()
 
         for turn in range(1, max_turns + 1):
-            print(
-                f"\n{Style.GRAY}{'─' * 3} Turn {turn}/{max_turns} {'─' * (TERM_WIDTH - 15)}{Style.RESET}"
-            )
-
             # Prune context if it's getting too large (prevent 800K token disasters)
             self.messages = prune_messages(self.messages)
+
+            # Log turn info with context size
+            msg_chars = sum(len(json.dumps(m)) for m in self.messages)
+            print(
+                f"\n{Style.GRAY}{'─' * 3} Turn {turn}/{max_turns} "
+                f"({len(self.messages)} msgs, ~{msg_chars // 4:,} tokens) "
+                f"{'─' * (TERM_WIDTH - 40)}{Style.RESET}"
+            )
 
             try:
                 response = self.client.chat(
@@ -1899,6 +1903,18 @@ class Agent:
             message = response.get("choices", [{}])[0].get("message", {})
             content = message.get("content") or ""
             tool_calls = message.get("tool_calls", [])
+
+            # Log per-turn token usage
+            turn_usage = response.get("usage", {})
+            if turn_usage:
+                prompt_tok = turn_usage.get("prompt_tokens", 0)
+                comp_tok = turn_usage.get("completion_tokens", 0)
+                cached_tok = turn_usage.get("cached_tokens", 0)
+                print(
+                    f"  {Style.DIM}Tokens: {prompt_tok:,} prompt"
+                    + (f" ({cached_tok:,} cached)" if cached_tok else "")
+                    + f", {comp_tok:,} completion{Style.RESET}"
+                )
 
             # Print response header
             if not self.stream and content:
