@@ -3,14 +3,14 @@
 **Status:** PLAN mode - Ready for BUILD execution  
 **Branch:** `brain-work`  
 **Last Updated:** 2026-01-22 02:54:51 (Ralph PLAN iteration)  
-**Progress:** 42/111 tasks complete (38%) - All verifier warnings triaged, Phase 8 captures remaining LOW priority linting
+**Progress:** 43/111 tasks complete (39%) - All verifier warnings triaged, Phase 8 captures remaining LOW priority linting
 
 **Current Status:**
 - ✅ Phase 0-Sync (Infrastructure) - COMPLETE (2/2 tasks)
 - 📋 Phase 0-Warn (Verifier Warnings) - 27/27 complete, **6 awaiting waiver approval** (4 markdown fences + 2 template sync false positives)
 - ✅ Phase 0-A (Cortex Manager Pack) - COMPLETE (19/19 tasks)
 - ✅ Phase 0-B (Cleanup & Templates) - COMPLETE (12/12 tasks)
-- 📋 Phase 0-Quick (Quick Wins) - 3/8 complete, **5 HIGH PRIORITY tasks remaining**
+- 📋 Phase 0-Quick (Quick Wins) - 4/8 complete, **4 HIGH PRIORITY tasks remaining**
 - 📋 Phase 1 (CodeRabbit Outside-Diff) - 0/5 complete
 - 📋 Phase 2 (Shell Script Cleanup) - 0/14 complete
 - 📋 Phase 3 (Quick Reference Tables) - 0/5 complete
@@ -21,12 +21,12 @@
 - 📋 Phase 8 (Pre-commit Linting) - 0/11 complete (LOW priority - templates only)
 
 **Task Breakdown:**
-- Total: 111 tasks (42 complete, 69 remaining)
-- Phase 0: 42/68 complete (27 warn + 5 quick wins + 2 complete phases)
+- Total: 111 tasks (43 complete, 68 remaining)
+- Phase 0: 43/68 complete (27 warn + 6 quick wins + 2 complete phases)
 - Phases 1-8: 0/43 complete (all pending)
 - **6 tasks awaiting human waiver approval** (markdown fence + template sync false positives)
 
-**Next Priority:** Phase 0-Quick task 0.Q.4 - Fix "Brain KB" → "Brain Skills" in templates/cortex/NEURONS.cortex.md (all Phase 0-Warn tasks complete except 6 awaiting waiver)
+**Next Priority:** Phase 1 task 1.1 - OD-1: Update wording for clarity in generators/generate-thoughts.sh (all Phase 0-Quick high-priority tasks complete)
 
 **Verifier Status:**
 - `.verify/latest.txt` shows all verifier rules passing (BugA.1, BugA.2, BugB.1, BugB.2, BugC.1, BugC.2)
