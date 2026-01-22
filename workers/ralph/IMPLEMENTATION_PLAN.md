@@ -2,8 +2,8 @@
 
 **Status:** PLAN mode - Ready for BUILD execution  
 **Branch:** `brain-work`  
-**Last Updated:** 2026-01-22 15:37:00 (Ralph PLAN iteration)  
-**Progress:** 43/120 tasks complete (36%) - All verifier warnings triaged, 3 new shellcheck warnings added from pre-commit scan
+**Last Updated:** 2026-01-22 15:50:00 (Ralph PLAN iteration)  
+**Progress:** 43/138 tasks complete (31%) - All verifier warnings triaged, 18 new shellcheck warnings added from pre-commit scan
 
 **Current Status:**
 
@@ -20,16 +20,18 @@
 - 📋 Phase 6 (Review PR #4 D-Items) - 0/22 complete
 - 📋 Phase 7 (Maintenance Items) - 0/1 complete
 - 📋 Phase 8 (Pre-commit Linting) - 0/17 complete (3 HIGH setup.sh + 14 LOW templates)
+- 📋 Phase 9-Precommit (NEW: Pre-commit Scan) - 0/18 complete (18 shellcheck violations in workers/ralph/)
 
 **Task Breakdown:**
 
-- Total: 120 tasks (43 complete, 77 remaining)
-- Phase 0: 43/71 complete (27 warn + 3 new shellcheck + 6 quick wins + 2 complete phases)
+- Total: 138 tasks (43 complete, 95 remaining)
+- Phase 0: 43/71 complete (27 warn + 6 quick wins + 2 complete phases)
 - Phases 1-8: 0/49 complete (all pending)
+- Phase 9-Precommit: 0/18 complete (NEW from pre-commit scan)
 - **6 tasks awaiting human waiver approval** (markdown fence + template sync false positives)
-- **New:** 3 shellcheck warnings from pre-commit scan (HIGH priority verify-brain.sh, MEDIUM new-project.sh, LOW pr-batch.sh)
+- **New:** 18 shellcheck warnings from pre-commit scan (SC2162, SC2155, SC2129, SC2086)
 
-**Next Priority:** Phase 0-Warn-Local task WARN.SC.15 - Fix SC2155 in verify-brain.sh (HIGH priority shellcheck issues)
+**Next Priority:** Phase 9-Precommit task 9.1 - Fix SC2162 warnings in new-project.sh (8 occurrences)
 
 **Verifier Status:**
 
@@ -929,3 +931,65 @@ Fix markdown formatting issues (deferred - low impact):
 - [ ] **8.3.1** Run full pre-commit and verify all pass
   - **AC:** `pre-commit run --all-files` exits with code 0
   - **Commit:** `style: fix all pre-commit linting warnings`
+
+---
+
+## Phase 9-Precommit: Pre-commit Scan Shellcheck Violations (NEW)
+
+Pre-commit scan discovered 18 shellcheck violations in workers/ralph/ scripts requiring fixes:
+
+### SC2162: read without -r (8 occurrences in new-project.sh)
+
+- [ ] **9.1** Fix SC2162 in `workers/ralph/new-project.sh` lines 250, 263, 277, 281, 290, 302, 585
+  - **Issue:** `read -p` commands missing `-r` flag (8 occurrences)
+  - **Fix:** Add `-r` flag to all read commands: `read -r -p "prompt" variable`
+  - **Files affected:** new-project.sh (8 locations)
+  - **AC:** `shellcheck workers/ralph/new-project.sh 2>&1 | grep -c SC2162` returns 0
+  - **Commit:** `fix(ralph): add -r flag to read commands in new-project.sh`
+
+### SC2155: declare and assign separately (8 occurrences in render_ac_status.sh)
+
+- [ ] **9.2** Fix SC2155 in `workers/ralph/render_ac_status.sh` lines 25-32, 111, 114
+  - **Issue:** `local var=$(command)` masks return values (8 occurrences)
+  - **Fix:** Split into separate lines: `local var; var=$(command)`
+  - **Files affected:** render_ac_status.sh (lines 25, 26, 29, 30, 31, 32, 111, 114)
+  - **AC:** `shellcheck workers/ralph/render_ac_status.sh 2>&1 | grep -c SC2155` returns 0
+  - **Commit:** `fix(ralph): declare and assign separately in render_ac_status.sh`
+
+### SC2129: command grouping (1 occurrence in sync_cortex_plan.sh)
+
+- [ ] **9.3** Fix SC2129 in `workers/ralph/sync_cortex_plan.sh` line 160
+  - **Issue:** Individual redirects instead of command grouping
+  - **Fix:** Use `{ cmd1; cmd2; } >> file` pattern
+  - **AC:** `shellcheck workers/ralph/sync_cortex_plan.sh 2>&1 | grep -c SC2129` returns 0
+  - **Commit:** `refactor(ralph): use command grouping in sync_cortex_plan.sh`
+
+### SC2086: unquoted variable (1 occurrence in sync_cortex_plan.sh)
+
+- [ ] **9.4** Fix SC2086 in `workers/ralph/sync_cortex_plan.sh` line 164
+  - **Issue:** `$phase7_line` unquoted in tail command
+  - **Fix:** Add quotes: `tail -n +"$phase7_line"`
+  - **AC:** `shellcheck workers/ralph/sync_cortex_plan.sh 2>&1 | grep -c SC2086` returns 0
+  - **Commit:** `fix(ralph): quote phase7_line variable in sync_cortex_plan.sh`
+
+### SC2155: declare and assign separately (2 occurrences in pr-batch.sh)
+
+- [ ] **9.5** Fix SC2155 in `workers/ralph/pr-batch.sh` lines 102, 190
+  - **Issue:** `local var=$(command)` masks return values (2 occurrences)
+  - **Fix:** Split into separate lines: `local var; var=$(command)`
+  - **AC:** `shellcheck workers/ralph/pr-batch.sh 2>&1 | grep -c SC2155` returns 0
+  - **Commit:** `fix(ralph): declare and assign separately in pr-batch.sh`
+
+---
+
+## Phase 9-Summary
+
+**Total:** 5 tasks covering 18 shellcheck violations
+
+- **Priority:** MEDIUM (code quality/best practices, not functional bugs)
+- **Batching strategy:** Group by file to minimize iterations
+  - 9.1: new-project.sh (8 SC2162)
+  - 9.2: render_ac_status.sh (8 SC2155)
+  - 9.3-9.4: sync_cortex_plan.sh (1 SC2129 + 1 SC2086 = batch together)
+  - 9.5: pr-batch.sh (2 SC2155)
+- **Expected iterations:** 4 BUILD iterations (1 per batched task)
