@@ -359,7 +359,7 @@ This [PROJECT_NAME] repository contains:
 - **How to run Ralph** → See AGENTS.md
 - **What exists where** → You're reading it (NEURONS.md)
 - **Project goals** → See THOUGHTS.md
-- **Brain KB patterns** → See `../../brain/skills/SUMMARY.md` (if brain exists)
+- **Brain Skills patterns** → See `../../brain/skills/SUMMARY.md` (if brain exists)
 - **React optimization** → See `../../brain/references/react-best-practices/HOTLIST.md` (if brain exists)
 
 > **Note:** All brain references are optional. If `../../brain/` doesn't exist, skip those references - this project works standalone.
