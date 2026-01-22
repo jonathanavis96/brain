@@ -238,14 +238,14 @@
   - **AC:** `shellcheck thunk_ralph_tasks.sh 2>&1 | grep -c 'SC2034.*LAST_DISPLAY_ROW'` returns 0
   - **Commit:** `fix(ralph): remove unused LAST_DISPLAY_ROW in thunk_ralph_tasks.sh`
 
-- [ ] **WARN.Shellcheck.13** - SC2155 in thunk_ralph_tasks.sh line 257 (LOW)
+- [x] **WARN.Shellcheck.13** - SC2155 in thunk_ralph_tasks.sh line 257 (LOW)
   - **File:** `thunk_ralph_tasks.sh` line 257
   - **Issue:** `local timestamp=$(date ...)` masks return values
   - **Fix:** Split into `local timestamp; timestamp=$(date ...)`
   - **AC:** `shellcheck thunk_ralph_tasks.sh 2>&1 | grep 'line 257' | grep -c SC2155` returns 0
   - **Commit:** `fix(ralph): separate declaration and assignment in thunk_ralph_tasks.sh line 257`
 
-- [ ] **WARN.Shellcheck.14** - SC2155 in thunk_ralph_tasks.sh line 330 (LOW)
+- [x] **WARN.Shellcheck.14** - SC2155 in thunk_ralph_tasks.sh line 330 (LOW)
   - **File:** `thunk_ralph_tasks.sh` line 330
   - **Issue:** `local timestamp=$(date ...)` masks return values
   - **Fix:** Split into `local timestamp; timestamp=$(date ...)`
@@ -266,7 +266,7 @@
   - **AC:** `bash -c 'opens=$(grep -c "^\`\`\`[a-z]" THOUGHTS.md); closes=$(grep -c "^\`\`\`$" THOUGHTS.md); [[ "$opens" -eq "$closes" ]] && echo "balanced"'` returns "balanced"
   - **Commit:** `fix(docs): add missing closing fences in THOUGHTS.md`
 
-- [ ] **WARN.Template.Sync.1** - thunk_ralph_tasks.sh differs from template (MEDIUM)
+- [x] **WARN.Template.Sync.1** - thunk_ralph_tasks.sh differs from template (MEDIUM)
   - **File:** `thunk_ralph_tasks.sh` vs `templates/ralph/thunk_ralph_tasks.sh`
   - **Issue:** Files differ (likely due to path changes or improvements)
   - **Fix:** Review diff and sync working version to template
