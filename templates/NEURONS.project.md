@@ -70,7 +70,7 @@ This is the **project map** that Ralph and all agents read on-demand when needed
 | **[Common task 1]** | `[location/file.ext]` |
 | **[Common task 2]** | `[location/file.ext]` |
 | **[Common task 3]** | `[location/file.ext]` |
-| **Reference brain KB** | `../../brain/skills/SUMMARY.md` (if brain exists) |
+| **Reference Brain Skills** | `../../brain/skills/SUMMARY.md` (if brain exists) |
 | **Check React patterns** | `../../brain/references/react-best-practices/HOTLIST.md` (if brain exists) |
 
 ### "Where do I put..."
@@ -352,7 +352,7 @@ This [PROJECT_NAME] repository contains:
 1. Read NEURONS.md (this file) via subagent when needed
 2. Use progressive disclosure (broad → specific)
 3. Search before creating (don't assume missing)
-4. Follow brain KB patterns (if brain exists): `../../brain/skills/SUMMARY.md`
+4. Follow Brain Skills patterns (if brain exists): `../../brain/skills/SUMMARY.md`
 5. Consult React patterns (if applicable and brain exists): `../../brain/references/react-best-practices/HOTLIST.md`
 
 **For questions about:**
