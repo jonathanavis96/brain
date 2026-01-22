@@ -7,11 +7,11 @@ This is the **project map** that Ralph and all agents read on-demand when needed
 
 ## Navigation Rules (Read This First)
 **Deterministic Context Loading Order:**
-1. `PROMPT.md` (loaded first by loop.sh - contains conditional logic for plan/build modes)
-2. `AGENTS.md` (operational guide - how to run Ralph)
-3. `NEURONS.md` (this file - read via subagent when needed, NOT in first-load context)
-4. `IMPLEMENTATION_PLAN.md` (TODO list - read in BUILD mode)
-5. `THOUGHTS.md` (project goals and success criteria - read as needed)
+1. `AGENTS.md` (injected first by loop.sh - operational guide)
+2. `PROMPT.md` (injected second - contains conditional logic for plan/build modes)
+3. `NEURONS.md` (this file - read via subagent when needed, NOT injected)
+4. `IMPLEMENTATION_PLAN.md` (TODO list - read in BUILD mode via subagent)
+5. `THOUGHTS.md` (project goals - read as needed via subagent)
 6. Project-specific files as needed
 
 **Progressive Disclosure:** Start broad, drill down only when needed. Don't read everything at once.
