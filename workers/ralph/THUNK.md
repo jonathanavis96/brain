@@ -376,3 +376,5 @@ Started: 2026-01-18
 | 373 | WARN.TemplateSync.1 | HIGH | **WARN.TemplateSync.1** - Sync current_ralph_tasks.sh with template - Copied template version to workers/ralph/, verified monitor still works correctly | 2026-01-22 |
 | 374 | WARN.SC.13 | HIGH | **WARN.SC.13** Fix SC2162 in templates/ralph/thunk_ralph_tasks.sh line 379 - Add -r flag to read command to prevent backslash mangling, formatted with shfmt | 2026-01-22 |
 | 375 | WARN.SC.14 | HIGH | **WARN.SC.14** Fix SC2094 in templates/ralph/verifier.sh lines 395-396 - Avoid reading and writing REPORT_FILE in same pipeline by storing hash guard result in local variable before appending summary, formatted with shfmt | 2026-01-22 |
+| 376 | WARN.SC.15 | HIGH | **WARN.SC.15** Fix SC2034 in workers/ralph/.maintenance/verify-brain.sh line 16 - Remove unused MAINTENANCE_LOG variable, WARN.SC.16 already resolved | 2026-01-22 |
+| 377 | WARN.SC.17 | HIGH | **WARN.SC.17** Fix SC2162 in workers/ralph/current_ralph_tasks.sh line 558 - Add -r flag to read command to prevent backslash mangling | 2026-01-22 |

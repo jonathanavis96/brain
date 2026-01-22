@@ -555,7 +555,7 @@ trap cleanup EXIT INT TERM
 # Monitor for file changes and hotkeys
 while true; do
   # Check for hotkey input (non-blocking)
-  if read -r -t 0.1 -n 1 key 2>/dev/null; then
+  if read -r -t 0.1 -n 1 -r key 2>/dev/null; then
     case "$key" in
       h | H)
         # Toggle hide completed
