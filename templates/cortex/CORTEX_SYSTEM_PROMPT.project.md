@@ -92,6 +92,7 @@ bash cortex/snapshot.sh
 - **Context is king** - Provide all necessary background in Task Contracts
 - **Performance matters** - Use snapshot.sh, not interactive scripts
 - **Timestamps need seconds** - Always use `YYYY-MM-DD HH:MM:SS` format
+- **Restore don't improve** - When something breaks, restore the working version exactly - don't try to "improve" it at the same time. Fix first, then improve separately.
 
 ## Additional Reading
 

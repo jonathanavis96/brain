@@ -202,7 +202,8 @@ Runner Selection:
   --runner rovodev|opencode|cerebras
                    rovodev: uses acli rovodev run (default)
                    opencode: uses opencode run (provider/model). See: opencode models
-                   cerebras: uses Cerebras API (requires CEREBRAS_API_KEY env var)
+                   cerebras: uses Cerebras agentic runner with tool execution
+                            (requires CEREBRAS_API_KEY env var, shows token usage)
 
 Branch Workflow:
   --branch <name>  Work on specified branch (creates if needed, switches to it)
@@ -273,84 +274,84 @@ CONSECUTIVE_VERIFIER_FAILURES=0
 # Parse args
 while [[ $# -gt 0 ]]; do
   case "$1" in
-  --prompt)
-    PROMPT_ARG="${2:-}"
-    shift 2
-    ;;
-  --iterations)
-    ITERATIONS="${2:-}"
-    shift 2
-    ;;
-  --plan-every)
-    PLAN_EVERY="${2:-}"
-    shift 2
-    ;;
-  --yolo)
-    YOLO_FLAG="--yolo"
-    shift
-    ;;
-  --no-yolo)
-    YOLO_FLAG=""
-    shift
-    ;;
-  --runner)
-    RUNNER="${2:-}"
-    shift 2
-    ;;
-  --opencode-serve)
-    OPENCODE_SERVE=true
-    shift
-    ;;
-  --opencode-port)
-    OPENCODE_PORT="${2:-4096}"
-    shift 2
-    ;;
-  --opencode-attach)
-    OPENCODE_ATTACH="${2:-}"
-    shift 2
-    ;;
-  --opencode-format)
-    OPENCODE_FORMAT="${2:-default}"
-    shift 2
-    ;;
-  --model)
-    MODEL_ARG="${2:-}"
-    shift 2
-    ;;
-  --branch)
-    BRANCH_ARG="${2:-}"
-    shift 2
-    ;;
-  --dry-run)
-    DRY_RUN=true
-    shift
-    ;;
-  --no-monitors)
-    NO_MONITORS=true
-    shift
-    ;;
-  --rollback)
-    ROLLBACK_MODE=true
-    if [[ -n "${2:-}" && "$2" =~ ^[0-9]+$ ]]; then
-      ROLLBACK_COUNT="$2"
+    --prompt)
+      PROMPT_ARG="${2:-}"
       shift 2
-    else
+      ;;
+    --iterations)
+      ITERATIONS="${2:-}"
+      shift 2
+      ;;
+    --plan-every)
+      PLAN_EVERY="${2:-}"
+      shift 2
+      ;;
+    --yolo)
+      YOLO_FLAG="--yolo"
       shift
-    fi
-    ;;
-  --resume)
-    RESUME_MODE=true
-    shift
-    ;;
-  -h | --help)
-    usage
-    exit 0
-    ;;
-  *)
-    echo "Unknown arg: $1" >&2
-    usage
-    exit 2
-    ;;
+      ;;
+    --no-yolo)
+      YOLO_FLAG=""
+      shift
+      ;;
+    --runner)
+      RUNNER="${2:-}"
+      shift 2
+      ;;
+    --opencode-serve)
+      OPENCODE_SERVE=true
+      shift
+      ;;
+    --opencode-port)
+      OPENCODE_PORT="${2:-4096}"
+      shift 2
+      ;;
+    --opencode-attach)
+      OPENCODE_ATTACH="${2:-}"
+      shift 2
+      ;;
+    --opencode-format)
+      OPENCODE_FORMAT="${2:-default}"
+      shift 2
+      ;;
+    --model)
+      MODEL_ARG="${2:-}"
+      shift 2
+      ;;
+    --branch)
+      BRANCH_ARG="${2:-}"
+      shift 2
+      ;;
+    --dry-run)
+      DRY_RUN=true
+      shift
+      ;;
+    --no-monitors)
+      NO_MONITORS=true
+      shift
+      ;;
+    --rollback)
+      ROLLBACK_MODE=true
+      if [[ -n "${2:-}" && "$2" =~ ^[0-9]+$ ]]; then
+        ROLLBACK_COUNT="$2"
+        shift 2
+      else
+        shift
+      fi
+      ;;
+    --resume)
+      RESUME_MODE=true
+      shift
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown arg: $1" >&2
+      usage
+      exit 2
+      ;;
   esac
 done
 
@@ -365,22 +366,22 @@ MODEL_SONNET_4="anthropic.claude-sonnet-4-20250514-v1:0"
 resolve_model() {
   local model="$1"
   case "$model" in
-  opus | opus4.5 | opus45)
-    echo "$MODEL_OPUS_45"
-    ;;
-  sonnet | sonnet4.5 | sonnet45)
-    echo "$MODEL_SONNET_45"
-    ;;
-  sonnet4)
-    echo "$MODEL_SONNET_4"
-    ;;
-  latest | auto)
-    # Use system default - don't override config
-    echo ""
-    ;;
-  *)
-    echo "$model"
-    ;;
+    opus | opus4.5 | opus45)
+      echo "$MODEL_OPUS_45"
+      ;;
+    sonnet | sonnet4.5 | sonnet45)
+      echo "$MODEL_SONNET_45"
+      ;;
+    sonnet4)
+      echo "$MODEL_SONNET_4"
+      ;;
+    latest | auto)
+      # Use system default - don't override config
+      echo ""
+      ;;
+    *)
+      echo "$model"
+      ;;
   esac
 }
 
@@ -389,26 +390,26 @@ resolve_model() {
 resolve_model_opencode() {
   local model="$1"
   case "$model" in
-  grok | grokfast | grok-code-fast-1)
-    # Confirmed via opencode models
-    echo "opencode/grok-code"
-    ;;
-  opus | opus4.5 | opus45)
-    # Placeholder - anthropic not available in current setup
-    echo "opencode/gpt-5-nano"
-    ;; # Fallback to available model
-  sonnet | sonnet4.5 | sonnet45)
-    # Placeholder - anthropic not available
-    echo "opencode/gpt-5-nano"
-    ;; # Fallback
-  latest | auto)
-    # Let OpenCode decide its own default if user explicitly asked for auto/latest
-    echo ""
-    ;;
-  *)
-    # Pass through (user provided provider/model already, or an OpenCode alias)
-    echo "$model"
-    ;;
+    grok | grokfast | grok-code-fast-1)
+      # Confirmed via opencode models
+      echo "opencode/grok-code"
+      ;;
+    opus | opus4.5 | opus45)
+      # Placeholder - anthropic not available in current setup
+      echo "opencode/gpt-5-nano"
+      ;; # Fallback to available model
+    sonnet | sonnet4.5 | sonnet45)
+      # Placeholder - anthropic not available
+      echo "opencode/gpt-5-nano"
+      ;; # Fallback
+    latest | auto)
+      # Let OpenCode decide its own default if user explicitly asked for auto/latest
+      echo ""
+      ;;
+    *)
+      # Pass through (user provided provider/model already, or an OpenCode alias)
+      echo "$model"
+      ;;
   esac
 }
 
@@ -417,33 +418,33 @@ resolve_model_opencode() {
 resolve_model_cerebras() {
   local model="$1"
   case "$model" in
-  llama4 | llama-4 | scout)
-    echo "llama-4-scout-17b"
-    ;;
-  llama4-large | maverick)
-    echo "llama-4-maverick-17b"
-    ;;
-  llama3 | llama-3 | llama3-8b)
-    echo "llama3.1-8b"
-    ;;
-  llama3-large | llama3-70b)
-    echo "llama3.1-70b"
-    ;;
-  qwen | qwen3)
-    echo "qwen-3-32b"
-    ;;
-  qwen-large | qwen-235b)
-    echo "qwen-3-235b-a22b-instruct-2507"
-    ;;
-  glm | glm4 | glm-4.7)
-    echo "zai-glm-4.7"
-    ;;
-  auto | latest | "")
-    echo "llama-4-scout-17b"
-    ;;
-  *)
-    echo "$model"
-    ;;
+    llama4 | llama-4 | scout)
+      echo "llama-4-scout-17b"
+      ;;
+    llama4-large | maverick)
+      echo "llama-4-maverick-17b"
+      ;;
+    llama3 | llama-3 | llama3-8b)
+      echo "llama3.1-8b"
+      ;;
+    llama3-large | llama3-70b)
+      echo "llama3.1-70b"
+      ;;
+    qwen | qwen3)
+      echo "qwen-3-32b"
+      ;;
+    qwen-large | qwen-235b)
+      echo "qwen-3-235b-a22b-instruct-2507"
+      ;;
+    glm | glm4 | glm-4.7)
+      echo "zai-glm-4.7"
+      ;;
+    auto | latest | "")
+      echo "llama-4-scout-17b"
+      ;;
+    *)
+      echo "$model"
+      ;;
   esac
 }
 
@@ -506,7 +507,7 @@ if [[ -z "$MODEL_ARG" ]]; then
   if [[ "$RUNNER" == "opencode" ]]; then
     MODEL_ARG="grok" # Default for OpenCode
   elif [[ "$RUNNER" == "cerebras" ]]; then
-    MODEL_ARG="llama4" # Default for Cerebras (fast Llama 4 Scout)
+    MODEL_ARG="glm" # Default for Cerebras (GLM 4.7 - strong coding model)
   else
     MODEL_ARG="sonnet" # Default for RovoDev
   fi
@@ -914,9 +915,15 @@ run_once() {
       return 1
     fi
   elif [[ "$RUNNER" == "cerebras" ]]; then
-    echo "🧠 Running Cerebras API with model: ${RESOLVED_MODEL}"
-    if ! run_cerebras_api "$prompt_with_mode" "$RESOLVED_MODEL" "$log"; then
-      echo "❌ Cerebras API failed. See: $log"
+    echo "🧠 Running Cerebras Agent with model: ${RESOLVED_MODEL}"
+    # Use the agentic Python runner that supports tool execution
+    if ! python3 "$RALPH/cerebras_agent.py" \
+      --prompt "$prompt_with_mode" \
+      --model "$RESOLVED_MODEL" \
+      --max-turns 30 \
+      --cwd "$ROOT" \
+      --output "$log"; then
+      echo "❌ Cerebras Agent failed. See: $log"
       return 1
     fi
   else
@@ -1105,15 +1112,14 @@ fi
 
 # Fail fast if cerebras runner but dependencies not found
 if [[ "$RUNNER" == "cerebras" ]]; then
-  command -v jq >/dev/null 2>&1 || {
-    echo "ERROR: jq not found in PATH (required for Cerebras runner)"
-    echo "Install with: sudo apt install jq"
+  command -v python3 >/dev/null 2>&1 || {
+    echo "ERROR: python3 not found in PATH (required for Cerebras runner)"
     exit 1
   }
-  command -v curl >/dev/null 2>&1 || {
-    echo "ERROR: curl not found in PATH (required for Cerebras runner)"
+  if [[ ! -f "$RALPH/cerebras_agent.py" ]]; then
+    echo "ERROR: cerebras_agent.py not found at $RALPH/cerebras_agent.py"
     exit 1
-  }
+  fi
   if [[ -z "${CEREBRAS_API_KEY:-}" ]]; then
     echo "ERROR: CEREBRAS_API_KEY environment variable not set"
     echo "Get your API key from: https://cloud.cerebras.ai"
@@ -1136,6 +1142,9 @@ fi
 
 # Print effective config for debugging
 echo "Runner=${RUNNER} Model=${RESOLVED_MODEL:-<default>} Format=${OPENCODE_FORMAT:-<default>} Attach=${OPENCODE_ATTACH:-<none>} Serve=${OPENCODE_SERVE:-false}"
+
+# Change to repository root for all git operations
+cd "$ROOT"
 
 # Ensure we're on the worktree branch before starting
 echo ""
