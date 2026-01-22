@@ -35,6 +35,17 @@ Common failure types:
 - **AntiCheat** (e.g., `AntiCheat.1`): Remove the problematic marker/phrase from your code.
 - **Infrastructure** (e.g., `freshness_check`): Report to human - this is a loop.sh issue.
 
+### Protected File Bail-Out (CRITICAL)
+
+If verifier shows `Protected.1`, `Protected.2`, `Protected.3`, or `Protected.4` failures:
+1. **STOP IMMEDIATELY** - Do NOT attempt to fix hash mismatches
+2. You CANNOT modify `.verify/*.sha256` files - they are human-only
+3. Output `:::HUMAN_REQUIRED:::` with the failure details
+4. **Move to next unrelated task** OR complete the iteration
+5. Do NOT waste tool calls debugging protected file issues
+
+**Anti-pattern:** Running `cat .verify/latest.txt` 5 times hoping for different results.
+
 If you cannot fix a failure (protected file, infrastructure issue), output:
 ```text
 ⚠️ HUMAN INTERVENTION REQUIRED
@@ -235,7 +246,34 @@ When fixing issues, search the ENTIRE repo: `rg "pattern" $ROOT` not just `worke
 
 Target: <20 tool calls per iteration.
 
+### No Duplicate Commands (CRITICAL)
+
+- **NEVER run the same bash command twice** in one iteration
+- Cache command output mentally - if you ran `cat .verify/latest.txt`, you have the result
+- If a command fails, fix the issue, don't re-run the same failing command hoping for different results
+
+**Anti-patterns (NEVER do these):**
+
+- Running `cat .verify/latest.txt` 3-5 times
+- Running `git status` before AND after `git add`
+- Running `shellcheck file.sh`, then `shellcheck -e SC1091 file.sh`, then `shellcheck -x file.sh`
+
+### Atomic Git Operations
+
+- **Use single combined command:** `git add -A && git commit -m "msg"`
+- **Do NOT:** `git add file` → `git status` → `git add file` → `git commit`
+- One add+commit per logical change
+
+### Fail Fast on Formatting
+
+- Run `shellcheck` ONCE, fix ALL reported issues, run ONCE more to verify
+- Do NOT try multiple formatter variants (`shfmt -i 2`, `shfmt -w`, `shfmt -ci`)
+- If formatting fails twice with same error, note in output and move on
+
+### Context You Already Have
+
 **NEVER repeat these (you already know):**
+
 - `pwd`, `git branch` - known from header
 - `.verify/latest.txt` - read ONCE at start
 - `tail THUNK.md` - get next number ONCE
