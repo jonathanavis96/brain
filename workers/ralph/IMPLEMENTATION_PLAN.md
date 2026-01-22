@@ -539,7 +539,7 @@ cd brain/workers/ralph && bash loop.sh --iterations 1
   - **AC:** CodeRabbit review passes for this item
   - **Commit:** `docs(generators): clarify wording in generate-thoughts.sh`
 
-- [ ] **1.2** OD-2: `templates/python/NEURONS.project.md` - Fix "Brain KB" → "Brain Skills"
+- [x] **1.2** OD-2: `templates/python/NEURONS.project.md` - Fix "Brain KB" → "Brain Skills"
   - **File:** `../../templates/python/NEURONS.project.md`
   - **Find:** "Brain KB"
   - **Replace:** "Brain Skills"

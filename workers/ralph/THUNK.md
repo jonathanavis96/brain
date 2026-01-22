@@ -351,3 +351,4 @@ Started: 2026-01-18
 | 350 | WARN.Markdown.Fences.1 | MEDIUM | **WARN.Markdown.Fences.1** Fix unbalanced code fences in AGENTS.md - Replaced incorrect closing markers (```bash and ```text) with proper closing fences (```), verified balance: 2 pairs (4 opens, 4 closes) | 2026-01-22 |
 | 345 | WARN.Shellcheck.10 | LOW | **WARN.Shellcheck.10** Remove useless cat in loop.sh line 642 - Replaced 'cat "$RALPH/.verify/latest.txt" | tail -10' with 'tail -10 "$RALPH/.verify/latest.txt"', verified shellcheck SC2002 warning resolved | 2026-01-22 |
 | 351 | WARN.Shellcheck.11 | LOW | **WARN.Shellcheck.11** Quote attach_flag in loop.sh line 756 - Changed ${attach_flag} to "${attach_flag}" to prevent word splitting, resolves SC2086 shellcheck warning | 2026-01-22 |
+| 292 | 1.2 | MEDIUM | **1.2** OD-2: Fix "Brain KB" → "Brain Skills" in templates/NEURONS.project.md line 362 | 2026-01-22 |
