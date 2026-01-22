@@ -569,3 +569,56 @@ After implementing these changes, measure:
 - [SWE-agent parsing.py](https://github.com/SWE-agent/SWE-agent/blob/main/sweagent/tools/parsing.py)
 - [OpenAI Function Calling Cookbook](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_call_functions_with_chat_models.ipynb)
 - [Anthropic Tool Use Cookbook](https://github.com/anthropics/anthropic-cookbook/tree/main/tool_use)
+
+---
+
+## 8. Cerebras-Specific: Token Efficiency
+
+### 8.1 The Problem
+
+Every API call sends the full conversation history. Unlike RovoDev (which maintains server-side context), Cerebras is stateless - each turn requires re-sending:
+
+- System prompt (~11K chars)
+- User prompt
+- All previous assistant messages
+- All tool results
+
+### 8.2 Implemented Solution: Tool Result Summarization
+
+Added `summarize_old_tool_results()` based on SWE-agent's `LastNObservations`:
+
+```python
+# In cerebras_agent.py
+KEEP_RECENT_TURNS = 6  # Keep last 6 messages with full content
+
+def summarize_old_tool_results(messages, keep_recent=KEEP_RECENT_TURNS):
+    """Replace old tool outputs with one-line summaries."""
+    # Messages 0-1: system + user (keep full)
+    # Messages 2 to -keep_recent: summarize tool results
+    # Last keep_recent messages: keep full
+```
+
+**Before:** Each tool result might be 100+ lines
+**After:** Old results become: `[Tool output: 47 lines] def run_verifier():...`
+
+### 8.3 Other Approaches Considered
+
+| Approach | Pros | Cons |
+|----------|------|------|
+| **Prompt caching** | Automatic if supported | Cerebras may do internally |
+| **Chat summarization** | Better context | Requires extra API call |
+| **Aggressive pruning** | Simple | Loses important context |
+| **Tool result limits** | Predictable | May miss details |
+
+### 8.4 Monitoring Token Usage
+
+Check the log for token counts:
+
+```text
+Prompt tokens:     115,891  # Should decrease over turns
+Completion tokens: 2,122
+Total tokens:      118,013
+API requests:      10
+```
+
+If prompt tokens stay constant or grow, summarization isn't working.
