@@ -607,7 +607,7 @@ cd brain/workers/ralph && bash loop.sh --iterations 1
   - **AC:** `rg "Brain KB" ../../templates/python/ | wc -l` returns 0
   - **Commit:** `docs(templates): fix Brain KB → Brain Skills in python template`
 
-- [ ] **1.3** OD-3: `templates/ralph/RALPH.md` - Fix "Brain KB" → "Brain Skills"
+- [x] **1.3** OD-3: `templates/ralph/RALPH.md` - Fix "Brain KB" → "Brain Skills"
   - **File:** `../../templates/ralph/RALPH.md`
   - **Find:** "Brain KB"
   - **Replace:** "Brain Skills"
