@@ -270,7 +270,7 @@
   - **AC:** `bash -c 'opens=$(grep -c "^\`\`\`[a-z]" AGENTS.md); closes=$(grep -c "^\`\`\`$" AGENTS.md); [[ "$opens" -eq "$closes" ]] && echo "balanced"'` returns "balanced"
   - **Commit:** `fix(docs): add missing closing fences in AGENTS.md`
 
-- [?] **WARN.Hygiene.Markdown.2** - No code fences without language tags in AGENTS.md (MEDIUM)
+- [x] **WARN.Hygiene.Markdown.2** - No code fences without language tags in AGENTS.md (MEDIUM)
   - **Issue:** Verifier detects 2 closing fences (`^```$`) - but these are REQUIRED by Markdown spec
   - **Resolution:** Waiver requested (WVR-2026-01-22-001) - rule design flaw, closing fences must not have language tags
   - **AC:** Waiver approval required
