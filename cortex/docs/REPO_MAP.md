@@ -192,7 +192,7 @@ This document provides a human-friendly overview of the Brain repository structu
 → Read `skills/SUMMARY.md` → Error Quick Reference table
 
 ### "I need to understand Ralph's workflow"
-→ Read `skills/domains/ralph-patterns.md`
+→ Read `skills/domains/ralph/ralph-patterns.md`
 
 ### "I need to create a new skill"
 → Read `skills/self-improvement/SKILL_TEMPLATE.md`

@@ -198,7 +198,7 @@ Started: 2026-01-18
 | 169 | 1.3 | HIGH | Audit TODOs in new-project.sh - Removed outdated TODO comments (generators already implemented) | 2026-01-18 |
 | 170 | 2.1 | HIGH | Review GAP_BACKLOG.md entries for promotion - Both entries kept as reference (do not meet recurring criteria) | 2026-01-18 |
 | 171 | 2.2 | HIGH | Verify skills/index.md completeness - All 12 domain + 2 project files correctly indexed, no updates needed | 2026-01-18 |
-| 172 | 2.3 | HIGH | **2.3** Create skill: Ralph Loop Architecture Deep Dive - Expand skills/domains/ralph-patterns.md with more detail - Add troubleshooting patterns from recent monitor fixes - Include: parser state machines, display strategies, file watching patterns | 2026-01-18 |
+| 172 | 2.3 | HIGH | **2.3** Create skill: Ralph Loop Architecture Deep Dive - Expand skills/domains/ralph/ralph-patterns.md with more detail - Add troubleshooting patterns from recent monitor fixes - Include: parser state machines, display strategies, file watching patterns | 2026-01-18 |
 | 173 | 3.1 | HIGH | **3.1** Sync current_ralph_tasks.sh updates to template - Copied latest version (22KB) from root to templates/ralph/ | 2026-01-18 |
 | 174 | 3.2 | HIGH | **3.2** Sync thunk_ralph_tasks.sh updates to template - Copied latest version (22.5KB) from root to templates/ralph/ | 2026-01-18 |
 | 175 | 3.3 | HIGH | **3.3** Sync loop.sh updates to template - Copied latest version (21KB) from root to templates/ralph/ | 2026-01-18 |

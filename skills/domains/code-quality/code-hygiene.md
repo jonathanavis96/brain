@@ -185,6 +185,6 @@ If a gate fails, fix the issue before proceeding.
 
 ## Related Skills
 
-- `skills/domains/ralph-patterns.md` - Ralph-specific workflows
+- `skills/domains/ralph/ralph-patterns.md` - Ralph-specific workflows
 - `skills/conventions.md` - General skill authoring rules
 - `PROMPT.md` - Definition of Done checklist

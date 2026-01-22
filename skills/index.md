@@ -20,66 +20,53 @@ Catalog of all skill files in the brain system.
 
 | Scope | Location |
 |-------|----------|
-| Broadly reusable across repos | `skills/domains/<topic>/<skill>.md` |
+| Broadly reusable across repos | `skills/domains/<category>/<skill>.md` |
 | Project-specific but reusable | `skills/projects/<project>/<skill>.md` |
-| Uncertain | Default to `skills/domains/` with best-guess topic |
+| Uncertain | Default to `skills/domains/` with best-guess category |
 
 ---
 
 ## Domains (Broadly Reusable)
 
-### API Design
-- [api-design-patterns.md](domains/api-design-patterns.md) - REST API design patterns and conventions
+### Backend
+- [api-design-patterns.md](domains/backend/api-design-patterns.md) - REST API design patterns and conventions
+- [auth-patterns.md](domains/backend/auth-patterns.md) - Authentication and authorization patterns
+- [caching-patterns.md](domains/backend/caching-patterns.md) - Caching strategies and patterns
+- [config-patterns.md](domains/backend/config-patterns.md) - Portable configs, templates, environment variables
+- [database-patterns.md](domains/backend/database-patterns.md) - Database design and query patterns
+- [error-handling-patterns.md](domains/backend/error-handling-patterns.md) - Error handling strategies
 
-### Authentication
-- [auth-patterns.md](domains/auth-patterns.md) - Authentication and authorization patterns
+### Code Quality
+- [code-consistency.md](domains/code-quality/code-consistency.md) - Documentation accuracy, terminology, parsing consistency
+- [code-hygiene.md](domains/code-quality/code-hygiene.md) - Definition of Done checklists
+- [markdown-patterns.md](domains/code-quality/markdown-patterns.md) - Lint rules (MD040, MD024, MD050), documentation accuracy
+- [testing-patterns.md](domains/code-quality/testing-patterns.md) - Testing strategies and patterns
 
-### Bootstrap
-- [bootstrap-patterns.md](domains/bootstrap-patterns.md) - Project bootstrapping patterns
+### Infrastructure
+- [deployment-patterns.md](domains/infrastructure/deployment-patterns.md) - Deployment and CI/CD patterns
+- [security-patterns.md](domains/infrastructure/security-patterns.md) - Security best practices
+- [state-management-patterns.md](domains/infrastructure/state-management-patterns.md) - State management patterns
 
-### Caching
-- [caching-patterns.md](domains/caching-patterns.md) - Caching strategies and patterns
+### Languages
 
-### Code Consistency
-- [code-consistency.md](domains/code-consistency.md) - Documentation accuracy, terminology, parsing consistency
+#### Python
+- [python-patterns.md](domains/languages/python/python-patterns.md) - datetime, f-strings, JSON handling, type hints
 
-### Configuration
-- [config-patterns.md](domains/config-patterns.md) - Portable configs, templates, environment variables
-
-### Database
-- [database-patterns.md](domains/database-patterns.md) - Database design and query patterns
-
-### Deployment
-- [deployment-patterns.md](domains/deployment-patterns.md) - Deployment and CI/CD patterns
-
-### Error Handling
-- [error-handling-patterns.md](domains/error-handling-patterns.md) - Error handling strategies
-
-### Markdown
-- [markdown-patterns.md](domains/markdown-patterns.md) - Lint rules (MD040, MD024, MD050), documentation accuracy
-
-### Python
-- [python-patterns.md](domains/python-patterns.md) - datetime, f-strings, JSON handling, type hints
+#### Shell
+- [README.md](domains/languages/shell/README.md) - Shell scripting overview and quick reference
+- [strict-mode.md](domains/languages/shell/strict-mode.md) - Strict mode (`set -euo pipefail`) patterns
+- [variable-patterns.md](domains/languages/shell/variable-patterns.md) - SC2155, SC2034, scoping
+- [cleanup-patterns.md](domains/languages/shell/cleanup-patterns.md) - Traps, temp files, state restoration
+- [common-pitfalls.md](domains/languages/shell/common-pitfalls.md) - ShellCheck errors and gotchas
 
 ### Ralph
-- [ralph-patterns.md](domains/ralph-patterns.md) - Ralph loop operational patterns
-- [code-hygiene.md](domains/code-hygiene.md) - Definition of Done checklists
+- [ralph-patterns.md](domains/ralph/ralph-patterns.md) - Ralph loop operational patterns
+- [bootstrap-patterns.md](domains/ralph/bootstrap-patterns.md) - Project bootstrapping patterns
+- [change-propagation.md](domains/ralph/change-propagation.md) - Change propagation and template sync
 
-### Security
-- [security-patterns.md](domains/security-patterns.md) - Security best practices
-
-### Shell Scripting
-- [shell/README.md](domains/shell/README.md) - Shell scripting overview and quick reference
-- [shell/strict-mode.md](domains/shell/strict-mode.md) - Strict mode (`set -euo pipefail`) patterns
-- [shell/variable-patterns.md](domains/shell/variable-patterns.md) - SC2155, SC2034, scoping
-- [shell/cleanup-patterns.md](domains/shell/cleanup-patterns.md) - Traps, temp files, state restoration
-- [shell/common-pitfalls.md](domains/shell/common-pitfalls.md) - ShellCheck errors and gotchas
-
-### State Management
-- [state-management-patterns.md](domains/state-management-patterns.md) - State management patterns
-
-### Testing
-- [testing-patterns.md](domains/testing-patterns.md) - Testing strategies and patterns
+### Websites
+- [README.md](domains/websites/README.md) - Website development overview
+- See `domains/websites/` for full structure (architecture, build, copywriting, design, discovery, launch, qa)
 
 ---
 

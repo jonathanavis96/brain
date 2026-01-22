@@ -51,7 +51,7 @@ Rules:
   - Current use case: Cache completed task display strings to skip title generation on refresh
 - **Priority:** P2
 - **Status:** Reviewed - Keep as reference
-- **Review notes (2026-01-18):** Does not meet "recurring" criteria. General caching patterns already documented in skills/domains/caching-patterns.md. This is a bash-specific implementation detail with low reuse potential. Keep as reference for bash caching needs.
+- **Review notes (2026-01-18):** Does not meet "recurring" criteria. General caching patterns already documented in skills/domains/backend/caching-patterns.md. This is a bash-specific implementation detail with low reuse potential. Keep as reference for bash caching needs.
 
 ### 2026-01-19 — Bash/Shell Project Validation Patterns
 - **Type:** Tooling / Pattern
