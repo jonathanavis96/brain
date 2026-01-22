@@ -231,7 +231,7 @@
   - **AC:** `shellcheck loop.sh 2>&1 | grep -c SC2086` returns 0
   - **Commit:** `fix(ralph): quote attach_flag in loop.sh`
 
-- [ ] **WARN.Shellcheck.12** - SC2034 unused LAST_DISPLAY_ROW in thunk_ralph_tasks.sh (MEDIUM)
+- [x] **WARN.Shellcheck.12** - SC2034 unused LAST_DISPLAY_ROW in thunk_ralph_tasks.sh (MEDIUM)
   - **File:** `thunk_ralph_tasks.sh` line 310
   - **Issue:** `LAST_DISPLAY_ROW` appears unused
   - **Fix:** Remove unused variable or mark as used
