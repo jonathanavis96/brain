@@ -4,7 +4,7 @@
 
 This implementation plan outlines the tasks to fully set up the brain repository as a self-improving knowledge base for RovoDev agents. The brain repository serves as both a skills knowledge base and uses Ralph loop for its own improvement.
 
-## High Priority
+## Phase 1: High Priority
 
 - [ ] Create THOUGHTS.md defining project goals and success criteria
 - [ ] Create NEURONS.md mapping the codebase structure and key files
@@ -18,7 +18,7 @@ This implementation plan outlines the tasks to fully set up the brain repository
   - [ ] Copy new-project.sh from ralph/ to root
   - [ ] Update paths to work from root context
 
-## Medium Priority
+## Phase 2: Medium Priority
 
 - [x] Verify and organize scripts (loop.sh, verifier.sh) in correct locations (both exist in ralph/ which is appropriate)
 - [ ] Update skills/SUMMARY.md and skills/index.md if new files added
@@ -27,7 +27,7 @@ This implementation plan outlines the tasks to fully set up the brain repository
 - [ ] Create docs/EDGE_CASES.md with detailed examples and error recovery procedures
 - [x] Ensure THUNK.md exists for logging completed tasks (exists in ralph/ for Ralph loop logging)
 
-## Low Priority
+## Phase 3: Low Priority
 
 - [ ] Review and optimize self-improvement system (GAP_BACKLOG.md, SKILL_BACKLOG.md)
 - [ ] Add any missing skill files based on gaps identified
@@ -49,10 +49,12 @@ This implementation plan outlines the tasks to fully set up the brain repository
 **File to Create:** `/home/grafe/code/brain/THOUGHTS.md` (new file, ~350 lines)
 
 **Purpose:** Top-level strategic vision document for the brain repository, distinct from:
+
 - `cortex/THOUGHTS.md` - Cortex manager's strategic decisions and planning sessions
 - `workers/ralph/THOUGHTS.md` - Ralph worker's tactical execution notes
 
 **Content Structure:**
+
 1. **Mission Statement** - What the brain repository is and why it exists
    - Self-improving skills knowledge base for AI agents
    - Core principles: agent-first, reference-focused, self-maintaining, quality-gated
@@ -87,11 +89,13 @@ This implementation plan outlines the tasks to fully set up the brain repository
 | **Content** | What/why (purpose) | How/when (strategy) | What/done (tactics) |
 
 **Differentiation from README.md:**
+
 - README.md = Human-readable onboarding, getting started guide
 - THOUGHTS.md = Strategic vision, goals, metrics, lessons learned
 - No duplication - README focuses on "how to use", THOUGHTS on "what we're achieving"
 
 **Implementation Approach:**
+
 ```bash
 # Would create file with:
 cat > THOUGHTS.md << 'EOF'
@@ -122,6 +126,7 @@ Brain-Repo: jonathanavis96/brain"
 ```
 
 **Validation Commands:**
+
 ```bash
 # Ensure no markdown lint violations
 markdownlint THOUGHTS.md 2>&1 | grep -E "MD040|MD024"
@@ -141,14 +146,16 @@ grep -E "^## " THOUGHTS.md  # Should show all major sections
 **Estimated Time:** 5-10 minutes (file creation, validation, commit)
 
 **Risk Assessment:**
+
 - **Very Low Risk** - Additive only, no breaking changes
 - **No conflicts** - File doesn't exist yet
 - **No dependencies** - References existing structure but doesn't modify it
 - **Potential staleness** - Will need periodic updates as project evolves (addressed in "Update Frequency" design)
 
 **Post-Creation Verification:**
+
 1. File exists at `/home/grafe/code/brain/THOUGHTS.md`
-2. All code fences have language tags (```markdown, ```bash, ```text)
+2. All code fences have language tags (backtick-markdown, backtick-bash, backtick-text)
 3. No duplicate headings at same level
 4. Terminology is consistent (uses "skills" not "KB")
 5. Git shows clean commit with proper message format
@@ -157,23 +164,27 @@ grep -E "^## " THOUGHTS.md  # Should show all major sections
 **Next Task After Completion:** Task 2 - Create NEURONS.md (codebase map)
 
 ### Task 2: Create NEURONS.md
+
 - NEURONS.md should map the brain repository structure, including ralph/ subdirectory
 - Include quick reference lookup table, file counts, validation commands
 - Follow structure similar to ralph/NEURONS.md but focused on brain root
 - File location: /path/to/brain/NEURONS.md (new file)
 
 ### Task 3: Create AGENTS.md
+
 - AGENTS.md should provide operational guidance for maintaining the brain repository
 - Include how to run Ralph on brain, task monitors, troubleshooting
 - File location: /path/to/brain/AGENTS.md (new file)
 
 ### Task 4: Ensure templates/ directory
+
 - Create templates/ in brain root for project bootstrapping
-- Copy and adapt templates from ralph/templates/ 
+- Copy and adapt templates from ralph/templates/
 - Ensure all paths use ../brain/ convention for portability
 - Include ralph/ subdirectory with core Ralph files
 
 ### Task 5: Ensure new-project.sh in root
+
 - Copy new-project.sh from ralph/ to brain root
 - Update any hardcoded paths to work from brain root context
 - Test bootstrap functionality
