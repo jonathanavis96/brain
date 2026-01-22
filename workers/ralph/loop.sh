@@ -61,7 +61,7 @@ LOCK_FILE="/tmp/ralph-${REPO_NAME}-${REPO_PATH_HASH}.lock"
 is_pid_running() {
   local pid="$1"
   if [[ -z "$pid" || "$pid" == "unknown" ]]; then
-    return 1  # Invalid PID, treat as not running
+    return 1 # Invalid PID, treat as not running
   fi
   # Check if process exists (works on Linux/macOS)
   kill -0 "$pid" 2>/dev/null
@@ -90,14 +90,20 @@ acquire_lock() {
     echo "$$" >"$LOCK_FILE"
   else
     # Portable fallback: noclobber atomic create
-    if ! ( set -o noclobber; echo "$$" > "$LOCK_FILE" ) 2>/dev/null; then
+    if ! (
+      set -o noclobber
+      echo "$$" >"$LOCK_FILE"
+    ) 2>/dev/null; then
       LOCK_PID=$(cat "$LOCK_FILE" 2>/dev/null || echo "unknown")
       # Double-check: maybe we lost a race but the winner is now dead
       if ! is_pid_running "$LOCK_PID"; then
         echo "🧹 Removing stale lock (PID $LOCK_PID no longer running)"
         rm -f "$LOCK_FILE"
         # Retry once
-        if ! ( set -o noclobber; echo "$$" > "$LOCK_FILE" ) 2>/dev/null; then
+        if ! (
+          set -o noclobber
+          echo "$$" >"$LOCK_FILE"
+        ) 2>/dev/null; then
           echo "ERROR: Ralph loop already running (lock: $LOCK_FILE)"
           exit 1
         fi
@@ -267,47 +273,83 @@ CONSECUTIVE_VERIFIER_FAILURES=0
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --prompt)
-      PROMPT_ARG="${2:-}"; shift 2 ;;
+      PROMPT_ARG="${2:-}"
+      shift 2
+      ;;
     --iterations)
-      ITERATIONS="${2:-}"; shift 2 ;;
+      ITERATIONS="${2:-}"
+      shift 2
+      ;;
     --plan-every)
-      PLAN_EVERY="${2:-}"; shift 2 ;;
+      PLAN_EVERY="${2:-}"
+      shift 2
+      ;;
     --yolo)
-      YOLO_FLAG="--yolo"; shift ;;
+      YOLO_FLAG="--yolo"
+      shift
+      ;;
     --no-yolo)
-      YOLO_FLAG=""; shift ;;
+      YOLO_FLAG=""
+      shift
+      ;;
     --runner)
-      RUNNER="${2:-}"; shift 2 ;;
+      RUNNER="${2:-}"
+      shift 2
+      ;;
     --opencode-serve)
-      OPENCODE_SERVE=true; shift ;;
+      OPENCODE_SERVE=true
+      shift
+      ;;
     --opencode-port)
-      OPENCODE_PORT="${2:-4096}"; shift 2 ;;
+      OPENCODE_PORT="${2:-4096}"
+      shift 2
+      ;;
     --opencode-attach)
-      OPENCODE_ATTACH="${2:-}"; shift 2 ;;
+      OPENCODE_ATTACH="${2:-}"
+      shift 2
+      ;;
     --opencode-format)
-      OPENCODE_FORMAT="${2:-default}"; shift 2 ;;
+      OPENCODE_FORMAT="${2:-default}"
+      shift 2
+      ;;
     --model)
-      MODEL_ARG="${2:-}"; shift 2 ;;
+      MODEL_ARG="${2:-}"
+      shift 2
+      ;;
     --branch)
-      BRANCH_ARG="${2:-}"; shift 2 ;;
+      BRANCH_ARG="${2:-}"
+      shift 2
+      ;;
     --dry-run)
-      DRY_RUN=true; shift ;;
+      DRY_RUN=true
+      shift
+      ;;
     --no-monitors)
-      NO_MONITORS=true; shift ;;
+      NO_MONITORS=true
+      shift
+      ;;
     --rollback)
       ROLLBACK_MODE=true
       if [[ -n "${2:-}" && "$2" =~ ^[0-9]+$ ]]; then
-        ROLLBACK_COUNT="$2"; shift 2
+        ROLLBACK_COUNT="$2"
+        shift 2
       else
         shift
-      fi ;;
+      fi
+      ;;
     --resume)
-      RESUME_MODE=true; shift ;;
-    -h|--help)
-      usage; exit 0 ;;
+      RESUME_MODE=true
+      shift
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
     *)
       echo "Unknown arg: $1" >&2
-      usage; exit 2 ;;
+      usage
+      exit 2
+      ;;
   esac
 done
 
@@ -322,17 +364,22 @@ MODEL_SONNET_4="anthropic.claude-sonnet-4-20250514-v1:0"
 resolve_model() {
   local model="$1"
   case "$model" in
-    opus|opus4.5|opus45)
-      echo "$MODEL_OPUS_45" ;;
-    sonnet|sonnet4.5|sonnet45)
-      echo "$MODEL_SONNET_45" ;;
+    opus | opus4.5 | opus45)
+      echo "$MODEL_OPUS_45"
+      ;;
+    sonnet | sonnet4.5 | sonnet45)
+      echo "$MODEL_SONNET_45"
+      ;;
     sonnet4)
-      echo "$MODEL_SONNET_4" ;;
-    latest|auto)
+      echo "$MODEL_SONNET_4"
+      ;;
+    latest | auto)
       # Use system default - don't override config
-      echo "" ;;
+      echo ""
+      ;;
     *)
-      echo "$model" ;;
+      echo "$model"
+      ;;
   esac
 }
 
@@ -341,21 +388,26 @@ resolve_model() {
 resolve_model_opencode() {
   local model="$1"
   case "$model" in
-    grok|grokfast|grok-code-fast-1)
+    grok | grokfast | grok-code-fast-1)
       # Confirmed via opencode models
-      echo "opencode/grok-code" ;;
-    opus|opus4.5|opus45)
+      echo "opencode/grok-code"
+      ;;
+    opus | opus4.5 | opus45)
       # Placeholder - anthropic not available in current setup
-      echo "opencode/gpt-5-nano" ;;  # Fallback to available model
-    sonnet|sonnet4.5|sonnet45)
+      echo "opencode/gpt-5-nano"
+      ;; # Fallback to available model
+    sonnet | sonnet4.5 | sonnet45)
       # Placeholder - anthropic not available
-      echo "opencode/gpt-5-nano" ;;  # Fallback
-    latest|auto)
+      echo "opencode/gpt-5-nano"
+      ;; # Fallback
+    latest | auto)
       # Let OpenCode decide its own default if user explicitly asked for auto/latest
-      echo "" ;;
+      echo ""
+      ;;
     *)
       # Pass through (user provided provider/model already, or an OpenCode alias)
-      echo "$model" ;;
+      echo "$model"
+      ;;
   esac
 }
 
@@ -366,7 +418,7 @@ TEMP_CONFIG=""
 # Use provided model or default based on runner
 if [[ -z "$MODEL_ARG" ]]; then
   if [[ "$RUNNER" == "opencode" ]]; then
-    MODEL_ARG="grok"   # Default for OpenCode (confirm mapping via: opencode models)
+    MODEL_ARG="grok" # Default for OpenCode (confirm mapping via: opencode models)
   else
     MODEL_ARG="sonnet" # Default for RovoDev Ralph loops
   fi
@@ -385,9 +437,9 @@ if [[ "$RUNNER" == "rovodev" ]]; then
 
     # Copy base config and override modelId
     if [[ -f "$HOME/.rovodev/config.yml" ]]; then
-      sed "s|^  modelId:.*|  modelId: $RESOLVED_MODEL|" "$HOME/.rovodev/config.yml" > "$TEMP_CONFIG"
+      sed "s|^  modelId:.*|  modelId: $RESOLVED_MODEL|" "$HOME/.rovodev/config.yml" >"$TEMP_CONFIG"
     else
-      cat > "$TEMP_CONFIG" <<EOFCONFIG
+      cat >"$TEMP_CONFIG" <<EOFCONFIG
 version: 1
 agent:
   modelId: $RESOLVED_MODEL
@@ -455,7 +507,7 @@ if [[ "$ROLLBACK_MODE" == "true" ]]; then
   echo ""
 
   # Confirmation
-  read -p "⚠️  Revert these $ROLLBACK_COUNT commit(s)? (type 'yes' to confirm): " confirm
+  read -r -p "⚠️  Revert these $ROLLBACK_COUNT commit(s)? (type 'yes' to confirm): " confirm
   if [[ "$confirm" != "yes" ]]; then
     echo "Rollback cancelled."
     exit 0
@@ -496,7 +548,7 @@ if [[ "$RESUME_MODE" == "true" ]]; then
   git status --short
   echo ""
 
-  read -p "Continue from this state? (yes/no): " confirm
+  read -r -p "Continue from this state? (yes/no): " confirm
   if [[ "$confirm" != "yes" ]]; then
     echo "Resume cancelled."
     exit 0
@@ -600,9 +652,9 @@ check_human_intervention() {
   local log_file="$1"
   # Strip ANSI codes and check for human intervention marker
   if sed 's/\x1b\[[0-9;]*m//g' "$log_file" | grep -q 'HUMAN INTERVENTION REQUIRED'; then
-    return 0  # intervention needed
+    return 0 # intervention needed
   fi
-  return 1  # no intervention needed
+  return 1 # no intervention needed
 }
 
 # Check if previous verifier found protected file failures (requires human intervention)
@@ -612,16 +664,16 @@ check_protected_file_failures() {
 
   # Check if any Protected.* rules failed
   if echo "$LAST_VERIFIER_FAILED_RULES" | grep -qE 'Protected\.[0-9]+'; then
-    return 0  # protected file failures found
+    return 0 # protected file failures found
   fi
-  return 1  # no protected file failures
+  return 1 # no protected file failures
 }
 
 run_verifier() {
   if [[ ! -x "$VERIFY_SCRIPT" ]]; then
     echo "⚠️  Verifier not found or not executable: $VERIFY_SCRIPT"
     LAST_VERIFIER_STATUS="SKIP"
-    return 0  # Don't block if verifier doesn't exist yet
+    return 0 # Don't block if verifier doesn't exist yet
   fi
 
   # Auto-init baselines if missing
@@ -727,7 +779,7 @@ run_once() {
     echo ""
     echo "---"
     echo ""
-    
+
     cat "$prompt_file"
 
     # Append dry-run instruction if enabled
@@ -754,7 +806,7 @@ run_once() {
       echo ""
       echo "This is a preview only. No commits will be made."
     fi
-  } > "$prompt_with_mode"
+  } >"$prompt_with_mode"
 
   # Feed prompt into selected runner
   if [[ "$RUNNER" == "opencode" ]]; then
@@ -793,7 +845,6 @@ run_once() {
     echo "========================================"
   fi
 
-
   # Run verifier after both PLAN and BUILD iterations
   if [[ "$phase" == "plan" ]] || [[ "$phase" == "build" ]]; then
     if run_verifier; then
@@ -830,7 +881,7 @@ run_once() {
     echo "Ralph has indicated it cannot proceed without human help."
     echo "Review the log above for details."
     echo ""
-    return 43  # Special return code for human intervention
+    return 43 # Special return code for human intervention
   fi
 
   # Check if all tasks are done (for true completion)
@@ -845,7 +896,7 @@ run_once() {
         echo "========================================"
         echo "🎉 All tasks complete and verified!"
         echo "========================================"
-        return 42  # Special return code for completion
+        return 42 # Special return code for completion
       fi
     fi
   fi
@@ -870,25 +921,25 @@ launch_in_terminal() {
   elif command -v wt.exe &>/dev/null; then
     wt.exe new-tab --title "$title" -- wsl bash "$script_path" 2>/dev/null &
     sleep 0.5
-    if pgrep -f "$process_pattern" > /dev/null; then
+    if pgrep -f "$process_pattern" >/dev/null; then
       return 0
     fi
   elif command -v gnome-terminal &>/dev/null; then
     gnome-terminal --title="$title" -- bash "$script_path" 2>/dev/null &
-    sleep 0.5  # Give it time to fail
-    if pgrep -f "$process_pattern" > /dev/null; then
+    sleep 0.5 # Give it time to fail
+    if pgrep -f "$process_pattern" >/dev/null; then
       return 0
     fi
   elif command -v konsole &>/dev/null; then
     konsole --title "$title" -e bash "$script_path" 2>/dev/null &
     sleep 0.5
-    if pgrep -f "$process_pattern" > /dev/null; then
+    if pgrep -f "$process_pattern" >/dev/null; then
       return 0
     fi
   elif command -v xterm &>/dev/null; then
     xterm -T "$title" -e bash "$script_path" 2>/dev/null &
     sleep 0.5
-    if pgrep -f "$process_pattern" > /dev/null; then
+    if pgrep -f "$process_pattern" >/dev/null; then
       return 0
     fi
   fi
@@ -904,23 +955,23 @@ launch_monitors() {
 
   # Check if current_ralph_tasks.sh exists and launch
   if [[ -f "$monitor_dir/current_ralph_tasks.sh" ]]; then
-    if ! pgrep -f "current_ralph_tasks.sh" > /dev/null; then
+    if ! pgrep -f "current_ralph_tasks.sh" >/dev/null; then
       if launch_in_terminal "Current Tasks" "$monitor_dir/current_ralph_tasks.sh" "current_ralph_tasks.sh"; then
         current_tasks_launched=true
       fi
     else
-      current_tasks_launched=true  # Already running
+      current_tasks_launched=true # Already running
     fi
   fi
 
   # Check if thunk_ralph_tasks.sh exists and launch
   if [[ -f "$monitor_dir/thunk_ralph_tasks.sh" ]]; then
-    if ! pgrep -f "thunk_ralph_tasks.sh" > /dev/null; then
+    if ! pgrep -f "thunk_ralph_tasks.sh" >/dev/null; then
       if launch_in_terminal "Thunk Tasks" "$monitor_dir/thunk_ralph_tasks.sh" "thunk_ralph_tasks.sh"; then
         thunk_tasks_launched=true
       fi
     else
-      thunk_tasks_launched=true  # Already running
+      thunk_tasks_launched=true # Already running
     fi
   fi
 
@@ -935,7 +986,7 @@ launch_monitors() {
     echo "    bash $monitor_dir/thunk_ralph_tasks.sh"
     echo "═══════════════════════════════════════════════════════════════"
     echo ""
-   fi
+  fi
 }
 
 # Start OpenCode server if requested
@@ -950,7 +1001,10 @@ fi
 
 # Fail fast if opencode runner but command not found
 if [[ "$RUNNER" == "opencode" ]]; then
-  command -v opencode >/dev/null 2>&1 || { echo "ERROR: opencode not found in PATH"; exit 1; }
+  command -v opencode >/dev/null 2>&1 || {
+    echo "ERROR: opencode not found in PATH"
+    exit 1
+  }
 fi
 
 # Health check for attach endpoint (TCP port check)
@@ -960,7 +1014,7 @@ if [[ -n "${OPENCODE_ATTACH:-}" ]]; then
   hostport="${hostport%%/*}"
   h="${hostport%%:*}"
   p="${hostport##*:}"
-  if ! (echo > /dev/tcp/"$h"/"$p") >/dev/null 2>&1; then
+  if ! (echo >/dev/tcp/"$h"/"$p") >/dev/null 2>&1; then
     echo "WARN: OpenCode attach endpoint not reachable; running without --attach"
     OPENCODE_ATTACH=""
   fi
@@ -985,11 +1039,11 @@ fi
 # Determine prompt strategy
 if [[ -n "$PROMPT_ARG" ]]; then
   PROMPT_FILE="$(resolve_prompt "$PROMPT_ARG")"
-  for ((i=1; i<=ITERATIONS; i++)); do
+  for ((i = 1; i <= ITERATIONS; i++)); do
     # Check for interrupt before starting iteration
     if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
       echo ""
-      echo "Exiting gracefully after iteration $((i-1))."
+      echo "Exiting gracefully after iteration $((i - 1))."
       exit 130
     fi
 
@@ -1078,11 +1132,11 @@ if [[ -n "$PROMPT_ARG" ]]; then
   done
 else
   # Alternating plan/build
-  for ((i=1; i<=ITERATIONS; i++)); do
+  for ((i = 1; i <= ITERATIONS; i++)); do
     # Check for interrupt before starting iteration
     if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
       echo ""
-      echo "Exiting gracefully after iteration $((i-1))."
+      echo "Exiting gracefully after iteration $((i - 1))."
       exit 130
     fi
 
@@ -1125,7 +1179,7 @@ else
 
     # Capture exit code without triggering set -e
     run_result=0
-    if [[ "$i" -eq 1 ]] || (( PLAN_EVERY > 0 && ( (i-1) % PLAN_EVERY == 0 ) )); then
+    if [[ "$i" -eq 1 ]] || ((PLAN_EVERY > 0 && ((i - 1) % PLAN_EVERY == 0))); then
       # Sync tasks from Cortex before PLAN mode
       if [[ -f "$RALPH/sync_cortex_plan.sh" ]]; then
         echo "Syncing tasks from Cortex..."
