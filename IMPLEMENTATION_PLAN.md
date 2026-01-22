@@ -2,9 +2,32 @@
 
 This implementation plan outlines the tasks to fully set up the brain repository as a self-improving knowledge base for RovoDev agents.
 
-## Phase 0-Warn: Verifier Warnings
+**Status:** PLAN mode - Updated 2026-01-22  
+**Branch:** `brain-work`  
+**Progress:** Overview below, detailed breakdown in workers/ralph/IMPLEMENTATION_PLAN.md
 
-### ShellCheck Warnings (HIGH Priority)
+## Overview
+
+The brain repository has **two implementation plans**:
+
+1. **This file (root IMPLEMENTATION_PLAN.md)** - High-level overview and strategic tasks
+2. **workers/ralph/IMPLEMENTATION_PLAN.md** - Detailed tactical execution plan for Ralph (923 lines, 117 tasks)
+
+**Current Status Summary:**
+
+- ✅ **Phase 0-Sync** - Infrastructure setup COMPLETE
+- ⚠️ **Phase 0-Warn** - Verifier warnings mostly resolved (27/27 complete, 6 awaiting waiver)
+- ✅ **Phase 0-A/B** - Cortex manager pack COMPLETE (31/31 tasks)
+- 🔄 **Phase 0-Quick** - Quick wins in progress (4/8 complete, 4 HIGH remaining)
+- 📋 **Phase 1-8** - Shell cleanup, documentation, optimization (0/93 complete)
+
+See **workers/ralph/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown.
+
+---
+
+## Phase 0-Warn: Verifier Warnings (Root Level Files Only)
+
+### ShellCheck Warnings (MEDIUM Priority)
 
 - [x] **WARN.SC.1** Fix SC2016 in `setup.sh` line 70 - Use double quotes for grep pattern with $HOME variable expansion
 - [x] **WARN.SC.2** Fix SC2129 in `setup.sh` line 75 - Consolidate multiple redirects to $SHELL_CONFIG using brace grouping
@@ -20,14 +43,8 @@ This implementation plan outlines the tasks to fully set up the brain repository
 - [x] **WARN.SC.12** Fix SC2162 in `templates/ralph/pr-batch.sh` line 191 - Add -r flag to read command
 - [x] **WARN.SC.13** Fix SC2162 in `templates/ralph/thunk_ralph_tasks.sh` line 379 - Add -r flag to read command
 - [x] **WARN.SC.14** Fix SC2094 in `templates/ralph/verifier.sh` lines 395-396 - Avoid reading and writing same file in pipeline
-- [x] **WARN.SC.15** Fix SC2034 in `workers/ralph/.maintenance/verify-brain.sh` line 16 - Remove unused MAINTENANCE_LOG variable or mark with underscore
-- [x] **WARN.SC.16** Fix SC2034 in `workers/ralph/.maintenance/verify-brain.sh` lines 83, 86 - Remove unused CORTEX_EXISTS and WORKERS_EXISTS variables
-- [x] **WARN.SC.17** Fix SC2162 in `workers/ralph/current_ralph_tasks.sh` line 558 - Add -r flag to read command
-- [x] **WARN.SC.18** Fix SC2162 in `workers/ralph/loop.sh` lines 458, 499 - Add -r flag to read commands
-- [ ] **WARN.SC.19** Fix SC2162 in `workers/ralph/new-project.sh` lines 250, 263, 277, 281, 290, 302 - Add -r flag to all read commands
-- [ ] **WARN.SC.20** Fix SC2155 in `workers/ralph/render_ac_status.sh` lines 29-32, 111 - Declare and assign separately to avoid masking return values
 
-### Markdown Lint Warnings (MEDIUM Priority)
+### Markdown Lint Warnings (LOW Priority)
 
 **Note:** ~100+ markdown lint violations discovered across cortex/ files. These are formatting issues (blank lines, table spacing) that don't affect functionality. Will batch-fix by file in BUILD mode.
 
@@ -36,34 +53,69 @@ This implementation plan outlines the tasks to fully set up the brain repository
 - [ ] **WARN.MD.7-10** Fix all MD violations in `cortex/DECISIONS.md` - MD022 (blank lines around headings), MD032 (blank lines around lists), MD031 (blank lines around fences), MD038 (spaces in code spans)
 - [ ] **WARN.MD.11** Fix all MD violations in `cortex/IMPLEMENTATION_PLAN.md` - MD032, MD031, MD060, MD009 (multiple formatting issues)
 
+---
+
 ## Phase 1: High Priority - Core Documentation
 
 - [x] Create THOUGHTS.md defining project goals and success criteria
 - [x] Create NEURONS.md mapping the codebase structure and key files
 - [x] Create AGENTS.md with guidance for agents working on the brain repository
-- [x] Create README.md providing human-readable overview and onboarding (README.md exists and is comprehensive)
-- [x] Ensure templates/ directory exists and contains necessary project templates (templates/ already exists with comprehensive content: ralph/, cortex/, backend/, python/ subdirectories)
-  - [x] Create templates/ directory in root (already exists)
-  - [x] Create templates/ralph/ subdirectory (already exists)
-  - [x] Copy and adapt templates from ralph/templates/ to root templates/ (already complete)
+- [x] Create README.md providing human-readable overview and onboarding
+- [x] Ensure templates/ directory exists with comprehensive project templates
 - [x] Ensure new-project.sh bootstrap script exists in root
-  - [x] Copy new-project.sh from ralph/ to root
-  - [x] Update paths to work from root context
+- [x] Verify scripts (loop.sh, verifier.sh) in correct locations (workers/ralph/)
+- [x] Update skills/SUMMARY.md and skills/index.md
+
+---
 
 ## Phase 2: Medium Priority - Skills & Documentation
 
-- [x] Verify and organize scripts (loop.sh, verifier.sh) in correct locations (both exist in workers/ralph/ which is appropriate)
-- [x] Update skills/SUMMARY.md and skills/index.md if new files added
-  - [x] Verify skills/SUMMARY.md completeness (exists in skills/)
-  - [x] Create skills/index.md if missing (not found in search)
 - [ ] **DOCS.1** Create docs/EDGE_CASES.md with detailed examples and error recovery procedures
-- [x] Ensure THUNK.md exists for logging completed tasks (exists in workers/ralph/ for Ralph loop logging)
+
+---
 
 ## Phase 3: Low Priority - Optimization & Testing
 
 - [ ] **OPT.1** Review and optimize self-improvement system (GAP_BACKLOG.md, SKILL_BACKLOG.md)
 - [ ] **OPT.2** Add any missing skill files based on gaps identified
 - [ ] **TEST.1** Test full Ralph loop execution with verifier integration
+
+---
+
+## Detailed Execution Plan
+
+**All tactical BUILD tasks are tracked in workers/ralph/IMPLEMENTATION_PLAN.md** which contains:
+
+- **Phase 0-Warn** - workers/ralph/ specific verifier warnings (2 shellcheck issues remaining)
+- **Phase 0-Quick** - Quick wins (4 HIGH priority tasks: verify-brain.sh paths, markdown fixes)
+- **Phase 1** - CodeRabbit outside-diff items (5 tasks)
+- **Phase 2** - Shell script cleanup (14 tasks across 3 scripts)
+- **Phase 3** - Quick reference tables (5 tasks)
+- **Phase 4** - Template maintenance (2 tasks marked obsolete)
+- **Phase 5** - Design decisions (6 tasks)
+- **Phase 6** - PR #4 D-items review (22 tasks)
+- **Phase 7** - Maintenance items (1 task)
+- **Phase 8** - Pre-commit linting cleanup (17 tasks)
+
+**Total:** 117 tasks tracked in workers/ralph/IMPLEMENTATION_PLAN.md
+
+---
+
+## Success Criteria
+
+- [ ] All verifier warnings resolved or waivers approved
+- [ ] All HIGH priority tasks complete
+- [ ] Verifier passes with 0 failures
+- [ ] Pre-commit hooks pass on all files
+- [ ] Documentation is accurate and synchronized
+- [ ] Shell scripts pass shellcheck with no warnings
+- [ ] Markdown files pass markdownlint
+
+---
+
+## Notes
+
+This root IMPLEMENTATION_PLAN.md provides strategic oversight. Ralph executes tasks from workers/ralph/IMPLEMENTATION_PLAN.md during BUILD iterations.
 
 ## Phase 4: Reference Notes
 
