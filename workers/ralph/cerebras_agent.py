@@ -462,11 +462,19 @@ SYSTEM_PROMPT = """You are Ralph, an expert software engineer.
 Complete ONLY this task, then output :::COMPLETE::: and stop.
 Do NOT explore other tasks. Do NOT audit the codebase. Just fix this ONE thing.
 
-## CRITICAL: Rate Limit Strategy
+## CRITICAL RULES (MUST FOLLOW)
+1. **READ BEFORE WRITE**: ALWAYS use head_file or read_lines BEFORE patch_file
+   - NEVER guess at file content - verify first
+   - If patch_file fails, read the file again and retry with exact text
+2. **ONE TASK ONLY**: Complete the assigned task, nothing else
+3. **VERIFY PATCHES**: After patch_file, use diff to confirm the change
+4. **COMMIT PROPERLY**: git_commit auto-retries if pre-commit modifies files
+
+## Rate Limit Strategy
 You have MAX 5-10 turns. Be efficient:
-1. Read what you need (batch tool calls)
-2. Make the fix
-3. Commit with descriptive message
+1. Read what you need (head_file for target lines)
+2. Make the fix (patch_file with EXACT text from step 1)
+3. Verify (diff) and commit (git_commit)
 4. Output :::COMPLETE:::
 
 ## Pre-loaded Context (DO NOT RE-READ THESE FILES)
@@ -697,11 +705,23 @@ def execute_patch_file(
         content = full_path.read_text(encoding="utf-8")
 
         if find not in content:
-            # Show context to help debug
+            # Provide actionable recovery guidance
+            lines = content.count(chr(10)) + 1
             return ToolResult(
                 success=False,
                 output="",
-                error=f"Pattern not found in {path}. File has {len(content)} chars, {content.count(chr(10))+1} lines.",
+                error=f"""Pattern not found in {path}. File has {len(content)} chars, {lines} lines.
+
+RECOVERY STEPS:
+1. Run: head_file {path} 50  (to see actual content)
+2. Copy the EXACT text you want to replace (including whitespace)
+3. Run patch_file again with the exact text
+
+Common issues:
+- Whitespace mismatch (spaces vs tabs, trailing spaces)
+- Line ending differences
+- Content changed since last read
+- Wrong file path""",
             )
 
         count = content.count(find)
@@ -888,7 +908,7 @@ def execute_git_status(cwd: str | None = None) -> ToolResult:
 def execute_git_commit(
     message: str, files: str = ".", cwd: str | None = None
 ) -> ToolResult:
-    """Stage files and commit in one operation."""
+    """Stage files and commit in one operation. Auto-retries once if pre-commit modifies files."""
     try:
         work_dir = cwd or "."
 
@@ -905,29 +925,52 @@ def execute_git_commit(
                 success=False, output="", error=f"git add failed: {add_result.stderr}"
             )
 
-        # Commit
-        commit_result = subprocess.run(
-            ["git", "commit", "-m", message],
-            capture_output=True,
-            text=True,
-            cwd=work_dir,
-            timeout=30,
-        )
+        # Commit (with retry logic for pre-commit hooks)
+        for attempt in range(2):  # Max 2 attempts
+            commit_result = subprocess.run(
+                ["git", "commit", "-m", message],
+                capture_output=True,
+                text=True,
+                cwd=work_dir,
+                timeout=60,  # Longer timeout for pre-commit hooks
+            )
 
-        if commit_result.returncode != 0:
+            if commit_result.returncode == 0:
+                # Success
+                output = commit_result.stdout.strip()
+                return ToolResult(success=True, output=f"[committed]\n{output}")
+
+            # Check for "nothing to commit"
             if "nothing to commit" in commit_result.stdout.lower():
                 return ToolResult(
                     success=True, output="[nothing to commit, working tree clean]"
                 )
+
+            # Check if pre-commit modified files (common with end-of-file-fixer, trailing-whitespace)
+            combined_output = commit_result.stdout + commit_result.stderr
+            if "files were modified by this hook" in combined_output and attempt == 0:
+                # Re-stage modified files and retry once
+                subprocess.run(
+                    ["git", "add", "-A"],
+                    capture_output=True,
+                    cwd=work_dir,
+                    timeout=30,
+                )
+                continue  # Retry the commit
+
+            # Other failure - return error
             return ToolResult(
                 success=False,
                 output="",
-                error=f"git commit failed: {commit_result.stderr}",
+                error=f"git commit failed: {commit_result.stderr or commit_result.stdout}",
             )
 
-        # Get the commit hash
-        output = commit_result.stdout.strip()
-        return ToolResult(success=True, output=f"[committed]\n{output}")
+        # Should not reach here, but just in case
+        return ToolResult(
+            success=False,
+            output="",
+            error="git commit failed after retry",
+        )
     except Exception as e:
         return ToolResult(success=False, output="", error=str(e))
 
