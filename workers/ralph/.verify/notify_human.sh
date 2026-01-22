@@ -18,8 +18,11 @@ if [[ ! -x "$POWERSHELL" ]]; then
     exit 0
 fi
 
-# Play attention sound (3 ascending beeps) in background
-"$POWERSHELL" -Command "[console]::beep(800,200); [console]::beep(1000,200); [console]::beep(1200,300)" 2>/dev/null &
+# Play attention sound at 30% volume in background
+"$POWERSHELL" -Command "
+\$player = New-Object System.Media.SoundPlayer
+[console]::beep(600,150); Start-Sleep -Milliseconds 50; [console]::beep(800,150); Start-Sleep -Milliseconds 50; [console]::beep(1000,200)
+" 2>/dev/null &
 
 # Build popup script - positioned on left monitor, non-modal
 read -r -d '' PS_SCRIPT << 'PSEOF' || true
@@ -30,7 +33,7 @@ $form = New-Object System.Windows.Forms.Form
 $form.Text = "TITLE_PLACEHOLDER"
 $form.Size = New-Object System.Drawing.Size(450, 250)
 $form.StartPosition = "Manual"
-$form.Location = New-Object System.Drawing.Point(50, 200)
+$form.Location = New-Object System.Drawing.Point(-1616, 472)
 $form.TopMost = $false
 $form.ShowInTaskbar = $true
 
