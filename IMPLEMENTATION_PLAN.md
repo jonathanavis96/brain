@@ -8,7 +8,7 @@ This implementation plan outlines the tasks to fully set up the brain repository
 
 - [x] Create THOUGHTS.md defining project goals and success criteria
 - [x] Create NEURONS.md mapping the codebase structure and key files
-- [ ] Create AGENTS.md with guidance for agents working on the brain repository
+- [x] Create AGENTS.md with guidance for agents working on the brain repository
 - [x] Create README.md providing human-readable overview and onboarding (README.md exists and is comprehensive)
 - [ ] Ensure templates/ directory exists and contains necessary project templates
   - [ ] Create templates/ directory in root
