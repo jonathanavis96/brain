@@ -388,3 +388,4 @@ Started: 2026-01-18
 | 382 | WARN.Hygiene.Markdown.3 | MEDIUM | **WARN.Hygiene.Markdown.3** Verify THOUGHTS.md code fences - All code fences already have language tags (`text`), verifier shows PASS for Lint.Markdown.ThoughtsBalancedFences, marked complete | 2026-01-22 |
 | 383 | WARN.SC.16 | MEDIUM | **WARN.SC.16** Fix SC2162 in workers/ralph/new-project.sh - Added -r flag to 7 read commands (lines 249, 263, 277, 281, 290, 302, 585) to prevent backslash mangling, applied shfmt formatting | 2026-01-22 |
 | 384 | 2.1 | LOW | **2.1** Update usage header in current_ralph_tasks.sh - Changed 'watch_ralph_tasks.sh' to 'current_ralph_tasks.sh' in line 3, updated both workers/ralph/ and templates/ralph/ versions | 2026-01-22 |
+| 385 | WARN.SC.17 | LOW | **WARN.SC.17** Fix SC2162 and SC2034 in workers/ralph/pr-batch.sh - Added -r flag to read command (line 189), removed unused week_num variable (line 97), applied shfmt formatting | 2026-01-22 |
