@@ -134,13 +134,13 @@ Checks for:
 #### Issue: Verifier fails with `Hygiene.Shellcheck.*` errors
 **Symptom:** SC2034 (unused variable) or SC2155 (declare and assign separately)  
 **Check:** `.verify/latest.txt` for specific file and line number  
-**Fix:** Consult `skills/domains/shell/variable-patterns.md` and fix the code  
+**Fix:** Consult `skills/domains/languages/shell/variable-patterns.md` and fix the code  
 **Commit:** `fix(ralph): resolve AC failure <RULE_ID>`
 
 #### Issue: Verifier fails with `Hygiene.Markdown.*` errors
 **Symptom:** Missing code fence language tags or duplicate headings  
 **Check:** `.verify/latest.txt` for specific file  
-**Fix:** Consult `skills/domains/markdown-patterns.md`  
+**Fix:** Consult `skills/domains/code-quality/markdown-patterns.md`  
 **Common fixes:**
   - Add language tag: ` ```bash ` instead of ` ``` `
   - Remove duplicate headings in same file
@@ -258,4 +258,4 @@ Example:
 - **../ralph/AGENTS.md** - Ralph operational guide and validation commands
 - **../ralph/PROMPT.md** - Ralph's instructions (PLAN/BUILD protocols)
 - **../skills/SUMMARY.md** - Skills knowledge base overview
-- **../skills/domains/ralph-patterns.md** - Ralph loop architecture
+- **../skills/domains/ralph/ralph-patterns.md** - Ralph loop architecture

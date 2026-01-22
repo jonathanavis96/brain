@@ -618,11 +618,11 @@ Source: `.maintenance/verify-brain.sh` output
 
 Add Quick Reference tables (per new convention) to:
 
-- [ ] **3.1** `skills/domains/database-patterns.md`
-- [ ] **3.2** `skills/domains/code-hygiene.md`
-- [ ] **3.3** `skills/domains/shell/common-pitfalls.md`
-- [ ] **3.4** `skills/domains/shell/strict-mode.md`
-- [ ] **3.5** `skills/domains/shell/variable-patterns.md`
+- [ ] **3.1** `skills/domains/backend/database-patterns.md`
+- [ ] **3.2** `skills/domains/code-quality/code-hygiene.md`
+- [ ] **3.3** `skills/domains/languages/shell/common-pitfalls.md`
+- [ ] **3.4** `skills/domains/languages/shell/strict-mode.md`
+- [ ] **3.5** `skills/domains/languages/shell/variable-patterns.md`
 
 ---
 

@@ -83,5 +83,5 @@ BUILD mode:
 ## Related
 
 - `templates/websites/` - Starter templates for common site types
-- `skills/domains/api-design-patterns.md` - If site needs API
-- `skills/domains/deployment-patterns.md` - General deployment patterns
+- `skills/domains/backend/api-design-patterns.md` - If site needs API
+- `skills/domains/infrastructure/deployment-patterns.md` - General deployment patterns

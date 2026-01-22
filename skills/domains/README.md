@@ -13,11 +13,14 @@ Create a skill file in `skills/domains/` when you:
 - Need to share technical knowledge across multiple projects
 
 **Examples of domain topics:**
-- Authentication patterns (OAuth2, JWT, session management)
-- Caching strategies (LRU, Redis patterns, React Query)
-- API design patterns (REST conventions, error handling)
-- Data validation approaches (Zod, type-safe validation)
-- State management patterns (Context, Zustand, server state)
+- Authentication patterns (OAuth2, JWT, session management) → `backend/`
+- Caching strategies (LRU, Redis patterns, React Query) → `backend/`
+- API design patterns (REST conventions, error handling) → `backend/`
+- Code quality (testing, linting, hygiene) → `code-quality/`
+- Infrastructure (deployment, security) → `infrastructure/`
+- Language-specific (Python, Shell) → `languages/`
+- Ralph patterns (bootstrap, loop) → `ralph/`
+- Website development → `websites/`
 
 ## Naming Conventions
 

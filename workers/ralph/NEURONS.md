@@ -115,8 +115,8 @@ brain/ (repository root)
 | **Check React performance patterns** | `references/react-best-practices/HOTLIST.md` → `INDEX.md` |
 | **Create new KB file** | `skills/conventions.md` (authoring guide) |
 | **Bootstrap new project** | `templates/README.md` (instructions) |
-| **Understand Ralph patterns** | `skills/domains/ralph-patterns.md` |
-| **Find auth patterns** | `skills/domains/auth-patterns.md` |
+| **Understand Ralph patterns** | `skills/domains/ralph/ralph-patterns.md` |
+| **Find auth patterns** | `skills/domains/backend/auth-patterns.md` |
 | **Learn brain conventions** | `skills/projects/brain-example.md` |
 | **Check Cortex architecture decisions** | `cortex/DECISIONS.md` |
 | **Understand manager/worker workflow** | `AGENTS.md` → "Manager/Worker Architecture" section |
@@ -156,8 +156,8 @@ brain/ (repository root)
 **Key Files:**
 - `skills/SUMMARY.md` - KB index, links to all domains and projects
 - `skills/conventions.md` - Required structure (Why/When/Details), naming, validation
-- `skills/domains/auth-patterns.md` - Authentication patterns (example)
-- `skills/domains/ralph-patterns.md` - Ralph loop architecture details
+- `skills/domains/backend/auth-patterns.md` - Authentication patterns (example)
+- `skills/domains/ralph/ralph-patterns.md` - Ralph loop architecture details
 - `skills/projects/brain-example.md` - Brain repo conventions (example)
 
 **All KB files must have:**
