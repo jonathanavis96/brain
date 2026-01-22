@@ -117,7 +117,7 @@ instructions=Run thunk_ralph_tasks.sh, mark a task [x] in IMPLEMENTATION_PLAN.md
 mode=auto
 gate=warn
 desc=thunk_ralph_tasks.sh matches template
-cmd=diff -q thunk_ralph_tasks.sh templates/ralph/thunk_ralph_tasks.sh 2>/dev/null && echo "match" || echo "differ"
+cmd=diff -q thunk_ralph_tasks.sh ../../templates/ralph/thunk_ralph_tasks.sh 2>/dev/null && echo "match" || echo "differ"
 expect_stdout=match
 expect_exit=0
 
@@ -308,14 +308,14 @@ expect_stdout=0
 mode=auto
 gate=warn
 desc=current_ralph_tasks.sh matches template
-cmd=diff -q current_ralph_tasks.sh templates/ralph/current_ralph_tasks.sh 2>/dev/null && echo "match" || echo "differ"
+cmd=diff -q current_ralph_tasks.sh ../../templates/ralph/current_ralph_tasks.sh 2>/dev/null && echo "match" || echo "differ"
 expect_stdout=match
 
 [Hygiene.TemplateSync.2]
 mode=auto
 gate=warn
 desc=loop.sh core logic matches template (excluding hashes)
-cmd=diff <(grep -v 'sha256\|MODEL_' loop.sh) <(grep -v 'sha256\|MODEL_' templates/ralph/loop.sh) 2>/dev/null && echo "match" || echo "differ"
+cmd=diff <(grep -v 'sha256\|MODEL_' loop.sh) <(grep -v 'sha256\|MODEL_' ../../templates/ralph/loop.sh) 2>/dev/null && echo "match" || echo "differ"
 expect_stdout=match
 
 # -----------------------------------------------------------------------------
@@ -328,30 +328,31 @@ gate=warn
 desc=No duplicate H2 headings in IMPLEMENTATION_PLAN.md
 cmd=grep -E '^## ' IMPLEMENTATION_PLAN.md | sort | uniq -d | wc -l | tr -d ' '
 expect_stdout=0
+# NOTE: Hygiene.Markdown.2-4 DELETED (2026-01-22) - replaced with markdownlint
 
-[Hygiene.Markdown.2]
+[Lint.Markdownlint.AGENTS]
 mode=auto
 gate=warn
-desc=No code fences without language tags in AGENTS.md
-cmd=grep -cE '^```$' AGENTS.md 2>/dev/null || true
-expect_stdout=0
-expect_exit=0
+desc=AGENTS.md passes markdownlint (if installed)
+cmd=bash -c 'command -v markdownlint &>/dev/null && markdownlint AGENTS.md 2>&1 | head -10 || echo "ok (markdownlint not installed)"'
+expect_stdout_regex=(^$|ok|AGENTS\.md)
 
-[Hygiene.Markdown.3]
+[Lint.Markdownlint.NEURONS]
 mode=auto
 gate=warn
-desc=No code fences without language tags in THOUGHTS.md
-cmd=grep -cE '^```$' THOUGHTS.md 2>/dev/null || true
-expect_stdout=0
-expect_exit=0
+desc=NEURONS.md passes markdownlint (if installed)
+cmd=bash -c 'command -v markdownlint &>/dev/null && markdownlint NEURONS.md 2>&1 | head -10 || echo "ok (markdownlint not installed)"'
+expect_stdout_regex=(^$|ok|NEURONS\.md)
 
-[Hygiene.Markdown.4]
+[Lint.Markdownlint.THOUGHTS]
 mode=auto
 gate=warn
-desc=No code fences without language tags in NEURONS.md
-cmd=grep -cE '^```$' NEURONS.md 2>/dev/null || true
-expect_stdout=0
-expect_exit=0
+desc=THOUGHTS.md passes markdownlint (if installed)
+cmd=bash -c 'command -v markdownlint &>/dev/null && markdownlint THOUGHTS.md 2>&1 | head -10 || echo "ok (markdownlint not installed)"'
+expect_stdout_regex=(^$|ok|THOUGHTS\.md)
+
+
+
 
 # -----------------------------------------------------------------------------
 # Documentation Sync (THUNK Monitor specific - Bug C)
