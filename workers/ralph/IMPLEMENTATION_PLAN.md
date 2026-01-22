@@ -770,25 +770,25 @@ Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - PR #4 Shell Issues (SH-*)
 
 - [x] **2.1** Line 4 - Update usage header to reflect current script name (SH-7, SH-13, SH-18)
 - [x] **2.2** Line 246 - Split declaration and assignment for SC2155 (SH-3, SH-9, SH-16)
-- [ ] **2.3** Lines 276-279 - Remove unused `skip_line` variable (SH-4, SH-10, SH-20)
-- [ ] **2.4** Lines 354-369 - Remove unused `wrap_text` function (SH-6, SH-21)
-- [ ] **2.5** Line 404 - Use `_` placeholders for unused parsed fields (SH-5, SH-12)
-- [ ] **2.6** Lines 156-159 - Fix cache key collision across sections (SH-11, SH-15)
-- [ ] **2.7** Line 283 - Fix table column count (SH-17)
-- [ ] **2.8** Lines 254-262 - Fix Archive/Clear exiting on ### headers (SH-8, SH-14, SH-19)
+- [x] **2.3** Lines 276-279 - Remove unused `skip_line` variable (SH-4, SH-10, SH-20)
+- [x] **2.4** Lines 354-369 - Remove unused `wrap_text` function (SH-6, SH-21)
+- [x] **2.5** Line 404 - Use `_` placeholders for unused parsed fields (SH-5, SH-12)
+- [x] **2.6** Lines 156-159 - Fix cache key collision across sections (SH-11, SH-15)
+- [x] **2.7** Line 283 - Fix table column count (SH-17)
+- [x] **2.8** Lines 254-262 - Fix Archive/Clear exiting on ### headers (SH-8, SH-14, SH-19)
 
 ## Phase 2-2: thunk_ralph_tasks.sh Cleanup (6 items)
 
-- [ ] **2.9** Lines 6-15 - Update header to clarify script modifies THUNK.md via hotkey e (SH-28, SH-30, SH-32)
-- [ ] **2.10** Lines 21-22 - Remove unused `LAST_DISPLAY_ROW` state (SH-33)
-- [ ] **2.11** Lines 106-112 - Remove unused `normalize_description` function (SH-25)
-- [ ] **2.12** Lines 125-134 - Remove unused `in_era` variable (SH-23)
-- [ ] **2.13** Line 250 - Split declaration and assignment for SC2155 (SH-24, SH-29, SH-31)
-- [ ] **2.14** Lines 217-227 - Extract magic number 8 into named constant (SH-26, SH-27)
+- [x] **2.9** Lines 6-15 - Update header to clarify script modifies THUNK.md via hotkey e (SH-28, SH-30, SH-32)
+- [x] **2.10** Lines 21-22 - Remove unused `LAST_DISPLAY_ROW` state (SH-33)
+- [x] **2.11** Lines 106-112 - Remove unused `normalize_description` function (SH-25)
+- [x] **2.12** Lines 125-134 - Remove unused `in_era` variable (SH-23)
+- [x] **2.13** Line 250 - Split declaration and assignment for SC2155 (SH-24, SH-29, SH-31)
+- [x] **2.14** Lines 217-227 - Extract magic number 8 into named constant (SH-26, SH-27)
 
 ## Phase 2-3: pr-batch.sh Cleanup (1 item)
 
-- [ ] **2.15** Lines 116-118 - Update category label to match new skills path (SH-22)
+- [x] **2.15** Lines 116-118 - Update category label to match new skills path (SH-22)
 
 ---
 
@@ -804,11 +804,11 @@ Source: `.maintenance/verify-brain.sh` output
 
 Add Quick Reference tables (per new convention) to:
 
-- [ ] **3.1** `skills/domains/backend/database-patterns.md`
-- [ ] **3.2** `skills/domains/code-quality/code-hygiene.md`
-- [ ] **3.3** `skills/domains/languages/shell/common-pitfalls.md`
-- [ ] **3.4** `skills/domains/languages/shell/strict-mode.md`
-- [ ] **3.5** `skills/domains/languages/shell/variable-patterns.md`
+- [x] **3.1** `skills/domains/backend/database-patterns.md`
+- [x] **3.2** `skills/domains/code-quality/code-hygiene.md`
+- [x] **3.3** `skills/domains/languages/shell/common-pitfalls.md`
+- [x] **3.4** `skills/domains/languages/shell/strict-mode.md`
+- [x] **3.5** `skills/domains/languages/shell/variable-patterns.md`
 
 ---
 
