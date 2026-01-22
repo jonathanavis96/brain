@@ -998,7 +998,7 @@ Pre-commit scan discovered 18 shellcheck violations in workers/ralph/ scripts re
 
 ### SC2155: declare and assign separately (8 occurrences in render_ac_status.sh)
 
-- [ ] **9.2** Fix SC2155 in `workers/ralph/render_ac_status.sh` lines 25-32, 111, 114
+- [x] **9.2** Fix SC2155 in `workers/ralph/render_ac_status.sh` lines 25-32, 111, 114
   - **Issue:** `local var=$(command)` masks return values (8 occurrences)
   - **Fix:** Split into separate lines: `local var; var=$(command)`
   - **Files affected:** render_ac_status.sh (lines 25, 26, 29, 30, 31, 32, 111, 114)
