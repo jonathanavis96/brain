@@ -10,6 +10,7 @@ else
   RALPH="$ROOT/workers/ralph"
 fi
 LOGDIR="$RALPH/logs"
+VERIFY_REPORT="$RALPH/.verify/latest.txt"
 mkdir -p "$LOGDIR"
 
 # Configurable Brain repo for commit trailers
