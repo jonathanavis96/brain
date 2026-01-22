@@ -10,13 +10,13 @@ This implementation plan outlines the tasks to fully set up the brain repository
 - [x] Create NEURONS.md mapping the codebase structure and key files
 - [x] Create AGENTS.md with guidance for agents working on the brain repository
 - [x] Create README.md providing human-readable overview and onboarding (README.md exists and is comprehensive)
-- [ ] Ensure templates/ directory exists and contains necessary project templates
-  - [ ] Create templates/ directory in root
-  - [ ] Create templates/ralph/ subdirectory
-  - [ ] Copy and adapt templates from ralph/templates/ to root templates/
-- [ ] Ensure new-project.sh bootstrap script exists in root
-  - [ ] Copy new-project.sh from ralph/ to root
-  - [ ] Update paths to work from root context
+- [x] Ensure templates/ directory exists and contains necessary project templates (templates/ already exists with comprehensive content: ralph/, cortex/, backend/, python/ subdirectories)
+  - [x] Create templates/ directory in root (already exists)
+  - [x] Create templates/ralph/ subdirectory (already exists)
+  - [x] Copy and adapt templates from ralph/templates/ to root templates/ (already complete)
+- [x] Ensure new-project.sh bootstrap script exists in root
+  - [x] Copy new-project.sh from ralph/ to root
+  - [x] Update paths to work from root context
 
 ## Phase 2: Medium Priority
 
