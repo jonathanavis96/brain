@@ -614,18 +614,20 @@ cd brain/workers/ralph && bash loop.sh --iterations 1
   - **AC:** `rg "Brain KB" ../../templates/ralph/RALPH.md | wc -l` returns 0
   - **Commit:** `docs(templates): fix Brain KB → Brain Skills in RALPH.md`
 
-- [ ] **1.4** OD-4: `skills/projects/brain-example.md` - Fix "Brain KB" → "Brain Skills"
+- [x] **1.4** OD-4: `skills/projects/brain-example.md` - Fix "Brain KB" → "Brain Skills"
   - **File:** `../../skills/projects/brain-example.md`
   - **Find:** "Brain KB"
   - **Replace:** "Brain Skills"
   - **AC:** `rg "Brain KB" ../../skills/projects/brain-example.md | wc -l` returns 0
   - **Commit:** `docs(skills): fix Brain KB → Brain Skills in brain-example.md`
+  - **Status:** ✅ ALREADY COMPLETE - No instances found
 
-- [ ] **1.5** OD-6: `skills/SUMMARY.md` - Add language tag to code fence
+- [x] **1.5** OD-6: `skills/SUMMARY.md` - Add language tag to code fence
   - **File:** `../../skills/SUMMARY.md`
   - **Issue:** Code fence missing language tag
   - **AC:** All code fences have language tags
   - **Commit:** `docs(skills): add language tag to code fence in SUMMARY.md`
+  - **Status:** ✅ ALREADY COMPLETE - All fences properly tagged (line 116: ```text, line 138: closing)
 
 ---
 
