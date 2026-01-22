@@ -19,7 +19,7 @@ If your prompt header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 If `.verify/latest.txt` contains `[WARN]` lines:
 1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of IMPLEMENTATION_PLAN.md (after header, before other phases)
 2. **⚠️ DO NOT create "## Verifier Warnings" without the "Phase 0-Warn:" prefix** - This breaks the task monitor!
-3. **LIST** each as: `- [ ] WARN.<ID> <RULE_ID> - <description>`
+3. **LIST** each as: `- [ ] WARN.<RULE_ID>.<filename> - <description>` (include filename to prevent duplicate IDs)
 4. **NEVER use numbered lists (1. 2. 3.)** - ALWAYS use checkbox format `- [ ]`
 5. **IGNORE** warnings marked `(manual review)` - these require human testing, not code fixes
 6. **FIX** warnings marked `(auto check failed but warn gate)` - these are real issues
@@ -28,6 +28,7 @@ If `.verify/latest.txt` contains `[WARN]` lines:
 9. **Waivers are one-time-use** - After verifier uses a waiver, it's moved to `.used` and deleted. Only request waivers for issues you genuinely cannot fix.
 10. In BUILD mode: Fix ONE warning, mark `[?]`, commit. Verifier determines `[x]`.
 11. **BATCHING:** When multiple warnings are in the SAME FILE, fix them ALL in one iteration (e.g., 3 shellcheck warnings in loop.sh = 1 task).
+12. **CROSS-FILE BATCHING:** When the SAME fix type applies to multiple files (e.g., SC2162 "add -r to read" in 5 files), fix ALL files in ONE iteration. Group by fix type, not by file.
 
 Common failure types:
 - **Hash mismatch** (e.g., `Protected.1`): A protected file was modified. You cannot fix this - report to human.
@@ -150,15 +151,12 @@ shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
 
 4. Validate per AGENTS.md commands
 
-5. Log completion to THUNK.md: When marking task `[x]`, append to current era table:
-   ```markdown
-   | <next_thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |
-   ```
-
-6. Commit ALL changes (local only, no push):
+5. **SINGLE COMMIT RULE:** Commit ALL changes together (code fix + THUNK.md + IMPLEMENTATION_PLAN.md):
+   - Log completion to THUNK.md (append to current era table)
+   - Mark task `[x]` in IMPLEMENTATION_PLAN.md
+   - **NEVER make separate commits** for "mark task complete" or "log to THUNK" - these waste iterations
    ```bash
-   git add -A
-   git commit -m "<type>(<scope>): <summary>
+   git add -A && git commit -m "<type>(<scope>): <summary>
 
    - Detail 1
    - Detail 2
@@ -167,15 +165,19 @@ shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
    Brain-Repo: ${BRAIN_REPO:-jonathanavis96/brain}"
    ```
 
-7. Update IMPLEMENTATION_PLAN.md: mark `[x]` complete, add any discovered subtasks
+6. **DISCOVERY DEFER RULE:** If you discover new issues while fixing:
+   - **DO NOT** update IMPLEMENTATION_PLAN.md with new tasks during BUILD mode
+   - **DO** note them in your commit message body (e.g., "Note: also found SC2034 in foo.sh")
+   - **WAIT** until PLAN mode to add new tasks to IMPLEMENTATION_PLAN.md
+   - This prevents "docs(plan): add new task" spam commits
 
-8. **Self-Improvement Check:** If you used undocumented knowledge/procedure/tooling:
+7. **Self-Improvement Check:** If you used undocumented knowledge/procedure/tooling:
    - Search `skills/` for existing matching skill
    - Search `skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
    - If not found: append new entry to `GAP_BACKLOG.md`
    - If gap is clear, specific, and recurring: promote to `SKILL_BACKLOG.md`
 
-9. **STOP** - Do not push, do not continue to next task
+8. **STOP** - Do not push, do not continue to next task
 
 **Important:** Warnings-first policy - Always check and fix verifier warnings before numbered tasks.
 
@@ -269,6 +271,13 @@ Target: <20 tool calls per iteration.
 - Run `shellcheck` ONCE, fix ALL reported issues, run ONCE more to verify
 - Do NOT try multiple formatter variants (`shfmt -i 2`, `shfmt -w`, `shfmt -ci`)
 - If formatting fails twice with same error, note in output and move on
+
+### shfmt: Run ONCE Per Session
+
+- **DO NOT** run shfmt on individual files repeatedly
+- If shellcheck fixes require reformatting, run `shfmt -w -i 2 <file>` ONCE after all fixes
+- **NEVER** include "applied shfmt formatting" as the main work - it's incidental to the real fix
+- If a file needs shfmt, note it in PLAN mode for a single "format all shell scripts" task
 
 ### Context You Already Have
 
