@@ -371,3 +371,4 @@ Started: 2026-01-18
 | 357 | WARN.SC.4-5 | HIGH | **WARN.SC.4-5** Fix SC2034 in templates/cortex/cortex.bash - Removed unused RUNNER (line 64) and CONFIG_FLAG (line 104) variables, both were declared but never read, resolves SC2034 shellcheck warnings | 2026-01-22 |
 | 358 | WARN.SC.6 | HIGH | **WARN.SC.6** Fix SC2086 in templates/cortex/one-shot.sh lines 257, 261 - Quote CONFIG_FLAG variable to prevent word splitting and globbing | 2026-01-22 |
 | 359 | WARN.SC.7 | HIGH | **WARN.SC.7** Fix SC2162 in templates/ralph/current_ralph_tasks.sh lines 261, 558 - Add -r flag to read commands to prevent backslash mangling, apply shfmt formatting with 2-space indentation and case statement alignment | 2026-01-22 |
+| 360 | WARN.SC.8-10 | HIGH | **WARN.SC.8-10** Fix SC2162, SC2002, SC2086 in templates/ralph/loop.sh - Add -r flag to read commands (lines 457, 498), replace useless cat with tail (line 666), quote attach_flag variable (line 765) | 2026-01-22 |
