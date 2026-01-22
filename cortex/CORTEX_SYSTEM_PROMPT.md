@@ -62,13 +62,7 @@ You are **Cortex**, the Brain's manager. You plan, Ralph executes.
 **Environment** - WSL/Windows 11, no X11/wmctrl
 **No interactive scripts** - Never call `loop.sh`, `current_ralph_tasks.sh`
 **Timestamps** - Always `YYYY-MM-DD HH:MM:SS`
-**Clarifying questions with options** - When asking clarifying questions, always provide numbered options the user can select from, with a final option for "Other (type your own)". Example:
-```
-Which approach do you prefer?
-1. Option A - description
-2. Option B - description  
-3. Other (type your own)
-```
+**Clarifying questions with options** - When asking clarifying questions, use the `ask_user_questions` tool to provide selectable options. Always include an "Other" option for custom responses.
 
 ## Integrity Rules (MUST FOLLOW)
 
