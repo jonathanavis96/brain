@@ -66,7 +66,8 @@ check_skills_index() {
     # Find all skill files in domains/ and projects/
     local missing_from_index=()
     while IFS= read -r skill_file; do
-        local basename=$(basename "$skill_file")
+        local basename
+        basename=$(basename "$skill_file")
         # Skip README files and index files
         [[ "$basename" == "README.md" || "$basename" == "index.md" ]] && continue
 
@@ -102,7 +103,8 @@ check_summary_completeness() {
 
     local missing_from_summary=()
     while IFS= read -r skill_file; do
-        local basename=$(basename "$skill_file")
+        local basename
+        basename=$(basename "$skill_file")
         [[ "$basename" == "README.md" || "$basename" == "SUMMARY.md" || "$basename" == "index.md" ]] && continue
 
         if ! grep -q "$basename" "$summary_file" 2>/dev/null; then
@@ -154,7 +156,8 @@ check_template_sync() {
         # Skip if template doesn't exist (might be intentional)
         if [[ ! -f "$template" ]]; then
             # Only warn if template directory exists
-            local template_dir=$(dirname "$template")
+            local template_dir
+            template_dir=$(dirname "$template")
             if [[ -d "$template_dir" ]]; then
                 log_warn "Template missing: $template (source: $source)"
                 add_maintenance_item "Create or sync template: $template from $source"
@@ -164,8 +167,10 @@ check_template_sync() {
 
         if [[ "$check_type" == "hash" ]]; then
             # Full file comparison
-            local source_hash=$(sha256sum "$source" 2>/dev/null | cut -d' ' -f1)
-            local template_hash=$(sha256sum "$template" 2>/dev/null | cut -d' ' -f1)
+            local source_hash
+            source_hash=$(sha256sum "$source" 2>/dev/null | cut -d' ' -f1)
+            local template_hash
+            template_hash=$(sha256sum "$template" 2>/dev/null | cut -d' ' -f1)
 
             if [[ "$source_hash" != "$template_hash" ]]; then
                 log_warn "Template out of sync: $template differs from $source"
@@ -223,7 +228,8 @@ check_broken_links() {
             [[ "$link" =~ ^https?:// || "$link" =~ ^# || -z "$link" ]] && continue
 
             # Resolve relative path from skill file location
-            local skill_dir=$(dirname "$skill_file")
+            local skill_dir
+            skill_dir=$(dirname "$skill_file")
             local target="$skill_dir/$link"
 
             # Normalize path
@@ -256,7 +262,8 @@ check_quick_reference_tables() {
 
     local missing_tables=()
     while IFS= read -r skill_file; do
-        local basename=$(basename "$skill_file")
+        local basename
+        basename=$(basename "$skill_file")
         # Skip meta files
         [[ "$basename" == "README.md" || "$basename" == "SUMMARY.md" || "$basename" == "index.md" || "$basename" == "conventions.md" ]] && continue
 
@@ -312,7 +319,8 @@ EOF
 
     # Append new items to Triggered Items section
     # Find the line number of "## Triggered Items" and insert after the comment
-    local temp_file=$(mktemp)
+    local temp_file
+    temp_file=$(mktemp)
     local inserted=false
 
     while IFS= read -r line; do
