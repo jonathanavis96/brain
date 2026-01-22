@@ -233,7 +233,15 @@ When fixing issues, search the ENTIRE repo: `rg "pattern" $ROOT` not just `worke
 
 ## Token Efficiency
 
-Target: <20 tool calls per iteration. See `skills/domains/code-quality/token-efficiency.md`.
+Target: <20 tool calls per iteration.
+
+**NEVER repeat these (you already know):**
+- `pwd`, `git branch` - known from header
+- `.verify/latest.txt` - read ONCE at start
+- `tail THUNK.md` - get next number ONCE
+- Same file content - read ONCE, remember it
+
+**ALWAYS batch:** `grep pattern file1 file2 file3` not 3 separate calls.
 
 ---
 

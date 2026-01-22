@@ -6,6 +6,18 @@ Minimize tool calls per iteration to save tokens and time. Target: <20 tool call
 
 ---
 
+## Common Traps (from actual Ralph logs)
+
+| Trap | Seen | Fix |
+|------|------|-----|
+| Reading `.verify/latest.txt` multiple times | 64x | Read ONCE at start, cache result |
+| Running `pwd`/`git branch` repeatedly | 38x | Known from header - never run |
+| Checking `tail THUNK.md` multiple times | 22x | Get next number ONCE |
+| Same grep pattern on different calls | 100+ | Combine: `grep pattern file1 file2 file3` |
+| Checking same file repeatedly | 80+ | Read ONCE, remember content |
+
+---
+
 ## DO
 
 - **Batch independent calls** - If you need to check 3 files, do it in ONE bash call:
