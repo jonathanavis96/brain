@@ -1,6 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# =============================================================================
+# Ralph Loop - Autonomous Agent Execution
+# =============================================================================
+#
+# WORKSPACE BOUNDARIES:
+#   Ralph operates from: $ROOT/workers/ralph/ (derived from this script location)
+#   Full access to:      $ROOT/** (entire brain repository)
+#   PROTECTED (no modify): rules/AC.rules, .verify/*.sha256, verifier.sh, loop.sh, PROMPT.md
+#   FORBIDDEN (no access): .verify/waivers/*.approved (OTP-protected)
+#
+# =============================================================================
+
 # ROOT can be overridden via env var for project delegation
 if [[ -n "${RALPH_PROJECT_ROOT:-}" ]]; then
   ROOT="$RALPH_PROJECT_ROOT"
@@ -12,6 +24,18 @@ fi
 LOGDIR="$RALPH/logs"
 VERIFY_REPORT="$RALPH/.verify/latest.txt"
 mkdir -p "$LOGDIR"
+
+# Cleanup logs older than 7 days on startup
+cleanup_old_logs() {
+  local days="${1:-7}"
+  local count
+  count=$(find "$LOGDIR" -name "*.log" -type f -mtime +"$days" 2>/dev/null | wc -l)
+  if [[ "$count" -gt 0 ]]; then
+    echo "🧹 Cleaning up $count log files older than $days days..."
+    find "$LOGDIR" -name "*.log" -type f -mtime +"$days" -delete
+  fi
+}
+cleanup_old_logs 7
 
 # Configurable Brain repo for commit trailers
 BRAIN_REPO="${BRAIN_REPO:-jonathanavis96/brain}"
