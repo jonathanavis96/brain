@@ -45,7 +45,7 @@ expect_stdout=0
 
 [BugB.UI.1]
 mode=manual
-gate=warn
+gate=block
 desc=No visual corruption after terminal resize
 instructions=Run current_ralph_tasks.sh, resize terminal, confirm display remains intact
 
@@ -105,7 +105,7 @@ expect_stdout=0
 
 [BugC.UI.1]
 mode=manual
-gate=warn
+gate=block
 desc=THUNK monitor only displays, never modifies files
 instructions=Run thunk_ralph_tasks.sh, mark a task [x] in IMPLEMENTATION_PLAN.md, confirm THUNK.md is NOT auto-updated
 
