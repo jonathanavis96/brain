@@ -19,9 +19,9 @@ This implementation plan outlines the tasks to fully set up the brain repository
 ## Phase 2: Medium Priority - Skills & Documentation
 
 - [x] Verify and organize scripts (loop.sh, verifier.sh) in correct locations (both exist in workers/ralph/ which is appropriate)
-- [ ] Update skills/SUMMARY.md and skills/index.md if new files added
-  - [ ] Verify skills/SUMMARY.md completeness (exists in skills/)
-  - [ ] Create skills/index.md if missing (not found in search)
+- [x] Update skills/SUMMARY.md and skills/index.md if new files added
+  - [x] Verify skills/SUMMARY.md completeness (exists in skills/)
+  - [x] Create skills/index.md if missing (not found in search)
 - [ ] Create docs/EDGE_CASES.md with detailed examples and error recovery procedures
 - [x] Ensure THUNK.md exists for logging completed tasks (exists in workers/ralph/ for Ralph loop logging)
 
