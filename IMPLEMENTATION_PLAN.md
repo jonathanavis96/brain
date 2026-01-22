@@ -50,7 +50,7 @@ See **workers/ralph/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown
 **Note:** ~100+ markdown lint violations discovered across cortex/ files. These are formatting issues (blank lines, table spacing) that don't affect functionality. Will batch-fix by file in BUILD mode.
 
 - [x] **WARN.MD.1-4** Fix all MD violations in `cortex/AGENTS.md` - MD032 (blank lines around lists), MD022 (blank lines around headings), MD031 (blank lines around fences), MD060 (table spacing)
-- [ ] **WARN.MD.5-6** Fix all MD violations in `cortex/CORTEX_SYSTEM_PROMPT.md` - MD032 (blank lines around lists), MD060 (table spacing)
+- [x] **WARN.MD.5-6** Fix all MD violations in `cortex/CORTEX_SYSTEM_PROMPT.md` - MD032 (blank lines around lists), MD060 (table spacing)
 - [ ] **WARN.MD.7-10** Fix all MD violations in `cortex/DECISIONS.md` - MD022 (blank lines around headings), MD032 (blank lines around lists), MD031 (blank lines around fences), MD038 (spaces in code spans)
 - [ ] **WARN.MD.11** Fix all MD violations in `cortex/IMPLEMENTATION_PLAN.md` - MD032, MD031, MD060, MD009 (multiple formatting issues)
 
