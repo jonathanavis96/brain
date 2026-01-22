@@ -16,8 +16,8 @@ This implementation plan outlines the tasks to fully set up the brain repository
 - [x] **WARN.SC.8** Fix SC2162 in `templates/ralph/loop.sh` lines 457, 498 - Add -r flag to read commands
 - [x] **WARN.SC.9** Fix SC2002 in `templates/ralph/loop.sh` line 666 - Replace useless cat with direct redirection
 - [x] **WARN.SC.10** Fix SC2086 in `templates/ralph/loop.sh` line 765 - Quote attach_flag variable
-- [ ] **WARN.SC.11** Fix SC2034 in `templates/ralph/pr-batch.sh` line 103 - Remove unused week_num variable
-- [ ] **WARN.SC.12** Fix SC2162 in `templates/ralph/pr-batch.sh` line 191 - Add -r flag to read command
+- [x] **WARN.SC.11** Fix SC2034 in `templates/ralph/pr-batch.sh` line 103 - Remove unused week_num variable
+- [x] **WARN.SC.12** Fix SC2162 in `templates/ralph/pr-batch.sh` line 191 - Add -r flag to read command
 - [ ] **WARN.SC.13** Fix SC2162 in `templates/ralph/thunk_ralph_tasks.sh` line 379 - Add -r flag to read command
 - [ ] **WARN.SC.14** Fix SC2094 in `templates/ralph/verifier.sh` lines 395-396 - Avoid reading and writing same file in pipeline
 - [ ] **WARN.SC.15** Fix SC2162 in `workers/ralph/current_ralph_tasks.sh` line 261 - Add -r flag to read command
