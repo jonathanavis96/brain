@@ -754,7 +754,7 @@ run_once() {
     if [[ -n "${OPENCODE_ATTACH:-}" ]]; then
       attach_flag="--attach ${OPENCODE_ATTACH}"
     fi
-    opencode run ${attach_flag} --model "${RESOLVED_MODEL}" --format "${OPENCODE_FORMAT}" "$(cat "$prompt_with_mode")" 2>&1 | tee "$log"
+    opencode run "${attach_flag}" --model "${RESOLVED_MODEL}" --format "${OPENCODE_FORMAT}" "$(cat "$prompt_with_mode")" 2>&1 | tee "$log"
     rc=$?
     if [[ $rc -ne 0 ]]; then
       echo "❌ OpenCode failed (exit $rc). See: $log"
