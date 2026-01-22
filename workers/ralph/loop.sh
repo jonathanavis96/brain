@@ -762,9 +762,23 @@ check_protected_file_failures() {
 
 run_verifier() {
 	if [[ ! -x "$VERIFY_SCRIPT" ]]; then
-		echo "⚠️  Verifier not found or not executable: $VERIFY_SCRIPT"
-		LAST_VERIFIER_STATUS="SKIP"
-		return 0 # Don't block if verifier doesn't exist yet
+		# Check for .initialized marker to determine security vs bootstrap mode
+		if [[ -f "$RALPH/.verify/.initialized" ]]; then
+			# Security hard-fail: verifier was initialized but is now missing
+			echo "🚨 SECURITY ERROR: Verifier missing but .initialized marker exists!"
+			echo "   Expected: $VERIFY_SCRIPT"
+			echo "   Marker: $RALPH/.verify/.initialized"
+			LAST_VERIFIER_STATUS="FAIL"
+			LAST_VERIFIER_FAILED_RULES="verifier_missing_initialized"
+			LAST_VERIFIER_FAIL_COUNT=1
+			return 1
+		else
+			# Bootstrap mode: soft-fail, allow continuation
+			echo "⚠️  Verifier not found or not executable: $VERIFY_SCRIPT"
+			echo "   (Bootstrap mode - no .initialized marker found)"
+			LAST_VERIFIER_STATUS="SKIP"
+			return 0 # Don't block if verifier doesn't exist yet
+		fi
 	fi
 
 	# Auto-init baselines if missing
