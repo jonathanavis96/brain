@@ -374,3 +374,5 @@ Started: 2026-01-18
 | 360 | WARN.SC.8-10 | HIGH | **WARN.SC.8-10** Fix SC2162, SC2002, SC2086 in templates/ralph/loop.sh - Add -r flag to read commands (lines 457, 498), replace useless cat with tail (line 666), quote attach_flag variable (line 765) | 2026-01-22 |
 | 361 | WARN.SC.11-12 | HIGH | **WARN.SC.11-12** Fix SC2034 and SC2162 in templates/ralph/pr-batch.sh - Removed unused week_num variable (line 103), added -r flag to read command (line 191), formatted with shfmt | 2026-01-22 |
 | 373 | WARN.TemplateSync.1 | HIGH | **WARN.TemplateSync.1** - Sync current_ralph_tasks.sh with template - Copied template version to workers/ralph/, verified monitor still works correctly | 2026-01-22 |
+| 374 | WARN.SC.13 | HIGH | **WARN.SC.13** Fix SC2162 in templates/ralph/thunk_ralph_tasks.sh line 379 - Add -r flag to read command to prevent backslash mangling, formatted with shfmt | 2026-01-22 |
+| 375 | WARN.SC.14 | HIGH | **WARN.SC.14** Fix SC2094 in templates/ralph/verifier.sh lines 395-396 - Avoid reading and writing REPORT_FILE in same pipeline by storing hash guard result in local variable before appending summary, formatted with shfmt | 2026-01-22 |
