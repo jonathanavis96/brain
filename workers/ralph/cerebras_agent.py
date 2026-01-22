@@ -454,73 +454,43 @@ TOOLS = [
     },
 ]
 
-# System prompt optimized for LOW REQUESTS (Cerebras limit: 10 req/min, 60k tokens/min)
-SYSTEM_PROMPT = """You are Ralph, an expert software engineer.
+# System prompt - loaded from PROMPT_cerebras.md file
+# Falls back to minimal prompt if file not found
+FALLBACK_SYSTEM_PROMPT = """You are Ralph, an expert software engineer.
 
-## YOUR ONE TASK
+## Your Task
 {task_focus}
 
 Complete ONLY this task, then output :::COMPLETE::: and stop.
-Do NOT explore other tasks. Do NOT audit the codebase. Just fix this ONE thing.
 
-## CRITICAL RULES (MUST FOLLOW)
-1. **READ BEFORE WRITE**: ALWAYS use head_file or read_lines BEFORE patch_file
-   - NEVER guess at file content - verify first
-   - If patch_file fails, read the file again and retry with exact text
-2. **ONE TASK ONLY**: Complete the assigned task, nothing else
-3. **VERIFY PATCHES**: After patch_file, use diff to confirm the change
-4. **COMMIT PROPERLY**: git_commit auto-retries if pre-commit modifies files
-
-## Rate Limit Strategy
-You have MAX 5-10 turns. Be efficient:
-1. Read what you need (head_file for target lines)
-2. Make the fix (patch_file with EXACT text from step 1)
-3. Verify (diff) and commit (git_commit)
-4. Output :::COMPLETE:::
-
-## Pre-loaded Context (DO NOT RE-READ THESE FILES)
-The context below ALREADY contains:
-- Git status, branch, recent commits
-- Directory tree (top-level structure)
-- Verifier status (.verify/latest.txt)
-- IMPLEMENTATION_PLAN.md (first 80 lines)
-- THUNK.md (last 20 lines) - at workers/ralph/THUNK.md
-- AGENTS.md (first 30 lines)
-
-⚠️ TRUST THE PRE-LOADED CONTEXT. Do NOT:
-- read_file/read_lines on pre-loaded files
-- tail_file before append_file (just append!)
-- read before patch_file (you know the string to find!)
-
-JUST DO IT. Don't verify. Don't read first. Make the change directly.
-
-## Tools (17) - Call MULTIPLE per turn when independent
-
-**Discovery:** glob, symbols, grep, list_dir
-**Reading:** read_lines, head_file, tail_file, read_file (small files only)
-**Writing:** patch_file (best), append_file (logs), write_file (new files)
-**Git:** git_status, git_commit, diff, undo_change
-**Meta:** think, bash
-
-## Batching Examples
-GOOD (1 request):
-  - think + grep + read_lines → plan, find, read in ONE turn
-  - patch_file + patch_file + git_commit → multiple edits + commit in ONE turn
-
-BAD (3 requests):
-  - Turn 1: grep → Turn 2: read_lines → Turn 3: patch_file
-
-## Workflow
-1. Context is pre-loaded - find your NEXT UNCHECKED task in Implementation Plan above
-2. Plan with think, then execute (grep + read_lines or symbols + read_lines)
-3. Make changes (patch_file), verify (diff), commit (git_commit) - ALL IN ONE TURN
-4. Update THUNK.md with append_file
-5. Output :::BUILD_READY::: or :::PLAN_READY:::
+## Rules
+1. READ BEFORE WRITE - use head_file before patch_file
+2. ONE TASK ONLY - complete assigned task, nothing else
+3. VERIFY PATCHES - use diff to confirm changes
+4. COMMIT - use git_commit when done
 
 ## Output
-Start: STATUS | task=<task from plan>
-End: :::BUILD_READY::: or :::PLAN_READY:::
+End with: :::BUILD_READY::: or :::PLAN_READY::: or :::COMPLETE:::
 """
+
+
+def load_system_prompt(cwd: str | None = None) -> str:
+    """Load system prompt from PROMPT_cerebras.md file."""
+    work_dir = Path(cwd or ".")
+
+    # Try to find PROMPT_cerebras.md
+    prompt_file = work_dir / "PROMPT_cerebras.md"
+    if not prompt_file.exists():
+        prompt_file = work_dir / "workers" / "ralph" / "PROMPT_cerebras.md"
+
+    if prompt_file.exists():
+        try:
+            return prompt_file.read_text(encoding="utf-8")
+        except Exception:
+            pass
+
+    # Fallback to minimal prompt
+    return FALLBACK_SYSTEM_PROMPT
 
 
 # =============================================================================
@@ -1396,153 +1366,17 @@ def extract_next_task(cwd: str | None = None) -> str | None:
 
 
 # =============================================================================
-# Fat Context Loader (minimize API requests by pre-loading context)
+# Token Usage Tracking
 # =============================================================================
 
 
-def load_project_context(cwd: str | None = None) -> str:
-    """
-    Pre-load common context to reduce tool calls.
-    This trades tokens for requests (good for Cerebras rate limits).
-    """
-    work_dir = Path(cwd or ".")
-    context_parts = []
-
-    # 1. Git status + branch + recent commits
-    try:
-        branch = (
-            subprocess.run(
-                ["git", "branch", "--show-current"],
-                capture_output=True,
-                text=True,
-                cwd=work_dir,
-                timeout=5,
-            ).stdout.strip()
-            or "(detached)"
-        )
-
-        status = (
-            subprocess.run(
-                ["git", "status", "--short"],
-                capture_output=True,
-                text=True,
-                cwd=work_dir,
-                timeout=5,
-            ).stdout.strip()
-            or "(clean)"
-        )
-
-        log = subprocess.run(
-            ["git", "log", "--oneline", "-5"],
-            capture_output=True,
-            text=True,
-            cwd=work_dir,
-            timeout=5,
-        ).stdout.strip()
-
-        context_parts.append(f"""## Git Status
-Branch: {branch}
-Status:
-{status}
-
-Recent commits:
-{log}""")
-    except Exception:
-        pass
-
-    # 2. Directory tree (top level only - keep lean)
-    try:
-        tree_lines = []
-        for item in sorted(work_dir.iterdir()):
-            if item.name.startswith(".") and item.name not in [".verify"]:
-                continue
-            suffix = "/" if item.is_dir() else ""
-            tree_lines.append(f"  {item.name}{suffix}")
-
-        context_parts.append(f"""## Directory Structure
-{chr(10).join(tree_lines[:25])}""")
-    except Exception:
-        pass
-
-    # 3. Verifier status
-    verify_file = work_dir / ".verify" / "latest.txt"
-    if verify_file.exists():
-        try:
-            content = verify_file.read_text()[:2000]
-            context_parts.append(f"""## Verifier Status (.verify/latest.txt)
-{content}""")
-        except Exception:
-            pass
-
-    # 4. IMPLEMENTATION_PLAN.md (first 100 lines or up to current task)
-    plan_file = work_dir / "IMPLEMENTATION_PLAN.md"
-    if not plan_file.exists():
-        plan_file = work_dir / "workers" / "ralph" / "IMPLEMENTATION_PLAN.md"
-
-    if plan_file.exists():
-        try:
-            content = plan_file.read_text()
-            lines = content.split("\n")
-            # Find unchecked tasks
-            preview_lines = []
-            found_unchecked = False
-            for i, line in enumerate(lines[:80]):
-                preview_lines.append(line)
-                if "- [ ]" in line and not found_unchecked:
-                    found_unchecked = True
-                    # Include a few more lines after first unchecked task
-                    preview_lines.extend(lines[i + 1 : i + 10])
-                    break
-
-            context_parts.append(f"""## Implementation Plan
-{chr(10).join(preview_lines)}""")
-        except Exception:
-            pass
-
-    # 5. THUNK.md (last 20 lines - recent completions)
-    thunk_file = work_dir / "THUNK.md"
-    if not thunk_file.exists():
-        thunk_file = work_dir / "workers" / "ralph" / "THUNK.md"
-
-    if thunk_file.exists():
-        try:
-            lines = thunk_file.read_text().split("\n")
-            tail = lines[-20:] if len(lines) > 20 else lines
-            context_parts.append(f"""## Recent Completions (THUNK.md tail)
-{chr(10).join(tail)}""")
-        except Exception:
-            pass
-
-    # 6. AGENTS.md (if exists, first 30 lines)
-    agents_file = work_dir / "AGENTS.md"
-    if not agents_file.exists():
-        agents_file = work_dir / "workers" / "ralph" / "AGENTS.md"
-
-    if agents_file.exists():
-        try:
-            lines = agents_file.read_text().split("\n")[:30]
-            context_parts.append(f"""## Project Guidelines (AGENTS.md)
-{chr(10).join(lines)}""")
-        except Exception:
-            pass
-
-    if context_parts:
-        return "\n\n---\n\n".join(context_parts)
-    return ""
-
-
-# =============================================================================
-# Cerebras API Client
-# =============================================================================
-
-
-@dataclass
 class TokenUsage:
-    """Track token usage across requests."""
+    """Track token usage across API requests."""
 
-    prompt_tokens: int = 0
-    completion_tokens: int = 0
-    total_requests: int = 0
+    def __init__(self):
+        self.prompt_tokens: int = 0
+        self.completion_tokens: int = 0
+        self.total_requests: int = 0
 
     def add(self, usage: dict):
         self.prompt_tokens += usage.get("prompt_tokens", 0)
@@ -1853,11 +1687,14 @@ class Agent:
             task_focus = "(No unchecked tasks found - review IMPLEMENTATION_PLAN.md)"
             print(f"  {Style.YELLOW}⚠ No unchecked tasks found{Style.RESET}")
 
-        # Combine system prompt with pre-loaded context
-        full_system_prompt = SYSTEM_PROMPT.format(task_focus=task_focus)
+        # Load system prompt from PROMPT_cerebras.md and inject task
+        system_prompt_template = load_system_prompt(self.cwd)
+        full_system_prompt = system_prompt_template.format(task_focus=task_focus)
+
+        # Append AGENTS.md context
         if project_context:
             full_system_prompt += (
-                f"\n\n# PRE-LOADED PROJECT CONTEXT\n\n{project_context}"
+                f"\n\n---\n\n# Project Context (AGENTS.md)\n\n{project_context}"
             )
 
         # Initialize with system prompt (including context) and user prompt
@@ -2081,3 +1918,30 @@ Environment:
 
 if __name__ == "__main__":
     main()
+
+
+def load_project_context(cwd: str | None = None) -> str:
+    """
+    Load ONLY essential context: AGENTS.md guidelines.
+
+    The agent should use tools (read_file, bash) to get anything else it needs.
+    This follows the RovoDev pattern: inject AGENTS.md, let the agent explore.
+    """
+    work_dir = Path(cwd or ".")
+    context_parts = []
+
+    # AGENTS.md - project guidelines (the main context file)
+    agents_file = work_dir / "AGENTS.md"
+    if not agents_file.exists():
+        agents_file = work_dir / "workers" / "ralph" / "AGENTS.md"
+
+    if agents_file.exists():
+        try:
+            content = agents_file.read_text()
+            # Include full AGENTS.md - it's the core guidance
+            context_parts.append(f"""## Project Guidelines (AGENTS.md)
+{content}""")
+        except Exception:
+            pass
+
+    return "\n\n".join(context_parts)
