@@ -20,9 +20,9 @@ The brain repository has **two implementation plans**:
 - ✅ **Phase 0-A/B** - Cortex manager pack COMPLETE (31/31 tasks)
 - ✅ **Phase 0-Quick** - Quick wins COMPLETE (8/8 tasks)
 - 📋 **Phase 1-8** - Shell cleanup, documentation, optimization (0/49 complete)
-- 🚨 **NEW: Pre-commit scan** - Discovered 18 shellcheck violations in workers/ralph/ scripts (SC2162, SC2155, SC2129, SC2086)
+- 🚨 **NEW: Pre-commit scan** - Discovered 3 shellcheck/shfmt violations in workers/ralph/ scripts (SC2162, SC2094, formatting)
 
-See **workers/ralph/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown (138 tasks total, +18 from pre-commit).
+See **workers/ralph/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown (121 tasks total, +3 from pre-commit).
 
 ---
 
@@ -98,7 +98,7 @@ See **workers/ralph/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown
 - **Phase 7** - Maintenance items (1 task)
 - **Phase 8** - Pre-commit linting cleanup (17 tasks)
 
-**Total:** 117 tasks tracked in workers/ralph/IMPLEMENTATION_PLAN.md
+**Total:** 121 tasks tracked in workers/ralph/IMPLEMENTATION_PLAN.md (117 original + 3 new pre-commit + 1 obsolete removed)
 
 ---
 

@@ -3,7 +3,7 @@
 **Status:** PLAN mode - Ready for BUILD execution  
 **Branch:** `brain-work`  
 **Last Updated:** 2026-01-22 15:50:00 (Ralph PLAN iteration)  
-**Progress:** 43/138 tasks complete (31%) - All verifier warnings triaged, 18 new shellcheck warnings added from pre-commit scan
+**Progress:** 43/121 tasks complete (36%) - All verifier warnings triaged, 3 new shellcheck/shfmt warnings added from pre-commit scan
 
 **Current Status:**
 
@@ -20,18 +20,56 @@
 - 📋 Phase 6 (Review PR #4 D-Items) - 0/22 complete
 - 📋 Phase 7 (Maintenance Items) - 0/1 complete
 - 📋 Phase 8 (Pre-commit Linting) - 0/17 complete (3 HIGH setup.sh + 14 LOW templates)
-- 📋 Phase 9-Precommit (NEW: Pre-commit Scan) - 0/18 complete (18 shellcheck violations in workers/ralph/)
+- 📋 Phase 9-Precommit (NEW: Pre-commit Scan) - 0/3 complete (SC2162, SC2094, shfmt formatting)
+
+## Phase 9-Precommit: New Pre-commit Scan Warnings (2026-01-22)
+
+**Goal:** Fix all shellcheck warnings discovered by pre-commit scan in workers/ralph/
+
+**Priority:** HIGH (affects core Ralph scripts)
+
+**Source:** `pre-commit run --all-files` output (2026-01-22 16:18)
+
+**Status:** 0/3 tasks complete
+
+### SC2162: read without -r flag
+
+- [ ] **9.1** Fix SC2162 in `thunk_ralph_tasks.sh` line 379
+  - **Issue:** `read -t 0.1 -n 1 key` should use `-r` flag to prevent backslash mangling
+  - **Fix:** Change to `read -r -t 0.1 -n 1 key`
+  - **AC:** `shellcheck thunk_ralph_tasks.sh 2>&1 | grep -c 'SC2162'` returns 0
+  - **Commit:** `fix(ralph): add -r flag to read in thunk_ralph_tasks.sh`
+
+### SC2094: Read and write same file in pipeline
+
+- [ ] **9.2** Fix SC2094 in `verifier.sh` lines 395-396
+  - **Issue:** Pipeline reads from and writes to $REPORT_FILE simultaneously
+  - **Fix:** Use temporary variable or read before writing
+  - **AC:** `shellcheck verifier.sh 2>&1 | grep -c 'SC2094'` returns 0
+  - **Commit:** `fix(ralph): avoid read/write race in verifier.sh`
+
+### shfmt formatting issues
+
+- [ ] **9.3** Run shfmt to auto-format all shell scripts
+  - **Issue:** Multiple indentation inconsistencies in verifier.sh
+  - **Fix:** Run `shfmt -w -i 2 *.sh` to auto-format
+  - **AC:** `shfmt -d *.sh` returns no diff
+  - **Commit:** `style(ralph): auto-format shell scripts with shfmt`
+
+---
+
+## Phase 9-Precommit (OLD REFERENCE - REMOVED)
 
 **Task Breakdown:**
 
-- Total: 138 tasks (43 complete, 95 remaining)
+- Total: 121 tasks (43 complete, 78 remaining)
 - Phase 0: 43/71 complete (27 warn + 6 quick wins + 2 complete phases)
 - Phases 1-8: 0/49 complete (all pending)
-- Phase 9-Precommit: 0/18 complete (NEW from pre-commit scan)
+- Phase 9-Precommit: 0/3 complete (NEW from pre-commit scan)
 - **6 tasks awaiting human waiver approval** (markdown fence + template sync false positives)
-- **New:** 18 shellcheck warnings from pre-commit scan (SC2162, SC2155, SC2129, SC2086)
+- **New:** 3 shellcheck/shfmt warnings from pre-commit scan (SC2162, SC2094, shfmt formatting)
 
-**Next Priority:** Phase 9-Precommit task 9.1 - Fix SC2162 warnings in new-project.sh (8 occurrences)
+**Next Priority:** Phase 9-Precommit task 9.1 - Fix SC2162 in thunk_ralph_tasks.sh line 379
 
 **Verifier Status:**
 
@@ -984,11 +1022,7 @@ Fix markdown formatting issues (deferred - low impact):
 
 ---
 
-## Phase 9-Precommit: Pre-commit Scan Shellcheck Violations (NEW)
-
-Pre-commit scan discovered 18 shellcheck violations in workers/ralph/ scripts requiring fixes:
-
-### SC2162: read without -r (8 occurrences in new-project.sh)
+---
 
 - [ ] **9.1** Fix SC2162 in `workers/ralph/new-project.sh` lines 250, 263, 277, 281, 290, 302, 585
   - **Issue:** `read -p` commands missing `-r` flag (8 occurrences)
