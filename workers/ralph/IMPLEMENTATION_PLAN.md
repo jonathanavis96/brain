@@ -575,11 +575,12 @@ cd brain/workers/ralph && bash loop.sh --iterations 1
 
 **Source:** `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - Outside Diff Items (OD-*)
 
-- [ ] **1.1** OD-1: `generators/generate-thoughts.sh` - Update wording for clarity
+- [x] **1.1** OD-1: `generators/generate-thoughts.sh` - Update wording for clarity
   - **File:** `../../generators/generate-thoughts.sh`
   - **Issue:** Wording could be clearer
+  - **Resolution:** File doesn't exist - generators were never created. The `new-project.sh` has fallback logic (lines 446-479) that uses templates when generators are missing. Task is obsolete.
   - **AC:** CodeRabbit review passes for this item
-  - **Commit:** `docs(generators): clarify wording in generate-thoughts.sh`
+  - **Commit:** `docs(plan): mark task 1.1 obsolete - generators never created`
 
 - [x] **1.2** OD-2: `templates/python/NEURONS.project.md` - Fix "Brain KB" → "Brain Skills"
   - **File:** `../../templates/python/NEURONS.project.md`
@@ -752,12 +753,39 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
 
 ## Phase 7: Maintenance Items
 
-**Goal:** Address items from maintenance check
+**Goal:** Address items from maintenance check (2026-01-22)
 
-- [ ] **7.1** Maintenance item tracking
-  - **Note:** Run `bash .maintenance/verify-brain.sh` periodically
-  - **AC:** All maintenance items incorporated into appropriate phases
-  - **AC:** Completed items logged in `.maintenance/MAINTENANCE_LOG.md`
+**Source:** `bash .maintenance/verify-brain.sh` output
+
+### Phase 7-1: Skills Index Completeness (HIGH PRIORITY)
+
+- [ ] **7.1.1** Add 25 missing skills to `skills/index.md`
+  - Missing: token-efficiency.md, all website skills (launch/, design/, qa/, architecture/, discovery/, build/, copywriting/)
+  - **AC:** `bash .maintenance/verify-brain.sh 2>&1 | grep -c 'Skills missing from index.md'` returns 0
+  - **Commit:** `docs(skills): add missing skills to index.md`
+
+- [ ] **7.1.2** Add 25 missing skills to `skills/SUMMARY.md`
+  - Same list as 7.1.1
+  - **AC:** `bash .maintenance/verify-brain.sh 2>&1 | grep -c 'Skills missing from SUMMARY.md'` returns 0
+  - **Commit:** `docs(skills): add missing skills to SUMMARY.md`
+
+### Phase 7-2: Template Maintenance Section
+
+- [ ] **7.2.1** Add `## MAINTENANCE` section to `templates/ralph/PROMPT.md`
+  - **Note:** templates/ralph/PROMPT.md appears to exist (maintenance script found it)
+  - **AC:** `grep -c '## MAINTENANCE' templates/ralph/PROMPT.md` returns non-zero
+  - **Commit:** `docs(templates): add MAINTENANCE section to PROMPT.md`
+
+### Phase 7-3: Skills Quick Reference Tables (LOW PRIORITY)
+
+- [ ] **7.3.1** Add Quick Reference table to `skills/domains/code-quality/token-efficiency.md`
+- [ ] **7.3.2** Add Quick Reference table to `skills/domains/code-quality/code-hygiene.md`
+- [ ] **7.3.3** Add Quick Reference table to `skills/domains/languages/shell/common-pitfalls.md`
+- [ ] **7.3.4** Add Quick Reference table to `skills/domains/languages/shell/strict-mode.md`
+- [ ] **7.3.5** Add Quick Reference table to `skills/domains/languages/shell/variable-patterns.md`
+- [ ] **7.3.6** Add Quick Reference table to `skills/domains/backend/database-patterns.md`
+  - **AC (all):** Each file has a Quick Reference section following SUMMARY.md pattern
+  - **Commit (batch):** `docs(skills): add Quick Reference tables to 6 skills`
 
 ---
 
