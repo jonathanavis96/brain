@@ -259,7 +259,7 @@
   - **AC:** `bash -c 'opens=$(grep -c "^\`\`\`[a-z]" AGENTS.md); closes=$(grep -c "^\`\`\`$" AGENTS.md); [[ "$opens" -eq "$closes" ]] && echo "balanced"'` returns "balanced"
   - **Commit:** `fix(docs): add missing closing fences in AGENTS.md`
 
-- [ ] **WARN.Markdown.Fences.2** - THOUGHTS.md missing closing fences (MEDIUM)
+- [x] **WARN.Markdown.Fences.2** - THOUGHTS.md missing closing fences (MEDIUM)
   - **File:** `THOUGHTS.md` lines 111-116, 135-157
   - **Issue:** Code blocks have opening fences (```text) but missing closing fences
   - **Fix:** Add closing ``` after each code block

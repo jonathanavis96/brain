@@ -113,7 +113,7 @@ brain/ralph/.maintenance/
 ├── verify-brain.sh      # Runs 6 consistency checks
 ├── MAINTENANCE.md       # Active items queue  
 └── MAINTENANCE_LOG.md   # Audit trail of completed items
-```text
+```
 
 **When in planning mode:** Run `bash .maintenance/verify-brain.sh` before planning.
 
@@ -154,7 +154,7 @@ brain/
       
   skills/                      ← Shared (Cortex manages, Ralph uses)
   templates/                   ← Shared (includes cortex/ template)
-```text
+```
 
 **Workflow:**
 1. Human runs `bash cortex/run.sh` → Opus loads as Cortex
