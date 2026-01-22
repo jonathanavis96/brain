@@ -339,12 +339,13 @@
   - **AC:** `rg "Brain KB" templates/ | wc -l` returns 0
   - **Commit:** `docs(templates): fix Brain KB → Brain Skills terminology`
 
-- [ ] **0.Q.5** Fix maintenance script paths
+- [x] **0.Q.5** Fix maintenance script paths
   - **Goal:** Fix verify-brain.sh to find skills/ at correct location
   - **Issue:** Script runs from `workers/ralph/.maintenance/` but skills/ is at repo root
   - **File:** `workers/ralph/.maintenance/verify-brain.sh`
   - **AC:** `bash workers/ralph/.maintenance/verify-brain.sh` reports 0 issues
   - **Commit:** `fix(maintenance): correct skills path resolution in verify-brain.sh`
+  - **Status:** ✅ COMPLETE
 
 - [x] **0.Q.6** Fix broken links in skills files
   - **Status:** ✅ COMPLETE - Maintenance check shows "No broken links detected"
