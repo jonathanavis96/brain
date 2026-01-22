@@ -844,10 +844,10 @@ Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - Design Decisions (human appro
 
 ## Phase 5-1: Verifier Soft-Fail During Init Only
 
-- [ ] **5.1** `loop.sh:504-508` - Add `.initialized` marker check to `run_verifier()`:
+- [x] **5.1** `loop.sh:504-508` - Add `.initialized` marker check to `run_verifier()`:
   - If `verifier.sh` missing AND `.verify/.initialized` exists → hard-fail (security)
   - If `verifier.sh` missing AND no `.initialized` → soft-fail (bootstrap mode)
-- [ ] **5.2** `templates/ralph/loop.sh` - Apply same fix to template
+- [x] **5.2** `templates/ralph/loop.sh` - Apply same fix to template
 - [ ] **5.3** `init_verifier_baselines.sh` - Create `.verify/.initialized` marker after successful init
 
 ## Phase 5-2: Gitignore Personal Config
@@ -1161,3 +1161,10 @@ Fix markdown formatting issues (deferred - low impact):
   - 9.3-9.4: sync_cortex_plan.sh (1 SC2129 + 1 SC2086 = batch together)
   - 9.5: pr-batch.sh (2 SC2155)
 - **Expected iterations:** 4 BUILD iterations (1 per batched task)
+
+## Phase 5-4: Shell Script Formatting Consistency
+
+- [ ] **5.4.1** Run `shfmt -w -i 2 workers/ralph/*.sh templates/ralph/*.sh` to normalize all shell scripts
+  - **Issue:** Pre-commit shfmt hook keeps modifying files with tab/space inconsistencies
+  - **AC:** `shfmt -d workers/ralph/*.sh templates/ralph/*.sh` returns no diff
+  - **Note:** This is a one-time bulk formatting fix

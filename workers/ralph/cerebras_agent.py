@@ -44,7 +44,7 @@ except ImportError:
 
 CEREBRAS_API_URL = "https://api.cerebras.ai/v1/chat/completions"
 DEFAULT_MODEL = "zai-glm-4.7"
-DEFAULT_MAX_TURNS = 10
+DEFAULT_MAX_TURNS = 15
 DEFAULT_MAX_TOKENS = 16384
 DEFAULT_TEMPERATURE = 0.2
 
