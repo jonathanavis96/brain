@@ -224,7 +224,7 @@
   - **AC:** `shellcheck loop.sh 2>&1 | grep -c SC2002` returns 0
   - **Commit:** `refactor(ralph): remove useless cat in loop.sh`
 
-- [ ] **WARN.Shellcheck.11** - SC2086 unquoted variable in loop.sh (LOW)
+- [x] **WARN.Shellcheck.11** - SC2086 unquoted variable in loop.sh (LOW)
   - **File:** `loop.sh` line 732
   - **Issue:** `${attach_flag}` should be quoted to prevent word splitting
   - **Fix:** Change `${attach_flag}` to `"${attach_flag}"`
