@@ -379,3 +379,4 @@ Started: 2026-01-18
 | 376 | WARN.SC.15 | HIGH | **WARN.SC.15** Fix SC2034 in workers/ralph/.maintenance/verify-brain.sh line 16 - Remove unused MAINTENANCE_LOG variable, WARN.SC.16 already resolved | 2026-01-22 |
 | 377 | WARN.SC.17 | HIGH | **WARN.SC.17** Fix SC2162 in workers/ralph/current_ralph_tasks.sh line 558 - Add -r flag to read command to prevent backslash mangling | 2026-01-22 |
 | 378 | WARN.SC.18 | HIGH | **WARN.SC.18** Fix SC2162 in workers/ralph/loop.sh lines 458, 499 - Add -r flag to read commands to prevent backslash mangling in user input prompts, applied shfmt formatting | 2026-01-22 |
+| 379 | WARN.MD.1-4 | LOW | **WARN.MD.1-4** Fix all MD violations in cortex/AGENTS.md - Added blank lines around lists (MD032), headings (MD022), code fences (MD031), fixed table column spacing (MD060), markdownlint now passes with zero errors | 2026-01-22 |
