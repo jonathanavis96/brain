@@ -196,7 +196,7 @@ expect_stdout=match
 mode=auto
 gate=block
 desc=Verifier run_id.txt exists and is non-empty
-cmd=test -s ../.verify/run_id.txt && echo "OK" || echo "FAIL"
+cmd=test -s .verify/run_id.txt && echo "OK" || echo "FAIL"
 expect_stdout=OK
 
 # =============================================================================
