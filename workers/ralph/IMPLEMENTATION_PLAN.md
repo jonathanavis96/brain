@@ -2,8 +2,8 @@
 
 **Status:** PLAN mode - Ready for BUILD execution  
 **Branch:** `brain-work`  
-**Last Updated:** 2026-01-22 04:25:26 (Ralph PLAN iteration)  
-**Progress:** 43/117 tasks complete (37%) - All verifier warnings triaged, Phase 8 captures remaining linting issues (3 HIGH setup.sh + 11 LOW templates)
+**Last Updated:** 2026-01-22 15:37:00 (Ralph PLAN iteration)  
+**Progress:** 43/120 tasks complete (36%) - All verifier warnings triaged, 3 new shellcheck warnings added from pre-commit scan
 
 **Current Status:**
 
@@ -23,13 +23,13 @@
 
 **Task Breakdown:**
 
-- Total: 117 tasks (43 complete, 74 remaining)
-- Phase 0: 43/68 complete (27 warn + 6 quick wins + 2 complete phases)
+- Total: 120 tasks (43 complete, 77 remaining)
+- Phase 0: 43/71 complete (27 warn + 3 new shellcheck + 6 quick wins + 2 complete phases)
 - Phases 1-8: 0/49 complete (all pending)
 - **6 tasks awaiting human waiver approval** (markdown fence + template sync false positives)
-- **New:** 6 pre-commit issues discovered (3 HIGH in setup.sh + 3 additional LOW in templates)
+- **New:** 3 shellcheck warnings from pre-commit scan (HIGH priority verify-brain.sh, MEDIUM new-project.sh, LOW pr-batch.sh)
 
-**Next Priority:** Phase 1 task 1.1 - OD-1: Update wording for clarity in generators/generate-thoughts.sh (all Phase 0-Quick high-priority tasks complete)
+**Next Priority:** Phase 0-Warn-Local task WARN.SC.15 - Fix SC2155 in verify-brain.sh (HIGH priority shellcheck issues)
 
 **Verifier Status:**
 
@@ -229,6 +229,12 @@
 **Goal:** Fix shellcheck and markdown warnings in workers/ralph/ files
 
 **Priority:** HIGH - Direct Ralph workspace issues
+
+### New Shellcheck Warnings from Pre-commit (2026-01-22)
+
+- [ ] **WARN.SC.15** Fix SC2155 in `workers/ralph/.maintenance/verify-brain.sh` lines 69, 105, 157, 167, 168 - Declare and assign separately (HIGH)
+- [ ] **WARN.SC.16** Fix SC2162 in `workers/ralph/new-project.sh` lines 271, 281, 290, 302, 585 - Add -r flag to read commands (MEDIUM)
+- [ ] **WARN.SC.17** Fix SC2162 in `workers/ralph/pr-batch.sh` line 102+ - Add -r flag to read commands (LOW)
 
 - [x] **WARN.Shellcheck.8** - SC2034 unused variables in current_ralph_tasks.sh (MEDIUM)
   - **File:** `current_ralph_tasks.sh` lines 107, 299
