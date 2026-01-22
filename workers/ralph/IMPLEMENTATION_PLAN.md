@@ -259,6 +259,36 @@
   - **AC:** `bash -c 'opens=$(grep -c "^\`\`\`[a-z]" AGENTS.md); closes=$(grep -c "^\`\`\`$" AGENTS.md); [[ "$opens" -eq "$closes" ]] && echo "balanced"'` returns "balanced"
   - **Commit:** `fix(docs): add missing closing fences in AGENTS.md`
 
+- [?] **WARN.Hygiene.Markdown.2** - No code fences without language tags in AGENTS.md (MEDIUM)
+  - **Issue:** Verifier detects 2 closing fences (`^```$`) - but these are REQUIRED by Markdown spec
+  - **Resolution:** Waiver requested (WVR-2026-01-22-001) - rule design flaw, closing fences must not have language tags
+  - **AC:** Waiver approval required
+
+- [?] **WARN.Hygiene.Markdown.3** - No code fences without language tags in THOUGHTS.md (MEDIUM)
+  - **Issue:** Verifier detects 2 closing fences (`^```$`) - but these are REQUIRED by Markdown spec
+  - **Resolution:** Waiver requested (WVR-2026-01-22-002) - rule design flaw, closing fences must not have language tags
+  - **AC:** Waiver approval required
+
+- [?] **WARN.Hygiene.Markdown.4** - No code fences without language tags in NEURONS.md (MEDIUM)
+  - **Issue:** Verifier detects 10 closing fences (`^```$`) - but these are REQUIRED by Markdown spec
+  - **Resolution:** Waiver requested (WVR-2026-01-22-003) - rule design flaw, closing fences must not have language tags
+  - **AC:** Waiver approval required
+
+- [?] **WARN.Template.1** - thunk_ralph_tasks.sh matches template (MEDIUM)
+  - **Issue:** Verifier reports differ but files match when checked directly
+  - **Analysis:** Template path in AC.rules may be incorrect (looking for `templates/ralph/` but actual path is `../../templates/ralph/`)
+  - **Resolution:** Files verified identical via `diff -q` - false positive, awaiting verifier re-run
+
+- [?] **WARN.Hygiene.TemplateSync.1** - current_ralph_tasks.sh matches template (MEDIUM)
+  - **Issue:** Verifier reports differ but files match when checked directly
+  - **Analysis:** Template path in AC.rules may be incorrect (looking for `templates/ralph/` but actual path is `../../templates/ralph/`)
+  - **Resolution:** Files verified identical via `diff -q` - false positive, awaiting verifier re-run
+
+- [?] **WARN.Hygiene.TemplateSync.2** - loop.sh core logic matches template (MEDIUM)
+  - **Issue:** Differences found in consecutive failure tracking logic and variable quoting
+  - **Analysis:** Working copy has enhanced features (consecutive failure tracking, exit code 44 handling) that template lacks
+  - **Resolution:** This is expected - worker implementation is ahead of template. Template needs sync from worker, not vice versa
+
 - [x] **WARN.Markdown.Fences.2** - THOUGHTS.md missing closing fences (MEDIUM)
   - **File:** `THOUGHTS.md` lines 111-116, 135-157
   - **Issue:** Code blocks have opening fences (```text) but missing closing fences
