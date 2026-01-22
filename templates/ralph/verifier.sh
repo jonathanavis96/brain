@@ -17,7 +17,7 @@ mkdir -p "$VERIFY_DIR"
 # Freshness: Write run_id if provided by loop.sh
 RUN_ID_FILE="${VERIFY_DIR}/run_id.txt"
 if [[ -n "${RUN_ID:-}" ]]; then
-  echo "$RUN_ID" > "$RUN_ID_FILE"
+  echo "$RUN_ID" >"$RUN_ID_FILE"
 fi
 
 timestamp() { date +"%Y-%m-%d %H:%M:%S"; }
@@ -165,7 +165,8 @@ main() {
         echo "[FAIL] $id"
         echo "  reason: missing mode="
       } >>"$REPORT_FILE"
-      fail=$((fail+1)); overall_fail=1
+      fail=$((fail + 1))
+      overall_fail=1
       reset_block
       return 0
     fi
@@ -178,7 +179,7 @@ main() {
             echo "  desc: $desc"
             echo "  gate: $gate"
           } >>"$REPORT_FILE"
-          pass=$((pass+1))
+          pass=$((pass + 1))
         else
           {
             echo "[FAIL] $id (manual approval required)"
@@ -187,7 +188,9 @@ main() {
             echo "  instructions: $instructions"
             echo "  action: add approval line to $APPROVALS_FILE"
           } >>"$REPORT_FILE"
-          fail=$((fail+1)); overall_fail=1; manual_block_fail=$((manual_block_fail+1))
+          fail=$((fail + 1))
+          overall_fail=1
+          manual_block_fail=$((manual_block_fail + 1))
         fi
       elif [[ "$gate" == "warn" ]]; then
         # For warn gate: if approved, PASS; if not approved, WARN (not FAIL)
@@ -197,21 +200,22 @@ main() {
             echo "  desc: $desc"
             echo "  gate: $gate"
           } >>"$REPORT_FILE"
-          pass=$((pass+1))
+          pass=$((pass + 1))
         else
           {
             echo "[WARN] $id (manual review)"
             echo "  desc: $desc"
             echo "  instructions: $instructions"
           } >>"$REPORT_FILE"
-          warn=$((warn+1)); manual_warn=$((manual_warn+1))
+          warn=$((warn + 1))
+          manual_warn=$((manual_warn + 1))
         fi
       else
         {
           echo "[SKIP] $id (manual ignored)"
           echo "  desc: $desc"
         } >>"$REPORT_FILE"
-        skip=$((skip+1))
+        skip=$((skip + 1))
       fi
 
       reset_block
@@ -225,7 +229,8 @@ main() {
         echo "  desc: $desc"
         echo "  reason: missing cmd="
       } >>"$REPORT_FILE"
-      fail=$((fail+1)); overall_fail=1
+      fail=$((fail + 1))
+      overall_fail=1
       reset_block
       return 0
     fi
@@ -284,13 +289,13 @@ main() {
             echo "  stderr: $(trim_ws "$stderr")"
           fi
         } >>"$REPORT_FILE"
-        pass=$((pass+1))
+        pass=$((pass + 1))
       else
         {
           echo "[SKIP] $id (auto ignored)"
           echo "  desc: $desc"
         } >>"$REPORT_FILE"
-        skip=$((skip+1))
+        skip=$((skip + 1))
       fi
     else
       if [[ "$gate" == "block" ]]; then
@@ -306,7 +311,8 @@ main() {
           echo "  reasons:"
           for r in "${reasons[@]}"; do echo "    - $r"; done
         } >>"$REPORT_FILE"
-        fail=$((fail+1)); overall_fail=1
+        fail=$((fail + 1))
+        overall_fail=1
       elif [[ "$gate" == "warn" ]]; then
         {
           echo "[WARN] $id (auto check failed but warn gate)"
@@ -317,13 +323,13 @@ main() {
           echo "  reasons:"
           for r in "${reasons[@]}"; do echo "    - $r"; done
         } >>"$REPORT_FILE"
-        warn=$((warn+1))
+        warn=$((warn + 1))
       else
         {
           echo "[SKIP] $id (auto ignored)"
           echo "  desc: $desc"
         } >>"$REPORT_FILE"
-        skip=$((skip+1))
+        skip=$((skip + 1))
       fi
     fi
 
@@ -332,9 +338,16 @@ main() {
   }
 
   reset_block() {
-    id=""; mode=""; gate=""; desc=""; cmd=""
-    expect_stdout=""; expect_stdout_regex=""; expect_exit=""
-    instructions=""; in_block=0
+    id=""
+    mode=""
+    gate=""
+    desc=""
+    cmd=""
+    expect_stdout=""
+    expect_stdout_regex=""
+    expect_exit=""
+    instructions=""
+    in_block=0
   }
 
   reset_block
@@ -384,6 +397,13 @@ main() {
 
   flush_block
 
+  # Avoid SC2094: read and write same file in same pipeline
+  # Store hash guard result before appending to REPORT_FILE
+  local hash_guard_status="OK"
+  if grep -q '^\[.*\] FAIL: AC hash mismatch' "$REPORT_FILE"; then
+    hash_guard_status="FAIL"
+  fi
+
   {
     echo "------------------------------------------------------------"
     echo "SUMMARY"
@@ -392,7 +412,7 @@ main() {
     echo "  WARN: $warn (manual_warn=$manual_warn)"
     echo "  SKIP: $skip"
     echo "  Manual gate=block failures: $manual_block_fail"
-    echo "  Hash guard: $(if grep -q '^\[.*\] FAIL: AC hash mismatch' "$REPORT_FILE"; then echo "FAIL"; else echo "OK"; fi)"
+    echo "  Hash guard: $hash_guard_status"
   } >>"$REPORT_FILE"
 
   if [[ $overall_fail -eq 1 ]]; then
