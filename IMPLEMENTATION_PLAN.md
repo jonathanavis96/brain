@@ -20,11 +20,12 @@ This implementation plan outlines the tasks to fully set up the brain repository
 - [x] **WARN.SC.12** Fix SC2162 in `templates/ralph/pr-batch.sh` line 191 - Add -r flag to read command
 - [ ] **WARN.SC.13** Fix SC2162 in `templates/ralph/thunk_ralph_tasks.sh` line 379 - Add -r flag to read command
 - [ ] **WARN.SC.14** Fix SC2094 in `templates/ralph/verifier.sh` lines 395-396 - Avoid reading and writing same file in pipeline
-- [ ] **WARN.SC.15** Fix SC2162 in `workers/ralph/current_ralph_tasks.sh` line 261 - Add -r flag to read command
-- [ ] **WARN.SC.16** Fix SC2162 in `workers/ralph/current_ralph_tasks.sh` line 558 - Add -r flag to read command
-- [ ] **WARN.SC.17** Fix SC2162 in `workers/ralph/loop.sh` lines 458, 499 - Add -r flag to read commands
-- [ ] **WARN.SC.18** Fix SC2162 in `workers/ralph/new-project.sh` lines 250, 263, 277, 281, 290, 302 - Add -r flag to all read commands
-- [ ] **WARN.SC.19** Fix SC2155 in `workers/ralph/render_ac_status.sh` lines 29-32, 111 - Declare and assign separately to avoid masking return values
+- [ ] **WARN.SC.15** Fix SC2034 in `workers/ralph/.maintenance/verify-brain.sh` line 16 - Remove unused MAINTENANCE_LOG variable or mark with underscore
+- [ ] **WARN.SC.16** Fix SC2034 in `workers/ralph/.maintenance/verify-brain.sh` lines 83, 86 - Remove unused CORTEX_EXISTS and WORKERS_EXISTS variables
+- [ ] **WARN.SC.17** Fix SC2162 in `workers/ralph/current_ralph_tasks.sh` line 558 - Add -r flag to read command
+- [ ] **WARN.SC.18** Fix SC2162 in `workers/ralph/loop.sh` lines 458, 499 - Add -r flag to read commands
+- [ ] **WARN.SC.19** Fix SC2162 in `workers/ralph/new-project.sh` lines 250, 263, 277, 281, 290, 302 - Add -r flag to all read commands
+- [ ] **WARN.SC.20** Fix SC2155 in `workers/ralph/render_ac_status.sh` lines 29-32, 111 - Declare and assign separately to avoid masking return values
 
 ### Markdown Lint Warnings (MEDIUM Priority)
 
