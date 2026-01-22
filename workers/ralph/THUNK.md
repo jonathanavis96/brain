@@ -372,3 +372,4 @@ Started: 2026-01-18
 | 358 | WARN.SC.6 | HIGH | **WARN.SC.6** Fix SC2086 in templates/cortex/one-shot.sh lines 257, 261 - Quote CONFIG_FLAG variable to prevent word splitting and globbing | 2026-01-22 |
 | 359 | WARN.SC.7 | HIGH | **WARN.SC.7** Fix SC2162 in templates/ralph/current_ralph_tasks.sh lines 261, 558 - Add -r flag to read commands to prevent backslash mangling, apply shfmt formatting with 2-space indentation and case statement alignment | 2026-01-22 |
 | 360 | WARN.SC.8-10 | HIGH | **WARN.SC.8-10** Fix SC2162, SC2002, SC2086 in templates/ralph/loop.sh - Add -r flag to read commands (lines 457, 498), replace useless cat with tail (line 666), quote attach_flag variable (line 765) | 2026-01-22 |
+| 361 | WARN.SC.11-12 | HIGH | **WARN.SC.11-12** Fix SC2034 and SC2162 in templates/ralph/pr-batch.sh - Removed unused week_num variable (line 103), added -r flag to read command (line 191), formatted with shfmt | 2026-01-22 |
