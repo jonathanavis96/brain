@@ -717,6 +717,26 @@ run_once() {
       echo ""
     fi
 
+    # Inject context files (AGENTS.md, NEURONS.md, THOUGHTS.md)
+    echo "# AGENTS.md - Quick Reference"
+    echo ""
+    cat "${RALPH}/AGENTS.md"
+    echo ""
+    echo "---"
+    echo ""
+    echo "# NEURONS.md - Codebase Map"
+    echo ""
+    cat "${RALPH}/NEURONS.md"
+    echo ""
+    echo "---"
+    echo ""
+    echo "# THOUGHTS.md - Current Context"
+    echo ""
+    cat "${RALPH}/THOUGHTS.md"
+    echo ""
+    echo "---"
+    echo ""
+    
     cat "$prompt_file"
 
     # Append dry-run instruction if enabled
