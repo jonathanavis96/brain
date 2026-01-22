@@ -79,7 +79,8 @@ echo -e "${GREEN}✓ Snapshot ready${NC}"
 echo ""
 
 # Build system prompt
-CORTEX_SYSTEM_PROMPT=$(cat <<EOF
+CORTEX_SYSTEM_PROMPT=$(
+  cat <<EOF
 $(cat "${SCRIPT_DIR}/AGENTS.md")
 
 ---
@@ -134,14 +135,14 @@ echo ""
 # Create config file
 CONFIG_FILE="/tmp/cortex_oneshot_$$_$(date +%s).yml"
 
-cat > "$CONFIG_FILE" <<EOF
+cat >"$CONFIG_FILE" <<EOF
 version: 1
 agent:
   modelId: ${RESOLVED_MODEL}
   additionalSystemPrompt: |
 $(while IFS= read -r line; do
-    echo "    $line"
-done <<< "$CORTEX_SYSTEM_PROMPT")
+  echo "    $line"
+done <<<"$CORTEX_SYSTEM_PROMPT")
   streaming: true
   temperature: 0.3
 EOF

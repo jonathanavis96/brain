@@ -34,7 +34,7 @@
 
 ### SC2162: read without -r flag
 
-- [ ] **9.1** Fix SC2162 in `thunk_ralph_tasks.sh` line 379
+- [x] **9.1** Fix SC2162 in `thunk_ralph_tasks.sh` line 379
   - **Issue:** `read -t 0.1 -n 1 key` should use `-r` flag to prevent backslash mangling
   - **Fix:** Change to `read -r -t 0.1 -n 1 key`
   - **AC:** `shellcheck thunk_ralph_tasks.sh 2>&1 | grep -c 'SC2162'` returns 0
@@ -947,10 +947,18 @@ Fix template file warnings:
   - **AC:** `shellcheck templates/ralph/thunk_ralph_tasks.sh 2>&1 | grep -c SC2162` returns 0
   - **Commit:** `fix(templates): add -r flag to read in thunk_ralph_tasks.sh`
 
-- [ ] **8.1.11** Fix SC2094 (same file read/write) in `templates/ralph/verifier.sh` lines 395-396
+- [x] **8.1.11** Fix SC2094 (same file read/write) in `templates/ralph/verifier.sh` lines 395-396
   - **Fix:** Reorder pipeline or use temp file to avoid reading/writing same file
   - **AC:** `shellcheck templates/ralph/verifier.sh 2>&1 | grep -c SC2094` returns 0
   - **Commit:** `fix(templates): avoid same file read/write in verifier.sh`
+
+### New Pre-commit Failures (2026-01-22)
+
+- [x] **WARN.Precommit.1** Fix SC2094 in `workers/ralph/verifier.sh` + shfmt formatting in `templates/cortex/one-shot.sh` and `.verify/check_waiver.sh` (HIGH)
+  - **Issue:** workers/ralph/verifier.sh lines 395-396 read/write REPORT_FILE in same pipeline, shfmt formatting needed for 2 other files
+  - **Fix:** Moved hash_guard_status check outside pipeline (before line 386), applied shfmt -w -i 2 -ci to templates/cortex/one-shot.sh and .verify/check_waiver.sh
+  - **AC:** `shellcheck workers/ralph/verifier.sh 2>&1 | grep -c SC2094` returns 0, shfmt check passes
+  - **Commit:** `fix(ralph): avoid same file read/write in verifier.sh, apply shfmt formatting`
 
 ## Phase 8-B2: workers/ralph/ Shellcheck Issues (LOW)
 
