@@ -13,7 +13,6 @@ BRAIN_ROOT="$(cd "$RALPH_DIR/../.." && pwd)"
 cd "$RALPH_DIR"
 
 MAINTENANCE_FILE=".maintenance/MAINTENANCE.md"
-MAINTENANCE_LOG=".maintenance/MAINTENANCE_LOG.md"
 QUIET="${1:-}"
 TODAY=$(date +%Y-%m-%d)
 
