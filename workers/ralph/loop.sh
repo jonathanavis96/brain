@@ -432,6 +432,12 @@ resolve_model_cerebras() {
   qwen | qwen3)
     echo "qwen-3-32b"
     ;;
+  qwen-large | qwen-235b)
+    echo "qwen-3-235b-a22b-instruct-2507"
+    ;;
+  glm | glm4 | glm-4.7)
+    echo "zai-glm-4.7"
+    ;;
   auto | latest | "")
     echo "llama-4-scout-17b"
     ;;
