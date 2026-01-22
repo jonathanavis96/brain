@@ -353,7 +353,7 @@
 - [x] **0.Q.7** Add Quick Reference tables to skills files
   - **Status:** ✅ COMPLETE - Maintenance check shows "All skills have Quick Reference tables"
 
-- [ ] **0.Q.8** Install linting tools and enable pre-commit hooks
+- [x] **0.Q.8** Install linting tools and enable pre-commit hooks
   - **Goal:** Set up static analysis infrastructure for code quality
   - **Steps:**
     1. Run `bash setup-linters.sh` to install shellcheck, markdownlint, ruff, mypy, jq, yq, pre-commit
