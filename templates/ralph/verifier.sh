@@ -261,7 +261,8 @@ main() {
     fi
 
     if [[ $pass_check -eq 1 ]]; then
-      if [[ "$gate" == "block" ]]; then
+      if [[ "$gate" == "block" || "$gate" == "warn" ]]; then
+        # Passing checks are PASS regardless of gate (warn gate only affects failures)
         {
           echo "[PASS] $id"
           echo "  desc: $desc"
@@ -273,15 +274,6 @@ main() {
           fi
         } >>"$REPORT_FILE"
         pass=$((pass+1))
-      elif [[ "$gate" == "warn" ]]; then
-        {
-          echo "[WARN] $id (auto check in warn gate)"
-          echo "  desc: $desc"
-          echo "  cmd:  $cmd"
-          echo "  exit: $rc"
-          echo "  stdout: $(printf "%s" "$stdout_norm")"
-        } >>"$REPORT_FILE"
-        warn=$((warn+1))
       else
         {
           echo "[SKIP] $id (auto ignored)"

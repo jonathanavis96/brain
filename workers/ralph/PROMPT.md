@@ -26,16 +26,18 @@ If your prompt header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 4. **COMMIT** your fix with message: `fix(ralph): resolve AC failure <RULE_ID>`
 5. **THEN** output `:::BUILD_READY:::` so the verifier can re-run
 
-If `.verify/latest.txt` contains `[WARN]` lines with `(auto check failed but warn gate)`:
+If `.verify/latest.txt` contains `[WARN]` lines:
 1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of IMPLEMENTATION_PLAN.md (after header, before other phases)
 2. **⚠️ DO NOT create "## Verifier Warnings" without the "Phase 0-Warn:" prefix** - This breaks the task monitor!
 3. **LIST** each as: `- [ ] WARN.<ID> <RULE_ID> - <description>`
 4. **NEVER use numbered lists (1. 2. 3.)** - ALWAYS use checkbox format `- [ ]`
-5. **IGNORE** warnings marked `(auto check in warn gate)` - already passing
-6. **NEVER** mark `[x]` until verifier confirms fix (re-run shows `[PASS]`)
-7. **NEVER** add "FALSE POSITIVE" notes - request waiver instead via `../.verify/request_waiver.sh`
-8. **Waivers are one-time-use** - After verifier uses a waiver, it's moved to `.used` and deleted. Only request waivers for issues you genuinely cannot fix.
-9. In BUILD mode: Fix ONE warning, mark `[?]`, commit. Verifier determines `[x]`.
+5. **IGNORE** warnings marked `(manual review)` - these require human testing, not code fixes
+6. **FIX** warnings marked `(auto check failed but warn gate)` - these are real issues
+7. **NEVER** mark `[x]` until verifier confirms fix (re-run shows `[PASS]`)
+8. **NEVER** add "FALSE POSITIVE" notes - request waiver instead via `../.verify/request_waiver.sh`
+9. **Waivers are one-time-use** - After verifier uses a waiver, it's moved to `.used` and deleted. Only request waivers for issues you genuinely cannot fix.
+10. In BUILD mode: Fix ONE warning, mark `[?]`, commit. Verifier determines `[x]`.
+11. **BATCHING:** When multiple warnings are in the SAME FILE, fix them ALL in one iteration (e.g., 3 shellcheck warnings in loop.sh = 1 task).
 
 Common failure types:
 - **Hash mismatch** (e.g., `Protected.1`): A protected file was modified. You cannot fix this - report to human.
@@ -306,12 +308,27 @@ You may mark tasks `[?]` when you've implemented changes. The verifier determine
 - You MUST NOT modify `rules/AC.rules` or `ac.sha256`.
 - If criteria needs change, create `SPEC_CHANGE_REQUEST.md` and STOP.
 
+## Workspace Boundaries
+
+**You have access to the ENTIRE brain repository** (from `$ROOT`), not just `workers/ralph/`.
+
+| Access Level | Paths | Notes |
+|--------------|-------|-------|
+| **Full access** | `skills/`, `templates/`, `cortex/`, `docs/`, `workers/` | Read, write, create, delete |
+| **Protected** | `rules/AC.rules`, `verifier.sh`, `loop.sh`, `PROMPT.md` | Read only - hash-guarded |
+| **Protected** | `.verify/*.sha256` | Baseline hashes - human updates |
+| **Forbidden** | `.verify/waivers/*.approved` | OTP-protected - cannot read/write |
+
+When fixing issues, search the ENTIRE repo: `rg "pattern" $ROOT` not just `workers/ralph/`.
+
+---
+
 ## Safety Rules (Non-Negotiable)
 
 - **No force push** (`--force` / `--force-with-lease`) unless explicitly instructed
 - **No destructive commands** (`rm -rf`, deleting directories) unless plan task explicitly says so
 - **Search before creating** - Verify something doesn't exist before adding it
-- **One task per BUILD** - No batching, no "while I'm here" extras
+- **One task per BUILD** - No batching, no "while I'm here" extras (EXCEPT: same-file warnings - batch those)
 - **Never remove uncompleted items** - NEVER delete `[ ]` tasks from IMPLEMENTATION_PLAN.md
 - **Never delete completed tasks** - Mark tasks `[x]` complete but NEVER delete them (they stay forever as history)
 - **Never delete sections** - NEVER remove entire sections (## Phase X:, ## Verifier Warnings, etc.) even if all tasks are complete
