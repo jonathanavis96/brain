@@ -653,7 +653,7 @@ Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - PR #4 Shell Issues (SH-*)
 
 ## Phase 2-1: current_ralph_tasks.sh Cleanup (10 items)
 
-- [ ] **2.1** Line 4 - Update usage header to reflect current script name (SH-7, SH-13, SH-18)
+- [x] **2.1** Line 4 - Update usage header to reflect current script name (SH-7, SH-13, SH-18)
 - [ ] **2.2** Line 246 - Split declaration and assignment for SC2155 (SH-3, SH-9, SH-16)
 - [ ] **2.3** Lines 276-279 - Remove unused `skip_line` variable (SH-4, SH-10, SH-20)
 - [ ] **2.4** Lines 354-369 - Remove unused `wrap_text` function (SH-6, SH-21)
