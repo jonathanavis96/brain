@@ -21,14 +21,14 @@ Ralph loop for brain repository self-improvement. Runs PLAN/BUILD cycles to main
 - Path separators: Use Unix-style `/` paths (WSL translates automatically)
 
 ## How to Run
-```bash
+````bash
 cd /path/to/brain/workers/ralph/
 bash loop.sh                    # Single iteration
 bash loop.sh --iterations 10    # Multiple iterations
 bash loop.sh --dry-run          # Preview changes
 bash loop.sh --rollback 2       # Undo last 2 commits
 bash loop.sh --resume           # Resume from interruption
-```
+````
 
 Mode: Iteration 1 or every 3rd = PLAN, others = BUILD.
 
@@ -43,9 +43,9 @@ See README.md for detailed monitor features and hotkeys.
 
 ## Loop Stop Sentinel
 Ralph outputs when ALL tasks complete:
-```text
+````text
 :::COMPLETE:::
-```
+````
 
 ## Troubleshooting
 - **acli not found**: Add to PATH in ~/.bashrc
