@@ -23,21 +23,46 @@ For patterns and best practices, use progressive disclosure:
 3. Specific rule files only if HOTLIST doesn't cover your scenario
 
 ❌ Never scan all rules by default
-✅ Use the hierarchy above
 
-## Task Completion Flow
+## Token Efficiency Rules (CRITICAL)
 
-When marking a task `[x]` complete:
+### PLANNING Mode Output
 
-1. **Validate** using commands below
-2. **Log to THUNK.md** - Append to current era table (DO NOT overwrite file):
-   ```markdown
-   | <next_thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |
-   ```
-3. **Commit** all changes (local only)
-4. **Update** IMPLEMENTATION_PLAN.md: mark `[x]`, add discovered subtasks
+In PLANNING mode, you MUST end with:
+```
+:::BUILD_READY:::
+```
+This signals loop.sh to proceed to BUILD mode. Without this marker, the iteration is wasted.
 
-⚠️ **THUNK.md is append-only** - Never rewrite or restructure it. Only append new rows to the existing table.
+### Batch Similar Fixes
+
+When you encounter multiple instances of the same issue type (e.g., SC2155, SC2086):
+1. **FIX ALL instances in one iteration** - don't create separate tasks for each
+2. **Group by error type**, not by file
+3. **One commit per error type**: `fix(ralph): resolve SC2155 in all shell scripts`
+
+### Formatting Discipline
+
+- **DO NOT** run shfmt on individual files repeatedly
+- If shellcheck fixes require reformatting, run `shfmt -w -i 2 <file>` ONCE after all fixes
+- **NEVER** include "applied shfmt formatting" as the main work - it's incidental to the real fix
+
+### Context You Already Have
+
+**NEVER repeat these (you already know):**
+- `pwd`, `git branch` - known from header
+- `.verify/latest.txt` - read ONCE at start
+- `tail THUNK.md` - get next number ONCE
+- Same file content - read ONCE, remember it
+
+**ALWAYS batch:** `grep pattern file1 file2 file3` not 3 separate calls.
+
+### Task ID Uniqueness
+
+**CRITICAL:** Before creating any task ID, search IMPLEMENTATION_PLAN.md to verify it doesn't exist.
+- Use format: `<phase>.<sequence>` (e.g., `9.1`, `9.2`)
+- If `9.1` exists, use `9.2`, not `9.1` again
+- Duplicate IDs cause confusion and wasted iterations
 
 ## Validation (before marking task complete)
 
