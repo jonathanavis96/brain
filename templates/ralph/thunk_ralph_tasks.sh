@@ -18,7 +18,6 @@ RALPH_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 THUNK_FILE="$RALPH_DIR/THUNK.md"
 LAST_THUNK_MODIFIED=""
 LAST_CONTENT_ROW=0
-LAST_DISPLAY_ROW=0
 LAST_TOTAL_COUNT=0
 
 # Check if required files exist
@@ -204,7 +203,6 @@ display_thunks() {
     ((display_row++))
 
     # Store last display row and total count for incremental updates
-    LAST_DISPLAY_ROW=$display_row
     LAST_TOTAL_COUNT=$total_count
 }
 
@@ -307,7 +305,6 @@ parse_new_thunk_entries() {
 
     # Update stored state
     LAST_CONTENT_ROW=$append_row
-    LAST_DISPLAY_ROW=$((footer_start + 9))
     LAST_TOTAL_COUNT=$new_total
 }
 
