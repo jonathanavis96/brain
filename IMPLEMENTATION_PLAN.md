@@ -13,9 +13,9 @@ This implementation plan outlines the tasks to fully set up the brain repository
 - [x] **WARN.SC.5** Fix SC2034 in `templates/cortex/cortex.bash` line 68 - Remove unused CONFIG_FLAG variable or mark with underscore
 - [x] **WARN.SC.6** Fix SC2086 in `templates/cortex/one-shot.sh` lines 257, 261 - Quote CONFIG_FLAG variable
 - [x] **WARN.SC.7** Fix SC2162 in `templates/ralph/current_ralph_tasks.sh` line 558 - Add -r flag to read command
-- [ ] **WARN.SC.8** Fix SC2162 in `templates/ralph/loop.sh` lines 457, 498 - Add -r flag to read commands
-- [ ] **WARN.SC.9** Fix SC2002 in `templates/ralph/loop.sh` line 666 - Replace useless cat with direct redirection
-- [ ] **WARN.SC.10** Fix SC2086 in `templates/ralph/loop.sh` line 765 - Quote attach_flag variable
+- [x] **WARN.SC.8** Fix SC2162 in `templates/ralph/loop.sh` lines 457, 498 - Add -r flag to read commands
+- [x] **WARN.SC.9** Fix SC2002 in `templates/ralph/loop.sh` line 666 - Replace useless cat with direct redirection
+- [x] **WARN.SC.10** Fix SC2086 in `templates/ralph/loop.sh` line 765 - Quote attach_flag variable
 - [ ] **WARN.SC.11** Fix SC2034 in `templates/ralph/pr-batch.sh` line 103 - Remove unused week_num variable
 - [ ] **WARN.SC.12** Fix SC2162 in `templates/ralph/pr-batch.sh` line 191 - Add -r flag to read command
 - [ ] **WARN.SC.13** Fix SC2162 in `templates/ralph/thunk_ralph_tasks.sh` line 379 - Add -r flag to read command

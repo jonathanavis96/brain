@@ -55,11 +55,11 @@ INTERACTIVE=false
 # Parse arguments
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -h|--help)
+    -h | --help)
       usage
       exit 0
       ;;
-    -i|--interactive)
+    -i | --interactive)
       INTERACTIVE=true
       shift
       ;;
@@ -88,16 +88,21 @@ MODEL_SONNET_4="anthropic.claude-sonnet-4-20250514-v1:0"
 resolve_model() {
   local model="$1"
   case "$model" in
-    opus|opus4.5|opus45)
-      echo "$MODEL_OPUS_45" ;;
-    sonnet|sonnet4.5|sonnet45)
-      echo "$MODEL_SONNET_45" ;;
+    opus | opus4.5 | opus45)
+      echo "$MODEL_OPUS_45"
+      ;;
+    sonnet | sonnet4.5 | sonnet45)
+      echo "$MODEL_SONNET_45"
+      ;;
     sonnet4)
-      echo "$MODEL_SONNET_4" ;;
-    latest|auto)
-      echo "" ;;
+      echo "$MODEL_SONNET_4"
+      ;;
+    latest | auto)
+      echo ""
+      ;;
     *)
-      echo "$model" ;;
+      echo "$model"
+      ;;
   esac
 }
 
@@ -105,16 +110,21 @@ resolve_model() {
 resolve_model_opencode() {
   local model="$1"
   case "$model" in
-    grok|grokfast|grok-code-fast-1)
-      echo "opencode/grok-code" ;;
-    opus|opus4.5|opus45)
-      echo "opencode/gpt-5-nano" ;;  # Fallback
-    sonnet|sonnet4.5|sonnet45)
-      echo "opencode/gpt-5-nano" ;;  # Fallback
-    latest|auto)
-      echo "" ;;
+    grok | grokfast | grok-code-fast-1)
+      echo "opencode/grok-code"
+      ;;
+    opus | opus4.5 | opus45)
+      echo "opencode/gpt-5-nano"
+      ;; # Fallback
+    sonnet | sonnet4.5 | sonnet45)
+      echo "opencode/gpt-5-nano"
+      ;; # Fallback
+    latest | auto)
+      echo ""
+      ;;
     *)
-      echo "$model" ;;
+      echo "$model"
+      ;;
   esac
 }
 
@@ -123,7 +133,7 @@ if [[ -z "$MODEL_ARG" ]]; then
   if [[ "$RUNNER" == "opencode" ]]; then
     MODEL_ARG="grok"
   else
-    MODEL_ARG="opus"  # Cortex uses Opus by default
+    MODEL_ARG="opus" # Cortex uses Opus by default
   fi
 fi
 
@@ -140,12 +150,12 @@ TEMP_CONFIG=""
 if [[ "$RUNNER" == "rovodev" ]]; then
   if [[ -n "$RESOLVED_MODEL" ]]; then
     TEMP_CONFIG="/tmp/rovodev_cortex_config_$$_$(date +%s).yml"
-    
+
     # Copy base config and override modelId
     if [[ -f "$HOME/.rovodev/config.yml" ]]; then
-      sed "s|^  modelId:.*|  modelId: $RESOLVED_MODEL|" "$HOME/.rovodev/config.yml" > "$TEMP_CONFIG"
+      sed "s|^  modelId:.*|  modelId: $RESOLVED_MODEL|" "$HOME/.rovodev/config.yml" >"$TEMP_CONFIG"
     else
-      cat > "$TEMP_CONFIG" <<EOFCONFIG
+      cat >"$TEMP_CONFIG" <<EOFCONFIG
 version: 1
 agent:
   modelId: $RESOLVED_MODEL
@@ -188,7 +198,7 @@ echo ""
 
 # Generate snapshot to temporary file
 SNAPSHOT_FILE="/tmp/cortex_snapshot_$$_$(date +%s).txt"
-if ! bash cortex/snapshot.sh > "$SNAPSHOT_FILE" 2>&1; then
+if ! bash cortex/snapshot.sh >"$SNAPSHOT_FILE" 2>&1; then
   echo "❌ Failed to generate snapshot" >&2
   cat "$SNAPSHOT_FILE"
   rm -f "$SNAPSHOT_FILE"
@@ -206,37 +216,37 @@ COMPOSITE_PROMPT="/tmp/cortex_prompt_$$_$(date +%s).md"
   echo ""
   echo "You are Cortex, the high-level manager for the Brain repository."
   echo ""
-  
+
   echo "---"
   echo ""
-  
+
   cat cortex/CORTEX_SYSTEM_PROMPT.md
-  
+
   echo ""
   echo "---"
   echo ""
   echo "# Current Repository State"
   echo ""
-  
+
   cat "$SNAPSHOT_FILE"
-  
+
   echo ""
   echo "---"
   echo ""
   echo "# Architectural Decisions"
   echo ""
-  
+
   cat cortex/DECISIONS.md
-  
+
   echo ""
   echo "---"
   echo ""
   echo "# Repository Map"
   echo ""
-  
+
   cat cortex/REPO_MAP.md
-  
-} > "$COMPOSITE_PROMPT"
+
+} >"$COMPOSITE_PROMPT"
 
 echo "Composite prompt prepared: $COMPOSITE_PROMPT"
 echo ""
@@ -254,11 +264,11 @@ if [[ "$RUNNER" == "rovodev" ]]; then
     echo "📋 Cortex has full context of the Brain repository."
     echo "💬 You can now ask questions and have a conversation."
     echo ""
-    acli rovodev run $CONFIG_FLAG --yolo "$(cat "$COMPOSITE_PROMPT")"
+    acli rovodev run "$CONFIG_FLAG" --yolo "$(cat "$COMPOSITE_PROMPT")"
     EXIT_CODE=$?
   else
     # One-shot mode - auto-approve with --yolo
-    acli rovodev run $CONFIG_FLAG --yolo "$(cat "$COMPOSITE_PROMPT")"
+    acli rovodev run "$CONFIG_FLAG" --yolo "$(cat "$COMPOSITE_PROMPT")"
     EXIT_CODE=$?
   fi
 else

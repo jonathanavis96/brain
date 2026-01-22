@@ -60,13 +60,12 @@ EOF
 }
 
 # Defaults
-MODEL_ARG="opus"  # Default to Opus 4.5 for Cortex strategic planning
-RUNNER="rovodev"
+MODEL_ARG="opus" # Default to Opus 4.5 for Cortex strategic planning
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -h|--help)
+    -h | --help)
       usage
       exit 0
       ;;
@@ -101,10 +100,8 @@ if [[ -n "$MODEL_ARG" ]]; then
   esac
 fi
 
-CONFIG_FLAG=""
 if [[ -n "$RESOLVED_MODEL" ]]; then
   echo -e "${GREEN}Using model: ${RESOLVED_MODEL}${NC}"
-  CONFIG_FLAG="--config-file /dev/stdin"
 else
   echo -e "${GREEN}Using default model${NC}"
 fi
@@ -117,7 +114,8 @@ echo ""
 SNAPSHOT_OUTPUT=$(bash "${SCRIPT_DIR}/snapshot.sh")
 
 # Create Cortex system prompt for config
-CORTEX_SYSTEM_PROMPT=$(cat <<EOF
+CORTEX_SYSTEM_PROMPT=$(
+  cat <<EOF
 $(cat "${SCRIPT_DIR}/AGENTS.md")
 
 ---
@@ -172,22 +170,22 @@ echo ""
 # Create temporary config file with Cortex system prompt
 CONFIG_FILE="/tmp/cortex_config_$$_$(date +%s).yml"
 
-cat > "$CONFIG_FILE" <<EOF
+cat >"$CONFIG_FILE" <<EOF
 version: 1
 agent:
   additionalSystemPrompt: |
 $(while IFS= read -r line; do
-    echo "    $line"
-done <<< "$CORTEX_SYSTEM_PROMPT")
+  echo "    $line"
+done <<<"$CORTEX_SYSTEM_PROMPT")
   streaming: true
   temperature: 0.3
 EOF
 
 # Add model if specified
 if [[ -n "$RESOLVED_MODEL" ]]; then
-  echo "  modelId: ${RESOLVED_MODEL}" >> "$CONFIG_FILE"
+  echo "  modelId: ${RESOLVED_MODEL}" >>"$CONFIG_FILE"
 else
-  echo "  modelId: auto" >> "$CONFIG_FILE"
+  echo "  modelId: auto" >>"$CONFIG_FILE"
 fi
 
 # Launch interactive chat (NO message argument = interactive mode)

@@ -67,14 +67,16 @@ else
   fi
 
   # Check if we already added it before
-  if grep -q 'export PATH="$HOME/bin:$PATH"' "$SHELL_CONFIG" 2>/dev/null; then
+  if grep -q "export PATH=\"\$HOME/bin:\$PATH\"" "$SHELL_CONFIG" 2>/dev/null; then
     echo -e "${GREEN}✓ PATH entry already exists in $SHELL_CONFIG${NC}"
   else
     echo ""
     echo -e "${CYAN}Adding ~/bin to PATH in $SHELL_CONFIG...${NC}"
-    echo "" >> "$SHELL_CONFIG"
-    echo "# Add ~/bin to PATH for Brain commands (cortex, ralph)" >> "$SHELL_CONFIG"
-    echo 'export PATH="$HOME/bin:$PATH"' >> "$SHELL_CONFIG"
+    {
+      echo ""
+      echo "# Add ~/bin to PATH for Brain commands (cortex, ralph)"
+      echo "export PATH=\"\$HOME/bin:\$PATH\""
+    } >>"$SHELL_CONFIG"
     echo -e "${GREEN}✓ Added ~/bin to PATH in $SHELL_CONFIG${NC}"
     echo ""
     echo -e "${YELLOW}⚠ Run this to activate in current shell:${NC}"
