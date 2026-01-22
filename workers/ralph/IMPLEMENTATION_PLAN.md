@@ -111,7 +111,9 @@
 
 **Goal:** Address verifier warnings (non-blocking but should be fixed)
 
-**Status:** 9 original warnings complete, 7 new shellcheck warnings from pre-commit found
+**Priority:** HIGH - Fix before continuing to other phases
+
+**Status:** 18/27 complete - 6 markdown fence warnings awaiting waiver approval, 3 template sync false positives
 
 - [x] **WARN.BugC.Auto.2** - THUNK writes limited to era creation only (HIGH)
   - **Issue:** `thunk_ralph_tasks.sh` has 1 write operation outside era creation context
@@ -150,7 +152,11 @@
   - **Issue:** cortex/AGENTS.md is 156 lines (max 150)
   - **Resolution:** File is outside Ralph's workspace (managed by Cortex). Cortex should condense this file by 6+ lines. Marked complete from Ralph's perspective.
 
-### New Pre-commit Shellcheck Warnings (2026-01-22)
+## Phase 0-Warn-External: External File Warnings (Shellcheck)
+
+**Goal:** Fix shellcheck warnings in files outside workers/ralph/
+
+**Priority:** MEDIUM - External repo files, not blocking Ralph
 
 - [x] **WARN.Shellcheck.1** - SC2034 unused variable in .verify/check_waiver.sh (MEDIUM)
   - **File:** `../../.verify/check_waiver.sh` line 123
@@ -201,7 +207,11 @@
   - **AC:** Warnings are INFO/STYLE level, code is correct as designed
   - **Commit:** Analysis complete - no fix needed
 
-### Ralph Local File Shellcheck Warnings (2026-01-22 PLAN iteration)
+## Phase 0-Warn-Local: Ralph Local Warnings
+
+**Goal:** Fix shellcheck and markdown warnings in workers/ralph/ files
+
+**Priority:** HIGH - Direct Ralph workspace issues
 
 - [x] **WARN.Shellcheck.8** - SC2034 unused variables in current_ralph_tasks.sh (MEDIUM)
   - **File:** `current_ralph_tasks.sh` lines 107, 299
@@ -363,7 +373,7 @@
 
 **Approach:** Build out cortex/ folder completely, then integrate with Ralph, then copy Ralph to workers/
 
-### 0.A.1 - Create Cortex Folder & Core Files (7 items)
+## Phase 0-A-1: Create Cortex Folder & Core Files (7 items)
 
 - [x] **0.A.1.1** Create `brain/cortex/` folder
   - **AC:** Folder exists at `brain/cortex/`
@@ -387,7 +397,7 @@
   - **AC:** File contains: header explaining purpose ("Cortex's analysis and decisions"), "Current Mission" section, "Decision Log" section
   - **Content:** Should follow similar structure to ralph/THOUGHTS.md but focused on Cortex's high-level planning concerns
 
-### 0.A.2 - Create cortex/run.sh and snapshot.sh (4 items)
+## Phase 0-A-2: Create cortex/run.sh and snapshot.sh (4 items)
 
 - [x] **0.A.2.1** Create `cortex/snapshot.sh` - Generates current state
   - **AC:** Script outputs: current mission (from cortex/THOUGHTS.md), task progress (X/Y from IMPLEMENTATION_PLAN.md), last 3 THUNK entries, GAP_BACKLOG.md entry count, git status (clean/dirty), last 5 commits (oneline)
@@ -406,7 +416,7 @@
 - [x] **0.A.2.4** Test: Run `bash cortex/run.sh --help` successfully
   - **AC:** Help text displays without errors
 
-### 0.A.3 - Update Ralph to Integrate with Cortex (3 items)
+## Phase 0-A-3: Update Ralph to Integrate with Cortex (3 items)
 
 **Note:** These changes document the architecture but do NOT implement the sync mechanism yet. Actual sync logic will be implemented in Phase 0-B after human verification of the workers/ralph/ copy.
 
@@ -422,7 +432,7 @@
   - **AC:** Add cortex/ folder and its files to the map
   - **AC:** Update skills/ file count (currently claims "33", already updated in WARN.ST1)
 
-### 0.A.4 - Restructure: Copy ralph/ to workers/ralph/ (5 items)
+## Phase 0-A-4: Restructure: Copy ralph/ to workers/ralph/ (5 items)
 
 **IMPORTANT:** This sub-phase ONLY copies files. Delete happens in Phase 0-B after human verification.
 
@@ -477,7 +487,7 @@ cd brain/workers/ralph && bash loop.sh --iterations 1
 
 **Status:** COMPLETE - Implemented full Option B structure with proper separation
 
-### 0.B.1 - Delete Old ralph/ and Update References (5 items) - ✅ COMPLETE
+## Phase 0-B-1: Delete Old ralph/ and Update References (5 items) - ✅ COMPLETE
 
 **PREREQUISITE:** Human has verified `workers/ralph/loop.sh` works from new location. ✅
 
@@ -500,7 +510,7 @@ cd brain/workers/ralph && bash loop.sh --iterations 1
   - **AC:** skills/ is peer to cortex/ and workers/ (not nested inside ralph/)
   - **Note:** If skills/ is currently at `brain/ralph/skills/`, move to `brain/skills/`
 
-### 0.B.2 - Create cortex/ at Brain Root and Update Templates (7 items) - ✅ COMPLETE
+## Phase 0-B-2: Create cortex/ at Brain Root and Update Templates (7 items) - ✅ COMPLETE
 
 - [x] **0.B.2.1** Move `brain/ralph/cortex/` to `brain/cortex/`
   - **AC:** `brain/cortex/` folder exists at brain root level (peer to workers/)
@@ -610,7 +620,7 @@ cd brain/workers/ralph && bash loop.sh --iterations 1
 
 Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - PR #4 Shell Issues (SH-*)
 
-### current_ralph_tasks.sh (10 items)
+## Phase 2-1: current_ralph_tasks.sh Cleanup (10 items)
 
 - [ ] **2.1** Line 4 - Update usage header to reflect current script name (SH-7, SH-13, SH-18)
 - [ ] **2.2** Line 246 - Split declaration and assignment for SC2155 (SH-3, SH-9, SH-16)
@@ -621,7 +631,7 @@ Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - PR #4 Shell Issues (SH-*)
 - [ ] **2.7** Line 283 - Fix table column count (SH-17)
 - [ ] **2.8** Lines 254-262 - Fix Archive/Clear exiting on ### headers (SH-8, SH-14, SH-19)
 
-### thunk_ralph_tasks.sh (6 items)
+## Phase 2-2: thunk_ralph_tasks.sh Cleanup (6 items)
 
 - [ ] **2.9** Lines 6-15 - Update header to clarify script modifies THUNK.md via hotkey e (SH-28, SH-30, SH-32)
 - [ ] **2.10** Lines 21-22 - Remove unused `LAST_DISPLAY_ROW` state (SH-33)
@@ -630,7 +640,7 @@ Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - PR #4 Shell Issues (SH-*)
 - [ ] **2.13** Line 250 - Split declaration and assignment for SC2155 (SH-24, SH-29, SH-31)
 - [ ] **2.14** Lines 217-227 - Extract magic number 8 into named constant (SH-26, SH-27)
 
-### pr-batch.sh (1 item)
+## Phase 2-3: pr-batch.sh Cleanup (1 item)
 
 - [ ] **2.15** Lines 116-118 - Update category label to match new skills path (SH-22)
 
@@ -686,7 +696,7 @@ Source: `.maintenance/verify-brain.sh` output
 
 Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - Design Decisions (human approved 2026-01-20)
 
-### DD-1 & DD-2: Verifier Soft-Fail During Init Only
+## Phase 5-1: Verifier Soft-Fail During Init Only
 
 - [ ] **5.1** `loop.sh:504-508` - Add `.initialized` marker check to `run_verifier()`:
   - If `verifier.sh` missing AND `.verify/.initialized` exists → hard-fail (security)
@@ -694,7 +704,7 @@ Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - Design Decisions (human appro
 - [ ] **5.2** `templates/ralph/loop.sh` - Apply same fix to template
 - [ ] **5.3** `init_verifier_baselines.sh` - Create `.verify/.initialized` marker after successful init
 
-### DD-3: Gitignore Personal Config
+## Phase 5-2: Gitignore Personal Config
 
 - [ ] **5.4** Rename `rovodev-config.yml` to `rovodev-config.local.yml`
 - [ ] **5.5** Add `rovodev-config.local.yml` to `.gitignore`
@@ -757,7 +767,7 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
 
 **Note:** Most critical warnings already addressed in Phase 0-Warn. These are lower-priority style issues.
 
-### 8.1 Shellcheck Warnings - Templates
+## Phase 8-1: Shellcheck Warnings - Templates
 Fix template file warnings:
 
 - [ ] **8.1.1** Fix SC2034 (unused RUNNER) in `templates/cortex/cortex.bash`
