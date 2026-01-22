@@ -1,7 +1,7 @@
 #!/bin/bash
 # Ralph Task Monitor - Real-time display of IMPLEMENTATION_PLAN.md tasks
 #
-# Usage: bash watch_ralph_tasks.sh [--hide-completed]
+# Usage: bash current_ralph_tasks.sh [--hide-completed]
 #
 # Features:
 #   - Auto-detects task formats (numbered, unnumbered, plain)

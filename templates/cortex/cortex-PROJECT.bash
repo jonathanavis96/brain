@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# cortex/cortex.bash - Interactive chat with Cortex for {{PROJECT_NAME}}
+# cortex/cortex-{{PROJECT_SLUG}}.bash - Interactive chat with Cortex for {{PROJECT_NAME}}
 
 set -euo pipefail
 
@@ -28,7 +28,7 @@ echo -e "${CYAN}========================================${NC}"
 echo ""
 
 usage() {
-  echo "Usage: bash cortex/cortex.bash [OPTIONS]"
+  echo "Usage: bash cortex/cortex-{{PROJECT_SLUG}}.bash [OPTIONS]"
   echo ""
   echo "Cortex Interactive Chat - Direct conversation with the project manager."
   echo ""
@@ -37,8 +37,8 @@ usage() {
   echo "  --model MODEL        Override model (opus, sonnet, auto)"
   echo ""
   echo "Examples:"
-  echo "  bash cortex/cortex.bash              # Start chat"
-  echo "  bash cortex/cortex.bash --model opus # Chat with specific model"
+  echo "  bash cortex/cortex-{{PROJECT_SLUG}}.bash              # Start chat"
+  echo "  bash cortex/cortex-{{PROJECT_SLUG}}.bash --model opus # Chat with specific model"
   echo ""
   echo "Use this for:"
   echo "  - Asking questions about the project"
