@@ -913,6 +913,55 @@ Fix template file warnings:
   - **AC:** `shellcheck templates/ralph/verifier.sh 2>&1 | grep -c SC2094` returns 0
   - **Commit:** `fix(templates): avoid same file read/write in verifier.sh`
 
+## Phase 8-B2: workers/ralph/ Shellcheck Issues (LOW)
+
+**Context:** Pre-commit scan found additional shellcheck warnings in workers/ralph/ scripts (not templates). These are active scripts.
+
+**Priority:** LOW (hygiene only, no functional impact)
+
+- [ ] **8.B2.1** Fix SC2034 (unused week_num) in `workers/ralph/pr-batch.sh` line 102
+  - **Fix:** Remove unused variable or mark with underscore
+  - **AC:** `shellcheck workers/ralph/pr-batch.sh 2>&1 | grep -c 'SC2034.*week_num'` returns 0
+  - **Commit:** `fix(ralph): remove unused week_num in pr-batch.sh`
+
+- [ ] **8.B2.2** Fix SC2162 (read without -r) in `workers/ralph/pr-batch.sh` line 190
+  - **Fix:** Add `-r` flag to read command
+  - **AC:** `shellcheck workers/ralph/pr-batch.sh 2>&1 | grep -c SC2162` returns 0
+  - **Commit:** `fix(ralph): add -r flag to read in pr-batch.sh`
+
+- [ ] **8.B2.3** Batch fix SC2155 (declare/assign separately) in `workers/ralph/render_ac_status.sh` lines 25,26,29,30,31,32,111,114
+  - **Fix:** Declare variables first, then assign on separate lines (8 instances)
+  - **AC:** `shellcheck workers/ralph/render_ac_status.sh 2>&1 | grep -c SC2155` returns 0
+  - **Commit:** `fix(ralph): separate declare/assign in render_ac_status.sh`
+  - **Note:** All in same file - batch fix in one iteration
+
+- [ ] **8.B2.4** Fix SC2129 (consolidate redirects) in `workers/ralph/sync_cortex_plan.sh` line 160
+  - **Fix:** Combine multiple echo statements into single redirect block
+  - **AC:** Check line 160 specifically
+  - **Commit:** `style(ralph): consolidate redirects in sync_cortex_plan.sh`
+
+- [ ] **8.B2.5** Fix SC2086 (quote variable) in `workers/ralph/sync_cortex_plan.sh` line 164
+  - **Fix:** Quote $phase7_line variable
+  - **AC:** `shellcheck workers/ralph/sync_cortex_plan.sh 2>&1 | grep -c SC2086` returns 0
+  - **Commit:** `fix(ralph): quote phase7_line in sync_cortex_plan.sh`
+
+- [ ] **8.B2.6** Fix SC2129 (consolidate redirects) in `workers/ralph/sync_cortex_plan.sh` line 168
+  - **Fix:** Combine with other redirects if possible
+  - **AC:** Check line 168 specifically
+  - **Commit:** `style(ralph): consolidate redirects in sync_cortex_plan.sh (line 168)`
+
+- [ ] **8.B2.7** Fix SC2162 (read without -r) in `workers/ralph/thunk_ralph_tasks.sh` line 379
+  - **Fix:** Add `-r` flag to read command
+  - **AC:** `shellcheck workers/ralph/thunk_ralph_tasks.sh 2>&1 | grep -c SC2162` returns 0
+  - **Commit:** `fix(ralph): add -r flag to read in thunk_ralph_tasks.sh`
+
+- [ ] **8.B2.8** Fix SC2094 (read/write same file) in `workers/ralph/verifier.sh` lines 395-396 - **PROTECTED FILE**
+  - **Issue:** Cannot modify protected file (hash-guarded)
+  - **Action:** Request waiver via `../.verify/request_waiver.sh`
+  - **Reason:** verifier.sh is protected, shellcheck warning is style-only (info level)
+  - **AC:** Waiver approved or human intervention
+  - **Commit:** N/A (protected file)
+
 ## Phase 8-C: Markdownlint Issues (LOW)
 
 Fix markdown formatting issues (deferred - low impact):
