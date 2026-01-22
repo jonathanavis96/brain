@@ -24,19 +24,16 @@ This implementation plan outlines the tasks to fully set up the brain repository
 - [ ] **WARN.SC.16** Fix SC2162 in `workers/ralph/current_ralph_tasks.sh` line 558 - Add -r flag to read command
 - [ ] **WARN.SC.17** Fix SC2162 in `workers/ralph/loop.sh` lines 458, 499 - Add -r flag to read commands
 - [ ] **WARN.SC.18** Fix SC2162 in `workers/ralph/new-project.sh` lines 250, 263, 277, 281, 290, 302 - Add -r flag to all read commands
+- [ ] **WARN.SC.19** Fix SC2155 in `workers/ralph/render_ac_status.sh` lines 29-32, 111 - Declare and assign separately to avoid masking return values
 
 ### Markdown Lint Warnings (MEDIUM Priority)
 
-- [ ] **WARN.MD.1** Fix MD032 in `cortex/AGENTS.md` - Add blank lines around lists (lines 6, 17, 37, 44, 92, 120, 124, 151)
-- [ ] **WARN.MD.2** Fix MD022 in `cortex/AGENTS.md` - Add blank lines around headings (lines 54, 59, 65)
-- [ ] **WARN.MD.3** Fix MD031 in `cortex/AGENTS.md` - Add blank lines around fenced code blocks (lines 55, 60, 62, 67, 72)
-- [ ] **WARN.MD.4** Fix MD060 in `cortex/AGENTS.md` - Fix table column spacing (line 86)
-- [ ] **WARN.MD.5** Fix MD032 in `cortex/CORTEX_SYSTEM_PROMPT.md` - Add blank lines around lists (lines 18, 25, 50)
-- [ ] **WARN.MD.6** Fix MD060 in `cortex/CORTEX_SYSTEM_PROMPT.md` - Fix table column spacing (line 92)
-- [ ] **WARN.MD.7** Fix MD022 in `cortex/DECISIONS.md` - Add blank lines around headings (lines 13, 18, 23, 131)
-- [ ] **WARN.MD.8** Fix MD032 in `cortex/DECISIONS.md` - Add blank lines around lists (multiple lines)
-- [ ] **WARN.MD.9** Fix MD031 in `cortex/DECISIONS.md` - Add blank lines around fenced code blocks (line 43)
-- [ ] **WARN.MD.10** Fix MD038 in `cortex/DECISIONS.md` line 133 - Remove spaces inside code span
+**Note:** ~100+ markdown lint violations discovered across cortex/ files. These are formatting issues (blank lines, table spacing) that don't affect functionality. Will batch-fix by file in BUILD mode.
+
+- [ ] **WARN.MD.1-4** Fix all MD violations in `cortex/AGENTS.md` - MD032 (blank lines around lists), MD022 (blank lines around headings), MD031 (blank lines around fences), MD060 (table spacing)
+- [ ] **WARN.MD.5-6** Fix all MD violations in `cortex/CORTEX_SYSTEM_PROMPT.md` - MD032 (blank lines around lists), MD060 (table spacing)
+- [ ] **WARN.MD.7-10** Fix all MD violations in `cortex/DECISIONS.md` - MD022 (blank lines around headings), MD032 (blank lines around lists), MD031 (blank lines around fences), MD038 (spaces in code spans)
+- [ ] **WARN.MD.11** Fix all MD violations in `cortex/IMPLEMENTATION_PLAN.md` - MD032, MD031, MD060, MD009 (multiple formatting issues)
 
 ## Phase 1: High Priority - Core Documentation
 
