@@ -57,6 +57,7 @@ MAX_BACKOFF = 60
 MAX_CONTEXT_CHARS = 50000  # ~12.5K tokens - keep well under 60K token/min limit
 MAX_TOOL_RESULT_CHARS = 4000  # Truncate individual tool results
 KEEP_RECENT_TURNS = 6  # Always keep last N turns (assistant + tool results)
+SUMMARIZE_AFTER_TURN = 3  # Start summarizing tool results after this many turns
 
 # Terminal formatting
 TERM_WIDTH = shutil.get_terminal_size().columns
@@ -1223,17 +1224,59 @@ def estimate_tokens(text: str) -> int:
     return len(text) // 4
 
 
+def summarize_old_tool_results(
+    messages: list[dict], keep_recent: int = KEEP_RECENT_TURNS
+) -> list[dict]:
+    """
+    Summarize old tool results to reduce token usage.
+    Pattern from SWE-agent: Keep last N observations full, summarize older ones.
+    """
+    if len(messages) <= keep_recent + 2:  # system + user + recent
+        return messages
+
+    result = []
+    # Find where recent messages start (from end)
+    recent_start = len(messages) - keep_recent
+
+    for i, msg in enumerate(messages):
+        # Always keep system (0) and user prompt (1) unchanged
+        if i < 2:
+            result.append(msg)
+            continue
+
+        # Keep recent messages unchanged
+        if i >= recent_start:
+            result.append(msg)
+            continue
+
+        # Summarize old tool results
+        if msg.get("role") == "tool":
+            content = msg.get("content", "")
+            lines = content.count("\n") + 1
+            # Create short summary
+            first_line = content.split("\n")[0][:80] if content else "(empty)"
+            summary = f"[Tool output: {lines} lines] {first_line}..."
+            result.append({**msg, "content": summary})
+        else:
+            result.append(msg)
+
+    return result
+
+
 def prune_messages(
     messages: list[dict], max_chars: int = MAX_CONTEXT_CHARS
 ) -> list[dict]:
     """
     Prune message history to stay under token limits.
     Strategy:
-    1. Always keep system message (index 0)
-    2. Always keep original user prompt (index 1)
-    3. Always keep last KEEP_RECENT_TURNS messages
-    4. Summarize/drop middle messages if over limit
+    1. First, summarize old tool results (keeps structure, reduces size)
+    2. Always keep system message (index 0)
+    3. Always keep original user prompt (index 1)
+    4. Always keep last KEEP_RECENT_TURNS messages
+    5. Drop middle messages only if still over limit
     """
+    # First pass: summarize old tool results
+    messages = summarize_old_tool_results(messages)
     if len(messages) <= 3:
         return messages
 
