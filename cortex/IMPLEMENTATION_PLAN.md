@@ -290,7 +290,22 @@ These are low-effort tasks that provide immediate value. Ralph should complete t
 
 ---
 
-### Task 1.3: Fix maintenance script paths (NEW)
+### Task 1.3: Fix thunk_ralph_tasks.sh footer display bug (NEW)
+
+**Problem:** When new thunks are added incrementally, the HOTKEYS footer box doesn't reposition correctly - it stays in place and new content appears above/over it, causing display corruption.
+
+**Root cause:** `parse_new_thunk_entries()` appends new entries at `LAST_CONTENT_ROW` but the footer redraw logic doesn't properly clear the old footer before drawing the new one at the updated position.
+
+**Fix:**
+- [ ] **1.3.1** In `parse_new_thunk_entries()`, before redrawing footer, clear the OLD footer lines (9 lines starting at old `LAST_CONTENT_ROW`)
+- [ ] **1.3.2** Update `LAST_CONTENT_ROW` to `append_row` BEFORE redrawing footer
+- [ ] **1.3.3** Test: Run `thunk_ralph_tasks.sh`, complete a task in another terminal, verify footer moves down cleanly
+
+**AC:** Footer (HOTKEYS box) repositions correctly when new thunks appear; no visual artifacts
+
+---
+
+### Task 1.4: Fix maintenance script paths (NEW)
 
 **Goal:** Fix verify-brain.sh to find skills/ at correct location
 
