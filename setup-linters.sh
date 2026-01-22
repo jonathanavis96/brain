@@ -49,7 +49,7 @@ install_apt() {
         SKIPPED+=("$pkg (already installed)")
         return 0
     fi
-    
+
     if sudo apt-get install -y "$pkg" &>/dev/null; then
         INSTALLED+=("$pkg - $desc")
         success "$pkg installed"
@@ -108,17 +108,17 @@ install_npm() {
     local pkg="$1"
     local desc="$2"
     local cmd="${3:-$pkg}"  # command name might differ from package name
-    
+
     if ! command -v npm &>/dev/null; then
         SKIPPED+=("$pkg (npm not available)")
         return 0
     fi
-    
+
     if command -v "$cmd" &>/dev/null; then
         SKIPPED+=("$pkg (already installed)")
         return 0
     fi
-    
+
     if npm install -g "$pkg" &>/dev/null 2>&1; then
         INSTALLED+=("$pkg - $desc")
         success "$pkg installed"
@@ -131,12 +131,12 @@ install_npm() {
 if command -v npm &>/dev/null; then
     # Markdown
     install_npm "markdownlint-cli" "Markdown linter" "markdownlint"
-    
+
     # JavaScript/TypeScript
     install_npm "eslint" "JavaScript/TypeScript linter"
     install_npm "prettier" "Code formatter (JS, CSS, HTML, MD)"
     install_npm "typescript" "TypeScript compiler/checker" "tsc"
-    
+
     # GitHub Pages deployment
     install_npm "gh-pages" "GitHub Pages deployment"
 else
@@ -169,17 +169,17 @@ install_pipx() {
     local pkg="$1"
     local desc="$2"
     local cmd="${3:-$pkg}"  # command name might differ from package name
-    
+
     if ! command -v pipx &>/dev/null; then
         SKIPPED+=("$pkg (pipx not available)")
         return 0
     fi
-    
+
     if command -v "$cmd" &>/dev/null; then
         SKIPPED+=("$pkg (already installed)")
         return 0
     fi
-    
+
     if pipx install "$pkg" &>/dev/null 2>&1; then
         INSTALLED+=("$pkg - $desc")
         success "$pkg installed"

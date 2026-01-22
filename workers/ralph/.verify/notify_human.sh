@@ -71,14 +71,14 @@ if [[ "$RESULT" == "APPROVED" && -n "$WAIVER_REQUEST" && -f "$WAIVER_REQUEST" ]]
     # Auto-approve the waiver
     WAIVER_ID=$(basename "$WAIVER_REQUEST" .json)
     APPROVE_FILE="${SCRIPT_DIR}/waivers/${WAIVER_ID}.approved"
-    
+
     # Extract info from JSON
     RULE_ID=$(grep -o '"rule_id":\s*"[^"]*"' "$WAIVER_REQUEST" | cut -d'"' -f4)
     REASON=$(grep -o '"reason":\s*"[^"]*"' "$WAIVER_REQUEST" | cut -d'"' -f4)
     PATHS=$(grep -o '"paths":\s*\[[^]]*\]' "$WAIVER_REQUEST" | sed 's/.*\[//;s/\].*//;s/"//g')
     REQUEST_HASH=$(sha256sum "$WAIVER_REQUEST" | cut -d' ' -f1)
     EXPIRY=$(date -d "+30 days" +%Y-%m-%d)
-    
+
     mkdir -p "${SCRIPT_DIR}/waivers"
     cat > "$APPROVE_FILE" << EOF
 WAIVER_ID=$WAIVER_ID
@@ -90,7 +90,7 @@ APPROVED_AT=$(date +%Y-%m-%d\ %H:%M:%S)
 EXPIRES=$EXPIRY
 REQUEST_SHA256=$REQUEST_HASH
 EOF
-    
+
     echo "✅ Waiver $WAIVER_ID approved via popup"
 else
     echo "ℹ️ Notification shown (no approval action)"

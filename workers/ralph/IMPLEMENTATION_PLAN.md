@@ -232,7 +232,7 @@
 
 ### New Shellcheck Warnings from Pre-commit (2026-01-22)
 
-- [ ] **WARN.SC.15** Fix SC2155 in `workers/ralph/.maintenance/verify-brain.sh` lines 69, 105, 157, 167, 168 - Declare and assign separately (HIGH)
+- [x] **WARN.SC.15** Fix SC2155 in `workers/ralph/.maintenance/verify-brain.sh` lines 69, 105, 157, 167, 168 - Declare and assign separately (HIGH)
 - [ ] **WARN.SC.16** Fix SC2162 in `workers/ralph/new-project.sh` lines 271, 281, 290, 302, 585 - Add -r flag to read commands (MEDIUM)
 - [ ] **WARN.SC.17** Fix SC2162 in `workers/ralph/pr-batch.sh` line 102+ - Add -r flag to read commands (LOW)
 
