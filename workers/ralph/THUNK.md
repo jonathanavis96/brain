@@ -378,3 +378,4 @@ Started: 2026-01-18
 | 375 | WARN.SC.14 | HIGH | **WARN.SC.14** Fix SC2094 in templates/ralph/verifier.sh lines 395-396 - Avoid reading and writing REPORT_FILE in same pipeline by storing hash guard result in local variable before appending summary, formatted with shfmt | 2026-01-22 |
 | 376 | WARN.SC.15 | HIGH | **WARN.SC.15** Fix SC2034 in workers/ralph/.maintenance/verify-brain.sh line 16 - Remove unused MAINTENANCE_LOG variable, WARN.SC.16 already resolved | 2026-01-22 |
 | 377 | WARN.SC.17 | HIGH | **WARN.SC.17** Fix SC2162 in workers/ralph/current_ralph_tasks.sh line 558 - Add -r flag to read command to prevent backslash mangling | 2026-01-22 |
+| 378 | WARN.SC.18 | HIGH | **WARN.SC.18** Fix SC2162 in workers/ralph/loop.sh lines 458, 499 - Add -r flag to read commands to prevent backslash mangling in user input prompts, applied shfmt formatting | 2026-01-22 |
