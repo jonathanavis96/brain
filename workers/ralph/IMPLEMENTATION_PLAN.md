@@ -332,7 +332,7 @@
   - **Commit:** `docs(templates): add SKILL_TEMPLATE.md to ralph templates`
   - **Status:** ✅ COMPLETE - File copied and verified identical
 
-- [ ] **0.Q.4** Fix "Brain KB" → "Brain Skills" in templates/NEURONS.project.md
+- [x] **0.Q.4** Fix "Brain KB" → "Brain Skills" in templates/NEURONS.project.md
   - **Goal:** Complete terminology migration from "KB" to "Skills"
   - **File:** `templates/NEURONS.project.md`
   - **Line:** `- **Brain KB patterns** → See...`
