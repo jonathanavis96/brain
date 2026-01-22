@@ -2,8 +2,8 @@
 
 **Status:** PLAN mode - Ready for BUILD execution  
 **Branch:** `brain-work`  
-**Last Updated:** 2026-01-22 01:36:30 (Ralph PLAN iteration)  
-**Progress:** 42/111 tasks complete (38%) - Phase 0-Warn updated with 11 new warnings from verifier and shellcheck
+**Last Updated:** 2026-01-22 02:46:03 (Ralph PLAN iteration)  
+**Progress:** 42/111 tasks complete (38%) - Structure updated: all sections now use "## Phase X:" format
 
 **Current Status:**
 - ✅ Phase 0-Sync (Infrastructure) - COMPLETE (2/2 tasks)
@@ -25,7 +25,7 @@
 - Phase 0: 42/68 complete (18 warn + 5 quick wins + 2 complete phases)
 - Phases 1-8: 0/43 complete (all pending)
 
-**Next Priority:** Phase 0-Warn high priority tasks - Fix markdown fences (AGENTS.md, THOUGHTS.md) and critical shellcheck issues before continuing quick wins
+**Next Priority:** Phase 0-Quick task 0.Q.4 - Fix "Brain KB" → "Brain Skills" in templates/NEURONS.project.md (verifier warnings require human waiver approval)
 
 **Verifier Status:**
 - `.verify/latest.txt` shows all verifier rules passing (BugA.1, BugA.2, BugB.1, BugB.2, BugC.1, BugC.2)
@@ -833,7 +833,7 @@ Fix template file warnings:
   - **AC:** `shellcheck ../../templates/ralph/thunk_ralph_tasks.sh 2>&1 | grep -c 'SC2034.*LAST_DISPLAY_ROW'` returns 0
   - **Commit:** `fix(templates): remove unused LAST_DISPLAY_ROW in thunk_ralph_tasks.sh`
 
-### 8.2 Shellcheck Warnings - Root Scripts
+## Phase 8-2: Shellcheck Warnings - Root Scripts
 Fix root-level script warnings:
 
 - [ ] **8.2.1** Fix SC2016 + SC2129 in `setup.sh`
@@ -851,7 +851,7 @@ Fix root-level script warnings:
   - **AC:** `shellcheck -e SC1091 *.sh 2>&1 | grep -c SC2162` returns 0
   - **Commit:** `fix(scripts): add -r flag to read commands`
 
-### 8.3 Markdownlint Warnings
+## Phase 8-3: Markdownlint Warnings
 Fix markdown formatting issues:
 
 - [ ] **8.3.1** Fix MD032 (blank lines around lists) in markdown files
@@ -869,7 +869,7 @@ Fix markdown formatting issues:
   - Files: `cortex/AGENTS.md` line 86
   - **AC:** `markdownlint . 2>&1 | grep -c MD060` returns 0
 
-### 8.4 Final Verification
+## Phase 8-4: Final Verification
 
 - [ ] **8.4.1** Run full pre-commit and verify all pass
   - **AC:** `pre-commit run --all-files` exits with code 0
