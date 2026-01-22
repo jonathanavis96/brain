@@ -830,6 +830,10 @@ def execute_append_file(path: str, content: str, cwd: str | None = None) -> Tool
         full_path = Path(cwd or ".") / path
         full_path.parent.mkdir(parents=True, exist_ok=True)
 
+        # Ensure content ends with newline (prevents end-of-file-fixer loops)
+        if content and not content.endswith("\n"):
+            content = content + "\n"
+
         with open(full_path, "a", encoding="utf-8") as f:
             f.write(content)
 
