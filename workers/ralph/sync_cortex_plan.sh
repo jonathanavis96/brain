@@ -112,6 +112,7 @@ fi
 declare -A synced_headers
 if [[ -f "$LAST_SYNC_FILE" ]]; then
   while IFS= read -r header_line; do
+    [[ -z "$header_line" ]] && continue
     synced_headers["$header_line"]=1
     log_verbose "Already synced: $header_line"
   done <"$LAST_SYNC_FILE"
