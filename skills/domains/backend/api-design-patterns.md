@@ -9,6 +9,7 @@ Well-designed APIs are the backbone of modern software systems, enabling fronten
 ## When to Use It
 
 Reference this KB file when:
+
 - Designing REST or GraphQL APIs for new projects
 - Standardizing error responses across multiple services
 - Implementing API versioning strategies (URL, header, or content negotiation)
@@ -18,6 +19,7 @@ Reference this KB file when:
 - Designing API authentication and authorization patterns
 
 **Specific triggers:**
+
 - Creating new backend endpoints or API routes
 - API inconsistencies causing integration issues
 - Need to version an existing API without breaking clients
@@ -36,7 +38,7 @@ REST (Representational State Transfer) is the most common API architecture. Foll
 
 Use nouns (not verbs) and plural forms for collections:
 
-```
+```text
 ✅ Good REST endpoints:
 GET    /users              # List all users
 GET    /users/123          # Get specific user
@@ -56,6 +58,7 @@ GET    /users/delete/123   # DELETE action should use DELETE method
 ```
 
 **Nested resources guidelines:**
+
 - Max 2 levels deep: `/users/123/posts/456` ✅
 - Avoid deeper nesting: `/users/123/posts/456/comments/789/replies` ❌
 - For deep nesting, use query parameters: `/comments?postId=456&parentId=789` ✅
@@ -63,7 +66,7 @@ GET    /users/delete/123   # DELETE action should use DELETE method
 #### HTTP Methods & Idempotency
 
 | Method | Purpose | Idempotent | Safe | Use Case |
-|--------|---------|------------|------|----------|
+| ------ | ------- | ---------- | ---- | -------- |
 | GET | Retrieve resource(s) | ✅ | ✅ | Fetch data, no side effects |
 | POST | Create new resource | ❌ | ❌ | Create user, submit form |
 | PUT | Replace entire resource | ✅ | ❌ | Update all fields |
@@ -79,6 +82,7 @@ GET    /users/delete/123   # DELETE action should use DELETE method
 Use appropriate status codes to communicate API response semantics:
 
 **Success (2xx):**
+
 ```javascript
 // 200 OK - Successful GET, PUT, PATCH, DELETE
 return Response.json({ user }, { status: 200 });
@@ -97,6 +101,7 @@ return new Response(null, { status: 204 });
 ```
 
 **Client Errors (4xx):**
+
 ```javascript
 // 400 Bad Request - Invalid input, validation error
 return Response.json(
@@ -148,6 +153,7 @@ return Response.json(
 ```
 
 **Server Errors (5xx):**
+
 ```javascript
 // 500 Internal Server Error - Unexpected error
 return Response.json(
@@ -368,7 +374,7 @@ export async function GET(request: Request) {
 **Pagination comparison:**
 
 | Type | Best For | Pros | Cons |
-|------|----------|------|------|
+| ---- | -------- | ---- | ---- |
 | Offset | Small datasets, simple UIs | Simple, allows jumping to any page | Slow at high offsets, inconsistent with inserts |
 | Cursor | Large datasets, feeds | Fast, consistent results | Can't jump to arbitrary page |
 | Page | Admin panels, tables | UI-friendly, predictable | Same issues as offset |
@@ -424,6 +430,7 @@ export async function GET(request: Request) {
 ```
 
 **Rate limit headers:**
+
 ```javascript
 return Response.json(data, {
   headers: {
@@ -500,6 +507,7 @@ input UpdateUserInput {
 ```
 
 **GraphQL error handling:**
+
 ```javascript
 // Return errors in standardized format
 {
@@ -539,9 +547,9 @@ export async function OPTIONS(request: Request) {
 }
 ```
 
-6. **Use API keys** for service-to-service communication
-7. **Log requests** for auditing and debugging
-8. **Sanitize error messages** (don't leak implementation details)
+1. **Use API keys** for service-to-service communication
+2. **Log requests** for auditing and debugging
+3. **Sanitize error messages** (don't leak implementation details)
 
 ### Common Mistakes to Avoid
 
@@ -558,7 +566,7 @@ export async function OPTIONS(request: Request) {
 ### Decision Matrix: REST vs GraphQL
 
 | Criterion | REST | GraphQL |
-|-----------|------|---------|
+| --------- | ---- | ------- |
 | **Simple CRUD** | ✅ Best choice | Overkill |
 | **Complex data fetching** | Multiple requests | ✅ Single request |
 | **Mobile apps (bandwidth)** | Over-fetching | ✅ Exact data |

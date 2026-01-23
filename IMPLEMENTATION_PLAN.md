@@ -81,7 +81,7 @@ See **workers/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown.
 - [x] **WARN.MD.21.skills** Fix MD violations in `skills/domains/websites/build/analytics-tracking.md` - MD032 (blanks around lists), MD022 (blanks around headings), MD031 (blanks around fences)
 - [x] **WARN.MD.22.skills** Fix MD violations in `skills/conventions.md` - MD032, MD022, MD031 violations
 - [x] **WARN.MD.23.skills** Fix MD violations in `skills/domains/README.md` - MD032, MD022, MD031 violations
-- [ ] **WARN.MD.24.skills** Fix MD violations in `skills/domains/backend/api-design-patterns.md` - MD032, MD022, MD031 violations
+- [x] **WARN.MD.24.skills** Fix MD violations in `skills/domains/backend/api-design-patterns.md` - MD032, MD022, MD031 violations
 - [ ] **WARN.MD.25.skills** Fix MD violations in `skills/domains/backend/auth-patterns.md` - MD032, MD022, MD031 violations
 - [ ] **WARN.MD.26.skills** Fix MD violations in `skills/domains/backend/caching-patterns.md` - MD032, MD022, MD031 violations
 - [ ] **WARN.MD.27.skills** Fix MD violations in `skills/domains/backend/config-patterns.md` - MD032, MD022, MD031 violations
