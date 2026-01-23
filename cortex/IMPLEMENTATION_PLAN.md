@@ -30,7 +30,7 @@
 
 ### Phase 0-C.3: Fix Sync Script Duplicate Detection Bug
 
-- [ ] **0.C.9** Test sync end-to-end:
+- [x] **0.C.9** Test sync end-to-end:
   - Add dummy `## Phase 99: Test Sync (1 task)` to Cortex plan
   - Run sync, verify only Phase 99 appears in Ralph's plan (no duplicates)
   - Remove test phase from both plans

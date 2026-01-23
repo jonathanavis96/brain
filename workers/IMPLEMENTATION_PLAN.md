@@ -187,7 +187,7 @@
   - **AC:** `grep -c "^\`\`\`[a-z]" workers/ralph/NEURONS.md` equals `grep -c "^\`\`\`$" workers/ralph/NEURONS.md`
   - **Fix:** Ensure every opening fence has a matching closing fence
 
-- [ ] **6.2.2** Fix unbalanced code fences in `workers/ralph/AGENTS.md`
+- [x] **6.2.2** Fix unbalanced code fences in `workers/ralph/AGENTS.md`
   - **AC:** Opens equals closes for code fences
   - **Note:** This is a PROTECTED file - will need hash baseline update
 
