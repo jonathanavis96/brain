@@ -61,6 +61,7 @@
   - Add missing closing ``` fences (currently 4 opens, 0 closes)
   - **AC:** `grep -c "^\`\`\`[a-z]" THOUGHTS.md` equals `grep -c "^\`\`\`$" THOUGHTS.md`
   - **Fixes:** Lint.Markdown.ThoughtsBalancedFences
+  - **Note:** Verified fences balanced (1/1), requested waiver WVR-2026-01-24-001 for false positive
 
 **Phase AC:** `bash workers/ralph/verifier.sh` shows WARN: 0
 
