@@ -12,6 +12,7 @@ Modern web applications need secure, maintainable authentication that works acro
 ## When to Use It
 
 Reference this KB file when:
+
 - Implementing user authentication in a new React/Next.js project
 - Choosing between session-based vs token-based authentication
 - Integrating OAuth2 providers (Google, GitHub, etc.)
@@ -20,6 +21,7 @@ Reference this KB file when:
 - Handling token refresh flows
 
 **Specific triggers:**
+
 - User story mentions "login", "signup", or "authentication"
 - API requires authentication headers
 - Need to restrict access to certain routes or components
@@ -64,6 +66,7 @@ export async function GET(request) {
 ```
 
 **Security considerations:**
+
 - Always validate `state` parameter to prevent CSRF attacks
 - Use PKCE (Proof Key for Code Exchange) for public clients
 - Store access tokens in httpOnly cookies, never localStorage
@@ -74,6 +77,7 @@ export async function GET(request) {
 Use JWT tokens for API authentication when you control both client and server.
 
 **Token storage:**
+
 - ✅ **httpOnly cookies** - Most secure, prevents XSS attacks
 - ⚠️ **sessionStorage** - Acceptable for SPAs, lost on tab close
 - ❌ **localStorage** - Vulnerable to XSS, avoid for sensitive tokens
@@ -157,6 +161,7 @@ export async function POST(request) {
 Use sessions when you need server-side state or are building traditional server-rendered apps.
 
 **When to choose sessions:**
+
 - Traditional server-rendered applications (not SPAs)
 - Need server-side state (shopping cart, multi-step forms)
 - Compliance requires server-side session management
@@ -261,7 +266,7 @@ export default async function DashboardPage() {
 ### Decision Matrix
 
 | Pattern | Best For | Pros | Cons |
-|---------|----------|------|------|
+| ------- | -------- | ---- | ---- |
 | OAuth2 | Third-party auth (Google, GitHub) | No password management, trusted providers | Requires external service, more complex |
 | JWT | SPAs, microservices, stateless APIs | Scalable, no server session storage | Token revocation is complex |
 | Sessions | Traditional apps, server-rendered | Simple revocation, server-side state | Requires session storage, less scalable |
