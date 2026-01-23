@@ -1042,6 +1042,8 @@ Fix template file warnings:
 
 **Priority:** LOW (hygiene only, no functional impact)
 
+**Note:** All shellcheck warnings in workers/ralph/ already fixed. Only shfmt formatting remains.
+
 - [ ] **8.B2.1** Fix SC2034 (unused week_num) in `workers/ralph/pr-batch.sh` line 102
   - **Fix:** Remove unused variable or mark with underscore
   - **AC:** `shellcheck workers/ralph/pr-batch.sh 2>&1 | grep -c 'SC2034.*week_num'` returns 0
@@ -1098,9 +1100,27 @@ Fix markdown formatting issues (deferred - low impact):
 - [ ] **8.2.3** Fix MD022 (blank lines around headings) in markdown files
   - **AC:** `markdownlint . 2>&1 | grep -c MD022` returns 0
 
-## Phase 8-D: Final Verification
+## Phase 8-D: shfmt Formatting Fixes (NEW - 2026-01-23)
 
-- [ ] **8.3.1** Run full pre-commit and verify all pass
+**Context:** Pre-commit scan discovered tab/space inconsistencies in workers/ralph/ monitor scripts
+
+**Priority:** MEDIUM (prevents commit hooks from auto-modifying files)
+
+- [ ] **8.D.1** Fix shfmt formatting in `workers/ralph/current_ralph_tasks.sh`
+  - **Issue:** Tab indentation instead of 2-space (entire file, ~500 lines)
+  - **Fix:** Run `shfmt -w -i 2 workers/ralph/current_ralph_tasks.sh`
+  - **AC:** `shfmt -d workers/ralph/current_ralph_tasks.sh` returns no diff
+  - **Commit:** `style(ralph): apply shfmt formatting to current_ralph_tasks.sh`
+
+- [ ] **8.D.2** Fix shfmt formatting in `workers/ralph/thunk_ralph_tasks.sh`
+  - **Issue:** Tab indentation in case statements (lines 378-400)
+  - **Fix:** Run `shfmt -w -i 2 workers/ralph/thunk_ralph_tasks.sh`
+  - **AC:** `shfmt -d workers/ralph/thunk_ralph_tasks.sh` returns no diff
+  - **Commit:** `style(ralph): apply shfmt formatting to thunk_ralph_tasks.sh`
+
+## Phase 8-E: Final Verification
+
+- [ ] **8.E.1** Run full pre-commit and verify all pass
   - **AC:** `pre-commit run --all-files` exits with code 0
   - **Commit:** `style: fix all pre-commit linting warnings`
 
