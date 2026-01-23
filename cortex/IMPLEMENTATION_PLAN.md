@@ -235,10 +235,3 @@
 ---
 
 <!-- Cortex adds new Task Contracts below this line -->
-
-## Phase 99-Test: Sync System Test (1 task)
-
-**Goal:** Test sync end-to-end functionality
-
-- [ ] **99.1** Verify sync system works correctly
-  - **AC:** This phase appears in workers/IMPLEMENTATION_PLAN.md without duplicates
