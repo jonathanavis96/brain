@@ -11,10 +11,10 @@ REQUESTS_DIR="${VERIFY_DIR}/waiver_requests"
 
 # Validate argument
 if [[ -z "$1" ]]; then
-    echo "ERROR: No waiver request filename provided."
-    echo "Usage: $0 <waiver_request_filename>"
-    echo "Example: $0 WVR-pop-test-001.json"
-    exit 1
+  echo "ERROR: No waiver request filename provided."
+  echo "Usage: $0 <waiver_request_filename>"
+  echo "Example: $0 WVR-pop-test-001.json"
+  exit 1
 fi
 
 REQUEST_FILE="$1"
@@ -22,8 +22,8 @@ REQUEST_PATH="${REQUESTS_DIR}/${REQUEST_FILE}"
 
 # Check request file exists
 if [[ ! -f "$REQUEST_PATH" ]]; then
-    echo "ERROR: Request file not found: $REQUEST_PATH"
-    exit 1
+  echo "ERROR: Request file not found: $REQUEST_PATH"
+  exit 1
 fi
 
 echo "=== Launching TOTP Approval Terminal ==="
@@ -35,7 +35,7 @@ echo ""
 
 # Create a temporary script that will run in the new terminal
 TEMP_SCRIPT="${VERIFY_DIR}/.tmp_approve_runner.sh"
-cat > "$TEMP_SCRIPT" << ENDSCRIPT
+cat >"$TEMP_SCRIPT" <<ENDSCRIPT
 #!/bin/bash
 cd ${REPO_ROOT}
 source .venv/bin/activate
@@ -53,11 +53,11 @@ chmod +x "$TEMP_SCRIPT"
 
 # Check if Windows Terminal (wt.exe) is available
 if /mnt/c/Windows/System32/cmd.exe /c "where wt" >/dev/null 2>&1; then
-    echo "Using Windows Terminal..."
-    /mnt/c/Windows/System32/cmd.exe /c "start wt.exe wsl.exe -d Ubuntu -- ${TEMP_SCRIPT}" 2>/dev/null
+  echo "Using Windows Terminal..."
+  /mnt/c/Windows/System32/cmd.exe /c "start wt.exe wsl.exe -d Ubuntu -- ${TEMP_SCRIPT}" 2>/dev/null
 else
-    echo "Windows Terminal not found, using fallback..."
-    /mnt/c/Windows/System32/cmd.exe /c "start wsl.exe -d Ubuntu -- ${TEMP_SCRIPT}" 2>/dev/null
+  echo "Windows Terminal not found, using fallback..."
+  /mnt/c/Windows/System32/cmd.exe /c "start wsl.exe -d Ubuntu -- ${TEMP_SCRIPT}" 2>/dev/null
 fi
 
 echo ""

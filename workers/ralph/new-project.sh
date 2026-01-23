@@ -31,92 +31,92 @@ success() { echo -e "${GREEN}[SUCCESS]${NC} $*"; }
 warn() { echo -e "${YELLOW}[WARN]${NC} $*"; }
 error() { echo -e "${RED}[ERROR]${NC} $*"; }
 die() {
-	error "$*"
-	exit 1
+  error "$*"
+  exit 1
 }
 
 # Check required dependencies
 check_dependencies() {
-	if ! command -v git &>/dev/null; then
-		die "git is not installed. Please install git first."
-	fi
+  if ! command -v git &>/dev/null; then
+    die "git is not installed. Please install git first."
+  fi
 }
 
 # Check gh CLI (only when needed for repo creation)
 check_gh() {
-	if ! command -v gh &>/dev/null; then
-		return 1
-	fi
-	if ! gh auth status &>/dev/null; then
-		return 1
-	fi
-	return 0
+  if ! command -v gh &>/dev/null; then
+    return 1
+  fi
+  if ! gh auth status &>/dev/null; then
+    return 1
+  fi
+  return 0
 }
 
 # Get GitHub username from gh CLI or config
 get_github_username() {
-	# First check config file
-	if [[ -f "$RALPH_CONFIG_FILE" ]]; then
-		local saved_username
-		saved_username=$(grep "^GITHUB_USERNAME=" "$RALPH_CONFIG_FILE" 2>/dev/null | cut -d= -f2)
-		if [[ -n "$saved_username" ]]; then
-			echo "$saved_username"
-			return 0
-		fi
-	fi
+  # First check config file
+  if [[ -f "$RALPH_CONFIG_FILE" ]]; then
+    local saved_username
+    saved_username=$(grep "^GITHUB_USERNAME=" "$RALPH_CONFIG_FILE" 2>/dev/null | cut -d= -f2)
+    if [[ -n "$saved_username" ]]; then
+      echo "$saved_username"
+      return 0
+    fi
+  fi
 
-	# Try to detect from gh CLI
-	if command -v gh &>/dev/null && gh auth status &>/dev/null; then
-		gh api user --jq '.login' 2>/dev/null || true
-	fi
+  # Try to detect from gh CLI
+  if command -v gh &>/dev/null && gh auth status &>/dev/null; then
+    gh api user --jq '.login' 2>/dev/null || true
+  fi
 }
 
 # Save GitHub username to config
 save_github_username() {
-	local username="$1"
-	mkdir -p "$RALPH_CONFIG_DIR"
-	if [[ -f "$RALPH_CONFIG_FILE" ]]; then
-		# Update existing config
-		if grep -q "^GITHUB_USERNAME=" "$RALPH_CONFIG_FILE"; then
-			sed -i "s/^GITHUB_USERNAME=.*/GITHUB_USERNAME=$username/" "$RALPH_CONFIG_FILE"
-		else
-			echo "GITHUB_USERNAME=$username" >>"$RALPH_CONFIG_FILE"
-		fi
-	else
-		echo "GITHUB_USERNAME=$username" >"$RALPH_CONFIG_FILE"
-	fi
+  local username="$1"
+  mkdir -p "$RALPH_CONFIG_DIR"
+  if [[ -f "$RALPH_CONFIG_FILE" ]]; then
+    # Update existing config
+    if grep -q "^GITHUB_USERNAME=" "$RALPH_CONFIG_FILE"; then
+      sed -i "s/^GITHUB_USERNAME=.*/GITHUB_USERNAME=$username/" "$RALPH_CONFIG_FILE"
+    else
+      echo "GITHUB_USERNAME=$username" >>"$RALPH_CONFIG_FILE"
+    fi
+  else
+    echo "GITHUB_USERNAME=$username" >"$RALPH_CONFIG_FILE"
+  fi
 }
 
 # Sanitize project name to repo name (lowercase, underscores to hyphens)
 sanitize_repo_name() {
-	local name="$1"
-	echo "$name" | tr '[:upper:]' '[:lower:]' | tr ' _' '-' | tr -cd 'a-z0-9-'
+  local name="$1"
+  echo "$name" | tr '[:upper:]' '[:lower:]' | tr ' _' '-' | tr -cd 'a-z0-9-'
 }
 
 # Escape string for sed replacement (handle special chars)
 escape_sed_replacement() {
-	local str="$1"
-	# Escape &, \, and / for sed replacement
-	printf '%s\n' "$str" | sed -e 's/[&/\]/\\&/g'
+  local str="$1"
+  # Escape &, \, and / for sed replacement
+  printf '%s\n' "$str" | sed -e 's/[&/\]/\\&/g'
 }
 
 # Substitute placeholders in a file
 substitute_placeholders() {
-	local file="$1"
-	local repo_name="$2"
-	local work_branch="$3"
+  local file="$1"
+  local repo_name="$2"
+  local work_branch="$3"
 
-	local escaped_repo escaped_branch
-	escaped_repo=$(escape_sed_replacement "$repo_name")
-	escaped_branch=$(escape_sed_replacement "$work_branch")
+  local escaped_repo escaped_branch
+  escaped_repo=$(escape_sed_replacement "$repo_name")
+  escaped_branch=$(escape_sed_replacement "$work_branch")
 
-	sed -i "s/__REPO_NAME__/$escaped_repo/g" "$file"
-	sed -i "s/__WORK_BRANCH__/$escaped_branch/g" "$file"
+  sed -i "s/__REPO_NAME__/$escaped_repo/g" "$file"
+  sed -i "s/__WORK_BRANCH__/$escaped_branch/g" "$file"
 }
 
 # Usage message
 usage() {
-	cat <<EOF
+  cat <<EOF
 Usage: bash new-project.sh NEW_PROJECT_IDEA.md
 
 Bootstrap a new project with complete Ralph infrastructure and GitHub integration.
@@ -147,12 +147,12 @@ Example:
   bash new-project.sh my_cool_app_idea.md
 
 EOF
-	exit 1
+  exit 1
 }
 
 # Parse command line arguments
 if [ $# -ne 1 ]; then
-	usage
+  usage
 fi
 
 IDEA_FILE="$1"
@@ -162,7 +162,7 @@ check_dependencies
 
 # Validate input file
 if [ ! -f "$IDEA_FILE" ]; then
-	die "Project idea file not found: $IDEA_FILE"
+  die "Project idea file not found: $IDEA_FILE"
 fi
 
 info "Reading project idea from: $IDEA_FILE"
@@ -176,19 +176,19 @@ info "Reading project idea from: $IDEA_FILE"
 #   Goals: <objectives>
 
 extract_field() {
-	local field="$1"
-	local file="$2"
-	grep -i "^${field}:" "$file" | head -1 | sed "s/^${field}://i" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+  local field="$1"
+  local file="$2"
+  grep -i "^${field}:" "$file" | head -1 | sed "s/^${field}://i" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
 }
 
 extract_project_name() {
-	local file="$1"
-	# Look for "# Project: NAME" or "Project: NAME"
-	if grep -q "^# Project:" "$file"; then
-		grep "^# Project:" "$file" | head -1 | sed 's/^# Project://i' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
-	else
-		extract_field "Project" "$file"
-	fi
+  local file="$1"
+  # Look for "# Project: NAME" or "Project: NAME"
+  if grep -q "^# Project:" "$file"; then
+    grep "^# Project:" "$file" | head -1 | sed 's/^# Project://i' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+  else
+    extract_field "Project" "$file"
+  fi
 }
 
 PROJECT_NAME=$(extract_project_name "$IDEA_FILE")
@@ -199,21 +199,21 @@ PROJECT_GOALS=$(extract_field "Goals" "$IDEA_FILE")
 
 # Validate extracted information
 if [ -z "$PROJECT_NAME" ]; then
-	die "Could not extract project name from $IDEA_FILE. Expected 'Project: <name>' or '# Project: <name>'"
+  die "Could not extract project name from $IDEA_FILE. Expected 'Project: <name>' or '# Project: <name>'"
 fi
 
 # Handle Location: use from IDEA file, or fallback to sibling of brain
 if [ -z "$PROJECT_LOCATION" ]; then
-	# Fallback: create as sibling of brain directory
-	DEFAULT_REPO_NAME=$(sanitize_repo_name "$PROJECT_NAME")
-	PROJECT_LOCATION="$BRAIN_ROOT/$DEFAULT_REPO_NAME"
-	warn "Location not specified in IDEA file"
-	info "Detected brain root: $BRAIN_ROOT"
-	info "Project will be created at: $PROJECT_LOCATION"
+  # Fallback: create as sibling of brain directory
+  DEFAULT_REPO_NAME=$(sanitize_repo_name "$PROJECT_NAME")
+  PROJECT_LOCATION="$BRAIN_ROOT/$DEFAULT_REPO_NAME"
+  warn "Location not specified in IDEA file"
+  info "Detected brain root: $BRAIN_ROOT"
+  info "Project will be created at: $PROJECT_LOCATION"
 elif [[ "$PROJECT_LOCATION" != /* ]]; then
-	# Relative path: resolve relative to BRAIN_ROOT
-	PROJECT_LOCATION="$BRAIN_ROOT/$PROJECT_LOCATION"
-	info "Resolved relative path to: $PROJECT_LOCATION"
+  # Relative path: resolve relative to BRAIN_ROOT
+  PROJECT_LOCATION="$BRAIN_ROOT/$PROJECT_LOCATION"
+  info "Resolved relative path to: $PROJECT_LOCATION"
 fi
 
 # Suggest repo name (sanitized, shorter)
@@ -232,7 +232,7 @@ echo ""
 
 # Validate target location doesn't exist
 if [ -e "$PROJECT_LOCATION" ]; then
-	die "Target location already exists: $PROJECT_LOCATION"
+  die "Target location already exists: $PROJECT_LOCATION"
 fi
 
 # ============================================
@@ -252,67 +252,67 @@ echo ""
 
 read -r -p "Create GitHub repository? (y/n): " create_repo_answer
 if [[ "$create_repo_answer" =~ ^[Yy] ]]; then
-	CREATE_REPO=true
+  CREATE_REPO=true
 
-	# Check if gh CLI is available
-	if ! check_gh; then
-		warn "GitHub CLI (gh) not installed or not authenticated"
-		echo ""
-		echo "Options:"
-		echo "  1. Install gh: https://cli.github.com/"
-		echo "  2. Run: gh auth login"
-		echo "  3. Or continue without GitHub (local-only)"
-		echo ""
-		read -r -p "Continue local-only? (y/n): " local_only_answer
-		if [[ "$local_only_answer" =~ ^[Yy] ]]; then
-			CREATE_REPO=false
-			LOCAL_ONLY=true
-		else
-			die "Please install and authenticate gh CLI first"
-		fi
-	fi
+  # Check if gh CLI is available
+  if ! check_gh; then
+    warn "GitHub CLI (gh) not installed or not authenticated"
+    echo ""
+    echo "Options:"
+    echo "  1. Install gh: https://cli.github.com/"
+    echo "  2. Run: gh auth login"
+    echo "  3. Or continue without GitHub (local-only)"
+    echo ""
+    read -r -p "Continue local-only? (y/n): " local_only_answer
+    if [[ "$local_only_answer" =~ ^[Yy] ]]; then
+      CREATE_REPO=false
+      LOCAL_ONLY=true
+    else
+      die "Please install and authenticate gh CLI first"
+    fi
+  fi
 
-	if [[ "$CREATE_REPO" == "true" ]]; then
-		# Get/confirm GitHub username
-		detected_username=$(get_github_username)
-		if [[ -n "$detected_username" ]]; then
-			echo ""
-			read -r -p "GitHub username [$detected_username]: " input_username
-			GITHUB_USERNAME="${input_username:-$detected_username}"
-		else
-			echo ""
-			read -r -p "GitHub username: " GITHUB_USERNAME
-			if [[ -z "$GITHUB_USERNAME" ]]; then
-				die "GitHub username is required"
-			fi
-		fi
-		save_github_username "$GITHUB_USERNAME"
+  if [[ "$CREATE_REPO" == "true" ]]; then
+    # Get/confirm GitHub username
+    detected_username=$(get_github_username)
+    if [[ -n "$detected_username" ]]; then
+      echo ""
+      read -r -p "GitHub username [$detected_username]: " input_username
+      GITHUB_USERNAME="${input_username:-$detected_username}"
+    else
+      echo ""
+      read -r -p "GitHub username: " GITHUB_USERNAME
+      if [[ -z "$GITHUB_USERNAME" ]]; then
+        die "GitHub username is required"
+      fi
+    fi
+    save_github_username "$GITHUB_USERNAME"
 
-		# Get repo name
-		echo ""
-		read -r -p "Repository name [$SUGGESTED_REPO]: " input_repo
-		REPO_NAME="${input_repo:-$SUGGESTED_REPO}"
-		WORK_BRANCH="${REPO_NAME}-work"
+    # Get repo name
+    echo ""
+    read -r -p "Repository name [$SUGGESTED_REPO]: " input_repo
+    REPO_NAME="${input_repo:-$SUGGESTED_REPO}"
+    WORK_BRANCH="${REPO_NAME}-work"
 
-		# Show summary
-		echo ""
-		echo -e "${CYAN}----------------------------------------${NC}"
-		info "Repository: $GITHUB_USERNAME/$REPO_NAME (public)"
-		info "Work branch: $WORK_BRANCH"
-		info "Location: $PROJECT_LOCATION"
-		echo -e "${CYAN}----------------------------------------${NC}"
-		echo ""
-		read -r -p "Proceed with this configuration? (y/n): " confirm_answer
-		if [[ ! "$confirm_answer" =~ ^[Yy] ]]; then
-			die "Setup cancelled by user"
-		fi
-	fi
+    # Show summary
+    echo ""
+    echo -e "${CYAN}----------------------------------------${NC}"
+    info "Repository: $GITHUB_USERNAME/$REPO_NAME (public)"
+    info "Work branch: $WORK_BRANCH"
+    info "Location: $PROJECT_LOCATION"
+    echo -e "${CYAN}----------------------------------------${NC}"
+    echo ""
+    read -r -p "Proceed with this configuration? (y/n): " confirm_answer
+    if [[ ! "$confirm_answer" =~ ^[Yy] ]]; then
+      die "Setup cancelled by user"
+    fi
+  fi
 else
-	# No GitHub, local only
-	LOCAL_ONLY=true
-	REPO_NAME="$SUGGESTED_REPO"
-	WORK_BRANCH="${REPO_NAME}-work"
-	info "Skipping GitHub setup (local-only mode)"
+  # No GitHub, local only
+  LOCAL_ONLY=true
+  REPO_NAME="$SUGGESTED_REPO"
+  WORK_BRANCH="${REPO_NAME}-work"
+  info "Skipping GitHub setup (local-only mode)"
 fi
 
 # ============================================
@@ -335,111 +335,111 @@ info "Copying template files..."
 
 # Copy AGENTS.md to ralph/ (not project root)
 if [ -f "$TEMPLATES_DIR/AGENTS.project.md" ]; then
-	cp "$TEMPLATES_DIR/AGENTS.project.md" "$PROJECT_LOCATION/ralph/AGENTS.md"
-	substitute_placeholders "$PROJECT_LOCATION/ralph/AGENTS.md" "$REPO_NAME" "$WORK_BRANCH"
-	success "Copied ralph/AGENTS.md"
+  cp "$TEMPLATES_DIR/AGENTS.project.md" "$PROJECT_LOCATION/ralph/AGENTS.md"
+  substitute_placeholders "$PROJECT_LOCATION/ralph/AGENTS.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied ralph/AGENTS.md"
 else
-	warn "Template not found: AGENTS.project.md"
+  warn "Template not found: AGENTS.project.md"
 fi
 
 # Copy Ralph infrastructure templates
 if [ -f "$TEMPLATES_DIR/ralph/PROMPT.project.md" ]; then
-	cp "$TEMPLATES_DIR/ralph/PROMPT.project.md" "$PROJECT_LOCATION/ralph/PROMPT.md"
-	substitute_placeholders "$PROJECT_LOCATION/ralph/PROMPT.md" "$REPO_NAME" "$WORK_BRANCH"
-	success "Copied ralph/PROMPT.md"
+  cp "$TEMPLATES_DIR/ralph/PROMPT.project.md" "$PROJECT_LOCATION/ralph/PROMPT.md"
+  substitute_placeholders "$PROJECT_LOCATION/ralph/PROMPT.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied ralph/PROMPT.md"
 else
-	warn "Template not found: ralph/PROMPT.project.md"
+  warn "Template not found: ralph/PROMPT.project.md"
 fi
 
 if [ -f "$TEMPLATES_DIR/ralph/IMPLEMENTATION_PLAN.project.md" ]; then
-	cp "$TEMPLATES_DIR/ralph/IMPLEMENTATION_PLAN.project.md" "$PROJECT_LOCATION/ralph/IMPLEMENTATION_PLAN.md"
-	substitute_placeholders "$PROJECT_LOCATION/ralph/IMPLEMENTATION_PLAN.md" "$REPO_NAME" "$WORK_BRANCH"
-	success "Copied ralph/IMPLEMENTATION_PLAN.md"
+  cp "$TEMPLATES_DIR/ralph/IMPLEMENTATION_PLAN.project.md" "$PROJECT_LOCATION/ralph/IMPLEMENTATION_PLAN.md"
+  substitute_placeholders "$PROJECT_LOCATION/ralph/IMPLEMENTATION_PLAN.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied ralph/IMPLEMENTATION_PLAN.md"
 else
-	warn "Template not found: ralph/IMPLEMENTATION_PLAN.project.md"
+  warn "Template not found: ralph/IMPLEMENTATION_PLAN.project.md"
 fi
 
 if [ -f "$TEMPLATES_DIR/ralph/VALIDATION_CRITERIA.project.md" ]; then
-	cp "$TEMPLATES_DIR/ralph/VALIDATION_CRITERIA.project.md" "$PROJECT_LOCATION/ralph/VALIDATION_CRITERIA.md"
-	substitute_placeholders "$PROJECT_LOCATION/ralph/VALIDATION_CRITERIA.md" "$REPO_NAME" "$WORK_BRANCH"
-	success "Copied ralph/VALIDATION_CRITERIA.md"
+  cp "$TEMPLATES_DIR/ralph/VALIDATION_CRITERIA.project.md" "$PROJECT_LOCATION/ralph/VALIDATION_CRITERIA.md"
+  substitute_placeholders "$PROJECT_LOCATION/ralph/VALIDATION_CRITERIA.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied ralph/VALIDATION_CRITERIA.md"
 else
-	warn "Template not found: ralph/VALIDATION_CRITERIA.project.md"
+  warn "Template not found: ralph/VALIDATION_CRITERIA.project.md"
 fi
 
 if [ -f "$TEMPLATES_DIR/ralph/RALPH.md" ]; then
-	cp "$TEMPLATES_DIR/ralph/RALPH.md" "$PROJECT_LOCATION/ralph/RALPH.md"
-	substitute_placeholders "$PROJECT_LOCATION/ralph/RALPH.md" "$REPO_NAME" "$WORK_BRANCH"
-	success "Copied ralph/RALPH.md"
+  cp "$TEMPLATES_DIR/ralph/RALPH.md" "$PROJECT_LOCATION/ralph/RALPH.md"
+  substitute_placeholders "$PROJECT_LOCATION/ralph/RALPH.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied ralph/RALPH.md"
 else
-	warn "Template not found: ralph/RALPH.md"
+  warn "Template not found: ralph/RALPH.md"
 fi
 
 # Copy loop.sh with placeholder substitution
 if [ -f "$TEMPLATES_DIR/ralph/loop.sh" ]; then
-	cp "$TEMPLATES_DIR/ralph/loop.sh" "$PROJECT_LOCATION/ralph/loop.sh"
-	chmod +x "$PROJECT_LOCATION/ralph/loop.sh"
-	substitute_placeholders "$PROJECT_LOCATION/ralph/loop.sh" "$REPO_NAME" "$WORK_BRANCH"
-	success "Copied ralph/loop.sh (executable)"
+  cp "$TEMPLATES_DIR/ralph/loop.sh" "$PROJECT_LOCATION/ralph/loop.sh"
+  chmod +x "$PROJECT_LOCATION/ralph/loop.sh"
+  substitute_placeholders "$PROJECT_LOCATION/ralph/loop.sh" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied ralph/loop.sh (executable)"
 else
-	warn "Template not found: ralph/loop.sh"
+  warn "Template not found: ralph/loop.sh"
 fi
 
 # Copy pr-batch.sh with placeholder substitution
 if [ -f "$TEMPLATES_DIR/ralph/pr-batch.sh" ]; then
-	cp "$TEMPLATES_DIR/ralph/pr-batch.sh" "$PROJECT_LOCATION/ralph/pr-batch.sh"
-	chmod +x "$PROJECT_LOCATION/ralph/pr-batch.sh"
-	substitute_placeholders "$PROJECT_LOCATION/ralph/pr-batch.sh" "$REPO_NAME" "$WORK_BRANCH"
-	success "Copied ralph/pr-batch.sh (executable)"
+  cp "$TEMPLATES_DIR/ralph/pr-batch.sh" "$PROJECT_LOCATION/ralph/pr-batch.sh"
+  chmod +x "$PROJECT_LOCATION/ralph/pr-batch.sh"
+  substitute_placeholders "$PROJECT_LOCATION/ralph/pr-batch.sh" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied ralph/pr-batch.sh (executable)"
 else
-	warn "Template not found: ralph/pr-batch.sh"
+  warn "Template not found: ralph/pr-batch.sh"
 fi
 
 # Copy monitor scripts (THUNK system)
 if [ -f "$TEMPLATES_DIR/ralph/current_ralph_tasks.sh" ]; then
-	cp "$TEMPLATES_DIR/ralph/current_ralph_tasks.sh" "$PROJECT_LOCATION/ralph/current_ralph_tasks.sh"
-	chmod +x "$PROJECT_LOCATION/ralph/current_ralph_tasks.sh"
-	success "Copied ralph/current_ralph_tasks.sh (executable)"
+  cp "$TEMPLATES_DIR/ralph/current_ralph_tasks.sh" "$PROJECT_LOCATION/ralph/current_ralph_tasks.sh"
+  chmod +x "$PROJECT_LOCATION/ralph/current_ralph_tasks.sh"
+  success "Copied ralph/current_ralph_tasks.sh (executable)"
 else
-	warn "Template not found: ralph/current_ralph_tasks.sh"
+  warn "Template not found: ralph/current_ralph_tasks.sh"
 fi
 
 if [ -f "$TEMPLATES_DIR/ralph/thunk_ralph_tasks.sh" ]; then
-	cp "$TEMPLATES_DIR/ralph/thunk_ralph_tasks.sh" "$PROJECT_LOCATION/ralph/thunk_ralph_tasks.sh"
-	chmod +x "$PROJECT_LOCATION/ralph/thunk_ralph_tasks.sh"
-	success "Copied ralph/thunk_ralph_tasks.sh (executable)"
+  cp "$TEMPLATES_DIR/ralph/thunk_ralph_tasks.sh" "$PROJECT_LOCATION/ralph/thunk_ralph_tasks.sh"
+  chmod +x "$PROJECT_LOCATION/ralph/thunk_ralph_tasks.sh"
+  success "Copied ralph/thunk_ralph_tasks.sh (executable)"
 else
-	warn "Template not found: ralph/thunk_ralph_tasks.sh"
+  warn "Template not found: ralph/thunk_ralph_tasks.sh"
 fi
 
 # Copy verifier.sh
 if [ -f "$TEMPLATES_DIR/ralph/verifier.sh" ]; then
-	cp "$TEMPLATES_DIR/ralph/verifier.sh" "$PROJECT_LOCATION/ralph/verifier.sh"
-	chmod +x "$PROJECT_LOCATION/ralph/verifier.sh"
-	success "Copied ralph/verifier.sh (executable)"
+  cp "$TEMPLATES_DIR/ralph/verifier.sh" "$PROJECT_LOCATION/ralph/verifier.sh"
+  chmod +x "$PROJECT_LOCATION/ralph/verifier.sh"
+  success "Copied ralph/verifier.sh (executable)"
 else
-	warn "Template not found: ralph/verifier.sh"
+  warn "Template not found: ralph/verifier.sh"
 fi
 
 # Copy and process THUNK.project.md template
 if [ -f "$TEMPLATES_DIR/ralph/THUNK.project.md" ]; then
-	cp "$TEMPLATES_DIR/ralph/THUNK.project.md" "$PROJECT_LOCATION/ralph/THUNK.md"
-	CREATION_DATE=$(date +"%Y-%m-%d")
-	INITIAL_ERA_NAME="Initial Setup"
+  cp "$TEMPLATES_DIR/ralph/THUNK.project.md" "$PROJECT_LOCATION/ralph/THUNK.md"
+  CREATION_DATE=$(date +"%Y-%m-%d")
+  INITIAL_ERA_NAME="Initial Setup"
 
-	# Escape variables for sed replacement to prevent corruption from special chars
-	esc_project_name=$(escape_sed_replacement "$PROJECT_NAME")
-	esc_creation_date=$(escape_sed_replacement "$CREATION_DATE")
-	esc_era_name=$(escape_sed_replacement "$INITIAL_ERA_NAME")
+  # Escape variables for sed replacement to prevent corruption from special chars
+  esc_project_name=$(escape_sed_replacement "$PROJECT_NAME")
+  esc_creation_date=$(escape_sed_replacement "$CREATION_DATE")
+  esc_era_name=$(escape_sed_replacement "$INITIAL_ERA_NAME")
 
-	# Process template placeholders
-	sed -i "s/{{PROJECT_NAME}}/$esc_project_name/g" "$PROJECT_LOCATION/ralph/THUNK.md"
-	sed -i "s/{{CREATION_DATE}}/$esc_creation_date/g" "$PROJECT_LOCATION/ralph/THUNK.md"
-	sed -i "s/{{INITIAL_ERA_NAME}}/$esc_era_name/g" "$PROJECT_LOCATION/ralph/THUNK.md"
+  # Process template placeholders
+  sed -i "s/{{PROJECT_NAME}}/$esc_project_name/g" "$PROJECT_LOCATION/ralph/THUNK.md"
+  sed -i "s/{{CREATION_DATE}}/$esc_creation_date/g" "$PROJECT_LOCATION/ralph/THUNK.md"
+  sed -i "s/{{INITIAL_ERA_NAME}}/$esc_era_name/g" "$PROJECT_LOCATION/ralph/THUNK.md"
 
-	success "Copied ralph/THUNK.md (from template)"
+  success "Copied ralph/THUNK.md (from template)"
 else
-	warn "Template not found: ralph/THUNK.project.md"
+  warn "Template not found: ralph/THUNK.project.md"
 fi
 
 # Generate custom files using HIGH INTELLIGENCE generators
@@ -447,40 +447,40 @@ info "Generating custom project files..."
 
 # THOUGHTS.md goes in ralph/, not project root
 if [ -f "$BRAIN_DIR/generators/generate-thoughts.sh" ]; then
-	info "Generating custom THOUGHTS.md..."
-	bash "$BRAIN_DIR/generators/generate-thoughts.sh" "$IDEA_FILE" "$PROJECT_LOCATION/ralph/THOUGHTS.md"
-	success "Generated ralph/THOUGHTS.md"
+  info "Generating custom THOUGHTS.md..."
+  bash "$BRAIN_DIR/generators/generate-thoughts.sh" "$IDEA_FILE" "$PROJECT_LOCATION/ralph/THOUGHTS.md"
+  success "Generated ralph/THOUGHTS.md"
 else
-	warn "Generator not found: generate-thoughts.sh (using template fallback)"
-	if [ -f "$TEMPLATES_DIR/THOUGHTS.project.md" ]; then
-		cp "$TEMPLATES_DIR/THOUGHTS.project.md" "$PROJECT_LOCATION/ralph/THOUGHTS.md"
-		substitute_placeholders "$PROJECT_LOCATION/ralph/THOUGHTS.md" "$REPO_NAME" "$WORK_BRANCH"
-		success "Copied ralph/THOUGHTS.md template (needs customization)"
-	fi
+  warn "Generator not found: generate-thoughts.sh (using template fallback)"
+  if [ -f "$TEMPLATES_DIR/THOUGHTS.project.md" ]; then
+    cp "$TEMPLATES_DIR/THOUGHTS.project.md" "$PROJECT_LOCATION/ralph/THOUGHTS.md"
+    substitute_placeholders "$PROJECT_LOCATION/ralph/THOUGHTS.md" "$REPO_NAME" "$WORK_BRANCH"
+    success "Copied ralph/THOUGHTS.md template (needs customization)"
+  fi
 fi
 
 # NEURONS.md goes in ralph/, not project root
 if [ -f "$BRAIN_DIR/generators/generate-neurons.sh" ]; then
-	info "Generating custom NEURONS.md..."
-	bash "$BRAIN_DIR/generators/generate-neurons.sh" "$IDEA_FILE" "$PROJECT_LOCATION/ralph/NEURONS.md"
-	success "Generated ralph/NEURONS.md"
+  info "Generating custom NEURONS.md..."
+  bash "$BRAIN_DIR/generators/generate-neurons.sh" "$IDEA_FILE" "$PROJECT_LOCATION/ralph/NEURONS.md"
+  success "Generated ralph/NEURONS.md"
 else
-	warn "Generator not found: generate-neurons.sh (using template fallback)"
-	if [ -f "$TEMPLATES_DIR/NEURONS.project.md" ]; then
-		cp "$TEMPLATES_DIR/NEURONS.project.md" "$PROJECT_LOCATION/ralph/NEURONS.md"
-		substitute_placeholders "$PROJECT_LOCATION/ralph/NEURONS.md" "$REPO_NAME" "$WORK_BRANCH"
-		success "Copied ralph/NEURONS.md template (needs customization)"
-	fi
+  warn "Generator not found: generate-neurons.sh (using template fallback)"
+  if [ -f "$TEMPLATES_DIR/NEURONS.project.md" ]; then
+    cp "$TEMPLATES_DIR/NEURONS.project.md" "$PROJECT_LOCATION/ralph/NEURONS.md"
+    substitute_placeholders "$PROJECT_LOCATION/ralph/NEURONS.md" "$REPO_NAME" "$WORK_BRANCH"
+    success "Copied ralph/NEURONS.md template (needs customization)"
+  fi
 fi
 
 # Generate IMPLEMENTATION_PLAN.md using HIGH INTELLIGENCE generator
 if [ -f "$BRAIN_DIR/generators/generate-implementation-plan.sh" ]; then
-	info "Generating custom IMPLEMENTATION_PLAN.md..."
-	bash "$BRAIN_DIR/generators/generate-implementation-plan.sh" "$IDEA_FILE" "$PROJECT_LOCATION/ralph/IMPLEMENTATION_PLAN.md"
-	success "Generated custom IMPLEMENTATION_PLAN.md"
+  info "Generating custom IMPLEMENTATION_PLAN.md..."
+  bash "$BRAIN_DIR/generators/generate-implementation-plan.sh" "$IDEA_FILE" "$PROJECT_LOCATION/ralph/IMPLEMENTATION_PLAN.md"
+  success "Generated custom IMPLEMENTATION_PLAN.md"
 else
-	warn "Generator not found: generate-implementation-plan.sh (using template)"
-	# Template already copied above
+  warn "Generator not found: generate-implementation-plan.sh (using template)"
+  # Template already copied above
 fi
 
 # ============================================
@@ -488,11 +488,11 @@ fi
 # ============================================
 
 if [ -f "$TEMPLATES_DIR/.gitignore" ]; then
-	cp "$TEMPLATES_DIR/.gitignore" "$PROJECT_LOCATION/.gitignore"
-	success "Copied .gitignore from template"
+  cp "$TEMPLATES_DIR/.gitignore" "$PROJECT_LOCATION/.gitignore"
+  success "Copied .gitignore from template"
 else
-	# Create default .gitignore
-	cat >"$PROJECT_LOCATION/.gitignore" <<'EOF'
+  # Create default .gitignore
+  cat >"$PROJECT_LOCATION/.gitignore" <<'EOF'
 # Ralph logs
 ralph/logs/
 
@@ -504,7 +504,7 @@ ralph/logs/
 .DS_Store
 Thumbs.db
 EOF
-	success "Created .gitignore"
+  success "Created .gitignore"
 fi
 
 # ============================================
@@ -569,72 +569,72 @@ git commit -m "Initial scaffolding from Ralph Brain"
 git branch -M main
 
 if [[ "$CREATE_REPO" == "true" ]]; then
-	info "Creating GitHub repository..."
+  info "Creating GitHub repository..."
 
-	# Loop for handling name conflicts
-	while true; do
-		create_output=$(gh repo create "$REPO_NAME" --public --source=. --remote=origin 2>&1)
-		create_exit=$?
+  # Loop for handling name conflicts
+  while true; do
+    create_output=$(gh repo create "$REPO_NAME" --public --source=. --remote=origin 2>&1)
+    create_exit=$?
 
-		if [[ $create_exit -eq 0 ]]; then
-			success "GitHub repo created: $GITHUB_USERNAME/$REPO_NAME"
-			break
-		else
-			# Classify error
-			if echo "$create_output" | grep -qiE "already exists|name.*(taken|unavailable)|repository creation failed|could not create repository"; then
-				# Name conflict
-				warn "Repository name '$REPO_NAME' is not available"
-				echo ""
-				read -r -p "Enter a different repository name (or 'skip' for local-only): " new_repo_name
-				if [[ "$new_repo_name" == "skip" ]]; then
-					LOCAL_ONLY=true
-					warn "Switching to local-only mode"
-					break
-				fi
-				REPO_NAME="$new_repo_name"
-				WORK_BRANCH="${REPO_NAME}-work"
-			elif echo "$create_output" | grep -qiE "auth|permission|token|credential|network|could not resolve|rate limit|forbidden|unauthorized"; then
-				# Auth/network failure
-				warn "GitHub unavailable: $create_output"
-				LOCAL_ONLY=true
-				break
-			else
-				# Unknown error - fallback to local-only
-				warn "Unknown error creating repo: $create_output"
-				LOCAL_ONLY=true
-				break
-			fi
-		fi
-	done
+    if [[ $create_exit -eq 0 ]]; then
+      success "GitHub repo created: $GITHUB_USERNAME/$REPO_NAME"
+      break
+    else
+      # Classify error
+      if echo "$create_output" | grep -qiE "already exists|name.*(taken|unavailable)|repository creation failed|could not create repository"; then
+        # Name conflict
+        warn "Repository name '$REPO_NAME' is not available"
+        echo ""
+        read -r -p "Enter a different repository name (or 'skip' for local-only): " new_repo_name
+        if [[ "$new_repo_name" == "skip" ]]; then
+          LOCAL_ONLY=true
+          warn "Switching to local-only mode"
+          break
+        fi
+        REPO_NAME="$new_repo_name"
+        WORK_BRANCH="${REPO_NAME}-work"
+      elif echo "$create_output" | grep -qiE "auth|permission|token|credential|network|could not resolve|rate limit|forbidden|unauthorized"; then
+        # Auth/network failure
+        warn "GitHub unavailable: $create_output"
+        LOCAL_ONLY=true
+        break
+      else
+        # Unknown error - fallback to local-only
+        warn "Unknown error creating repo: $create_output"
+        LOCAL_ONLY=true
+        break
+      fi
+    fi
+  done
 
-	if [[ "$LOCAL_ONLY" != "true" ]]; then
-		# Push main
-		info "Pushing main branch..."
-		git push -u origin main
+  if [[ "$LOCAL_ONLY" != "true" ]]; then
+    # Push main
+    info "Pushing main branch..."
+    git push -u origin main
 
-		# Create and push work branch
-		info "Creating work branch: $WORK_BRANCH"
-		git checkout -b "$WORK_BRANCH"
-		git push -u origin "$WORK_BRANCH"
+    # Create and push work branch
+    info "Creating work branch: $WORK_BRANCH"
+    git checkout -b "$WORK_BRANCH"
+    git push -u origin "$WORK_BRANCH"
 
-		success "Repository setup complete!"
-	fi
+    success "Repository setup complete!"
+  fi
 fi
 
 # Handle local-only mode
 if [[ "$LOCAL_ONLY" == "true" ]]; then
-	warn "Project created in local-only mode"
-	echo ""
-	echo "To connect to GitHub later, run these commands:"
-	echo ""
-	echo "  gh repo create $REPO_NAME --public --source=. --remote=origin"
-	echo "  git push -u origin main"
-	echo "  git checkout -b $WORK_BRANCH"
-	echo "  git push -u origin $WORK_BRANCH"
-	echo ""
+  warn "Project created in local-only mode"
+  echo ""
+  echo "To connect to GitHub later, run these commands:"
+  echo ""
+  echo "  gh repo create $REPO_NAME --public --source=. --remote=origin"
+  echo "  git push -u origin main"
+  echo "  git checkout -b $WORK_BRANCH"
+  echo "  git push -u origin $WORK_BRANCH"
+  echo ""
 
-	# Still create local work branch
-	git checkout -b "$WORK_BRANCH"
+  # Still create local work branch
+  git checkout -b "$WORK_BRANCH"
 fi
 
 # Ensure we end on work branch
@@ -652,7 +652,7 @@ echo ""
 info "Project created at: $PROJECT_LOCATION"
 info "Current branch: $WORK_BRANCH"
 if [[ "$LOCAL_ONLY" != "true" ]]; then
-	info "GitHub repo: https://github.com/$GITHUB_USERNAME/$REPO_NAME"
+  info "GitHub repo: https://github.com/$GITHUB_USERNAME/$REPO_NAME"
 fi
 echo ""
 info "Next steps:"

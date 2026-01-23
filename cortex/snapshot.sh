@@ -19,29 +19,29 @@ echo ""
 # 1. Git Status
 echo "## Git"
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    echo "Branch: $(git branch --show-current)"
-    if git diff-index --quiet HEAD -- 2>/dev/null; then
-        echo "Status: Clean"
-    else
-        echo "Status: Dirty"
-        git status --short
-    fi
+  echo "Branch: $(git branch --show-current)"
+  if git diff-index --quiet HEAD -- 2>/dev/null; then
+    echo "Status: Clean"
+  else
+    echo "Status: Dirty"
+    git status --short
+  fi
 else
-    echo "Not a git repository"
+  echo "Not a git repository"
 fi
 echo ""
 
 # 2. Ralph Status
 echo "## Ralph"
 if [[ -f "workers/IMPLEMENTATION_PLAN.md" ]]; then
-    ralph_total=$(grep -cE '^\- \[(x|~| |\?)\] \*\*[0-9]' workers/IMPLEMENTATION_PLAN.md || echo "0")
-    ralph_done=$(grep -cE '^\- \[x\] \*\*[0-9]' workers/IMPLEMENTATION_PLAN.md || echo "0")
-    echo "Tasks: ${ralph_done}/${ralph_total}"
-    echo ""
-    echo "Next:"
-    grep -E '^\- \[ \] \*\*[0-9]' workers/IMPLEMENTATION_PLAN.md | head -3 || echo "None"
+  ralph_total=$(grep -cE '^\- \[(x|~| |\?)\] \*\*[0-9]' workers/IMPLEMENTATION_PLAN.md || echo "0")
+  ralph_done=$(grep -cE '^\- \[x\] \*\*[0-9]' workers/IMPLEMENTATION_PLAN.md || echo "0")
+  echo "Tasks: ${ralph_done}/${ralph_total}"
+  echo ""
+  echo "Next:"
+  grep -E '^\- \[ \] \*\*[0-9]' workers/IMPLEMENTATION_PLAN.md | head -3 || echo "None"
 else
-    echo "No IMPLEMENTATION_PLAN.md"
+  echo "No IMPLEMENTATION_PLAN.md"
 fi
 echo ""
 

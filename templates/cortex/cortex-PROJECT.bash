@@ -54,9 +54,19 @@ MODEL_ARG="opus"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -h|--help) usage; exit 0 ;;
-    --model) MODEL_ARG="${2:-}"; shift 2 ;;
-    *) echo "Unknown: $1" >&2; usage; exit 2 ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    --model)
+      MODEL_ARG="${2:-}"
+      shift 2
+      ;;
+    *)
+      echo "Unknown: $1" >&2
+      usage
+      exit 2
+      ;;
   esac
 done
 
@@ -74,7 +84,8 @@ echo ""
 SNAPSHOT_OUTPUT=$(bash "${SCRIPT_DIR}/snapshot.sh")
 
 # Build system prompt with project context
-CORTEX_SYSTEM_PROMPT=$(cat <<EOF
+CORTEX_SYSTEM_PROMPT=$(
+  cat <<EOF
 $(cat "${SCRIPT_DIR}/AGENTS.md")
 
 ---
@@ -130,21 +141,21 @@ echo ""
 
 CONFIG_FILE="/tmp/cortex_config_$$_$(date +%s).yml"
 
-cat > "$CONFIG_FILE" <<EOF
+cat >"$CONFIG_FILE" <<EOF
 version: 1
 agent:
   additionalSystemPrompt: |
 $(while IFS= read -r line; do
-    echo "    $line"
-done <<< "$CORTEX_SYSTEM_PROMPT")
+  echo "    $line"
+done <<<"$CORTEX_SYSTEM_PROMPT")
   streaming: true
   temperature: 0.3
 EOF
 
 if [[ -n "$RESOLVED_MODEL" ]]; then
-  echo "  modelId: ${RESOLVED_MODEL}" >> "$CONFIG_FILE"
+  echo "  modelId: ${RESOLVED_MODEL}" >>"$CONFIG_FILE"
 else
-  echo "  modelId: auto" >> "$CONFIG_FILE"
+  echo "  modelId: auto" >>"$CONFIG_FILE"
 fi
 
 acli rovodev run --config-file "$CONFIG_FILE" --yolo

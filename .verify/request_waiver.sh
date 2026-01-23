@@ -22,7 +22,7 @@ REQUESTS_DIR="${SCRIPT_DIR}/waiver_requests"
 DEFAULT_EXPIRY_DAYS=30
 
 usage() {
-    cat << 'EOF'
+  cat <<'EOF'
 Usage: request_waiver.sh <RULE_ID> <FILE_PATH> "<REASON>"
 
 Arguments:
@@ -42,7 +42,7 @@ After creating the request, ask Jono to approve:
   source .venv/bin/activate
   python .verify/approve_waiver_totp.py .verify/waiver_requests/<WAIVER_ID>.json
 EOF
-    exit 1
+  exit 1
 }
 
 # Parse arguments
@@ -50,26 +50,26 @@ EXPIRY_DAYS=$DEFAULT_EXPIRY_DAYS
 POSITIONAL=()
 
 while [[ $# -gt 0 ]]; do
-    case $1 in
-        --expiry)
-            EXPIRY_DAYS="$2"
-            shift 2
-            ;;
-        --help|-h)
-            usage
-            ;;
-        *)
-            POSITIONAL+=("$1")
-            shift
-            ;;
-    esac
+  case $1 in
+    --expiry)
+      EXPIRY_DAYS="$2"
+      shift 2
+      ;;
+    --help | -h)
+      usage
+      ;;
+    *)
+      POSITIONAL+=("$1")
+      shift
+      ;;
+  esac
 done
 
 set -- "${POSITIONAL[@]}"
 
 if [[ $# -lt 3 ]]; then
-    echo "ERROR: Missing required arguments"
-    usage
+  echo "ERROR: Missing required arguments"
+  usage
 fi
 
 RULE_ID="$1"
@@ -78,39 +78,39 @@ REASON="$3"
 
 # Validate inputs
 if [[ -z "$RULE_ID" ]]; then
-    echo "ERROR: RULE_ID cannot be empty"
-    exit 1
+  echo "ERROR: RULE_ID cannot be empty"
+  exit 1
 fi
 
 if [[ -z "$FILE_PATH" ]]; then
-    echo "ERROR: FILE_PATH cannot be empty"
-    exit 1
+  echo "ERROR: FILE_PATH cannot be empty"
+  exit 1
 fi
 
 if [[ "$FILE_PATH" == "." || "$FILE_PATH" == "*" || "$FILE_PATH" == "**" || "$FILE_PATH" == "**/*" ]]; then
-    echo "ERROR: Wildcard or repo-wide scopes are forbidden"
-    echo "Specify explicit file paths only."
-    exit 1
+  echo "ERROR: Wildcard or repo-wide scopes are forbidden"
+  echo "Specify explicit file paths only."
+  exit 1
 fi
 
 if [[ "$FILE_PATH" == *"*"* ]]; then
-    echo "ERROR: Wildcards not allowed in FILE_PATH"
-    exit 1
+  echo "ERROR: Wildcards not allowed in FILE_PATH"
+  exit 1
 fi
 
 if [[ -z "$REASON" ]]; then
-    echo "ERROR: REASON cannot be empty"
-    exit 1
+  echo "ERROR: REASON cannot be empty"
+  exit 1
 fi
 
 if [[ $EXPIRY_DAYS -gt 60 ]]; then
-    echo "ERROR: Expiry cannot exceed 60 days"
-    exit 1
+  echo "ERROR: Expiry cannot exceed 60 days"
+  exit 1
 fi
 
 if [[ $EXPIRY_DAYS -lt 1 ]]; then
-    echo "ERROR: Expiry must be at least 1 day"
-    exit 1
+  echo "ERROR: Expiry must be at least 1 day"
+  exit 1
 fi
 
 # Generate waiver ID
@@ -120,24 +120,24 @@ TODAY=$(date +%Y-%m-%d)
 mkdir -p "$REQUESTS_DIR"
 SEQ=1
 while [[ -f "${REQUESTS_DIR}/WVR-${TODAY}-$(printf '%03d' $SEQ).json" ]]; do
-    ((SEQ++))
+  ((SEQ++))
 done
 
 WAIVER_ID="WVR-${TODAY}-$(printf '%03d' $SEQ)"
 
 # Calculate expiry date
 if [[ "$(uname)" == "Darwin" ]]; then
-    # macOS
-    EXPIRES=$(date -v+"${EXPIRY_DAYS}"d +%Y-%m-%d)
+  # macOS
+  EXPIRES=$(date -v+"${EXPIRY_DAYS}"d +%Y-%m-%d)
 else
-    # Linux
-    EXPIRES=$(date -d "+${EXPIRY_DAYS} days" +%Y-%m-%d)
+  # Linux
+  EXPIRES=$(date -d "+${EXPIRY_DAYS} days" +%Y-%m-%d)
 fi
 
 # Create request JSON
 REQUEST_FILE="${REQUESTS_DIR}/${WAIVER_ID}.json"
 
-cat > "$REQUEST_FILE" << EOF
+cat >"$REQUEST_FILE" <<EOF
 {
   "waiver_id": "${WAIVER_ID}",
   "rule_id": "${RULE_ID}",

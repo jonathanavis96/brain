@@ -89,6 +89,7 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
     - [Variable Patterns](domains/shell/variable-patterns.md) - SC2155, SC2034, scoping
     - [Cleanup Patterns](domains/shell/cleanup-patterns.md) - Traps, temp files, state restoration
     - [Common Pitfalls](domains/shell/common-pitfalls.md) - TTY guards, magic numbers, DRY
+    - [Validation Patterns](domains/shell/validation-patterns.md) - Shell project validation (syntax, shellcheck, permissions, security)
   - **[Website Development](domains/websites/README.md)** - Website development overview
     - **Architecture**
       - [Section Composer](domains/websites/architecture/section-composer.md) - Section-based page composition
