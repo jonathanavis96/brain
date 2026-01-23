@@ -56,7 +56,7 @@
 
 - [x] **3.2.1** Create `workers/cerebras/` directory structure
 - [x] **3.2.2** Copy `loop.sh` template to `workers/cerebras/loop.sh`
-- [ ] **3.2.3** Create `workers/cerebras/NEURONS.md` (cerebras-specific structure map)
+- [x] **3.2.3** Create `workers/cerebras/NEURONS.md` (cerebras-specific structure map)
 
 ### Phase 3.3: Create Cerebras-specific `loop.sh`
 

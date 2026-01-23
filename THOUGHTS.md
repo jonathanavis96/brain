@@ -48,7 +48,7 @@ The brain repository is a **self-improving skills knowledge base for AI agents**
 
 ```text
 Agent discovers gap → Log to GAP_BACKLOG.md → Review and refine → Promote to SKILL_BACKLOG.md → Create skill document
-```text
+```
 
 **Components:**
 

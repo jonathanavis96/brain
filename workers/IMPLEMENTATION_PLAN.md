@@ -10,6 +10,8 @@
 ## Phase 0-Warn: Verifier Warnings
 
 - [x] **WARN.Template.1.thunk** Fix Template.1 - thunk_ralph_tasks.sh matches template (FALSE POSITIVE - files are identical via cmp, diff shows no output)
+- [x] **WARN.Markdown.NeuronsBalancedFences** Fix Lint.Markdown.NeuronsBalancedFences - NEURONS.md had 4 opening fences but 0 closing fences (lines 91, 237 had triple-backtick-text instead of triple-backtick)
+- [x] **WARN.Markdown.ThoughtsBalancedFences** Fix Lint.Markdown.ThoughtsBalancedFences - THOUGHTS.md had 2 opening fences but 0 closing fences (line 50 had triple-backtick-text instead of triple-backtick)
 - [ ] **WARN.TemplateSync.1.current** Fix Hygiene.TemplateSync.1 - Sync performance optimizations from workers/ralph/current_ralph_tasks.sh to template
 - [ ] **WARN.TemplateSync.2.loop** Fix Hygiene.TemplateSync.2 - loop.sh path differences (workers/ralph/ vs ralph/) - BY DESIGN, different deployment paths
 - [ ] **WARN.Shellcheck.LoopSh** Fix Lint.Shellcheck.LoopSh (FALSE POSITIVE - shellcheck passes with 0 errors)

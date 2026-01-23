@@ -89,7 +89,7 @@ brain/                           # Root of brain repository
     ├── latest.txt              # Last verifier run output
     ├── waiver_requests/        # Pending waiver requests
     └── waivers/                # Approved waivers (OTP-protected)
-```text
+```
 
 ## File Counts
 
@@ -235,7 +235,7 @@ rg -i "TODO|FIXME|XXX" --type md | head -20
 # Verify skills catalog up-to-date
 ls -1 skills/domains/*/*.md | wc -l
 grep -c "^- \[" skills/index.md
-```text
+```
 
 ## Navigation Tips
 

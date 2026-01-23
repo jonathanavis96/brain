@@ -68,7 +68,7 @@ Then output `:::BUILD_READY:::` to end the iteration.
 **Every completed task MUST include ALL THREE in ONE commit:**
 
 1. ✅ The code/doc fix itself
-2. ✅ THUNK.md entry (append to current era table)
+2. ✅ workers/ralph/THUNK.md entry (append to current era table)
 3. ✅ workers/IMPLEMENTATION_PLAN.md update (mark task `[x]`)
 
 ```bash
@@ -78,7 +78,7 @@ git add -A && git commit -m "msg"
 
 **NEVER make separate commits** for "mark task complete" or "log to THUNK" - these waste iterations and break traceability.
 
-**If you commit code without updating THUNK.md and workers/IMPLEMENTATION_PLAN.md, you have NOT completed the task.**
+**If you commit code without updating workers/ralph/THUNK.md and workers/IMPLEMENTATION_PLAN.md, you have NOT completed the task.**
 
 ---
 
@@ -244,8 +244,8 @@ cat .verify/latest.txt | grep -E "SUMMARY|\[WARN\]|\[FAIL\]"
 
 4. Validate per AGENTS.md commands
 
-5. **SINGLE COMMIT RULE:** Commit ALL changes together (code fix + THUNK.md + workers/IMPLEMENTATION_PLAN.md):
-   - Log completion to THUNK.md (append to current era table)
+5. **SINGLE COMMIT RULE:** Commit ALL changes together (code fix + workers/ralph/THUNK.md + workers/IMPLEMENTATION_PLAN.md):
+   - Log completion to workers/ralph/THUNK.md (append to current era table)
    - Mark task `[x]` in workers/IMPLEMENTATION_PLAN.md
    - **NEVER make separate commits** for "mark task complete" or "log to THUNK" - these waste iterations
 
@@ -380,7 +380,7 @@ Target: <20 tool calls per iteration.
 
 - `pwd`, `git branch` - known from header
 - `.verify/latest.txt` - read ONCE at start
-- `tail THUNK.md` - get next number ONCE
+- `tail workers/ralph/THUNK.md` - get next number ONCE
 - Same file content - read ONCE, remember it
 
 **ALWAYS batch:** `grep pattern file1 file2 file3` not 3 separate calls.
