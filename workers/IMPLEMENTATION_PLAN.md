@@ -19,7 +19,7 @@
 - [x] **0.W.7** Fix SC issues in templates/ralph/thunk_ralph_tasks.sh (Lint.Shellcheck.ThunkRalphTasks) - FALSE POSITIVE: shellcheck passes, verifier regex issue
 - [x] **0.W.8** Request waivers for all 7 verifier false positives - Created WVR-2026-01-23-014 through WVR-2026-01-23-020
 - [x] **0.W.9** Note: Protected.1 warning for loop.sh - SKIP (human review, change already logged)
-- [ ] **0.W.10** Note: Hygiene.TemplateSync.2 for loop.sh - SKIP (intentional divergence, waiver WVR-2026-01-23-020 requested)
+- [x] **0.W.10** Note: Hygiene.TemplateSync.2 for loop.sh - SKIP (intentional divergence, waiver WVR-2026-01-23-020 requested)
 
 ---
 
@@ -111,23 +111,23 @@
 
 ### Phase 7.1: Modify verifier behavior (2 tasks)
 
-- [ ] **7.1.1** Change Protected.* checks from FAIL to WARN in `workers/ralph/verifier.sh`
+- [x] **7.1.1** Change Protected.* checks from FAIL to WARN in `workers/ralph/verifier.sh`
   - Keep hash comparison logic
   - Output `[WARN]` instead of `[FAIL]`
   - Don't increment failure count for protected file mismatches
   - **AC:** Protected file mismatches show WARN, loop continues
 
-- [ ] **7.1.2** Create `.verify/protected_changes.log` to track changes
+- [x] **7.1.2** Create `.verify/protected_changes.log` to track changes
   - On hash mismatch, append: timestamp, filename, lines added/removed (from `git diff --stat`)
   - Human can review this file to see what changed
   - **AC:** File exists and logs changes when protected files modified
 
 ### Phase 7.2: Update baselines and templates (2 tasks)
 
-- [ ] **7.2.1** Regenerate verifier.sh hash baselines after modification
+- [x] **7.2.1** Regenerate verifier.sh hash baselines after modification
   - **AC:** `sha256sum verifier.sh` matches `.verify/verifier.sha256`
 
-- [ ] **7.2.2** Sync changes to `templates/ralph/verifier.sh`
+- [x] **7.2.2** Sync changes to `templates/ralph/verifier.sh`
   - **AC:** `diff workers/ralph/verifier.sh templates/ralph/verifier.sh` returns no output
 
 **AC:** Protected file changes warn but don't block, changes logged for human review
