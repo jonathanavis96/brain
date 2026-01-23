@@ -18,8 +18,10 @@ if [[ -n "${RALPH_PROJECT_ROOT:-}" ]]; then
   ROOT="$RALPH_PROJECT_ROOT"
   RALPH="$ROOT/workers/ralph"
 else
-  ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-  RALPH="$ROOT/workers/ralph"
+  # Get absolute path to this script, then go up two levels for ROOT (brain/workers/ralph -> brain)
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  RALPH="$SCRIPT_DIR"
+  ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
 fi
 LOGDIR="$RALPH/logs"
 VERIFY_REPORT="$RALPH/.verify/latest.txt"
