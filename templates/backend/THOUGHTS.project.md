@@ -7,6 +7,7 @@
 [REPLACE: Describe your backend service's purpose. What problem does it solve? Who/what consumes it? What value does it provide?]
 
 Example structure:
+
 - **Primary Goal:** [Main objective - e.g., "Provide authentication and user management API"]
 - **Key Features:** [List 3-5 main API capabilities or services]
 - **Target Consumers:** [Who/what uses this API - frontend apps, other services, external clients]
@@ -19,6 +20,7 @@ Example structure:
 [REPLACE: What is the backend currently working on? What's the immediate priority?]
 
 Example:
+
 - New API endpoint implementation (e.g., POST /api/v1/orders)
 - Performance optimization (e.g., database query tuning, caching layer)
 - Authentication/authorization enhancement
@@ -32,6 +34,7 @@ Example:
 A task/feature in this project is complete when:
 
 #### ✅ Functionality
+
 - API endpoint works as specified in requirements
 - Handles all expected input cases
 - Proper error handling for invalid inputs
@@ -39,6 +42,7 @@ A task/feature in this project is complete when:
 - Returns correct status codes and response formats
 
 #### ✅ Testing
+
 - Unit tests written and passing (>80% coverage on business logic)
 - Integration tests cover API endpoints end-to-end
 - Error scenarios tested (4xx, 5xx responses)
@@ -46,6 +50,7 @@ A task/feature in this project is complete when:
 - Load/performance testing completed (if applicable)
 
 #### ✅ Code Quality
+
 - Follows framework-specific best practices
 - Business logic separated from HTTP layer
 - Error handling consistent across endpoints
@@ -54,6 +59,7 @@ A task/feature in this project is complete when:
 - No secrets in code or logs
 
 #### ✅ Documentation
+
 - API endpoint documented (OpenAPI/Swagger or equivalent)
 - Request/response examples provided
 - Error responses documented
@@ -61,6 +67,7 @@ A task/feature in this project is complete when:
 - NEURONS.md updated if structure changes
 
 #### ✅ Security & Performance
+
 - Input validation at API boundary
 - Authentication/authorization enforced
 - SQL injection/XSS prevention verified
@@ -69,6 +76,7 @@ A task/feature in this project is complete when:
 - Database queries optimized (no N+1 problems)
 
 #### ✅ Deployment
+
 - Environment variables documented
 - Database migrations applied
 - Health check endpoint working
@@ -100,6 +108,7 @@ For this project, "source code" means:
 - **`scripts/`** - Deployment and utility scripts
 
 **NOT source code:**
+
 - `node_modules/` or `venv/` - Dependencies (generated)
 - `dist/`, `build/`, `target/` - Build artifacts (generated)
 - `logs/` - Runtime logs (generated)
@@ -123,6 +132,7 @@ This project references brain repository knowledge:
 [REPLACE: Key technical decisions, architecture choices, or constraints]
 
 ### Technology Stack
+
 - **Language:** [e.g., TypeScript (Node.js), Python, Go, Java]
 - **Framework:** [e.g., Express, FastAPI, Gin, Spring Boot]
 - **Database:** [e.g., PostgreSQL, MongoDB, MySQL]
@@ -131,12 +141,14 @@ This project references brain repository knowledge:
 - **Infrastructure:** [e.g., Docker, Kubernetes, AWS Lambda, Heroku]
 
 ### Architecture Decisions
+
 - [Key decision 1 and rationale, e.g., "RESTful API over GraphQL for simplicity and caching"]
 - [Key decision 2 and rationale, e.g., "PostgreSQL for ACID compliance and relational data"]
 - [Key decision 3 and rationale, e.g., "JWT tokens for stateless authentication"]
 - [Key decision 4 and rationale, e.g., "Layered architecture: routes → services → repositories"]
 
 ### API Design Principles
+
 - **Versioning:** [e.g., "URL-based: /api/v1/resource"]
 - **Authentication:** [e.g., "JWT Bearer tokens"]
 - **Error Format:** [e.g., "JSON with error code, message, details"]
@@ -144,12 +156,14 @@ This project references brain repository knowledge:
 - **Rate Limiting:** [e.g., "100 requests per minute per API key"]
 
 ### Constraints
+
 - [Technical constraint 1, e.g., "Must support 1000 concurrent connections"]
 - [Technical constraint 2, e.g., "Response time <200ms for 95th percentile"]
 - [Technical constraint 3, e.g., "Must integrate with legacy system via REST"]
 - [Business constraint 1, e.g., "PCI DSS compliance required for payment data"]
 
 ### Deployment & Operations
+
 - **Environment Variables:** [List critical env vars, e.g., DATABASE_URL, API_KEY, JWT_SECRET]
 - **Health Checks:** [Endpoint for health monitoring, e.g., GET /health]
 - **Logging:** [Logging strategy, e.g., "Structured JSON logs to stdout"]

@@ -140,7 +140,7 @@ CREATE INDEX idx_posts_user_id ON posts(user_id);
 CREATE INDEX idx_posts_published_at ON posts(published_at) WHERE published_at IS NOT NULL;
 CREATE INDEX idx_comments_post_id ON comments(post_id);
 CREATE INDEX idx_comments_user_id ON comments(user_id);
-```
+```text
 
 **When to normalize:**
 
@@ -186,7 +186,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER comment_count_trigger
 AFTER INSERT OR DELETE ON comments
 FOR EACH ROW EXECUTE FUNCTION update_post_comment_count();
-```
+```text
 
 **When to denormalize:**
 
@@ -221,7 +221,7 @@ UPDATE posts SET deleted_at = NULL WHERE id = 123;
 
 -- Hard delete after retention period (run periodically)
 DELETE FROM posts WHERE deleted_at < NOW() - INTERVAL '90 days';
-```
+```text
 
 **When to use soft deletes:**
 
@@ -250,7 +250,7 @@ for (const post of posts) {
     where: { id: post.userId } 
   }); // Executes N times!
 }
-```
+```text
 
 **Solution 1 - Eager loading with ORM:**
 
@@ -261,7 +261,7 @@ const posts = await db.post.findMany({
     author: true,  // Prisma joins or batches this
   }
 });
-```
+```text
 
 **Solution 2 - Manual batching (DataLoader pattern):**
 
@@ -287,7 +287,7 @@ const postsWithAuthors = await Promise.all(
     author: await userLoader.load(post.userId)
   }))
 );
-```
+```text
 
 **Solution 3 - Raw SQL with JOIN:**
 
@@ -300,7 +300,7 @@ SELECT
 FROM posts
 INNER JOIN users ON posts.user_id = users.id
 WHERE posts.published_at IS NOT NULL;
-```
+```text
 
 #### Pattern 5: Indexing Strategy
 
@@ -331,7 +331,7 @@ WHERE published_at IS NOT NULL;
 -- Composite index (order matters! Most selective first)
 CREATE INDEX idx_users_tenant_active 
 ON users(tenant_id, is_active, created_at);
-```
+```text
 
 **Index guidelines:**
 
@@ -358,7 +358,7 @@ ORDER BY schemaname, tablename;
 -- Query performance analysis
 EXPLAIN ANALYZE
 SELECT * FROM posts WHERE user_id = 123 AND published_at IS NOT NULL;
-```
+```text
 
 #### Pattern 6: Pagination
 
@@ -371,7 +371,7 @@ const posts = await db.post.findMany({
   take: pageSize,            // LIMIT
   orderBy: { createdAt: 'desc' }
 });
-```
+```text
 
 **Cursor-based (efficient for large datasets):**
 
@@ -389,7 +389,7 @@ return {
   posts,
   nextCursor: posts[posts.length - 1]?.id
 };
-```
+```text
 
 **SQL cursor pattern:**
 
@@ -399,7 +399,7 @@ SELECT * FROM posts
 WHERE created_at < '2024-01-15 10:00:00'  -- Cursor value
 ORDER BY created_at DESC
 LIMIT 20;
-```
+```text
 
 ### Transaction Patterns
 
@@ -427,7 +427,7 @@ await db.$transaction(async (tx) => {
   
   // All succeed or all rollback
 });
-```
+```text
 
 **PostgreSQL transaction isolation levels:**
 
@@ -440,7 +440,7 @@ BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 -- Serializable - strictest, prevents all anomalies
 BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;
-```
+```text
 
 **When to use transactions:**
 
@@ -478,7 +478,7 @@ const updated = await db.post.updateMany({
 if (updated.count === 0) {
   throw new Error('Post was modified by another user. Please refresh.');
 }
-```
+```text
 
 **Schema for optimistic locking:**
 
@@ -489,7 +489,7 @@ CREATE TABLE posts (
   version INTEGER DEFAULT 1,  -- Increment on every update
   updated_at TIMESTAMP DEFAULT NOW()
 );
-```
+```text
 
 **When to use:**
 
@@ -545,7 +545,7 @@ await db.$executeRaw`
   DROP COLUMN first_name,
   DROP COLUMN last_name;
 `;
-```
+```text
 
 **Migration best practices:**
 
@@ -567,7 +567,7 @@ npx prisma migrate deploy
 # Rollback (manual)
 # Edit schema.prisma to previous state, then:
 npx prisma migrate dev --name revert_full_name
-```
+```text
 
 ### Connection Pooling
 
@@ -589,7 +589,7 @@ const prisma = new PrismaClient({
 
 // PostgreSQL URL with pool settings
 DATABASE_URL="postgresql://user:password@localhost:5432/mydb?connection_limit=10&pool_timeout=20"  # pragma: allowlist secret
-```
+```text
 
 **Node.js pg pool:**
 
@@ -619,7 +619,7 @@ async function queryUser(userId) {
     client.release();  // Critical: return to pool
   }
 }
-```
+```text
 
 **Pool sizing guidelines:**
 
@@ -652,13 +652,13 @@ ALTER TABLE posts ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY tenant_isolation ON posts
   USING (tenant_id = current_setting('app.current_tenant')::UUID);
-```
+```text
 
 ```javascript
 // Set tenant context per request
 await db.$executeRaw`SET app.current_tenant = ${tenantId}`;
 const posts = await db.post.findMany();  // Automatic filtering
-```
+```text
 
 **Strategy 2 - Schema-level (separate schemas per tenant):**
 
@@ -670,13 +670,13 @@ CREATE SCHEMA tenant_globex;
 -- Same table structure in each schema
 CREATE TABLE tenant_acme.posts (...);
 CREATE TABLE tenant_globex.posts (...);
-```
+```text
 
 ```javascript
 // Switch schema per request
 await db.$executeRaw`SET search_path = ${tenantSchema}`;
 const posts = await db.post.findMany();
-```
+```text
 
 **Strategy 3 - Database-level (separate database per tenant):**
 
@@ -687,7 +687,7 @@ const tenantDb = new PrismaClient({
     db: { url: `postgresql://localhost/${tenantId}` }
   }
 });
-```
+```text
 
 **Decision matrix:**
 
@@ -707,7 +707,7 @@ SELECT * FROM posts;
 
 -- GOOD: Fetch only needed columns
 SELECT id, title, created_at FROM posts;
-```
+```text
 
 **❌ Missing indexes on foreign keys:**
 
@@ -720,7 +720,7 @@ CREATE TABLE posts (
 
 -- GOOD: Index foreign keys
 CREATE INDEX idx_posts_user_id ON posts(user_id);
-```
+```text
 
 **❌ Storing JSON blobs instead of proper schema:**
 
@@ -737,7 +737,7 @@ CREATE TABLE users (
   email VARCHAR(255) NOT NULL,
   preferences JSONB  -- Only dynamic data in JSON
 );
-```
+```text
 
 **❌ Using ORM for complex queries (slow):**
 
@@ -767,7 +767,7 @@ const result = await db.$queryRaw`
   LEFT JOIN comments c ON p.id = c.post_id
   LEFT JOIN users a ON c.user_id = a.id
 `;
-```
+```text
 
 **❌ Long-running transactions with external calls:**
 
@@ -786,7 +786,7 @@ const order = await db.$transaction(async (tx) => {
   return order;
 });
 await sendEmail(order);  // After transaction committed
-```
+```text
 
 ## Related Patterns
 

@@ -11,7 +11,7 @@ ralph --runner cerebras --model zai-glm-4.7 -i20 -p5
 
 # Using loop.sh directly
 bash loop.sh --runner cerebras --model glm --iterations 5 --plan-every 99
-```
+```text
 
 ## Models
 
@@ -25,6 +25,7 @@ bash loop.sh --runner cerebras --model glm --iterations 5 --plan-every 99
 ## 17 Tools
 
 **Discovery** - Find before you read
+
 | Tool | Use For |
 |------|---------|
 | `glob` | Find files by pattern (`**/*.py`) |
@@ -33,6 +34,7 @@ bash loop.sh --runner cerebras --model glm --iterations 5 --plan-every 99
 | `list_dir` | Directory structure |
 
 **Reading** - Most → least specific
+
 | Tool | Use For |
 |------|---------|
 | `read_lines` | Specific line range (after grep/symbols) |
@@ -41,6 +43,7 @@ bash loop.sh --runner cerebras --model glm --iterations 5 --plan-every 99
 | `read_file` | Entire file (small files only) |
 
 **Writing** - Most → least efficient
+
 | Tool | Use For |
 |------|---------|
 | `patch_file` | Find/replace (best for edits) |
@@ -48,6 +51,7 @@ bash loop.sh --runner cerebras --model glm --iterations 5 --plan-every 99
 | `write_file` | Full rewrite (new files) |
 
 **Git** - Combined operations
+
 | Tool | Use For |
 |------|---------|
 | `git_status` | Branch + status + log in ONE call |
@@ -66,7 +70,7 @@ bash loop.sh --runner cerebras --model glm --iterations 5 --plan-every 99
 
 ```text
 think → glob → symbols → grep → read_lines → patch_file → diff → git_commit
-```
+```text
 
 1. **Plan** what you need to do
 2. **Find** files with glob
@@ -100,7 +104,7 @@ think → glob → symbols → grep → read_lines → patch_file → diff → g
   Completion tokens: 2,456
   Total tokens:      14,801
 ────────────────────────────────────────────────────────────────────────────────
-```
+```text
 
 ## Rate Limits
 

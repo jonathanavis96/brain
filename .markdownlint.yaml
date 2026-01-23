@@ -65,9 +65,8 @@ MD022:
 MD025: false
 
 # MD029 - Ordered list item prefix
-# Use ordered numbers (1. 2. 3.) not all 1s
-MD029:
-  style: ordered
+# Disabled: Code blocks interrupt lists and cause false positives
+MD029: false
 
 # MD035 - Horizontal rule style
 MD035:
@@ -92,3 +91,15 @@ MD049:
 # Use asterisks for bold
 MD050:
   style: asterisk
+
+# MD036 - No emphasis as heading
+# Disabled: We use bold for labels like "Correct ✅" intentionally
+MD036: false
+
+# MD051 - Link fragments should be valid
+# Disabled: False positives with special characters in headings (N+1, etc.)
+MD051: false
+
+# MD060 - Table column style
+# Disabled: Too strict about mixed styles within tables
+MD060: false

@@ -31,7 +31,7 @@ bash loop.sh --iterations 10    # Multiple iterations
 bash loop.sh --dry-run          # Preview changes
 bash loop.sh --rollback 2       # Undo last 2 commits
 bash loop.sh --resume           # Resume from interruption
-```
+```text
 
 **Mode:** Iteration 1 or every 3rd = PLAN, others = BUILD.
 
@@ -78,7 +78,7 @@ find /path/to/brain -name "filename"
 
 # Check if something already exists
 ls -la /path/to/brain/path/to/file
-```
+```text
 
 **Validate changes:**
 
@@ -91,7 +91,7 @@ shellcheck -e SC1091 workers/ralph/*.sh
 
 # Check markdown
 markdownlint **/*.md
-```
+```text
 
 ### Protected Files
 
@@ -151,7 +151,7 @@ The verifier runs automatically after each BUILD iteration, but you can run it m
 cd /path/to/brain/workers/ralph
 bash verifier.sh
 cat ../.verify/latest.txt  # See results
-```
+```text
 
 ## Troubleshooting
 

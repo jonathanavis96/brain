@@ -20,21 +20,25 @@ Read the current plan. If it doesn't exist or is empty, the first iteration must
 Ralph operates in two alternating phases:
 
 #### 📋 PLAN Phase
+
 See `PROMPT.md` (planning mode section) for full instructions.
 
 **Goal**: Create or update `fix_plan.md` with a prioritized Top 10 checklist
 
-**Frequency**: 
+**Frequency**:
+
 - First iteration (if fix_plan.md missing/empty)
 - Every N iterations (configurable, default: every 3)
 - When explicitly requested
 
 #### 🔨 BUILD Phase
+
 See `PROMPT.md` (building mode section) for full instructions.
 
 **Goal**: Implement the top item from `fix_plan.md`
 
 **Process**:
+
 1. Take top incomplete item from fix_plan.md
 2. Implement the change
 3. Run build/tests
@@ -45,11 +49,13 @@ See `PROMPT.md` (building mode section) for full instructions.
 ### Parallelism Contract
 
 **Reading/Searching** (max 100 parallel subagents):
+
 - Studying specs, source code, documentation
 - Searching for patterns, imports, references
 - Analyzing KB files and best practices
 
 **Building/Testing** (exactly 1 agent):
+
 - Running build commands
 - Executing tests and benchmarks
 - Making file modifications
@@ -59,15 +65,16 @@ See `PROMPT.md` (building mode section) for full instructions.
 
 When all work is complete, Ralph outputs:
 
-```
+```text
 :::COMPLETE:::
-```
+```text
 
 The loop runner detects this sentinel and stops iteration.
 
 ## Progress Tracking
 
 All Ralph iterations are logged to `ralph/progress.txt` with:
+
 - Timestamp
 - Iteration number
 - Phase (PLAN or BUILD)
@@ -79,12 +86,14 @@ All Ralph iterations are logged to `ralph/progress.txt` with:
 **Commits happen in PLAN phase only**, not after each BUILD iteration.
 
 PLAN phase commits all accumulated changes from BUILD iterations:
-```
+
+```text
 git add -A
 git commit -m "Ralph Plan: [comprehensive summary of all changes]"
-```
+```text
 
 This ensures:
+
 - Fewer, more meaningful commits
 - Comprehensive commit messages (Ralph has full context during PLAN)
 - All related changes grouped together
@@ -94,10 +103,12 @@ This ensures:
 Ralph MUST consult the shared brain knowledge base:
 
 **Always read first:**
+
 - `../../brain/skills/SUMMARY.md`
 - `../../brain/references/react-best-practices/HOTLIST.md`
 
 **Read on-demand:**
+
 - `../../brain/references/react-best-practices/INDEX.md`
 - `../../brain/references/react-best-practices/react-performance-guidelines.md`
 - `../../brain/references/react-best-practices/rules/*` (specific rules only)
@@ -108,19 +119,21 @@ When Ralph discovers new conventions or decisions, it creates/updates KB files i
 ## Running Ralph
 
 ### PowerShell
+
 ```powershell
 .\ralph\ralph.ps1 -Iterations 10 -PlanEvery 3
-```
+```text
 
 ### Manual (RovoDev CLI)
+
 ```powershell
 # Ralph determines mode from iteration number
 acli rovodev run "$(Get-Content ralph\PROMPT.md -Raw)"
-```
+```text
 
 ## File Structure
 
-```
+```text
 project-root/               ← Application code and config files
 ├── src/                    # Source code - ALWAYS in project root!
 ├── package.json            # Dependencies - in project root
@@ -139,9 +152,9 @@ project-root/               ← Application code and config files
     ├── logs/               # Iteration logs
     ├── skills/             # Project-specific knowledge base
     └── progress.txt        # Iteration log (appended)
-```
+```text
 
-### ⚠️ CRITICAL: Source code goes in PROJECT ROOT, not ralph/!
+### ⚠️ CRITICAL: Source code goes in PROJECT ROOT, not ralph/
 
 **The `ralph/` directory contains Ralph loop infrastructure AND project context files.**
 
@@ -155,6 +168,7 @@ project-root/               ← Application code and config files
 ## Philosophy: Ralph Wiggum
 
 Named after the Simpsons character who famously said "I'm helping!" Ralph embodies:
+
 - **Simple and obvious** - No clever tricks, just systematic iteration
 - **Persistent** - Keeps going until the job is done
 - **Honest** - Logs everything, admits what it doesn't know

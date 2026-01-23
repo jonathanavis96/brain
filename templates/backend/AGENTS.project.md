@@ -5,6 +5,7 @@
 ### Progressive Disclosure: Always Read in This Order
 
 **ALWAYS start here:**
+
 1. `../../brain/skills/SUMMARY.md` - Knowledge base overview and usage guide
 2. `../../brain/skills/domains/` - Domain-specific patterns (caching, API design, auth, testing, etc.)
 
@@ -15,6 +16,7 @@
 4. `../../brain/skills/projects/<project-slug>.md` - Project-specific conventions discovered in this codebase
 
 ### Why This Order Matters
+
 - **Token efficiency**: Start with summaries, drill down only when needed
 - **Faster results**: Targeted knowledge lookup vs scanning everything
 - **Avoid overwhelm**: Read specific docs only when task requires them
@@ -30,6 +32,7 @@ When you discover a new convention, architectural decision, or project-specific 
 2. **Update the index**: Add a link in `../../brain/skills/SUMMARY.md`
 
 3. **Structure new skill files** with:
+
    ```markdown
    # [Title]
    
@@ -46,21 +49,25 @@ When you discover a new convention, architectural decision, or project-specific 
 ## Parallelism Rule
 
 **Reading/searching/spec review**: Use up to **100 parallel subagents** for maximum efficiency
+
 - File reading, searching, spec analysis, documentation review
 - Gathering context from multiple sources simultaneously
 
 **Build/tests/benchmarks**: Use exactly **1 agent**
+
 - Running build commands, executing tests, benchmarks
 - Making file modifications and commits
 
 ## Core Principles
 
 ### Before Making Changes
+
 1. **Search the codebase** - Don't assume anything is missing; search first
 2. **Read targeted knowledge** - Follow the hierarchy: SUMMARY → domain docs → specific files
 3. **Check existing patterns** - Look for established conventions in the codebase before inventing new ones
 
 ### API Design Best Practices
+
 - Follow RESTful conventions (or GraphQL/gRPC best practices)
 - Use proper HTTP status codes (2xx success, 4xx client errors, 5xx server errors)
 - Implement consistent error response formats
@@ -71,6 +78,7 @@ When you discover a new convention, architectural decision, or project-specific 
 - Keep endpoints focused and predictable
 
 ### Code Quality
+
 - Write clear, self-documenting code with minimal comments
 - Keep functions and handlers small and focused (single responsibility)
 - Use dependency injection for testability
@@ -80,6 +88,7 @@ When you discover a new convention, architectural decision, or project-specific 
 - Validate all inputs at API boundaries
 
 ### Project Structure
+
 - Organize by feature/domain (not by type - controllers/models/views)
 - Keep API routes in clear, documented files
 - Separate business logic from HTTP/transport layer
@@ -90,6 +99,7 @@ When you discover a new convention, architectural decision, or project-specific 
 - Maintain `ralph/IMPLEMENTATION_PLAN.md` as a prioritized task list
 
 ### Backend-Specific Best Practices
+
 - **Authentication**: Use JWT, OAuth2, or session-based auth consistently
 - **Authorization**: Implement role-based or attribute-based access control
 - **Validation**: Validate all inputs at the API boundary
@@ -105,10 +115,11 @@ When you discover a new convention, architectural decision, or project-specific 
 
 - **Environment:** WSL (Windows Subsystem for Linux) on Windows 11 with Ubuntu
 - **Shell:** bash (comes with WSL Ubuntu)
-- **Atlassian CLI:** `acli` - https://developer.atlassian.com/cloud/cli/
+- **Atlassian CLI:** `acli` - <https://developer.atlassian.com/cloud/cli/>
 - **RovoDev:** `acli rovodev auth && acli rovodev usage site`
 
 ### WSL/Windows 11 Specifics
+
 - Working directory: `/mnt/c/...` or `/home/...` depending on where repository is cloned
 - Git line endings: Use `core.autocrlf=input` to avoid CRLF issues
 - File permissions: WSL handles Unix permissions on Windows filesystem
@@ -117,6 +128,7 @@ When you discover a new convention, architectural decision, or project-specific 
 ## Ralph Integration
 
 This project uses the Ralph Wiggum iterative loop for systematic development:
+
 - **Single unified prompt**: See `ralph/PROMPT.md` (determines mode from iteration number)
 - **Progress tracking**: All work logged in `ralph/progress.txt`
 - **Completion**: Look for `:::COMPLETE:::` sentinel
@@ -142,6 +154,7 @@ When working with RovoDev and Atlassian CLI:
 ## Framework-Specific Notes
 
 ### Express.js (Node.js)
+
 - Use async/await for asynchronous operations
 - Implement error handling middleware
 - Use helmet for security headers
@@ -149,6 +162,7 @@ When working with RovoDev and Atlassian CLI:
 - Use environment variables via dotenv
 
 ### FastAPI (Python)
+
 - Use Pydantic models for request/response validation
 - Leverage automatic OpenAPI documentation
 - Use dependency injection for database connections
@@ -156,6 +170,7 @@ When working with RovoDev and Atlassian CLI:
 - Use middleware for cross-cutting concerns
 
 ### Gin/Echo (Go)
+
 - Use structured logging
 - Implement middleware for common tasks
 - Use context for request-scoped values
@@ -163,6 +178,7 @@ When working with RovoDev and Atlassian CLI:
 - Use goroutines responsibly for concurrent operations
 
 ### Spring Boot (Java)
+
 - Use annotations for configuration
 - Implement exception handlers
 - Use dependency injection (constructor injection preferred)
@@ -172,18 +188,21 @@ When working with RovoDev and Atlassian CLI:
 ## Testing Backend APIs
 
 ### Unit Testing
+
 - Test business logic in isolation
 - Mock external dependencies (databases, APIs, services)
 - Test edge cases and error conditions
 - Aim for >80% coverage on critical paths
 
 ### Integration Testing
+
 - Test full API endpoints with real dependencies
 - Use test databases/containers for isolation
 - Test authentication and authorization flows
 - Verify error responses and status codes
 
 ### Common Testing Tools
+
 - **Node.js**: Jest, Supertest, Mocha/Chai
 - **Python**: pytest, unittest, httpx (for async)
 - **Go**: testing package, httptest, testify

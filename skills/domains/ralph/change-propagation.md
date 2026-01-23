@@ -33,7 +33,7 @@ Reality: Never wrote this to any file
 ✅ RIGHT - Write to persistent location
 Agent: "I've documented this in cortex/AGENTS.md lines 145-155"
 Then actually write it to the file
-```
+```text
 
 ## Verification Checklist
 
@@ -61,7 +61,7 @@ templates/ralph/loop.sh
 # Example: Updated cortex/rovo/AGENTS.md with lean format
 # Must also update:
 templates/cortex/AGENTS.project.md  # (if it's a pattern for all projects)
-```
+```text
 
 ## The "Say-Do" Rule
 
@@ -75,7 +75,7 @@ templates/cortex/AGENTS.project.md  # (if it's a pattern for all projects)
 ✅ "I've written this to cortex/AGENTS.md lines 145-155"
 ✅ "I've updated templates/ralph/loop.sh with the same change"
 ✅ "Task complete - verified with: bash -n loop.sh"
-```
+```text
 
 ## Acceptance Criteria Pattern
 
@@ -88,7 +88,7 @@ When given a task, define AC that includes propagation:
     - [ ] templates/ralph/loop.sh updated (same change)
     - [ ] Both pass syntax check: `bash -n`
     - [ ] Pattern documented in skills/ if reusable
-```
+```text
 
 ## Why This Matters
 

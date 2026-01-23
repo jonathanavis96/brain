@@ -35,7 +35,7 @@ Different caching layers serve different purposes. Use multiple layers for maxim
 ```text
 Request → CDN Cache → Application Cache → Database Query Cache → Database
           (edge)       (Redis/memory)       (DB level)
-```
+```text
 
 **Decision matrix:**
 
@@ -76,7 +76,7 @@ const user = await getCurrentUser();
 
 // app/header.jsx
 const user = await getCurrentUser(); // Uses cached result from above
-```
+```text
 
 **When to use:**
 
@@ -127,7 +127,7 @@ export function invalidateUser(userId) {
 export function clearUserCache() {
   userCache.clear();
 }
-```
+```text
 
 **When to use:**
 
@@ -172,7 +172,7 @@ export function slugify(text) {
 export function clearSlugCache() {
   slugCache.clear();
 }
-```
+```text
 
 **When to use:**
 
@@ -194,7 +194,7 @@ function cacheSet(cache, key, value) {
   }
   cache.set(key, value);
 }
-```
+```text
 
 ### Redis Caching (Distributed)
 
@@ -230,7 +230,7 @@ const userData = await getCached(
   () => db.user.findUnique({ where: { id: userId } }),
   600 // 10 minute TTL
 );
-```
+```text
 
 #### Pattern 5: Cache Key Design
 
@@ -261,7 +261,7 @@ function tenantKey(tenantId, resource, id) {
 // tenant:acme:user:123
 // tenant:acme:product:456
 // tenant:beta:user:123  (different tenant, different cache)
-```
+```text
 
 #### Pattern 6: Cache Invalidation Strategies
 
@@ -270,7 +270,7 @@ function tenantKey(tenantId, resource, id) {
 ```javascript
 // Simple: Data expires automatically
 await redis.setex('user:123', 300, JSON.stringify(user)); // 5 minutes
-```
+```text
 
 **Event-based (explicit invalidation):**
 
@@ -289,7 +289,7 @@ async function updateUser(userId, updates) {
   
   return user;
 }
-```
+```text
 
 **Tag-based invalidation (complex):**
 
@@ -323,7 +323,7 @@ await cacheWithTags(
 
 // Later: invalidate all posts caches
 await invalidateTag('posts');
-```
+```text
 
 ### CDN Caching (Edge)
 
@@ -344,7 +344,7 @@ export async function GET(request) {
     },
   });
 }
-```
+```text
 
 **Cache-Control directives:**
 
@@ -370,7 +370,7 @@ import Image from 'next/image';
 
 // API versioning for cache busting
 const response = await fetch('/api/v2/users'); // v2 won't use v1 cache
-```
+```text
 
 ### Browser Caching (Client)
 
@@ -406,7 +406,7 @@ export function getWithExpiry(key) {
 // Usage
 setWithExpiry('theme', 'dark', 1000 * 60 * 60 * 24 * 7); // 7 days
 const theme = getWithExpiry('theme'); // Returns null if expired
-```
+```text
 
 #### Pattern 10: SWR (Stale-While-Revalidate) Pattern
 
@@ -432,7 +432,7 @@ function Profile() {
 // - Deduplicates simultaneous requests
 // - Revalidates stale data in background
 // - Handles race conditions
-```
+```text
 
 ### Cache Warming Strategies
 
@@ -464,7 +464,7 @@ async function warmCache() {
 if (process.env.NODE_ENV === 'production') {
   warmCache();
 }
-```
+```text
 
 ### Cache Stampede Prevention
 
@@ -499,7 +499,7 @@ export async function getCachedWithLock(key, fetchFn, ttl = 300) {
   lockMap.set(key, lockPromise);
   return await lockPromise;
 }
-```
+```text
 
 ### Decision Guide
 
@@ -566,7 +566,7 @@ async function updateUser(userId, data) {
   
   return user;
 }
-```
+```text
 
 **Write-behind cache (eventual consistency):**
 
@@ -580,7 +580,7 @@ async function updateUser(userId, data) {
   
   return data;
 }
-```
+```text
 
 **Cache-aside (lazy loading):**
 
@@ -598,7 +598,7 @@ async function getUser(userId) {
   
   return user;
 }
-```
+```text
 
 ### TTL Strategy Guidelines
 
@@ -622,7 +622,7 @@ function calculateTTL(accessCount, baseSeconds = 300) {
   if (accessCount > 10) return baseSeconds * 2;  // Warm data: 10 min
   return baseSeconds;                             // Cold data: 5 min
 }
-```
+```text
 
 ## Related Patterns
 

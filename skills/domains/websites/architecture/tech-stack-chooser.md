@@ -15,7 +15,7 @@ Selects the best technology stack based on project requirements, content type, a
 
 ## Decision Tree
 
-```
+```text
 START: Does the client need to edit content themselves?
 │
 ├─ YES → Do they have technical skills?
@@ -29,7 +29,7 @@ START: Does the client need to edit content themselves?
         └─ NO → How simple can we go?
             ├─ Very simple (1-5 pages) → Plain HTML + Tailwind
             └─ Some complexity → Astro
-```
+```text
 
 ## Stack Comparison
 
@@ -155,7 +155,7 @@ START: Does the client need to edit content themselves?
 - If blog needed: Add MDX to Astro
 - If booking needed: Embed Calendly or Cal.com
 - If CMS needed: Add Sanity or Contentful
-```
+```text
 
 ## Related Skills
 

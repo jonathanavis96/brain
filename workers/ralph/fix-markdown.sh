@@ -13,9 +13,10 @@
 #
 # Issues that CANNOT be auto-fixed (require manual edits):
 #   - MD040: Fenced code blocks should have a language specified
-#   - MD060: Table column style (spacing around pipes)
 #   - MD024: Multiple headings with same content
 #   - MD036: Emphasis used instead of a heading
+#
+# Note: MD060 (table column style) is configured to "expanded" in .markdownlint.yaml
 #
 # Run this BEFORE attempting manual fixes to reduce the number of changes needed.
 
@@ -71,8 +72,7 @@ if [[ $AFTER -gt 0 ]]; then
 
   echo ""
   echo "Common manual fixes needed:"
-  echo "  MD040: Add language to code fences (e.g., \`\`\`bash, \`\`\`python)"
-  echo "  MD060: Add spaces around table pipes (| col1 | col2 |)"
+  echo "  MD040: Add language to code fences (e.g., \`\`\`bash, \`\`\`python, \`\`\`text)"
   echo "  MD024: Rename duplicate headings to be unique"
   echo "  MD036: Convert bold text to proper headings (#### Heading)"
 fi

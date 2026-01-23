@@ -33,7 +33,7 @@ snapshot.sh (current state)
 Chat Mode Instructions (inline)
   ↓
 RovoDev executes
-```
+```text
 
 ---
 
@@ -59,7 +59,7 @@ PROMPT.md (full identity + instructions)
 RovoDev executes
   ↓
 Ralph reads AGENTS.md IF instructed by PROMPT.md
-```
+```text
 
 ---
 
@@ -165,7 +165,7 @@ brain/
 project/
   ralph/
     kb/             ← Project-specific local knowledge
-```
+```text
 
 ---
 
@@ -200,7 +200,7 @@ project/
 - Paths: /mnt/c/ or /home/
 
 See CORTEX_SYSTEM_PROMPT.md for full details.
-```
+```text
 
 ### 2. Update CORTEX_SYSTEM_PROMPT.md
 
@@ -213,7 +213,7 @@ Add at top:
 1. `cortex/AGENTS.md` (you should have already read this)
 2. This file (CORTEX_SYSTEM_PROMPT.md) - your full identity
 3. `cortex/snapshot.sh` output - current repository state
-```
+```text
 
 ### 3. Update Ralph's PROMPT.md
 
@@ -226,7 +226,7 @@ Add at top:
 1. `AGENTS.md` (you should have already read this)
 2. This file (PROMPT.md) - your full identity and mode logic
 3. `.verify/latest.txt` - verifier results (if exists)
-```
+```text
 
 ### 4. Add Research Instructions to Both
 
@@ -240,7 +240,7 @@ You have internet access. Use it when needed:
 - **How:** `curl -s URL` to fetch docs, specs, examples
 - **Example:** `curl -s https://docs.python.org/3/...`
 - **Fallback:** If blocked, ask user for information
-```
+```text
 
 **Ralph (PROMPT.md):**
 
@@ -252,7 +252,7 @@ You have internet access. Use it when needed:
 - **How:** `curl -s URL` to fetch documentation
 - **Example:** `curl -s https://api.github.com/...`
 - **Balance:** Prefer skills/ knowledge base first, research second
-```
+```text
 
 ### 5. Fix KB → Skills Terminology
 

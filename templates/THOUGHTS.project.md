@@ -7,6 +7,7 @@
 [REPLACE: Describe your project's purpose. What problem does it solve? Who uses it? What value does it provide?]
 
 Example structure:
+
 - **Primary Goal:** [Main objective of the project]
 - **Key Features:** [List 3-5 main features or capabilities]
 - **Target Users:** [Who benefits from this project]
@@ -19,6 +20,7 @@ Example structure:
 [REPLACE: What is the project currently working on? What's the immediate priority?]
 
 Example:
+
 - Feature X implementation
 - Performance optimization in area Y
 - Refactoring module Z
@@ -31,19 +33,23 @@ Example:
 A task/feature in this project is complete when:
 
 #### ✅ [Category 1 - e.g., Functionality]
+
 - [Specific criterion 1]
 - [Specific criterion 2]
 - [Specific criterion 3]
 
 #### ✅ [Category 2 - e.g., Testing]
+
 - [Specific criterion 1]
 - [Specific criterion 2]
 
 #### ✅ [Category 3 - e.g., Documentation]
+
 - [Specific criterion 1]
 - [Specific criterion 2]
 
 #### ✅ [Category 4 - e.g., Integration]
+
 - [Specific criterion 1]
 - [Specific criterion 2]
 
@@ -71,6 +77,7 @@ For this project, "source code" means:
 - **`[directory/]`** - [Description of what lives here]
 
 **NOT source code:**
+
 - `[directory/]` - [Explanation why - e.g., "Generated files", "External dependencies", "Read-only reference"]
 
 ## Knowledge Base Integration
@@ -92,17 +99,20 @@ For this project, "source code" means:
 [REPLACE: Key technical decisions, architecture choices, or constraints]
 
 ### Technology Stack
+
 - **Language(s):** [e.g., TypeScript, Python, Bash]
 - **Framework(s):** [e.g., Next.js, React, Express]
 - **Key Libraries:** [List major dependencies]
 - **Infrastructure:** [e.g., Vercel, AWS, Docker]
 
 ### Architecture Decisions
+
 - [Key decision 1 and rationale]
 - [Key decision 2 and rationale]
 - [Key decision 3 and rationale]
 
 ### Constraints
+
 - [Technical constraint 1]
 - [Technical constraint 2]
 - [Business constraint 1]

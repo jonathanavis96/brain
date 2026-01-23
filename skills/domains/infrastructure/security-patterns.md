@@ -111,7 +111,7 @@ export async function OPTIONS(request: NextRequest) {
     },
   });
 }
-```
+```text
 
 **Express.js (Node):**
 
@@ -140,7 +140,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-```
+```text
 
 **Key principles:**
 
@@ -190,7 +190,7 @@ function SafeRichContent({ htmlContent }) {
   
   return <div dangerouslySetInnerHTML={{ __html: sanitized }} />;
 }
-```
+```text
 
 **Server-side sanitization (Node.js):**
 
@@ -219,7 +219,7 @@ export async function POST(request) {
   
   return Response.json({ success: true });
 }
-```
+```text
 
 **Content Security Policy (CSP):**
 
@@ -263,7 +263,7 @@ export function middleware(request) {
   });
   return response;
 }
-```
+```text
 
 **Key principles:**
 
@@ -325,7 +325,7 @@ export async function POST(request: NextRequest) {
   
   return NextResponse.json({ success: true });
 }
-```
+```text
 
 **Client-side (fetch with CSRF token):**
 
@@ -351,7 +351,7 @@ export async function apiPost(endpoint: string, data: any) {
   
   return response.json();
 }
-```
+```text
 
 **SameSite cookies (strong CSRF protection):**
 
@@ -375,7 +375,7 @@ export async function POST(request) {
   
   return response;
 }
-```
+```text
 
 **Key principles:**
 
@@ -435,7 +435,7 @@ export async function POST(request) {
   const validatedData = result.data;
   // ... save to database ...
 }
-```
+```text
 
 **SQL injection prevention (parameterized queries):**
 
@@ -454,7 +454,7 @@ const userId = parseInt(request.query.id, 10);
 const user = await prisma.user.findUnique({
   where: { id: userId },
 });
-```
+```text
 
 **Path traversal prevention:**
 
@@ -477,7 +477,7 @@ if (!filePath.startsWith(allowedDir)) {
 }
 
 const content = await fs.readFile(filePath);
-```
+```text
 
 **Key principles:**
 
@@ -519,7 +519,7 @@ export async function authenticateRequest(request: NextRequest) {
     return { authenticated: false, user: null };
   }
 }
-```
+```text
 
 **Authorization middleware (role-based):**
 
@@ -553,7 +553,7 @@ export async function DELETE(request: NextRequest) {
   
   return NextResponse.json({ success: true });
 }
-```
+```text
 
 **Resource-based authorization:**
 
@@ -580,7 +580,7 @@ export async function PUT(request: NextRequest, { params }) {
   
   return NextResponse.json({ success: true });
 }
-```
+```text
 
 **Key principles:**
 
@@ -609,7 +609,7 @@ DATABASE_URL=postgresql://user:password@localhost:5432/mydb  # pragma: allowlist
 JWT_SECRET=your-super-secret-key-here
 API_KEY=sk_live_51H...
 NEXT_PUBLIC_STRIPE_KEY=pk_test_51H... # NEXT_PUBLIC_ exposes to client!
-```
+```text
 
 **Server-side secret usage:**
 
@@ -626,7 +626,7 @@ export async function GET() {
   
   return NextResponse.json({ data: 'success' });
 }
-```
+```text
 
 **Client-side (public) secrets:**
 
@@ -643,7 +643,7 @@ export default function Page() {
   
   return <div>Stripe Key: {stripeKey}</div>;
 }
-```
+```text
 
 **.gitignore (essential):**
 
@@ -657,7 +657,7 @@ export default function Page() {
 secrets/
 *.pem
 *.key
-```
+```text
 
 **Secret rotation strategy:**
 
@@ -675,7 +675,7 @@ export function verifyToken(token: string) {
     return jwt.verify(token, PREVIOUS_JWT_SECRET);
   }
 }
-```
+```text
 
 **Key principles:**
 
@@ -761,7 +761,7 @@ export async function GET(request: NextRequest) {
   
   return response;
 }
-```
+```text
 
 **Redis-based rate limiter (production):**
 
@@ -798,7 +798,7 @@ export async function rateLimitRedis(
   
   return { allowed: false, remaining: 0, resetAt };
 }
-```
+```text
 
 **Key principles:**
 
@@ -834,7 +834,7 @@ const hashedPassword = await bcrypt.hash(password, 10);
 
 // Verify password
 const isValid = await bcrypt.compare(inputPassword, hashedPassword);
-```
+```text
 
 #### 3. Injection (SQL, NoSQL, Command)
 
@@ -860,7 +860,7 @@ return NextResponse.json({ error: error.stack }, { status: 500 });
 return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
 // Log full error server-side for debugging
 console.error('API error:', error);
-```
+```text
 
 #### 6. Vulnerable and Outdated Components
 
@@ -871,7 +871,7 @@ console.error('API error:', error);
 npm audit
 npm audit fix
 npm update
-```
+```text
 
 #### 7. Identification and Authentication Failures
 
@@ -894,7 +894,7 @@ const data = JSON.parse(untrustedString);
 // ✅ Validate after parsing
 const parsed = JSON.parse(untrustedString);
 const validated = schema.parse(parsed); // Zod validation
-```
+```text
 
 #### 9. Security Logging and Monitoring Failures
 
@@ -915,7 +915,7 @@ logger.info('User deleted', {
   deletedBy: currentUser.id, 
   timestamp: new Date().toISOString(),
 });
-```
+```text
 
 #### 10. Server-Side Request Forgery (SSRF)
 
@@ -943,7 +943,7 @@ if (blockedPatterns.some(pattern => pattern.test(parsed.hostname))) {
 }
 
 const response = await fetch(url);
-```
+```text
 
 ---
 

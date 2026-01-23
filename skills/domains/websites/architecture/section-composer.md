@@ -17,6 +17,7 @@ Assembles the optimal section order for landing pages and service pages based on
 ## Trigger Conditions
 
 Use this skill when:
+
 - Planning a new landing page
 - Page has content but poor flow
 - High bounce rate on key pages
@@ -26,7 +27,7 @@ Use this skill when:
 
 Every effective page follows this psychological sequence:
 
-```
+```text
 1. ATTENTION → Hero (what is this, is it for me?)
 2. TRUST → Social proof (can I trust this?)
 3. VALUE → Services/benefits (what do I get?)
@@ -34,7 +35,7 @@ Every effective page follows this psychological sequence:
 5. CONNECTION → About/story (who is behind this?)
 6. OBJECTIONS → FAQ (what about my concerns?)
 7. ACTION → CTA (what do I do now?)
-```
+```text
 
 ## Section Templates by Page Type
 
@@ -86,7 +87,7 @@ Every effective page follows this psychological sequence:
    - Navigation
    - Contact info
    - Legal links
-```
+```text
 
 ### Services Page
 
@@ -126,7 +127,7 @@ Every effective page follows this psychological sequence:
 
 9. **CTA**
    - Book this service
-```
+```text
 
 ### About Page
 
@@ -158,7 +159,7 @@ Every effective page follows this psychological sequence:
 
 6. **CTA**
    - Work with me
-```
+```text
 
 ## Section Spacing Rules
 
@@ -234,7 +235,7 @@ Every effective page follows this psychological sequence:
 - [Book a Consultation] [Contact Me]
 
 ### 10. Footer
-```
+```text
 
 ## Related Skills
 

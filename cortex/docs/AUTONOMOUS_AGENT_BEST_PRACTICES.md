@@ -439,7 +439,7 @@ def execute_symbols(path, cwd):
 ```python
 if content and not content.endswith("\n"):
     content = content + "\n"
-```
+```text
 
 #### Fix 2: patch_file guidance
 
@@ -451,7 +451,7 @@ NEXT STEPS:
 2. Find the exact text to replace
 3. patch_file with exact match
 """
-```
+```text
 
 #### Fix 3: git_commit retry logic
 
@@ -460,7 +460,7 @@ NEXT STEPS:
 if "files were modified by this hook" in stderr:
     subprocess.run(["git", "add", "-A"])
     # Retry commit
-```
+```text
 
 ### 5.2 System Prompt Improvements
 
@@ -596,7 +596,7 @@ def summarize_old_tool_results(messages, keep_recent=KEEP_RECENT_TURNS):
     # Messages 0-1: system + user (keep full)
     # Messages 2 to -keep_recent: summarize tool results
     # Last keep_recent messages: keep full
-```
+```text
 
 **Before:** Each tool result might be 100+ lines
 **After:** Old results become: `[Tool output: 47 lines] def run_verifier():...`
@@ -619,6 +619,6 @@ Prompt tokens:     115,891  # Should decrease over turns
 Completion tokens: 2,122
 Total tokens:      118,013
 API requests:      10
-```
+```text
 
 If prompt tokens stay constant or grow, summarization isn't working.

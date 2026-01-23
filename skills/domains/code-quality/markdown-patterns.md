@@ -27,7 +27,7 @@ echo "hello"
 ​```bash
 echo "hello"
 ​```
-```
+```text
 
 ### Common Language Tags
 
@@ -59,7 +59,7 @@ echo "hello"
 ... content ...
 ## Advanced Configuration
 ... more content ...
-```
+```text
 
 ### Heading Hierarchy (MD001)
 
@@ -72,7 +72,7 @@ echo "hello"
 # Title
 ## Section
 ### Subsection
-```
+```text
 
 ### Don't Use Emphasis as Headings (MD036)
 
@@ -86,7 +86,7 @@ Some content under it.
 ## This Is a Heading
 
 Some content under it.
-```
+```text
 
 ## Emphasis Consistency (MD049/MD050)
 
@@ -100,7 +100,7 @@ This is *italic* and this is _also italic_.
 ✅ Right - consistent style (asterisks)
 This is **bold** and this is **also bold**.
 This is *italic* and this is *also italic*.
-```
+```text
 
 ## Lists
 
@@ -120,7 +120,7 @@ Some text.
 - Item 2
 
 More text.
-```
+```text
 
 ### Consistent List Markers (MD004)
 
@@ -134,7 +134,7 @@ More text.
 - Item 1
 - Item 2
 - Item 3
-```
+```text
 
 ## Code Blocks
 
@@ -156,7 +156,7 @@ echo "hello"
 ​```
 
 More text.
-```
+```text
 
 ### No Spaces in Code Spans (MD038)
 
@@ -168,7 +168,7 @@ Run ` npm install `.
 ✅ Right - no extra spaces
 Use the `config.yml` file.
 Run `npm install`.
-```
+```text
 
 ## Links
 
@@ -180,7 +180,7 @@ Check out https://example.com for more info.
 
 ✅ Right - proper link
 Check out [example.com](https://example.com) for more info.
-```
+```text
 
 ### No Empty Links (MD042)
 
@@ -191,7 +191,7 @@ Check out [example.com](https://example.com) for more info.
 
 ✅ Right - complete link
 [Example Site](https://example.com)
-```
+```text
 
 ## Documentation Accuracy
 
@@ -213,7 +213,7 @@ modify_file() {  # BUG: Contradicts header!
 # task-manager.sh - Display and manage tasks
 #
 # This script displays tasks and can modify THUNK.md via hotkeys.
-```
+```text
 
 ### Usage Comments Must Be Current
 
@@ -225,7 +225,7 @@ modify_file() {  # BUG: Contradicts header!
 # ✅ Right - matches actual filename
 #!/usr/bin/env bash
 # Usage: new_name.sh [options]
-```
+```text
 
 ## Terminology Consistency
 
@@ -247,7 +247,7 @@ When renaming concepts (e.g., `kb/` → `skills/`), update ALL references:
 # Find all remaining references to old term
 grep -r "kb/" --include="*.md" --include="*.sh"
 grep -r "knowledge base" --include="*.md" -i
-```
+```text
 
 ## Running Markdownlint
 
@@ -266,7 +266,7 @@ markdownlint --fix "**/*.md"
 
 # Ignore specific rules
 markdownlint -d MD013 "**/*.md"  # Ignore line length
-```
+```text
 
 ### Configuration File (.markdownlint.json)
 
@@ -277,7 +277,7 @@ markdownlint -d MD013 "**/*.md"  # Ignore line length
   "MD041": false,
   "MD024": { "siblings_only": true }
 }
-```
+```text
 
 ## Common Mistakes Summary
 

@@ -3,10 +3,13 @@
 **Read via subagent** - This is the codebase map for Ralph. Not loaded in first context.
 
 ## Purpose
+
 This is the **brain map** that Ralph and all agents read on-demand when needed. It maps the entire brain repository structure, tells you where everything lives, and provides quick lookup for common tasks.
 
 ## Navigation Rules (Read This First)
+
 **Deterministic Context Loading Order:**
+
 1. `AGENTS.md` (injected first by loop.sh - operational guide)
 2. `PROMPT.md` (injected second - contains conditional logic for plan/build modes)
 3. `NEURONS.md` (this file - read via subagent when needed, NOT injected)
@@ -83,7 +86,7 @@ brain/ (repository root)
     ├── *.sha256                 # Hash guards for protected files
     ├── waivers/                 # Approved waivers (TOTP-protected)
     └── waiver_requests/         # Pending waiver requests
-```
+```text
 
 ---
 
@@ -146,6 +149,7 @@ brain/ (repository root)
 **Purpose:** Curated knowledge for agents - domain patterns, project conventions, authoring guidelines.
 
 **Navigation:**
+
 1. Start: `skills/SUMMARY.md` - Overview of all KB content
 2. Index: `skills/index.md` - Complete catalog of all skills
 3. Authoring: `skills/conventions.md` - How to create/update KB files
@@ -154,6 +158,7 @@ brain/ (repository root)
 6. Self-Improvement: `skills/self-improvement/` - Gap capture system (6 files)
 
 **Key Files:**
+
 - `skills/SUMMARY.md` - KB index, links to all domains and projects
 - `skills/conventions.md` - Required structure (Why/When/Details), naming, validation
 - `skills/domains/backend/auth-patterns.md` - Authentication patterns (example)
@@ -161,6 +166,7 @@ brain/ (repository root)
 - `skills/projects/brain-example.md` - Brain repo conventions (example)
 
 **All KB files must have:**
+
 ```markdown
 # Title
 
@@ -172,7 +178,7 @@ brain/ (repository root)
 
 ## Details
 [The actual knowledge]
-```
+```text
 
 ---
 
@@ -185,11 +191,13 @@ brain/ (repository root)
 **CRITICAL: READ-ONLY - DO NOT MODIFY ANY FILES IN references/**
 
 **Navigation Hierarchy (Progressive Disclosure):**
+
 1. **First:** `references/react-best-practices/HOTLIST.md` - Top 10 most applicable rules (start here always)
 2. **Second:** `references/react-best-practices/INDEX.md` - Categorized rule index (8 categories, 45 rules)
 3. **Third:** `references/react-best-practices/rules/*.md` - Individual rule files (only when needed)
 
 **Rule Categories (from INDEX.md):**
+
 - 🔄 Async & Waterfall Elimination (7 rules)
 - 📦 Bundle Optimization (5 rules)
 - 🖥️ Server Performance (4 rules)
@@ -200,12 +208,14 @@ brain/ (repository root)
 - 🔬 Advanced Patterns (2 rules)
 
 **Rule Count Validation:**
+
 ```bash
 find references/react-best-practices/rules/ -name "*.md" | wc -l
 # Must always output: 45 (rule files only, excludes _template.md and _sections.md)
-```
+```text
 
 **Usage Pattern:**
+
 - ❌ Don't scan all 45 rules (token-inefficient)
 - ✅ Do use HOTLIST → INDEX → specific rule
 
@@ -218,22 +228,25 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 **Purpose:** Bootstrap new projects with Ralph infrastructure and KB integration.
 
 **Key Files:**
+
 - `templates/README.md` - Usage instructions, path conventions, validation
 - `templates/AGENTS.project.md` - Becomes AGENTS.md in new projects
 - `templates/fix_plan.md` - Task checklist template
 - `../../templates/ralph/RALPH.md` - Ralph contract documentation (from workers/ralph/)
 
 **Path Conventions:**
+
 - Templates use relative paths: `../brain/skills/SUMMARY.md` (from project root)
 - Brain's own prompts use local paths: `../../skills/SUMMARY.md` (relative to workers/ralph/)
 - All paths in templates must be validated before use
 
 **Bootstrap Process:**
+
 ```bash
 # From brain repository root (not implemented in bash yet - legacy PowerShell)
 # ./new-project.ps1 -Name my-project
 # Creates: ../my-project/ with AGENTS.md, ralph/, specs/, src/
-```
+```text
 
 ---
 
@@ -244,6 +257,7 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 **Purpose:** Manager layer running Opus 4.5 - creates high-level implementation plans and manages strategic decisions.
 
 **Key Files:**
+
 - `cortex/CORTEX_SYSTEM_PROMPT.md` - Cortex identity, role definition, what Cortex can/cannot modify
 - `cortex/REPO_MAP.md` - Human-friendly navigation guide for the brain repository
 - `cortex/DECISIONS.md` - Stability anchor for naming, style, architecture decisions
@@ -254,6 +268,7 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 - `cortex/snapshot.sh` - Generates current state summary (mission, progress, git status)
 
 **Workflow:**
+
 1. Cortex creates/updates high-level tasks in `cortex/IMPLEMENTATION_PLAN.md`
 2. Ralph copies these to `IMPLEMENTATION_PLAN.md` (via sync mechanism - to be implemented)
 3. Ralph picks ONE atomic task per BUILD iteration and implements it
@@ -261,22 +276,25 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 5. Cortex reviews progress via `cortex/snapshot.sh` and adjusts strategy
 
 **What Cortex Can Modify:**
+
 - ✅ `cortex/IMPLEMENTATION_PLAN.md` - Task contracts
 - ✅ `cortex/THOUGHTS.md` - Strategic thinking
 - ✅ `skills/self-improvement/GAP_BACKLOG.md` - Knowledge gaps
 - ✅ `skills/self-improvement/SKILL_BACKLOG.md` - Skill promotion queue
 
 **What Cortex Cannot Modify:**
+
 - ❌ `PROMPT.md`, `loop.sh`, `verifier.sh` - Protected Ralph infrastructure
 - ❌ Source code in `ralph/`, `skills/`, `templates/` - Ralph's domain
 - ❌ Acceptance criteria in `rules/AC.rules` - Protected by hash guard
 
 **Running Cortex:**
+
 ```bash
 cd /path/to/brain/
 bash cortex/run.sh              # Single review cycle
 bash cortex/run.sh --help       # Show usage
-```
+```text
 
 ---
 
@@ -287,9 +305,11 @@ bash cortex/run.sh --help       # Show usage
 **Purpose:** Define what the brain repository is for and what "done" means.
 
 **Key File:**
+
 - `THOUGHTS.md` - Brain repo vision, goals, knowledge classification, definition of done
 
 **Contents:**
+
 - Primary functions: Knowledge repository, project bootstrap, self-evolution
 - Knowledge classification: Global (brain) vs project-specific
 - Knowledge growth process: Determine scope → Create/update KB → Update SUMMARY → Validate
@@ -303,18 +323,21 @@ bash cortex/run.sh --help       # Show usage
 ### Core Files (at ralph/ root)
 
 **Execution:**
+
 - `loop.sh` - Bash script that runs Ralph iterations
 - `rovodev-config.yml` - RovoDev configuration
 
 **Prompts:**
+
 - `PROMPT.md` - Unified prompt with conditional logic (plan mode: gap analysis, NO code changes, updates TODO list; build mode: implement top task, validate, commit)
 - `IMPLEMENTATION_PLAN.md` - Persistent TODO list (updated by planning mode, read by building mode)
 - `PROMPT_verify.md` - Verification prompt (validation checks)
 
 **Stop Sentinel:**
+
 ```text
 :::COMPLETE:::
-```
+```text
 
 Only output when ALL tasks in IMPLEMENTATION_PLAN.md are 100% complete.
 
@@ -323,20 +346,26 @@ Only output when ALL tasks in IMPLEMENTATION_PLAN.md are 100% complete.
 ## Parallel Subagent Patterns
 
 ### Reading/Discovery: Up to 100 parallel subagents
+
 Use for:
+
 - Grep searches across codebase
 - File scanning and documentation study
 - KB discovery and indexing
 - Comparing specs to documentation
 
 ### Comparison/Analysis: Up to 500 parallel subagents
+
 Use for:
+
 - Large-scale spec vs code comparison
 - Cross-file dependency analysis
 - Comprehensive validation checks
 
 ### Building/Modification: Exactly 1 subagent
+
 Use for:
+
 - Implementation and code changes
 - Git operations (commit, push)
 - File writes and modifications
@@ -348,9 +377,10 @@ Use for:
 
 ## Ralph Pattern Documentation (Legacy)
 
-**Source:** https://github.com/ghuntley/how-to-ralph-wiggum
+**Source:** <https://github.com/ghuntley/how-to-ralph-wiggum>
 
 **Core Principles:**
+
 - **Don't assume not implemented** - Always search codebase before creating new functionality
 - **Parallel subagents for reading** - Up to 100 for discovery, 500 for comparison
 - **Single agent for building** - Exactly 1 for implementation/modification/git ops
@@ -359,12 +389,14 @@ Use for:
 - **One iteration = one coherent unit** - Implement + verify + update plan + commit
 
 **Context Loading Each Iteration:**
+
 1. PROMPT.md (planning or build prompt)
 2. AGENTS.md (operational guide)
 3. NEURONS.md (brain map - this file)
 4. Specs and KB files via progressive disclosure
 
 **Loop Structure:**
+
 - **PLAN phase:** Gap analysis, updates TODO list, NO code changes, NO commits
 - **BUILD phase:** Implements top task, validates, commits when complete
 - **Completion:** Outputs `:::COMPLETE:::` when all tasks done
@@ -374,6 +406,7 @@ Use for:
 ## File Counts and Validation
 
 ### Quick Checks
+
 ```bash
 # KB file count
 find skills/ -name "*.md" | wc -l
@@ -398,9 +431,10 @@ find specs/ -name "*.md" | wc -l
 # Total .md files in brain/ root (excluding subdirs)
 find . -maxdepth 1 -name "*.md" | wc -l
 # Current: ~7 files (AGENTS, NEURONS, PROMPT, IMPLEMENTATION_PLAN, THOUGHTS, THUNK, README, VALIDATION_CRITERIA)
-```
+```text
 
 ### Validation Commands (Backpressure)
+
 ```bash
 # Verify file structure
 ls -la skills/ templates/ references/ specs/
@@ -418,18 +452,20 @@ bash -n loop.sh
 
 # Check AGENTS.md and NEURONS.md exist
 ls -lh AGENTS.md NEURONS.md
-```
+```text
 
 ---
 
 ## Read-Only vs Modifiable Sections
 
 ### ❌ DO NOT MODIFY (Read-Only)
+
 - **references/react-best-practices/rules/*.md** - 45 curated rules from Vercel Engineering
 - **old_md/** - Archived plans and reports (historical record)
 - **logs/** - Auto-generated execution transcripts
 
 ### ✅ MODIFIABLE (Active Development)
+
 - **AGENTS.md** - Ralph operational guide
 - **NEURONS.md** - This brain map
 - **PROMPT.md** - Ralph unified prompt
@@ -470,32 +506,37 @@ From `THOUGHTS.md`, the brain is successful when:
 ## Common Workflows
 
 ### Adding New Domain Knowledge
+
 1. Check if it exists: grep across `skills/domains/`
 2. Create: `skills/domains/new-pattern.md` with Why/When/Details structure
 3. Update: `skills/SUMMARY.md` to link new file
 4. Validate: Check required headers present
 
 ### Adding Project-Specific Knowledge
+
 1. Create: `skills/projects/project-slug.md`
 2. Follow Why/When/Details structure
 3. Update: `skills/SUMMARY.md`
 4. Keep focused: Only project-specific content
 
 ### Using React Best Practices
+
 1. Start: `references/react-best-practices/HOTLIST.md`
 2. If not covered: `references/react-best-practices/INDEX.md`
 3. Drill down: `references/react-best-practices/rules/specific-rule.md`
 4. Never: Scan all 45 rules at once
 
 ### Running Ralph Loop
+
 ```bash
 cd /path/to/brain/workers/ralph/
 bash loop.sh                           # Single iteration
 bash loop.sh --iterations 10           # Multiple iterations
 bash loop.sh --prompt PROMPT.md        # Use unified prompt
-```
+```text
 
 ### Validating Brain Integrity
+
 ```bash
 # File counts
 find skills/ -name "*.md" | wc -l              # Should be 7
@@ -510,13 +551,14 @@ bash -n loop.sh
 
 # Directory structure
 tree -L 2 -I 'old_md|logs'
-```
+```text
 
 ---
 
 ## Summary
 
 This brain repository contains:
+
 - **33 KB files** (index, conventions, domains with shell/, projects, self-improvement)
 - **8 Cortex files** (manager layer - CORTEX_SYSTEM_PROMPT, REPO_MAP, DECISIONS, RUNBOOK, IMPLEMENTATION_PLAN, THOUGHTS, run.sh, snapshot.sh)
 - **45 React rules** (read-only performance patterns)
@@ -525,6 +567,7 @@ This brain repository contains:
 - **Ralph loop infrastructure** (bash-based, WSL2)
 
 **Remember:**
+
 1. Read NEURONS.md (this file) immediately after AGENTS.md
 2. Use progressive disclosure (HOTLIST → INDEX → specific files)
 3. Search before creating (don't assume missing)
@@ -533,6 +576,7 @@ This brain repository contains:
 6. Cortex manages strategy, Ralph executes tasks
 
 **For questions about:**
+
 - **How to run Ralph** → See AGENTS.md
 - **How to run Cortex** → See cortex/RUNBOOK.md
 - **What exists where** → You're reading it (NEURONS.md) or see cortex/REPO_MAP.md

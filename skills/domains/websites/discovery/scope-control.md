@@ -14,6 +14,7 @@ Separates must-have now vs nice-to-have later to avoid bloated sites and endless
 ## Trigger Conditions
 
 Use this skill when:
+
 - Project scope keeps growing
 - Client adds "one more thing" repeatedly
 - Timeline or budget is fixed
@@ -35,7 +36,7 @@ Use this skill when:
 - [ ] Multi-language support
 - [ ] Client portal
 ...
-```
+```text
 
 ### 2. Apply MoSCoW Prioritization
 
@@ -85,7 +86,7 @@ Use this skill when:
 Any additions to "Must Have" require:
 1. Removing something of equal effort, OR
 2. Extending timeline/budget
-```
+```text
 
 ### 4. Scope Change Protocol
 
@@ -104,7 +105,7 @@ B) Add now, extend deadline to [date]
 C) Add now, remove [equivalent item]
 
 **Recommendation:** Option A - launch sooner, add booking in Phase 2
-```
+```text
 
 ## Common Mistakes
 
@@ -118,6 +119,7 @@ C) Add now, remove [equivalent item]
 ## Scope Creep Warning Signs
 
 Watch for these phrases:
+
 - "While you're in there, can you also..."
 - "This should be quick..."
 - "Just one small thing..."
@@ -161,7 +163,7 @@ Response: "I can add that to Phase 2, or we can discuss adjusting the current sc
 - ❌ Online payments
 - ❌ Course/workshop e-commerce
 - ❌ Multi-language (Afrikaans)
-```
+```text
 
 ## Related Skills
 

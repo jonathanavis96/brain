@@ -7,25 +7,30 @@ Detailed rules, examples, and troubleshooting. Read on-demand, not injected.
 ## IMPLEMENTATION_PLAN.md Formatting Rules
 
 ### Phase Sections Required
+
 ```markdown
 ## Phase 0-Warn: Verifier Warnings
 ## Phase 0-Quick: Quick Wins
 ## Phase 1: Core Refactoring
-```
+```text
+
 Ralph's monitor only detects `## Phase X:` headers.
 
 ### Checkbox Format Required
+
 ```markdown
 - [ ] **1.1** - Pending task
 - [x] **1.2** - Completed task
 - [?] **1.3** - Proposed done, awaiting verification
-```
+```text
 
 ### Never Delete Tasks
+
 - Keep completed tasks as history
 - Keep empty phases as completed phase markers
 
 ### Task Numbering
+
 - Top-level: `1.1`, `1.2`
 - Subtasks: `1.1.1`, `1.1.2`
 
@@ -45,19 +50,22 @@ Ralph's monitor only detects `## Phase X:` headers.
     - Tests pass: `pytest tests/test_api_cache.py`
   - **If Blocked:**
     - Redis not available? Skip caching, log warning
-```
+```text
 
 ---
 
 ## Communication Protocol
 
 ### Start Cortex
+
 `bash cortex/run.sh` → loads prompt, snapshot, decisions
 
 ### Start Ralph
+
 `bash loop.sh` → syncs plan, picks task, implements, commits
 
 ### Monitor Progress
+
 - `bash cortex/snapshot.sh` - Git + Ralph status
 - Read `workers/ralph/THUNK.md` - Completed work
 
@@ -82,7 +90,7 @@ curl -s https://docs.example.com/api
 
 # Check GitHub repos
 curl -s https://raw.githubusercontent.com/user/repo/main/README.md
-```
+```text
 
 ---
 
@@ -97,4 +105,4 @@ grep -E '^\| [0-9]+' workers/ralph/THUNK.md | tail -5
 
 # Full snapshot
 bash cortex/snapshot.sh
-```
+```text

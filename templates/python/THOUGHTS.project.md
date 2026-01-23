@@ -7,6 +7,7 @@
 [REPLACE: Describe your project's purpose. What problem does it solve? Who uses it? What value does it provide?]
 
 Example structure:
+
 - **Primary Goal:** [Main objective of the project]
 - **Key Features:** [List 3-5 main features or capabilities]
 - **Target Users:** [Who benefits from this project]
@@ -19,6 +20,7 @@ Example structure:
 [REPLACE: What is the project currently working on? What's the immediate priority?]
 
 Example:
+
 - Feature X implementation
 - Performance optimization in area Y
 - Refactoring module Z
@@ -31,18 +33,21 @@ Example:
 A task/feature in this project is complete when:
 
 #### ✅ Functionality
+
 - Feature works as specified in requirements
 - Edge cases handled appropriately
 - Error handling implemented
 - Input validation in place
 
 #### ✅ Testing
+
 - Unit tests written and passing (>80% coverage on critical paths)
 - Integration tests cover key workflows
 - Manual testing completed for user-facing features
 - Test fixtures/mocks properly configured
 
 #### ✅ Code Quality
+
 - Follows PEP 8 style guidelines
 - Type hints added to function signatures
 - Docstrings present for modules, classes, and public functions
@@ -50,12 +55,14 @@ A task/feature in this project is complete when:
 - Linter passes (flake8/pylint)
 
 #### ✅ Documentation
+
 - README.md updated if setup changes
 - Docstrings explain complex logic
 - API documentation generated (if applicable)
 - NEURONS.md updated if structure changes
 
 #### ✅ Dependencies
+
 - requirements.txt updated
 - Virtual environment requirements documented
 - No unnecessary dependencies added
@@ -84,6 +91,7 @@ For this project, "source code" means:
 - **`config/`** - Configuration management code
 
 **NOT source code:**
+
 - `venv/` or `.venv/` - Virtual environment (generated)
 - `__pycache__/` - Python bytecode cache (generated)
 - `*.egg-info/` - Package metadata (generated)
@@ -105,6 +113,7 @@ This project references brain repository knowledge:
 [REPLACE: Key technical decisions, architecture choices, or constraints]
 
 ### Technology Stack
+
 - **Language:** Python [version, e.g., 3.9+]
 - **Framework:** [e.g., Django, FastAPI, Flask, CLI with Click/Typer]
 - **Key Libraries:** [List major dependencies, e.g., SQLAlchemy, Pydantic, requests]
@@ -112,16 +121,19 @@ This project references brain repository knowledge:
 - **Infrastructure:** [e.g., Docker, AWS Lambda, Kubernetes] (if applicable)
 
 ### Architecture Decisions
+
 - [Key decision 1 and rationale, e.g., "FastAPI for async support and auto-generated docs"]
 - [Key decision 2 and rationale, e.g., "Pydantic for data validation to ensure type safety"]
 - [Key decision 3 and rationale, e.g., "Repository pattern for database abstraction"]
 
 ### Constraints
+
 - [Technical constraint 1, e.g., "Must support Python 3.9+ for compatibility"]
 - [Technical constraint 2, e.g., "Response time <200ms for API endpoints"]
 - [Business constraint 1, e.g., "Must integrate with legacy system via REST API"]
 
 ### Python-Specific Considerations
+
 - **Virtual Environment**: Required for dependency isolation
 - **Package Distribution**: [e.g., "Internal use only" or "PyPI package"]
 - **Type Checking**: [e.g., "mypy enforced in CI" or "Optional for now"]

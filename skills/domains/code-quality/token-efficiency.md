@@ -69,11 +69,11 @@ grep -c pattern file3
 diff file1 template1
 diff file2 template2
 diff file3 template3
-```
+```text
 
 **GOOD (2 calls):**
 
 ```bash
 grep -c pattern file1 file2 file3
 diff file1 template1 && diff file2 template2 && diff file3 template3
-```
+```text

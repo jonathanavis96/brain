@@ -37,7 +37,7 @@ Use this skill when:
 - Contact
 - Privacy Policy
 - Terms of Service
-```
+```text
 
 ### 2. Apply the 7±2 Rule
 
@@ -63,7 +63,7 @@ Primary nav should have **4-7 items max**. More = cognitive overload.
 - Legal: Privacy Policy, Terms
 - Social: LinkedIn, Instagram
 - Contact: Email, Phone, Address
-```
+```text
 
 ### 4. Define Page Hierarchy
 
@@ -77,7 +77,7 @@ Home
 ├── Blog (optional)
 │   └── [Articles]
 └── Contact
-```
+```text
 
 ## Navigation Patterns
 
@@ -85,7 +85,7 @@ Home
 
 ```text
 [Logo] Home | About | Services | Contact [CTA Button]
-```
+```text
 
 ### With Dropdown (5-6 items)
 
@@ -94,13 +94,13 @@ Home
                       └── Service A
                       └── Service B
                       └── Pricing
-```
+```text
 
 ### Mega Menu (7+ sections) - Only for large sites
 
 ```text
 [Logo] Products ▼ | Solutions ▼ | Resources ▼ | Company ▼ [CTA]
-```
+```text
 
 ## Footer Structure
 
@@ -116,7 +116,7 @@ Home
 
 ---
 © 2026 Company | Privacy Policy | Terms of Service
-```
+```text
 
 ## Common Mistakes
 
@@ -154,7 +154,7 @@ Home
 
 ---
 © 2026 Jacqui Howles | HPCSA Reg: [Number] | Psychology Today Verified
-```
+```text
 
 ## Related Skills
 

@@ -9,6 +9,7 @@ This document defines the acceptance criteria and quality standards for the [PRO
 ## Code Quality Standards
 
 ### Python Style & Standards
+
 - [ ] **PEP 8 Compliance**: Code follows PEP 8 style guide
 - [ ] **Linter Passes**: `flake8` or `pylint` runs without errors
 - [ ] **Type Hints**: Public functions have type hints
@@ -18,6 +19,7 @@ This document defines the acceptance criteria and quality standards for the [PRO
 - [ ] **No Warnings**: Python interpreter runs without warnings
 
 ### Code Formatting
+
 - [ ] **Black Formatted**: Code formatted with Black (or equivalent)
 - [ ] **Consistent Style**: Naming conventions consistent across codebase
 - [ ] **No Dead Code**: Unused imports, variables, and functions removed
@@ -26,6 +28,7 @@ This document defines the acceptance criteria and quality standards for the [PRO
 ## Testing Standards
 
 ### Test Coverage
+
 - [ ] **Unit Tests**: Critical functions have unit tests
 - [ ] **Coverage Target**: >80% code coverage on core logic
 - [ ] **Test Passing**: All tests pass (`pytest` exits with 0)
@@ -33,6 +36,7 @@ This document defines the acceptance criteria and quality standards for the [PRO
 - [ ] **Test Isolation**: Tests don't depend on execution order
 
 ### Test Quality
+
 - [ ] **Fixtures Used**: Test setup/teardown uses fixtures
 - [ ] **Mocks Proper**: External dependencies mocked appropriately
 - [ ] **Edge Cases**: Edge cases and error conditions tested
@@ -42,6 +46,7 @@ This document defines the acceptance criteria and quality standards for the [PRO
 ## Functional Requirements
 
 ### Core Functionality
+
 - [ ] **Requirements Met**: Feature implements specified requirements
 - [ ] **Edge Cases**: Handles edge cases gracefully
 - [ ] **Error Handling**: Errors caught and logged appropriately
@@ -49,6 +54,7 @@ This document defines the acceptance criteria and quality standards for the [PRO
 - [ ] **Output Correctness**: Outputs match expected results
 
 ### Python-Specific
+
 - [ ] **Virtual Environment**: Dependencies installable in clean venv
 - [ ] **Dependencies Updated**: requirements.txt reflects actual dependencies
 - [ ] **Entry Points Work**: CLI/API entry points function correctly
@@ -57,12 +63,14 @@ This document defines the acceptance criteria and quality standards for the [PRO
 ## Documentation Standards
 
 ### Code Documentation
+
 - [ ] **Module Docstrings**: Each module has purpose docstring
 - [ ] **Function Docstrings**: Public functions documented with args/returns
 - [ ] **Complex Logic**: Non-obvious code has explanatory comments
 - [ ] **Type Hints**: Function signatures include type hints
 
 ### Project Documentation
+
 - [ ] **README Updated**: Setup instructions current and accurate
 - [ ] **NEURONS.md Updated**: Structure changes reflected in map
 - [ ] **Examples Work**: Code examples in docs execute successfully
@@ -71,11 +79,13 @@ This document defines the acceptance criteria and quality standards for the [PRO
 ## Performance Standards
 
 ### Efficiency
+
 - [ ] **Response Time**: [Define acceptable response times, e.g., "<200ms for API calls"]
 - [ ] **Resource Usage**: [Define memory/CPU constraints, e.g., "<500MB memory"]
 - [ ] **Scalability**: [Define load requirements, e.g., "Handles 1000 req/sec"]
 
 ### Python-Specific Performance
+
 - [ ] **No Memory Leaks**: Long-running processes don't accumulate memory
 - [ ] **Efficient Iteration**: Uses generators/iterators for large datasets
 - [ ] **Database Queries**: No N+1 query problems (if applicable)
@@ -84,12 +94,14 @@ This document defines the acceptance criteria and quality standards for the [PRO
 ## Security Standards
 
 ### General Security
+
 - [ ] **Input Sanitized**: User inputs sanitized to prevent injection
 - [ ] **Secrets Secure**: No hardcoded secrets in code
 - [ ] **Dependencies Safe**: No known vulnerabilities in dependencies
 - [ ] **Error Messages**: Error messages don't leak sensitive info
 
 ### Python-Specific Security
+
 - [ ] **No eval/exec**: Avoids dangerous functions like `eval()`, `exec()`
 - [ ] **Pickle Careful**: Uses pickle only with trusted data
 - [ ] **Path Traversal**: File paths validated to prevent traversal attacks
@@ -98,6 +110,7 @@ This document defines the acceptance criteria and quality standards for the [PRO
 ## Dependency Management
 
 ### Dependency Standards
+
 - [ ] **requirements.txt Current**: All dependencies listed
 - [ ] **Version Pinning**: Critical dependencies version-pinned
 - [ ] **No Unused Deps**: Unused dependencies removed
@@ -107,12 +120,14 @@ This document defines the acceptance criteria and quality standards for the [PRO
 ## Git & Version Control
 
 ### Commit Standards
+
 - [ ] **Clear Messages**: Commit messages describe what and why
 - [ ] **Atomic Commits**: Each commit is a logical unit
 - [ ] **No Secrets**: No secrets or credentials in git history
 - [ ] **Clean History**: No debug commits or TODO commits
 
 ### Branch Standards
+
 - [ ] **Branch Named**: Branch name describes purpose
 - [ ] **Up to Date**: Branch synced with main/master
 - [ ] **Conflicts Resolved**: No merge conflicts
@@ -120,6 +135,7 @@ This document defines the acceptance criteria and quality standards for the [PRO
 ## Integration Standards
 
 ### External Systems
+
 - [ ] **API Calls Work**: External API integrations tested
 - [ ] **Database Migrations**: Database schema changes have migrations
 - [ ] **Backward Compatible**: Changes don't break existing integrations
@@ -128,6 +144,7 @@ This document defines the acceptance criteria and quality standards for the [PRO
 ## Ralph Loop Integration
 
 ### Ralph Compliance
+
 - [ ] **IMPLEMENTATION_PLAN Updated**: Task marked complete, discoveries noted
 - [ ] **NEURONS.md Accurate**: Structure changes reflected
 - [ ] **VALIDATION_CRITERIA Met**: All quality gates passed
@@ -136,24 +153,28 @@ This document defines the acceptance criteria and quality standards for the [PRO
 ## Framework-Specific Standards
 
 ### [Django Projects]
+
 - [ ] **Migrations Generated**: Database changes have migration files
 - [ ] **Admin Registered**: Models registered in admin (if applicable)
 - [ ] **Tests Use TestCase**: Tests inherit from appropriate base
 - [ ] **Settings Secure**: Debug=False, SECRET_KEY not hardcoded
 
 ### [FastAPI Projects]
+
 - [ ] **Schemas Defined**: Pydantic models for request/response
 - [ ] **OpenAPI Docs**: Auto-generated docs accurate
 - [ ] **Async Used**: Async/await used for I/O operations
 - [ ] **Dependencies Work**: FastAPI dependency injection used properly
 
 ### [Flask Projects]
+
 - [ ] **Blueprints Used**: Routes organized in blueprints
 - [ ] **Config Object**: Configuration uses app.config
 - [ ] **Context Managed**: App context handled correctly
 - [ ] **Templates Escaped**: Jinja2 auto-escaping enabled
 
 ### [CLI Projects]
+
 - [ ] **Help Text**: `--help` provides clear usage instructions
 - [ ] **Exit Codes**: Proper exit codes (0=success, non-zero=error)
 - [ ] **Arguments Parsed**: Input parsing handles invalid arguments

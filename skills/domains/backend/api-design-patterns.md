@@ -55,7 +55,7 @@ GET    /getUsers           # Verb in URL (use HTTP method instead)
 GET    /user               # Singular (use plural)
 POST   /createUser         # Verb redundant with POST
 GET    /users/delete/123   # DELETE action should use DELETE method
-```
+```text
 
 **Nested resources guidelines:**
 
@@ -98,7 +98,7 @@ return Response.json(
 
 // 204 No Content - Successful DELETE or update with no response body
 return new Response(null, { status: 204 });
-```
+```text
 
 **Client Errors (4xx):**
 
@@ -150,7 +150,7 @@ return Response.json(
   { error: "Rate limit exceeded", retryAfter: 60 },
   { status: 429, headers: { 'Retry-After': '60' } }
 );
-```
+```text
 
 **Server Errors (5xx):**
 
@@ -166,7 +166,7 @@ return Response.json(
   { error: "Service temporarily unavailable" },
   { status: 503, headers: { 'Retry-After': '300' } }
 );
-```
+```text
 
 ### Error Response Format
 
@@ -209,7 +209,7 @@ if (!email.includes('@')) {
     { field: 'email', message: 'Invalid email format' }
   ]);
 }
-```
+```text
 
 ### API Versioning Strategies
 
@@ -227,7 +227,7 @@ app.get('/v2/users', handleV2Users);
 // Next.js App Router structure:
 // app/api/v1/users/route.ts
 // app/api/v2/users/route.ts
-```
+```text
 
 #### 2. Header Versioning
 
@@ -243,7 +243,7 @@ export async function GET(request: Request) {
   }
   return handleV1(request);
 }
-```
+```text
 
 #### 3. Content Negotiation (Accept Header)
 
@@ -259,7 +259,7 @@ export async function GET(request: Request) {
   }
   return handleV1(request);
 }
-```
+```text
 
 **Recommendation:** Use URL versioning for public APIs (simplicity, discoverability). Use header versioning for internal APIs (clean URLs).
 
@@ -295,7 +295,7 @@ export async function GET(request: Request) {
     }
   });
 }
-```
+```text
 
 #### 2. Cursor-Based Pagination (Recommended for Large Datasets)
 
@@ -338,7 +338,7 @@ function encodeCursor(id: number): string {
 function decodeCursor(cursor: string): number {
   return JSON.parse(Buffer.from(cursor, 'base64').toString()).id;
 }
-```
+```text
 
 #### 3. Page-Based Pagination (UI-Friendly)
 
@@ -369,7 +369,7 @@ export async function GET(request: Request) {
     }
   });
 }
-```
+```text
 
 **Pagination comparison:**
 
@@ -427,7 +427,7 @@ export async function GET(request: Request) {
   // Handle request normally
   return Response.json({ data: 'success' });
 }
-```
+```text
 
 **Rate limit headers:**
 
@@ -439,7 +439,7 @@ return Response.json(data, {
     'X-RateLimit-Reset': String(resetTimestamp)
   }
 });
-```
+```text
 
 ### GraphQL Schema Design
 
@@ -504,7 +504,7 @@ input UpdateUserInput {
   email: String
   name: String
 }
-```
+```text
 
 **GraphQL error handling:**
 
@@ -524,7 +524,7 @@ input UpdateUserInput {
     }
   ]
 }
-```
+```text
 
 ### API Security Best Practices
 
@@ -545,7 +545,7 @@ export async function OPTIONS(request: Request) {
     }
   });
 }
-```
+```text
 
 1. **Use API keys** for service-to-service communication
 2. **Log requests** for auditing and debugging

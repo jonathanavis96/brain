@@ -63,7 +63,7 @@ export async function GET(request) {
     }
   });
 }
-```
+```text
 
 **Security considerations:**
 
@@ -122,7 +122,7 @@ export async function POST(request) {
 
 // Client: Use token in requests (automatic with httpOnly cookies)
 // Tokens sent automatically by browser with each request
-```
+```text
 
 **Refresh token pattern:**
 
@@ -154,7 +154,7 @@ export async function POST(request) {
     return new Response('Invalid refresh token', { status: 401 });
   }
 }
-```
+```text
 
 ### Session-Based Authentication
 
@@ -209,7 +209,7 @@ function ProtectedComponent() {
   
   return <div>Welcome {session.user.email}</div>;
 }
-```
+```text
 
 ### Protected Routes Pattern
 
@@ -236,7 +236,7 @@ export function ProtectedRoute({ children }) {
   
   return children;
 }
-```
+```text
 
 **Server-side protection (for security):**
 
@@ -261,7 +261,7 @@ export default async function DashboardPage() {
     redirect('/login');
   }
 }
-```
+```text
 
 ### Decision Matrix
 

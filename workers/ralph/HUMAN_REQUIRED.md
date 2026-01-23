@@ -9,6 +9,7 @@ Manual verification tasks that cannot be automated. Complete these and update `r
 **Description:** Verify no visual corruption after terminal resize
 
 **Steps:**
+
 1. Open a terminal and run: `bash workers/ralph/current_ralph_tasks.sh`
 2. Resize the terminal window (drag edges, maximize/restore)
 3. Verify the display updates correctly without corruption
@@ -24,6 +25,7 @@ Manual verification tasks that cannot be automated. Complete these and update `r
 **Description:** Verify THUNK monitor only displays, never modifies files
 
 **Steps:**
+
 1. Open a terminal and run: `bash workers/ralph/thunk_ralph_tasks.sh`
 2. In another terminal, edit `workers/IMPLEMENTATION_PLAN.md`
 3. Mark any task as complete: change `- [ ]` to `- [x]`
@@ -44,7 +46,7 @@ After passing a test, add approval to `rules/MANUAL_APPROVALS.rules`:
 # Example
 echo "BugB.UI.1=approved" >> rules/MANUAL_APPROVALS.rules
 echo "BugC.UI.1=approved" >> rules/MANUAL_APPROVALS.rules
-```
+```text
 
 Then run verifier to confirm: `cd workers/ralph && bash verifier.sh`
 

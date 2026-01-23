@@ -36,7 +36,7 @@ echo $?  # Always 0, even if some_command failed!
 export PATH=$(build_path)
 readonly CONFIG=$(load_config)
 declare -r VALUE=$(compute_value)
-```
+```text
 
 ### The Solution
 
@@ -54,7 +54,7 @@ export PATH="$path"
 local config
 config=$(load_config)
 readonly config
-```
+```text
 
 ### Quick Pattern
 
@@ -62,7 +62,7 @@ readonly config
 # Template for any local variable from command
 local varname
 varname=$(command) || { echo "Failed" >&2; return 1; }
-```
+```text
 
 ## SC2034: Unused Variables
 
@@ -73,7 +73,7 @@ Variables assigned but never used clutter code and may indicate bugs.
 ```bash
 # Run shellcheck to find them
 shellcheck -e SC2034 script.sh
-```
+```text
 
 ### Common Causes
 
@@ -96,7 +96,7 @@ if [[ "${VERBOSE:-}" == "1" ]]; then
     local debug_info="$1"
     echo "Debug: $debug_info"
 fi
-```
+```text
 
 ## Variable Scoping
 
@@ -108,7 +108,7 @@ my_func() {
     local internal_var="value"  # Only exists in this function
     echo "$internal_var"
 }
-```
+```text
 
 ### Subshell Scoping Trap
 
@@ -129,7 +129,7 @@ echo "$count"  # Correct value
 while read -r line; do
     count=$((count + 1))
 done <<< "$(cat file.txt)"
-```
+```text
 
 ### Exporting to Child Processes
 
@@ -140,7 +140,7 @@ MY_VAR="value"
 
 export MY_VAR="value"
 ./child.sh  # Can see MY_VAR
-```
+```text
 
 ## Safe Defaults
 
@@ -157,7 +157,7 @@ echo "${var:-default}"   # "default" (unset or empty)
 var=""
 echo "${var:-default}"   # "default" (empty triggers default)
 echo "${var-default}"    # "" (only unset triggers default)
-```
+```text
 
 ## Array Variables
 
@@ -175,7 +175,7 @@ done
 
 # Length
 echo "${#my_array[@]}"
-```
+```text
 
 ## Associative Arrays (bash 4+)
 
@@ -193,7 +193,7 @@ echo "${my_map["key"]}"
 if [[ -v my_map["key"] ]]; then
     echo "Key exists"
 fi
-```
+```text
 
 ## Naming Conventions
 
@@ -210,7 +210,7 @@ local file_path=""
 for f in *.txt; do
 for i in {1..10}; do
 for line in "${lines[@]}"; do
-```
+```text
 
 ## Related
 

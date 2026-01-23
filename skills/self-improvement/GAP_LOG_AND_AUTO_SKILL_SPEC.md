@@ -20,19 +20,21 @@ Provide a complete, chronological history of all gap discoveries and updates. Wh
 ### Problem Being Solved
 
 Current behavior: When Claude discovers more about an existing topic, it **updates** the existing `GAP_BACKLOG.md` entry. This loses visibility into:
+
 - When each piece of knowledge was learned
 - The evolution of understanding over time
 - Metrics on gap discovery frequency and patterns
 
 ### File Location
 
-```
+```text
 brain/ralph/skills/self-improvement/GAP_LOG.md
-```
+```text
 
 ### Entry Format
 
 Each entry includes:
+
 - **Full timestamp** (date + time) — not just date
 - **Gap name** — matches the name in GAP_BACKLOG.md
 - **Action type** — NEW or UPDATED
@@ -52,7 +54,7 @@ Each entry includes:
 ### 2026-01-19 10:15 — Bash Terminal Control with tput (UPDATED)
 - **Addition:** Color support via `tput colors` (query) and `tput setaf N` (set foreground)
 - **Context:** Adding color coding to task status display
-```
+```text
 
 ### Capture Rules
 
@@ -64,6 +66,7 @@ Each entry includes:
 **Timing:** Logging happens at the moment of gap capture (Rule 2 in GAP_CAPTURE_RULES.md), not during review.
 
 **Relationship to GAP_BACKLOG.md:**
+
 - `GAP_BACKLOG.md` — Edit/update in place (consolidated view)
 - `GAP_LOG.md` — Always append (historical view)
 - Both are updated in the same operation
@@ -90,13 +93,14 @@ Current state: The system defines promotion criteria but has no engine to drive 
 ### Trigger Condition
 
 Auto-skill promotion activates **only when all planned work is done**:
+
 - All tasks in `IMPLEMENTATION_PLAN.md` are marked complete
 - No pending items remain in the current plan
 - `loop.sh` has finished its planned iteration
 
 ### Processing Flow
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    PLANNED WORK PHASE                        │
 │  (Normal loop.sh execution of IMPLEMENTATION_PLAN.md tasks) │
@@ -134,7 +138,7 @@ Auto-skill promotion activates **only when all planned work is done**:
                                                   ▼
                                       Loop back to review
                                       (check for more gaps)
-```
+```text
 
 ### Key Behaviors
 
@@ -189,7 +193,7 @@ When a gap qualifies for promotion, these tasks are appended to `IMPLEMENTATION_
 - [ ] Does this skill change agent behavior? → Update `AGENTS.md`
 - [ ] Does this skill affect prompts? → Update `PROMPT.md` or templates
 - [ ] Does this skill affect validation? → Update `VALIDATION_CRITERIA.md`
-```
+```text
 
 ### Gap Selection Priority
 
@@ -221,7 +225,7 @@ When multiple gaps qualify, select based on:
 
 Add logic at end of main loop:
 
-```
+```text
 After all IMPLEMENTATION_PLAN.md tasks complete:
 1. Read GAP_BACKLOG.md
 2. For each gap with Status: Identified
@@ -235,7 +239,7 @@ After all IMPLEMENTATION_PLAN.md tasks complete:
 4. If no gap selected:
    - Log "No gaps ready for promotion"
    - Exit loop (truly done)
-```
+```text
 
 ### GAP_CAPTURE_RULES.md Addition
 
@@ -250,7 +254,7 @@ Every gap capture or update must also append to `GAP_LOG.md`:
 2. **Updated gap** → Append with `(UPDATED)` suffix describing only what was added
 3. Include timestamp with date AND time (YYYY-MM-DD HH:MM)
 4. Never edit or remove entries from GAP_LOG.md
-```
+```text
 
 ---
 

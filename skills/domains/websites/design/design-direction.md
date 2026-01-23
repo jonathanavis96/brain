@@ -15,6 +15,7 @@ Picks a cohesive visual style that aligns with brand, audience, and goals.
 ## Trigger Conditions
 
 Use this skill when:
+
 - Starting visual design phase
 - Client says "make it modern" (undefined)
 - Design feels inconsistent
@@ -43,7 +44,7 @@ Use this skill when:
 - [ ] Sites they dislike
 - [ ] Words to describe desired feel
 - [ ] Any hard constraints
-```
+```text
 
 ### 2. Define Design Direction
 
@@ -67,7 +68,7 @@ Example: Calm, professional, warm, approachable, trustworthy
 - [keyword 1]
 - [keyword 2]
 - [keyword 3]
-```
+```text
 
 ### 3. Create Design Tokens
 
@@ -95,59 +96,64 @@ Example: Calm, professional, warm, approachable, trustworthy
 
 **Shadows:**
 - Style: [none / subtle / pronounced]
-```
+```text
 
 ## Direction Archetypes
 
 ### 1. Calm & Trustworthy (Healthcare, Finance, Therapy)
-```
+
+```text
 Colors: Soft blues, greens, warm neutrals
 Typography: Rounded sans-serif or humanist fonts
 Spacing: Generous, breathing room
 Images: Real people, natural light, candid
 Borders: Rounded (8-16px)
 Overall: Nothing jarring, quiet confidence
-```
+```text
 
 ### 2. Modern & Clean (SaaS, Tech)
-```
+
+```text
 Colors: Primary blue/purple, vibrant accents
 Typography: Geometric sans-serif (Inter, Geist)
 Spacing: Structured grid
 Images: Abstract, illustrations, screenshots
 Borders: Slightly rounded (4-8px)
 Overall: Professional but not boring
-```
+```text
 
 ### 3. Bold & Energetic (Startups, Creative)
-```
+
+```text
 Colors: High contrast, neon accents
 Typography: Bold weights, expressive
 Spacing: Tighter, dynamic
 Images: Photography with personality
 Borders: Mix of sharp and rounded
 Overall: Memorable, stands out
-```
+```text
 
 ### 4. Elegant & Premium (Luxury, High-end Services)
-```
+
+```text
 Colors: Black, white, gold/muted accent
 Typography: Serif headings, refined sans body
 Spacing: Lots of white space
 Images: High-quality, editorial style
 Borders: Sharp or very subtle
 Overall: Less is more, quality feel
-```
+```text
 
 ### 5. Warm & Friendly (Local Business, Personal Brand)
-```
+
+```text
 Colors: Warm tones, earth colors
 Typography: Friendly, approachable fonts
 Spacing: Comfortable, not too formal
 Images: Real people, behind-the-scenes
 Borders: Rounded, soft
 Overall: Like talking to a friend
-```
+```text
 
 ## Common Mistakes
 
@@ -209,7 +215,7 @@ Images:
 - Professional photo of Jacqui (warm, approachable)
 - Abstract/nature imagery for backgrounds
 - Avoid: stock photos, clinical settings
-```
+```text
 
 ## Related Skills
 

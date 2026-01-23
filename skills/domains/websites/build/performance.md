@@ -44,7 +44,7 @@ The largest image or text block must render quickly.
 <style>
   .hero { /* critical styles */ }
 </style>
-```
+```text
 
 ### FID / INP (Interaction Responsiveness)
 
@@ -60,7 +60,7 @@ Page must respond to clicks/taps immediately.
 <script src="/chat-widget.js" async></script>
 
 <!-- Avoid long tasks (>50ms) in JS -->
-```
+```text
 
 ### CLS (Cumulative Layout Shift)
 
@@ -85,7 +85,7 @@ Elements shouldn't jump around during load.
     font-display: swap;
   }
 </style>
-```
+```text
 
 ## Image Optimization
 
@@ -115,7 +115,7 @@ Elements shouldn't jump around during load.
   loading="lazy"
   decoding="async"
 />
-```
+```text
 
 ### Lazy Loading
 
@@ -125,7 +125,7 @@ Elements shouldn't jump around during load.
 
 <!-- Eager load above-fold (hero) images -->
 <img src="/hero.jpg" loading="eager" fetchpriority="high" alt="" />
-```
+```text
 
 ## JavaScript Optimization
 
@@ -137,7 +137,7 @@ import { format } from 'date-fns/format';
 
 // ❌ Don't import entire library
 import * as dateFns from 'date-fns';
-```
+```text
 
 ### Defer Non-Critical JS
 
@@ -151,7 +151,7 @@ import * as dateFns from 'date-fns';
     import('./heavy-feature.js');
   }, { once: true });
 </script>
-```
+```text
 
 ### Astro: Zero JS by Default
 
@@ -161,7 +161,7 @@ import * as dateFns from 'date-fns';
 
 <!-- Add JS only when needed -->
 <InteractiveWidget client:visible />
-```
+```text
 
 ## CSS Optimization
 
@@ -179,7 +179,7 @@ Inline styles needed for above-fold content.
   <!-- Load full CSS async -->
   <link rel="preload" href="/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 </head>
-```
+```text
 
 ### Reduce CSS Size
 
@@ -189,7 +189,7 @@ Inline styles needed for above-fold content.
 module.exports = {
   content: ['./src/**/*.{astro,html,js,jsx,ts,tsx}'],
 }
-```
+```text
 
 ## Font Optimization
 
@@ -212,7 +212,7 @@ module.exports = {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 </style>
-```
+```text
 
 ## Hosting & CDN
 
@@ -256,7 +256,7 @@ module.exports = {
 - [ ] Caching headers set
 - [ ] CDN in use
 - [ ] Lighthouse score 90+
-```
+```text
 
 ## Common Mistakes
 
@@ -300,7 +300,7 @@ import Services from '../components/sections/Services.astro';
   <!-- Lazy load below-fold images -->
   <Services />
 </BaseLayout>
-```
+```text
 
 ```astro
 <!-- BaseLayout.astro head -->
@@ -319,7 +319,7 @@ import Services from '../components/sections/Services.astro';
   
   <slot name="head" />
 </head>
-```
+```text
 
 ## Related Skills
 

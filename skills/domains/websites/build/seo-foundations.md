@@ -15,6 +15,7 @@ Sets up technical SEO: titles, meta descriptions, heading structure, schema mark
 ## Trigger Conditions
 
 Use this skill when:
+
 - Building any website (SEO is non-negotiable)
 - Pages not appearing in search
 - Poor click-through rates from search
@@ -23,18 +24,21 @@ Use this skill when:
 ## Title Tags
 
 ### Formula
-```
+
+```text
 [Primary Keyword] - [Brand] | [Modifier]
-```
+```text
 
 **Examples:**
+
 ```html
 <title>Anxiety Therapy in Johannesburg | Jacqui Howles Psychology</title>
 <title>About Jacqui Howles - Registered Psychologist | Johannesburg</title>
 <title>Contact | Book Your First Therapy Session | Jacqui Howles</title>
-```
+```text
 
 ### Rules
+
 - 50-60 characters (Google truncates longer)
 - Primary keyword near the beginning
 - Unique for every page
@@ -43,16 +47,19 @@ Use this skill when:
 ## Meta Descriptions
 
 ### Formula
-```
+
+```text
 [What you offer] + [for whom] + [CTA or benefit]
-```
+```text
 
 **Examples:**
+
 ```html
 <meta name="description" content="Professional therapy for anxiety, trauma, and life transitions. HPCSA-registered psychologist in Johannesburg. Book your first session today." />
-```
+```text
 
 ### Rules
+
 - 150-160 characters
 - Include target keyword naturally
 - Compelling (it's your ad copy in search results)
@@ -69,9 +76,10 @@ Use this skill when:
     <h3>Subsection</h3>
   <h2>Another Major Section</h2>
     <h3>Subsection</h3>
-```
+```text
 
 ### Rules
+
 - One H1 per page
 - Don't skip levels (H1 → H3)
 - Headings describe content (not for styling)
@@ -79,7 +87,7 @@ Use this skill when:
 
 ## URL Structure
 
-```
+```text
 ✅ Good URLs:
 /services/individual-therapy
 /about
@@ -89,9 +97,10 @@ Use this skill when:
 /services/service1
 /page?id=123
 /About-Us-Page
-```
+```text
 
 ### Rules
+
 - Lowercase
 - Hyphens (not underscores)
 - Short and descriptive
@@ -101,6 +110,7 @@ Use this skill when:
 ## Schema Markup (Structured Data)
 
 ### Local Business (for therapists, local services)
+
 ```html
 <script type="application/ld+json">
 {
@@ -129,9 +139,10 @@ Use this skill when:
   }
 }
 </script>
-```
+```text
 
 ### Professional Service
+
 ```html
 <script type="application/ld+json">
 {
@@ -158,9 +169,10 @@ Use this skill when:
   }
 }
 </script>
-```
+```text
 
 ### FAQ Schema
+
 ```html
 <script type="application/ld+json">
 {
@@ -178,7 +190,7 @@ Use this skill when:
   ]
 }
 </script>
-```
+```text
 
 ## Open Graph Tags (Social Sharing)
 
@@ -197,9 +209,10 @@ Use this skill when:
   <meta name="twitter:description" content="Professional therapy for anxiety, trauma, and life transitions." />
   <meta name="twitter:image" content="https://www.jacquihowles.com/og-image.jpg" />
 </head>
-```
+```text
 
 ### OG Image Requirements
+
 - Size: 1200x630px (Facebook/LinkedIn)
 - Format: JPG or PNG
 - Include logo/brand
@@ -242,11 +255,12 @@ Use this skill when:
 - [ ] Open Graph tags
 - [ ] Twitter Card tags
 - [ ] OG image created
-```
+```text
 
 ## Sitemap and Robots.txt
 
 ### sitemap.xml
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -261,14 +275,15 @@ Use this skill when:
   </url>
   <!-- ... -->
 </urlset>
-```
+```text
 
 ### robots.txt
-```
+
+```text
 User-agent: *
 Allow: /
 Sitemap: https://www.jacquihowles.com/sitemap.xml
-```
+```text
 
 ## Common Mistakes
 

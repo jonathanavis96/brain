@@ -15,6 +15,7 @@ Checks alignment, padding, inconsistent font sizes, contrast issues, and spacing
 ## Trigger Conditions
 
 Use this skill when:
+
 - Build is "complete" but before launch
 - Design review with client
 - Something feels "off" but unclear what
@@ -23,6 +24,7 @@ Use this skill when:
 ## Visual QA Checklist
 
 ### Typography
+
 ```markdown
 - [ ] Headings use correct font family
 - [ ] Headings use correct sizes (H1 > H2 > H3)
@@ -31,9 +33,10 @@ Use this skill when:
 - [ ] No orphaned words in headings
 - [ ] No widows (single words on last line)
 - [ ] Text doesn't touch edges
-```
+```text
 
 ### Spacing
+
 ```markdown
 - [ ] Consistent section padding
 - [ ] Consistent component spacing
@@ -41,9 +44,10 @@ Use this skill when:
 - [ ] Breathing room around text
 - [ ] Cards have equal padding
 - [ ] Button padding consistent
-```
+```text
 
 ### Alignment
+
 ```markdown
 - [ ] Text aligns to grid
 - [ ] Images align with content
@@ -51,9 +55,10 @@ Use this skill when:
 - [ ] Form labels align with inputs
 - [ ] Nav items evenly spaced
 - [ ] Footer columns align
-```
+```text
 
 ### Colors
+
 ```markdown
 - [ ] Colors match design system
 - [ ] Text has sufficient contrast (4.5:1)
@@ -62,25 +67,27 @@ Use this skill when:
 - [ ] Focus states visible
 - [ ] Error states red/visible
 - [ ] Success states green/visible
-```
+```text
 
 ### Images
+
 ```markdown
 - [ ] Images not stretched/squished
 - [ ] Images not pixelated
 - [ ] Consistent image aspect ratios
 - [ ] Images have alt text
 - [ ] Placeholder images replaced
-```
+```text
 
 ### Components
+
 ```markdown
 - [ ] Buttons consistent size/style
 - [ ] Cards consistent style
 - [ ] Icons consistent size/style
 - [ ] Forms styled consistently
 - [ ] Links styled consistently
-```
+```text
 
 ## Responsive Checkpoints
 
@@ -98,6 +105,7 @@ Test at these widths:
 | 1920px | Full HD |
 
 ### What Breaks
+
 ```markdown
 - [ ] No horizontal scroll at any width
 - [ ] Text doesn't overflow containers
@@ -106,11 +114,12 @@ Test at these widths:
 - [ ] Buttons/CTAs accessible
 - [ ] Forms usable
 - [ ] Tables scroll or stack
-```
+```text
 
 ## Common Visual Bugs
 
 ### Spacing Issues
+
 ```css
 /* Problem: Inconsistent margins */
 .card { margin: 20px; }
@@ -118,9 +127,10 @@ Test at these widths:
 
 /* Fix: Use spacing scale */
 .card { margin: var(--space-4); }
-```
+```text
 
 ### Typography Issues
+
 ```css
 /* Problem: Random font sizes */
 .heading { font-size: 32px; }
@@ -128,9 +138,10 @@ Test at these widths:
 
 /* Fix: Use type scale */
 .heading { font-size: var(--text-3xl); }
-```
+```text
 
 ### Alignment Issues
+
 ```css
 /* Problem: Misaligned content */
 .container { padding-left: 20px; }
@@ -138,25 +149,29 @@ Test at these widths:
 
 /* Fix: Consistent container */
 .container { padding: 0 var(--space-4); }
-```
+```text
 
 ## Testing Tools
 
 ### Browser DevTools
+
 - Toggle device toolbar (Ctrl/Cmd + Shift + M)
 - Test responsive breakpoints
 - Inspect computed styles
 
 ### Visual Regression Tools
+
 - Percy (percy.io)
 - Chromatic (chromatic.com)
 - BackstopJS (open source)
 
 ### Design Comparison
+
 - Overlay design in browser (Figma plugin)
 - PixelPerfect extension
 
 ### Accessibility Checks
+
 - axe DevTools extension
 - WAVE extension
 - Lighthouse accessibility audit
@@ -164,31 +179,40 @@ Test at these widths:
 ## Process
 
 ### 1. Full Page Scroll
+
 Scroll through entire page slowly. Look for:
+
 - Spacing jumps
 - Alignment shifts
 - Color inconsistencies
 
 ### 2. Resize Window
+
 Drag browser width narrow to wide. Look for:
+
 - Layout breaks
 - Text overflow
 - Image issues
 
 ### 3. Component Audit
+
 Check each component type:
+
 - All buttons
 - All cards
 - All headings
 - All forms
 
 ### 4. Interactive States
+
 Test:
+
 - Hover states
 - Focus states (tab through)
 - Active/pressed states
 
 ### 5. Dark Mode (if applicable)
+
 - Colors adapt correctly
 - Contrast maintained
 - Images work
@@ -243,7 +267,7 @@ Test:
 ### Issues Found
 1. ~~FAQ accordion arrow misaligned~~ → Fixed
 2. ~~Mobile nav too close to edge~~ → Added padding
-```
+```text
 
 ## Related Skills
 

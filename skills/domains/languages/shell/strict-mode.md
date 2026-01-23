@@ -28,7 +28,7 @@ Every bash script should start with:
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
-```
+```text
 
 ### What Each Option Does
 
@@ -50,7 +50,7 @@ if [[ -z "$OPTIONAL_VAR" ]]; then
 
 # ✅ Right - safe default
 if [[ -z "${OPTIONAL_VAR:-}" ]]; then
-```
+```text
 
 ### Commands That May Fail
 
@@ -65,7 +65,7 @@ count=$(grep -c "pattern" file.txt) || true
 if ! count=$(grep -c "pattern" file.txt 2>/dev/null); then
     count=0
 fi
-```
+```text
 
 ### Checking Command Existence
 
@@ -75,7 +75,7 @@ if which jq >/dev/null 2>&1; then
 
 # ✅ Right - command -v doesn't fail with -e
 if command -v jq >/dev/null 2>&1; then
-```
+```text
 
 ## Extended Debugging
 
@@ -85,7 +85,7 @@ For development/debugging, add:
 set -euo pipefail
 # Uncomment for debugging:
 # set -x  # Print each command before execution
-```
+```text
 
 ## Function-Level Error Handling
 
@@ -100,7 +100,7 @@ my_function() {
     fi
     echo "$result"
 }
-```
+```text
 
 ## Common Pitfalls
 
@@ -117,7 +117,7 @@ my_func() {
     local output
     output=$(failing_command)  # Now -e catches failure
 }
-```
+```text
 
 See [variable-patterns.md](./variable-patterns.md) for detailed coverage.
 
@@ -136,7 +136,7 @@ if ! (cd /some/dir && failing_command); then
     echo "Subshell failed" >&2
     exit 1
 fi
-```
+```text
 
 ## Script Template
 
@@ -161,7 +161,7 @@ main() {
 }
 
 main "$@"
-```
+```text
 
 ## Related
 

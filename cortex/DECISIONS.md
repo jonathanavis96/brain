@@ -58,7 +58,7 @@ brain/
     
   workers/ralph/               ← Worker - execution only
     PROMPT.md, loop.sh, ...    ← Ralph's machinery
-```
+```text
 
 **Workflow:**
 

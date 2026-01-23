@@ -34,7 +34,7 @@ Use this skill when:
   gtag('js', new Date());
   gtag('config', 'G-XXXXXXXX');
 </script>
-```
+```text
 
 ### Astro Integration
 
@@ -56,7 +56,7 @@ const GA_ID = import.meta.env.PUBLIC_GA_ID;
     </>
   )}
 </head>
-```
+```text
 
 ### With Cookie Consent
 
@@ -79,14 +79,14 @@ const GA_ID = import.meta.env.PUBLIC_GA_ID;
     gtag('config', 'G-XXXXXXXX');
   }
 </script>
-```
+```text
 
 ## Privacy-Focused Alternative: Plausible
 
 ```html
 <!-- Plausible - no cookies, GDPR-compliant -->
 <script defer data-domain="yoursite.com" src="https://plausible.io/js/script.js"></script>
-```
+```text
 
 ### Track Custom Events (Plausible)
 
@@ -99,7 +99,7 @@ const GA_ID = import.meta.env.PUBLIC_GA_ID;
 <script>
   plausible('Form Submit', {props: {form: 'contact'}});
 </script>
-```
+```text
 
 ## Conversion Tracking
 
@@ -141,7 +141,7 @@ document.querySelectorAll('a[href^="tel:"]').forEach(el => {
     });
   });
 });
-```
+```text
 
 ### Track Outbound Links
 
@@ -156,7 +156,7 @@ document.querySelectorAll('a[href^="http"]').forEach(link => {
     });
   }
 });
-```
+```text
 
 ## Google Tag Manager (GTM)
 
@@ -173,7 +173,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- GTM noscript (after body tag) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-```
+```text
 
 Then configure triggers and tags in GTM interface.
 
@@ -204,7 +204,7 @@ Then configure triggers and tags in GTM interface.
 - Core Web Vitals (LCP, CLS, FID)
 - Page load time
 - Mobile vs Desktop ratio
-```
+```text
 
 ## Setting Up Goals in GA4
 
@@ -220,7 +220,7 @@ Track marketing campaigns:
 
 ```text
 https://jacquihowles.com/?utm_source=google&utm_medium=cpc&utm_campaign=therapy-johannesburg
-```
+```text
 
 | Parameter | Purpose | Example |
 | ----------- | --------- | --------- |
@@ -256,7 +256,7 @@ console.log(typeof gtag); // Should be 'function'
 
 // Check dataLayer
 console.log(window.dataLayer);
-```
+```text
 
 ### Real-Time Reports
 
@@ -307,7 +307,7 @@ const isProd = import.meta.env.PROD;
     </script>
   )}
 </body>
-```
+```text
 
 Usage in components:
 
@@ -319,7 +319,7 @@ Usage in components:
 <a href="tel:+27123456789" class="...">
   Call Now
 </a>
-```
+```text
 
 ## Related Skills
 

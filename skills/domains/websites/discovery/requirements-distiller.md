@@ -13,6 +13,7 @@ Turns messy client notes into clear goals, pages, sections, constraints, and "do
 ## Trigger Conditions
 
 Use this skill when:
+
 - Starting any new website project
 - Client provides unstructured requirements
 - Scope is unclear or keeps changing
@@ -29,11 +30,12 @@ Use this skill when:
 - **CTAs:** [current calls to action]
 - **Trust markers:** [credentials, testimonials, logos]
 - **Pain points:** [what's not working]
-```
+```text
 
 ### 2. Extract Core Requirements
 
 Ask/determine:
+
 - **Primary goal:** What's the ONE thing this site must do?
 - **Target audience:** Who visits? What problem do they have?
 - **Conversion event:** Book call? Buy? Submit form? WhatsApp?
@@ -73,7 +75,7 @@ Ask/determine:
 ### Done Looks Like
 - [ ] [Specific acceptance criteria]
 - [ ] [Measurable outcome]
-```
+```text
 
 ## Common Mistakes
 
@@ -89,6 +91,7 @@ Ask/determine:
 **Input:** "We need a new website. Current one is outdated. We want more clients."
 
 **Output:**
+
 ```markdown
 ## Project Requirements: Jacqui Howles Psychology
 
@@ -118,7 +121,7 @@ Ask/determine:
 - [ ] Clear booking CTA above fold on every page
 - [ ] Mobile-friendly (Lighthouse mobile score 90+)
 - [ ] Load time under 3 seconds
-```
+```text
 
 ## Related Skills
 

@@ -14,7 +14,7 @@ This file contains detailed examples, error recovery, and edge case handling. Re
 
 Co-authored-by: ralph-brain <ralph-brain@users.noreply.github.com>
 Brain-Repo: ${BRAIN_REPO}
-```
+```text
 
 ### Allowed Types
 
@@ -41,6 +41,7 @@ Brain-Repo: ${BRAIN_REPO}
 ### Examples
 
 **Feature addition:**
+
 ```text
 feat(templates): add lean PROMPT.project.md template
 
@@ -50,9 +51,10 @@ feat(templates): add lean PROMPT.project.md template
 
 Co-authored-by: ralph-brain <ralph-brain@users.noreply.github.com>
 Brain-Repo: jonathanavis96/brain
-```
+```text
 
 **Bug fix:**
+
 ```text
 fix(loop): prevent concurrent ralph runs with lock file
 
@@ -62,9 +64,10 @@ fix(loop): prevent concurrent ralph runs with lock file
 
 Co-authored-by: ralph-brain <ralph-brain@users.noreply.github.com>
 Brain-Repo: jonathanavis96/brain
-```
+```text
 
 **Documentation:**
+
 ```text
 docs(plan): update implementation plan
 
@@ -74,7 +77,7 @@ docs(plan): update implementation plan
 
 Co-authored-by: ralph-brain <ralph-brain@users.noreply.github.com>
 Brain-Repo: jonathanavis96/brain
-```
+```text
 
 ## Plan Structure Template
 
@@ -99,7 +102,7 @@ When creating/updating IMPLEMENTATION_PLAN.md:
 
 ## Completed
 - [x] 0. Initial setup (moved here when done)
-```
+```text
 
 ### Task Breakdown Rules
 
@@ -111,6 +114,7 @@ When creating/updating IMPLEMENTATION_PLAN.md:
 ## Error Recovery
 
 ### Build Fails
+
 1. Read the error message carefully
 2. Check if it's a pre-existing issue (search git log)
 3. Fix the immediate error
@@ -118,19 +122,23 @@ When creating/updating IMPLEMENTATION_PLAN.md:
 5. If stuck after 2 attempts, add `[BLOCKED: reason]` to the task and move to next
 
 ### Tests Fail
+
 1. Determine if failure is from your changes or pre-existing
 2. If pre-existing: note in plan, continue
 3. If from your changes: fix before marking complete
 4. Never mark a task complete if your changes broke tests
 
 ### Merge Conflicts
+
 1. Do NOT force push
 2. Pull latest: `git pull --rebase origin $(git branch --show-current)`
 3. Resolve conflicts manually
 4. If complex, add `[NEEDS-REVIEW: merge conflict]` and stop
 
 ### Unknown State
+
 If you're unsure what state the codebase is in:
+
 1. Run `git status` to see uncommitted changes
 2. Run `git log --oneline -5` to see recent commits
 3. Check IMPLEMENTATION_PLAN.md for last completed task
@@ -139,22 +147,25 @@ If you're unsure what state the codebase is in:
 ## Subagent Usage Patterns
 
 ### Reading/Discovery (up to 100 parallel)
+
 ```bash
 - grep -r "pattern" . --include="*.ts"
 - Find all files matching criteria
 - Read multiple documentation files
 - Search for existing implementations
-```
+```text
 
 ### Building/Modification (exactly 1)
+
 ```text
 - File creation/modification
 - Git operations
 - Running build/test commands
 - Any state-changing operation
-```
+```text
 
 **Why single subagent for builds?**
+
 - Prevents race conditions
 - Ensures atomic commits
 - Maintains consistent state
@@ -174,6 +185,7 @@ If you're unsure what state the codebase is in:
 | React best practices | references/react-best-practices/HOTLIST.md |
 
 ### Skills Lookup Order (Token Efficient)
+
 1. `skills/SUMMARY.md` - Overview, when to use what
 2. `references/*/HOTLIST.md` - Top 10 rules (covers 80% of cases)
 3. Specific rule files - Only when HOTLIST doesn't cover your scenario
@@ -184,6 +196,7 @@ If you're unsure what state the codebase is in:
 ## Design Philosophy
 
 ### Core Principles
+
 - **Prefer correctness over speed** - Get it right, then optimize
 - **Search before creating** - Avoid duplicate implementations
 - **Leave code working** - Each task should leave codebase testable
@@ -191,12 +204,14 @@ If you're unsure what state the codebase is in:
 - **Trust the loop** - It handles sequencing, you handle one task
 
 ### What Makes a Good Task
+
 - Clear definition of done
 - Single responsibility
 - Independently verifiable
 - Leaves codebase in working state
 
 ### What Makes a Bad Task
+
 - Vague: "improve the code"
 - Multi-part: "add X, Y, and Z"
 - Unbounded: "refactor everything"

@@ -19,7 +19,7 @@ For markdown files, **always run the auto-fix script first**:
 
 ```bash
 bash workers/ralph/fix-markdown.sh <file_or_directory>
-```
+```text
 
 This handles ~40-60% of common issues automatically:
 
@@ -52,7 +52,7 @@ When manual fixes are needed, batch them efficiently:
 2. Identify ALL issues to fix
 3. Make ONE comprehensive find_and_replace per logical section
    - Or use bash/sed for pattern-based fixes
-```
+```text
 
 ### Example: Fixing Multiple Tables
 
@@ -61,7 +61,7 @@ Instead of fixing each table cell individually:
 ```bash
 # Fix all table spacing in one command
 sed -i 's/|\([^|]*[^ |]\)|/| \1 |/g' file.md
-```
+```text
 
 Or use a single find_and_replace that captures a whole table.
 
@@ -74,7 +74,7 @@ Markdown lint errors?
 │   ├── 0 errors → Done!
 │   ├── <5 errors → Individual find_and_replace OK
 │   └── 5+ errors → Batch fixes (sed or section replacement)
-```
+```text
 
 ## Anti-Patterns
 
@@ -85,7 +85,7 @@ find_and_replace: line 10
 find_and_replace: line 11  
 find_and_replace: line 12
 ... (28 more calls)
-```
+```text
 
 ### ❌ Ignoring Auto-Fix Tools
 

@@ -15,6 +15,7 @@ Adds sections and copy that neutralize common buyer doubts about price, time, tr
 ## Trigger Conditions
 
 Use this skill when:
+
 - Traffic but no conversions
 - Users abandon at pricing/contact
 - FAQ receives same questions repeatedly
@@ -37,10 +38,12 @@ Every purchase decision faces these:
 ### 1. Trust Objections
 
 **Signals:**
+
 - "How do I know you're legit?"
 - "I've been burned before"
 
 **Solutions:**
+
 ```markdown
 - Credentials prominently displayed (HPCSA, certifications)
 - Third-party verification (Psychology Today, Google reviews)
@@ -49,30 +52,34 @@ Every purchase decision faces these:
 - Media mentions ("As seen in...")
 - Years of experience / clients served
 - Professional photo (not stock)
-```
+```text
 
 ### 2. Need/Fit Objections
 
 **Signals:**
+
 - "Is this right for my situation?"
 - "I'm not sure I need this"
 
 **Solutions:**
+
 ```markdown
 - "This is for you if..." section
 - Specific problem callouts ("struggling with anxiety?")
 - "Not for you if..." (shows confidence, builds trust)
 - Case studies of similar clients
 - Quiz or assessment to confirm fit
-```
+```text
 
 ### 3. Price Objections
 
 **Signals:**
+
 - "It's too expensive"
 - "I can't afford it"
 
 **Solutions:**
+
 ```markdown
 - Frame as investment, not cost
 - Compare to cost of NOT solving problem
@@ -81,15 +88,17 @@ Every purchase decision faces these:
 - Anchor against higher alternatives
 - "Starting from" to lower barrier
 - Free consultation to prove value first
-```
+```text
 
 ### 4. Time Objections
 
 **Signals:**
+
 - "I'm too busy"
 - "How long will this take?"
 
 **Solutions:**
+
 ```markdown
 - Clear time commitment upfront
 - "Just [X] minutes per week"
@@ -97,15 +106,17 @@ Every purchase decision faces these:
 - Show process timeline
 - Quick wins early
 - Online/remote options
-```
+```text
 
 ### 5. Risk Objections
 
 **Signals:**
+
 - "What if it doesn't work?"
 - "I need to think about it"
 
 **Solutions:**
+
 ```markdown
 - Satisfaction guarantee (if applicable)
 - Free consultation / first session
@@ -113,7 +124,7 @@ Every purchase decision faces these:
 - Clear cancellation policy
 - Testimonials showing results
 - Step-by-step process (reduces unknown)
-```
+```text
 
 ## FAQ as Objection Handler
 
@@ -141,7 +152,7 @@ A: [Honest timeline + "you'll feel progress"]
 ### Risk
 **Q: What if I don't connect with you?**
 A: [No pressure, referrals available]
-```
+```text
 
 ## Common Mistakes
 
@@ -201,7 +212,7 @@ A: That's okay. The consultation is just a conversation — no pressure, no comm
 
 **Q: What if we're not a good fit?**
 A: It's important you feel comfortable. If we're not the right match, I'm happy to recommend colleagues who might be better suited.
-```
+```text
 
 ## Related Skills
 

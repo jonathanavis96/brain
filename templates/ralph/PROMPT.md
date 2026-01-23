@@ -45,7 +45,7 @@ If you cannot fix a failure (protected file, infrastructure issue), output:
 
 Cannot fix AC failure: <RULE_ID>
 Reason: <why you can't fix it>
-```
+```text
 
 Then output `:::BUILD_READY:::` to end the iteration.
 
@@ -62,7 +62,7 @@ Then output `:::BUILD_READY:::` to end the iteration.
 ```bash
 # CORRECT: Single commit with everything
 git add -A && git commit -m "fix(scope): description"
-```
+```text
 
 **NEVER make separate commits** for "mark task complete" or "log to THUNK" - these waste iterations and break traceability.
 
@@ -113,7 +113,7 @@ pre-commit run --all-files 2>&1 | head -50 || true
 
 # Or run individual checks if pre-commit not installed:
 shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
-```
+```text
 
 **If any issues found:** Add them to the TOP of IMPLEMENTATION_PLAN.md as high-priority tasks in "## Phase 0-Warn: Verifier Warnings" section.
 
@@ -308,7 +308,7 @@ for file in rules/AC.rules verifier.sh loop.sh PROMPT.md; do
     echo "✅ $file"
   fi
 done
-```
+```text
 
 **Repository Health:**
 
@@ -324,7 +324,7 @@ grep -c '^\- \[ \]' ralph/IMPLEMENTATION_PLAN.md || echo "0"
 
 # Check verifier status
 cat .verify/latest.txt | grep -E '\[PASS\]|\[FAIL\]|\[WARN\]' | tail -5
-```
+```text
 
 **Skills Coverage:**
 
@@ -332,7 +332,7 @@ cat .verify/latest.txt | grep -E '\[PASS\]|\[FAIL\]|\[WARN\]' | tail -5
 # Check for gaps in skills documentation
 find skills/ -name "*.md" -type f | wc -l
 grep -c "^\- " skills/index.md
-```
+```text
 
 ### Common Maintenance Tasks
 
@@ -344,21 +344,21 @@ sha256sum rules/AC.rules > .verify/ac.sha256
 sha256sum verifier.sh > .verify/verifier.sha256
 sha256sum loop.sh > .verify/loop.sha256
 sha256sum PROMPT.md > ../.verify/prompt.sha256
-```
+```text
 
 **Clean up waiver files:**
 
 ```bash
 # Remove expired or used waivers
 ls -la .verify/waivers/*.used 2>/dev/null
-```
+```text
 
 **Sync with brain templates:**
 
 ```bash
 # After updating brain templates, sync to project ralph/
 diff -rq ../brain/templates/ralph/ ralph/ | grep "differ$"
-```
+```text
 
 ---
 

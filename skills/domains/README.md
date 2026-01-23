@@ -50,7 +50,7 @@ Every domain skill file must follow this structure:
 
 [The actual knowledge: patterns, code examples, decision criteria]
 [Can include multiple subsections as needed]
-```
+```text
 
 ## Contributing
 

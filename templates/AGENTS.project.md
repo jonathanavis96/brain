@@ -7,6 +7,7 @@
 ### Progressive Disclosure: Always Read in This Order
 
 **If brain repository is available, ALWAYS start here:**
+
 1. `../../brain/skills/SUMMARY.md` - Knowledge base overview and usage guide
 2. `../../brain/references/react-best-practices/HOTLIST.md` - Top 10 most applicable performance rules (covers 80% of scenarios)
 
@@ -21,12 +22,15 @@
 ✅ **Only open specific rule files when needed for the task** - don't read everything "just in case"
 
 ### Why This Order Matters
+
 - **Token efficiency**: HOTLIST covers most common scenarios with minimal tokens
 - **Faster results**: Start broad, drill down only when needed
 - **Avoid overwhelm**: Don't read all rules unless explicitly instructed
 
 ### Standalone Mode
+
 If the brain repository is not present (e.g., project cloned standalone), skip the KB lookups above and rely on:
+
 - Project-local documentation in `docs/`
 - Standard best practices for your tech stack
 - Any project-specific conventions documented in this file
@@ -42,6 +46,7 @@ When you discover a new convention, architectural decision, or project-specific 
 2. **Update the index**: Add a link in `../../brain/skills/SUMMARY.md`
 
 3. **Structure new KB files** with:
+
    ```markdown
    # [Title]
    
@@ -60,11 +65,13 @@ When you discover a new convention, architectural decision, or project-specific 
 > **Note:** This protocol requires the brain repository at `../../brain/`. If running standalone (brain not present), skip this section.
 
 **Start of iteration:**
+
 1. Study `../../brain/skills/SUMMARY.md` for overview
 2. Check `../../brain/skills/index.md` for available skills
 3. Review `../../brain/skills/self-improvement/GAP_CAPTURE_RULES.md` for capture protocol
 
 **End of iteration:**
+
 1. If you used undocumented knowledge/procedure/tooling:
    - Search `../../brain/skills/` for existing matching skill
    - Search `../../brain/skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
@@ -77,21 +84,25 @@ When you discover a new convention, architectural decision, or project-specific 
 ## Parallelism Rule
 
 **Reading/searching/spec review**: Use up to **100 parallel subagents** for maximum efficiency
+
 - File reading, searching, spec analysis, documentation review
 - Gathering context from multiple sources simultaneously
 
 **Build/tests/benchmarks**: Use exactly **1 agent**
+
 - Running build commands, executing tests, benchmarks
 - Making file modifications and commits
 
 ## Core Principles
 
 ### Before Making Changes
+
 1. **Search the codebase** - Don't assume anything is missing; search first
 2. **Read targeted knowledge** - Follow the hierarchy: SUMMARY → HOTLIST → specific rules
 3. **Check existing patterns** - Look for established conventions in the codebase before inventing new ones
 
 ### Code Quality
+
 - Prefer standard patterns from the knowledge base over custom solutions
 - Keep components small and focused
 - Write clear, self-documenting code with minimal comments
@@ -100,7 +111,7 @@ When you discover a new convention, architectural decision, or project-specific 
 
 **⚠️ CRITICAL: Source code goes in PROJECT ROOT, not in ralph/!**
 
-```
+```text
 project-root/           ← Working directory for application files
 ├── src/                ← Source code HERE
 ├── package.json        ← Config files HERE
@@ -117,7 +128,7 @@ project-root/           ← Working directory for application files
     ├── loop.sh         ← Loop runner
     ├── kb/             ← Project knowledge base
     └── logs/           ← Iteration logs
-```
+```text
 
 - **Source code**: Always in `src/` at project root (NOT `ralph/src/`)
 - **Config files**: Always at project root (`package.json`, `tsconfig.json`, etc.)
@@ -129,10 +140,11 @@ project-root/           ← Working directory for application files
 
 - **Environment:** WSL (Windows Subsystem for Linux) on Windows 11 with Ubuntu
 - **Shell:** bash (comes with WSL Ubuntu)
-- **Atlassian CLI:** `acli` - https://developer.atlassian.com/cloud/cli/
+- **Atlassian CLI:** `acli` - <https://developer.atlassian.com/cloud/cli/>
 - **RovoDev:** `acli rovodev auth && acli rovodev usage site`
 
 ### WSL/Windows 11 Specifics
+
 - Working directory: `/mnt/c/...` or `/home/...` depending on where repository is cloned
 - Git line endings: Use `core.autocrlf=input` to avoid CRLF issues
 - File permissions: WSL handles Unix permissions on Windows filesystem
@@ -141,6 +153,7 @@ project-root/           ← Working directory for application files
 ## Ralph Integration
 
 This project uses the Ralph Wiggum iterative loop for systematic development:
+
 - **Single unified prompt**: See `ralph/PROMPT.md` (determines mode from iteration number)
 - **Progress tracking**: All work logged in `ralph/progress.txt`
 - **Completion**: Look for `:::COMPLETE:::` sentinel

@@ -12,6 +12,7 @@ Goals: [Key objectives and success criteria - e.g., "Build scalable API, achieve
 ## Success Criteria
 
 [Optional: Specific metrics or conditions that define project success]
+
 - [ ] Criterion 1
 - [ ] Criterion 2
 - [ ] Criterion 3

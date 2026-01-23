@@ -23,7 +23,7 @@ bash setup.sh
 # Verify installation
 cortex --help
 ralph --help
-```
+```text
 
 **What `setup.sh` does:**
 
@@ -52,9 +52,10 @@ bash workers/ralph/new-project.sh NEW_PROJECT_IDEA.md
 # 3. Your project is ready!
 cd /path/to/your-project
 ralph loop --iterations 10
-```
+```text
 
 **What gets created:**
+
 - Complete Ralph infrastructure (`ralph/loop.sh`, `ralph/PROMPT.md`, etc.)
 - Custom `THOUGHTS.md` (generated from your project idea)
 - Custom `NEURONS.md` (codebase map inferred from tech stack)
@@ -65,7 +66,7 @@ ralph loop --iterations 10
 
 ## Repository Structure
 
-```
+```text
 brain/
 ├── README.md                      # This file
 ├── .gitignore                     # Excludes logs, backups, old files
@@ -118,7 +119,7 @@ brain/
     ├── new-project.sh             # Bootstrap orchestration
     ├── loop.sh                    # Ralph loop (brain self-improvement)
     └── watch_ralph_tasks.sh       # Interactive task monitor
-```
+```text
 
 ## Knowledge Base Usage
 
@@ -131,7 +132,7 @@ Always start broad, drill down only when needed:
 2. references/react-best-practices/HOTLIST.md → Top 10 rules (covers 80% of scenarios)
 3. references/react-best-practices/INDEX.md   → Full categorized index (if needed)
 4. references/react-best-practices/rules/*    → Specific rule deep-dives
-```
+```text
 
 **Don't:** Scan all 45 rules by default (token-inefficient)
 **Do:** Use HOTLIST → INDEX → specific rules
@@ -167,7 +168,7 @@ bash loop.sh --iterations 10
 
 # Watch tasks in real-time (interactive)
 bash watch_ralph_tasks.sh
-```
+```text
 
 ### Task Monitor (Interactive)
 
@@ -175,9 +176,10 @@ Real-time display of `IMPLEMENTATION_PLAN.md` with hotkeys:
 
 ```bash
 bash watch_ralph_tasks.sh
-```
+```text
 
 **Hotkeys:**
+
 - `h` - Toggle hide/show completed tasks
 - `r` - Archive completed tasks to timestamped section
 - `f` - Force refresh display
@@ -186,6 +188,7 @@ bash watch_ralph_tasks.sh
 - `q` - Quit
 
 **Supports multiple task formats:**
+
 - `- [ ] **Task 1:** Description` (numbered)
 - `- [ ] **Description text**` (unnumbered)
 - `- [ ] Description text` (plain)
@@ -208,18 +211,21 @@ See `THOUGHTS.md` for Ralph's 20 strategic questions about brain evolution:
 Generators analyze your project idea and produce customized content:
 
 **generate-thoughts.sh**
+
 - Parses purpose/goals from `NEW_PROJECT_IDEA.md`
 - Infers Definition of Done
 - Creates project-specific success metrics
 - Generates vision aligned with project type
 
 **generate-neurons.sh**
+
 - Parses tech stack (Next.js, Python, Go, etc.)
 - Infers directory structure conventions
 - Maps initial codebase layout
 - Includes tech-stack-specific patterns
 
 **generate-implementation-plan.sh**
+
 - Parses goals and breaks into tasks
 - Prioritizes by dependency order
 - Creates actionable first sprint
@@ -230,6 +236,7 @@ Generators analyze your project idea and produce customized content:
 Current: React/Next.js focused
 
 **Planned (see THOUGHTS.md):**
+
 - Python (Django, FastAPI, Flask)
 - Go (web services, CLI tools)
 - Rust (systems programming, WASM)
@@ -249,7 +256,7 @@ All templates use **bash-style forward slash paths**:
 # Incorrect ❌
 ..\\brain\\kb\\SUMMARY.md                             # Windows backslashes
 /path/to/brain/kb/SUMMARY.md                 # Absolute paths (breaks portability)
-```
+```text
 
 **Why:** Cross-platform compatibility (WSL, Linux, macOS, Windows Git Bash)
 
@@ -258,6 +265,7 @@ All templates use **bash-style forward slash paths**:
 ### Adding Knowledge
 
 1. **Domain patterns** (reusable across projects):
+
    ```bash
    # Create new domain KB file
    cat > kb/domains/my-pattern.md << 'EOF'
@@ -278,6 +286,7 @@ All templates use **bash-style forward slash paths**:
    ```
 
 2. **Project-specific knowledge**:
+
    ```bash
    # Create project KB file
    cat > kb/projects/my-project.md << 'EOF'
@@ -321,7 +330,7 @@ bash loop.sh --iterations 5
 
 # Watch progress
 bash watch_ralph_tasks.sh
-```
+```text
 
 **Ralph's Design Philosophy:**
 
@@ -394,7 +403,7 @@ bash -n new-project.sh
 # KB integrity (all files have required headers)
 grep -r "## Why This Exists" kb/domains/ kb/projects/
 grep -r "## When to Use It" kb/domains/ kb/projects/
-```
+```text
 
 ## Key Principles
 

@@ -42,7 +42,7 @@ Every skills file **must** follow this four-section structure:
 [The actual knowledge: patterns, code examples, implementation details]
 [Can include multiple subsections as needed]
 [Can be as long or short as necessary]
-```
+```text
 
 ### Section Guidelines
 
@@ -109,7 +109,7 @@ skills/
 └── projects/               # Project-specific knowledge
     ├── README.md
     └── [project-skills-files].md
-```
+```text
 
 ## Domain vs Project Skills
 
@@ -164,12 +164,12 @@ skills/
    [Content]
    ```
 
-3. **Update `skills/SUMMARY.md`**
+1. **Update `skills/SUMMARY.md`**
    - Add link under "Domains" or "Projects" section
    - Use descriptive link text
    - Keep alphabetical order within sections
 
-4. **Validate the file**
+2. **Validate the file**
    - Check: All three required headers present
    - Check: Content is clear and actionable
    - Check: Linked from SUMMARY.md
@@ -232,7 +232,7 @@ When implementing OAuth2 authentication:
 
 ```text
 (end of code example)
-```
+```text
 
 ## Common Mistakes to Avoid
 

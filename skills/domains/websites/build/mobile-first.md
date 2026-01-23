@@ -16,6 +16,7 @@ Designs and builds for mobile screens first, then enhances for larger screens.
 ## Trigger Conditions
 
 Use this skill when:
+
 - Building any website (60%+ traffic is mobile)
 - Layout breaks on small screens
 - Text too small or buttons too close
@@ -37,9 +38,10 @@ Use this skill when:
     flex-direction: row;
   }
 }
-```
+```text
 
 **NOT** desktop-first:
+
 ```css
 /* ❌ DON'T DO THIS */
 .card {
@@ -53,11 +55,12 @@ Use this skill when:
     flex-direction: column;
   }
 }
-```
+```text
 
 ## Common Patterns
 
 ### Navigation
+
 ```astro
 <!-- Mobile: hamburger menu -->
 <nav>
@@ -81,9 +84,10 @@ Use this skill when:
     <!-- ... -->
   </div>
 </nav>
-```
+```text
 
 ### Grid Layout
+
 ```html
 <!-- 1 column mobile, 2 tablet, 3 desktop -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -91,9 +95,10 @@ Use this skill when:
   <Card />
   <Card />
 </div>
-```
+```text
 
 ### Hero Section
+
 ```html
 <!-- Stack on mobile, side-by-side on desktop -->
 <section class="hero">
@@ -108,9 +113,10 @@ Use this skill when:
     </div>
   </div>
 </section>
-```
+```text
 
 ### Typography Scaling
+
 ```css
 h1 {
   font-size: 1.875rem; /* 30px mobile */
@@ -132,9 +138,10 @@ h1 {
 h1 {
   font-size: clamp(1.875rem, 4vw, 3rem);
 }
-```
+```text
 
 ### Spacing
+
 ```css
 section {
   padding: 3rem 1rem; /* Mobile */
@@ -145,7 +152,7 @@ section {
     padding: 5rem 2rem; /* Tablet+ */
   }
 }
-```
+```text
 
 ## Touch Targets
 
@@ -162,7 +169,7 @@ button, .nav-link {
 .nav-link + .nav-link {
   margin-top: 8px; /* Prevent mis-taps */
 }
-```
+```text
 
 ## Mobile Checklist
 
@@ -194,7 +201,7 @@ button, .nav-link {
 - [ ] Dropdowns/accordions work on tap
 - [ ] No hover-only interactions
 - [ ] Form validation shows on mobile
-```
+```text
 
 ## Common Mistakes
 
@@ -254,7 +261,7 @@ button, .nav-link {
     </div>
   </div>
 </section>
-```
+```text
 
 ## Related Skills
 

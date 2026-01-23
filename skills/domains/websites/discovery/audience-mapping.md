@@ -14,6 +14,7 @@ Identifies target user, their pains, desired outcomes, and the primary CTA that 
 ## Trigger Conditions
 
 Use this skill when:
+
 - Target audience is vague ("everyone")
 - Copy doesn't resonate with visitors
 - High traffic but low conversions
@@ -37,7 +38,7 @@ Use this skill when:
 
 **They search for:**
 - "[Actual search terms they'd use]"
-```
+```text
 
 ### 2. Map Pain → Desire → Action
 
@@ -49,7 +50,7 @@ Use this skill when:
 | [What hurts] | [What they want] | [What to offer] |
 | Feeling overwhelmed | Feel calm and in control | "Book a free consultation" |
 | Don't know where to start | Clear first step | "Take our assessment" |
-```
+```text
 
 ### 3. Identify Trust Barriers
 
@@ -64,7 +65,7 @@ What stops them from converting?
 | "Will this work for me?" | Testimonials from similar people |
 | "Is it too expensive?" | Pricing transparency or "worth it" framing |
 | "Is it safe to share?" | Privacy assurances, professional standards |
-```
+```text
 
 ### 4. Prioritize Segments (if multiple)
 
@@ -76,7 +77,7 @@ What stops them from converting?
 | [Segment A] | Large | High | Good | 🥇 Primary |
 | [Segment B] | Medium | Medium | Good | 🥈 Secondary |
 | [Segment C] | Small | High | Okay | 🥉 Tertiary |
-```
+```text
 
 ## Common Mistakes
 
@@ -126,7 +127,7 @@ What stops them from converting?
 | "Will they understand my situation?" | Specific mention of their issue (trauma, anxiety, etc.) |
 | "What's the process like?" | Clear "how it works" section |
 | "Can I afford this?" | Session rates or "investment" framing |
-```
+```text
 
 ## Related Skills
 

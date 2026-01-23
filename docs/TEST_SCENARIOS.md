@@ -11,6 +11,7 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
 ## Loop Correctness
 
 ### :::COMPLETE::: Detection
+
 - [ ] **Test: Echo `:::COMPLETE:::` in log → expect loop exits immediately**
   - Run: Create log with `:::COMPLETE:::` marker
   - Expected: Loop detects marker and exits with code 0
@@ -36,6 +37,7 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
 ## Monitor Launch
 
 ### Startup Behavior
+
 - [ ] **Test: Run loop.sh in tmux → expect tmux windows created**
   - Run: `TMUX=1 bash loop.sh --iterations 1` in tmux session
   - Expected: Two new tmux windows created with titles "Current Tasks" and "Thunk Tasks"
@@ -57,6 +59,7 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
   - Validation: Loop completes tasks, no fatal errors
 
 ### Terminal Detection Priority
+
 - [ ] **Test: Verify tmux has highest priority**
   - Run: In tmux with DISPLAY set and gnome-terminal installed
   - Expected: Uses tmux, not graphical terminal
@@ -72,6 +75,7 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
 ## Monitor File Watching
 
 ### Current Tasks Monitor (IMPLEMENTATION_PLAN.md)
+
 - [ ] **Test: Modify IMPLEMENTATION_PLAN.md → expect monitor updates within 1 second**
   - Run: Add/remove task in plan file
   - Expected: Monitor detects change within 1s (2x poll interval)
@@ -83,6 +87,7 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
   - Validation: Completed count increases
 
 ### Thunk Monitor (THUNK.md)
+
 - [ ] **Test: Modify THUNK.md → expect monitor updates within 1 second**
   - Run: Append new row to THUNK.md
   - Expected: Monitor detects change within 1s
@@ -98,6 +103,7 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
 ## Monitor Performance
 
 ### Current Tasks Monitor UX
+
 - [ ] **Test: Refresh display with 50+ tasks → expect no blank screen**
   - Run: Load plan with 50+ tasks, trigger refresh
   - Expected: Screen shows header immediately, content populates progressively
@@ -114,6 +120,7 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
   - Validation: Performance acceptable for real-world use
 
 ### Thunk Monitor UX
+
 - [ ] **Test: Startup time < 1 second with 100 entries**
   - Run: Launch thunk monitor with 100 THUNK.md entries
   - Expected: Initial display renders in < 1 second
@@ -129,6 +136,7 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
 ## Monitor Display Format
 
 ### Symbols & Indicators
+
 - [ ] **Test: First unchecked task shows `▶` symbol**
   - Run: View plan with multiple pending tasks
   - Expected: First `[ ]` task marked with `▶` (current)
@@ -150,6 +158,7 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
   - Validation: Current indicator updates dynamically
 
 ### Task Formatting
+
 - [ ] **Test: Empty line between tasks for readability**
   - Run: View monitor with multiple tasks
   - Expected: Visual spacing between each task
@@ -170,9 +179,10 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
 ## Integration Tests
 
 ### Full System Verification
+
 - [ ] **Test: Run full integration test with all fixes**
   - Run: `bash loop.sh --iterations 2` in clean environment
-  - Expected: 
+  - Expected:
     - Monitors launch (or fallback message)
     - Tasks display with proper symbols
     - Manual task completion updates both monitors
@@ -194,6 +204,7 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
 ## Error Handling & Edge Cases
 
 ### Graceful Degradation
+
 - [ ] **Test: THUNK.md line count decreases → expect full refresh**
   - Run: Delete rows from THUNK.md
   - Expected: Monitor detects decrease, triggers full refresh
@@ -210,6 +221,7 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
   - Validation: Robust parsing, no crashes
 
 ### File System
+
 - [ ] **Test: IMPLEMENTATION_PLAN.md deleted → expect monitor detects and waits**
   - Run: Remove plan file while monitor running
   - Expected: Monitor detects missing file, waits for restoration
@@ -225,6 +237,7 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
 ## Regression Prevention
 
 ### Known Historical Issues
+
 - [ ] **Test: $? overwrite bug fixed (lines 600-610, 582-588)**
   - Run: Verify return code captured immediately after run_once
   - Expected: No intermediate commands between call and capture
@@ -245,22 +258,26 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
 ## How to Use This Checklist
 
 ### For Manual Testing
+
 1. Start from top, work through each section
 2. Mark `[x]` when test passes
 3. Document failures with date and details
 4. Retest after fixes applied
 
 ### For Automated Testing
+
 1. Each test should have corresponding script in `tmp_rovodev_test_*.sh`
 2. Run all tests: `bash -c 'for f in tmp_rovodev_test_*.sh; do bash "$f" || echo "FAILED: $f"; done'`
 3. Clean up temp files after testing
 
 ### For Regression Testing
+
 1. Run full checklist before major releases
 2. Run relevant sections after bug fixes
 3. Update checklist when new scenarios discovered
 
 ### For CI/CD Integration
+
 1. Automate critical tests (loop correctness, monitor launch, performance)
 2. Run on each commit to main branch
 3. Block merges if critical tests fail
@@ -270,11 +287,13 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
 ## Test Script Naming Convention
 
 Test scripts should follow this pattern:
-```
+
+```text
 tmp_rovodev_test_<phase>_<task>.sh
-```
+```text
 
 Examples:
+
 - `tmp_rovodev_test_p1_2.sh` - Tests P1.2 (completion detection)
 - `tmp_rovodev_test_p3_6.sh` - Tests P3.6 (tmux window creation)
 - `tmp_rovodev_test_p4a7.sh` - Tests P4A.7 (no blank screen)

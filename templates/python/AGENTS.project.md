@@ -5,6 +5,7 @@
 ### Progressive Disclosure: Always Read in This Order
 
 **ALWAYS start here:**
+
 1. `../../brain/skills/SUMMARY.md` - Knowledge base overview and usage guide
 2. `../../brain/skills/domains/` - Domain-specific patterns (caching, API design, auth, testing, etc.)
 
@@ -15,6 +16,7 @@
 4. `../../brain/skills/projects/<project-slug>.md` - Project-specific conventions discovered in this codebase
 
 ### Why This Order Matters
+
 - **Token efficiency**: Start with summaries, drill down only when needed
 - **Faster results**: Targeted knowledge lookup vs scanning everything
 - **Avoid overwhelm**: Read specific docs only when task requires them
@@ -30,6 +32,7 @@ When you discover a new convention, architectural decision, or project-specific 
 2. **Update the index**: Add a link in `../../brain/skills/SUMMARY.md`
 
 3. **Structure new skill files** with:
+
    ```markdown
    # [Title]
    
@@ -46,21 +49,25 @@ When you discover a new convention, architectural decision, or project-specific 
 ## Parallelism Rule
 
 **Reading/searching/spec review**: Use up to **100 parallel subagents** for maximum efficiency
+
 - File reading, searching, spec analysis, documentation review
 - Gathering context from multiple sources simultaneously
 
 **Build/tests/benchmarks**: Use exactly **1 agent**
+
 - Running build commands, executing tests, benchmarks
 - Making file modifications and commits
 
 ## Core Principles
 
 ### Before Making Changes
+
 1. **Search the codebase** - Don't assume anything is missing; search first
 2. **Read targeted knowledge** - Follow the hierarchy: SUMMARY → domain docs → specific files
 3. **Check existing patterns** - Look for established conventions in the codebase before inventing new ones
 
 ### Code Quality (Python-Specific)
+
 - Follow PEP 8 style guidelines
 - Use type hints for function signatures
 - Prefer standard library over third-party dependencies when appropriate
@@ -69,6 +76,7 @@ When you discover a new convention, architectural decision, or project-specific 
 - Use virtual environments for dependency isolation
 
 ### Project Structure (Python Conventions)
+
 - Prefer `src/` or package-named directory for source code
 - Keep tests in `tests/` directory
 - Use `requirements.txt` or `pyproject.toml` for dependencies
@@ -77,6 +85,7 @@ When you discover a new convention, architectural decision, or project-specific 
 - Maintain `ralph/IMPLEMENTATION_PLAN.md` as a prioritized task list
 
 ### Python Best Practices
+
 - Use context managers (`with` statements) for resource management
 - Prefer list comprehensions over map/filter for readability
 - Use `pathlib.Path` over `os.path` for path operations
@@ -88,10 +97,11 @@ When you discover a new convention, architectural decision, or project-specific 
 
 - **Environment:** WSL (Windows Subsystem for Linux) on Windows 11 with Ubuntu
 - **Shell:** bash (comes with WSL Ubuntu)
-- **Atlassian CLI:** `acli` - https://developer.atlassian.com/cloud/cli/
+- **Atlassian CLI:** `acli` - <https://developer.atlassian.com/cloud/cli/>
 - **RovoDev:** `acli rovodev auth && acli rovodev usage site`
 
 ### WSL/Windows 11 Specifics
+
 - Working directory: `/mnt/c/...` or `/home/...` depending on where repository is cloned
 - Git line endings: Use `core.autocrlf=input` to avoid CRLF issues
 - File permissions: WSL handles Unix permissions on Windows filesystem
@@ -100,6 +110,7 @@ When you discover a new convention, architectural decision, or project-specific 
 ## Ralph Integration
 
 This project uses the Ralph Wiggum iterative loop for systematic development:
+
 - **Single unified prompt**: See `ralph/PROMPT.md` (determines mode from iteration number)
 - **Progress tracking**: All work logged in `ralph/progress.txt`
 - **Completion**: Look for `:::COMPLETE:::` sentinel
@@ -125,11 +136,13 @@ When working with RovoDev and Atlassian CLI:
 ## Python Testing
 
 ### Testing Frameworks
+
 - **pytest**: Preferred for most Python projects (simple, powerful, extensive plugin ecosystem)
 - **unittest**: Standard library option for simpler projects
 - **doctest**: For documentation examples that double as tests
 
 ### Testing Best Practices
+
 - Write tests alongside features (not as an afterthought)
 - Use fixtures for test setup/teardown
 - Mock external dependencies (APIs, databases, file I/O)
@@ -155,7 +168,7 @@ pip install -r requirements.txt
 
 # Deactivate when done
 deactivate
-```
+```text
 
 ## Project-Specific Notes
 
