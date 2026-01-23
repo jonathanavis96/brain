@@ -2,6 +2,25 @@
 
 > Essential safety settings for bash scripts that catch errors early.
 
+## 🚨 Quick Reference
+
+| Situation | Pattern | Why |
+|-----------|---------|-----|
+| **Every script** | `set -euo pipefail` | Exit on error, undefined vars, pipe failures |
+| **Optional vars** | `${VAR:-}` or `${VAR:-default}` | Avoid `-u` errors when checking if set |
+| **Commands that may fail** | `cmd \|\| true` or `if ! cmd; then` | Prevent `-e` from exiting script |
+| **Check command exists** | `command -v jq >/dev/null` | Use `command -v`, not `which` |
+| **Local assignment** | `local var; var=$(cmd)` | Separate declare/assign to catch failures |
+| **Subshell handling** | `if ! (cd /dir && cmd); then` | Explicitly check subshell exit code |
+
+**Common Fixes:**
+
+- Split `local var=$(cmd)` into two lines (SC2155)
+- Add `|| true` to grep/commands that may return non-zero
+- Use `${VAR:-}` when checking if variable is set
+
+---
+
 ## The Standard Header
 
 Every bash script should start with:
