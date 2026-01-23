@@ -1,5 +1,29 @@
 # Code Hygiene Skill
 
+## 🚨 Quick Reference (Check Before Completing Any Task!)
+
+**Use this checklist before writing `:::BUILD_READY:::`**
+
+| Check                    | Command/Action                                                   | What It Catches                 |
+|--------------------------|------------------------------------------------------------------|---------------------------------|
+| **Documentation Sync**   | `rg "function_name\|FeatureName" --include='*.md' -l`            | Stale docs after code changes   |
+| **Comprehensive Search** | `rg "old_term" -n .` before AND after change                     | Incomplete renames/refactors    |
+| **Dead Code Sweep**      | `rg "old_function\|OLD_VAR" --include='*.sh' --include='*.md' -n`| Unused code after removal       |
+| **Template Sync**        | `diff file.sh templates/ralph/file.sh`                           | Template divergence             |
+| **Markdown Validation**  | `grep -E '^#{1,3} ' file.md \| sort \| uniq -d`                  | Duplicate headings              |
+| **Fence Language Tags**  | `grep -n '\`\`\`$' file.md`                                      | Missing code fence tags         |
+| **Shellcheck**           | `shellcheck script.sh`                                           | SC2034, SC2155, SC2086          |
+| **Status Consistency**   | `rg "Status:\|commits ahead" IMPLEMENTATION_PLAN.md`             | Inconsistent status text        |
+
+**Common Fixes:**
+
+- Add fence tags: ` ```bash`, ` ```markdown`, ` ```text`
+- Split declare/assign: `local var; var=$(cmd)`
+- Remove unused vars or prefix with `_unused_`
+- Update ALL docs in same commit as code change
+
+---
+
 ## Purpose
 
 Prevent recurring mistakes where Ralph fixes code but forgets related documentation, leaves dead code behind, or makes incomplete refactoring changes.
@@ -15,6 +39,7 @@ Prevent recurring mistakes where Ralph fixes code but forgets related documentat
 **Procedure:**
 
 1. **Identify all docs that reference this behavior:**
+
    ```bash
    rg "function_name|FeatureName|behavior_keyword" --include='*.md' -l
    ```
@@ -30,9 +55,11 @@ Prevent recurring mistakes where Ralph fixes code but forgets related documentat
 
 4. **Status consistency check:**
    - If you update overview/status in one place, grep for ALL status mentions:
+
      ```bash
      rg "Status:|Branch status:|commits ahead|up to date" IMPLEMENTATION_PLAN.md
      ```
+
    - Update ALL occurrences to match.
 
 ---
@@ -44,6 +71,7 @@ Prevent recurring mistakes where Ralph fixes code but forgets related documentat
 **Procedure:**
 
 1. **Before making the change:**
+
    ```bash
    rg "old_term" -n .
    rg "old/path" -n .
@@ -54,8 +82,9 @@ Prevent recurring mistakes where Ralph fixes code but forgets related documentat
 3. **Update ALL files in single commit.**
 
 4. **After the change, verify no instances remain:**
+
    ```bash
-   rg "old_term" -n . | grep -v "\.git"
+   rg "old_term" -n . | grep -v "\\.git"
    ```
 
 **Anti-pattern:** Fixing one file and assuming others are fine.
@@ -69,6 +98,7 @@ Prevent recurring mistakes where Ralph fixes code but forgets related documentat
 **Procedure:**
 
 1. **Grep for the old symbol across ALL files:**
+
    ```bash
    rg "old_function_name|OLD_VARIABLE" --include='*.sh' --include='*.md' -n
    ```
@@ -79,6 +109,7 @@ Prevent recurring mistakes where Ralph fixes code but forgets related documentat
    - Stale comments referencing removed code
 
 3. **Run shellcheck on modified bash scripts:**
+
    ```bash
    shellcheck script.sh
    ```
@@ -105,6 +136,7 @@ Prevent recurring mistakes where Ralph fixes code but forgets related documentat
 2. **If template exists, update BOTH files** (unless difference is intentional).
 
 3. **Verify sync:**
+
    ```bash
    diff file.sh templates/ralph/file.sh
    ```
@@ -124,11 +156,13 @@ Prevent recurring mistakes where Ralph fixes code but forgets related documentat
    - No rows split across multiple lines
 
 2. **Check for duplicate headings:**
+
    ```bash
    grep -E '^#{1,3} ' file.md | sort | uniq -d
    ```
 
 3. **Check for missing fence language tags:**
+
    ```bash
    grep -n '```$' file.md  # Should show only closing fences
    ```
@@ -156,14 +190,14 @@ Prevent recurring mistakes where Ralph fixes code but forgets related documentat
 
 ## Common Anti-Patterns to Avoid
 
-| Anti-Pattern | Correct Approach |
-|--------------|------------------|
-| Fix bug, leave docs stale | Update docs in same commit |
-| Rename in one file | `rg` for all occurrences first |
-| Add variable, remove feature, leave variable | Grep for symbol after removal |
-| Update overview, forget Phase summary | Search for ALL status text |
-| Change main file, forget template | Check templates/ for counterpart |
-| Add code block without language tag | Always specify: bash, markdown, text |
+| Anti-Pattern                                 | Correct Approach                       |
+|----------------------------------------------|----------------------------------------|
+| Fix bug, leave docs stale                    | Update docs in same commit             |
+| Rename in one file                           | `rg` for all occurrences first         |
+| Add variable, remove feature, leave variable | Grep for symbol after removal          |
+| Update overview, forget Phase summary        | Search for ALL status text             |
+| Change main file, forget template            | Check templates/ for counterpart       |
+| Add code block without language tag          | Always specify: bash, markdown, text   |
 
 ---
 
@@ -171,13 +205,13 @@ Prevent recurring mistakes where Ralph fixes code but forgets related documentat
 
 These checks are enforced by `verifier.sh` via `rules/AC.rules`:
 
-| Gate | What it catches |
-|------|-----------------|
-| `Hygiene.Shellcheck` | Unused vars, SC2155 issues |
-| `Hygiene.TermSync` | Stale kb/ references after skills migration |
-| `Hygiene.DocSync` | Code changed but docs unchanged |
-| `Hygiene.TemplateSync` | Main file differs from template |
-| `Hygiene.Markdown` | Broken tables, duplicate headings |
+| Gate                   | What it catches                          |
+|------------------------|------------------------------------------|
+| `Hygiene.Shellcheck`   | Unused vars, SC2155 issues               |
+| `Hygiene.TermSync`     | Stale kb/ references after skills migration |
+| `Hygiene.DocSync`      | Code changed but docs unchanged          |
+| `Hygiene.TemplateSync` | Main file differs from template          |
+| `Hygiene.Markdown`     | Broken tables, duplicate headings        |
 
 If a gate fails, fix the issue before proceeding.
 

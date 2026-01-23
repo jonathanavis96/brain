@@ -58,7 +58,7 @@ See **workers/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown (123 
 
 **Note:** These are from the latest verifier run (2026-01-23 14:07:49). Each warning needs investigation to determine if it's a real issue or requires a waiver.
 
-- [ ] **WARN.Template.1.workers-ralph** Template.1 (auto check failed but warn gate) - Investigate template synchronization issue in workers/ralph/
+- [x] **WARN.Template.1.workers-ralph** Template.1 (auto check failed but warn gate) - Investigate template synchronization issue in workers/ralph/
 - [ ] **WARN.Hygiene.TemplateSync.1** Hygiene.TemplateSync.1 (auto check failed but warn gate) - Investigate template hygiene issue #1
 - [ ] **WARN.Hygiene.TemplateSync.2** Hygiene.TemplateSync.2 (auto check failed but warn gate) - Investigate template hygiene issue #2
 - [ ] **WARN.Lint.Shellcheck.LoopSh** Lint.Shellcheck.LoopSh (auto check failed but warn gate) - Investigate shellcheck issues in workers/ralph/loop.sh

@@ -11,7 +11,7 @@
 
 Add Quick Reference tables to skills files following SUMMARY.md pattern.
 
-- [ ] **1.1** Add Quick Reference table to `skills/domains/code-quality/code-hygiene.md`
+- [x] **1.1** Add Quick Reference table to `skills/domains/code-quality/code-hygiene.md`
 - [ ] **1.2** Add Quick Reference table to `skills/domains/languages/shell/common-pitfalls.md`
 - [ ] **1.3** Add Quick Reference table to `skills/domains/languages/shell/strict-mode.md`
 - [ ] **1.4** Add Quick Reference table to `skills/domains/languages/shell/variable-patterns.md`
