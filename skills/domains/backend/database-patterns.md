@@ -5,7 +5,7 @@
 **Use this table when making database architecture decisions:**
 
 | Decision Point | Question | Quick Answer | Pattern Reference |
-|----------------|----------|--------------|-------------------|
+| ---------------- | ---------- | -------------- | ------------------- |
 | **SQL vs NoSQL** | Which database type? | Structured data with relationships → SQL; Flexible schema → NoSQL | [SQL vs NoSQL Decision Matrix](#sql-vs-nosql-decision-matrix) |
 | **ORM Selection** | Which ORM for my language? | TypeScript → Prisma; Python → SQLAlchemy; Go → GORM | [ORM Selection Guide](#orm-selection-guide) |
 | **Schema Design** | How to normalize? | 3NF for most apps; denormalize for read-heavy queries | [Pattern 1: Normalization Strategy](#pattern-1-normalization-strategy) |
@@ -34,6 +34,7 @@ Database design and interaction patterns are fundamental to building scalable, m
 ## When to Use It
 
 Reference this KB file when:
+
 - Designing database schemas or choosing between SQL vs NoSQL
 - Selecting an ORM or writing raw queries
 - Optimizing slow database queries or reducing query counts
@@ -43,6 +44,7 @@ Reference this KB file when:
 - Debugging N+1 query problems or performance issues
 
 **Specific triggers:**
+
 - Application performance profiling shows database as bottleneck
 - Query execution times exceeding 100ms
 - Database connection pool exhaustion
@@ -58,7 +60,7 @@ Reference this KB file when:
 Choose the right database type for your use case:
 
 | Use Case | Recommendation | Reasoning |
-|----------|---------------|-----------|
+| ---------- | --------------- | ----------- |
 | Structured data with relationships | **SQL** (PostgreSQL, MySQL) | ACID guarantees, joins, constraints |
 | Document storage, flexible schema | **NoSQL** (MongoDB) | Schema flexibility, horizontal scaling |
 | Key-value cache | **Redis** | Speed, TTL support |
@@ -68,6 +70,7 @@ Choose the right database type for your use case:
 | Analytics/OLAP | **BigQuery, Snowflake** | Column-oriented, aggregation optimized |
 
 **When to use SQL (most common):**
+
 - You have clear relationships (users, posts, comments)
 - Need ACID transactions (financial data, inventory)
 - Complex queries with joins across multiple tables
@@ -75,6 +78,7 @@ Choose the right database type for your use case:
 - Strong consistency requirements
 
 **When to use NoSQL:**
+
 - Schema frequently changes or varies by document
 - Denormalized data acceptable (faster reads, slower writes)
 - Horizontal scaling critical (millions of documents)
@@ -83,7 +87,7 @@ Choose the right database type for your use case:
 ### ORM Selection Guide
 
 | ORM | Language | Best For | Pros | Cons |
-|-----|----------|----------|------|------|
+| ----- | ---------- | ---------- | ------ | ------ |
 | **Prisma** | TypeScript/JS | Modern Node.js apps | Type-safe, great DX, migrations | Less mature ecosystem |
 | **TypeORM** | TypeScript/JS | Enterprise Node.js | Decorator-based, supports multiple DBs | Complex decorators |
 | **Sequelize** | JavaScript | Legacy Node.js | Mature, widely adopted | No TypeScript first-class support |
@@ -92,6 +96,7 @@ Choose the right database type for your use case:
 | **GORM** | Go | Go applications | Simple API, auto-migrations | Less powerful than SQLAlchemy |
 
 **Raw SQL vs ORM decision:**
+
 - Use ORM for: CRUD operations, simple queries, rapid development, type safety
 - Use raw SQL for: Complex queries with performance critical, data migrations, analytics queries
 - Hybrid approach (recommended): ORM for 80% of queries, raw SQL for complex edge cases
@@ -138,6 +143,7 @@ CREATE INDEX idx_comments_user_id ON comments(user_id);
 ```
 
 **When to normalize:**
+
 - Data changes frequently (avoid update anomalies)
 - Strong consistency required
 - Storage is not a primary concern
@@ -183,6 +189,7 @@ FOR EACH ROW EXECUTE FUNCTION update_post_comment_count();
 ```
 
 **When to denormalize:**
+
 - Read-heavy workloads (10:1 read:write ratio or higher)
 - Avoiding expensive joins improves user experience significantly
 - Aggregates are expensive to compute on-the-fly
@@ -217,11 +224,13 @@ DELETE FROM posts WHERE deleted_at < NOW() - INTERVAL '90 days';
 ```
 
 **When to use soft deletes:**
+
 - Need audit trail or recovery capability
 - Regulatory compliance requires data retention
 - Users expect "undo" functionality
 
 **When NOT to use:**
+
 - GDPR "right to be forgotten" requires hard deletes
 - Storage costs are critical
 - Unique constraints conflict with soft-deleted rows
@@ -325,6 +334,7 @@ ON users(tenant_id, is_active, created_at);
 ```
 
 **Index guidelines:**
+
 - Index foreign keys used in JOINs
 - Index columns in WHERE, ORDER BY, GROUP BY clauses
 - Composite index order: Equality filters → Range filters → Sort columns
@@ -433,12 +443,14 @@ BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 ```
 
 **When to use transactions:**
+
 - Multi-step operations that must all succeed or fail together
 - Financial operations (transfers, payments)
 - Inventory updates with reservations
 - Referential integrity across tables
 
 **When NOT to use long transactions:**
+
 - Avoid holding transactions during external API calls
 - Keep transaction scope minimal (lock contention)
 - Consider eventual consistency for non-critical operations
@@ -480,6 +492,7 @@ CREATE TABLE posts (
 ```
 
 **When to use:**
+
 - Concurrent edits are rare but possible
 - Lower latency than pessimistic locking
 - Can handle conflicts in application layer
@@ -535,6 +548,7 @@ await db.$executeRaw`
 ```
 
 **Migration best practices:**
+
 - **Additive changes first**: Add columns before removing
 - **Backfill in batches**: Avoid locking entire table
 - **Test rollback**: Ensure migration can be reverted
@@ -608,6 +622,7 @@ async function queryUser(userId) {
 ```
 
 **Pool sizing guidelines:**
+
 - **Small apps (< 1000 req/s)**: 10-20 connections
 - **Medium apps (1000-10000 req/s)**: 20-50 connections
 - **Large apps (> 10000 req/s)**: 50-100 connections, consider read replicas
@@ -677,7 +692,7 @@ const tenantDb = new PrismaClient({
 **Decision matrix:**
 
 | Strategy | Best For | Pros | Cons |
-|----------|----------|------|------|
+| ---------- | ---------- | ------ | ------ |
 | Row-level | Many small tenants | Easy to manage, shared resources | Queries must always filter tenant_id |
 | Schema-level | Medium tenants (10-1000) | Logical isolation, easier backups | More complex migrations |
 | Database-level | Few large tenants, high isolation | Strong isolation, independent scaling | High overhead per tenant |
@@ -685,6 +700,7 @@ const tenantDb = new PrismaClient({
 ## Common Anti-Patterns
 
 **❌ SELECT * (retrieve unnecessary columns):**
+
 ```sql
 -- BAD: Fetches megabytes of data
 SELECT * FROM posts;
@@ -694,6 +710,7 @@ SELECT id, title, created_at FROM posts;
 ```
 
 **❌ Missing indexes on foreign keys:**
+
 ```sql
 -- BAD: No index on user_id
 CREATE TABLE posts (
@@ -706,6 +723,7 @@ CREATE INDEX idx_posts_user_id ON posts(user_id);
 ```
 
 **❌ Storing JSON blobs instead of proper schema:**
+
 ```sql
 -- BAD: Difficult to query, no validation
 CREATE TABLE users (
@@ -722,6 +740,7 @@ CREATE TABLE users (
 ```
 
 **❌ Using ORM for complex queries (slow):**
+
 ```javascript
 // BAD: ORM generates inefficient query
 const users = await db.user.findMany({
@@ -751,6 +770,7 @@ const result = await db.$queryRaw`
 ```
 
 **❌ Long-running transactions with external calls:**
+
 ```javascript
 // BAD: Holds transaction during API call
 await db.$transaction(async (tx) => {
