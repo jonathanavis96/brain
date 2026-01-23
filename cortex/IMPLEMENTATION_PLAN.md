@@ -38,7 +38,7 @@
 
 **Solution:** Use exact full-header-line matching + track synced headers in `.last_sync` file.
 
-- [ ] **0.C.6** Rewrite sync detection logic in `workers/ralph/sync_cortex_plan.sh`:
+- [x] **0.C.6** Rewrite sync detection logic in `workers/ralph/sync_cortex_plan.sh`:
   - Both plans use same marker: `<!-- Cortex adds new Task Contracts below this line -->`
   - Read content BELOW the marker in Cortex plan (new tasks go here)
   - Read content BELOW the marker in Workers plan
