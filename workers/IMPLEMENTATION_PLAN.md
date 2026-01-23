@@ -38,7 +38,7 @@
 
 ### Phase 3.5: Verify Path References (2 tasks)
 
-- [ ] **3.5.1** Audit workers/ralph/ scripts for hardcoded paths
+- [x] **3.5.1** Audit workers/ralph/ scripts for hardcoded paths
   - Check all .sh files for absolute paths that should be relative
   - **AC:** All scripts use $ROOT or relative paths consistently
 
