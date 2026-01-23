@@ -8,7 +8,7 @@ This document defines how tasks flow from Cortex (strategic manager) to Ralph (e
 
 ```
 Cortex (Manager)                    Ralph (Worker)
-├─ cortex/IMPLEMENTATION_PLAN.md    ├─ workers/ralph/IMPLEMENTATION_PLAN.md
+├─ cortex/IMPLEMENTATION_PLAN.md    ├─ workers/IMPLEMENTATION_PLAN.md
 │  (Strategic task contracts)       │  (Execution-ready tasks + subtasks)
 │                                   │
 │  [Task 1.1] ──────────────────────> [Task 1.1] + subtasks
@@ -29,7 +29,7 @@ Cortex (Manager)                    Ralph (Worker)
 # Pseudocode for sync_cortex_plan.sh
 
 cortex_plan = "cortex/IMPLEMENTATION_PLAN.md"
-ralph_plan = "workers/ralph/IMPLEMENTATION_PLAN.md"
+ralph_plan = "workers/IMPLEMENTATION_PLAN.md"
 
 # CASE A: First Time (Bootstrap)
 if ralph_plan does not exist:
@@ -93,7 +93,7 @@ You (Cortex) update `cortex/IMPLEMENTATION_PLAN.md`:
 ```
 
 ### Step 2: Ralph Receives Tasks (First Sync)
-When Ralph runs `loop.sh`, sync creates `workers/ralph/IMPLEMENTATION_PLAN.md`:
+When Ralph runs `loop.sh`, sync creates `workers/IMPLEMENTATION_PLAN.md`:
 
 ```markdown
 ## Phase 1: Quick Fixes
@@ -131,7 +131,7 @@ On next `loop.sh` run, sync detects:
 - Tasks 1.1, 1.2, 1.3 already have `SYNCED_FROM_CORTEX` markers → skip
 - Task 1.4 is new → append to Ralph's plan
 
-Result in `workers/ralph/IMPLEMENTATION_PLAN.md`:
+Result in `workers/IMPLEMENTATION_PLAN.md`:
 
 ```markdown
 - [ ] **1.2** Copy SKILL_TEMPLATE to templates/
@@ -203,7 +203,7 @@ Check these indicators in your snapshot:
 
 ### How Ralph Knows Tasks Are Stale
 Ralph's `loop.sh` checks:
-1. Is `cortex/IMPLEMENTATION_PLAN.md` newer than `workers/ralph/IMPLEMENTATION_PLAN.md`?
+1. Is `cortex/IMPLEMENTATION_PLAN.md` newer than `workers/IMPLEMENTATION_PLAN.md`?
 2. If yes → run sync
 3. If no → log "Ralph's plan is current"
 
@@ -253,19 +253,19 @@ When reviewing Ralph's progress, check:
 
 1. **Sync timestamp freshness**:
    ```bash
-   grep -E "SYNCED_FROM_CORTEX" workers/ralph/IMPLEMENTATION_PLAN.md | tail -1
+   grep -E "SYNCED_FROM_CORTEX" workers/IMPLEMENTATION_PLAN.md | tail -1
    ```
 
 2. **Task count alignment**:
    ```bash
    cortex_tasks=$(grep -cE '^\- \[ \] \*\*[0-9]' cortex/IMPLEMENTATION_PLAN.md)
-   ralph_tasks=$(grep -cE 'SYNCED_FROM_CORTEX' workers/ralph/IMPLEMENTATION_PLAN.md)
+   ralph_tasks=$(grep -cE 'SYNCED_FROM_CORTEX' workers/IMPLEMENTATION_PLAN.md)
    # Should be equal or ralph_tasks >= cortex_tasks (Ralph adds subtasks)
    ```
 
 3. **Pending syncs**:
    ```bash
-   if [[ "cortex/IMPLEMENTATION_PLAN.md" -nt "workers/ralph/IMPLEMENTATION_PLAN.md" ]]; then
+   if [[ "cortex/IMPLEMENTATION_PLAN.md" -nt "workers/IMPLEMENTATION_PLAN.md" ]]; then
        echo "Cortex has updates waiting for next Ralph loop"
    fi
    ```
@@ -336,8 +336,8 @@ brain/workers/ralph/loop.sh (line ~937)
 <!-- SYNCED_FROM_CORTEX: YYYY-MM-DD -->
 
 # Check if sync needed
-[[ "cortex/IMPLEMENTATION_PLAN.md" -nt "workers/ralph/IMPLEMENTATION_PLAN.md" ]]
+[[ "cortex/IMPLEMENTATION_PLAN.md" -nt "workers/IMPLEMENTATION_PLAN.md" ]]
 
 # View synced tasks
-grep -B 1 "SYNCED_FROM_CORTEX" workers/ralph/IMPLEMENTATION_PLAN.md
+grep -B 1 "SYNCED_FROM_CORTEX" workers/IMPLEMENTATION_PLAN.md
 ```

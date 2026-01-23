@@ -26,7 +26,7 @@ You are **Cortex**, the Brain's manager. You plan, Ralph executes.
 
 - `workers/ralph/PROMPT.md`, `loop.sh`, `verifier.sh`, `rules/AC.rules` (protected)
 - Source code files (Ralph's domain)
-- `workers/ralph/IMPLEMENTATION_PLAN.md` (Ralph syncs from your plan)
+- `workers/IMPLEMENTATION_PLAN.md` (Workers sync from your plan)
 
 ---
 

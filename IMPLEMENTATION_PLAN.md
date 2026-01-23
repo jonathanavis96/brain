@@ -4,14 +4,14 @@ This implementation plan outlines the tasks to fully set up the brain repository
 
 **Status:** PLAN mode - Updated 2026-01-22  
 **Branch:** `brain-work`  
-**Progress:** Overview below, detailed breakdown in workers/ralph/IMPLEMENTATION_PLAN.md
+**Progress:** Overview below, detailed breakdown in workers/IMPLEMENTATION_PLAN.md
 
 ## Overview
 
 The brain repository has **two implementation plans**:
 
 1. **This file (root IMPLEMENTATION_PLAN.md)** - High-level overview and strategic tasks
-2. **workers/ralph/IMPLEMENTATION_PLAN.md** - Detailed tactical execution plan for Ralph (923 lines, 117 tasks)
+2. **workers/IMPLEMENTATION_PLAN.md** - Detailed tactical execution plan for workers (923 lines, 117 tasks)
 
 **Current Status Summary:**
 
@@ -22,7 +22,7 @@ The brain repository has **two implementation plans**:
 - 📋 **Phase 1-8** - Shell cleanup, documentation, optimization (0/49 complete)
 - 🚨 **NEW: Pre-commit scan** - Discovered shfmt formatting violations in workers/ralph/ scripts (current_ralph_tasks.sh, thunk_ralph_tasks.sh need tab→space conversion)
 
-See **workers/ralph/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown (123 tasks total).
+See **workers/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown (123 tasks total).
 
 ---
 
@@ -85,7 +85,7 @@ See **workers/ralph/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown
 
 ## Detailed Execution Plan
 
-**All tactical BUILD tasks are tracked in workers/ralph/IMPLEMENTATION_PLAN.md** which contains:
+**All tactical BUILD tasks are tracked in workers/IMPLEMENTATION_PLAN.md** which contains:
 
 - **Phase 0-Warn** - workers/ralph/ specific verifier warnings (2 shellcheck issues remaining)
 - **Phase 0-Quick** - Quick wins (4 HIGH priority tasks: verify-brain.sh paths, markdown fixes)
@@ -98,7 +98,7 @@ See **workers/ralph/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown
 - **Phase 7** - Maintenance items (1 task)
 - **Phase 8** - Pre-commit linting cleanup (19 tasks)
 
-**Total:** 123 tasks tracked in workers/ralph/IMPLEMENTATION_PLAN.md (117 original + 5 new pre-commit + 1 obsolete removed)
+**Total:** 123 tasks tracked in workers/IMPLEMENTATION_PLAN.md (117 original + 5 new pre-commit + 1 obsolete removed)
 
 ---
 
@@ -116,7 +116,7 @@ See **workers/ralph/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown
 
 ## Notes
 
-This root IMPLEMENTATION_PLAN.md provides strategic oversight. Ralph executes tasks from workers/ralph/IMPLEMENTATION_PLAN.md during BUILD iterations.
+This root IMPLEMENTATION_PLAN.md provides strategic oversight. Workers execute tasks from workers/IMPLEMENTATION_PLAN.md during BUILD iterations.
 
 ## Phase 4: Reference Notes
 

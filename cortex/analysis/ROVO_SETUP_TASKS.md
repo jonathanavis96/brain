@@ -7,7 +7,7 @@
 
 ## For Brain Repository Ralph (workers/ralph/)
 
-Add these tasks to `workers/ralph/IMPLEMENTATION_PLAN.md` AFTER Phase 0-Sync:
+Add these tasks to `workers/IMPLEMENTATION_PLAN.md` AFTER Phase 0-Sync:
 
 ---
 

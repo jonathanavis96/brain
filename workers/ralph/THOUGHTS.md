@@ -171,7 +171,7 @@ brain/
 1. Human runs `bash cortex/run.sh` → Opus loads as Cortex
 2. Cortex writes `cortex/IMPLEMENTATION_PLAN.md` (atomic tasks)
 3. Human runs `bash workers/ralph/loop.sh`
-4. Ralph copies Cortex plan to `workers/ralph/IMPLEMENTATION_PLAN.md` (once at startup)
+4. Ralph copies Cortex plan to `workers/IMPLEMENTATION_PLAN.md` (once at startup)
 5. Ralph executes tasks, updates his copy, logs to THUNK.md
 6. Cortex can compare both plans to check alignment
 
