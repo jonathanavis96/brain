@@ -9,6 +9,7 @@ Security vulnerabilities are among the most critical risks in modern web applica
 ## When to Use It
 
 Reference this KB file when:
+
 - Setting up CORS policies for API communication
 - Implementing input validation and sanitization
 - Preventing XSS (Cross-Site Scripting) attacks
@@ -20,6 +21,7 @@ Reference this KB file when:
 - Onboarding developers to security best practices
 
 **Specific triggers:**
+
 - User story mentions "security", "authentication", "authorization", or "permissions"
 - API accepts user input that needs validation
 - Implementing cross-origin requests (frontend ↔ backend)
@@ -30,7 +32,7 @@ Reference this KB file when:
 ## Quick Reference
 
 | Vulnerability | Prevention | Key Pattern |
-|--------------|------------|-------------|
+| ------------ | ---------- | ----------- |
 | **XSS** | Escape output, CSP headers | Use React's auto-escaping, DOMPurify for raw HTML |
 | **CSRF** | Anti-CSRF tokens, SameSite cookies | `SameSite=Strict`, verify `Origin` header |
 | **SQL Injection** | Parameterized queries | Never concatenate user input in SQL |
@@ -45,7 +47,7 @@ Reference this KB file when:
 ### Common Mistakes
 
 | ❌ Don't | ✅ Do |
-|---------|------|
+| --------- | ------ |
 | `Access-Control-Allow-Origin: *` | Whitelist specific origins |
 | Store tokens in localStorage | Use httpOnly cookies |
 | `dangerouslySetInnerHTML` without sanitization | Use DOMPurify or avoid |
@@ -66,6 +68,7 @@ CORS controls which origins can access your API. Misconfigured CORS is a common 
 **Solution:** Configure CORS precisely based on environment.
 
 **Next.js API Route (App Router):**
+
 ```typescript
 // app/api/data/route.ts
 import { NextRequest, NextResponse } from 'next/server';
@@ -111,6 +114,7 @@ export async function OPTIONS(request: NextRequest) {
 ```
 
 **Express.js (Node):**
+
 ```javascript
 // server.js
 const express = require('express');
@@ -139,6 +143,7 @@ app.use(cors(corsOptions));
 ```
 
 **Key principles:**
+
 - ❌ Never use `Access-Control-Allow-Origin: *` with credentials
 - ✅ Whitelist specific origins based on environment
 - ✅ Use environment variables for origin configuration
@@ -156,6 +161,7 @@ XSS attacks inject malicious scripts into web pages viewed by other users. There
 **Solution:** Sanitize all user input, escape output, use Content Security Policy (CSP), and leverage framework protections.
 
 **React (automatic XSS protection):**
+
 ```jsx
 // ✅ SAFE: React escapes by default
 function UserProfile({ user }) {
@@ -187,6 +193,7 @@ function SafeRichContent({ htmlContent }) {
 ```
 
 **Server-side sanitization (Node.js):**
+
 ```javascript
 // api/comments/route.ts
 import { sanitize } from 'isomorphic-dompurify';
@@ -215,6 +222,7 @@ export async function POST(request) {
 ```
 
 **Content Security Policy (CSP):**
+
 ```typescript
 // next.config.js or middleware
 const securityHeaders = [
@@ -258,6 +266,7 @@ export function middleware(request) {
 ```
 
 **Key principles:**
+
 - ✅ React escapes by default - use it!
 - ❌ Avoid `dangerouslySetInnerHTML` unless absolutely necessary
 - ✅ Sanitize user input server-side before storing
@@ -276,6 +285,7 @@ CSRF attacks trick authenticated users into executing unwanted actions by exploi
 **Solution:** Use CSRF tokens for state-changing operations, verify origin/referer headers, use SameSite cookies.
 
 **Next.js API Route with CSRF protection:**
+
 ```typescript
 // lib/csrf.ts
 import { randomBytes } from 'crypto';
@@ -318,6 +328,7 @@ export async function POST(request: NextRequest) {
 ```
 
 **Client-side (fetch with CSRF token):**
+
 ```typescript
 // lib/api-client.ts
 export async function apiPost(endpoint: string, data: any) {
@@ -343,6 +354,7 @@ export async function apiPost(endpoint: string, data: any) {
 ```
 
 **SameSite cookies (strong CSRF protection):**
+
 ```typescript
 // app/api/auth/login/route.ts
 import { NextResponse } from 'next/server';
@@ -366,6 +378,7 @@ export async function POST(request) {
 ```
 
 **Key principles:**
+
 - ✅ Use CSRF tokens for state-changing operations (POST, PUT, DELETE)
 - ✅ Set `SameSite=Lax` or `SameSite=Strict` on cookies
 - ✅ Verify `Origin` and `Referer` headers for additional protection
@@ -383,6 +396,7 @@ All user input must be validated and sanitized to prevent injection attacks and 
 **Solution:** Validate input format and type, sanitize before use, use parameterized queries, validate on both client and server.
 
 **Schema validation with Zod:**
+
 ```typescript
 // lib/validation.ts
 import { z } from 'zod';
@@ -424,6 +438,7 @@ export async function POST(request) {
 ```
 
 **SQL injection prevention (parameterized queries):**
+
 ```typescript
 // ❌ VULNERABLE: String concatenation
 const userId = request.query.id;
@@ -442,6 +457,7 @@ const user = await prisma.user.findUnique({
 ```
 
 **Path traversal prevention:**
+
 ```typescript
 // ❌ VULNERABLE: User-controlled file path
 const filename = request.query.file;
@@ -464,6 +480,7 @@ const content = await fs.readFile(filePath);
 ```
 
 **Key principles:**
+
 - ✅ Validate all user input on the server (client validation is for UX only)
 - ✅ Use schema validation libraries (Zod, Yup, Joi)
 - ✅ Use parameterized queries or ORMs to prevent SQL injection
@@ -482,6 +499,7 @@ Authentication verifies identity ("who are you?"), authorization controls access
 **Solution:** Implement both authentication (verify user identity) and authorization (check permissions).
 
 **Authentication middleware:**
+
 ```typescript
 // middleware/auth.ts
 import { NextRequest, NextResponse } from 'next/server';
@@ -504,6 +522,7 @@ export async function authenticateRequest(request: NextRequest) {
 ```
 
 **Authorization middleware (role-based):**
+
 ```typescript
 // middleware/authorize.ts
 export function requireRole(allowedRoles: string[]) {
@@ -537,6 +556,7 @@ export async function DELETE(request: NextRequest) {
 ```
 
 **Resource-based authorization:**
+
 ```typescript
 // Check if user owns the resource
 export async function PUT(request: NextRequest, { params }) {
@@ -563,6 +583,7 @@ export async function PUT(request: NextRequest, { params }) {
 ```
 
 **Key principles:**
+
 - ✅ Implement authentication first (verify identity)
 - ✅ Then check authorization (verify permissions)
 - ✅ Return 401 for unauthenticated, 403 for unauthorized
@@ -581,15 +602,17 @@ API keys, database passwords, and other secrets must never be exposed in code or
 **Solution:** Use environment variables, secret management services, and separate server/client secrets.
 
 **Environment variables (.env.local):**
+
 ```bash
 # .env.local (NEVER commit this file)
-DATABASE_URL=postgresql://user:password@localhost:5432/mydb
+DATABASE_URL=postgresql://user:password@localhost:5432/mydb  # pragma: allowlist secret
 JWT_SECRET=your-super-secret-key-here
 API_KEY=sk_live_51H...
 NEXT_PUBLIC_STRIPE_KEY=pk_test_51H... # NEXT_PUBLIC_ exposes to client!
 ```
 
 **Server-side secret usage:**
+
 ```typescript
 // app/api/data/route.ts
 import { NextResponse } from 'next/server';
@@ -606,6 +629,7 @@ export async function GET() {
 ```
 
 **Client-side (public) secrets:**
+
 ```typescript
 // app/page.tsx
 'use client';
@@ -622,6 +646,7 @@ export default function Page() {
 ```
 
 **.gitignore (essential):**
+
 ```gitignore
 # Environment variables
 .env
@@ -635,6 +660,7 @@ secrets/
 ```
 
 **Secret rotation strategy:**
+
 ```typescript
 // Support multiple keys for zero-downtime rotation
 const CURRENT_JWT_SECRET = process.env.JWT_SECRET;
@@ -652,6 +678,7 @@ export function verifyToken(token: string) {
 ```
 
 **Key principles:**
+
 - ✅ Use environment variables for all secrets
 - ✅ Never commit `.env` files to version control
 - ✅ Use `NEXT_PUBLIC_` prefix only for client-safe values
@@ -670,6 +697,7 @@ Rate limiting prevents abuse, DDoS attacks, and brute force attempts.
 **Solution:** Implement rate limiting per IP, per user, or per API key.
 
 **Simple in-memory rate limiter:**
+
 ```typescript
 // lib/rate-limit.ts
 type RateLimitStore = Map<string, { count: number; resetAt: number }>;
@@ -736,6 +764,7 @@ export async function GET(request: NextRequest) {
 ```
 
 **Redis-based rate limiter (production):**
+
 ```typescript
 // lib/rate-limit-redis.ts
 import Redis from 'ioredis';
@@ -772,6 +801,7 @@ export async function rateLimitRedis(
 ```
 
 **Key principles:**
+
 - ✅ Implement rate limiting on authentication endpoints (prevent brute force)
 - ✅ Use IP-based limiting for public endpoints
 - ✅ Use user ID or API key for authenticated endpoints
@@ -785,14 +815,17 @@ export async function rateLimitRedis(
 
 Quick reference for common web vulnerabilities from OWASP Top 10 (2021):
 
-**1. Broken Access Control**
+#### 1. Broken Access Control
+
 - **Risk:** Users access resources they shouldn't (privilege escalation)
 - **Prevention:** Check authorization on every endpoint, validate resource ownership
 - **See:** Authentication vs Authorization section above
 
-**2. Cryptographic Failures**
+#### 2. Cryptographic Failures
+
 - **Risk:** Sensitive data exposed due to weak encryption or no encryption
 - **Prevention:** Use HTTPS, encrypt data at rest, use bcrypt for passwords, never store plaintext secrets
+
 ```typescript
 import bcrypt from 'bcrypt';
 
@@ -803,18 +836,22 @@ const hashedPassword = await bcrypt.hash(password, 10);
 const isValid = await bcrypt.compare(inputPassword, hashedPassword);
 ```
 
-**3. Injection (SQL, NoSQL, Command)**
+#### 3. Injection (SQL, NoSQL, Command)
+
 - **Risk:** Attacker executes malicious code through unvalidated input
 - **Prevention:** Use parameterized queries, ORMs, input validation
 - **See:** Input Validation and Sanitization section above
 
-**4. Insecure Design**
+#### 4. Insecure Design
+
 - **Risk:** Architectural flaws, missing security requirements
 - **Prevention:** Threat modeling, security requirements in design phase, defense in depth
 
-**5. Security Misconfiguration**
+#### 5. Security Misconfiguration
+
 - **Risk:** Default credentials, verbose error messages, unnecessary features enabled
 - **Prevention:** Disable unnecessary features, custom error pages, security headers
+
 ```typescript
 // ❌ Verbose error (exposes internals)
 return NextResponse.json({ error: error.stack }, { status: 500 });
@@ -825,23 +862,28 @@ return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
 console.error('API error:', error);
 ```
 
-**6. Vulnerable and Outdated Components**
+#### 6. Vulnerable and Outdated Components
+
 - **Risk:** Using libraries with known vulnerabilities
 - **Prevention:** Regular `npm audit`, keep dependencies updated, use Dependabot
+
 ```bash
 npm audit
 npm audit fix
 npm update
 ```
 
-**7. Identification and Authentication Failures**
+#### 7. Identification and Authentication Failures
+
 - **Risk:** Weak passwords, broken session management, credential stuffing
 - **Prevention:** Strong password requirements, MFA, rate limiting on login, secure session management
 - **See:** Rate Limiting section above
 
-**8. Software and Data Integrity Failures**
+#### 8. Software and Data Integrity Failures
+
 - **Risk:** Unsigned updates, insecure CI/CD, untrusted data deserialization
 - **Prevention:** Verify package signatures, secure CI/CD pipelines, avoid eval()
+
 ```typescript
 // ❌ Never use eval with user input
 eval(userInput); // DANGEROUS!
@@ -854,9 +896,11 @@ const parsed = JSON.parse(untrustedString);
 const validated = schema.parse(parsed); // Zod validation
 ```
 
-**9. Security Logging and Monitoring Failures**
+#### 9. Security Logging and Monitoring Failures
+
 - **Risk:** Breaches go undetected, no audit trail for incidents
 - **Prevention:** Log authentication events, failed access attempts, anomalies; set up alerts
+
 ```typescript
 // Log security events
 logger.warn('Failed login attempt', { 
@@ -873,9 +917,11 @@ logger.info('User deleted', {
 });
 ```
 
-**10. Server-Side Request Forgery (SSRF)**
+#### 10. Server-Side Request Forgery (SSRF)
+
 - **Risk:** Attacker tricks server into making requests to internal systems
 - **Prevention:** Validate and sanitize URLs, whitelist allowed domains, block internal IPs
+
 ```typescript
 // ❌ User-controlled URL without validation
 const url = request.query.url;
@@ -910,6 +956,7 @@ const response = await fetch(url);
    - Always validate and authorize on the server
 
 2. **❌ Logging sensitive data**
+
    ```typescript
    // ❌ Bad: logs password
    console.log('User login:', { email, password });
