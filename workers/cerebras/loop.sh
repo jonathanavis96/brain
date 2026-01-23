@@ -6,7 +6,7 @@ set -euo pipefail
 # =============================================================================
 #
 # WORKSPACE BOUNDARIES:
-#   Ralph operates from: $ROOT/workers/ralph/ (derived from this script location)
+#   Cerebras operates from: $ROOT/workers/cerebras/ (derived from this script location)
 #   Full access to:      $ROOT/** (entire brain repository)
 #   PROTECTED (no modify): rules/AC.rules, .verify/*.sha256, verifier.sh, loop.sh, PROMPT.md
 #   FORBIDDEN (no access): .verify/waivers/*.approved (OTP-protected)
@@ -14,17 +14,17 @@ set -euo pipefail
 # =============================================================================
 
 # ROOT can be overridden via env var for project delegation
-if [[ -n ${RALPH_PROJECT_ROOT:-} ]]; then
-  ROOT="$RALPH_PROJECT_ROOT"
-  RALPH="$ROOT/workers/ralph"
+if [[ -n ${CEREBRAS_PROJECT_ROOT:-} ]]; then
+  ROOT="$CEREBRAS_PROJECT_ROOT"
+  CEREBRAS="$ROOT/workers/cerebras"
 else
-  # Get absolute path to this script, then go up two levels for ROOT (brain/workers/ralph -> brain)
+  # Get absolute path to this script, then go up two levels for ROOT (brain/workers/cerebras -> brain)
   SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  RALPH="$SCRIPT_DIR"
+  CEREBRAS="$SCRIPT_DIR"
   ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
 fi
-LOGDIR="$RALPH/logs"
-VERIFY_REPORT="$RALPH/.verify/latest.txt"
+LOGDIR="$CEREBRAS/logs"
+VERIFY_REPORT="$CEREBRAS/.verify/latest.txt"
 mkdir -p "$LOGDIR"
 
 # Cleanup logs older than 7 days on startup
@@ -251,7 +251,6 @@ EOF
 # Defaults
 ITERATIONS=1
 PLAN_EVERY=3
-YOLO_FLAG="--yolo"
 PROMPT_ARG=""
 MODEL_ARG=""
 BRANCH_ARG=""
@@ -278,11 +277,11 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     --yolo)
-      YOLO_FLAG="--yolo"
+      # Placeholder for future yolo mode implementation
       shift
       ;;
     --no-yolo)
-      YOLO_FLAG=""
+      # Placeholder for future no-yolo mode implementation
       shift
       ;;
     --model)
@@ -547,14 +546,14 @@ if [[ -n $BRANCH_ARG ]]; then
 fi
 
 # Ralph determines mode from iteration number (PROMPT.md has conditional logic)
-PLAN_PROMPT="$RALPH/PROMPT.md"
-BUILD_PROMPT="$RALPH/PROMPT.md"
+PLAN_PROMPT="$CEREBRAS/PROMPT.md"
+BUILD_PROMPT="$CEREBRAS/PROMPT.md"
 
 # Verifier gate - runs rules/AC.rules checks after BUILD
-VERIFY_SCRIPT="$RALPH/verifier.sh"
-RUN_ID_FILE="$RALPH/.verify/run_id.txt"
-INIT_SCRIPT="$RALPH/init_verifier_baselines.sh"
-AC_HASH_FILE="$RALPH/.verify/ac.sha256"
+VERIFY_SCRIPT="$CEREBRAS/verifier.sh"
+RUN_ID_FILE="$CEREBRAS/.verify/run_id.txt"
+INIT_SCRIPT="$CEREBRAS/init_verifier_baselines.sh"
+AC_HASH_FILE="$CEREBRAS/.verify/ac.sha256"
 
 # Auto-init verifier baselines if missing
 init_verifier_if_needed() {
@@ -637,11 +636,11 @@ check_protected_file_failures() {
 run_verifier() {
   if [[ ! -x $VERIFY_SCRIPT ]]; then
     # Check for .initialized marker to determine security vs bootstrap mode
-    if [[ -f "$RALPH/.verify/.initialized" ]]; then
+    if [[ -f "$CEREBRAS/.verify/.initialized" ]]; then
       # Security hard-fail: verifier was initialized but is now missing
       echo "🚨 SECURITY ERROR: Verifier missing but .initialized marker exists!"
       echo "   Expected: $VERIFY_SCRIPT"
-      echo "   Marker: $RALPH/.verify/.initialized"
+      echo "   Marker: $CEREBRAS/.verify/.initialized"
       LAST_VERIFIER_STATUS="FAIL"
       LAST_VERIFIER_FAILED_RULES="verifier_missing_initialized"
       LAST_VERIFIER_FAIL_COUNT=1
@@ -695,7 +694,7 @@ run_verifier() {
     fi
 
     echo "✅ All acceptance criteria passed! (run_id: $RUN_ID)"
-    tail -10 "$RALPH/.verify/latest.txt" 2>/dev/null || true
+    tail -10 "$CEREBRAS/.verify/latest.txt" 2>/dev/null || true
     LAST_VERIFIER_STATUS="PASS"
     LAST_VERIFIER_FAILED_RULES=""
     LAST_VERIFIER_FAIL_COUNT=0
@@ -704,9 +703,9 @@ run_verifier() {
     echo "❌ Acceptance criteria FAILED"
     echo ""
     # Show header and summary, skip individual check results
-    sed -n '1,/^----/p; /^SUMMARY$/,$ p' "$RALPH/.verify/latest.txt" 2>/dev/null || echo "(no report found)"
+    sed -n '1,/^----/p; /^SUMMARY$/,$ p' "$CEREBRAS/.verify/latest.txt" 2>/dev/null || echo "(no report found)"
     LAST_VERIFIER_STATUS="FAIL"
-    parse_verifier_failures "$RALPH/.verify/latest.txt"
+    parse_verifier_failures "$CEREBRAS/.verify/latest.txt"
     return 1
   fi
 }
@@ -750,11 +749,11 @@ run_once() {
       echo ""
     fi
 
-    # Inject AGENTS.md (standard Ralph pattern: PROMPT.md + AGENTS.md)
+    # Inject AGENTS.md (standard Cerebras pattern: PROMPT.md + AGENTS.md)
     # NEURONS.md and THOUGHTS.md are read via subagent when needed (too large for base context)
     echo "# AGENTS.md - Operational Guide"
     echo ""
-    cat "${RALPH}/AGENTS.md"
+    cat "${CEREBRAS}/AGENTS.md"
     echo ""
     echo "---"
     echo ""
@@ -790,7 +789,7 @@ run_once() {
   # Feed prompt into Cerebras agent
   echo "🧠 Running Cerebras Agent with model: ${RESOLVED_MODEL}"
   # Use the agentic Python runner that supports tool execution
-  if ! python3 "$RALPH/cerebras_agent.py" \
+  if ! python3 "$CEREBRAS/cerebras_agent.py" \
     --prompt "$prompt_with_mode" \
     --model "$RESOLVED_MODEL" \
     --max-turns 15 \
@@ -857,10 +856,10 @@ run_once() {
   fi
 
   # Check if all tasks are done (for true completion)
-  if [[ -f "$RALPH/IMPLEMENTATION_PLAN.md" ]]; then
+  if [[ -f "$CEREBRAS/IMPLEMENTATION_PLAN.md" ]]; then
     local unchecked_count
     # Note: grep -c returns exit 1 when count is 0, so we capture output first then default
-    unchecked_count=$(grep -cE '^\s*-\s*\[ \]' "$RALPH/IMPLEMENTATION_PLAN.md" 2>/dev/null) || unchecked_count=0
+    unchecked_count=$(grep -cE '^\s*-\s*\[ \]' "$CEREBRAS/IMPLEMENTATION_PLAN.md" 2>/dev/null) || unchecked_count=0
     if [[ $unchecked_count -eq 0 ]]; then
       # All tasks done - run final verification
       if run_verifier; then
@@ -921,7 +920,7 @@ launch_in_terminal() {
 
 # Auto-launch monitors in background if not already running
 launch_monitors() {
-  local monitor_dir="$RALPH"
+  local monitor_dir="$CEREBRAS"
   local current_tasks_launched=false
   local thunk_tasks_launched=false
 
@@ -966,8 +965,8 @@ command -v python3 >/dev/null 2>&1 || {
   echo "ERROR: python3 not found in PATH (required for Cerebras runner)"
   exit 1
 }
-if [[ ! -f "$RALPH/cerebras_agent.py" ]]; then
-  echo "ERROR: cerebras_agent.py not found at $RALPH/cerebras_agent.py"
+if [[ ! -f "$CEREBRAS/cerebras_agent.py" ]]; then
+  echo "ERROR: cerebras_agent.py not found at $CEREBRAS/cerebras_agent.py"
   exit 1
 fi
 if [[ -z ${CEREBRAS_API_KEY:-} ]]; then
@@ -1033,7 +1032,7 @@ if [[ -n $PROMPT_ARG ]]; then
         echo ""
       fi
       echo "To regenerate baselines for these files:"
-      echo "  cd brain/ralph"
+      echo "  cd workers/cerebras"
       echo "  sha256sum loop.sh | cut -d' ' -f1 > .verify/loop.sha256"
       echo "  sha256sum PROMPT.md | cut -d' ' -f1 > .verify/prompt.sha256"
       echo "  sha256sum verifier.sh | cut -d' ' -f1 > .verify/verifier.sha256"
@@ -1126,7 +1125,7 @@ else
         echo ""
       fi
       echo "To regenerate baselines for these files:"
-      echo "  cd brain/ralph"
+      echo "  cd workers/cerebras"
       echo "  sha256sum loop.sh | cut -d' ' -f1 > .verify/loop.sha256"
       echo "  sha256sum PROMPT.md | cut -d' ' -f1 > .verify/prompt.sha256"
       echo "  sha256sum verifier.sh | cut -d' ' -f1 > .verify/verifier.sha256"
@@ -1140,9 +1139,9 @@ else
     run_result=0
     if [[ $i -eq 1 ]] || ((PLAN_EVERY > 0 && ((i - 1) % PLAN_EVERY == 0))); then
       # Sync tasks from Cortex before PLAN mode
-      if [[ -f "$RALPH/sync_cortex_plan.sh" ]]; then
+      if [[ -f "$CEREBRAS/sync_cortex_plan.sh" ]]; then
         echo "Syncing tasks from Cortex..."
-        if (cd "$RALPH" && bash sync_cortex_plan.sh) 2>&1; then
+        if (cd "$CEREBRAS" && bash sync_cortex_plan.sh) 2>&1; then
           echo "✓ Cortex sync complete"
         else
           echo "⚠ Cortex sync failed (non-blocking)"
