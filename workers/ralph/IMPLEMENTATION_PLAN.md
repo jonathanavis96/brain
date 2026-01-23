@@ -1138,6 +1138,18 @@ Fix template file warnings:
   - **AC:** `shellcheck workers/ralph/verifier.sh 2>&1 | grep -c SC2094` returns 0, shfmt check passes
   - **Commit:** `fix(ralph): avoid same file read/write in verifier.sh, apply shfmt formatting`
 
+- [ ] **WARN.Precommit.2.current_ralph_tasks** Fix shfmt formatting in `workers/ralph/current_ralph_tasks.sh` (HIGH)
+  - **Issue:** Tab indentation throughout file (492 lines need conversion to 2-space indentation)
+  - **Fix:** Run `shfmt -w -i 2 workers/ralph/current_ralph_tasks.sh`
+  - **AC:** `shfmt -d -i 2 workers/ralph/current_ralph_tasks.sh` returns empty (no diff)
+  - **Commit:** `style(ralph): convert tabs to 2-space indentation in current_ralph_tasks.sh`
+
+- [ ] **WARN.Precommit.2.thunk_ralph_tasks** Fix shfmt formatting in `workers/ralph/thunk_ralph_tasks.sh` (HIGH)
+  - **Issue:** Tab indentation throughout file (needs conversion to 2-space indentation)
+  - **Fix:** Run `shfmt -w -i 2 workers/ralph/thunk_ralph_tasks.sh`
+  - **AC:** `shfmt -d -i 2 workers/ralph/thunk_ralph_tasks.sh` returns empty (no diff)
+  - **Commit:** `style(ralph): convert tabs to 2-space indentation in thunk_ralph_tasks.sh`
+
 ## Phase 8-B2: workers/ralph/ Shellcheck Issues (LOW)
 
 **Context:** Pre-commit scan found additional shellcheck warnings in workers/ralph/ scripts (not templates). These are active scripts.
