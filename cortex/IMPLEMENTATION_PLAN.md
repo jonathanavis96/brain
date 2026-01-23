@@ -49,9 +49,9 @@
 
 ## Current Status
 
-**Last Updated:** 2026-01-23 14:45:00  
-**Progress:** 60 pending tasks across 5 phases  
-**Verifier:** All checks passing
+**Last Updated:** 2026-01-23 20:25:00  
+**Progress:** 69 pending tasks across 6 phases  
+**Verifier:** 52 PASS, 0 FAIL, 9 WARN
 
 ---
 
@@ -238,6 +238,55 @@ Add Quick Reference tables to skills files following SUMMARY.md pattern.
 - [ ] **5.6.1** Update `workers/ralph/.maintenance/verify-brain.sh` to use correct paths
 
 **AC:** `bash workers/ralph/.maintenance/verify-brain.sh` reports 0 issues
+
+---
+
+## Phase 6: Fix Verifier WARNs (9 tasks)
+
+**Goal:** Resolve all 9 WARN-level checks from verifier so they pass cleanly.
+
+### Phase 6.1: Template Sync Issues (2 tasks)
+
+- [ ] **6.1.1** Sync `workers/ralph/current_ralph_tasks.sh` with `templates/ralph/current_ralph_tasks.sh`
+  - **AC:** `diff workers/ralph/current_ralph_tasks.sh templates/ralph/current_ralph_tasks.sh` returns no output
+  - **Note:** Determine which is authoritative (likely workers/), then copy to template
+
+- [ ] **6.1.2** Sync `workers/ralph/loop.sh` core logic with `templates/ralph/loop.sh`
+  - **AC:** Hygiene.TemplateSync.2 check passes
+  - **Note:** This is a PROTECTED file - may need hash baseline update after sync
+
+### Phase 6.2: Markdown Balanced Fences (3 tasks)
+
+- [ ] **6.2.1** Fix unbalanced code fences in `workers/ralph/NEURONS.md`
+  - **AC:** `grep -c "^\`\`\`[a-z]" workers/ralph/NEURONS.md` equals `grep -c "^\`\`\`$" workers/ralph/NEURONS.md`
+  - **Fix:** Ensure every opening fence has a matching closing fence
+
+- [ ] **6.2.2** Fix unbalanced code fences in `workers/ralph/AGENTS.md`
+  - **AC:** Opens equals closes for code fences
+  - **Note:** This is a PROTECTED file - will need hash baseline update
+
+- [ ] **6.2.3** Fix unbalanced code fences in `workers/ralph/THOUGHTS.md`
+  - **AC:** Opens equals closes for code fences
+
+### Phase 6.3: Shellcheck Issues (4 tasks)
+
+- [ ] **6.3.1** Fix shellcheck issues in `workers/ralph/loop.sh`
+  - **AC:** `shellcheck -e SC1091 workers/ralph/loop.sh` returns 0 errors
+  - **Note:** PROTECTED file - needs human approval for changes + hash update
+
+- [ ] **6.3.2** Fix shellcheck issues in `workers/ralph/verifier.sh`
+  - **AC:** `shellcheck -e SC1091 workers/ralph/verifier.sh` returns 0 errors
+  - **Note:** PROTECTED file - needs human approval for changes + hash update
+
+- [ ] **6.3.3** Fix shellcheck issues in `workers/ralph/current_ralph_tasks.sh`
+  - **AC:** `shellcheck -e SC1091 workers/ralph/current_ralph_tasks.sh` returns 0 errors
+
+- [ ] **6.3.4** Fix shellcheck issues in `workers/ralph/thunk_ralph_tasks.sh`
+  - **AC:** `shellcheck -e SC1091 workers/ralph/thunk_ralph_tasks.sh` returns 0 errors
+
+**Acceptance Criteria for Phase 6:**
+
+- [ ] `bash workers/ralph/verifier.sh` shows 0 WARN (all checks PASS)
 
 ---
 
