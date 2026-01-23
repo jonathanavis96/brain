@@ -10,7 +10,7 @@
 
 These are all false positives - shellcheck passes, files are in sync:
 
-- [ ] **WARN.TemplateSync.1.current** Sync current_ralph_tasks.sh to template (workers has perf optimizations)
+- [x] **WARN.TemplateSync.1.current** Sync current_ralph_tasks.sh to template (workers has perf optimizations)
 - [ ] **WARN.TemplateSync.2.loop** loop.sh path differences - BY DESIGN (workers/ralph/ vs ralph/)
 
 ---
