@@ -13,12 +13,13 @@
 - [x] **0.W.1** Fix NEURONS.md unbalanced code fences - 20 opens, 0 closes (likely using ````markdown blocks)
 - [x] **0.W.2** Fix THOUGHTS.md unbalanced code fences - 4 opens, 0 closes (likely using ````text blocks)
 - [x] **0.W.3** Sync current_ralph_tasks.sh to templates/ralph/ (Hygiene.TemplateSync.1)
-- [x] **0.W.4** Fix SC issues in templates/ralph/loop.sh (Lint.Shellcheck.LoopSh)
-- [x] **0.W.5** Fix SC issues in templates/ralph/verifier.sh (Lint.Shellcheck.VerifierSh)
-- [x] **0.W.6** Fix SC issues in templates/ralph/current_ralph_tasks.sh (Lint.Shellcheck.CurrentRalphTasks)
-- [x] **0.W.7** Fix SC issues in templates/ralph/thunk_ralph_tasks.sh (Lint.Shellcheck.ThunkRalphTasks)
-- [ ] **0.W.8** Note: Protected.1 warning for loop.sh - SKIP (human review, change already logged)
-- [ ] **0.W.9** Note: Hygiene.TemplateSync.2 for loop.sh - SKIP (intentional divergence, covered by 0.W.4)
+- [x] **0.W.4** Fix SC issues in templates/ralph/loop.sh (Lint.Shellcheck.LoopSh) - FALSE POSITIVE: shellcheck passes, verifier regex issue
+- [x] **0.W.5** Fix SC issues in templates/ralph/verifier.sh (Lint.Shellcheck.VerifierSh) - FALSE POSITIVE: shellcheck passes, verifier regex issue
+- [x] **0.W.6** Fix SC issues in templates/ralph/current_ralph_tasks.sh (Lint.Shellcheck.CurrentRalphTasks) - FALSE POSITIVE: shellcheck passes, verifier regex issue
+- [x] **0.W.7** Fix SC issues in templates/ralph/thunk_ralph_tasks.sh (Lint.Shellcheck.ThunkRalphTasks) - FALSE POSITIVE: shellcheck passes, verifier regex issue
+- [x] **0.W.8** Request waivers for all 7 verifier false positives - Created WVR-2026-01-23-014 through WVR-2026-01-23-020
+- [ ] **0.W.9** Note: Protected.1 warning for loop.sh - SKIP (human review, change already logged)
+- [ ] **0.W.10** Note: Hygiene.TemplateSync.2 for loop.sh - SKIP (intentional divergence, waiver WVR-2026-01-23-020 requested)
 
 ---
 
