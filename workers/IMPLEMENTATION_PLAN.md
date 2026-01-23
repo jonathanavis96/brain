@@ -145,7 +145,7 @@
   - Show `ETA: Complete` when remaining_tasks = 0
   - **AC:** ETA line visible below progress bar
 
-- [ ] **8.1.2** Track THUNK entry timestamps for duration calculation
+- [x] **8.1.2** Track THUNK entry timestamps for duration calculation
   - Session-only (no persistence)
   - Record timestamp when new THUNK entry detected
   - Calculate duration between consecutive entries
