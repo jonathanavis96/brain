@@ -89,6 +89,8 @@ You are **Cortex**, the Brain's manager. You plan, Ralph executes.
 
 **Hash Regen Rule** - After ANY change to protected files (PROMPT.md, loop.sh, verifier.sh, AC.rules), MUST regenerate hash baselines in ALL `.verify` directories. There are three: `~/code/brain/.verify/` (root - used by verifier), `~/code/brain/workers/ralph/.verify/` (Ralph worker), and `~/code/brain/templates/ralph/.verify/` (template). Run: `cd ~/code/brain/workers/ralph && HASH=$(sha256sum <file> | cut -d' ' -f1) && echo "$HASH" > .verify/<basename>.sha256 && echo "$HASH" > ../../.verify/<basename>.sha256` (skip templates unless bootstrapping)
 
+**Markdown Creation Rule** - When creating `.md` files, ALWAYS: (1) Add language tags to code blocks (` ```bash `, ` ```text `, never bare ` ``` `), (2) Add blank lines before/after code blocks, lists, and headings, (3) Run `markdownlint <file>` before committing. See `skills/self-improvement/SKILL_TEMPLATE.md` Pre-Commit Checklist for details.
+
 ---
 
 ## Decision Authority
