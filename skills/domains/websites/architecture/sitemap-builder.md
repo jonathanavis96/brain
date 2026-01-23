@@ -5,7 +5,7 @@ Proposes clean navigation structure (usually 4-7 top items) and footer organizat
 ## Quick Reference
 
 | Site Type | Typical Nav Items | Notes |
-|-----------|-------------------|-------|
+| --------- | ----------------- | ----- |
 | Solo service provider | Home, About, Services, Contact | 4 items, simple |
 | Small business | Home, Services, About, Portfolio, Contact | 5 items |
 | SaaS | Product, Pricing, Docs, Blog, Contact | 5-6 items |
@@ -14,6 +14,7 @@ Proposes clean navigation structure (usually 4-7 top items) and footer organizat
 ## Trigger Conditions
 
 Use this skill when:
+
 - Planning a new website structure
 - Existing navigation is confusing
 - Too many or too few nav items
@@ -66,7 +67,7 @@ Primary nav should have **4-7 items max**. More = cognitive overload.
 
 ### 4. Define Page Hierarchy
 
-```
+```text
 Home
 ├── About
 ├── Services
@@ -81,12 +82,14 @@ Home
 ## Navigation Patterns
 
 ### Simple (4 items) - Best for most service sites
-```
+
+```text
 [Logo] Home | About | Services | Contact [CTA Button]
 ```
 
 ### With Dropdown (5-6 items)
-```
+
+```text
 [Logo] Home | About | Services ▼ | Resources | Contact [CTA]
                       └── Service A
                       └── Service B
@@ -94,7 +97,8 @@ Home
 ```
 
 ### Mega Menu (7+ sections) - Only for large sites
-```
+
+```text
 [Logo] Products ▼ | Solutions ▼ | Resources ▼ | Company ▼ [CTA]
 ```
 
@@ -117,7 +121,7 @@ Home
 ## Common Mistakes
 
 | Mistake | Why It's Wrong | Do This Instead |
-|---------|----------------|-----------------|
+| ------- | -------------- | --------------- |
 | 10+ nav items | Overwhelming, hard to scan | Max 7, use dropdowns |
 | "Resources" with 1 item | Pointless category | Promote or remove |
 | No clear CTA in nav | Misses conversion opportunity | Add "Book Now" button |
