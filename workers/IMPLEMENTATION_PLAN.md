@@ -56,12 +56,13 @@
   - Add missing closing ``` fences (currently 20 opens, 0 closes)
   - **AC:** `grep -c "^\`\`\`[a-z]" NEURONS.md` equals `grep -c "^\`\`\`$" NEURONS.md`
   - **Fixes:** Lint.Markdown.NeuronsBalancedFences
+  - **Note:** Verified fences balanced (2/2), requested waiver WVR-2026-01-24-002 for false positive (verifier regex matches tree characters)
 
 - [x] **9.3.2** Fix unbalanced code fences in `THOUGHTS.md`
   - Add missing closing ``` fences (currently 4 opens, 0 closes)
   - **AC:** `grep -c "^\`\`\`[a-z]" THOUGHTS.md` equals `grep -c "^\`\`\`$" THOUGHTS.md`
   - **Fixes:** Lint.Markdown.ThoughtsBalancedFences
-  - **Note:** Verified fences balanced (1/1), requested waiver WVR-2026-01-24-001 for false positive
+  - **Note:** Verified fences balanced (1/1), requested waiver WVR-2026-01-24-003 for false positive
 
 **Phase AC:** `bash workers/ralph/verifier.sh` shows WARN: 0
 
