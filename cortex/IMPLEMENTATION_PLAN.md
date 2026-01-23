@@ -3,6 +3,7 @@
 **Purpose:** This file contains high-level Task Contracts that Cortex creates for Ralph workers. Each contract defines a complete, atomic task with clear goals, constraints, inputs, and acceptance criteria.
 
 **Workflow:**
+
 1. Cortex creates/updates Task Contracts in this file
 2. Ralph's `loop.sh` syncs this file to `workers/ralph/IMPLEMENTATION_PLAN.md` at startup
 3. Ralph works through tasks, marking them complete in his local copy
@@ -19,26 +20,31 @@ Use this format when creating new Task Contracts:
 **Goal:** What Ralph should achieve (one clear outcome)
 
 **Subtasks:**
+
 - [ ] Subtask 1 description
 - [ ] Subtask 2 description
 - [ ] Subtask 3 description
 
 **Constraints:**
+
 - Constraint 1 (e.g., "Do not modify protected files")
 - Constraint 2 (e.g., "Use existing patterns from skills/")
 - Constraint 3 (e.g., "Test changes before committing")
 
 **Inputs:**
+
 - Input 1 (e.g., "Reference: skills/domains/shell/strict-mode.md")
 - Input 2 (e.g., "Existing code: workers/ralph/loop.sh")
 - Input 3 (e.g., "Acceptance criteria: rules/AC.rules")
 
 **Acceptance Criteria:**
+
 - [ ] AC 1: Specific, measurable condition
 - [ ] AC 2: Specific, measurable condition
 - [ ] AC 3: Specific, measurable condition
 
 **If Blocked:**
+
 - What to do if Ralph encounters an issue
 - Who to escalate to (Cortex, Human, etc.)
 - What information to provide
@@ -52,29 +58,34 @@ Use this format when creating new Task Contracts:
 **Goal:** Ensure all shell scripts pass shellcheck with no warnings
 
 **Subtasks:**
+
 - [ ] Add shellcheck rules to rules/AC.rules
 - [ ] Update verifier.sh to run shellcheck
 - [ ] Fix any shellcheck violations in existing scripts
 - [ ] Test verifier passes on clean code
 
 **Constraints:**
+
 - Do not modify protected files' hash guards
 - Use existing rule format in AC.rules
 - Must work in WSL2 Ubuntu environment
 - Keep verifier runtime under 5 seconds
 
 **Inputs:**
+
 - Reference: skills/domains/shell/variable-patterns.md
 - Existing code: verifier.sh, rules/AC.rules
 - Test scripts: current_ralph_tasks.sh, thunk_ralph_tasks.sh
 
 **Acceptance Criteria:**
+
 - [ ] AC 1: rules/AC.rules contains new shellcheck rules
 - [ ] AC 2: verifier.sh runs shellcheck on target scripts
 - [ ] AC 3: All existing scripts pass shellcheck
 - [ ] AC 4: Verifier report shows PASS for shellcheck rules
 
 **If Blocked:**
+
 - If shellcheck not installed: Report to human (installation required)
 - If shellcheck rules too strict: Document exception in GAP_BACKLOG.md
 - If scripts need refactoring: Break into subtasks and update this contract
@@ -88,7 +99,7 @@ Use this format when creating new Task Contracts:
 ### ✅ Completed Phases
 
 | Phase | Description | Status |
-|-------|-------------|--------|
+| ----- | ----------- | ------ |
 | 0-A | Cortex Manager Pack | ✅ Complete |
 | 0-B | Repository Restructure (Option B) | ✅ Complete |
 | 0-Warn | Verifier Warnings | ✅ All resolved |
@@ -128,17 +139,21 @@ The `workers/ralph/.maintenance/verify-brain.sh` script reports `skills/index.md
        - Append new tasks to `workers/ralph/IMPLEMENTATION_PLAN.md`
        - Add sync markers to newly synced tasks
     3. Integrate into `workers/ralph/loop.sh` startup sequence:
+
        ```bash
        # At start of PLAN mode, before task selection
        if [[ -f "../cortex/IMPLEMENTATION_PLAN.md" ]]; then
            bash sync_cortex_plan.sh
        fi
        ```
+
   - **Reference Implementation:** See `cortex/docs/TASK_SYNC_PROTOCOL.md` sections:
     - "Sync Mechanism" (lines 60-85)
     - "Workflow Example" (lines 87-150)
     - "Pseudocode" (lines 200-230)
   - **AC:**
+
+    ```text
     - [ ] `workers/ralph/sync_cortex_plan.sh` exists and is executable
     - [ ] Script reads from `cortex/IMPLEMENTATION_PLAN.md`
     - [ ] Script appends new tasks to `workers/ralph/IMPLEMENTATION_PLAN.md`
@@ -146,7 +161,10 @@ The `workers/ralph/.maintenance/verify-brain.sh` script reports `skills/index.md
     - [ ] Duplicate tasks are NOT created (check for existing markers)
     - [ ] `loop.sh` calls sync script at startup in PLAN mode
     - [ ] Test: Add a dummy task to cortex plan, run sync, verify it appears in Ralph's plan
-  - **If Blocked:** 
+    ```
+
+  - **If Blocked:**
+
     - Reference TASK_SYNC_PROTOCOL.md for detailed algorithm
     - Ask user for clarification on sync timing or marker format
 
@@ -164,7 +182,7 @@ The `workers/ralph/.maintenance/verify-brain.sh` script reports `skills/index.md
   
     ```markdown
     ## Quick Start
-    
+
     ```bash
     git clone https://github.com/jonathanavis96/brain
     cd brain
@@ -172,26 +190,26 @@ The `workers/ralph/.maintenance/verify-brain.sh` script reports `skills/index.md
     source ~/.bashrc  # Or open a new terminal
     cortex            # Ready to use!
     ```
-    
-    ## What setup.sh Does
-    
-    - ✅ Detects brain location automatically
-    - ✅ Creates ~/bin/cortex and ~/bin/ralph symlinks
-    - ✅ Ensures ~/bin is in PATH
-    - ✅ Adds PATH to shell config if needed
-    - ✅ Works across different systems/users
-    
-    ## Available Commands
-    
-    ```bash
-    cortex              # Chat with Cortex (Opus 4.5)
-    cortex -h           # Help
-    ralph -i20 -p5      # Run Ralph (Sonnet 4.5)
-    ralph -h            # Help
-    ```
-    ```
-  
+
+  **What setup.sh Does:**
+
+  - ✅ Detects brain location automatically
+  - ✅ Creates ~/bin/cortex and ~/bin/ralph symlinks
+  - ✅ Ensures ~/bin is in PATH
+  - ✅ Adds PATH to shell config if needed
+  - ✅ Works across different systems/users
+
+  **Available Commands:**
+
+  ```bash
+  cortex              # Chat with Cortex (Opus 4.5)
+  cortex -h           # Help
+  ralph -i20 -p5      # Run Ralph (Sonnet 4.5)
+  ralph -h            # Help
+  ```
+
   - **AC:**
+
     - [ ] README.md updated with Quick Start section
     - [ ] Setup instructions are clear and accurate
     - [ ] Command examples are included
@@ -229,10 +247,12 @@ These are low-effort tasks that provide immediate value. Ralph should complete t
   - Replace: "Brain skills repository" (when referring to brain/skills/) OR "Project kb/ directory" (when referring to local knowledge)
 - **Important:** Keep "kb/" references when they refer to project-local knowledge directories
 - **AC:**
+
   - [ ] "KB" replaced with "Skills" in all 4 template AGENTS files
   - [ ] "Knowledge Base" → "Brain Skills Repository" or "Brain skills repository"
   - [ ] Project-local "kb/" references preserved and clarified
   - [ ] Grep check: `grep -r "Knowledge Base\|KB lookups" templates/` returns no matches (except kb/ directory references)
+
 - **If Blocked:** Search templates for "KB" to find all occurrences
 
 ---
@@ -242,18 +262,22 @@ These are low-effort tasks that provide immediate value. Ralph should complete t
 **Goal:** Ensure template directory has the skill template for new projects
 
 **Subtasks:**
+
 - [ ] Copy `skills/self-improvement/SKILL_TEMPLATE.md` to `templates/ralph/SKILL_TEMPLATE.md`
 - [ ] Verify content matches source
 
 **Constraints:**
+
 - Do not modify the source file
 - Preserve exact content (no edits)
 
 **Inputs:**
+
 - Source: `skills/self-improvement/SKILL_TEMPLATE.md` (exists, 2751 bytes)
 - Destination: `templates/ralph/SKILL_TEMPLATE.md` (missing)
 
 **Acceptance Criteria:**
+
 - [ ] File exists at `templates/ralph/SKILL_TEMPLATE.md`
 - [ ] `diff skills/self-improvement/SKILL_TEMPLATE.md templates/ralph/SKILL_TEMPLATE.md` returns no differences
 
@@ -268,19 +292,23 @@ These are low-effort tasks that provide immediate value. Ralph should complete t
 **Goal:** Complete terminology migration from "KB" to "Skills"
 
 **Subtasks:**
+
 - [ ] Edit `templates/NEURONS.project.md` line containing "Brain KB patterns"
 - [ ] Replace "Brain KB" with "Brain Skills"
 
 **Constraints:**
+
 - Only change terminology, not meaning
 - Single file edit required
 
 **Inputs:**
+
 - File: `templates/NEURONS.project.md`
 - Line: `- **Brain KB patterns** → See...`
 - Command to verify: `rg "Brain KB" templates/`
 
 **Acceptance Criteria:**
+
 - [ ] `rg "Brain KB" templates/ | wc -l` returns 0
 - [ ] Line now reads `- **Brain Skills patterns** → See...`
 
@@ -297,6 +325,7 @@ These are low-effort tasks that provide immediate value. Ralph should complete t
 **Root cause:** `parse_new_thunk_entries()` appends new entries at `LAST_CONTENT_ROW` but the footer redraw logic doesn't properly clear the old footer before drawing the new one at the updated position.
 
 **Fix:**
+
 - [ ] **1.3.1** In `parse_new_thunk_entries()`, before redrawing footer, clear the OLD footer lines (9 lines starting at old `LAST_CONTENT_ROW`)
 - [ ] **1.3.2** Update `LAST_CONTENT_ROW` to `append_row` BEFORE redrawing footer
 - [ ] **1.3.3** Test: Run `thunk_ralph_tasks.sh`, complete a task in another terminal, verify footer moves down cleanly
@@ -310,21 +339,25 @@ These are low-effort tasks that provide immediate value. Ralph should complete t
 **Goal:** Fix verify-brain.sh to find skills/ at correct location
 
 **Subtasks:**
+
 - [ ] Update `workers/ralph/.maintenance/verify-brain.sh` to use correct paths
 - [ ] Change `skills/index.md` check to use `../../../skills/index.md` or absolute path detection
 - [ ] Change `skills/SUMMARY.md` check similarly
 - [ ] Test script reports 0 issues after fix
 
 **Constraints:**
+
 - Script must work when run from `workers/ralph/.maintenance/` directory
 - Must also work from repo root if invoked directly
 - Use portable path resolution (not hardcoded absolute paths)
 
 **Inputs:**
+
 - Script: `workers/ralph/.maintenance/verify-brain.sh`
 - Skills location: `brain/skills/` (3 levels up from .maintenance/)
 
 **Acceptance Criteria:**
+
 - [ ] `bash workers/ralph/.maintenance/verify-brain.sh` reports 0 issues
 - [ ] Script correctly finds `skills/index.md` and `skills/SUMMARY.md`
 
@@ -341,6 +374,7 @@ These are low-effort tasks that provide immediate value. Ralph should complete t
 **Note:** Complete Phase 1 first. Phase 2 tasks improve code quality but are lower priority.
 
 Tasks in Ralph's IMPLEMENTATION_PLAN.md. Order of execution:
+
 1. `current_ralph_tasks.sh` fixes (2.1-2.8)
 2. `thunk_ralph_tasks.sh` fixes (2.9-2.14)
 3. `pr-batch.sh` (2.15)
