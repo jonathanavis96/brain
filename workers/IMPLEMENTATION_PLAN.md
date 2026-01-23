@@ -10,8 +10,8 @@
 
 ### Immediate Fixes (9 warnings)
 
-- [ ] **0.W.1** Fix NEURONS.md unbalanced code fences - 20 opens, 0 closes (likely using ````markdown blocks)
-- [ ] **0.W.2** Fix THOUGHTS.md unbalanced code fences - 4 opens, 0 closes (likely using ````text blocks)
+- [x] **0.W.1** Fix NEURONS.md unbalanced code fences - 20 opens, 0 closes (likely using ````markdown blocks)
+- [x] **0.W.2** Fix THOUGHTS.md unbalanced code fences - 4 opens, 0 closes (likely using ````text blocks)
 - [ ] **0.W.3** Sync current_ralph_tasks.sh to templates/ralph/ (Hygiene.TemplateSync.1)
 - [ ] **0.W.4** Fix SC issues in templates/ralph/loop.sh (Lint.Shellcheck.LoopSh)
 - [ ] **0.W.5** Fix SC issues in templates/ralph/verifier.sh (Lint.Shellcheck.VerifierSh)
