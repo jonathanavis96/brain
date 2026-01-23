@@ -903,15 +903,17 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
 
 ### Phase 7-1: Skills Index Completeness (HIGH PRIORITY)
 
-- [ ] **7.1.1** Add 25 missing skills to `skills/index.md`
+- [x] **7.1.1** Add 25 missing skills to `skills/index.md`
   - Missing: token-efficiency.md, all website skills (launch/, design/, qa/, architecture/, discovery/, build/, copywriting/)
   - **AC:** `bash .maintenance/verify-brain.sh 2>&1 | grep -c 'Skills missing from index.md'` returns 0
   - **Commit:** `docs(skills): add missing skills to index.md`
+  - **Status:** ✅ ALREADY COMPLETE - All skills already listed in index.md
 
-- [ ] **7.1.2** Add 25 missing skills to `skills/SUMMARY.md`
+- [x] **7.1.2** Add 25 missing skills to `skills/SUMMARY.md`
   - Same list as 7.1.1
   - **AC:** `bash .maintenance/verify-brain.sh 2>&1 | grep -c 'Skills missing from SUMMARY.md'` returns 0
   - **Commit:** `docs(skills): add missing skills to SUMMARY.md`
+  - **Status:** ✅ COMPLETE - Added token-efficiency + 24 website skills, maintenance check passes
 
 ### Phase 7-2: Template Maintenance Section
 
