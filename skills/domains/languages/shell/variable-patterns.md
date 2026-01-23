@@ -2,6 +2,25 @@
 
 > Safe variable declaration, assignment, and scoping in bash.
 
+## Quick Reference
+
+| Issue | Anti-Pattern | Correct Pattern | Why It Matters |
+|-------|--------------|-----------------|----------------|
+| **SC2155** Masked exit codes | `local x=$(cmd)` | `local x; x=$(cmd)` | Assignment masks command failure |
+| **SC2034** Unused variable | `local unused="val"` | Remove or use `_unused="val"` | Dead code, possible bug |
+| **Subshell scope loss** | `cat f \| while read x; do count=$((count+1)); done` | `while read x; do ...; done < <(cat f)` | Variables set in pipe subshell are lost |
+| **Unquoted expansion** | `echo $var` | `echo "$var"` | Word splitting breaks on spaces |
+| **Optional variable** | `file=${CONFIG}` (fails if unset) | `file=${CONFIG:-default}` | Provide fallback value |
+| **Required variable** | `path=$REQUIRED` (silent if unset) | `: ${REQUIRED:?error msg}` | Fail fast with clear error |
+| **Export for child** | `VAR=x; ./child.sh` | `export VAR=x; ./child.sh` | Children don't inherit non-exported vars |
+| **Array iteration** | `for x in ${arr[@]}` | `for x in "${arr[@]}"` | Unquoted breaks on whitespace |
+
+**Quick Fixes:**
+
+1. **SC2155 everywhere?** Search `local.*=$(` and split into two lines
+2. **SC2034 cleanup:** Run `shellcheck script.sh \| grep SC2034`, remove or prefix with `_`
+3. **Lost variable in loop?** Check for `| while read` - replace with `< <(command)` or `<<< "$(command)"`
+
 ## SC2155: Separate Declaration from Assignment
 
 **The #1 most common shell bug** - masking command exit codes.
