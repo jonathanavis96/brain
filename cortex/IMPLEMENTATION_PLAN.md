@@ -13,14 +13,26 @@
 
 **Root Cause:** Task 9.1.3 moved `workers/ralph/IMPLEMENTATION_PLAN.md` → `workers/IMPLEMENTATION_PLAN.md` but didn't update the path in `current_ralph_tasks.sh`.
 
-### Phase 0-C.2: Fix Sync Timestamp Format (2 tasks)
+### Phase 0-C.2: Rewrite Sync Script (Append-Only, Clean Format) (3 tasks)
 
-- [ ] **0.C.3** Fix `workers/ralph/sync_cortex_plan.sh` line 17 - change `$(date +%Y-%m-%d)` to `$(date '+%Y-%m-%d %H:%M:%S')` for full timestamp
-  - **AC:** Sync marker shows `SYNCED_FROM_CORTEX: 2026-01-23 16:45:00` format (with HH:MM:SS)
-- [ ] **0.C.4** Fix `templates/ralph/sync_cortex_plan.sh` - same fix for template consistency
-  - **AC:** Template matches worker file timestamp format
+**Goal:** Fix sync to use append-only model with clean format. No per-task markers, no overwriting Ralph's progress.
 
-**Note:** Sync is ONE-WAY only (Cortex → Ralph). Ralph takes tasks and logs completions to THUNK.md. No reverse sync needed.
+- [ ] **0.C.3** Rewrite `workers/ralph/sync_cortex_plan.sh` with these changes:
+  - Fix timestamp: `$(date +%Y-%m-%d)` → `$(date '+%Y-%m-%d %H:%M:%S')`
+  - Remove per-task `<!-- SYNCED_FROM_CORTEX -->` markers (lines 78, 130)
+  - Add single marker at section header only: `## Phase 0-Synced: Tasks from Cortex (synced: 2026-01-23 16:45:00)`
+  - Ensure script only APPENDS new tasks, never touches existing tasks/checkboxes
+  - Flatten Cortex grouped format into atomic tasks for Ralph
+  - **AC:** `bash sync_cortex_plan.sh --dry-run` shows clean output without per-task markers
+- [ ] **0.C.4** Fix `templates/ralph/sync_cortex_plan.sh` - same rewrite for template consistency
+  - **AC:** Template matches worker file
+- [ ] **0.C.5** Clean up `workers/IMPLEMENTATION_PLAN.md`:
+  - Remove duplicate "Phase 0-Synced" sections (merge into one)
+  - Remove all inline `<!-- SYNCED_FROM_CORTEX -->` comments
+  - Preserve Ralph's completed checkboxes `[x]`
+  - **AC:** Only one "Phase 0-Synced" section exists, no inline sync markers
+
+**Sync Model:** ONE-WAY append-only (Cortex → Ralph). Ralph owns his checkboxes. Cortex adds new tasks to synced section only.
 
 ---
 

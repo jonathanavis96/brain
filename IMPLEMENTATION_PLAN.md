@@ -150,6 +150,11 @@ See **workers/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown.
 - [ ] **WARN.MD.87.templates** Fix MD violations in `templates/ralph/VALIDATION_CRITERIA.project.md` - MD032, MD022, MD031 violations
 - [ ] **WARN.MD.88.templates** Fix MD violations in `templates/ralph/docs/WAIVER_PROTOCOL.md` - MD022, MD032, MD031 violations
 
+#### Docs Files (NEW - from pre-commit scan)
+
+- [ ] **WARN.MD.89.docs** Fix MD violations in `docs/BOOTSTRAPPING.md` - MD022 (blanks around headings), MD032 (blanks around lists), MD040 (fence language tags)
+- [ ] **WARN.MD.90.docs** Fix MD violations in `docs/TEST_SCENARIOS.md` - MD022 (blanks around headings), MD032 (blanks around lists)
+
 ### Verifier Warnings (AUTO CHECK FAILED - WARN GATE) (MEDIUM Priority)
 
 **Note:** These are from the latest verifier run (2026-01-23 14:07:49). Each warning needs investigation to determine if it's a real issue or requires a waiver.
