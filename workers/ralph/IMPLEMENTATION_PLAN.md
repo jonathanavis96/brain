@@ -932,7 +932,7 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
 - [x] **1.3.3** Test: Run `thunk_ralph_tasks.sh`, complete a task in another terminal, verify footer moves down cleanly
   <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
 
-- [ ] **9.1.1** Move `workers/ralph/.verify/` → `workers/.verify/`
+- [x] **9.1.1** Move `workers/ralph/.verify/` → `workers/.verify/`
   <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
 
 - [ ] **9.1.3** Move `workers/ralph/IMPLEMENTATION_PLAN.md` → `workers/IMPLEMENTATION_PLAN.md`
