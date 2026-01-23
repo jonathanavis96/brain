@@ -23,7 +23,7 @@
 
 ### Phase 9.1: Template Sync Warnings
 
-- [ ] **9.1.1** Sync `thunk_ralph_tasks.sh` to template
+- [x] **9.1.1** Sync `thunk_ralph_tasks.sh` to template
   - Copy `workers/ralph/thunk_ralph_tasks.sh` → `templates/ralph/thunk_ralph_tasks.sh`
   - **AC:** `diff -q workers/ralph/thunk_ralph_tasks.sh templates/ralph/thunk_ralph_tasks.sh` shows "match"
   - **Fixes:** Template.1
