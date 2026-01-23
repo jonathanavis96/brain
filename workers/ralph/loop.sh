@@ -177,7 +177,7 @@ usage() {
   cat <<'EOF'
 Usage:
   loop.sh [--prompt <path>] [--iterations N] [--plan-every N] [--yolo|--no-yolo]
-          [--runner rovodev|opencode|cerebras] [--model <model>] [--branch <name>] [--dry-run] [--no-monitors]
+          [--runner rovodev|opencode] [--model <model>] [--branch <name>] [--dry-run] [--no-monitors]
           [--opencode-serve] [--opencode-port N] [--opencode-attach <url>] [--opencode-format json|text]
           [--rollback [N]] [--resume]
 
@@ -185,7 +185,7 @@ Defaults:
   --iterations 1
   --plan-every 3
   --runner      rovodev
-  --model       Sonnet 4.5 (rovodev) or Grok Code (opencode), Llama models (cerebras). Use --model auto for rovodev config.
+  --model       Sonnet 4.5 (rovodev) or Grok Code (opencode). Use --model auto for rovodev config.
   --branch      Defaults to <repo>-work (e.g., brain-work, NeoQueue-work)
   If --prompt is NOT provided, loop alternates:
     - PLAN on iteration 1 and every N iterations
@@ -201,11 +201,9 @@ Model Selection:
                     Or provide a full model ID directly.
 
 Runner Selection:
-  --runner rovodev|opencode|cerebras
+  --runner rovodev|opencode
                    rovodev: uses acli rovodev run (default)
                    opencode: uses opencode run (provider/model). See: opencode models
-                   cerebras: uses Cerebras agentic runner with tool execution
-                            (requires CEREBRAS_API_KEY env var, shows token usage)
 
 Branch Workflow:
   --branch <name>  Work on specified branch (creates if needed, switches to it)
@@ -413,56 +411,6 @@ resolve_model_opencode() {
       echo "$model"
       ;;
   esac
-}
-
-# Run Cerebras API call (OpenAI-compatible endpoint)
-run_cerebras_api() {
-  local prompt_file="$1"
-  local model="$2"
-  local output_file="$3"
-
-  if [[ -z "${CEREBRAS_API_KEY:-}" ]]; then
-    echo "ERROR: CEREBRAS_API_KEY environment variable not set"
-    echo "Get your API key from: https://cloud.cerebras.ai"
-    return 1
-  fi
-
-  # Create JSON payload using jq for proper escaping
-  local json_payload
-  json_payload=$(jq -n \
-    --arg model "$model" \
-    --rawfile content "$prompt_file" \
-    '{
-      model: $model,
-      messages: [{role: "user", content: $content}],
-      max_tokens: 16384,
-      temperature: 0.3
-    }')
-
-  # Make API call
-  local response
-  response=$(curl -sS "https://api.cerebras.ai/v1/chat/completions" \
-    -H "Authorization: Bearer $CEREBRAS_API_KEY" \
-    -H "Content-Type: application/json" \
-    -d "$json_payload" 2>&1)
-
-  local rc=$?
-  if [[ $rc -ne 0 ]]; then
-    echo "ERROR: Cerebras API call failed (curl exit $rc)"
-    echo "$response"
-    return 1
-  fi
-
-  # Check for API error
-  if echo "$response" | jq -e '.error' >/dev/null 2>&1; then
-    echo "ERROR: Cerebras API error:"
-    echo "$response" | jq -r '.error.message // .error'
-    return 1
-  fi
-
-  # Extract and output the response content
-  echo "$response" | jq -r '.choices[0].message.content' | tee "$output_file"
-  return 0
 }
 
 # Setup model config - default to Sonnet 4.5 for Ralph loops

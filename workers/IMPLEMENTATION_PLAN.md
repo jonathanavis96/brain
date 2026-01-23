@@ -35,7 +35,7 @@
 ### Phase 3.4: Clean Ralph's `loop.sh` (3 tasks)
 
 - [x] **3.4.1** Remove `resolve_model_cerebras()` function from `workers/ralph/loop.sh`
-- [ ] **3.4.2** Remove cerebras runner option from `workers/ralph/loop.sh`
+- [x] **3.4.2** Remove cerebras runner option from `workers/ralph/loop.sh`
 - [ ] **3.4.3** Simplify runner detection to only rovodev/opencode
 
 ### Phase 3.5: Update All Path References (3 tasks)
