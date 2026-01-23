@@ -88,7 +88,7 @@ Phases 0, 2, 3, 4, 5, 6 completed - see `workers/ralph/THUNK.md` for details.
 
 **Goal:** Fix sync_cortex_plan.sh crash when .last_sync is empty.
 
-- [ ] **10.1** Fix empty `.last_sync` file causing "bad array subscript" error
+- [x] **10.1** Fix empty `.last_sync` file causing "bad array subscript" error
   - In `sync_cortex_plan.sh`, skip empty lines when reading `.last_sync`
   - Add: `[[ -z "$header_line" ]] && continue` inside the while loop
   - **AC:** `echo "" > .last_sync && bash sync_cortex_plan.sh --verbose` runs without error
