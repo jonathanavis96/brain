@@ -59,6 +59,25 @@ Then output `:::BUILD_READY:::` to end the iteration.
 
 ---
 
+## MANDATORY: Checkpoint After Every Task
+
+**Every completed task MUST include ALL THREE in ONE commit:**
+
+1. ✅ The code/doc fix itself
+2. ✅ THUNK.md entry (append to current era table)
+3. ✅ IMPLEMENTATION_PLAN.md update (mark task `[x]`)
+
+```bash
+# CORRECT: Single commit with everything
+git add -A && git commit -m "fix(scope): description"
+```
+
+**NEVER make separate commits** for "mark task complete" or "log to THUNK" - these waste iterations and break traceability.
+
+**If you commit code without updating THUNK.md and IMPLEMENTATION_PLAN.md, you have NOT completed the task.**
+
+---
+
 ## Runtime Error Protocol (same iteration)
 
 If a command/tool fails (traceback, syntax error, non-zero exit):
