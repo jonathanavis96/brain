@@ -14,8 +14,8 @@ POWERSHELL="/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if [[ ! -x "$POWERSHELL" ]]; then
-    echo "🔔 ALERT: $TITLE - $MESSAGE" >&2
-    exit 0
+  echo "🔔 ALERT: $TITLE - $MESSAGE" >&2
+  exit 0
 fi
 
 # Play attention sound at 30% volume in background
@@ -25,7 +25,7 @@ fi
 " 2>/dev/null &
 
 # Build popup script - positioned on left monitor, non-modal
-read -r -d '' PS_SCRIPT << 'PSEOF' || true
+read -r -d '' PS_SCRIPT <<'PSEOF' || true
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
@@ -68,19 +68,19 @@ PS_SCRIPT="${PS_SCRIPT//MESSAGE_PLACEHOLDER/$ESCAPED_MESSAGE}"
 RESULT=$("$POWERSHELL" -Command "$PS_SCRIPT" 2>/dev/null || echo "")
 
 if [[ "$RESULT" == "APPROVED" && -n "$WAIVER_REQUEST" && -f "$WAIVER_REQUEST" ]]; then
-    # Auto-approve the waiver
-    WAIVER_ID=$(basename "$WAIVER_REQUEST" .json)
-    APPROVE_FILE="${SCRIPT_DIR}/waivers/${WAIVER_ID}.approved"
+  # Auto-approve the waiver
+  WAIVER_ID=$(basename "$WAIVER_REQUEST" .json)
+  APPROVE_FILE="${SCRIPT_DIR}/waivers/${WAIVER_ID}.approved"
 
-    # Extract info from JSON
-    RULE_ID=$(grep -o '"rule_id":\s*"[^"]*"' "$WAIVER_REQUEST" | cut -d'"' -f4)
-    REASON=$(grep -o '"reason":\s*"[^"]*"' "$WAIVER_REQUEST" | cut -d'"' -f4)
-    PATHS=$(grep -o '"paths":\s*\[[^]]*\]' "$WAIVER_REQUEST" | sed 's/.*\[//;s/\].*//;s/"//g')
-    REQUEST_HASH=$(sha256sum "$WAIVER_REQUEST" | cut -d' ' -f1)
-    EXPIRY=$(date -d "+30 days" +%Y-%m-%d)
+  # Extract info from JSON
+  RULE_ID=$(grep -o '"rule_id":\s*"[^"]*"' "$WAIVER_REQUEST" | cut -d'"' -f4)
+  REASON=$(grep -o '"reason":\s*"[^"]*"' "$WAIVER_REQUEST" | cut -d'"' -f4)
+  PATHS=$(grep -o '"paths":\s*\[[^]]*\]' "$WAIVER_REQUEST" | sed 's/.*\[//;s/\].*//;s/"//g')
+  REQUEST_HASH=$(sha256sum "$WAIVER_REQUEST" | cut -d' ' -f1)
+  EXPIRY=$(date -d "+30 days" +%Y-%m-%d)
 
-    mkdir -p "${SCRIPT_DIR}/waivers"
-    cat > "$APPROVE_FILE" << EOF
+  mkdir -p "${SCRIPT_DIR}/waivers"
+  cat >"$APPROVE_FILE" <<EOF
 WAIVER_ID=$WAIVER_ID
 RULE_ID=$RULE_ID
 PATHS=$PATHS
@@ -91,7 +91,7 @@ EXPIRES=$EXPIRY
 REQUEST_SHA256=$REQUEST_HASH
 EOF
 
-    echo "✅ Waiver $WAIVER_ID approved via popup"
+  echo "✅ Waiver $WAIVER_ID approved via popup"
 else
-    echo "ℹ️ Notification shown (no approval action)"
+  echo "ℹ️ Notification shown (no approval action)"
 fi
