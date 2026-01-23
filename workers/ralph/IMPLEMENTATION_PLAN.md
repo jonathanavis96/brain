@@ -924,7 +924,7 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
 
 ### Phase 7-3: Skills Quick Reference Tables (LOW PRIORITY)
 
-- [ ] **7.3.1** Add Quick Reference table to `skills/domains/code-quality/token-efficiency.md`
+- [x] **7.3.1** Add Quick Reference table to `skills/domains/code-quality/token-efficiency.md`
 - [ ] **7.3.2** Add Quick Reference table to `skills/domains/code-quality/code-hygiene.md`
 - [ ] **7.3.3** Add Quick Reference table to `skills/domains/languages/shell/common-pitfalls.md`
 - [ ] **7.3.4** Add Quick Reference table to `skills/domains/languages/shell/strict-mode.md`
