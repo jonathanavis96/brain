@@ -14,7 +14,7 @@ This plan addresses verifier warnings, pre-commit formatting issues, and strateg
 
 **Priority:** HIGH - Fix verifier warnings first before numbered tasks
 
-- [ ] WARN.Template.1.thunk_ralph_tasks - Sync workers/ralph/thunk_ralph_tasks.sh with template
+- [x] WARN.Template.1.thunk_ralph_tasks - Sync workers/ralph/thunk_ralph_tasks.sh with template
 - [ ] WARN.Hygiene.TemplateSync.1.current_ralph_tasks - Sync workers/ralph/current_ralph_tasks.sh with template
 - [ ] WARN.Hygiene.TemplateSync.2.loop - Sync workers/ralph/loop.sh core logic with template (path references)
 - [ ] WARN.Lint.Shellcheck.LoopSh - Fix shellcheck issues in workers/ralph/loop.sh
