@@ -5,7 +5,7 @@
 ## Quick Reference
 
 | Issue | Problem | Fix |
-|-------|---------|-----|
+| ----- | ------- | --- |
 | Hardcoded paths | `/c/Users/name/...` breaks on other machines | Use `$HOME` or relative paths |
 | Committed secrets | API keys in repo history | Use `.env` + `.gitignore` |
 | No defaults | Missing config = crash | Provide sensible defaults |
@@ -78,7 +78,7 @@ fi
 
 ### Create Template + Real Config
 
-```
+```text
 project/
 ├── config.yml           # .gitignored - real config
 ├── config.template.yml  # tracked - template with placeholders
@@ -190,7 +190,7 @@ config.yml      # Real config with secrets
 ```bash
 # .env (gitignored)
 API_KEY=sk-abc123...
-DATABASE_URL=postgres://user:pass@host/db
+DATABASE_URL=postgres://user:pass@host/db  # pragma: allowlist secret
 ```
 
 ```bash
@@ -288,7 +288,7 @@ fi
 ## Common Mistakes Summary
 
 | Mistake | Problem | Fix |
-|---------|---------|-----|
+| ------- | ------- | --- |
 | `/c/Users/name/...` | Only works on one machine | Use `$HOME` or relative |
 | Secrets in repo | Security risk forever | Use `.env` + `.gitignore` |
 | No defaults | Crashes without config | `${VAR:-default}` pattern |
