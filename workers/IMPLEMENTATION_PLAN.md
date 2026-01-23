@@ -100,7 +100,7 @@
 ### Phase 3.2: Create `workers/cerebras/` Directory (3 tasks)
 
 - [x] **3.2.1** Create `workers/cerebras/` directory structure
-- [ ] **3.2.2** Copy `loop.sh` template to `workers/cerebras/loop.sh`
+- [x] **3.2.2** Copy `loop.sh` template to `workers/cerebras/loop.sh`
 - [ ] **3.2.3** Create `workers/cerebras/PROMPT.md` for Cerebras-specific instructions
 
 ### Phase 3.3: Create Cerebras-specific `loop.sh` (3 tasks)
