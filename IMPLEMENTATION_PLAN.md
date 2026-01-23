@@ -20,13 +20,21 @@ The brain repository has **two implementation plans**:
 - ✅ **Phase 0-A/B** - Cortex manager pack COMPLETE (31/31 tasks)
 - ✅ **Phase 0-Quick** - Quick wins COMPLETE (8/8 tasks)
 - 📋 **Phase 1-8** - Shell cleanup, documentation, optimization (0/49 complete)
-- 🚨 **NEW: Pre-commit scan** - Discovered shfmt formatting violations in workers/ralph/ scripts (current_ralph_tasks.sh, thunk_ralph_tasks.sh need tab→space conversion)
+- 🚨 **NEW: Pre-commit scan** - Discovered shfmt formatting violations in workers/ralph/new-project.sh (needs tab→space conversion to match project standard)
 
 See **workers/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown (123 tasks total).
 
 ---
 
-## Phase 0-Warn: Verifier Warnings (Root Level Files Only)
+## Phase 0-Warn: Verifier Warnings
+
+### Pre-Commit shfmt Failures (HIGH Priority)
+
+**Note:** Discovered via `pre-commit run --all-files` scan. These are formatting inconsistencies (tabs vs spaces) that violate project standard of 2-space indentation.
+
+- [ ] **WARN.SHFMT.1.new-project** Fix shfmt formatting in `workers/ralph/new-project.sh` - Convert tabs to 2-space indentation throughout file (functions: die, check_dependencies, load_github_username, save_github_username, prompt_github_username, select_template, copy_template_to_project, customize_project, initialize_git_repo, create_project)
+
+## Phase 0-Warn: Root Level Verifier Warnings (COMPLETED)
 
 ### ShellCheck Warnings (MEDIUM Priority)
 
