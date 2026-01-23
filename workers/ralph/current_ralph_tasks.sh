@@ -522,6 +522,14 @@ display_tasks() {
 
   # Display progress bar
   printf "  Progress: %3d%% [%s%s\n" "$percentage" "$bar" "$fraction_text"
+
+  # Display ETA
+  if [[ $pending_count -eq 0 ]]; then
+    echo "  ETA: Complete"
+  else
+    # TODO: Implement ETA calculation in task 8.1.2 and 8.1.3
+    echo "  ETA: --:--:--"
+  fi
   echo ""
 
   # Hotkey legend
