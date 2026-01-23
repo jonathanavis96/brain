@@ -82,7 +82,7 @@ When you discover a new convention, architectural decision, or project-specific 
 - Use `requirements.txt` or `pyproject.toml` for dependencies
 - Document setup and usage in README.md
 - Keep project goals and vision in `THOUGHTS.md`
-- Maintain `ralph/IMPLEMENTATION_PLAN.md` as a prioritized task list
+- Maintain `workers/ralph/IMPLEMENTATION_PLAN.md` as a prioritized task list
 
 ### Python Best Practices
 
@@ -111,8 +111,8 @@ When you discover a new convention, architectural decision, or project-specific 
 
 This project uses the Ralph Wiggum iterative loop for systematic development:
 
-- **Single unified prompt**: See `ralph/PROMPT.md` (determines mode from iteration number)
-- **Progress tracking**: All work logged in `ralph/progress.txt`
+- **Single unified prompt**: See `workers/ralph/PROMPT.md` (determines mode from iteration number)
+- **Progress tracking**: All work logged in `workers/ralph/progress.txt`
 - **Completion**: Look for `:::COMPLETE:::` sentinel
 
 ## RovoDev + CLI Guardrails

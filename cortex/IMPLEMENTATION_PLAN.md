@@ -116,7 +116,7 @@
 ### Task 5.1: Update README.md with setup instructions
 
 - [x] **5.1.1** Add Quick Start section to README.md
-- [ ] **5.1.2** Document what setup.sh does
+- [x] **5.1.2** Document what setup.sh does
 - [ ] **5.1.3** Add available commands examples
 
 **AC:** README.md has clear Quick Start and setup documentation
