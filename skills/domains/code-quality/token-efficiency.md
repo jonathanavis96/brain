@@ -6,6 +6,23 @@ Minimize tool calls per iteration to save tokens and time. Target: <20 tool call
 
 ---
 
+## Quick Reference
+
+| Category | Anti-Pattern (DON'T) | Best Practice (DO) |
+|----------|---------------------|-------------------|
+| **Duplicate Commands** | Running `cat .verify/latest.txt` 3 times | Read ONCE at start, cache result mentally |
+| **Known Values** | Running `pwd`, `git branch` repeatedly | Known from header - never run |
+| **File Content** | Opening same file multiple times | Read ONCE, remember content |
+| **Multi-File Search** | `grep pattern file1`, `grep pattern file2`, `grep pattern file3` (3 calls) | `grep pattern file1 file2 file3` (1 call) |
+| **Sequential Checks** | `shellcheck file1.sh`, `shellcheck file2.sh` (2 calls) | `shellcheck file1.sh file2.sh` (1 call) |
+| **Git Operations** | `git add file`, `git status`, `git add file`, `git commit` | `git add -A && git commit -m "msg"` (1 call) |
+| **Context Gathering** | Running `tail THUNK.md` multiple times | Get next number ONCE |
+| **Formatting** | Running `shfmt -i 2`, `shfmt -w`, `shfmt -ci` variants | Run ONCE with correct flags |
+
+**Rule:** If you ran a command and got the result, you HAVE that information. Don't run it again.
+
+---
+
 ## Common Traps (from actual Ralph logs)
 
 | Trap | Seen | Fix |
@@ -21,9 +38,11 @@ Minimize tool calls per iteration to save tokens and time. Target: <20 tool call
 ## DO
 
 - **Batch independent calls** - If you need to check 3 files, do it in ONE bash call:
+
   ```bash
   cat file1 && cat file2 && cat file3
   ```
+
 - **Cache results mentally** - If you ran `ls templates/ralph/`, don't run it again in the same iteration
 - **Use grep -l for multi-file search** - One call instead of checking each file
 - **Combine checks** - `shellcheck file1.sh file2.sh file3.sh` not 3 separate calls
@@ -42,6 +61,7 @@ Minimize tool calls per iteration to save tokens and time. Target: <20 tool call
 ## Examples
 
 **BAD (6 calls):**
+
 ```bash
 grep -c pattern file1
 grep -c pattern file2  
@@ -52,6 +72,7 @@ diff file3 template3
 ```
 
 **GOOD (2 calls):**
+
 ```bash
 grep -c pattern file1 file2 file3
 diff file1 template1 && diff file2 template2 && diff file3 template3
