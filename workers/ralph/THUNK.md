@@ -464,3 +464,4 @@ Started: 2026-01-18
 | 463 | WARN.SC.9 | MEDIUM | **WARN.SC.9** Fix SC2002 in `templates/ralph/loop.sh` line 666 - Replace useless cat with direct redirection | 2026-01-23 |
 | 464 | WARN.SC.10 | MEDIUM | **WARN.SC.10** Fix SC2086 in `templates/ralph/loop.sh` line 765 - Quote attach_flag variable | 2026-01-23 |
 | 465 | WARN.SC.12 | MEDIUM | **WARN.SC.12** Fix SC2162 in `templates/ralph/pr-batch.sh` line 191 - Add -r flag to read command | 2026-01-23 |
+| 466 | INFRA.1 | HIGH | **INFRA.1** Add lint-fix auto-approval to verifier.sh - Added is_lint_only_change() and auto_regen_protected_hash() functions, Protected.X failures now auto-approve if changes are lint-only (SC2162, SC2086, SC2155, SC2002, SC2129, shfmt whitespace), converts to [WARN] and auto-regenerates hash, non-lint changes still [FAIL] | 2026-01-23 |
