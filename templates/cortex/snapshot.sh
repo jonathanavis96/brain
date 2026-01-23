@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Quick project state snapshot for Cortex
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Get absolute path to this script, then go up one level for ROOT
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(dirname "$SCRIPT_DIR")"
 cd "$ROOT" || exit 1
 
 echo "# {{PROJECT_NAME}} Snapshot"
