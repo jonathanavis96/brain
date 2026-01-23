@@ -6,7 +6,7 @@ set -euo pipefail
 # =============================================================================
 #
 # WORKSPACE BOUNDARIES:
-#   Ralph operates from: $ROOT/ralph/ (derived from this script location)
+#   Ralph operates from: $ROOT/workers/ralph/ (derived from this script location)
 #   Full access to:      $ROOT/** (entire brain repository)
 #   PROTECTED (no modify): rules/AC.rules, .verify/*.sha256, verifier.sh, loop.sh, PROMPT.md
 #   FORBIDDEN (no access): .verify/waivers/*.approved (OTP-protected)
@@ -16,12 +16,12 @@ set -euo pipefail
 # ROOT can be overridden via env var for project delegation
 if [[ -n "${RALPH_PROJECT_ROOT:-}" ]]; then
   ROOT="$RALPH_PROJECT_ROOT"
-  RALPH="$ROOT/ralph"
+  RALPH="$ROOT/workers/ralph"
 else
-  # Get absolute path to this script, then go up one level for ROOT
+  # Get absolute path to this script, then go up two levels for ROOT (brain/workers/ralph -> brain)
   SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  ROOT="$(dirname "$SCRIPT_DIR")"
   RALPH="$SCRIPT_DIR"
+  ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
 fi
 LOGDIR="$RALPH/logs"
 VERIFY_REPORT="$RALPH/.verify/latest.txt"
@@ -936,7 +936,7 @@ run_once() {
     if ! python3 "$RALPH/cerebras_agent.py" \
       --prompt "$prompt_with_mode" \
       --model "$RESOLVED_MODEL" \
-      --max-turns 30 \
+      --max-turns 15 \
       --cwd "$ROOT" \
       --output "$log"; then
       echo "❌ Cerebras Agent failed. See: $log"
@@ -1322,7 +1322,7 @@ else
       # Sync tasks from Cortex before PLAN mode
       if [[ -f "$RALPH/sync_cortex_plan.sh" ]]; then
         echo "Syncing tasks from Cortex..."
-        if bash "$RALPH/sync_cortex_plan.sh" 2>&1; then
+        if (cd "$RALPH" && bash sync_cortex_plan.sh) 2>&1; then
           echo "✓ Cortex sync complete"
         else
           echo "⚠ Cortex sync failed (non-blocking)"

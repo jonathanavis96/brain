@@ -283,6 +283,14 @@ parse_new_thunk_entries() {
   local footer_start=$append_row
 
   if [[ -t 1 ]]; then
+    # BUGFIX: Clear the OLD footer lines (9 lines starting at old LAST_CONTENT_ROW)
+    # before redrawing at new position to prevent ghost footer artifacts
+    local old_footer_row=$LAST_CONTENT_ROW
+    for ((i = 0; i < 9; i++)); do
+      tput cup $((old_footer_row + i)) 0
+      tput el # Clear entire line
+    done
+
     # Clear everything from footer_start to end of screen to remove old footer
     tput cup $footer_start 0
     tput ed # Clear from cursor to end of display
