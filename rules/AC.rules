@@ -188,6 +188,13 @@ desc=PROMPT.md unchanged from baseline
 cmd=sha256sum PROMPT.md | cut -d' ' -f1 | diff -q - .verify/prompt.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
 expect_stdout=match
 
+[Protected.4]
+mode=auto
+gate=block
+desc=AGENTS.md unchanged from baseline
+cmd=sha256sum AGENTS.md | cut -d' ' -f1 | diff -q - .verify/agents.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
+expect_stdout=match
+
 # =============================================================================
 # Verifier Meta-Integrity
 # =============================================================================

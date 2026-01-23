@@ -42,6 +42,7 @@ check_init_required() {
   [[ ! -f "${VERIFY_DIR}/loop.sha256" ]] && missing+=("loop.sha256")
   [[ ! -f "${VERIFY_DIR}/verifier.sha256" ]] && missing+=("verifier.sha256")
   [[ ! -f "${VERIFY_DIR}/prompt.sha256" ]] && missing+=("prompt.sha256")
+  [[ ! -f "${VERIFY_DIR}/agents.sha256" ]] && missing+=("agents.sha256")
 
   if [[ ${#missing[@]} -gt 0 ]]; then
     echo ""
@@ -415,6 +416,11 @@ main() {
             protected_file="PROMPT.md"
             hash_file=".verify/prompt.sha256"
             root_hash_file="$ROOT/.verify/prompt.sha256"
+            ;;
+          Protected.4)
+            protected_file="AGENTS.md"
+            hash_file=".verify/agents.sha256"
+            root_hash_file="$ROOT/.verify/agents.sha256"
             ;;
         esac
 

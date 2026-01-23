@@ -8,7 +8,7 @@
 ## Quick Reference
 
 | Problem | Solution | See |
-|---------|----------|-----|
+| ------- | -------- | --- |
 | `local foo=$(cmd)` masks exit code | Split: `local foo; foo=$(cmd)` | [variable-patterns.md](variable-patterns.md) |
 | Unused variable warnings | Remove or prefix with `_` | [variable-patterns.md](variable-patterns.md) |
 | Variables lost in pipelines | Use `< <(cmd)` or `< file` | [variable-patterns.md](variable-patterns.md) |
@@ -22,11 +22,11 @@
 ## Skill Files
 
 | File | Purpose | Key Patterns |
-|------|---------|--------------|
+| ---- | ------- | ------------ |
 | [strict-mode.md](strict-mode.md) | Defensive script headers | `set -euo pipefail`, error functions |
 | [variable-patterns.md](variable-patterns.md) | Variable declaration & scoping | SC2155, SC2034, subshell fixes |
 | [cleanup-patterns.md](cleanup-patterns.md) | Resource management | Traps, temp files, shopt |
-| [common-pitfalls.md](common-pitfalls.md) | Miscellaneous gotchas | Quoting, `read -r`, `cd || exit` |
+| [common-pitfalls.md](common-pitfalls.md) | Miscellaneous gotchas | Quoting, `read -r`, `cd \|\| exit` |
 
 ---
 
@@ -35,6 +35,7 @@
 **Trigger:** Any time you're writing or modifying `.sh` files.
 
 **Pre-commit checklist:**
+
 ```bash
 # Run shellcheck on modified scripts
 shellcheck script.sh
