@@ -31,7 +31,7 @@
 
 - [x] **3.4.1** Remove `resolve_model_cerebras()` function from `workers/ralph/loop.sh`
 - [x] **3.4.2** Remove cerebras runner option from `workers/ralph/loop.sh`
-- [ ] **3.4.3** Simplify runner detection to only rovodev/opencode
+- [x] **3.4.3** Simplify runner detection to only rovodev/opencode
   - Verify no cerebras references remain in workers/ralph/loop.sh
   - Update usage/help text to remove cerebras mentions
   - **AC:** `rg -i cerebras workers/ralph/loop.sh` returns 0 results

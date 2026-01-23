@@ -163,7 +163,7 @@
 
 ### Phase 6.1: Template Sync Issues
 
-- [ ] **6.1.1** Sync `workers/ralph/current_ralph_tasks.sh` with `templates/ralph/current_ralph_tasks.sh`
+- [x] **6.1.1** Sync `workers/ralph/current_ralph_tasks.sh` with `templates/ralph/current_ralph_tasks.sh`
   - **AC:** `diff workers/ralph/current_ralph_tasks.sh templates/ralph/current_ralph_tasks.sh` returns no output
   - **Note:** Determine which is authoritative (likely workers/), then copy to template
 
