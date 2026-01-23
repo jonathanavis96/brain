@@ -49,12 +49,12 @@
   - **AC:** `bash sync_cortex_plan.sh --dry-run` on unchanged plans shows "No new sections"
   - **AC:** Adding new Phase below marker in Cortex syncs ONLY that phase (no duplicates)
 
-- [ ] **0.C.7** Add `--reset` flag to sync script:
+- [x] **0.C.7** Add `--reset` flag to sync script:
   - Clears `.last_sync` file
   - Allows re-bootstrapping if plans diverge
   - **AC:** `bash sync_cortex_plan.sh --reset` clears state and reports success
 
-- [ ] **0.C.8** Sync template: Copy fixed `workers/ralph/sync_cortex_plan.sh` to `templates/ralph/sync_cortex_plan.sh`
+- [x] **0.C.8** Sync template: Copy fixed `workers/ralph/sync_cortex_plan.sh` to `templates/ralph/sync_cortex_plan.sh`
   - **AC:** `diff workers/ralph/sync_cortex_plan.sh templates/ralph/sync_cortex_plan.sh` returns no output
 
 - [ ] **0.C.9** Test sync end-to-end:
@@ -322,3 +322,9 @@ Add Quick Reference tables to skills files following SUMMARY.md pattern.
 ---
 
 <!-- Cortex adds new Task Contracts below this line -->
+## Phase 99-Test: Sync System Test (1 task)
+
+**Goal:** Test sync end-to-end functionality
+
+- [ ] **99.1** Verify sync system works correctly
+  - **AC:** This phase appears in workers/IMPLEMENTATION_PLAN.md without duplicates

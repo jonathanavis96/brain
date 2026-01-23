@@ -7,7 +7,7 @@
 
 ---
 
-## Completed Phases (see THUNK.md for details)
+## Phase 0-Complete: Completed Phases (see THUNK.md for details)
 
 | Phase | Description | THUNK # |
 |-------|-------------|---------|
@@ -16,6 +16,22 @@
 | 2 | Shell Script Linting (25 tasks) | #475 |
 | 3.7 | Shellcheck Fixes (10 tasks) | #476 |
 | 4 | Shell Formatting (1 task) | #477 |
+
+---
+
+## Phase 0-Warn: Pre-commit Linting Issues (3 tasks)
+
+- [x] **0.W.1** Fix markdown issues in `cortex/IMPLEMENTATION_PLAN.md`:
+  - MD032: Add blank line before list at line 42
+  - MD022: Add blank line before heading at line 43
+  - MD024: Remove duplicate "Phase 99: Test Sync" heading at line 332
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` returns 0 errors
+
+- [ ] **0.W.2** Fix EOF in `cortex/IMPLEMENTATION_PLAN.md`
+  - **AC:** `pre-commit run end-of-file-fixer --files cortex/IMPLEMENTATION_PLAN.md` passes
+
+- [ ] **0.W.3** Verify all pre-commit checks pass
+  - **AC:** `pre-commit run --all-files` shows all checks passed
 
 ---
 
@@ -117,33 +133,33 @@
 
 ## Phase 5: Documentation & Terminology (5 remaining)
 
-### Task 5.1: Update README.md with setup instructions
+### Phase 5.1: Update README.md with setup instructions
 
 - [ ] **5.1.1** Add Quick Start section to README.md
 - [ ] **5.1.2** Document what setup.sh does
 - [ ] **5.1.3** Add available commands examples
 
-### Task 5.2: Fix AGENTS.md template paths (4 tasks)
+### Phase 5.2: Fix AGENTS.md template paths (4 tasks)
 
 - [ ] **5.2.1** Update `templates/AGENTS.project.md`
 - [ ] **5.2.2** Update `templates/backend/AGENTS.project.md`
 - [ ] **5.2.3** Update `templates/python/AGENTS.project.md`
 - [ ] **5.2.4** Update `templates/cortex/AGENTS.project.md`
 
-### Task 5.4: Fix "Brain KB" terminology
+### Phase 5.4: Fix "Brain KB" terminology
 
 - [ ] **5.4.1** Edit `templates/NEURONS.project.md` - replace "Brain KB" with "Brain Skills"
 
 **AC:** `rg "Brain KB" templates/ | wc -l` returns 0
 
-### Task 5.5: Fix thunk_ralph_tasks.sh footer display bug
+### Phase 5.5: Fix thunk_ralph_tasks.sh footer display bug
 
 - [ ] **5.5.1** In `parse_new_thunk_entries()`, clear OLD footer lines before redrawing
 - [ ] **5.5.2** Update `LAST_CONTENT_ROW` BEFORE redrawing footer
 
 **AC:** Footer repositions cleanly when new thunks appear
 
-### Task 5.6: Fix maintenance script paths
+### Phase 5.6: Fix maintenance script paths
 
 - [ ] **5.6.1** Update `workers/ralph/.maintenance/verify-brain.sh` to use correct paths
 
