@@ -2,8 +2,8 @@
 
 **Status:** Ready for BUILD execution  
 **Branch:** `brain-work`  
-**Last Updated:** 2026-01-23 20:30:00  
-**Progress:** Phases 0-Warn, 1, 2, 3.7, 4 COMPLETE
+**Last Updated:** 2026-01-23 20:14:00  
+**Progress:** Phase 0-CRITICAL complete, Phase 3 (Worker Separation) pending, Phase 5 (Documentation) pending
 
 ---
 
@@ -19,11 +19,23 @@
 
 ---
 
-## Phase 0-CRITICAL: Fix Broken Task Monitor & Sync (1 remaining)
+## Phase 0-CRITICAL: Fix Broken Task Monitor & Sync (COMPLETE)
 
 - [x] **0.C.4** Fix `templates/ralph/sync_cortex_plan.sh` - same rewrite as workers version
 
 **AC:** Sync markers only at section headers
+
+---
+
+## Phase 2.5: Skills Catalog Maintenance (2 tasks)
+
+**Goal:** Fix broken links and missing entries in skills catalog.
+
+- [ ] **2.5.1** Add `bulk-edit-patterns.md` to `skills/index.md`
+- [ ] **2.5.2** Add `bulk-edit-patterns.md` to `skills/SUMMARY.md`
+- [ ] **2.5.3** Fix broken links in `skills/SUMMARY.md` (change `domains/X` to `domains/Y/X` paths)
+
+**AC:** `bash workers/ralph/.maintenance/verify-brain.sh` reports 0 broken link issues
 
 ---
 
