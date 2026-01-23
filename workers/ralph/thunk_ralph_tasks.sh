@@ -285,7 +285,12 @@ parse_new_thunk_entries() {
   if [[ -t 1 ]]; then
     # BUGFIX: Clear the OLD footer lines (9 lines starting at old LAST_CONTENT_ROW)
     # before redrawing at new position to prevent ghost footer artifacts
+    # Save the old position BEFORE updating LAST_CONTENT_ROW
     local old_footer_row=$LAST_CONTENT_ROW
+
+    # Update LAST_CONTENT_ROW to new position BEFORE clearing old footer
+    LAST_CONTENT_ROW=$append_row
+
     for ((i = 0; i < 9; i++)); do
       tput cup $((old_footer_row + i)) 0
       tput el # Clear entire line
@@ -312,8 +317,7 @@ parse_new_thunk_entries() {
     : # No-op - skip footer in non-TTY mode for incremental updates
   fi
 
-  # Update stored state
-  LAST_CONTENT_ROW=$append_row
+  # Update stored state (LAST_CONTENT_ROW already updated above before clearing)
   LAST_TOTAL_COUNT=$new_total
 }
 

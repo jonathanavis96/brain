@@ -88,7 +88,7 @@
 
 ### Phase 5.3: Monitor improvements (1 task)
 
-- [ ] **5.3.1** Fix thunk_ralph_tasks.sh footer display bug
+- [x] **5.3.1** Fix thunk_ralph_tasks.sh footer display bug
   - In `parse_new_thunk_entries()`, clear OLD footer lines before redrawing
   - Update `LAST_CONTENT_ROW` BEFORE redrawing footer
   - **AC:** Footer repositions cleanly when new thunks appear
