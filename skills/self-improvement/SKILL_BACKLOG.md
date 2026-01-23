@@ -3,6 +3,7 @@
 This file tracks gaps that have met promotion criteria and are queued for skill file creation.
 
 Rules:
+
 - Only add entries here when promotion criteria are met (see GAP_CAPTURE_RULES.md)
 - Update status as work progresses
 - Link to created skill file when done
@@ -33,4 +34,10 @@ Rules:
 
 -->
 
-*No skills queued for promotion yet.*
+### Bash/Shell Project Validation Patterns
+
+- **Status:** Pending
+- **Source gap:** 2026-01-19 entry in GAP_BACKLOG.md
+- **Target path:** `skills/domains/languages/shell/validation-patterns.md`
+- **Priority:** P1 (high leverage / recurring)
+- **Notes:** Ralph templates assume npm/TypeScript projects. Need bash-specific validation patterns (bash -n, shellcheck, permission checks, jq validation, security checks). Will help future shell script project bootstrapping.

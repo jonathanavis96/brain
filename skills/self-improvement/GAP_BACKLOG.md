@@ -1,6 +1,7 @@
 # Gap Backlog (Auto-maintained by Claude)
 
 Rules:
+
 - Each entry is a missing brain capability discovered during work.
 - If a similar entry exists, **UPDATE it** (don't duplicate).
 - Include evidence (paths, filenames, brief snippets, or observations).
@@ -26,10 +27,11 @@ Rules:
 -->
 
 ### 2026-01-18 — Bash Terminal Control with tput
+
 - **Type:** Tooling / Knowledge
 - **Why useful:** Prevents screen flashing/blanking during display refreshes in interactive bash scripts
 - **When triggered:** Implementing cursor positioning for top-anchored display in current_ralph_tasks.sh (task P4A.1)
-- **Evidence:** 
+- **Evidence:**
   - Used `tput cup 0 0` to move cursor to top-left without clearing screen
   - Used `tput ed` to clear from cursor to end of screen
   - Pattern: Replace `clear` command with `tput cup 0 0 && tput ed` for flicker-free updates
@@ -39,6 +41,7 @@ Rules:
 - **Review notes (2026-01-18):** Does not meet "recurring" criteria. Very specialized for interactive terminal scripts. Only 2 monitor scripts in brain repo use this. Low reuse potential. Keep as reference in GAP_BACKLOG for future monitor script work.
 
 ### 2026-01-18 — Bash Associative Arrays for Caching
+
 - **Type:** Knowledge / Pattern
 - **Why useful:** Improves performance by avoiding repeated expensive operations (parsing, computation) on immutable data
 - **When triggered:** Implementing completed task caching in current_ralph_tasks.sh (task P4A.2)
@@ -54,6 +57,7 @@ Rules:
 - **Review notes (2026-01-18):** Does not meet "recurring" criteria. General caching patterns already documented in skills/domains/backend/caching-patterns.md. This is a bash-specific implementation detail with low reuse potential. Keep as reference for bash caching needs.
 
 ### 2026-01-19 — Bash/Shell Project Validation Patterns
+
 - **Type:** Tooling / Pattern
 - **Why useful:** Ralph templates assume npm/TypeScript projects. Need bash-specific validation patterns for shell script projects.
 - **When triggered:** Bootstrapping rovo-account-manager project (pure bash/shell automation)
@@ -68,4 +72,4 @@ Rules:
     - Security checks for hardcoded credentials
   - Should add bash/shell template variant or make templates tech-stack aware
 - **Priority:** P1
-- **Status:** Identified
+- **Status:** Promoted to SKILL_BACKLOG (2026-01-23)

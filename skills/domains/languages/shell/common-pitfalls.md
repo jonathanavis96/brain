@@ -2,6 +2,31 @@
 
 > ShellCheck errors and bash gotchas to avoid.
 
+## 🚨 Quick Reference (Common Shell Pitfalls to Avoid!)
+
+Check this table when writing shell scripts or debugging ShellCheck errors.
+
+| Pitfall                  | Anti-Pattern                                    | Correct Pattern                          | What Goes Wrong             |
+|--------------------------|-------------------------------------------------|------------------------------------------|-----------------------------|
+| **Unquoted Variables**   | `echo $file; cp $src $dest`                     | `echo "$file"; cp "$src" "$dest"`        | Word splitting, glob expansion |
+| **Masked Exit Codes**    | `local result=$(cmd)`                           | `local result; result=$(cmd)`            | Exit code hidden, errors missed |
+| **Unused Variables**     | `local var="value"` (never used)                | Remove or prefix: `_unused_var`          | SC2034 warnings, code clutter |
+| **Unquoted Expansion**   | `files=$(ls *.txt); echo $files`                | `files=$(find . -name "*.txt"); echo "$files"` | Word splitting breaks filenames |
+| **Backticks**            | `` result=`command` ``                          | `result=$(command)`                      | Hard to nest, deprecated    |
+| **Useless Cat**          | `cat file.txt \| grep pattern`                  | `grep pattern file.txt`                  | Extra process, SC2002       |
+| **Missing -r in read**   | `while read line; do`                           | `while read -r line; do`                 | Backslashes mangled, SC2162 |
+| **Glob in [[ ]]**        | `[[ $var == *.txt ]]` (wrong context)           | `case "$var" in *.txt) ;; esac`          | Glob doesn't work in [[ ]]  |
+
+**Quick Fixes:**
+
+- Always quote: `"$var"`, `"${array[@]}"`
+- Separate declare/assign: `local x; x=$(cmd)`
+- Use `read -r` to prevent backslash interpretation
+- Prefer `$(cmd)` over `` `cmd` ``
+- Check all scripts with: `shellcheck -e SC1091 *.sh`
+
+---
+
 ## ShellCheck Quick Reference
 
 ### High-Impact Errors
