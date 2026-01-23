@@ -7,6 +7,18 @@
 
 ---
 
+## Phase 0-Warn: Verifier Warnings
+
+- [ ] **WARN.Template.1.thunk** Fix Template.1 - thunk_ralph_tasks.sh matches template (FALSE POSITIVE - files are identical via cmp, diff shows no output)
+- [ ] **WARN.TemplateSync.1.current** Fix Hygiene.TemplateSync.1 - Sync performance optimizations from workers/ralph/current_ralph_tasks.sh to template
+- [ ] **WARN.TemplateSync.2.loop** Fix Hygiene.TemplateSync.2 - loop.sh path differences (workers/ralph/ vs ralph/) - BY DESIGN, different deployment paths
+- [ ] **WARN.Shellcheck.LoopSh** Fix Lint.Shellcheck.LoopSh (FALSE POSITIVE - shellcheck passes with 0 errors)
+- [ ] **WARN.Shellcheck.VerifierSh** Fix Lint.Shellcheck.VerifierSh (FALSE POSITIVE - shellcheck passes with 0 errors)
+- [ ] **WARN.Shellcheck.CurrentRalphTasks** Fix Lint.Shellcheck.CurrentRalphTasks (FALSE POSITIVE - shellcheck passes with 0 errors)
+- [ ] **WARN.Shellcheck.ThunkRalphTasks** Fix Lint.Shellcheck.ThunkRalphTasks (FALSE POSITIVE - shellcheck passes with 0 errors)
+
+---
+
 ## Phase 0-Complete: Completed Phases (see THUNK.md for details)
 
 | Phase | Description | THUNK # |
@@ -101,7 +113,7 @@
 
 - [x] **3.2.1** Create `workers/cerebras/` directory structure
 - [x] **3.2.2** Copy `loop.sh` template to `workers/cerebras/loop.sh`
-- [ ] **3.2.3** Create `workers/cerebras/PROMPT.md` for Cerebras-specific instructions
+- [x] **3.2.3** Create `workers/cerebras/PROMPT.md` for Cerebras-specific instructions
 
 ### Phase 3.3: Create Cerebras-specific `loop.sh` (3 tasks)
 
@@ -213,6 +225,37 @@
 **Acceptance Criteria for Phase 6:**
 
 - [ ] `bash workers/ralph/verifier.sh` shows 0 WARN (all checks PASS)
+
+---
+
+<!-- Cortex adds new Task Contracts below this line -->
+
+## Phase 2: Lint Issues (Dynamic)
+
+**Note:** Auto-fix runs before each BUILD iteration. Check verifier output for remaining issues.
+
+- [ ] **2.1** Fix any `[WARN]` items from verifier output
+  - **AC:** `bash verifier.sh` shows 0 WARN items
+  - **Note:** Focus on non-auto-fixable issues (shellcheck in protected files, MD040 language tags)
+
+---
+
+
+## Phase 6: Template Sync & Cleanup
+
+**Goal:** Ensure templates stay in sync with workers.
+
+### Phase 6.1: Template Sync Issues
+
+- [ ] **6.1.1** Sync `workers/ralph/current_ralph_tasks.sh` with `templates/ralph/current_ralph_tasks.sh`
+  - **AC:** `diff workers/ralph/current_ralph_tasks.sh templates/ralph/current_ralph_tasks.sh` returns no output
+  - **Note:** Determine which is authoritative (likely workers/), then copy to template
+
+- [ ] **6.1.2** Sync `workers/ralph/loop.sh` core logic with `templates/ralph/loop.sh`
+  - **AC:** Hygiene.TemplateSync.2 check passes
+  - **Note:** This is a PROTECTED file - may need hash baseline update after sync
+
+**Note:** Lint issues (shellcheck, markdownlint) are handled dynamically by Phase 2. Check verifier output for current state.
 
 ---
 
