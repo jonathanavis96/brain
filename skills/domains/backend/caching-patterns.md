@@ -9,6 +9,7 @@ Caching is one of the most powerful performance optimizations in software develo
 ## When to Use It
 
 Reference this KB file when:
+
 - Optimizing application performance (reduce latency or load)
 - Reducing database query load or API call costs
 - Designing cache key strategies for multi-tenant or user-specific data
@@ -17,6 +18,7 @@ Reference this KB file when:
 - Debugging stale data or cache consistency issues
 
 **Specific triggers:**
+
 - Performance profiling shows repeated identical queries
 - API rate limits being hit frequently
 - Database experiencing high read load
@@ -30,7 +32,7 @@ Reference this KB file when:
 
 Different caching layers serve different purposes. Use multiple layers for maximum efficiency:
 
-```
+```text
 Request → CDN Cache → Application Cache → Database Query Cache → Database
           (edge)       (Redis/memory)       (DB level)
 ```
@@ -38,7 +40,7 @@ Request → CDN Cache → Application Cache → Database Query Cache → Databas
 **Decision matrix:**
 
 | Layer | Best For | TTL | Invalidation Complexity |
-|-------|----------|-----|------------------------|
+| ----- | -------- | --- | ---------------------- |
 | CDN | Static assets, public pages | Hours-Days | Low (version URLs) |
 | Application (Redis) | User sessions, API responses | Minutes-Hours | Medium (explicit invalidation) |
 | In-Memory | Hot data, per-request dedup | Seconds-Minutes | Low (TTL-based) |
@@ -77,6 +79,7 @@ const user = await getCurrentUser(); // Uses cached result from above
 ```
 
 **When to use:**
+
 - Server Components in Next.js 13+
 - Multiple components need the same data in one request
 - Authentication checks, user data lookups
@@ -127,12 +130,14 @@ export function clearUserCache() {
 ```
 
 **When to use:**
+
 - Sequential user actions need same data (click button A, then B)
 - Serverful deployments (not serverless - cache resets on cold start)
 - Moderate data set (hundreds to thousands of items)
 - Data changes infrequently
 
-**Limitations:** 
+**Limitations:**
+
 - Memory-bound (cache lives in process memory)
 - Lost on server restart or serverless cold start
 - Not shared across multiple server instances
@@ -170,11 +175,13 @@ export function clearSlugCache() {
 ```
 
 **When to use:**
+
 - Pure functions with expensive computation
 - Same inputs called repeatedly during render
 - No external dependencies (consistent output for same input)
 
 **Memory leak prevention:**
+
 ```javascript
 // Set maximum cache size
 const MAX_CACHE_SIZE = 1000;
@@ -259,12 +266,14 @@ function tenantKey(tenantId, resource, id) {
 #### Pattern 6: Cache Invalidation Strategies
 
 **Time-based (TTL):**
+
 ```javascript
 // Simple: Data expires automatically
 await redis.setex('user:123', 300, JSON.stringify(user)); // 5 minutes
 ```
 
 **Event-based (explicit invalidation):**
+
 ```javascript
 // When user updates profile, invalidate cache
 async function updateUser(userId, updates) {
@@ -283,6 +292,7 @@ async function updateUser(userId, updates) {
 ```
 
 **Tag-based invalidation (complex):**
+
 ```javascript
 // Tag cache entries for bulk invalidation
 async function cacheWithTags(key, data, tags, ttl) {
@@ -337,6 +347,7 @@ export async function GET(request) {
 ```
 
 **Cache-Control directives:**
+
 - `s-maxage=3600` - CDN caches for 1 hour
 - `max-age=3600` - Browser caches for 1 hour  
 - `stale-while-revalidate=86400` - Serve stale while fetching fresh (24h window)
@@ -493,12 +504,14 @@ export async function getCachedWithLock(key, fetchFn, ttl = 300) {
 ### Decision Guide
 
 **Choose in-memory caching when:**
+
 - Data needed within single request (use `React.cache()`)
 - Low-latency requirements (sub-millisecond)
 - Simple deployment (single server instance)
 - Small data set (< 100MB)
 
 **Choose Redis caching when:**
+
 - Multiple server instances need shared cache
 - Cache should survive server restarts
 - Need distributed cache invalidation
@@ -506,12 +519,14 @@ export async function getCachedWithLock(key, fetchFn, ttl = 300) {
 - Serverless deployment (external state required)
 
 **Choose CDN caching when:**
+
 - Serving static assets (images, CSS, JS)
 - Public API responses (same for all users)
 - Global distribution required (low latency worldwide)
 - High read volume (millions of requests)
 
 **Choose browser caching when:**
+
 - User-specific UI state
 - Offline support required
 - Reduce server load for preferences
@@ -531,11 +546,13 @@ export async function getCachedWithLock(key, fetchFn, ttl = 300) {
 ### Cache Invalidation Patterns
 
 Two hard problems in computer science:
+
 1. Cache invalidation
 2. Naming things
 3. Off-by-one errors
 
 **Write-through cache (strong consistency):**
+
 ```javascript
 async function updateUser(userId, data) {
   // 1. Update database
@@ -552,6 +569,7 @@ async function updateUser(userId, data) {
 ```
 
 **Write-behind cache (eventual consistency):**
+
 ```javascript
 async function updateUser(userId, data) {
   // 1. Update cache immediately
@@ -565,6 +583,7 @@ async function updateUser(userId, data) {
 ```
 
 **Cache-aside (lazy loading):**
+
 ```javascript
 async function getUser(userId) {
   // 1. Try cache
@@ -584,7 +603,7 @@ async function getUser(userId) {
 ### TTL Strategy Guidelines
 
 | Data Type | Suggested TTL | Reasoning |
-|-----------|---------------|-----------|
+| --------- | ------------- | --------- |
 | User profile | 10-30 minutes | Changes infrequently |
 | User session | 15-60 minutes | Balance security vs UX |
 | API responses (public) | 1-24 hours | Depends on update frequency |
@@ -594,6 +613,7 @@ async function getUser(userId) {
 | User preferences | 7-30 days | Very stable |
 
 **Adaptive TTL based on access pattern:**
+
 ```javascript
 // Shorter TTL for rarely accessed data (conserve memory)
 // Longer TTL for frequently accessed data (better performance)
