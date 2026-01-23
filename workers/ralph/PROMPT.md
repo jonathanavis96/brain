@@ -17,6 +17,7 @@ If your prompt header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 5. **THEN** output `:::BUILD_READY:::` so the verifier can re-run
 
 If `.verify/latest.txt` contains `[WARN]` lines:
+
 1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of workers/IMPLEMENTATION_PLAN.md (after header, before other phases)
 2. **⚠️ DO NOT create "## Verifier Warnings" without the "Phase 0-Warn:" prefix** - This breaks the task monitor!
 3. **LIST** each as: `- [ ] WARN.<RULE_ID>.<filename> - <description>` (include filename to prevent duplicate IDs)
@@ -31,6 +32,7 @@ If `.verify/latest.txt` contains `[WARN]` lines:
 12. **CROSS-FILE BATCHING:** When the SAME fix type applies to multiple files (e.g., SC2162 "add -r to read" in 5 files), fix ALL files in ONE iteration. Group by fix type, not by file.
 
 Common failure types:
+
 - **Hash mismatch** (e.g., `Protected.1`): A protected file was modified. You cannot fix this - report to human.
 - **Hygiene issues** (e.g., `Hygiene.Shellcheck.2`): Fix the code issue (unused var, missing fence tag, etc.)
 - **AntiCheat** (e.g., `AntiCheat.1`): Remove the problematic marker/phrase from your code.
@@ -39,6 +41,7 @@ Common failure types:
 ### Protected File Bail-Out (CRITICAL)
 
 If verifier shows `Protected.1`, `Protected.2`, `Protected.3`, or `Protected.4` failures:
+
 1. **STOP IMMEDIATELY** - Do NOT attempt to fix hash mismatches
 2. You CANNOT modify `.verify/*.sha256` files - they are human-only
 3. Output `:::HUMAN_REQUIRED:::` with the failure details
@@ -48,6 +51,7 @@ If verifier shows `Protected.1`, `Protected.2`, `Protected.3`, or `Protected.4` 
 **Anti-pattern:** Running `cat .verify/latest.txt` 5 times hoping for different results.
 
 If you cannot fix a failure (protected file, infrastructure issue), output:
+
 ```text
 ⚠️ HUMAN INTERVENTION REQUIRED
 
@@ -81,12 +85,38 @@ git add -A && git commit -m "fix(scope): description"
 ## Runtime Error Protocol (same iteration)
 
 If a command/tool fails (traceback, syntax error, non-zero exit):
+
 1. Stop and fix first.
 2. Open `skills/SUMMARY.md` → Error Quick Reference.
 3. Read the single best-matching skill doc.
 4. Apply the minimum fix and re-run the failing command.
 
 Rule: only 1 "obvious" quick attempt before doing the lookup.
+
+---
+
+## Markdown Fix Protocol
+
+**Before making manual markdown fixes, ALWAYS run the auto-fix script first:**
+
+```bash
+bash workers/ralph/fix-markdown.sh <file_or_directory>
+```
+
+This auto-fixes ~40-60% of issues (MD009, MD012, MD031, MD032, MD047).
+
+**Only these need manual fixes:**
+
+| Rule | Fix |
+| ---- | --- |
+| MD040 | Add language after ``` (e.g., ```bash) |
+| MD060 | Add spaces around table pipes |
+| MD024 | Make duplicate headings unique |
+| MD036 | Convert **bold** to #### heading |
+
+**Anti-pattern:** Don't make 30+ individual `find_and_replace_code` calls - this wastes tokens and iterations. Use the script first, then batch remaining fixes efficiently.
+
+See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
 
 ---
 
@@ -103,6 +133,7 @@ Rule: only 1 "obvious" quick attempt before doing the lookup.
 ## PLANNING Mode (Iteration 1 or every 3rd)
 
 ### Context Gathering (up to 100 parallel subagents)
+
 - Study `skills/SUMMARY.md` for overview and `skills/index.md` for available skills
 - Study THOUGHTS.md for project goals
 - Study workers/IMPLEMENTATION_PLAN.md (if exists)
@@ -110,7 +141,9 @@ Rule: only 1 "obvious" quick attempt before doing the lookup.
 - Search for gaps between intent and implementation
 
 ### Pre-Planning Lint Check (MANDATORY)
+
 Before planning tasks, run linting tools to discover issues:
+
 ```bash
 # Run pre-commit if available (catches shell, markdown, python issues)
 pre-commit run --all-files 2>&1 | head -50 || true
@@ -118,9 +151,11 @@ pre-commit run --all-files 2>&1 | head -50 || true
 # Or run individual checks if pre-commit not installed:
 shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
 ```
+
 **If any issues found:** Add them to the TOP of workers/IMPLEMENTATION_PLAN.md as high-priority tasks in "## Phase 0-Warn: Verifier Warnings" section.
 
 ### Actions
+
 1. Create/update workers/IMPLEMENTATION_PLAN.md:
    - **⚠️ CRITICAL:** ALL task sections MUST be "## Phase X:" format (e.g., "## Phase 0-Quick: Quick Wins", "## Phase 1: Maintenance")
    - **⚠️ NEVER create these non-phase sections:** "## Overview", "## Quick Wins" (without Phase prefix), "## Verifier Warnings" (without Phase prefix), "## Maintenance Check", "## TODO Items"
@@ -132,12 +167,14 @@ shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
    - A task is "atomic" when completable in ONE BUILD iteration
 
 2. Commit planning updates (local):
+
    ```bash
    git add -A
    git commit -m "docs(plan): [summary]"
    ```
 
 3. Push ALL accumulated commits (from BUILD iterations + this commit):
+
    ```bash
    git push
    ```
@@ -147,6 +184,7 @@ shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
 ## BUILDING Mode (All other iterations)
 
 ### Context Gathering (up to 100 parallel subagents)
+
 - Study `skills/SUMMARY.md` for overview and `skills/index.md` for available skills
 - Study THOUGHTS.md and workers/IMPLEMENTATION_PLAN.md
 - Search codebase - **don't assume things are missing**
@@ -154,6 +192,7 @@ shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
 - Use Brain Skills: `skills/SUMMARY.md` → `references/HOTLIST.md` → specific rules only if needed
 
 ### Actions
+
 1. **CHECK FOR VERIFIER WARNINGS FIRST:**
    - If `workers/IMPLEMENTATION_PLAN.md` has a "## Verifier Warnings" section with unchecked `- [ ]` tasks:
      - Pick ONE warning task (prioritize High > Medium > Low)
@@ -174,6 +213,7 @@ shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
    - Log completion to THUNK.md (append to current era table)
    - Mark task `[x]` in workers/IMPLEMENTATION_PLAN.md
    - **NEVER make separate commits** for "mark task complete" or "log to THUNK" - these waste iterations
+
    ```bash
    git add -A && git commit -m "<type>(<scope>): <summary>
 
@@ -220,6 +260,7 @@ After BUILD, `loop.sh` runs `verifier.sh` which checks `rules/AC.rules`. Only if
 ## Task Status Rules
 
 Statuses:
+
 - `[ ]` TODO
 - `[~]` IN_PROGRESS
 - `[?]` PROPOSED_DONE (you believe it's done, pending verifier)
@@ -239,9 +280,9 @@ You may mark tasks `[?]` when you've implemented changes. The verifier determine
 **You have access to the ENTIRE brain repository** (from `$ROOT`), not just `workers/ralph/`.
 
 | Access Level | Paths | Notes |
-|--------------|-------|-------|
+| ------------ | ----- | ----- |
 | **Full access** | `skills/`, `templates/`, `cortex/`, `docs/`, `workers/` | Read, write, create, delete |
-| **Protected** | `rules/AC.rules`, `verifier.sh`, `loop.sh`, `PROMPT.md` | Read only - hash-guarded |
+| **Protected** | `rules/AC.rules`, `verifier.sh`, `loop.sh`, `PROMPT.md`, `AGENTS.md` | Read only - hash-guarded |
 | **Protected** | `.verify/*.sha256` | Baseline hashes - human updates |
 | **Forbidden** | `.verify/waivers/*.approved` | OTP-protected - cannot read/write |
 
