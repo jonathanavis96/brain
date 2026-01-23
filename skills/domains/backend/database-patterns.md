@@ -1,5 +1,30 @@
 # Database Patterns
 
+## 🚨 Quick Reference (Database Decision Guide)
+
+**Use this table when making database architecture decisions:**
+
+| Decision Point | Question | Quick Answer | Pattern Reference |
+|----------------|----------|--------------|-------------------|
+| **SQL vs NoSQL** | Which database type? | Structured data with relationships → SQL; Flexible schema → NoSQL | [SQL vs NoSQL Decision Matrix](#sql-vs-nosql-decision-matrix) |
+| **ORM Selection** | Which ORM for my language? | TypeScript → Prisma; Python → SQLAlchemy; Go → GORM | [ORM Selection Guide](#orm-selection-guide) |
+| **Schema Design** | How to normalize? | 3NF for most apps; denormalize for read-heavy queries | [Pattern 1: Normalization Strategy](#pattern-1-normalization-strategy) |
+| **Performance** | Query is slow? | Add index → prevent N+1 → use eager loading | [Pattern 4: N+1 Query Prevention](#pattern-4-n1-query-prevention) |
+| **Transactions** | Need ACID guarantees? | Use transactions for multi-step writes; isolate for concurrency | [Pattern 7: ACID Transactions](#pattern-7-acid-transactions) |
+| **Scaling** | Too many connections? | Configure connection pool (min=10, max=20-30) | [Pattern 10: Connection Pool Configuration](#pattern-10-connection-pool-configuration) |
+| **Migrations** | How to change schema? | Version migrations, test rollbacks, avoid data loss | [Pattern 9: Safe Schema Migrations](#pattern-9-safe-schema-migrations) |
+| **Indexing** | Which columns to index? | WHERE/JOIN/ORDER BY columns; avoid over-indexing | [Pattern 5: Indexing Strategy](#pattern-5-indexing-strategy) |
+
+**Common Quick Fixes:**
+
+- Slow query → Add index on WHERE/JOIN columns
+- N+1 queries → Use `include`/`populate`/`prefetch_related`
+- Connection exhaustion → Reduce pool max or fix connection leaks
+- Migration failed → Test rollback, add IF NOT EXISTS checks
+- Data race → Wrap in transaction with proper isolation level
+
+---
+
 ## Why This Exists
 
 Database design and interaction patterns are fundamental to building scalable, maintainable applications. Poor database choices lead to performance bottlenecks (N+1 queries, missing indexes), data integrity issues, difficult migrations, and expensive refactoring. This knowledge base documents proven database patterns across SQL and NoSQL systems, ORM usage, schema design, query optimization, and transaction management, helping teams make informed decisions and avoid common pitfalls.
@@ -549,7 +574,7 @@ const prisma = new PrismaClient({
 });
 
 // PostgreSQL URL with pool settings
-DATABASE_URL="postgresql://user:password@localhost:5432/mydb?connection_limit=10&pool_timeout=20"
+DATABASE_URL="postgresql://user:password@localhost:5432/mydb?connection_limit=10&pool_timeout=20"  # pragma: allowlist secret
 ```
 
 **Node.js pg pool:**
@@ -561,7 +586,7 @@ const pool = new Pool({
   host: 'localhost',
   database: 'mydb',
   user: 'postgres',
-  password: 'secret',
+  password: 'secret',  // pragma: allowlist secret
   max: 20,              // Maximum pool size
   idleTimeoutMillis: 30000,  // Close idle connections after 30s
   connectionTimeoutMillis: 2000,  // Fail fast if no connection available
