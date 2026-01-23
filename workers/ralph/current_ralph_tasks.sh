@@ -50,14 +50,22 @@ get_file_mtime() {
 }
 
 # Function to generate short human-readable title from task description
+# PERFORMANCE: Uses pure bash - no subprocess spawning (sed, cut, echo pipes)
 generate_title() {
   local desc="$1"
 
   # Strip technical IDs (T1.1, P4A.7, 1.1, 2.3, etc.) from the beginning
-  desc=$(echo "$desc" | sed -E 's/^[[:space:]]*\*\*[T]?[0-9A-Za-z]+(\.[0-9A-Za-z]+)*\*\*[[:space:]]*//')
+  # Pattern: optional whitespace, **, optional T, alphanumeric with dots, **, whitespace
+  if [[ "$desc" =~ ^[[:space:]]*\*\*[T]?[0-9A-Za-z]+(\.[0-9A-Za-z]+)*\*\*[[:space:]]*(.*) ]]; then
+    desc="${BASH_REMATCH[2]}"
+  fi
 
-  # Strip markdown bold markers
-  desc=$(echo "$desc" | sed -E 's/\*\*//g')
+  # Strip markdown bold markers (replace ** with nothing)
+  desc="${desc//\*\*/}"
+
+  # Strip leading/trailing whitespace
+  desc="${desc#"${desc%%[![:space:]]*}"}"
+  desc="${desc%"${desc##*[![:space:]]}"}"
 
   # Extract action verb and main object (look for common action verbs)
   if [[ "$desc" =~ ^(Rename|Update|Create|Verify|Delete|Add|Remove|Test|Implement|Fix|Refactor|Document|Migrate|Copy|Set|Run|If)([[:space:]]*:[[:space:]]*|[[:space:]]+)(.+)$ ]]; then
@@ -70,30 +78,35 @@ generate_title() {
       # Take up to arrow, period, or first 50 chars
       if [[ "$rest" =~ ^([^.→]+)[.→] ]]; then
         rest="${BASH_REMATCH[1]}"
-      else
-        rest=$(echo "$rest" | cut -c1-50)
+      elif [[ ${#rest} -gt 50 ]]; then
+        rest="${rest:0:50}"
       fi
-      # Remove any trailing quotes, backticks, or markdown
-      rest=$(echo "$rest" | sed -E 's/`[[:space:]]*$//; s/[[:space:]]*$//')
+      # Remove trailing backticks and whitespace (bash builtins)
+      rest="${rest%\`}"
+      rest="${rest%"${rest##*[![:space:]]}"}"
       echo "$verb: $rest"
     else
       # For other verbs, take up to colon with space (title separator) or first 50 chars
       if [[ "$rest" =~ ^([^:]+):[[:space:]] ]]; then
         rest="${BASH_REMATCH[1]}"
-      else
-        rest=$(echo "$rest" | cut -c1-50)
+      elif [[ ${#rest} -gt 50 ]]; then
+        rest="${rest:0:50}"
       fi
-      # Remove any trailing quotes, backticks, or markdown
-      rest=$(echo "$rest" | sed -E 's/`[[:space:]]*$//; s/[[:space:]]*$//')
+      # Remove trailing backticks and whitespace (bash builtins)
+      rest="${rest%\`}"
+      rest="${rest%"${rest##*[![:space:]]}"}"
       echo "$verb $rest"
     fi
   else
-    # Fallback: take first 60 chars or up to first colon
+    # Fallback: take first 60 chars or up to first colon/period
     if [[ "$desc" =~ ^([^:.]+)[:.] ]]; then
-      echo "${BASH_REMATCH[1]}"
-    else
-      echo "$desc" | cut -c1-60 | sed 's/[[:space:]]*$//'
+      desc="${BASH_REMATCH[1]}"
+    elif [[ ${#desc} -gt 60 ]]; then
+      desc="${desc:0:60}"
     fi
+    # Remove trailing whitespace
+    desc="${desc%"${desc##*[![:space:]]}"}"
+    echo "$desc"
   fi
 }
 
@@ -174,9 +187,9 @@ extract_tasks() {
       if [[ -n "$status" && -n "$task_desc" ]]; then
         # For completed tasks, check cache first
         if [[ "$status" == "x" ]]; then
-          # Generate cache key (hash of full raw line to prevent collisions)
-          local cache_key
-          cache_key=$(echo -n "$line" | md5sum | cut -d' ' -f1)
+          # PERFORMANCE: Use line directly as cache key - no subprocess spawning
+          # The full line is unique enough (includes section context via line number)
+          local cache_key="$line"
 
           # If cached, return cached value
           if [[ -n "${COMPLETED_CACHE[$cache_key]}" ]]; then
