@@ -18,7 +18,7 @@
 - [x] **0.W.6** Fix SC issues in templates/ralph/current_ralph_tasks.sh (Lint.Shellcheck.CurrentRalphTasks) - FALSE POSITIVE: shellcheck passes, verifier regex issue
 - [x] **0.W.7** Fix SC issues in templates/ralph/thunk_ralph_tasks.sh (Lint.Shellcheck.ThunkRalphTasks) - FALSE POSITIVE: shellcheck passes, verifier regex issue
 - [x] **0.W.8** Request waivers for all 7 verifier false positives - Created WVR-2026-01-23-014 through WVR-2026-01-23-020
-- [ ] **0.W.9** Note: Protected.1 warning for loop.sh - SKIP (human review, change already logged)
+- [x] **0.W.9** Note: Protected.1 warning for loop.sh - SKIP (human review, change already logged)
 - [ ] **0.W.10** Note: Hygiene.TemplateSync.2 for loop.sh - SKIP (intentional divergence, waiver WVR-2026-01-23-020 requested)
 
 ---
