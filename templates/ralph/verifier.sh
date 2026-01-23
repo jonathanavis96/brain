@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Get script directory for relative paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 AC_FILE="${1:-${ROOT}/rules/AC.rules}"
 APPROVALS_FILE="${2:-${ROOT}/rules/MANUAL_APPROVALS.rules}"
