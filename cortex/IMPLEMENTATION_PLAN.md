@@ -6,9 +6,9 @@
 
 ### Phase 0-C.1: Fix Path References (2 tasks)
 
-- [ ] **0.C.1** Fix `workers/ralph/current_ralph_tasks.sh` line 25 - change `PLAN_FILE="$RALPH_DIR/IMPLEMENTATION_PLAN.md"` to `PLAN_FILE="$RALPH_DIR/../IMPLEMENTATION_PLAN.md"`
+- [x] **0.C.1** Fix `workers/ralph/current_ralph_tasks.sh` line 25 - change `PLAN_FILE="$RALPH_DIR/IMPLEMENTATION_PLAN.md"` to `PLAN_FILE="$RALPH_DIR/../IMPLEMENTATION_PLAN.md"`
   - **AC:** `bash workers/ralph/current_ralph_tasks.sh` shows tasks instead of "Error: IMPLEMENTATION_PLAN.md not found"
-- [ ] **0.C.2** Fix `templates/ralph/current_ralph_tasks.sh` line 26 - same fix for template consistency
+- [x] **0.C.2** Fix `templates/ralph/current_ralph_tasks.sh` line 26 - same fix for template consistency
   - **AC:** Template matches worker file path reference
 
 **Root Cause:** Task 9.1.3 moved `workers/ralph/IMPLEMENTATION_PLAN.md` → `workers/IMPLEMENTATION_PLAN.md` but didn't update the path in `current_ralph_tasks.sh`.
@@ -17,7 +17,7 @@
 
 **Goal:** Fix sync to use append-only model with clean format. No per-task markers, no overwriting Ralph's progress.
 
-- [ ] **0.C.3** Rewrite `workers/ralph/sync_cortex_plan.sh` with these changes:
+- [x] **0.C.3** Rewrite `workers/ralph/sync_cortex_plan.sh` with these changes:
   - Fix timestamp: `$(date +%Y-%m-%d)` → `$(date '+%Y-%m-%d %H:%M:%S')`
   - Remove per-task `<!-- SYNCED_FROM_CORTEX -->` markers (lines 78, 130)
   - Add single marker at section header only: `## Phase 0-Synced: Tasks from Cortex (synced: 2026-01-23 16:45:00)`
