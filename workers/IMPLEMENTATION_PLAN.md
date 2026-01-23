@@ -82,7 +82,7 @@
 
 ### Phase 5.2: Fix maintenance scripts (1 task)
 
-- [ ] **5.2.1** Update `workers/ralph/.maintenance/verify-brain.sh` to use correct paths
+- [x] **5.2.1** Update `workers/ralph/.maintenance/verify-brain.sh` to use correct paths
   - Replace any hardcoded paths with $ROOT-based paths
   - **AC:** `bash workers/ralph/.maintenance/verify-brain.sh` runs without errors
 

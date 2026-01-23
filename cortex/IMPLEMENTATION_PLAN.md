@@ -117,7 +117,7 @@
 
 - [x] **5.1.1** Add Quick Start section to README.md
 - [x] **5.1.2** Document what setup.sh does
-- [ ] **5.1.3** Add available commands examples
+- [x] **5.1.3** Add available commands examples
 
 **AC:** README.md has clear Quick Start and setup documentation
 
