@@ -24,7 +24,13 @@
 
 RALPH_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLAN_FILE="$RALPH_DIR/../IMPLEMENTATION_PLAN.md"
+THUNK_FILE="$RALPH_DIR/THUNK.md"
 HIDE_COMPLETED=false
+
+# ETA tracking arrays (session-only, no persistence)
+declare -a TASK_TIMESTAMPS=()
+declare -a TASK_DURATIONS=()
+LAST_THUNK_COUNT=0
 LAST_MODIFIED=""
 
 # Completed task cache - stores hashes of completed task descriptions
@@ -522,6 +528,13 @@ display_tasks() {
 
   # Display progress bar
   printf "  Progress: %3d%% [%s%s\n" "$percentage" "$bar" "$fraction_text"
+
+  # Display ETA
+  if [[ $pending_count -eq 0 ]]; then
+    echo "  ETA: Complete"
+  else
+    calculate_eta "$pending_count"
+  fi
   echo ""
 
   # Hotkey legend
@@ -536,6 +549,72 @@ display_tasks() {
   fi
 }
 
+# Function to count THUNK entries
+count_thunk_entries() {
+  if [[ ! -f "$THUNK_FILE" ]]; then
+    echo "0"
+    return
+  fi
+
+  # Count lines that match THUNK table rows (| number | ... |)
+  grep -cE '^\|[[:space:]]*[0-9]+[[:space:]]*\|' "$THUNK_FILE" | grep -v "THUNK #"
+}
+
+# Function to calculate and display ETA
+calculate_eta() {
+  local remaining_tasks="$1"
+
+  # If no duration data yet, show placeholder
+  if [[ ${#TASK_DURATIONS[@]} -eq 0 ]]; then
+    echo "  ETA: --:--:-- (gathering data...)"
+    return
+  fi
+
+  # Calculate average task duration
+  local total_duration=0
+  for duration in "${TASK_DURATIONS[@]}"; do
+    total_duration=$((total_duration + duration))
+  done
+
+  local avg_duration=$((total_duration / ${#TASK_DURATIONS[@]}))
+  local eta_seconds=$((avg_duration * remaining_tasks))
+
+  # Convert seconds to HH:MM:SS
+  local hours=$((eta_seconds / 3600))
+  local minutes=$(((eta_seconds % 3600) / 60))
+  local seconds=$((eta_seconds % 60))
+
+  printf "  ETA: %02d:%02d:%02d (%d task avg: %ds)\n" "$hours" "$minutes" "$seconds" "${#TASK_DURATIONS[@]}" "$avg_duration"
+}
+
+# Function to update THUNK timestamp tracking
+update_thunk_tracking() {
+  local current_count
+  current_count=$(count_thunk_entries)
+
+  # If count increased, record timestamp and calculate duration
+  if [[ $current_count -gt $LAST_THUNK_COUNT ]]; then
+    local current_time
+    current_time=$(date +%s)
+
+    # If this is not the first entry, calculate duration from last timestamp
+    if [[ ${#TASK_TIMESTAMPS[@]} -gt 0 ]]; then
+      local last_timestamp="${TASK_TIMESTAMPS[-1]}"
+      local duration=$((current_time - last_timestamp))
+
+      # Only add duration if it's reasonable (30 seconds to 1 hour)
+      # This filters out anomalies like manual edits or long pauses
+      if [[ $duration -ge 30 && $duration -le 3600 ]]; then
+        TASK_DURATIONS+=("$duration")
+      fi
+    fi
+
+    # Record current timestamp
+    TASK_TIMESTAMPS+=("$current_time")
+    LAST_THUNK_COUNT=$current_count
+  fi
+}
+
 # Main loop - interactive with file watching
 echo "Starting Ralph Task Monitor..."
 echo "Watching: $PLAN_FILE"
@@ -547,6 +626,16 @@ display_tasks
 
 # Get initial modification time
 LAST_MODIFIED=$(get_file_mtime)
+
+# Initialize THUNK tracking
+LAST_THUNK_COUNT=$(count_thunk_entries)
+if [[ $LAST_THUNK_COUNT -gt 0 ]]; then
+  # Record initial timestamp
+  TASK_TIMESTAMPS+=("$(date +%s)")
+fi
+
+# Track THUNK file modification time for change detection
+LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE" 2>/dev/null || echo "0")
 
 # Enable non-blocking input
 if [[ -t 0 ]]; then
@@ -612,6 +701,16 @@ while true; do
   if [[ "$CURRENT_MODIFIED" != "$LAST_MODIFIED" ]]; then
     LAST_MODIFIED="$CURRENT_MODIFIED"
     display_tasks
+  fi
+
+  # Check for THUNK file changes (for ETA tracking)
+  if [[ -f "$THUNK_FILE" ]]; then
+    CURRENT_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
+    if [[ "$CURRENT_THUNK_MODIFIED" != "$LAST_THUNK_MODIFIED" ]]; then
+      LAST_THUNK_MODIFIED="$CURRENT_THUNK_MODIFIED"
+      update_thunk_tracking
+      display_tasks
+    fi
   fi
 
   # Small sleep to prevent CPU spinning
