@@ -77,7 +77,7 @@
 - [x] **5.1.3** Update `templates/python/AGENTS.project.md` - change "ralph/" to "workers/ralph/"
   - **AC:** Consistent path references
 
-- [ ] **5.1.4** Update `templates/cortex/CORTEX_SYSTEM_PROMPT.project.md` - change "ralph/" to "workers/ralph/"
+- [x] **5.1.4** Update `templates/cortex/CORTEX_SYSTEM_PROMPT.project.md` - change "ralph/" to "workers/ralph/"
   - **AC:** Consistent path references
 
 ### Phase 5.2: Fix maintenance scripts (1 task)
