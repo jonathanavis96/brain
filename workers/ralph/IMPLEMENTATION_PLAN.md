@@ -896,7 +896,7 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
 
 ## Phase 0-Synced: Tasks from Cortex
 
-- [ ] **0.0** Implement sync_cortex_plan.sh script
+- [x] **0.0** Implement sync_cortex_plan.sh script
   <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
   - **Priority:** CRITICAL (blocks all other Cortex → Ralph task delegation)
   - **Goal:** Implement the task synchronization mechanism described in `cortex/docs/TASK_SYNC_PROTOCOL.md`
@@ -914,7 +914,7 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
        - Add sync markers to newly synced tasks
     3. Integrate into `workers/ralph/loop.sh` startup sequence:
 
-- [ ] **0.1** Update README.md with setup instructions
+- [x] **0.1** Update README.md with setup instructions
   <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
   - **Goal:** Add installation and quick start documentation
   - **Context:**
@@ -926,7 +926,7 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
     ```markdown
     ## Quick Start
 
-- [ ] **1.3.1** In `parse_new_thunk_entries()`, before redrawing footer, clear the OLD footer lines (9 lines starting at old `LAST_CONTENT_ROW`)
+- [x] **1.3.1** In `parse_new_thunk_entries()`, before redrawing footer, clear the OLD footer lines (9 lines starting at old `LAST_CONTENT_ROW`)
   <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
 
 - [ ] **1.3.3** Test: Run `thunk_ralph_tasks.sh`, complete a task in another terminal, verify footer moves down cleanly

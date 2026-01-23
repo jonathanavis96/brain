@@ -10,6 +10,28 @@ The **brain** repository is the shared consciousness for all projects - a centra
 
 ## Quick Start
 
+### Installation
+
+```bash
+# Clone the brain repository
+git clone <brain-repo-url> ~/code/brain
+cd ~/code/brain
+
+# Run setup to install cortex and ralph commands globally
+bash setup.sh
+
+# Verify installation
+cortex --help
+ralph --help
+```
+
+**What `setup.sh` does:**
+
+- Creates `~/bin/cortex` symlink → `brain/cortex/cortex.bash`
+- Creates `~/bin/ralph` symlink → `brain/workers/ralph/ralph.sh`
+- Adds `~/bin` to your PATH (if not already present)
+- Verifies Atlassian CLI (`acli`) is installed
+
 ### Bootstrap a New Project
 
 ```bash
@@ -23,12 +45,13 @@ Tech Stack: Next.js, TypeScript, PostgreSQL, Docker
 Goals: MVP in 2 weeks, 1000 users in first month
 EOF
 
-# 2. Run bootstrap
-bash ralph/new-project.sh NEW_PROJECT_IDEA.md
+# 2. Run bootstrap (using globally installed command)
+cd ~/code/brain
+bash workers/ralph/new-project.sh NEW_PROJECT_IDEA.md
 
 # 3. Your project is ready!
 cd /path/to/your-project
-bash ralph/loop.sh --iterations 10
+ralph loop --iterations 10
 ```
 
 **What gets created:**
