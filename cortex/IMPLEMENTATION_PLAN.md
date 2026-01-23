@@ -1,486 +1,208 @@
 # Cortex Implementation Plan
 
-**Purpose:** This file contains high-level Task Contracts that Cortex creates for Ralph workers. Each contract defines a complete, atomic task with clear goals, constraints, inputs, and acceptance criteria.
+**Purpose:** Task Contracts for Ralph workers. Each contract defines an atomic task with clear goals and acceptance criteria.
 
 **Workflow:**
 
-1. Cortex creates/updates Task Contracts in this file
-2. Ralph's `loop.sh` syncs this file to `workers/IMPLEMENTATION_PLAN.md` at startup
-3. Ralph works through tasks, marking them complete in his local copy
-4. Cortex reviews Ralph's progress and creates new contracts as needed
-
----
-
-## Task Contract Template
-
-Use this format when creating new Task Contracts:
-
-### Task: [Short descriptive title]
-
-**Goal:** What Ralph should achieve (one clear outcome)
-
-**Subtasks:**
-
-- [ ] Subtask 1 description
-- [ ] Subtask 2 description
-- [ ] Subtask 3 description
-
-**Constraints:**
-
-- Constraint 1 (e.g., "Do not modify protected files")
-- Constraint 2 (e.g., "Use existing patterns from skills/")
-- Constraint 3 (e.g., "Test changes before committing")
-
-**Inputs:**
-
-- Input 1 (e.g., "Reference: skills/domains/shell/strict-mode.md")
-- Input 2 (e.g., "Existing code: workers/ralph/loop.sh")
-- Input 3 (e.g., "Acceptance criteria: rules/AC.rules")
-
-**Acceptance Criteria:**
-
-- [ ] AC 1: Specific, measurable condition
-- [ ] AC 2: Specific, measurable condition
-- [ ] AC 3: Specific, measurable condition
-
-**If Blocked:**
-
-- What to do if Ralph encounters an issue
-- Who to escalate to (Cortex, Human, etc.)
-- What information to provide
-
----
-
-## Example Task Contract
-
-### Task: Add shellcheck validation to verifier.sh
-
-**Goal:** Ensure all shell scripts pass shellcheck with no warnings
-
-**Subtasks:**
-
-- [ ] Add shellcheck rules to rules/AC.rules
-- [ ] Update verifier.sh to run shellcheck
-- [ ] Fix any shellcheck violations in existing scripts
-- [ ] Test verifier passes on clean code
-
-**Constraints:**
-
-- Do not modify protected files' hash guards
-- Use existing rule format in AC.rules
-- Must work in WSL2 Ubuntu environment
-- Keep verifier runtime under 5 seconds
-
-**Inputs:**
-
-- Reference: skills/domains/shell/variable-patterns.md
-- Existing code: verifier.sh, rules/AC.rules
-- Test scripts: current_ralph_tasks.sh, thunk_ralph_tasks.sh
-
-**Acceptance Criteria:**
-
-- [ ] AC 1: rules/AC.rules contains new shellcheck rules
-- [ ] AC 2: verifier.sh runs shellcheck on target scripts
-- [ ] AC 3: All existing scripts pass shellcheck
-- [ ] AC 4: Verifier report shows PASS for shellcheck rules
-
-**If Blocked:**
-
-- If shellcheck not installed: Report to human (installation required)
-- If shellcheck rules too strict: Document exception in GAP_BACKLOG.md
-- If scripts need refactoring: Break into subtasks and update this contract
+1. Cortex creates/updates Task Contracts here
+2. Ralph's `loop.sh` syncs this file via `sync_cortex_plan.sh`
+3. Ralph works through tasks, marking them complete
+4. Cortex reviews progress and creates new contracts
 
 ---
 
 ## Current Status
 
-**Last Updated:** 2026-01-21 19:57:00 (by Cortex)
-
-### ✅ Completed Phases
-
-| Phase | Description | Status |
-| ----- | ----------- | ------ |
-| 0-A | Cortex Manager Pack | ✅ Complete |
-| 0-B | Repository Restructure (Option B) | ✅ Complete |
-| 0-Warn | Verifier Warnings | ✅ All resolved |
-
-### 📊 Progress Summary
-
-- **Completed:** ~40 tasks (Phase 0-A, 0-B, 0-Warn all done)
-- **Pending:** ~35 tasks (Phase 1-7)
-- **Verifier:** 24/24 PASS
-- **Maintenance:** 2 false-positive issues (path bug in verify-brain.sh)
-
-### ⚠️ Maintenance Script Path Issue
-
-The `workers/ralph/.maintenance/verify-brain.sh` script reports `skills/index.md` and `skills/SUMMARY.md` as "not found" because it uses relative paths from `workers/ralph/`. The files exist at `brain/skills/` (root level). This is a **path bug in the maintenance script**, not missing files.
-
-**Recommendation:** Add task to fix verify-brain.sh paths in Phase 2.
+**Last Updated:** 2026-01-23 14:45:00  
+**Progress:** 60 pending tasks across 5 phases  
+**Verifier:** All checks passing
 
 ---
 
-## Active Task Contracts
+## Phase 1: Quick Reference Tables (5 tasks)
 
-### Phase 0-Sync: Infrastructure (Priority: CRITICAL - DO THIS FIRST)
+Add Quick Reference tables to skills files following SUMMARY.md pattern.
 
-- [ ] **0.0** Implement sync_cortex_plan.sh script
-  - **Priority:** CRITICAL (blocks all other Cortex → Ralph task delegation)
-  - **Goal:** Implement the task synchronization mechanism described in `cortex/docs/TASK_SYNC_PROTOCOL.md`
-  - **Context:**
-    - Currently, there is NO automatic sync from `cortex/IMPLEMENTATION_PLAN.md` → `workers/IMPLEMENTATION_PLAN.md`
-    - The protocol is documented but the script doesn't exist yet
-    - Without this, Cortex must manually copy tasks or user must do it
-  - **Implementation:**
-    1. Create `workers/ralph/sync_cortex_plan.sh`
-    2. Implement logic from TASK_SYNC_PROTOCOL.md:
-       - Read `cortex/IMPLEMENTATION_PLAN.md`
-       - Extract tasks from Phase sections
-       - Check if task already synced (via `<!-- SYNCED_FROM_CORTEX: YYYY-MM-DD -->` marker)
-       - Append new tasks to `workers/IMPLEMENTATION_PLAN.md`
-       - Add sync markers to newly synced tasks
-    3. Integrate into `workers/ralph/loop.sh` startup sequence:
+- [ ] **1.1** Add Quick Reference table to `skills/domains/code-quality/code-hygiene.md`
+- [ ] **1.2** Add Quick Reference table to `skills/domains/languages/shell/common-pitfalls.md`
+- [ ] **1.3** Add Quick Reference table to `skills/domains/languages/shell/strict-mode.md`
+- [ ] **1.4** Add Quick Reference table to `skills/domains/languages/shell/variable-patterns.md`
+- [ ] **1.5** Add Quick Reference table to `skills/domains/backend/database-patterns.md`
 
-       ```bash
-       # At start of PLAN mode, before task selection
-       if [[ -f "../cortex/IMPLEMENTATION_PLAN.md" ]]; then
-           bash sync_cortex_plan.sh
-       fi
-       ```
-
-  - **Reference Implementation:** See `cortex/docs/TASK_SYNC_PROTOCOL.md` sections:
-    - "Sync Mechanism" (lines 60-85)
-    - "Workflow Example" (lines 87-150)
-    - "Pseudocode" (lines 200-230)
-  - **AC:**
-
-    ```text
-    - [ ] `workers/ralph/sync_cortex_plan.sh` exists and is executable
-    - [ ] Script reads from `cortex/IMPLEMENTATION_PLAN.md`
-    - [ ] Script appends new tasks to `workers/IMPLEMENTATION_PLAN.md`
-    - [ ] Synced tasks have `<!-- SYNCED_FROM_CORTEX: YYYY-MM-DD -->` markers
-    - [ ] Duplicate tasks are NOT created (check for existing markers)
-    - [ ] `loop.sh` calls sync script at startup in PLAN mode
-    - [ ] Test: Add a dummy task to cortex plan, run sync, verify it appears in Ralph's plan
-    ```
-
-  - **If Blocked:**
-
-    - Reference TASK_SYNC_PROTOCOL.md for detailed algorithm
-    - Ask user for clarification on sync timing or marker format
+**AC:** Each file has a Quick Reference section  
+**Commit:** `docs(skills): add Quick Reference tables`
 
 ---
 
-### Phase 0-Quick: Documentation Updates (Priority: HIGH)
+## Phase 2: Shell Script Linting (25 tasks)
 
-- [ ] **0.1** Update README.md with setup instructions
-  - **Goal:** Add installation and quick start documentation
-  - **Context:**
-    - New `setup.sh` script installs `cortex` and `ralph` commands globally
-    - Users need clear instructions on getting started
-    - **DO NOT merge to main** - there's a pending PR that needs fixing first
-  - **Implementation:** Add these sections to `README.md`:
-  
-    ```markdown
-    ## Quick Start
+### Phase 2.1: setup.sh Issues (3 tasks)
 
-    ```bash
-    git clone https://github.com/jonathanavis96/brain
-    cd brain
-    bash setup.sh
-    source ~/.bashrc  # Or open a new terminal
-    cortex            # Ready to use!
-    ```
+- [ ] **2.1.1** Fix SC2016 in `setup.sh` line 70 - grep pattern with literal $HOME
+  - **Note:** False positive - single quotes intentional for literal string search
+- [ ] **2.1.2** Fix SC2129 in `setup.sh` line 75 - consolidate multiple redirects
+  - **Fix:** Combine echo statements into single redirect block
+- [ ] **2.1.3** Fix SC2016 in `setup.sh` line 77 - echo with literal $HOME
+  - **Note:** Intentional - we want literal $HOME in .bashrc
 
-  **What setup.sh Does:**
+### Phase 2.2: Template Shellcheck Issues (10 tasks)
 
-  - ✅ Detects brain location automatically
-  - ✅ Creates ~/bin/cortex and ~/bin/ralph symlinks
-  - ✅ Ensures ~/bin is in PATH
-  - ✅ Adds PATH to shell config if needed
-  - ✅ Works across different systems/users
+- [ ] **2.2.1** Fix SC2034 (unused RUNNER) in `templates/cortex/cortex.bash` line 64
+- [ ] **2.2.2** Fix SC2034 (unused CONFIG_FLAG) in `templates/cortex/cortex.bash` line 107
+- [ ] **2.2.3** Fix SC2086 (unquoted CONFIG_FLAG) in `templates/cortex/one-shot.sh` lines 257, 261
+- [ ] **2.2.4** Fix SC2162 (read without -r) in `templates/ralph/current_ralph_tasks.sh` lines 261, 558
+- [ ] **2.2.5** Fix SC2162 (read without -r) in `templates/ralph/loop.sh` lines 457, 498
+- [ ] **2.2.6** Fix SC2002 (useless cat) in `templates/ralph/loop.sh` line 666
+- [ ] **2.2.7** Fix SC2086 (unquoted attach_flag) in `templates/ralph/loop.sh` line 765
+- [ ] **2.2.8** Fix SC2034 (unused week_num) in `templates/ralph/pr-batch.sh` line 103
+- [ ] **2.2.9** Fix SC2162 (read without -r) in `templates/ralph/pr-batch.sh` line 191
+- [ ] **2.2.10** Fix SC2162 (read without -r) in `templates/ralph/thunk_ralph_tasks.sh` line 379
 
-  **Available Commands:**
+### Phase 2.3: workers/ralph/ Shellcheck Issues (8 tasks)
 
-  ```bash
-  cortex              # Chat with Cortex (Opus 4.5)
-  cortex -h           # Help
-  ralph -i20 -p5      # Run Ralph (Sonnet 4.5)
-  ralph -h            # Help
-  ```
+- [ ] **2.3.1** Fix SC2034 (unused week_num) in `workers/ralph/pr-batch.sh` line 102
+- [ ] **2.3.2** Fix SC2162 (read without -r) in `workers/ralph/pr-batch.sh` line 190
+- [ ] **2.3.3** Fix SC2155 (declare/assign separately) in `workers/ralph/render_ac_status.sh` lines 25,26,29,30,31,32,111,114
+- [ ] **2.3.4** Fix SC2129 (consolidate redirects) in `workers/ralph/sync_cortex_plan.sh` line 160
+- [ ] **2.3.5** Fix SC2086 (quote variable) in `workers/ralph/sync_cortex_plan.sh` line 164
+- [ ] **2.3.6** Fix SC2129 (consolidate redirects) in `workers/ralph/sync_cortex_plan.sh` line 168
+- [ ] **2.3.7** Fix SC2162 (read without -r) in `workers/ralph/thunk_ralph_tasks.sh` line 379
+- [ ] **2.3.8** Fix SC2094 (read/write same file) in `workers/ralph/verifier.sh` lines 395-396 - **PROTECTED FILE**
 
-  - **AC:**
+### Phase 2.4: Markdownlint Issues (3 tasks)
 
-    - [ ] README.md updated with Quick Start section
-    - [ ] Setup instructions are clear and accurate
-    - [ ] Command examples are included
-    - [ ] Changes committed to current branch (NOT main)
-  - **If Blocked:** Ask for clarification on setup.sh location or behavior
+- [ ] **2.4.1** Fix MD032 (blank lines around lists) in markdown files
+- [ ] **2.4.2** Fix MD031 (blank lines around fences) in markdown files
+- [ ] **2.4.3** Fix MD022 (blank lines around headings) in markdown files
 
----
+### Phase 2.5: shfmt Formatting (2 tasks)
 
-### Phase 1: Quick Fixes (Priority: MEDIUM)
+- [ ] **2.5.1** Fix shfmt formatting in `workers/ralph/current_ralph_tasks.sh`
+  - **Fix:** Run `shfmt -w -i 2 workers/ralph/current_ralph_tasks.sh`
+- [ ] **2.5.2** Fix shfmt formatting in `workers/ralph/thunk_ralph_tasks.sh`
+  - **Fix:** Run `shfmt -w -i 2 workers/ralph/thunk_ralph_tasks.sh`
 
-These are low-effort tasks that provide immediate value. Ralph should complete these in order.
+### Phase 2.6: Final Verification (1 task)
 
----
-
-### Task 1.0: Fix KB→Skills terminology in templates
-
-- **Goal:** Replace confusing "KB" (Knowledge Base) terminology with correct "Skills" terminology
-- **Context:** Templates use "KB" inconsistently, which is confusing
-  - "Brain skills repository" = correct (cross-project reusable patterns at `brain/skills/`)
-  - "kb/" = local project knowledge (project-specific, not cross-project)
-  - "KB" is ambiguous and should be replaced
-- **Files to Update:**
-  - `templates/AGENTS.project.md`
-  - `templates/backend/AGENTS.project.md`
-  - `templates/python/AGENTS.project.md`
-  - `templates/cortex/AGENTS.project.md`
-- **Changes:**
-  - Find: "Knowledge Base (MUST USE)"
-  - Replace: "Brain Skills Repository (MUST USE)"
-  - Find: "KB lookups"
-  - Replace: "Skills lookups"
-  - Find: "Create a KB file"
-  - Replace: "Create a skill file" (or "Create a local kb/ file" if referring to project-local knowledge)
-  - Find: "Project knowledge base"
-  - Replace: "Brain skills repository" (when referring to brain/skills/) OR "Project kb/ directory" (when referring to local knowledge)
-- **Important:** Keep "kb/" references when they refer to project-local knowledge directories
-- **AC:**
-
-  - [ ] "KB" replaced with "Skills" in all 4 template AGENTS files
-  - [ ] "Knowledge Base" → "Brain Skills Repository" or "Brain skills repository"
-  - [ ] Project-local "kb/" references preserved and clarified
-  - [ ] Grep check: `grep -r "Knowledge Base\|KB lookups" templates/` returns no matches (except kb/ directory references)
-
-- **If Blocked:** Search templates for "KB" to find all occurrences
+- [ ] **2.6.1** Run full pre-commit and verify all pass
+  - **AC:** `pre-commit run --all-files` exits with code 0
 
 ---
 
-### Task 1.1: Copy SKILL_TEMPLATE to templates
+## Phase 3: Worker Separation - Ralph/Cerebras (29 tasks)
 
-**Goal:** Ensure template directory has the skill template for new projects
+**Goal:** Separate workers into `workers/ralph/` (rovodev/opencode) and `workers/cerebras/` (cerebras API).
 
-**Subtasks:**
+### Phase 3.1: Create Shared Infrastructure in `/workers/` (3 tasks)
 
-- [ ] Copy `skills/self-improvement/SKILL_TEMPLATE.md` to `templates/ralph/SKILL_TEMPLATE.md`
-- [ ] Verify content matches source
+- [ ] **3.1.1** Move `workers/ralph/VALIDATION_CRITERIA.md` → `workers/VALIDATION_CRITERIA.md`
+- [ ] **3.1.2** Move `workers/ralph/sync_cortex_plan.sh` → `workers/sync_cortex_plan.sh`
+- [ ] **3.1.3** Move `workers/ralph/render_ac_status.sh` → `workers/render_ac_status.md`
 
-**Constraints:**
+### Phase 3.2: Create `workers/cerebras/` Directory (3 tasks)
 
-- Do not modify the source file
-- Preserve exact content (no edits)
+- [ ] **3.2.1** Create `workers/cerebras/` directory
+- [ ] **3.2.2** Move `workers/ralph/PROMPT_cerebras.md` → `workers/cerebras/PROMPT_cerebras.md`
+- [ ] **3.2.3** Create `workers/cerebras/NEURONS.md` (cerebras-specific structure map)
 
-**Inputs:**
+### Phase 3.3: Create Cerebras-specific `loop.sh` (3 tasks)
 
-- Source: `skills/self-improvement/SKILL_TEMPLATE.md` (exists, 2751 bytes)
-- Destination: `templates/ralph/SKILL_TEMPLATE.md` (missing)
+- [ ] **3.3.1** Copy `workers/ralph/loop.sh` → `workers/cerebras/loop.sh`
+- [ ] **3.3.2** Remove opencode runner code from `workers/cerebras/loop.sh`
+- [ ] **3.3.3** Set default runner to `cerebras` (remove runner selection logic)
 
-**Acceptance Criteria:**
+### Phase 3.4: Clean Ralph's `loop.sh` (3 tasks)
 
-- [ ] File exists at `templates/ralph/SKILL_TEMPLATE.md`
-- [ ] `diff skills/self-improvement/SKILL_TEMPLATE.md templates/ralph/SKILL_TEMPLATE.md` returns no differences
+- [ ] **3.4.1** Remove `resolve_model_cerebras()` function from `workers/ralph/loop.sh`
+- [ ] **3.4.2** Remove cerebras runner dispatch code from `workers/ralph/loop.sh`
+- [ ] **3.4.3** Remove `--runner cerebras` option from help text and argument parsing
 
-**If Blocked:** Report to Cortex if source file is missing
+### Phase 3.5: Update All Path References (4 tasks)
 
-**Estimated Effort:** <2 minutes
+- [ ] **3.5.1** Update `workers/ralph/current_ralph_tasks.sh` to reference `../IMPLEMENTATION_PLAN.md`
+- [ ] **3.5.2** Update `workers/ralph/pr-batch.sh` path references if needed
+- [ ] **3.5.3** Update `cortex/snapshot.sh` to reference new shared paths
+- [ ] **3.5.4** Update root `AGENTS.md` with new worker structure documentation
 
----
+### Phase 3.6: Verification & Cleanup (3 tasks)
 
-### Task 1.2: Fix "Brain KB" terminology in templates
+- [ ] **3.6.1** Run `bash workers/verifier.sh` and confirm all checks pass
+- [ ] **3.6.2** Test `bash workers/cerebras/loop.sh --help` works correctly
+- [ ] **3.6.3** Update hash baselines in `workers/.verify/` for moved files
 
-**Goal:** Complete terminology migration from "KB" to "Skills"
+### Phase 3.7: Additional Shellcheck Fixes for Separation (10 tasks)
 
-**Subtasks:**
-
-- [ ] Edit `templates/NEURONS.project.md` line containing "Brain KB patterns"
-- [ ] Replace "Brain KB" with "Brain Skills"
-
-**Constraints:**
-
-- Only change terminology, not meaning
-- Single file edit required
-
-**Inputs:**
-
-- File: `templates/NEURONS.project.md`
-- Line: `- **Brain KB patterns** → See...`
-- Command to verify: `rg "Brain KB" templates/`
-
-**Acceptance Criteria:**
-
-- [ ] `rg "Brain KB" templates/ | wc -l` returns 0
-- [ ] Line now reads `- **Brain Skills patterns** → See...`
-
-**If Blocked:** If file is protected, document for human review
-
-**Estimated Effort:** <2 minutes
-
----
-
-### Task 1.3: Fix thunk_ralph_tasks.sh footer display bug (NEW)
-
-**Problem:** When new thunks are added incrementally, the HOTKEYS footer box doesn't reposition correctly - it stays in place and new content appears above/over it, causing display corruption.
-
-**Root cause:** `parse_new_thunk_entries()` appends new entries at `LAST_CONTENT_ROW` but the footer redraw logic doesn't properly clear the old footer before drawing the new one at the updated position.
-
-**Fix:**
-
-- [ ] **1.3.1** In `parse_new_thunk_entries()`, before redrawing footer, clear the OLD footer lines (9 lines starting at old `LAST_CONTENT_ROW`)
-- [ ] **1.3.2** Update `LAST_CONTENT_ROW` to `append_row` BEFORE redrawing footer
-- [ ] **1.3.3** Test: Run `thunk_ralph_tasks.sh`, complete a task in another terminal, verify footer moves down cleanly
-
-**AC:** Footer (HOTKEYS box) repositions correctly when new thunks appear; no visual artifacts
-
----
-
-### Task 1.4: Fix maintenance script paths (NEW)
-
-**Goal:** Fix verify-brain.sh to find skills/ at correct location
-
-**Subtasks:**
-
-- [ ] Update `workers/ralph/.maintenance/verify-brain.sh` to use correct paths
-- [ ] Change `skills/index.md` check to use `../../../skills/index.md` or absolute path detection
-- [ ] Change `skills/SUMMARY.md` check similarly
-- [ ] Test script reports 0 issues after fix
-
-**Constraints:**
-
-- Script must work when run from `workers/ralph/.maintenance/` directory
-- Must also work from repo root if invoked directly
-- Use portable path resolution (not hardcoded absolute paths)
-
-**Inputs:**
-
-- Script: `workers/ralph/.maintenance/verify-brain.sh`
-- Skills location: `brain/skills/` (3 levels up from .maintenance/)
-
-**Acceptance Criteria:**
-
-- [ ] `bash workers/ralph/.maintenance/verify-brain.sh` reports 0 issues
-- [ ] Script correctly finds `skills/index.md` and `skills/SUMMARY.md`
-
-**If Blocked:** Document path resolution approach in THUNK.md
-
-**Estimated Effort:** 5-10 minutes
-
----
-
-## Queued Task Contracts
-
-### Phase 2: Shell Script Cleanup (Priority: MEDIUM)
-
-**Note:** Complete Phase 1 first. Phase 2 tasks improve code quality but are lower priority.
-
-Tasks in Ralph's IMPLEMENTATION_PLAN.md. Order of execution:
-
-1. `current_ralph_tasks.sh` fixes (2.1-2.8)
-2. `thunk_ralph_tasks.sh` fixes (2.9-2.14)
-3. `pr-batch.sh` (2.15)
-4. Template sync (resolve WARN.T1, WARN.T2)
-
-### Phase 3: Quick Reference Tables (Priority: MEDIUM)
-
-Maintenance script says all skills have Quick Reference tables. **Verify this is accurate** given the path bug - may be false positive.
-
-### Phase 5: Design Decisions (Priority: LOW)
-
-**⚠️ Requires Human Approval:** Tasks modify protected files (loop.sh).
-
-Defer until Phases 1-3 complete.
-
----
-
-## Deferred Items
-
-### Phase 6: PR #4 D-Items Review
-
-**Recommendation:** Many D-items may be obsolete after Phase 0-A/0-B restructure.
-
-**Action:** Ralph should review D-items and mark obsolete ones as resolved.
-
-### Phase 7: Maintenance
-
-Ongoing - run `bash workers/ralph/.maintenance/verify-brain.sh` after Phase 1.3 fix.
-
----
-
-## Phase 9: Worker Separation - Ralph/Cerebras (Priority: HIGH)
-
-**Goal:** Separate `workers/ralph/` into two distinct workers: `workers/ralph/` (rovodev/opencode) and `workers/cerebras/` (cerebras API runner). Shared infrastructure moves to `workers/`.
-
-**Background:** The current `loop.sh` has 3 runners mixed together. This separation:
-
-- Makes each worker self-contained and focused
-- Shared files (verifier, task lists) live in parent `workers/` folder
-- Easier to maintain and extend each runner independently
-
-### Phase 9.1: Create Shared Infrastructure in `/workers/`
-
-- [ ] **9.1.1** Move `workers/ralph/.verify/` → `workers/.verify/`
-- [ ] **9.1.2** Move `workers/ralph/verifier.sh` → `workers/verifier.sh`
-- [x] **9.1.3** Move `workers/ralph/IMPLEMENTATION_PLAN.md` → `workers/IMPLEMENTATION_PLAN.md`
-- [ ] **9.1.4** Move `workers/ralph/THUNK.md` → `workers/THUNK.md`
-- [ ] **9.1.5** Move `workers/ralph/VALIDATION_CRITERIA.md` → `workers/VALIDATION_CRITERIA.md`
-- [ ] **9.1.6** Move `workers/ralph/thunk_ralph_tasks.sh` → `workers/thunk_ralph_tasks.sh`
-- [ ] **9.1.7** Move `workers/ralph/sync_cortex_plan.sh` → `workers/sync_cortex_plan.sh`
-- [ ] **9.1.8** Move `workers/ralph/init_verifier_baselines.sh` → `workers/init_verifier_baselines.sh`
-- [ ] **9.1.9** Move `workers/ralph/render_ac_status.sh` → `workers/render_ac_status.sh`
-
-### Phase 9.2: Create `workers/cerebras/` Directory
-
-- [ ] **9.2.1** Create `workers/cerebras/` directory
-- [ ] **9.2.2** Move `workers/ralph/cerebras_agent.py` → `workers/cerebras/cerebras_agent.py`
-- [ ] **9.2.3** Move `workers/ralph/PROMPT_cerebras.md` → `workers/cerebras/PROMPT_cerebras.md`
-- [ ] **9.2.4** Move `workers/ralph/CEREBRAS_AGENT.md` → `workers/cerebras/AGENTS.md` (rename)
-- [ ] **9.2.5** Create `workers/cerebras/NEURONS.md` (cerebras-specific structure map)
-- [ ] **9.2.6** Create `workers/cerebras/README.md` (cerebras worker documentation)
-
-### Phase 9.3: Create Cerebras-specific `loop.sh`
-
-- [ ] **9.3.1** Copy `workers/ralph/loop.sh` → `workers/cerebras/loop.sh`
-- [ ] **9.3.2** Remove rovodev runner code from `workers/cerebras/loop.sh`
-- [ ] **9.3.3** Remove opencode runner code from `workers/cerebras/loop.sh`
-- [ ] **9.3.4** Update path references in `workers/cerebras/loop.sh` to use `../verifier.sh`, `../IMPLEMENTATION_PLAN.md`, etc.
-- [ ] **9.3.5** Set default runner to `cerebras` (remove runner selection logic)
-
-### Phase 9.4: Clean Ralph's `loop.sh`
-
-- [ ] **9.4.1** Remove `resolve_model_cerebras()` function from `workers/ralph/loop.sh`
-- [ ] **9.4.2** Remove `run_cerebras_api()` function from `workers/ralph/loop.sh`
-- [ ] **9.4.3** Remove cerebras runner dispatch code from `workers/ralph/loop.sh`
-- [ ] **9.4.4** Remove cerebras dependency checks from `workers/ralph/loop.sh`
-- [ ] **9.4.5** Remove `--runner cerebras` option from help text and argument parsing
-- [ ] **9.4.6** Update path references in `workers/ralph/loop.sh` to use `../verifier.sh`, `../IMPLEMENTATION_PLAN.md`, etc.
-
-### Phase 9.5: Update All Path References
-
-- [ ] **9.5.1** Update `workers/ralph/current_ralph_tasks.sh` to reference `../IMPLEMENTATION_PLAN.md`
-- [ ] **9.5.2** Update `workers/ralph/new-project.sh` path references if needed
-- [ ] **9.5.3** Update `workers/ralph/pr-batch.sh` path references if needed
-- [ ] **9.5.4** Update `workers/ralph/ralph.sh` path references if needed
-- [ ] **9.5.5** Update `cortex/snapshot.sh` to reference new shared paths
-- [ ] **9.5.6** Update `cortex/AGENTS.md` with new worker structure documentation
-- [ ] **9.5.7** Update root `AGENTS.md` with new worker structure documentation
-- [ ] **9.5.8** Update root `NEURONS.md` with new directory structure
-
-### Phase 9.6: Verification & Cleanup
-
-- [ ] **9.6.1** Run `bash workers/verifier.sh` and confirm all checks pass
-- [ ] **9.6.2** Test `bash workers/ralph/loop.sh --help` works correctly
-- [ ] **9.6.3** Test `bash workers/cerebras/loop.sh --help` works correctly
-- [ ] **9.6.4** Remove any leftover cerebras files from `workers/ralph/`
-- [ ] **9.6.5** Update hash baselines in `workers/.verify/` for moved files
-- [ ] **9.6.6** Commit with message: `refactor(workers): separate ralph and cerebras into distinct workers`
+- [ ] **3.7.1** Fix SC2034 (unused SECTION_HEADER) in `workers/ralph/current_ralph_tasks.sh` line 53
+- [ ] **3.7.2** Fix SC2034 (unused FIRST_RUN) in `workers/ralph/current_ralph_tasks.sh` line 90
+- [ ] **3.7.3** Fix SC2086 (unquoted var) in `workers/ralph/current_ralph_tasks.sh` line 488
+- [ ] **3.7.4** Fix SC2155 (local/assign) in `workers/ralph/current_ralph_tasks.sh` line 509
+- [ ] **3.7.5** Fix SC2086 (unquoted phase7_line) in `workers/ralph/current_ralph_tasks.sh` line 515
+- [ ] **3.7.6** Fix SC2155 (local/assign) in `workers/ralph/pr-batch.sh` lines 102, 190
+- [ ] **3.7.7** Fix SC2162 (read -r) in `workers/ralph/current_ralph_tasks.sh` lines 261, 558
+- [ ] **3.7.8** Fix SC2162 (read -r) in `workers/ralph/loop.sh` lines 457, 498
+- [ ] **3.7.9** Fix SC2002 (useless cat) in `workers/ralph/loop.sh` line 666
+- [ ] **3.7.10** Fix SC2086 (unquoted attach_flag) in `workers/ralph/loop.sh` line 765
 
 **Acceptance Criteria:**
 
 - [ ] `workers/ralph/loop.sh` only has rovodev and opencode runners
 - [ ] `workers/cerebras/loop.sh` only has cerebras runner
-- [ ] Shared files exist in `workers/` (verifier.sh, IMPLEMENTATION_PLAN.md, THUNK.md, etc.)
-- [ ] Both `loop.sh` scripts reference shared files correctly
+- [ ] Shared files exist in `workers/`
 - [ ] `bash workers/verifier.sh` passes all checks
-- [ ] No cerebras-related files remain in `workers/ralph/`
+
+---
+
+## Phase 4: Shell Script Formatting Consistency (1 task)
+
+- [ ] **4.1** Run `shfmt -w -i 2 workers/ralph/*.sh templates/ralph/*.sh` to normalize all shell scripts
+  - **AC:** `shfmt -d workers/ralph/*.sh templates/ralph/*.sh` returns no diff
+
+---
+
+## Phase 5: Documentation & Terminology (6 tasks)
+
+### Task 5.1: Update README.md with setup instructions
+
+- [ ] **5.1.1** Add Quick Start section to README.md
+- [ ] **5.1.2** Document what setup.sh does
+- [ ] **5.1.3** Add available commands examples
+
+**AC:** README.md has clear Quick Start and setup documentation
+
+### Task 5.2: Fix KB→Skills terminology in templates
+
+- [ ] **5.2.1** Update `templates/AGENTS.project.md`
+- [ ] **5.2.2** Update `templates/backend/AGENTS.project.md`
+- [ ] **5.2.3** Update `templates/python/AGENTS.project.md`
+- [ ] **5.2.4** Update `templates/cortex/AGENTS.project.md`
+
+**AC:** `grep -r "Knowledge Base\|KB lookups" templates/` returns no matches
+
+### Task 5.3: Copy SKILL_TEMPLATE to templates
+
+- [ ] **5.3.1** Copy `skills/self-improvement/SKILL_TEMPLATE.md` to `templates/ralph/SKILL_TEMPLATE.md`
+
+**AC:** File exists and matches source
+
+### Task 5.4: Fix "Brain KB" terminology
+
+- [ ] **5.4.1** Edit `templates/NEURONS.project.md` - replace "Brain KB" with "Brain Skills"
+
+**AC:** `rg "Brain KB" templates/ | wc -l` returns 0
+
+### Task 5.5: Fix thunk_ralph_tasks.sh footer display bug
+
+- [ ] **5.5.1** In `parse_new_thunk_entries()`, clear OLD footer lines before redrawing
+- [ ] **5.5.2** Update `LAST_CONTENT_ROW` BEFORE redrawing footer
+
+**AC:** Footer repositions cleanly when new thunks appear
+
+### Task 5.6: Fix maintenance script paths
+
+- [ ] **5.6.1** Update `workers/ralph/.maintenance/verify-brain.sh` to use correct paths
+
+**AC:** `bash workers/ralph/.maintenance/verify-brain.sh` reports 0 issues
+
+---
 
 <!-- Cortex will add new Task Contracts above this line -->
