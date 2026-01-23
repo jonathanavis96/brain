@@ -54,6 +54,18 @@ See **workers/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown (123 
 - [x] **WARN.MD.7-10** Fix all MD violations in `cortex/DECISIONS.md` - MD022 (blank lines around headings), MD032 (blank lines around lists), MD031 (blank lines around fences), MD038 (spaces in code spans)
 - [x] **WARN.MD.11** Fix all MD violations in `cortex/IMPLEMENTATION_PLAN.md` - MD032, MD031, MD060, MD009 (multiple formatting issues)
 
+### Verifier Warnings (AUTO CHECK FAILED - WARN GATE) (MEDIUM Priority)
+
+**Note:** These are from the latest verifier run (2026-01-23 14:07:49). Each warning needs investigation to determine if it's a real issue or requires a waiver.
+
+- [ ] **WARN.Template.1.workers-ralph** Template.1 (auto check failed but warn gate) - Investigate template synchronization issue in workers/ralph/
+- [ ] **WARN.Hygiene.TemplateSync.1** Hygiene.TemplateSync.1 (auto check failed but warn gate) - Investigate template hygiene issue #1
+- [ ] **WARN.Hygiene.TemplateSync.2** Hygiene.TemplateSync.2 (auto check failed but warn gate) - Investigate template hygiene issue #2
+- [ ] **WARN.Lint.Shellcheck.LoopSh** Lint.Shellcheck.LoopSh (auto check failed but warn gate) - Investigate shellcheck issues in workers/ralph/loop.sh
+- [ ] **WARN.Lint.Shellcheck.VerifierSh** Lint.Shellcheck.VerifierSh (auto check failed but warn gate) - Investigate shellcheck issues in workers/ralph/verifier.sh
+- [ ] **WARN.Lint.Shellcheck.CurrentRalphTasks** Lint.Shellcheck.CurrentRalphTasks (auto check failed but warn gate) - Investigate shellcheck issues in workers/ralph/current_ralph_tasks.sh
+- [ ] **WARN.Lint.Shellcheck.ThunkRalphTasks** Lint.Shellcheck.ThunkRalphTasks (auto check failed but warn gate) - Investigate shellcheck issues in workers/ralph/thunk_ralph_tasks.sh
+
 ---
 
 ## Phase 1: High Priority - Core Documentation
