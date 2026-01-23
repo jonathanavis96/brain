@@ -48,7 +48,7 @@
 
 ### Phase 3.6: Worker Independence Testing (2 tasks)
 
-- [ ] **3.6.1** Test `bash workers/ralph/loop.sh --help` works correctly
+- [x] **3.6.1** Test `bash workers/ralph/loop.sh --help` works correctly
   - Verify help text shows only rovodev/opencode runners
   - Verify no cerebras mentions in output
   - **AC:** Help text clean, no errors
