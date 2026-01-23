@@ -44,7 +44,7 @@ Phases 0, 2, 3, 4, 5, 6 completed - see `workers/ralph/THUNK.md` for details.
   - **Fixes:** Protected.1
   - **Note:** This is a HUMAN task - Ralph cannot modify hash baselines
 
-- [ ] **9.1.3** Sync `loop.sh` template with workers version
+- [x] **9.1.3** Sync `loop.sh` template with workers version
   - **AC:** Hygiene.TemplateSync.2 check passes
   - **Fixes:** Hygiene.TemplateSync.2
 
