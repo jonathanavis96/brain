@@ -36,6 +36,7 @@
 ### Quick Action Guide
 
 **If you see a verifier failure (LAST_VERIFIER_RESULT: FAIL):**
+
 1. Read `.verify/latest.txt` to identify which rule(s) failed
 2. Look up the rule in the table above
 3. If it says "HUMAN INTERVENTION REQUIRED" - stop and report
@@ -43,6 +44,7 @@
 5. Apply the fix and commit with: `fix(ralph): resolve AC failure <RULE_ID>`
 
 **If you encounter a runtime error (command/tool failure):**
+
 1. Note the error type (shell, Python, API, etc.)
 2. Look up the error type in the "Common Runtime Errors" table above
 3. Read the linked skill document
@@ -74,6 +76,7 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
   - [Markdown Patterns](domains/markdown-patterns.md) - Lint rules (MD040, MD024, MD050), documentation accuracy
   - [Python Patterns](domains/python-patterns.md) - datetime, f-strings, JSON handling, type hints, import scope
   - [Testing Patterns](domains/testing-patterns.md) - Unit, integration, e2e testing across Jest, pytest, Go testing
+  - [Token Efficiency](domains/code-quality/token-efficiency.md) - Token optimization strategies for AI agents
   - [Ralph Loop Architecture](domains/ralph-patterns.md) - How Ralph works internally (subagents, tool visibility, execution flow)
   - [Bootstrap Patterns](domains/bootstrap-patterns.md) - Project bootstrapping, scaffold templates, initialization flows
   - [Code Hygiene](domains/code-hygiene.md) - Dead code removal, linting, formatting consistency
@@ -86,6 +89,38 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
     - [Variable Patterns](domains/shell/variable-patterns.md) - SC2155, SC2034, scoping
     - [Cleanup Patterns](domains/shell/cleanup-patterns.md) - Traps, temp files, state restoration
     - [Common Pitfalls](domains/shell/common-pitfalls.md) - TTY guards, magic numbers, DRY
+  - **[Website Development](domains/websites/README.md)** - Website development overview
+    - **Architecture**
+      - [Section Composer](domains/websites/architecture/section-composer.md) - Section-based page composition
+      - [Sitemap Builder](domains/websites/architecture/sitemap-builder.md) - Sitemap planning and structure
+      - [Tech Stack Chooser](domains/websites/architecture/tech-stack-chooser.md) - Technology selection guidance
+    - **Build**
+      - [Analytics Tracking](domains/websites/build/analytics-tracking.md) - Analytics integration patterns
+      - [Component Development](domains/websites/build/component-development.md) - Component development workflow
+      - [Forms Integration](domains/websites/build/forms-integration.md) - Form handling and integration
+      - [Mobile First](domains/websites/build/mobile-first.md) - Mobile-first development approach
+      - [Performance](domains/websites/build/performance.md) - Performance optimization strategies
+      - [SEO Foundations](domains/websites/build/seo-foundations.md) - SEO fundamentals
+    - **Copywriting**
+      - [CTA Optimizer](domains/websites/copywriting/cta-optimizer.md) - Call-to-action optimization
+      - [Objection Handler](domains/websites/copywriting/objection-handler.md) - Objection handling in copy
+      - [Value Proposition](domains/websites/copywriting/value-proposition.md) - Value proposition development
+    - **Design**
+      - [Color System](domains/websites/design/color-system.md) - Color system design
+      - [Design Direction](domains/websites/design/design-direction.md) - Design direction and vision
+      - [Spacing Layout](domains/websites/design/spacing-layout.md) - Spacing and layout systems
+      - [Typography System](domains/websites/design/typography-system.md) - Typography system design
+    - **Discovery**
+      - [Audience Mapping](domains/websites/discovery/audience-mapping.md) - Audience research and mapping
+      - [Requirements Distiller](domains/websites/discovery/requirements-distiller.md) - Requirements gathering and distillation
+      - [Scope Control](domains/websites/discovery/scope-control.md) - Scope management
+    - **Launch**
+      - [Deployment](domains/websites/launch/deployment.md) - Deployment procedures
+      - [Finishing Pass](domains/websites/launch/finishing-pass.md) - Final QA and polish
+    - **QA**
+      - [Acceptance Criteria](domains/websites/qa/acceptance-criteria.md) - Acceptance criteria definition
+      - [Accessibility](domains/websites/qa/accessibility.md) - Accessibility testing and compliance
+      - [Visual QA](domains/websites/qa/visual-qa.md) - Visual quality assurance
 - **[Projects](projects/README.md)** - Project-specific conventions, decisions, and context
   - [Brain Repository](projects/brain-example.md) - Brain-specific conventions and Ralph usage
 - **[Self-Improvement](self-improvement/README.md)** - Gap capture and skill promotion system
