@@ -16,7 +16,7 @@ The brain repository has **two implementation plans**:
 **Current Status Summary:**
 
 - ✅ **Phase 0-Sync** - Infrastructure setup COMPLETE
-- ⚠️ **Phase 0-Warn** - Verifier warnings resolved, markdown lint tasks added (22/44 complete: 2 shfmt complete, 4 cortex MD complete, 6 verifier warnings complete, 10 shellcheck complete; 11 new MD tasks pending across skills/ and templates/)
+- ⚠️ **Phase 0-Warn** - Verifier warnings resolved, markdown lint tasks added (19/88 complete: 2 shfmt complete, 4 cortex MD complete, 3 cortex analysis MD complete, 6 skills MD complete, 4 root verifier warnings complete; 69 new MD tasks pending across skills/ and templates/)
 - ✅ **Phase 0-A/B** - Cortex manager pack COMPLETE (31/31 tasks)
 - ✅ **Phase 0-Quick** - Quick wins COMPLETE (8/8 tasks)
 - 📋 **Phase 1-8** - Shell cleanup, documentation, optimization (0/49 complete)
@@ -79,10 +79,76 @@ See **workers/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown.
 - [x] **WARN.MD.19.skills** Fix MD violations in `skills/self-improvement/SKILL_TEMPLATE.md` - MD022 (blanks around headings), MD032 (blanks around lists)
 - [ ] **WARN.MD.20.skills** Fix MD violations in `skills/domains/websites/architecture/sitemap-builder.md` - MD032 (blanks around lists), MD022 (blanks around headings), MD031 (blanks around fences), MD040 (fence language tags)
 - [ ] **WARN.MD.21.skills** Fix MD violations in `skills/domains/websites/build/analytics-tracking.md` - MD032 (blanks around lists), MD022 (blanks around headings), MD031 (blanks around fences)
+- [ ] **WARN.MD.22.skills** Fix MD violations in `skills/conventions.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.23.skills** Fix MD violations in `skills/domains/README.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.24.skills** Fix MD violations in `skills/domains/backend/api-design-patterns.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.25.skills** Fix MD violations in `skills/domains/backend/auth-patterns.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.26.skills** Fix MD violations in `skills/domains/backend/caching-patterns.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.27.skills** Fix MD violations in `skills/domains/backend/config-patterns.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.28.skills** Fix MD violations in `skills/domains/backend/database-patterns.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.29.skills** Fix MD violations in `skills/domains/backend/error-handling-patterns.md` - MD032, MD031, MD036 violations
+- [ ] **WARN.MD.30.skills** Fix MD violations in `skills/domains/code-quality/testing-patterns.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.31.skills** Fix MD violations in `skills/domains/infrastructure/deployment-patterns.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.32.skills** Fix MD violations in `skills/domains/infrastructure/security-patterns.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.33.skills** Fix MD violations in `skills/domains/infrastructure/state-management-patterns.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.34.skills** Fix MD violations in `skills/domains/languages/python/python-patterns.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.35.skills** Fix MD violations in `skills/domains/languages/shell/README.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.36.skills** Fix MD violations in `skills/domains/ralph/ralph-patterns.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.37.skills** Fix MD violations in `skills/domains/websites/README.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.38.skills** Fix MD violations in `skills/domains/websites/architecture/section-composer.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.39.skills** Fix MD violations in `skills/domains/websites/architecture/tech-stack-chooser.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.40.skills** Fix MD violations in `skills/domains/websites/build/component-development.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.41.skills** Fix MD violations in `skills/domains/websites/build/forms-integration.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.42.skills** Fix MD violations in `skills/domains/websites/build/mobile-first.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.43.skills** Fix MD violations in `skills/domains/websites/build/performance.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.44.skills** Fix MD violations in `skills/domains/websites/build/seo-foundations.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.45.skills** Fix MD violations in `skills/domains/websites/copywriting/cta-optimizer.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.46.skills** Fix MD violations in `skills/domains/websites/copywriting/objection-handler.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.47.skills** Fix MD violations in `skills/domains/websites/copywriting/value-proposition.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.48.skills** Fix MD violations in `skills/domains/websites/design/color-system.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.49.skills** Fix MD violations in `skills/domains/websites/design/design-direction.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.50.skills** Fix MD violations in `skills/domains/websites/design/spacing-layout.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.51.skills** Fix MD violations in `skills/domains/websites/design/typography-system.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.52.skills** Fix MD violations in `skills/domains/websites/discovery/audience-mapping.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.53.skills** Fix MD violations in `skills/domains/websites/discovery/requirements-distiller.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.54.skills** Fix MD violations in `skills/domains/websites/discovery/scope-control.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.55.skills** Fix MD violations in `skills/domains/websites/launch/deployment.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.56.skills** Fix MD violations in `skills/domains/websites/launch/finishing-pass.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.57.skills** Fix MD violations in `skills/domains/websites/qa/accessibility.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.58.skills** Fix MD violations in `skills/domains/websites/qa/visual-qa.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.59.skills** Fix MD violations in `skills/index.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.60.skills** Fix MD violations in `skills/projects/brain-example.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.61.skills** Fix MD violations in `skills/self-improvement/GAP_BACKLOG.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.62.skills** Fix MD violations in `skills/self-improvement/README.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.63.skills** Fix MD violations in `skills/self-improvement/SKILL_BACKLOG.md` - MD032, MD022, MD031 violations
 
 #### Template Files (NEW - from pre-commit scan)
 
-- [ ] **WARN.MD.22.templates** Fix MD violations in `templates/cortex/AGENTS.project.md` - MD022 (blanks around headings), MD032 (blanks around lists), MD031 (blanks around fences), MD034 (bare URLs)
+- [ ] **WARN.MD.64.templates** Fix MD violations in `templates/cortex/AGENTS.project.md` - MD022 (blanks around headings), MD032 (blanks around lists), MD031 (blanks around fences), MD034 (bare URLs)
+- [ ] **WARN.MD.65.templates** Fix MD violations in `templates/AGENTS.project.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.66.templates** Fix MD violations in `templates/NEURONS.project.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.67.templates** Fix MD violations in `templates/NEW_PROJECT_IDEA.template.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.68.templates** Fix MD violations in `templates/README.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.69.templates** Fix MD violations in `templates/THOUGHTS.project.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.70.templates** Fix MD violations in `templates/backend/AGENTS.project.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.71.templates** Fix MD violations in `templates/backend/NEURONS.project.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.72.templates** Fix MD violations in `templates/backend/THOUGHTS.project.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.73.templates** Fix MD violations in `templates/backend/VALIDATION_CRITERIA.project.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.74.templates** Fix MD violations in `templates/cortex/CORTEX_SYSTEM_PROMPT.project.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.75.templates** Fix MD violations in `templates/cortex/DECISIONS.project.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.76.templates** Fix MD violations in `templates/cortex/THOUGHTS.project.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.77.templates** Fix MD violations in `templates/fix_plan.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.78.templates** Fix MD violations in `templates/python/AGENTS.project.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.79.templates** Fix MD violations in `templates/python/NEURONS.project.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.80.templates** Fix MD violations in `templates/python/THOUGHTS.project.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.81.templates** Fix MD violations in `templates/python/VALIDATION_CRITERIA.project.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.82.templates** Fix MD violations in `templates/ralph-cleanup-fix.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.83.templates** Fix MD violations in `templates/ralph/IMPLEMENTATION_PLAN.project.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.84.templates** Fix MD violations in `templates/ralph/RALPH.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.85.templates** Fix MD violations in `templates/ralph/SKILL_TEMPLATE.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.86.templates** Fix MD violations in `templates/ralph/THUNK.project.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.87.templates** Fix MD violations in `templates/ralph/VALIDATION_CRITERIA.project.md` - MD032, MD022, MD031 violations
+- [ ] **WARN.MD.88.templates** Fix MD violations in `templates/ralph/docs/WAIVER_PROTOCOL.md` - MD022, MD032, MD031 violations
 
 ### Verifier Warnings (AUTO CHECK FAILED - WARN GATE) (MEDIUM Priority)
 
