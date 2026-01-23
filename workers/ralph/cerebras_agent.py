@@ -512,6 +512,12 @@ def execute_bash(
     command: str, cwd: str | None = None, timeout: int = 300
 ) -> ToolResult:
     """Execute a bash command."""
+    # Warn if trying to use bash for git commits (should use git_commit tool instead)
+    if "git commit" in command or "git add" in command and "commit" in command:
+        hint = "\n[HINT: Use the git_commit tool instead of bash for commits - it auto-retries if pre-commit hooks modify files]"
+    else:
+        hint = ""
+
     try:
         result = subprocess.run(
             ["bash", "-c", command],
@@ -541,6 +547,7 @@ def execute_bash(
         if stderr:
             output += f"\n[stderr]: {stderr}" if output else f"[stderr]: {stderr}"
         output += f"\n[exit: {result.returncode}]"
+        output += hint  # Add hint if using bash for git commits
 
         return ToolResult(
             success=result.returncode == 0, output=output.strip(), truncated=truncated
