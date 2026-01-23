@@ -2,16 +2,23 @@
 
 **Status:** Active  
 **Branch:** `brain-work`  
-**Last Updated:** 2026-01-23 22:10:00
+**Last Updated:** 2026-01-23 23:12:15
 
 ---
 
-## Phase 0-Warn: Verifier Warnings (FALSE POSITIVES - Request Waivers)
+## Phase 0-Warn: Verifier Warnings
 
-These are all false positives - shellcheck passes, files are in sync:
+### Immediate Fixes (9 warnings)
 
-- [x] **WARN.TemplateSync.1.current** Sync current_ralph_tasks.sh to template (workers has perf optimizations)
-- [x] **WARN.TemplateSync.2.loop** loop.sh path differences - BY DESIGN (workers/ralph/ vs ralph/)
+- [ ] **0.W.1** Fix NEURONS.md unbalanced code fences - 20 opens, 0 closes (likely using ````markdown blocks)
+- [ ] **0.W.2** Fix THOUGHTS.md unbalanced code fences - 4 opens, 0 closes (likely using ````text blocks)
+- [ ] **0.W.3** Sync current_ralph_tasks.sh to templates/ralph/ (Hygiene.TemplateSync.1)
+- [ ] **0.W.4** Fix SC issues in templates/ralph/loop.sh (Lint.Shellcheck.LoopSh)
+- [ ] **0.W.5** Fix SC issues in templates/ralph/verifier.sh (Lint.Shellcheck.VerifierSh)
+- [ ] **0.W.6** Fix SC issues in templates/ralph/current_ralph_tasks.sh (Lint.Shellcheck.CurrentRalphTasks)
+- [ ] **0.W.7** Fix SC issues in templates/ralph/thunk_ralph_tasks.sh (Lint.Shellcheck.ThunkRalphTasks)
+- [ ] **0.W.8** Note: Protected.1 warning for loop.sh - SKIP (human review, change already logged)
+- [ ] **0.W.9** Note: Hygiene.TemplateSync.2 for loop.sh - SKIP (intentional divergence, covered by 0.W.4)
 
 ---
 
