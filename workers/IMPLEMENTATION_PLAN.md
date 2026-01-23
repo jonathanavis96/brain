@@ -27,7 +27,7 @@
   - MD024: Remove duplicate "Phase 99: Test Sync" heading at line 332
   - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` returns 0 errors
 
-- [ ] **0.W.2** Fix EOF in `cortex/IMPLEMENTATION_PLAN.md`
+- [x] **0.W.2** Fix EOF in `cortex/IMPLEMENTATION_PLAN.md`
   - **AC:** `pre-commit run end-of-file-fixer --files cortex/IMPLEMENTATION_PLAN.md` passes
 
 - [ ] **0.W.3** Verify all pre-commit checks pass
