@@ -95,6 +95,43 @@ Rule: only 1 "obvious" quick attempt before doing the lookup.
 
 ---
 
+## Creating New Markdown Files
+
+**ALWAYS follow these rules when creating `.md` files:**
+
+1. **Code blocks MUST have language tags** - Never use bare ` ``` `
+   - Shell commands: ` ```bash `
+   - Python: ` ```python `
+   - Directory trees/output: ` ```text `
+   - JSON/YAML: ` ```json ` / ` ```yaml `
+
+2. **Blank lines are REQUIRED around:**
+   - Code blocks (before and after)
+   - Lists (before and after)
+   - Headings (after)
+
+3. **Run `markdownlint <file>`** before committing new files
+
+**Example - WRONG vs RIGHT:**
+
+```markdown
+## Heading
+- list item
+```text
+code without language
+```text
+
+## Heading
+
+- list item
+
+```bash
+code with language
+```text
+```text
+
+---
+
 ## Markdown Fix Protocol
 
 **Before making manual markdown fixes, ALWAYS run the auto-fix script first:**
