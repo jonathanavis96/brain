@@ -177,15 +177,13 @@ usage() {
   cat <<'EOF'
 Usage:
   loop.sh [--prompt <path>] [--iterations N] [--plan-every N] [--yolo|--no-yolo]
-          [--runner rovodev|opencode|cerebras] [--model <model>] [--branch <name>] [--dry-run] [--no-monitors]
-          [--opencode-serve] [--opencode-port N] [--opencode-attach <url>] [--opencode-format json|text]
+          [--model <model>] [--branch <name>] [--dry-run] [--no-monitors]
           [--rollback [N]] [--resume]
 
 Defaults:
   --iterations 1
   --plan-every 3
-  --runner      rovodev
-  --model       Sonnet 4.5 (rovodev) or Grok Code (opencode), Llama models (cerebras). Use --model auto for rovodev config.
+  --model       glm (GLM 4.7 - strong coding model)
   --branch      Defaults to <repo>-work (e.g., brain-work, NeoQueue-work)
   If --prompt is NOT provided, loop alternates:
     - PLAN on iteration 1 and every N iterations
@@ -193,19 +191,17 @@ Defaults:
   If --prompt IS provided, that prompt is used for all iterations.
 
 Model Selection:
-  --model <model>  Specify the model to use. Shortcuts available:
-                   sonnet  -> Sonnet 4.5 (anthropic.claude-sonnet-4-5-20250929-v1:0)
-                   opus    -> Opus 4.5 (anthropic.claude-opus-4-5-20251101-v1:0)
-                   sonnet4 -> Sonnet 4 (anthropic.claude-sonnet-4-20250514-v1:0)
-                    auto    -> Use default from ~/.rovodev/config.yml
-                    Or provide a full model ID directly.
-
-Runner Selection:
-  --runner rovodev|opencode|cerebras
-                   rovodev: uses acli rovodev run (default)
-                   opencode: uses opencode run (provider/model). See: opencode models
-                   cerebras: uses Cerebras agentic runner with tool execution
-                            (requires CEREBRAS_API_KEY env var, shows token usage)
+  --model <model>  Specify the Cerebras model to use. Shortcuts available:
+                   llama4 / scout    -> llama-4-scout-17b (default)
+                   maverick          -> llama-4-maverick-17b
+                   llama3 / llama3-8b -> llama3.1-8b
+                   llama3-70b        -> llama3.1-70b
+                   qwen / qwen3      -> qwen-3-32b
+                   qwen-235b         -> qwen-3-235b-a22b-instruct-2507
+                   glm / glm4        -> zai-glm-4.7
+                   auto              -> llama-4-scout-17b
+                   Or provide a full Cerebras model ID directly.
+                   See: https://inference-docs.cerebras.ai/introduction
 
 Branch Workflow:
   --branch <name>  Work on specified branch (creates if needed, switches to it)
@@ -218,39 +214,37 @@ Safety Features:
   --rollback [N]  Undo last N Ralph commits (default: 1). Requires confirmation.
   --resume        Resume from last incomplete iteration (checks for uncommitted changes)
 
-OpenCode Options:
-  --opencode-serve      Start local OpenCode server for faster runs (implies --opencode-attach localhost:4096)
-  --opencode-port N     Port for OpenCode server (default: 4096)
-  --opencode-attach <url> Attach to running OpenCode server at <url> (e.g., http://localhost:4096)
-  --opencode-format default|json  Format for OpenCode output (default: default; use default for grep-based verifiers)
+Requirements:
+  - CEREBRAS_API_KEY environment variable must be set
+  - Get your API key from: https://cloud.cerebras.ai
 
 Examples:
   # Run BUILD once (from anywhere)
-  bash ralph/loop.sh --prompt ralph/PROMPT_build.md --iterations 1 --plan-every 999
+  bash cerebras/loop.sh --prompt cerebras/PROMPT_build.md --iterations 1 --plan-every 999
 
-  # From inside ralph/
+  # From inside cerebras/
   bash ./loop.sh --prompt ./PROMPT_build.md --iterations 1 --plan-every 999
 
   # Alternate plan/build for 10 iters, plan every 3
-  bash ralph/loop.sh --iterations 10 --plan-every 3
+  bash cerebras/loop.sh --iterations 10 --plan-every 3
 
-  # Use Sonnet model for faster iterations
-  bash ralph/loop.sh --model sonnet --iterations 20 --plan-every 5
+  # Use GLM model for coding tasks
+  bash cerebras/loop.sh --model glm --iterations 20 --plan-every 5
 
-  # Use Opus for careful planning
-  bash ralph/loop.sh --model opus --iterations 1
+  # Use Llama 4 Maverick for complex planning
+  bash cerebras/loop.sh --model maverick --iterations 1
 
   # Dry-run mode (see what would change)
-  bash ralph/loop.sh --dry-run --iterations 1
+  bash cerebras/loop.sh --dry-run --iterations 1
 
   # Run without monitor terminals (useful for CI/CD)
-  bash ralph/loop.sh --no-monitors --iterations 5
+  bash cerebras/loop.sh --no-monitors --iterations 5
 
   # Rollback last 2 iterations
-  bash ralph/loop.sh --rollback 2
+  bash cerebras/loop.sh --rollback 2
 
   # Resume after error
-  bash ralph/loop.sh --resume
+  bash cerebras/loop.sh --resume
 EOF
 }
 
@@ -258,15 +252,10 @@ EOF
 ITERATIONS=1
 PLAN_EVERY=3
 YOLO_FLAG="--yolo"
-RUNNER="rovodev"
 PROMPT_ARG=""
 MODEL_ARG=""
 BRANCH_ARG=""
 DRY_RUN=false
-OPENCODE_SERVE=false
-OPENCODE_PORT=4096
-OPENCODE_ATTACH=""
-OPENCODE_FORMAT="default"
 ROLLBACK_MODE=false
 ROLLBACK_COUNT=1
 RESUME_MODE=false
@@ -276,177 +265,99 @@ CONSECUTIVE_VERIFIER_FAILURES=0
 # Parse args
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --prompt)
-      PROMPT_ARG="${2:-}"
+  --prompt)
+    PROMPT_ARG="${2:-}"
+    shift 2
+    ;;
+  --iterations)
+    ITERATIONS="${2:-}"
+    shift 2
+    ;;
+  --plan-every)
+    PLAN_EVERY="${2:-}"
+    shift 2
+    ;;
+  --yolo)
+    YOLO_FLAG="--yolo"
+    shift
+    ;;
+  --no-yolo)
+    YOLO_FLAG=""
+    shift
+    ;;
+  --model)
+    MODEL_ARG="${2:-}"
+    shift 2
+    ;;
+  --branch)
+    BRANCH_ARG="${2:-}"
+    shift 2
+    ;;
+  --dry-run)
+    DRY_RUN=true
+    shift
+    ;;
+  --no-monitors)
+    NO_MONITORS=true
+    shift
+    ;;
+  --rollback)
+    ROLLBACK_MODE=true
+    if [[ -n "${2:-}" && "$2" =~ ^[0-9]+$ ]]; then
+      ROLLBACK_COUNT="$2"
       shift 2
-      ;;
-    --iterations)
-      ITERATIONS="${2:-}"
-      shift 2
-      ;;
-    --plan-every)
-      PLAN_EVERY="${2:-}"
-      shift 2
-      ;;
-    --yolo)
-      YOLO_FLAG="--yolo"
+    else
       shift
-      ;;
-    --no-yolo)
-      YOLO_FLAG=""
-      shift
-      ;;
-    --runner)
-      RUNNER="${2:-}"
-      shift 2
-      ;;
-    --opencode-serve)
-      OPENCODE_SERVE=true
-      shift
-      ;;
-    --opencode-port)
-      OPENCODE_PORT="${2:-4096}"
-      shift 2
-      ;;
-    --opencode-attach)
-      OPENCODE_ATTACH="${2:-}"
-      shift 2
-      ;;
-    --opencode-format)
-      OPENCODE_FORMAT="${2:-default}"
-      shift 2
-      ;;
-    --model)
-      MODEL_ARG="${2:-}"
-      shift 2
-      ;;
-    --branch)
-      BRANCH_ARG="${2:-}"
-      shift 2
-      ;;
-    --dry-run)
-      DRY_RUN=true
-      shift
-      ;;
-    --no-monitors)
-      NO_MONITORS=true
-      shift
-      ;;
-    --rollback)
-      ROLLBACK_MODE=true
-      if [[ -n "${2:-}" && "$2" =~ ^[0-9]+$ ]]; then
-        ROLLBACK_COUNT="$2"
-        shift 2
-      else
-        shift
-      fi
-      ;;
-    --resume)
-      RESUME_MODE=true
-      shift
-      ;;
-    -h | --help)
-      usage
-      exit 0
-      ;;
-    *)
-      echo "Unknown arg: $1" >&2
-      usage
-      exit 2
-      ;;
+    fi
+    ;;
+  --resume)
+    RESUME_MODE=true
+    shift
+    ;;
+  -h | --help)
+    usage
+    exit 0
+    ;;
+  *)
+    echo "Unknown arg: $1" >&2
+    usage
+    exit 2
+    ;;
   esac
 done
-
-# Model version configuration - SINGLE SOURCE OF TRUTH
-# Update these when new model versions are released
-# Last updated: 2026-01-18 (Sonnet 4.5 September 2025 release)
-MODEL_SONNET_45="anthropic.claude-sonnet-4-5-20250929-v1:0"
-MODEL_OPUS_45="anthropic.claude-opus-4-5-20251101-v1:0"
-MODEL_SONNET_4="anthropic.claude-sonnet-4-20250514-v1:0"
-
-# Resolve model shortcut to full model ID
-resolve_model() {
-  local model="$1"
-  case "$model" in
-    opus | opus4.5 | opus45)
-      echo "$MODEL_OPUS_45"
-      ;;
-    sonnet | sonnet4.5 | sonnet45)
-      echo "$MODEL_SONNET_45"
-      ;;
-    sonnet4)
-      echo "$MODEL_SONNET_4"
-      ;;
-    latest | auto)
-      # Use system default - don't override config
-      echo ""
-      ;;
-    *)
-      echo "$model"
-      ;;
-  esac
-}
-
-# Resolve model shortcut to OpenCode provider/model.
-# IMPORTANT: Replace placeholder IDs below with the *exact* IDs from: opencode models
-resolve_model_opencode() {
-  local model="$1"
-  case "$model" in
-    grok | grokfast | grok-code-fast-1)
-      # Confirmed via opencode models
-      echo "opencode/grok-code"
-      ;;
-    opus | opus4.5 | opus45)
-      # Placeholder - anthropic not available in current setup
-      echo "opencode/gpt-5-nano"
-      ;; # Fallback to available model
-    sonnet | sonnet4.5 | sonnet45)
-      # Placeholder - anthropic not available
-      echo "opencode/gpt-5-nano"
-      ;; # Fallback
-    latest | auto)
-      # Let OpenCode decide its own default if user explicitly asked for auto/latest
-      echo ""
-      ;;
-    *)
-      # Pass through (user provided provider/model already, or an OpenCode alias)
-      echo "$model"
-      ;;
-  esac
-}
 
 # Resolve model shortcut to Cerebras model ID
 # Available models: https://inference-docs.cerebras.ai/introduction
 resolve_model_cerebras() {
   local model="$1"
   case "$model" in
-    llama4 | llama-4 | scout)
-      echo "llama-4-scout-17b"
-      ;;
-    llama4-large | maverick)
-      echo "llama-4-maverick-17b"
-      ;;
-    llama3 | llama-3 | llama3-8b)
-      echo "llama3.1-8b"
-      ;;
-    llama3-large | llama3-70b)
-      echo "llama3.1-70b"
-      ;;
-    qwen | qwen3)
-      echo "qwen-3-32b"
-      ;;
-    qwen-large | qwen-235b)
-      echo "qwen-3-235b-a22b-instruct-2507"
-      ;;
-    glm | glm4 | glm-4.7)
-      echo "zai-glm-4.7"
-      ;;
-    auto | latest | "")
-      echo "llama-4-scout-17b"
-      ;;
-    *)
-      echo "$model"
-      ;;
+  llama4 | llama-4 | scout)
+    echo "llama-4-scout-17b"
+    ;;
+  llama4-large | maverick)
+    echo "llama-4-maverick-17b"
+    ;;
+  llama3 | llama-3 | llama3-8b)
+    echo "llama3.1-8b"
+    ;;
+  llama3-large | llama3-70b)
+    echo "llama3.1-70b"
+    ;;
+  qwen | qwen3)
+    echo "qwen-3-32b"
+    ;;
+  qwen-large | qwen-235b)
+    echo "qwen-3-235b-a22b-instruct-2507"
+    ;;
+  glm | glm4 | glm-4.7)
+    echo "zai-glm-4.7"
+    ;;
+  auto | latest | "")
+    echo "llama-4-scout-17b"
+    ;;
+  *)
+    echo "$model"
+    ;;
   esac
 }
 
@@ -500,54 +411,15 @@ run_cerebras_api() {
   return 0
 }
 
-# Setup model config - default to Sonnet 4.5 for Ralph loops
-CONFIG_FLAG=""
-TEMP_CONFIG=""
-
-# Use provided model or default based on runner
+# Use provided model or default for Cerebras
 if [[ -z "$MODEL_ARG" ]]; then
-  if [[ "$RUNNER" == "opencode" ]]; then
-    MODEL_ARG="grok" # Default for OpenCode
-  elif [[ "$RUNNER" == "cerebras" ]]; then
-    MODEL_ARG="glm" # Default for Cerebras (GLM 4.7 - strong coding model)
-  else
-    MODEL_ARG="sonnet" # Default for RovoDev
-  fi
+  MODEL_ARG="glm" # Default for Cerebras (GLM 4.7 - strong coding model)
 fi
 
-if [[ "$RUNNER" == "opencode" ]]; then
-  RESOLVED_MODEL="$(resolve_model_opencode "$MODEL_ARG")"
-elif [[ "$RUNNER" == "cerebras" ]]; then
-  RESOLVED_MODEL="$(resolve_model_cerebras "$MODEL_ARG")"
-else
-  RESOLVED_MODEL="$(resolve_model "$MODEL_ARG")"
-fi
+RESOLVED_MODEL="$(resolve_model_cerebras "$MODEL_ARG")"
 
-# Only create RovoDev temp config when runner=rovodev and we have a model to set
-if [[ "$RUNNER" == "rovodev" ]]; then
-  if [[ -n "$RESOLVED_MODEL" ]]; then
-    TEMP_CONFIG="/tmp/rovodev_config_$$_$(date +%s).yml"
-
-    # Copy base config and override modelId
-    if [[ -f "$HOME/.rovodev/config.yml" ]]; then
-      sed "s|^  modelId:.*|  modelId: $RESOLVED_MODEL|" "$HOME/.rovodev/config.yml" >"$TEMP_CONFIG"
-    else
-      cat >"$TEMP_CONFIG" <<EOFCONFIG
-version: 1
-agent:
-  modelId: $RESOLVED_MODEL
-EOFCONFIG
-    fi
-    CONFIG_FLAG="--config-file $TEMP_CONFIG"
-    echo "Using model: $RESOLVED_MODEL"
-  fi
-else
-  # OpenCode runner uses provider/model directly; no temp config needed.
-  if [[ -n "$RESOLVED_MODEL" ]]; then
-    echo "Using model: $RESOLVED_MODEL"
-  else
-    echo "Using model: (OpenCode default)"
-  fi
+if [[ -n "$RESOLVED_MODEL" ]]; then
+  echo "Using model: $RESOLVED_MODEL"
 fi
 
 # Resolve target branch:
