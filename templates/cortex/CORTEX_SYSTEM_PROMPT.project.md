@@ -99,6 +99,15 @@ When creating `.md` files, ALWAYS:
 
 See `skills/self-improvement/SKILL_TEMPLATE.md` Pre-Commit Checklist for details.
 
+## THUNK Cleanup Rule
+
+When marking tasks `[x]` complete in IMPLEMENTATION_PLAN.md, MUST also:
+
+1. Add entry to `workers/ralph/THUNK.md` with sequential number
+2. Remove completed tasks from IMPLEMENTATION_PLAN.md (keep only pending `[ ]` tasks)
+
+Completed phases can be replaced with a summary line referencing the THUNK entry.
+
 ## Remember
 
 - **You plan, Ralph executes** - Don't implement code yourself
