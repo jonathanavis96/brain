@@ -51,22 +51,22 @@
   - **Fixes:** Lint.Shellcheck.VerifierSh
   - **Note:** Protected file - will need hash baseline update after
 
-- [ ] **9.2.3** Fix shellcheck issues in `workers/ralph/current_ralph_tasks.sh`
+- [x] **9.2.3** Fix shellcheck issues in `workers/ralph/current_ralph_tasks.sh`
   - **AC:** `shellcheck -e SC1091 workers/ralph/current_ralph_tasks.sh` returns 0 warnings
   - **Fixes:** Lint.Shellcheck.CurrentRalphTasks
 
-- [ ] **9.2.4** Fix shellcheck issues in `workers/ralph/thunk_ralph_tasks.sh`
+- [x] **9.2.4** Fix shellcheck issues in `workers/ralph/thunk_ralph_tasks.sh`
   - **AC:** `shellcheck -e SC1091 workers/ralph/thunk_ralph_tasks.sh` returns 0 warnings
   - **Fixes:** Lint.Shellcheck.ThunkRalphTasks
 
 ### Phase 9.3: Markdown Fence Balance Warnings
 
-- [ ] **9.3.1** Fix unbalanced code fences in `NEURONS.md`
+- [x] **9.3.1** Fix unbalanced code fences in `NEURONS.md`
   - Add missing closing ``` fences (currently 20 opens, 0 closes)
   - **AC:** `grep -c "^\`\`\`[a-z]" NEURONS.md` equals `grep -c "^\`\`\`$" NEURONS.md`
   - **Fixes:** Lint.Markdown.NeuronsBalancedFences
 
-- [ ] **9.3.2** Fix unbalanced code fences in `THOUGHTS.md`
+- [x] **9.3.2** Fix unbalanced code fences in `THOUGHTS.md`
   - Add missing closing ``` fences (currently 4 opens, 0 closes)
   - **AC:** `grep -c "^\`\`\`[a-z]" THOUGHTS.md` equals `grep -c "^\`\`\`$" THOUGHTS.md`
   - **Fixes:** Lint.Markdown.ThoughtsBalancedFences
