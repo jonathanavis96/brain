@@ -93,16 +93,19 @@ User should manually:
 ## Summary
 
 **What Brain Ralph Does:**
+
 - Creates cortex/ infrastructure in rovo project
 - Populates with rovo-specific context
 - Prepares window management fix plan
 
 **What User Does:**
+
 - Remove Phase 0-Sync from rovo plan (brain-specific)
 - Keep Phase 0-P1 in rovo plan (rovo-specific)
 - Use Cortex to manage rovo project going forward
 
 **Result:**
+
 - Rovo project has Cortex manager
 - Window management fix tasks ready for rovo Ralph
 - Clean separation between brain and rovo plans
