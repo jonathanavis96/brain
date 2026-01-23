@@ -23,7 +23,7 @@
 #   q - Quit cleanly
 
 RALPH_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PLAN_FILE="$RALPH_DIR/IMPLEMENTATION_PLAN.md"
+PLAN_FILE="$RALPH_DIR/../IMPLEMENTATION_PLAN.md"
 HIDE_COMPLETED=false
 LAST_MODIFIED=""
 
