@@ -421,3 +421,9 @@ Started: 2026-01-18
 | 420 | 9.1.3 | CRITICAL | **9.1.3** Move `workers/ralph/IMPLEMENTATION_PLAN.md` → `workers/IMPLEMENTATION_PLAN.md` - Moved implementation plan from ralph-specific location to shared workers level using git mv, updated all path references across 15 files (AGENTS.md, root IMPLEMENTATION_PLAN.md, cortex/, workers/ralph/), changed from Ralph-specific to shared workers context for multi-worker support (Ralph, Cerebras, etc.) | 2026-01-23 |
 | 421 | WARN.Template.1.workers-ralph | MEDIUM | **WARN.Template.1.workers-ralph** Template.1 - Synced templates/ralph/ with workers/ralph/ (copied thunk_ralph_tasks.sh with footer bugfix, current_ralph_tasks.sh with tab fixes, updated loop.sh paths from ralph/ to workers/ralph/ and max-turns 30→15), all 3 template sync checks now pass | 2026-01-23 |
 | 422 | 1.1 | HIGH | **1.1** Add Quick Reference table to `skills/domains/code-quality/code-hygiene.md` - Added comprehensive 8-row Quick Reference table at top of file with common checks (Documentation Sync, Comprehensive Search, Dead Code Sweep, Template Sync, Markdown Validation, Fence Language Tags, Shellcheck, Status Consistency), includes command/action column and what each check catches, plus Common Fixes section with quick solutions | 2026-01-23 |
+| 423 | WARN.Hygiene.TemplateSync.1 | MEDIUM | **WARN.Hygiene.TemplateSync.1** Fixed case statement indentation in current_ralph_tasks.sh - Changed 2-space indentation to 4-space for case branches (h|H, r|R, f|F, c|C, ?, q|Q) to match template, now passes Hygiene.TemplateSync.1 check | 2026-01-23 |
+
+## Era 4: Template Sync & Shellcheck Cleanup (2026-01-23)
+
+| THUNK # | Original # | Priority | Description | Completed |
+|---------|------------|----------|-------------|-----------|
