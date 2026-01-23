@@ -77,7 +77,7 @@ See **workers/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown.
 - [x] **WARN.MD.17.skills** Fix MD violations in `skills/domains/websites/qa/acceptance-criteria.md` - MD022 (blanks around headings), MD031 (blanks around fences), MD034 (bare URLs) - 20+ violations
 - [x] **WARN.MD.18.skills** Fix MD violations in `skills/projects/README.md` - MD032 (blanks around lists)
 - [x] **WARN.MD.19.skills** Fix MD violations in `skills/self-improvement/SKILL_TEMPLATE.md` - MD022 (blanks around headings), MD032 (blanks around lists)
-- [ ] **WARN.MD.20.skills** Fix MD violations in `skills/domains/websites/architecture/sitemap-builder.md` - MD032 (blanks around lists), MD022 (blanks around headings), MD031 (blanks around fences), MD040 (fence language tags)
+- [x] **WARN.MD.20.skills** Fix MD violations in `skills/domains/websites/architecture/sitemap-builder.md` - MD032 (blanks around lists), MD022 (blanks around headings), MD031 (blanks around fences), MD040 (fence language tags)
 - [ ] **WARN.MD.21.skills** Fix MD violations in `skills/domains/websites/build/analytics-tracking.md` - MD032 (blanks around lists), MD022 (blanks around headings), MD031 (blanks around fences)
 - [ ] **WARN.MD.22.skills** Fix MD violations in `skills/conventions.md` - MD032, MD022, MD031 violations
 - [ ] **WARN.MD.23.skills** Fix MD violations in `skills/domains/README.md` - MD032, MD022, MD031 violations
