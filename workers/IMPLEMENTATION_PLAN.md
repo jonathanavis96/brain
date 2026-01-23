@@ -31,9 +31,9 @@
 
 **Goal:** Fix broken links and missing entries in skills catalog.
 
-- [ ] **2.5.1** Add `bulk-edit-patterns.md` to `skills/index.md`
-- [ ] **2.5.2** Add `bulk-edit-patterns.md` to `skills/SUMMARY.md`
-- [ ] **2.5.3** Fix broken links in `skills/SUMMARY.md` (change `domains/X` to `domains/Y/X` paths)
+- [x] **2.5.1** Add `bulk-edit-patterns.md` to `skills/index.md`
+- [x] **2.5.2** Add `bulk-edit-patterns.md` to `skills/SUMMARY.md`
+- [x] **2.5.3** Fix broken links in `skills/SUMMARY.md` (change `domains/X` to `domains/Y/X` paths)
 
 **AC:** `bash workers/ralph/.maintenance/verify-brain.sh` reports 0 broken link issues
 

@@ -66,24 +66,25 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
 ### Skills Directories
 
 - **[Domains](domains/README.md)** - Technical domain knowledge and reusable patterns (authentication, caching, API design, etc.)
-  - [Authentication Patterns](domains/auth-patterns.md) - OAuth2, JWT, session management
-  - [Caching Patterns](domains/caching-patterns.md) - Redis, in-memory, CDN, and browser caching strategies
-  - [API Design Patterns](domains/api-design-patterns.md) - REST, GraphQL, versioning, error handling
-  - [Change Propagation](domains/change-propagation.md) - Template sync, knowledge persistence, verification checklists
-  - [Code Consistency](domains/code-consistency.md) - Documentation accuracy, terminology, parsing consistency
-  - [Config Patterns](domains/config-patterns.md) - Portable configs, templates, environment variables
-  - [Database Patterns](domains/database-patterns.md) - Schema design, ORMs, query optimization, migrations, transactions
-  - [Markdown Patterns](domains/markdown-patterns.md) - Lint rules (MD040, MD024, MD050), documentation accuracy
-  - [Python Patterns](domains/python-patterns.md) - datetime, f-strings, JSON handling, type hints, import scope
-  - [Testing Patterns](domains/testing-patterns.md) - Unit, integration, e2e testing across Jest, pytest, Go testing
+  - [Authentication Patterns](domains/backend/auth-patterns.md) - OAuth2, JWT, session management
+  - [Caching Patterns](domains/backend/caching-patterns.md) - Redis, in-memory, CDN, and browser caching strategies
+  - [API Design Patterns](domains/backend/api-design-patterns.md) - REST, GraphQL, versioning, error handling
+  - [Change Propagation](domains/ralph/change-propagation.md) - Template sync, knowledge persistence, verification checklists
+  - [Bulk Edit Patterns](domains/code-quality/bulk-edit-patterns.md) - Bulk editing strategies and markdown auto-fix patterns
+  - [Code Consistency](domains/code-quality/code-consistency.md) - Documentation accuracy, terminology, parsing consistency
+  - [Config Patterns](domains/backend/config-patterns.md) - Portable configs, templates, environment variables
+  - [Database Patterns](domains/backend/database-patterns.md) - Schema design, ORMs, query optimization, migrations, transactions
+  - [Markdown Patterns](domains/code-quality/markdown-patterns.md) - Lint rules (MD040, MD024, MD050), documentation accuracy
+  - [Python Patterns](domains/languages/python/python-patterns.md) - datetime, f-strings, JSON handling, type hints, import scope
+  - [Testing Patterns](domains/code-quality/testing-patterns.md) - Unit, integration, e2e testing across Jest, pytest, Go testing
   - [Token Efficiency](domains/code-quality/token-efficiency.md) - Token optimization strategies for AI agents
-  - [Ralph Loop Architecture](domains/ralph-patterns.md) - How Ralph works internally (subagents, tool visibility, execution flow)
-  - [Bootstrap Patterns](domains/bootstrap-patterns.md) - Project bootstrapping, scaffold templates, initialization flows
-  - [Code Hygiene](domains/code-hygiene.md) - Dead code removal, linting, formatting consistency
-  - [Deployment Patterns](domains/deployment-patterns.md) - CI/CD, rollout strategies, environment management
-  - [Error Handling Patterns](domains/error-handling-patterns.md) - Exception handling, error boundaries, retry strategies
-  - [Security Patterns](domains/security-patterns.md) - Input validation, secrets management, secure defaults
-  - [State Management Patterns](domains/state-management-patterns.md) - React state, global stores, persistence
+  - [Ralph Loop Architecture](domains/ralph/ralph-patterns.md) - How Ralph works internally (subagents, tool visibility, execution flow)
+  - [Bootstrap Patterns](domains/ralph/bootstrap-patterns.md) - Project bootstrapping, scaffold templates, initialization flows
+  - [Code Hygiene](domains/code-quality/code-hygiene.md) - Dead code removal, linting, formatting consistency
+  - [Deployment Patterns](domains/infrastructure/deployment-patterns.md) - CI/CD, rollout strategies, environment management
+  - [Error Handling Patterns](domains/backend/error-handling-patterns.md) - Exception handling, error boundaries, retry strategies
+  - [Security Patterns](domains/infrastructure/security-patterns.md) - Input validation, secrets management, secure defaults
+  - [State Management Patterns](domains/infrastructure/state-management-patterns.md) - React state, global stores, persistence
   - **[Shell Scripting](domains/shell/README.md)** - Bash best practices, ShellCheck patterns, cleanup/traps
     - [Strict Mode](domains/shell/strict-mode.md) - `set -euo pipefail` patterns
     - [Variable Patterns](domains/shell/variable-patterns.md) - SC2155, SC2034, scoping
