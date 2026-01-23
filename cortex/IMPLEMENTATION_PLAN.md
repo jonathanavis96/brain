@@ -39,14 +39,15 @@
 **Solution:** Use exact full-header-line matching + track synced headers in `.last_sync` file.
 
 - [ ] **0.C.6** Rewrite sync detection logic in `workers/ralph/sync_cortex_plan.sh`:
-  - Read `## Phase` headers from Cortex plan (above `<!-- Cortex will add new Task Contracts above this line -->`)
-  - Read `## Phase` headers from Workers plan (all of them)
+  - Both plans use same marker: `<!-- Cortex adds new Task Contracts below this line -->`
+  - Read content BELOW the marker in Cortex plan (new tasks go here)
+  - Read content BELOW the marker in Workers plan
   - Match sections by **exact header line** (not regex-extracted Phase ID)
-  - Only append sections whose headers don't exist in Workers plan
-  - Append new sections **below** the `<!-- Cortex adds new Task Contracts below this line -->` marker in Workers plan
-  - Track synced headers in `workers/ralph/.last_sync` file
+  - Find sections in Cortex (below marker) that don't exist in Workers (below marker)
+  - Append ONLY new sections below the marker in Workers plan
+  - Track synced headers in `workers/ralph/.last_sync` file (optional - marker approach may not need it)
   - **AC:** `bash sync_cortex_plan.sh --dry-run` on unchanged plans shows "No new sections"
-  - **AC:** Adding new Phase to Cortex plan syncs ONLY that phase
+  - **AC:** Adding new Phase below marker in Cortex syncs ONLY that phase (no duplicates)
 
 - [ ] **0.C.7** Add `--reset` flag to sync script:
   - Clears `.last_sync` file
@@ -163,7 +164,7 @@ Add Quick Reference tables to skills files following SUMMARY.md pattern.
 
 - [x] **3.1.1** Move `workers/ralph/VALIDATION_CRITERIA.md` → `workers/VALIDATION_CRITERIA.md`
 - [x] **3.1.2** Move `workers/ralph/sync_cortex_plan.sh` → `workers/sync_cortex_plan.sh`
-- [ ] **3.1.3** Move `workers/ralph/render_ac_status.sh` → `workers/render_ac_status.md`
+- [x] **3.1.3** Move `workers/ralph/render_ac_status.sh` → `workers/render_ac_status.md`
 
 ### Phase 3.2: Create `workers/cerebras/` Directory (3 tasks)
 
@@ -320,4 +321,4 @@ Add Quick Reference tables to skills files following SUMMARY.md pattern.
 
 ---
 
-<!-- Cortex will add new Task Contracts above this line -->
+<!-- Cortex adds new Task Contracts below this line -->
