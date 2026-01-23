@@ -14,7 +14,7 @@ set -euo pipefail
 # =============================================================================
 
 # ROOT can be overridden via env var for project delegation
-if [[ -n "${RALPH_PROJECT_ROOT:-}" ]]; then
+if [[ -n ${RALPH_PROJECT_ROOT:-} ]]; then
   ROOT="$RALPH_PROJECT_ROOT"
   RALPH="$ROOT/workers/ralph"
 else
@@ -32,7 +32,7 @@ cleanup_old_logs() {
   local days="${1:-7}"
   local count
   count=$(find "$LOGDIR" -name "*.log" -type f -mtime +"$days" 2>/dev/null | wc -l)
-  if [[ "$count" -gt 0 ]]; then
+  if [[ $count -gt 0 ]]; then
     echo "🧹 Cleaning up $count log files older than $days days..."
     find "$LOGDIR" -name "*.log" -type f -mtime +"$days" -delete
   fi
@@ -62,7 +62,7 @@ LOCK_FILE="/tmp/ralph-${REPO_NAME}-${REPO_PATH_HASH}.lock"
 # Check if a PID is still running
 is_pid_running() {
   local pid="$1"
-  if [[ -z "$pid" || "$pid" == "unknown" ]]; then
+  if [[ -z $pid || $pid == "unknown" ]]; then
     return 1 # Invalid PID, treat as not running
   fi
   # Check if process exists (works on Linux/macOS)
@@ -72,7 +72,7 @@ is_pid_running() {
 # Atomic lock acquisition with stale lock detection
 acquire_lock() {
   # First, check for stale lock
-  if [[ -f "$LOCK_FILE" ]]; then
+  if [[ -f $LOCK_FILE ]]; then
     LOCK_PID=$(cat "$LOCK_FILE" 2>/dev/null || echo "unknown")
     if ! is_pid_running "$LOCK_PID"; then
       echo "🧹 Removing stale lock (PID $LOCK_PID no longer running)"
@@ -125,7 +125,7 @@ INTERRUPT_RECEIVED=false
 # Cleanup function for temp files and lock
 cleanup() {
   rm -f "$LOCK_FILE"
-  if [[ -n "${TEMP_CONFIG:-}" && -f "${TEMP_CONFIG:-}" ]]; then
+  if [[ -n ${TEMP_CONFIG:-} && -f ${TEMP_CONFIG:-} ]]; then
     rm -f "$TEMP_CONFIG"
   fi
 }
@@ -265,64 +265,64 @@ CONSECUTIVE_VERIFIER_FAILURES=0
 # Parse args
 while [[ $# -gt 0 ]]; do
   case "$1" in
-  --prompt)
-    PROMPT_ARG="${2:-}"
-    shift 2
-    ;;
-  --iterations)
-    ITERATIONS="${2:-}"
-    shift 2
-    ;;
-  --plan-every)
-    PLAN_EVERY="${2:-}"
-    shift 2
-    ;;
-  --yolo)
-    YOLO_FLAG="--yolo"
-    shift
-    ;;
-  --no-yolo)
-    YOLO_FLAG=""
-    shift
-    ;;
-  --model)
-    MODEL_ARG="${2:-}"
-    shift 2
-    ;;
-  --branch)
-    BRANCH_ARG="${2:-}"
-    shift 2
-    ;;
-  --dry-run)
-    DRY_RUN=true
-    shift
-    ;;
-  --no-monitors)
-    NO_MONITORS=true
-    shift
-    ;;
-  --rollback)
-    ROLLBACK_MODE=true
-    if [[ -n "${2:-}" && "$2" =~ ^[0-9]+$ ]]; then
-      ROLLBACK_COUNT="$2"
+    --prompt)
+      PROMPT_ARG="${2:-}"
       shift 2
-    else
+      ;;
+    --iterations)
+      ITERATIONS="${2:-}"
+      shift 2
+      ;;
+    --plan-every)
+      PLAN_EVERY="${2:-}"
+      shift 2
+      ;;
+    --yolo)
+      YOLO_FLAG="--yolo"
       shift
-    fi
-    ;;
-  --resume)
-    RESUME_MODE=true
-    shift
-    ;;
-  -h | --help)
-    usage
-    exit 0
-    ;;
-  *)
-    echo "Unknown arg: $1" >&2
-    usage
-    exit 2
-    ;;
+      ;;
+    --no-yolo)
+      YOLO_FLAG=""
+      shift
+      ;;
+    --model)
+      MODEL_ARG="${2:-}"
+      shift 2
+      ;;
+    --branch)
+      BRANCH_ARG="${2:-}"
+      shift 2
+      ;;
+    --dry-run)
+      DRY_RUN=true
+      shift
+      ;;
+    --no-monitors)
+      NO_MONITORS=true
+      shift
+      ;;
+    --rollback)
+      ROLLBACK_MODE=true
+      if [[ -n ${2:-} && $2 =~ ^[0-9]+$ ]]; then
+        ROLLBACK_COUNT="$2"
+        shift 2
+      else
+        shift
+      fi
+      ;;
+    --resume)
+      RESUME_MODE=true
+      shift
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown arg: $1" >&2
+      usage
+      exit 2
+      ;;
   esac
 done
 
@@ -331,33 +331,33 @@ done
 resolve_model_cerebras() {
   local model="$1"
   case "$model" in
-  llama4 | llama-4 | scout)
-    echo "llama-4-scout-17b"
-    ;;
-  llama4-large | maverick)
-    echo "llama-4-maverick-17b"
-    ;;
-  llama3 | llama-3 | llama3-8b)
-    echo "llama3.1-8b"
-    ;;
-  llama3-large | llama3-70b)
-    echo "llama3.1-70b"
-    ;;
-  qwen | qwen3)
-    echo "qwen-3-32b"
-    ;;
-  qwen-large | qwen-235b)
-    echo "qwen-3-235b-a22b-instruct-2507"
-    ;;
-  glm | glm4 | glm-4.7)
-    echo "zai-glm-4.7"
-    ;;
-  auto | latest | "")
-    echo "llama-4-scout-17b"
-    ;;
-  *)
-    echo "$model"
-    ;;
+    llama4 | llama-4 | scout)
+      echo "llama-4-scout-17b"
+      ;;
+    llama4-large | maverick)
+      echo "llama-4-maverick-17b"
+      ;;
+    llama3 | llama-3 | llama3-8b)
+      echo "llama3.1-8b"
+      ;;
+    llama3-large | llama3-70b)
+      echo "llama3.1-70b"
+      ;;
+    qwen | qwen3)
+      echo "qwen-3-32b"
+      ;;
+    qwen-large | qwen-235b)
+      echo "qwen-3-235b-a22b-instruct-2507"
+      ;;
+    glm | glm4 | glm-4.7)
+      echo "zai-glm-4.7"
+      ;;
+    auto | latest | "")
+      echo "llama-4-scout-17b"
+      ;;
+    *)
+      echo "$model"
+      ;;
   esac
 }
 
@@ -367,7 +367,7 @@ run_cerebras_api() {
   local model="$2"
   local output_file="$3"
 
-  if [[ -z "${CEREBRAS_API_KEY:-}" ]]; then
+  if [[ -z ${CEREBRAS_API_KEY:-} ]]; then
     echo "ERROR: CEREBRAS_API_KEY environment variable not set"
     echo "Get your API key from: https://cloud.cerebras.ai"
     return 1
@@ -412,13 +412,13 @@ run_cerebras_api() {
 }
 
 # Use provided model or default for Cerebras
-if [[ -z "$MODEL_ARG" ]]; then
+if [[ -z $MODEL_ARG ]]; then
   MODEL_ARG="glm" # Default for Cerebras (GLM 4.7 - strong coding model)
 fi
 
 RESOLVED_MODEL="$(resolve_model_cerebras "$MODEL_ARG")"
 
-if [[ -n "$RESOLVED_MODEL" ]]; then
+if [[ -n $RESOLVED_MODEL ]]; then
   echo "Using model: $RESOLVED_MODEL"
 fi
 
@@ -426,9 +426,9 @@ fi
 # 1. User-provided --branch takes precedence
 # 2. On --resume without --branch, stay on current branch
 # 3. Otherwise use default WORK_BRANCH
-if [[ -n "$BRANCH_ARG" ]]; then
+if [[ -n $BRANCH_ARG ]]; then
   TARGET_BRANCH="$BRANCH_ARG"
-elif [[ "$RESUME_MODE" == "true" ]]; then
+elif [[ $RESUME_MODE == "true" ]]; then
   TARGET_BRANCH="$(git -C "$ROOT" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "$WORK_BRANCH")"
 else
   TARGET_BRANCH="$WORK_BRANCH"
@@ -440,10 +440,10 @@ echo "Repo: $REPO_NAME | Branch: $TARGET_BRANCH | Lock: $LOCK_FILE"
 # Resolve a prompt path robustly (works from repo root or ralph/)
 resolve_prompt() {
   local p="$1"
-  if [[ -z "$p" ]]; then return 1; fi
+  if [[ -z $p ]]; then return 1; fi
 
   # 1) As provided (relative to current working directory)
-  if [[ -f "$p" ]]; then
+  if [[ -f $p ]]; then
     realpath "$p"
     return 0
   fi
@@ -459,7 +459,7 @@ resolve_prompt() {
 }
 
 # Handle rollback mode
-if [[ "$ROLLBACK_MODE" == "true" ]]; then
+if [[ $ROLLBACK_MODE == "true" ]]; then
   echo "========================================"
   echo "🔄 Rollback Mode"
   echo "========================================"
@@ -473,7 +473,7 @@ if [[ "$ROLLBACK_MODE" == "true" ]]; then
 
   # Confirmation
   read -r -p "⚠️  Revert these $ROLLBACK_COUNT commit(s)? (type 'yes' to confirm): " confirm
-  if [[ "$confirm" != "yes" ]]; then
+  if [[ $confirm != "yes" ]]; then
     echo "Rollback cancelled."
     exit 0
   fi
@@ -495,7 +495,7 @@ if [[ "$ROLLBACK_MODE" == "true" ]]; then
 fi
 
 # Handle resume mode
-if [[ "$RESUME_MODE" == "true" ]]; then
+if [[ $RESUME_MODE == "true" ]]; then
   echo "========================================"
   echo "🔄 Resume Mode"
   echo "========================================"
@@ -514,7 +514,7 @@ if [[ "$RESUME_MODE" == "true" ]]; then
   echo ""
 
   read -r -p "Continue from this state? (yes/no): " confirm
-  if [[ "$confirm" != "yes" ]]; then
+  if [[ $confirm != "yes" ]]; then
     echo "Resume cancelled."
     exit 0
   fi
@@ -524,9 +524,9 @@ if [[ "$RESUME_MODE" == "true" ]]; then
 fi
 
 # Handle branch switching
-if [[ -n "$BRANCH_ARG" ]]; then
+if [[ -n $BRANCH_ARG ]]; then
   CURRENT_BRANCH=$(git branch --show-current)
-  if [[ "$CURRENT_BRANCH" != "$BRANCH_ARG" ]]; then
+  if [[ $CURRENT_BRANCH != "$BRANCH_ARG" ]]; then
     echo "========================================"
     echo "🌿 Branch: $BRANCH_ARG"
     echo "========================================"
@@ -558,7 +558,7 @@ AC_HASH_FILE="$RALPH/.verify/ac.sha256"
 
 # Auto-init verifier baselines if missing
 init_verifier_if_needed() {
-  if [[ -x "$INIT_SCRIPT" && ! -f "$AC_HASH_FILE" ]]; then
+  if [[ -x $INIT_SCRIPT && ! -f $AC_HASH_FILE ]]; then
     echo ""
     echo "========================================"
     echo "🔧 Initializing verifier baselines..."
@@ -581,7 +581,7 @@ LAST_VERIFIER_FAIL_COUNT=0
 # Parse verifier report to extract failed rules
 parse_verifier_failures() {
   local report_file="$1"
-  [[ -f "$report_file" ]] || return
+  [[ -f $report_file ]] || return
 
   local rules=""
   local count=0
@@ -599,8 +599,8 @@ parse_verifier_failures() {
   fi
 
   # Combine results
-  if [[ -n "$standard_fails" ]]; then
-    if [[ -n "$rules" ]]; then
+  if [[ -n $standard_fails ]]; then
+    if [[ -n $rules ]]; then
       rules="$rules, $standard_fails"
     else
       rules="$standard_fails"
@@ -625,7 +625,7 @@ check_human_intervention() {
 # Check if previous verifier found protected file failures (requires human intervention)
 check_protected_file_failures() {
   # If no failed rules, nothing to check
-  [[ -z "$LAST_VERIFIER_FAILED_RULES" ]] && return 1
+  [[ -z $LAST_VERIFIER_FAILED_RULES ]] && return 1
 
   # Check if any Protected.* rules failed
   if echo "$LAST_VERIFIER_FAILED_RULES" | grep -qE 'Protected\.[0-9]+'; then
@@ -635,7 +635,7 @@ check_protected_file_failures() {
 }
 
 run_verifier() {
-  if [[ ! -x "$VERIFY_SCRIPT" ]]; then
+  if [[ ! -x $VERIFY_SCRIPT ]]; then
     # Check for .initialized marker to determine security vs bootstrap mode
     if [[ -f "$RALPH/.verify/.initialized" ]]; then
       # Security hard-fail: verifier was initialized but is now missing
@@ -674,10 +674,10 @@ run_verifier() {
 
   if "$VERIFY_SCRIPT"; then
     # Verify freshness: run_id.txt must match our RUN_ID
-    if [[ -f "$RUN_ID_FILE" ]]; then
+    if [[ -f $RUN_ID_FILE ]]; then
       local stored_id
       stored_id=$(cat "$RUN_ID_FILE" 2>/dev/null)
-      if [[ "$stored_id" != "$RUN_ID" ]]; then
+      if [[ $stored_id != "$RUN_ID" ]]; then
         echo "❌ Freshness check FAILED: run_id mismatch"
         echo "   Expected: $RUN_ID"
         echo "   Got: $stored_id"
@@ -740,9 +740,9 @@ run_once() {
     echo ""
 
     # Inject verifier status from previous iteration (if any)
-    if [[ -n "$LAST_VERIFIER_STATUS" ]]; then
+    if [[ -n $LAST_VERIFIER_STATUS ]]; then
       echo "# LAST_VERIFIER_RESULT: $LAST_VERIFIER_STATUS"
-      if [[ "$LAST_VERIFIER_STATUS" == "FAIL" ]]; then
+      if [[ $LAST_VERIFIER_STATUS == "FAIL" ]]; then
         echo "# FAILED_RULES: $LAST_VERIFIER_FAILED_RULES"
         echo "# FAILURE_COUNT: $LAST_VERIFIER_FAIL_COUNT"
         echo "# ACTION_REQUIRED: Read .verify/latest.txt and fix AC failures BEFORE picking new tasks."
@@ -762,7 +762,7 @@ run_once() {
     cat "$prompt_file"
 
     # Append dry-run instruction if enabled
-    if [[ "$DRY_RUN" == "true" ]]; then
+    if [[ $DRY_RUN == "true" ]]; then
       echo ""
       echo "---"
       echo ""
@@ -787,36 +787,17 @@ run_once() {
     fi
   } >"$prompt_with_mode"
 
-  # Feed prompt into selected runner
-  if [[ "$RUNNER" == "opencode" ]]; then
-    # NOTE: Passing full prompt as CLI arg can hit shell/argv limits if prompt is huge.
-    # If that happens, pivot to a file-based approach after validating basic integration.
-    attach_flag=""
-    if [[ -n "${OPENCODE_ATTACH:-}" ]]; then
-      attach_flag="--attach ${OPENCODE_ATTACH}"
-    fi
-    opencode run "${attach_flag}" --model "${RESOLVED_MODEL}" --format "${OPENCODE_FORMAT}" "$(cat "$prompt_with_mode")" 2>&1 | tee "$log"
-    rc=$?
-    if [[ $rc -ne 0 ]]; then
-      echo "❌ OpenCode failed (exit $rc). See: $log"
-      tail -n 80 "$log" || true
-      return 1
-    fi
-  elif [[ "$RUNNER" == "cerebras" ]]; then
-    echo "🧠 Running Cerebras Agent with model: ${RESOLVED_MODEL}"
-    # Use the agentic Python runner that supports tool execution
-    if ! python3 "$RALPH/cerebras_agent.py" \
-      --prompt "$prompt_with_mode" \
-      --model "$RESOLVED_MODEL" \
-      --max-turns 15 \
-      --cwd "$ROOT" \
-      --output "$log"; then
-      echo "❌ Cerebras Agent failed. See: $log"
-      return 1
-    fi
-  else
-    # Default: RovoDev
-    script -q -c "cat \"$prompt_with_mode\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG}" "$log"
+  # Feed prompt into Cerebras agent
+  echo "🧠 Running Cerebras Agent with model: ${RESOLVED_MODEL}"
+  # Use the agentic Python runner that supports tool execution
+  if ! python3 "$RALPH/cerebras_agent.py" \
+    --prompt "$prompt_with_mode" \
+    --model "$RESOLVED_MODEL" \
+    --max-turns 15 \
+    --cwd "$ROOT" \
+    --output "$log"; then
+    echo "❌ Cerebras Agent failed. See: $log"
+    return 1
   fi
 
   # Clean up temporary prompt
@@ -827,7 +808,7 @@ run_once() {
   echo "Transcript: $log"
 
   # In dry-run mode, remind user no commits were made
-  if [[ "$DRY_RUN" == "true" ]]; then
+  if [[ $DRY_RUN == "true" ]]; then
     echo ""
     echo "========================================"
     echo "🔍 Dry-run completed"
@@ -837,7 +818,7 @@ run_once() {
   fi
 
   # Run verifier after both PLAN and BUILD iterations
-  if [[ "$phase" == "plan" ]] || [[ "$phase" == "build" ]]; then
+  if [[ $phase == "plan" ]] || [[ $phase == "build" ]]; then
     if run_verifier; then
       echo ""
       echo "========================================"
@@ -880,7 +861,7 @@ run_once() {
     local unchecked_count
     # Note: grep -c returns exit 1 when count is 0, so we capture output first then default
     unchecked_count=$(grep -cE '^\s*-\s*\[ \]' "$RALPH/IMPLEMENTATION_PLAN.md" 2>/dev/null) || unchecked_count=0
-    if [[ "$unchecked_count" -eq 0 ]]; then
+    if [[ $unchecked_count -eq 0 ]]; then
       # All tasks done - run final verification
       if run_verifier; then
         echo ""
@@ -905,7 +886,7 @@ launch_in_terminal() {
 
   # Try to detect available terminal emulator (priority order: tmux, wt.exe, gnome-terminal, konsole, xterm)
   # All terminal launches redirect stderr to /dev/null to suppress dbus/X11 errors
-  if [[ -n "${TMUX:-}" ]]; then
+  if [[ -n ${TMUX:-} ]]; then
     if tmux new-window -n "$title" "bash $script_path" 2>/dev/null; then
       return 0
     fi
@@ -967,7 +948,7 @@ launch_monitors() {
   fi
 
   # If both monitors failed to launch, print consolidated fallback message
-  if [[ "$current_tasks_launched" == "false" && "$thunk_tasks_launched" == "false" ]]; then
+  if [[ $current_tasks_launched == "false" && $thunk_tasks_launched == "false" ]]; then
     echo ""
     echo "═══════════════════════════════════════════════════════════════"
     echo "  ⚠️  Could not auto-launch monitor terminals."
@@ -980,56 +961,23 @@ launch_monitors() {
   fi
 }
 
-# Start OpenCode server if requested
-if [[ "$RUNNER" == "opencode" ]]; then
-  if $OPENCODE_SERVE; then
-    OPENCODE_ATTACH="http://localhost:${OPENCODE_PORT}"
-    opencode serve --port "$OPENCODE_PORT" >/tmp/opencode_serve.log 2>&1 &
-    OPENCODE_SERVE_PID=$!
-    trap '[[ -n "${OPENCODE_SERVE_PID:-}" ]] && kill "$OPENCODE_SERVE_PID" 2>/dev/null' EXIT
-  fi
+# Fail fast if cerebras dependencies not found
+command -v python3 >/dev/null 2>&1 || {
+  echo "ERROR: python3 not found in PATH (required for Cerebras runner)"
+  exit 1
+}
+if [[ ! -f "$RALPH/cerebras_agent.py" ]]; then
+  echo "ERROR: cerebras_agent.py not found at $RALPH/cerebras_agent.py"
+  exit 1
 fi
-
-# Fail fast if opencode runner but command not found
-if [[ "$RUNNER" == "opencode" ]]; then
-  command -v opencode >/dev/null 2>&1 || {
-    echo "ERROR: opencode not found in PATH"
-    exit 1
-  }
-fi
-
-# Fail fast if cerebras runner but dependencies not found
-if [[ "$RUNNER" == "cerebras" ]]; then
-  command -v python3 >/dev/null 2>&1 || {
-    echo "ERROR: python3 not found in PATH (required for Cerebras runner)"
-    exit 1
-  }
-  if [[ ! -f "$RALPH/cerebras_agent.py" ]]; then
-    echo "ERROR: cerebras_agent.py not found at $RALPH/cerebras_agent.py"
-    exit 1
-  fi
-  if [[ -z "${CEREBRAS_API_KEY:-}" ]]; then
-    echo "ERROR: CEREBRAS_API_KEY environment variable not set"
-    echo "Get your API key from: https://cloud.cerebras.ai"
-    exit 1
-  fi
-fi
-
-# Health check for attach endpoint (TCP port check)
-if [[ -n "${OPENCODE_ATTACH:-}" ]]; then
-  hostport="${OPENCODE_ATTACH#http://}"
-  hostport="${hostport#https://}"
-  hostport="${hostport%%/*}"
-  h="${hostport%%:*}"
-  p="${hostport##*:}"
-  if ! (echo >/dev/tcp/"$h"/"$p") >/dev/null 2>&1; then
-    echo "WARN: OpenCode attach endpoint not reachable; running without --attach"
-    OPENCODE_ATTACH=""
-  fi
+if [[ -z ${CEREBRAS_API_KEY:-} ]]; then
+  echo "ERROR: CEREBRAS_API_KEY environment variable not set"
+  echo "Get your API key from: https://cloud.cerebras.ai"
+  exit 1
 fi
 
 # Print effective config for debugging
-echo "Runner=${RUNNER} Model=${RESOLVED_MODEL:-<default>} Format=${OPENCODE_FORMAT:-<default>} Attach=${OPENCODE_ATTACH:-<none>} Serve=${OPENCODE_SERVE:-false}"
+echo "Runner=cerebras Model=${RESOLVED_MODEL:-<default>}"
 
 # Change to repository root for all git operations
 cd "$ROOT"
@@ -1043,16 +991,16 @@ ensure_worktree_branch "$TARGET_BRANCH"
 echo ""
 
 # Launch monitors before starting iterations (unless --no-monitors flag is set)
-if [[ "$NO_MONITORS" == "false" ]]; then
+if [[ $NO_MONITORS == "false" ]]; then
   launch_monitors
 fi
 
 # Determine prompt strategy
-if [[ -n "$PROMPT_ARG" ]]; then
+if [[ -n $PROMPT_ARG ]]; then
   PROMPT_FILE="$(resolve_prompt "$PROMPT_ARG")"
   for ((i = 1; i <= ITERATIONS; i++)); do
     # Check for interrupt before starting iteration
-    if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
+    if [[ $INTERRUPT_RECEIVED == "true" ]]; then
       echo ""
       echo "Exiting gracefully after iteration $((i - 1))."
       exit 130
@@ -1069,7 +1017,7 @@ if [[ -n "$PROMPT_ARG" ]]; then
       echo "These files are protected and cannot be fixed by Ralph."
       echo ""
       # Show which specific files failed
-      if [[ -f "$VERIFY_REPORT" ]]; then
+      if [[ -f $VERIFY_REPORT ]]; then
         echo "Failed protected files:"
         grep "^\[FAIL\] Protected\." "$VERIFY_REPORT" | while read -r line; do
           if echo "$line" | grep -q "Protected.1"; then
@@ -1145,7 +1093,7 @@ else
   # Alternating plan/build
   for ((i = 1; i <= ITERATIONS; i++)); do
     # Check for interrupt before starting iteration
-    if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
+    if [[ $INTERRUPT_RECEIVED == "true" ]]; then
       echo ""
       echo "Exiting gracefully after iteration $((i - 1))."
       exit 130
@@ -1162,7 +1110,7 @@ else
       echo "These files are protected and cannot be fixed by Ralph."
       echo ""
       # Show which specific files failed
-      if [[ -f "$VERIFY_REPORT" ]]; then
+      if [[ -f $VERIFY_REPORT ]]; then
         echo "Failed protected files:"
         grep "^\[FAIL\] Protected\." "$VERIFY_REPORT" | while read -r line; do
           if echo "$line" | grep -q "Protected.1"; then
@@ -1190,7 +1138,7 @@ else
 
     # Capture exit code without triggering set -e
     run_result=0
-    if [[ "$i" -eq 1 ]] || ((PLAN_EVERY > 0 && ((i - 1) % PLAN_EVERY == 0))); then
+    if [[ $i -eq 1 ]] || ((PLAN_EVERY > 0 && ((i - 1) % PLAN_EVERY == 0))); then
       # Sync tasks from Cortex before PLAN mode
       if [[ -f "$RALPH/sync_cortex_plan.sh" ]]; then
         echo "Syncing tasks from Cortex..."
