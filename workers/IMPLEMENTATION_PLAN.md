@@ -159,7 +159,7 @@
 
 ### Phase 8.2: Template Sync (1 task)
 
-- [ ] **8.2.1** Sync changes to `templates/ralph/current_ralph_tasks.sh`
+- [x] **8.2.1** Sync changes to `templates/ralph/current_ralph_tasks.sh`
   - **AC:** `diff workers/ralph/current_ralph_tasks.sh templates/ralph/current_ralph_tasks.sh` returns no output
 
 **AC:** ETA timer shows accurate estimates based on observed task completion times
