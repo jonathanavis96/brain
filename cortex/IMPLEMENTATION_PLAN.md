@@ -47,7 +47,7 @@ Add Quick Reference tables to skills files following SUMMARY.md pattern.
 
 ### Phase 2.2: Template Shellcheck Issues (10 tasks)
 
-- [ ] **2.2.1** Fix SC2034 (unused RUNNER) in `templates/cortex/cortex.bash` line 64
+- [x] **2.2.1** Fix SC2034 (unused RUNNER) in `templates/cortex/cortex.bash` line 64
 - [ ] **2.2.2** Fix SC2034 (unused CONFIG_FLAG) in `templates/cortex/cortex.bash` line 107
 - [ ] **2.2.3** Fix SC2086 (unquoted CONFIG_FLAG) in `templates/cortex/one-shot.sh` lines 257, 261
 - [ ] **2.2.4** Fix SC2162 (read without -r) in `templates/ralph/current_ralph_tasks.sh` lines 261, 558
