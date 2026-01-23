@@ -1,5 +1,20 @@
 # Cortex Implementation Plan
 
+## Phase 0-CRITICAL: Fix Broken Task Monitor (2 tasks)
+
+**Goal:** Fix `current_ralph_tasks.sh` which is broken due to path change from task 9.1.3 (moved IMPLEMENTATION_PLAN.md to workers/).
+
+### Phase 0-C.1: Fix Path References (2 tasks)
+
+- [ ] **0.C.1** Fix `workers/ralph/current_ralph_tasks.sh` line 25 - change `PLAN_FILE="$RALPH_DIR/IMPLEMENTATION_PLAN.md"` to `PLAN_FILE="$RALPH_DIR/../IMPLEMENTATION_PLAN.md"`
+  - **AC:** `bash workers/ralph/current_ralph_tasks.sh` shows tasks instead of "Error: IMPLEMENTATION_PLAN.md not found"
+- [ ] **0.C.2** Fix `templates/ralph/current_ralph_tasks.sh` line 26 - same fix for template consistency
+  - **AC:** Template matches worker file path reference
+
+**Root Cause:** Task 9.1.3 moved `workers/ralph/IMPLEMENTATION_PLAN.md` → `workers/IMPLEMENTATION_PLAN.md` but didn't update the path in `current_ralph_tasks.sh`.
+
+---
+
 **Purpose:** Task Contracts for Ralph workers. Each contract defines an atomic task with clear goals and acceptance criteria.
 
 **Workflow:**
@@ -117,9 +132,9 @@ Add Quick Reference tables to skills files following SUMMARY.md pattern.
 - [ ] **3.4.2** Remove cerebras runner dispatch code from `workers/ralph/loop.sh`
 - [ ] **3.4.3** Remove `--runner cerebras` option from help text and argument parsing
 
-### Phase 3.5: Update All Path References (4 tasks)
+### Phase 3.5: Update All Path References (3 tasks)
 
-- [ ] **3.5.1** Update `workers/ralph/current_ralph_tasks.sh` to reference `../IMPLEMENTATION_PLAN.md`
+- [x] **3.5.1** Update `workers/ralph/current_ralph_tasks.sh` to reference `../IMPLEMENTATION_PLAN.md` → **MOVED to Phase 0-CRITICAL as 0.C.1**
 - [ ] **3.5.2** Update `workers/ralph/pr-batch.sh` path references if needed
 - [ ] **3.5.3** Update `cortex/snapshot.sh` to reference new shared paths
 - [ ] **3.5.4** Update root `AGENTS.md` with new worker structure documentation
