@@ -39,10 +39,12 @@
 **Solution:** Use exact full-header-line matching + track synced headers in `.last_sync` file.
 
 - [ ] **0.C.6** Rewrite sync detection logic in `workers/ralph/sync_cortex_plan.sh`:
-  - Create `workers/ralph/.last_sync` file to track synced section headers (full lines)
+  - Read `## Phase` headers from Cortex plan (above `<!-- Cortex will add new Task Contracts above this line -->`)
+  - Read `## Phase` headers from Workers plan (all of them)
   - Match sections by **exact header line** (not regex-extracted Phase ID)
-  - Only append sections whose headers don't exist in Ralph's plan
-  - Update `.last_sync` after successful sync
+  - Only append sections whose headers don't exist in Workers plan
+  - Append new sections **below** the `<!-- Cortex adds new Task Contracts below this line -->` marker in Workers plan
+  - Track synced headers in `workers/ralph/.last_sync` file
   - **AC:** `bash sync_cortex_plan.sh --dry-run` on unchanged plans shows "No new sections"
   - **AC:** Adding new Phase to Cortex plan syncs ONLY that phase
 
