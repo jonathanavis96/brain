@@ -929,7 +929,7 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
 - [x] **1.3.1** In `parse_new_thunk_entries()`, before redrawing footer, clear the OLD footer lines (9 lines starting at old `LAST_CONTENT_ROW`)
   <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
 
-- [ ] **1.3.3** Test: Run `thunk_ralph_tasks.sh`, complete a task in another terminal, verify footer moves down cleanly
+- [x] **1.3.3** Test: Run `thunk_ralph_tasks.sh`, complete a task in another terminal, verify footer moves down cleanly
   <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
 
 - [ ] **9.1.1** Move `workers/ralph/.verify/` → `workers/.verify/`
