@@ -71,7 +71,7 @@
   - Update directory structure diagrams
   - **AC:** No bare "ralph/" paths remain (all are "workers/ralph/")
 
-- [ ] **5.1.2** Update `templates/backend/AGENTS.project.md` - change "ralph/" to "workers/ralph/"
+- [x] **5.1.2** Update `templates/backend/AGENTS.project.md` - change "ralph/" to "workers/ralph/"
   - **AC:** Consistent path references
 
 - [ ] **5.1.3** Update `templates/python/AGENTS.project.md` - change "ralph/" to "workers/ralph/"
