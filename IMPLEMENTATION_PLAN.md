@@ -71,7 +71,7 @@ See **workers/ralph/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown
 
 ## Phase 2: Medium Priority - Skills & Documentation
 
-- [ ] **DOCS.1** Create docs/EDGE_CASES.md with detailed examples and error recovery procedures
+- [x] **DOCS.1** Create docs/EDGE_CASES.md with detailed examples and error recovery procedures
 
 ---
 
