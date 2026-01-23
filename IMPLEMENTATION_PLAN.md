@@ -32,7 +32,8 @@ See **workers/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown (123 
 
 **Note:** Discovered via `pre-commit run --all-files` scan. These are formatting inconsistencies (tabs vs spaces) that violate project standard of 2-space indentation.
 
-- [ ] **WARN.SHFMT.1.new-project** Fix shfmt formatting in `workers/ralph/new-project.sh` - Convert tabs to 2-space indentation throughout file (functions: die, check_dependencies, load_github_username, save_github_username, prompt_github_username, select_template, copy_template_to_project, customize_project, initialize_git_repo, create_project)
+- [x] **WARN.SHFMT.1.new-project** Fix shfmt formatting in `workers/ralph/new-project.sh` - Convert tabs to 2-space indentation throughout file (functions: die, check_dependencies, load_github_username, save_github_username, prompt_github_username, select_template, copy_template_to_project, customize_project, initialize_git_repo, create_project)
+- [x] **WARN.SHFMT.2-8.multiple-files** Fix shfmt formatting in 7 files - Applied shfmt -ci -w -i 2 to convert case statement formatting to 2-space indentation with case-indent flag (files: templates/cortex/cortex-PROJECT.bash, workers/ralph/ralph.sh, .verify/launch_approve_waiver.sh, workers/ralph/.maintenance/verify-brain.sh, .verify/request_waiver.sh, cortex/one-shot.sh, setup-linters.sh), pre-commit shfmt now passes
 
 ## Phase 0-Warn: Root Level Verifier Warnings (COMPLETED)
 
@@ -98,7 +99,7 @@ See **workers/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown (123 
 ## Phase 3: Low Priority - Optimization & Testing
 
 - [x] **OPT.1** Review and optimize self-improvement system (GAP_BACKLOG.md, SKILL_BACKLOG.md)
-- [ ] **OPT.2** Add any missing skill files based on gaps identified
+- [x] **OPT.2** Add any missing skill files based on gaps identified
 - [ ] **TEST.1** Test full Ralph loop execution with verifier integration
 
 ---

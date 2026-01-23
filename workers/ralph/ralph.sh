@@ -4,16 +4,16 @@
 # Resolve script directory (follow symlink if needed)
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do
-	DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
-	SOURCE="$(readlink "$SOURCE")"
-	[[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+  DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
 done
 SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
 LOOP_SH="$SCRIPT_DIR/loop.sh"
 
 # Usage help
 usage() {
-	cat <<EOF
+  cat <<EOF
 Usage: ralph [OPTIONS]
 
 Ralph Worker - Execute tasks from the Brain repository implementation plan.
@@ -70,58 +70,58 @@ EOF
 LOOP_ARGS=()
 
 while [[ $# -gt 0 ]]; do
-	case "$1" in
-	-i)
-		LOOP_ARGS+=(--iterations "${2:-1}")
-		shift 2
-		;;
-	-i*)
-		# Handle -i20 format (no space)
-		LOOP_ARGS+=(--iterations "${1#-i}")
-		shift
-		;;
-	-p)
-		LOOP_ARGS+=(--plan-every "${2:-3}")
-		shift 2
-		;;
-	-p*)
-		# Handle -p5 format (no space)
-		LOOP_ARGS+=(--plan-every "${1#-p}")
-		shift
-		;;
-	-m)
-		LOOP_ARGS+=(--model "${2:-auto}")
-		shift 2
-		;;
-	-m*)
-		# Handle -mopus format (no space)
-		LOOP_ARGS+=(--model "${1#-m}")
-		shift
-		;;
-	-r)
-		LOOP_ARGS+=(--runner "${2:-rovodev}")
-		shift 2
-		;;
-	-r*)
-		# Handle -rcerebras format (no space)
-		LOOP_ARGS+=(--runner "${1#-r}")
-		shift
-		;;
-	-h)
-		usage
-		exit 0
-		;;
-	--help)
-		# Show full loop.sh help
-		bash "$LOOP_SH" --help
-		exit 0
-		;;
-	*)
-		# Pass through any other args to loop.sh
-		LOOP_ARGS+=("$1")
-		shift
-		;;
-	esac
+  case "$1" in
+    -i)
+      LOOP_ARGS+=(--iterations "${2:-1}")
+      shift 2
+      ;;
+    -i*)
+      # Handle -i20 format (no space)
+      LOOP_ARGS+=(--iterations "${1#-i}")
+      shift
+      ;;
+    -p)
+      LOOP_ARGS+=(--plan-every "${2:-3}")
+      shift 2
+      ;;
+    -p*)
+      # Handle -p5 format (no space)
+      LOOP_ARGS+=(--plan-every "${1#-p}")
+      shift
+      ;;
+    -m)
+      LOOP_ARGS+=(--model "${2:-auto}")
+      shift 2
+      ;;
+    -m*)
+      # Handle -mopus format (no space)
+      LOOP_ARGS+=(--model "${1#-m}")
+      shift
+      ;;
+    -r)
+      LOOP_ARGS+=(--runner "${2:-rovodev}")
+      shift 2
+      ;;
+    -r*)
+      # Handle -rcerebras format (no space)
+      LOOP_ARGS+=(--runner "${1#-r}")
+      shift
+      ;;
+    -h)
+      usage
+      exit 0
+      ;;
+    --help)
+      # Show full loop.sh help
+      bash "$LOOP_SH" --help
+      exit 0
+      ;;
+    *)
+      # Pass through any other args to loop.sh
+      LOOP_ARGS+=("$1")
+      shift
+      ;;
+  esac
 done
 
 # Execute loop.sh with converted arguments

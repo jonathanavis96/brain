@@ -64,6 +64,7 @@ Catalog of all skill files in the brain system.
 - [variable-patterns.md](domains/languages/shell/variable-patterns.md) - SC2155, SC2034, scoping
 - [cleanup-patterns.md](domains/languages/shell/cleanup-patterns.md) - Traps, temp files, state restoration
 - [common-pitfalls.md](domains/languages/shell/common-pitfalls.md) - ShellCheck errors and gotchas
+- [validation-patterns.md](domains/languages/shell/validation-patterns.md) - Shell project validation (syntax, shellcheck, permissions, security)
 
 ### Ralph
 

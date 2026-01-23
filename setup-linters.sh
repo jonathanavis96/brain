@@ -43,20 +43,20 @@ FAILED=()
 echo "📦 Installing apt packages..."
 
 install_apt() {
-    local pkg="$1"
-    local desc="$2"
-    if command -v "$pkg" &>/dev/null; then
-        SKIPPED+=("$pkg (already installed)")
-        return 0
-    fi
+  local pkg="$1"
+  local desc="$2"
+  if command -v "$pkg" &>/dev/null; then
+    SKIPPED+=("$pkg (already installed)")
+    return 0
+  fi
 
-    if sudo apt-get install -y "$pkg" &>/dev/null; then
-        INSTALLED+=("$pkg - $desc")
-        success "$pkg installed"
-    else
-        FAILED+=("$pkg")
-        fail "$pkg failed to install"
-    fi
+  if sudo apt-get install -y "$pkg" &>/dev/null; then
+    INSTALLED+=("$pkg - $desc")
+    success "$pkg installed"
+  else
+    FAILED+=("$pkg")
+    fail "$pkg failed to install"
+  fi
 }
 
 # Update apt cache once
@@ -68,33 +68,33 @@ install_apt "gh" "GitHub CLI"
 
 # yq - YAML processor (like jq but for YAML)
 if command -v yq &>/dev/null; then
-    SKIPPED+=("yq (already installed)")
+  SKIPPED+=("yq (already installed)")
 elif sudo apt-get install -y yq &>/dev/null 2>&1; then
-    INSTALLED+=("yq - YAML processor")
-    success "yq installed"
+  INSTALLED+=("yq - YAML processor")
+  success "yq installed"
 elif command -v snap &>/dev/null && sudo snap install yq &>/dev/null 2>&1; then
-    INSTALLED+=("yq - YAML processor (via snap)")
-    success "yq installed via snap"
+  INSTALLED+=("yq - YAML processor (via snap)")
+  success "yq installed via snap"
 elif pip install --user yq &>/dev/null 2>&1; then
-    INSTALLED+=("yq - YAML processor (via pip)")
-    success "yq installed via pip"
+  INSTALLED+=("yq - YAML processor (via pip)")
+  success "yq installed via pip"
 else
-    FAILED+=("yq")
-    warn "yq not available - install manually from https://github.com/mikefarah/yq"
+  FAILED+=("yq")
+  warn "yq not available - install manually from https://github.com/mikefarah/yq"
 fi
 
 # shfmt might be in a different package name or need snap
 if command -v shfmt &>/dev/null; then
-    SKIPPED+=("shfmt (already installed)")
+  SKIPPED+=("shfmt (already installed)")
 elif sudo apt-get install -y shfmt &>/dev/null 2>&1; then
-    INSTALLED+=("shfmt - Shell script formatter")
-    success "shfmt installed"
+  INSTALLED+=("shfmt - Shell script formatter")
+  success "shfmt installed"
 elif command -v snap &>/dev/null && sudo snap install shfmt &>/dev/null 2>&1; then
-    INSTALLED+=("shfmt - Shell script formatter (via snap)")
-    success "shfmt installed via snap"
+  INSTALLED+=("shfmt - Shell script formatter (via snap)")
+  success "shfmt installed via snap"
 else
-    FAILED+=("shfmt")
-    warn "shfmt not available via apt or snap - install manually: GO111MODULE=on go install mvdan.cc/sh/v3/cmd/shfmt@latest"
+  FAILED+=("shfmt")
+  warn "shfmt not available via apt or snap - install manually: GO111MODULE=on go install mvdan.cc/sh/v3/cmd/shfmt@latest"
 fi
 
 echo ""
@@ -105,43 +105,43 @@ echo ""
 echo "📦 Installing npm packages..."
 
 install_npm() {
-    local pkg="$1"
-    local desc="$2"
-    local cmd="${3:-$pkg}"  # command name might differ from package name
+  local pkg="$1"
+  local desc="$2"
+  local cmd="${3:-$pkg}" # command name might differ from package name
 
-    if ! command -v npm &>/dev/null; then
-        SKIPPED+=("$pkg (npm not available)")
-        return 0
-    fi
+  if ! command -v npm &>/dev/null; then
+    SKIPPED+=("$pkg (npm not available)")
+    return 0
+  fi
 
-    if command -v "$cmd" &>/dev/null; then
-        SKIPPED+=("$pkg (already installed)")
-        return 0
-    fi
+  if command -v "$cmd" &>/dev/null; then
+    SKIPPED+=("$pkg (already installed)")
+    return 0
+  fi
 
-    if npm install -g "$pkg" &>/dev/null 2>&1; then
-        INSTALLED+=("$pkg - $desc")
-        success "$pkg installed"
-    else
-        FAILED+=("$pkg")
-        fail "$pkg failed to install"
-    fi
+  if npm install -g "$pkg" &>/dev/null 2>&1; then
+    INSTALLED+=("$pkg - $desc")
+    success "$pkg installed"
+  else
+    FAILED+=("$pkg")
+    fail "$pkg failed to install"
+  fi
 }
 
 if command -v npm &>/dev/null; then
-    # Markdown
-    install_npm "markdownlint-cli" "Markdown linter" "markdownlint"
+  # Markdown
+  install_npm "markdownlint-cli" "Markdown linter" "markdownlint"
 
-    # JavaScript/TypeScript
-    install_npm "eslint" "JavaScript/TypeScript linter"
-    install_npm "prettier" "Code formatter (JS, CSS, HTML, MD)"
-    install_npm "typescript" "TypeScript compiler/checker" "tsc"
+  # JavaScript/TypeScript
+  install_npm "eslint" "JavaScript/TypeScript linter"
+  install_npm "prettier" "Code formatter (JS, CSS, HTML, MD)"
+  install_npm "typescript" "TypeScript compiler/checker" "tsc"
 
-    # GitHub Pages deployment
-    install_npm "gh-pages" "GitHub Pages deployment"
+  # GitHub Pages deployment
+  install_npm "gh-pages" "GitHub Pages deployment"
 else
-    warn "npm not found - skipping all npm packages (markdownlint, eslint, prettier, typescript, gh-pages)"
-    SKIPPED+=("npm packages (npm not available)")
+  warn "npm not found - skipping all npm packages (markdownlint, eslint, prettier, typescript, gh-pages)"
+  SKIPPED+=("npm packages (npm not available)")
 fi
 
 echo ""
@@ -153,40 +153,40 @@ echo "📦 Installing Python packages via pipx..."
 
 # Ensure pipx is available
 if ! command -v pipx &>/dev/null; then
-    echo "Installing pipx first..."
-    if sudo apt-get install -y pipx &>/dev/null 2>&1; then
-        pipx ensurepath &>/dev/null 2>&1 || true
-        INSTALLED+=("pipx - Python app installer")
-        success "pipx installed"
-    else
-        FAILED+=("pipx")
-        fail "pipx failed to install - Python tools will be skipped"
-        warn "Install manually: sudo apt-get install pipx"
-    fi
+  echo "Installing pipx first..."
+  if sudo apt-get install -y pipx &>/dev/null 2>&1; then
+    pipx ensurepath &>/dev/null 2>&1 || true
+    INSTALLED+=("pipx - Python app installer")
+    success "pipx installed"
+  else
+    FAILED+=("pipx")
+    fail "pipx failed to install - Python tools will be skipped"
+    warn "Install manually: sudo apt-get install pipx"
+  fi
 fi
 
 install_pipx() {
-    local pkg="$1"
-    local desc="$2"
-    local cmd="${3:-$pkg}"  # command name might differ from package name
+  local pkg="$1"
+  local desc="$2"
+  local cmd="${3:-$pkg}" # command name might differ from package name
 
-    if ! command -v pipx &>/dev/null; then
-        SKIPPED+=("$pkg (pipx not available)")
-        return 0
-    fi
+  if ! command -v pipx &>/dev/null; then
+    SKIPPED+=("$pkg (pipx not available)")
+    return 0
+  fi
 
-    if command -v "$cmd" &>/dev/null; then
-        SKIPPED+=("$pkg (already installed)")
-        return 0
-    fi
+  if command -v "$cmd" &>/dev/null; then
+    SKIPPED+=("$pkg (already installed)")
+    return 0
+  fi
 
-    if pipx install "$pkg" &>/dev/null 2>&1; then
-        INSTALLED+=("$pkg - $desc")
-        success "$pkg installed"
-    else
-        FAILED+=("$pkg")
-        fail "$pkg failed to install"
-    fi
+  if pipx install "$pkg" &>/dev/null 2>&1; then
+    INSTALLED+=("$pkg - $desc")
+    success "$pkg installed"
+  else
+    FAILED+=("$pkg")
+    fail "$pkg failed to install"
+  fi
 }
 
 install_pipx "pre-commit" "Git hooks framework"
@@ -203,27 +203,27 @@ echo "📋 Installation Summary"
 echo "========================================"
 
 if [[ ${#INSTALLED[@]} -gt 0 ]]; then
-    echo ""
-    echo -e "${GREEN}Installed:${NC}"
-    for item in "${INSTALLED[@]}"; do
-        echo "  ✅ $item"
-    done
+  echo ""
+  echo -e "${GREEN}Installed:${NC}"
+  for item in "${INSTALLED[@]}"; do
+    echo "  ✅ $item"
+  done
 fi
 
 if [[ ${#SKIPPED[@]} -gt 0 ]]; then
-    echo ""
-    echo -e "${YELLOW}Skipped:${NC}"
-    for item in "${SKIPPED[@]}"; do
-        echo "  ⏭️  $item"
-    done
+  echo ""
+  echo -e "${YELLOW}Skipped:${NC}"
+  for item in "${SKIPPED[@]}"; do
+    echo "  ⏭️  $item"
+  done
 fi
 
 if [[ ${#FAILED[@]} -gt 0 ]]; then
-    echo ""
-    echo -e "${RED}Failed:${NC}"
-    for item in "${FAILED[@]}"; do
-        echo "  ❌ $item"
-    done
+  echo ""
+  echo -e "${RED}Failed:${NC}"
+  for item in "${FAILED[@]}"; do
+    echo "  ❌ $item"
+  done
 fi
 
 echo ""

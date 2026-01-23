@@ -36,8 +36,9 @@ Rules:
 
 ### Bash/Shell Project Validation Patterns
 
-- **Status:** Pending
+- **Status:** Done
 - **Source gap:** 2026-01-19 entry in GAP_BACKLOG.md
 - **Target path:** `skills/domains/languages/shell/validation-patterns.md`
 - **Priority:** P1 (high leverage / recurring)
-- **Notes:** Ralph templates assume npm/TypeScript projects. Need bash-specific validation patterns (bash -n, shellcheck, permission checks, jq validation, security checks). Will help future shell script project bootstrapping.
+- **Skill file link:** [validation-patterns.md](../domains/languages/shell/validation-patterns.md)
+- **Notes:** Created comprehensive skill covering syntax validation (bash -n), static analysis (shellcheck), executable permissions, JSON validation (jq), security checks (hardcoded secrets), dependency checks (command -v), testing patterns, example VALIDATION_CRITERIA.md for shell projects, and Ralph template integration guidance.
