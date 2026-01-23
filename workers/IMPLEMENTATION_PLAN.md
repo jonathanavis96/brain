@@ -39,7 +39,7 @@
   - **AC:** `bash sync_cortex_plan.sh --dry-run` on unchanged plans shows "No new sections"
   - **AC:** Adding new Phase below marker in Cortex syncs ONLY that phase (no duplicates)
 
-- [ ] **0.C.7** Add `--reset` flag to sync script:
+- [x] **0.C.7** Add `--reset` flag to sync script:
   - Clears `.last_sync` file
   - Allows re-bootstrapping if plans diverge
   - **AC:** `bash sync_cortex_plan.sh --reset` clears state and reports success
