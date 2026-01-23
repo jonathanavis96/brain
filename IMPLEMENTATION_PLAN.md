@@ -100,7 +100,7 @@ See **workers/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown.
 - [ ] **WARN.MD.40.skills** Fix MD violations in `skills/domains/websites/build/component-development.md` - MD032, MD022, MD031 violations
 - [ ] **WARN.MD.41.skills** Fix MD violations in `skills/domains/websites/build/forms-integration.md` - MD032, MD022, MD031 violations
 - [ ] **WARN.MD.42.skills** Fix MD violations in `skills/domains/websites/build/mobile-first.md` - MD032, MD022, MD031 violations
-- [ ] **WARN.MD.43.skills** Fix MD violations in `skills/domains/websites/build/performance.md` - MD032, MD022, MD031 violations
+- [x] **WARN.MD.43.skills** Fix MD violations in `skills/domains/websites/build/performance.md` - MD032, MD022, MD031 violations
 - [ ] **WARN.MD.44.skills** Fix MD violations in `skills/domains/websites/build/seo-foundations.md` - MD032, MD022, MD031 violations
 - [ ] **WARN.MD.45.skills** Fix MD violations in `skills/domains/websites/copywriting/cta-optimizer.md` - MD032, MD022, MD031 violations
 - [ ] **WARN.MD.46.skills** Fix MD violations in `skills/domains/websites/copywriting/objection-handler.md` - MD032, MD022, MD031 violations

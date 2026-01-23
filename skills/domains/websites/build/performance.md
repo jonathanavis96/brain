@@ -5,7 +5,7 @@ Optimizes for Core Web Vitals and fast load times across all devices.
 ## Quick Reference
 
 | Metric | Target | What It Measures |
-|--------|--------|------------------|
+| ------ | ------ | ---------------- |
 | **LCP** (Largest Contentful Paint) | < 2.5s | Loading speed |
 | **FID** (First Input Delay) | < 100ms | Interactivity |
 | **CLS** (Cumulative Layout Shift) | < 0.1 | Visual stability |
@@ -15,6 +15,7 @@ Optimizes for Core Web Vitals and fast load times across all devices.
 ## Trigger Conditions
 
 Use this skill when:
+
 - Lighthouse score below 90
 - Page feels slow to load
 - Layout jumps around during load
@@ -27,6 +28,7 @@ Use this skill when:
 The largest image or text block must render quickly.
 
 **Fixes:**
+
 ```html
 <!-- Preload hero image -->
 <link rel="preload" as="image" href="/hero.webp" />
@@ -49,6 +51,7 @@ The largest image or text block must render quickly.
 Page must respond to clicks/taps immediately.
 
 **Fixes:**
+
 ```html
 <!-- Defer non-critical JavaScript -->
 <script src="/analytics.js" defer></script>
@@ -64,6 +67,7 @@ Page must respond to clicks/taps immediately.
 Elements shouldn't jump around during load.
 
 **Fixes:**
+
 ```html
 <!-- Always set dimensions on images -->
 <img src="/photo.jpg" width="800" height="600" alt="" />
@@ -86,14 +90,16 @@ Elements shouldn't jump around during load.
 ## Image Optimization
 
 ### Format Selection
+
 | Format | Use For | Savings |
-|--------|---------|---------|
+| ------ | ------- | ------- |
 | **WebP** | Photos, general use | 25-35% smaller than JPEG |
 | **AVIF** | Best compression | 50% smaller than JPEG |
 | **SVG** | Icons, logos | Scales infinitely |
 | **PNG** | Transparency needed | Use sparingly |
 
 ### Responsive Images
+
 ```html
 <img
   src="/hero-800.webp"
@@ -112,6 +118,7 @@ Elements shouldn't jump around during load.
 ```
 
 ### Lazy Loading
+
 ```html
 <!-- Native lazy loading for below-fold images -->
 <img src="/photo.jpg" loading="lazy" alt="" />
@@ -123,6 +130,7 @@ Elements shouldn't jump around during load.
 ## JavaScript Optimization
 
 ### Bundle Size
+
 ```javascript
 // ✅ Import only what you need
 import { format } from 'date-fns/format';
@@ -132,6 +140,7 @@ import * as dateFns from 'date-fns';
 ```
 
 ### Defer Non-Critical JS
+
 ```html
 <!-- Analytics, chat widgets, etc. -->
 <script src="/analytics.js" defer></script>
@@ -145,6 +154,7 @@ import * as dateFns from 'date-fns';
 ```
 
 ### Astro: Zero JS by Default
+
 ```astro
 <!-- Static by default - no JS shipped -->
 <Button>Click Me</Button>
@@ -156,6 +166,7 @@ import * as dateFns from 'date-fns';
 ## CSS Optimization
 
 ### Critical CSS
+
 Inline styles needed for above-fold content.
 
 ```html
@@ -171,6 +182,7 @@ Inline styles needed for above-fold content.
 ```
 
 ### Reduce CSS Size
+
 ```css
 /* Use Tailwind's purge - only ships used classes */
 /* Configure in tailwind.config.js */
@@ -205,7 +217,7 @@ module.exports = {
 ## Hosting & CDN
 
 | Host | Features | Best For |
-|------|----------|----------|
+| ---- | -------- | -------- |
 | **Vercel** | Edge, automatic optimization | Next.js, Astro |
 | **Netlify** | CDN, easy deploys | Static sites |
 | **Cloudflare Pages** | Global edge, fast | Any static |
@@ -249,7 +261,7 @@ module.exports = {
 ## Common Mistakes
 
 | Mistake | Impact | Fix |
-|---------|--------|-----|
+| ------- | ------ | --- |
 | Unoptimized images | Slow LCP | Compress, use WebP |
 | No image dimensions | CLS issues | Always set width/height |
 | Too much JavaScript | Slow FID | Use Astro, defer scripts |
