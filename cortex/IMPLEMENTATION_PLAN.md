@@ -60,7 +60,7 @@
 
 ### Phase 3.3: Create Cerebras-specific `loop.sh`
 
-- [ ] **3.3.1** Copy `workers/ralph/loop.sh` → `workers/cerebras/loop.sh`
+- [x] **3.3.1** Copy `workers/ralph/loop.sh` → `workers/cerebras/loop.sh`
 - [ ] **3.3.2** Remove opencode runner code from `workers/cerebras/loop.sh`
 - [ ] **3.3.3** Set default runner to `cerebras` (remove runner selection logic)
 
