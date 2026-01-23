@@ -9,6 +9,7 @@ State management is one of the most challenging aspects of frontend development.
 ## When to Use It
 
 Reference this KB file when:
+
 - Choosing a state management solution for a new feature or project
 - Refactoring components with excessive prop drilling or lift-state-up
 - Implementing data fetching, caching, or synchronization with server state
@@ -17,6 +18,7 @@ Reference this KB file when:
 - Debugging state-related bugs (stale closures, race conditions, inconsistent state)
 
 **Specific triggers:**
+
 - Component tree more than 3 levels deep passing the same props
 - Multiple components need access to the same state
 - State changes cause performance issues (excessive re-renders)
@@ -30,7 +32,7 @@ Reference this KB file when:
 ### State Types and Solutions
 
 | State Type | Examples | Recommended Tool |
-|------------|----------|------------------|
+| ------------ | ---------- | ------------------ |
 | **Local UI** | Modal open, input value | `useState` |
 | **Shared UI** | Theme, sidebar open | Context or Zustand |
 | **Server/Cache** | API data, user profile | React Query / SWR |
@@ -41,7 +43,7 @@ Reference this KB file when:
 ### Tool Decision Matrix
 
 | Need | useState | Context | Zustand | Redux | React Query |
-|------|----------|---------|---------|-------|-------------|
+| ------ | ---------- | --------- | --------- | ------- | ------------- |
 | Simple local state | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Avoid prop drilling | ❌ | ✅ | ✅ | ✅ | ❌ |
 | Frequent updates | ✅ | ⚠️ | ✅ | ✅ | ❌ |
@@ -53,7 +55,7 @@ Reference this KB file when:
 ### Common Mistakes
 
 | ❌ Don't | ✅ Do |
-|---------|------|
+| --------- | ------ |
 | Redux for everything | Match tool to state type |
 | Prop drill 4+ levels | Use Context or state library |
 | Store server data in Redux | Use React Query/SWR |
@@ -66,7 +68,7 @@ Reference this KB file when:
 ### Performance Patterns
 
 | Problem | Solution |
-|---------|----------|
+| --------- | ---------- |
 | Unnecessary re-renders | `React.memo`, selector functions |
 | Slow context updates | Split into multiple contexts |
 | Stale closures | `useRef` for latest value |
@@ -80,7 +82,7 @@ Reference this KB file when:
 Before choosing a solution, identify what type of state you're managing:
 
 | State Type | Scope | Examples | Best Solution |
-|------------|-------|----------|---------------|
+| ------------ | ------- | ---------- | --------------- |
 | **Local Component** | Single component | Form inputs, toggles, hover state | `useState`, `useReducer` |
 | **Local Shared** | Component + children | Modal open/close, theme toggle | `useState` + props or Context |
 | **Global Client** | Entire application | User preferences, UI state, cart | Context, Zustand, Redux |
@@ -119,11 +121,13 @@ function SearchIndex({ items }: Props) {
 ```
 
 **When to use:**
+
 - State only affects one component
 - No need to share with siblings or ancestors
 - Simple state transitions (toggles, counters, input values)
 
 **Avoid:**
+
 - Passing state through 3+ component levels
 - Duplicating state across multiple components
 - Complex state logic (use `useReducer` instead)
@@ -180,6 +184,7 @@ function UserProfile({ userId }: Props) {
 ```
 
 **When to use:**
+
 - State has multiple related sub-values
 - Next state depends on previous state
 - Complex state transitions (e.g., state machines)
@@ -229,7 +234,9 @@ function ThemeToggle() {
 }
 ```
 
-**Performance optimization: Split contexts to prevent unnecessary re-renders**
+#### Performance optimization
+
+Split contexts to prevent unnecessary re-renders:
 
 ```tsx
 // ❌ Bad: Everything re-renders when anything changes
@@ -252,11 +259,13 @@ const NotificationsContext = createContext(notifications) // Changes often
 ```
 
 **When to use:**
+
 - Data needed by many components at different nesting levels
 - Data changes infrequently (theme, locale, user auth status)
 - Want to avoid prop drilling through 3+ levels
 
 **Avoid:**
+
 - Rapidly changing data (causes re-renders of all consumers)
 - Data that only 1-2 components need (use props instead)
 - Server state (use React Query/SWR instead)
@@ -325,12 +334,14 @@ export const useCartStore = create(
 ```
 
 **When to use:**
+
 - Global state that changes frequently (shopping cart, notifications)
 - Need better performance than Context (selector-based subscriptions)
 - Want simple API without boilerplate (vs Redux)
 - Need to persist state to localStorage
 
 **Advantages over Context:**
+
 - No Provider wrapper needed
 - Automatic selector optimization (only re-render when selected state changes)
 - Built-in persistence middleware
@@ -390,6 +401,7 @@ function UserProfile() {
 ```
 
 **When to use:**
+
 - Very large applications with complex state requirements
 - Need advanced middleware (sagas, observables, custom logging)
 - Team already familiar with Redux patterns
@@ -477,6 +489,7 @@ function UserPosts({ userId }: Props) {
 ```
 
 **When to use:**
+
 - Any data fetched from a server/API
 - Need automatic caching and background refetching
 - Need optimistic updates or mutations
@@ -484,6 +497,7 @@ function UserPosts({ userId }: Props) {
 - Need to handle loading/error states consistently
 
 **Advantages:**
+
 - Automatic caching and deduplication
 - Background refetching and synchronization
 - Optimistic updates and rollback
@@ -548,11 +562,13 @@ function StaticConfig() {
 ```
 
 **When to use:**
+
 - Similar needs to React Query but prefer simpler API
 - Smaller bundle size is important (SWR is ~4KB, React Query is ~13KB)
 - Next.js projects (SWR made by Vercel, first-class Next.js support)
 
 **React Query vs SWR:**
+
 - React Query: More features, better TypeScript, more powerful devtools
 - SWR: Simpler API, smaller bundle, sufficient for most use cases
 
@@ -610,12 +626,14 @@ function SignupForm() {
 ```
 
 **When to use:**
+
 - Forms with validation
 - Need to minimize re-renders (React Hook Form uses uncontrolled inputs)
 - Multi-step forms or complex form logic
 - Need to integrate with validation libraries (Zod, Yup)
 
 **Advantages over controlled inputs:**
+
 - Fewer re-renders (doesn't re-render on every keystroke)
 - Better performance for large forms
 - Built-in validation and error handling
@@ -633,9 +651,9 @@ function ProductList() {
   const searchParams = useSearchParams()
   const [params, setParams] = useSearchParams()
   
-  const category = searchParams.get('category') || 'all'
-  const page = parseInt(searchParams.get('page') || '1')
-  const sortBy = searchParams.get('sort') || 'name'
+  const category = searchParams.get('category') |  | 'all'
+  const page = parseInt(searchParams.get('page') |  | '1')
+  const sortBy = searchParams.get('sort') |  | 'name'
   
   function updateFilter(key: string, value: string) {
     const newParams = new URLSearchParams(searchParams)
@@ -669,12 +687,14 @@ function ProductList() {
 ```
 
 **When to use:**
+
 - Filters, search queries, pagination, tabs
 - State that should be shareable (copy URL to share state)
 - State that should persist across page refreshes
 - State that should be in browser history (back/forward buttons)
 
 **Best practices:**
+
 - Use search params for UI state, not sensitive data
 - Validate and sanitize params (users can modify URLs)
 - Provide sensible defaults for missing params
@@ -728,11 +748,13 @@ function ProductList({ products }: Props) {
 ```
 
 **When to use:**
+
 - Total can be computed from items
 - Filtered list can be computed from list + filter
 - Validation state can be computed from input values
 
 **Use useMemo when:**
+
 - Computation is expensive (filtering large lists, complex calculations)
 - Derived state is passed to memoized components
 - Profiling shows performance issues
@@ -767,12 +789,14 @@ function UncontrolledInput() {
 ```
 
 **Use controlled when:**
+
 - Need to validate input on every keystroke
 - Need to disable submit button based on input
 - Multiple inputs depend on each other
 - Need to format input as user types
 
 **Use uncontrolled when:**
+
 - Simple forms without complex validation
 - Need better performance (fewer re-renders)
 - Integrating with non-React code
@@ -780,7 +804,7 @@ function UncontrolledInput() {
 
 ## Decision Tree
 
-```
+```text
 Need to manage state?
 ├─ Is it server data? (from API/database)
 │  ├─ Yes → Use React Query or SWR (Pattern 6/7)
