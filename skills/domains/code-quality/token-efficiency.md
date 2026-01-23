@@ -9,7 +9,7 @@ Minimize tool calls per iteration to save tokens and time. Target: <20 tool call
 ## Quick Reference
 
 | Category | Anti-Pattern (DON'T) | Best Practice (DO) |
-|----------|---------------------|-------------------|
+| -------- | -------------------- | ----------------- |
 | **Duplicate Commands** | Running `cat .verify/latest.txt` 3 times | Read ONCE at start, cache result mentally |
 | **Known Values** | Running `pwd`, `git branch` repeatedly | Known from header - never run |
 | **File Content** | Opening same file multiple times | Read ONCE, remember content |
@@ -26,7 +26,7 @@ Minimize tool calls per iteration to save tokens and time. Target: <20 tool call
 ## Common Traps (from actual Ralph logs)
 
 | Trap | Seen | Fix |
-|------|------|-----|
+| ------ | ------ | ----- |
 | Reading `.verify/latest.txt` multiple times | 64x | Read ONCE at start, cache result |
 | Running `pwd`/`git branch` repeatedly | 38x | Known from header - never run |
 | Checking `tail THUNK.md` multiple times | 22x | Get next number ONCE |
