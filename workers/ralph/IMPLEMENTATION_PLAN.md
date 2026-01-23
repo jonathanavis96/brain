@@ -1184,6 +1184,22 @@ Fix markdown formatting issues (deferred - low impact):
   - 9.5: pr-batch.sh (2 SC2155)
 - **Expected iterations:** 4 BUILD iterations (1 per batched task)
 
+## Phase 8: Pre-Commit Linting Cleanup
+
+### shfmt Formatting (tab→space conversion)
+
+- [ ] **8.1** Fix shfmt indentation in `workers/ralph/current_ralph_tasks.sh`
+  - **Issue:** File uses tabs instead of spaces (detected by pre-commit shfmt hook)
+  - **Fix:** Run `shfmt -w -i 2 workers/ralph/current_ralph_tasks.sh`
+  - **AC:** `shfmt -d workers/ralph/current_ralph_tasks.sh` returns no diff
+  - **Commit:** `style(ralph): convert tabs to spaces in current_ralph_tasks.sh`
+
+- [ ] **8.2** Fix shfmt indentation in `workers/ralph/thunk_ralph_tasks.sh`
+  - **Issue:** File uses tabs instead of spaces (detected by pre-commit shfmt hook)
+  - **Fix:** Run `shfmt -w -i 2 workers/ralph/thunk_ralph_tasks.sh`
+  - **AC:** `shfmt -d workers/ralph/thunk_ralph_tasks.sh` returns no diff
+  - **Commit:** `style(ralph): convert tabs to spaces in thunk_ralph_tasks.sh`
+
 ## Phase 5-4: Shell Script Formatting Consistency
 
 - [ ] **5.4.1** Run `shfmt -w -i 2 workers/ralph/*.sh templates/ralph/*.sh` to normalize all shell scripts

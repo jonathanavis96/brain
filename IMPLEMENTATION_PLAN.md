@@ -22,7 +22,7 @@ The brain repository has **two implementation plans**:
 - 📋 **Phase 1-8** - Shell cleanup, documentation, optimization (0/49 complete)
 - 🚨 **NEW: Pre-commit scan** - Discovered shfmt formatting violations in workers/ralph/ scripts (current_ralph_tasks.sh, thunk_ralph_tasks.sh need tab→space conversion)
 
-See **workers/ralph/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown (121 tasks total).
+See **workers/ralph/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown (123 tasks total).
 
 ---
 
@@ -96,9 +96,9 @@ See **workers/ralph/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown
 - **Phase 5** - Design decisions (6 tasks)
 - **Phase 6** - PR #4 D-items review (22 tasks)
 - **Phase 7** - Maintenance items (1 task)
-- **Phase 8** - Pre-commit linting cleanup (17 tasks)
+- **Phase 8** - Pre-commit linting cleanup (19 tasks)
 
-**Total:** 121 tasks tracked in workers/ralph/IMPLEMENTATION_PLAN.md (117 original + 3 new pre-commit + 1 obsolete removed)
+**Total:** 123 tasks tracked in workers/ralph/IMPLEMENTATION_PLAN.md (117 original + 5 new pre-commit + 1 obsolete removed)
 
 ---
 
