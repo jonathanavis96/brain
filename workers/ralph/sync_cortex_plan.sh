@@ -14,7 +14,7 @@ set -euo pipefail
 
 # Paths (relative to workers/ralph/)
 CORTEX_PLAN="../../cortex/IMPLEMENTATION_PLAN.md"
-RALPH_PLAN="IMPLEMENTATION_PLAN.md"
+RALPH_PLAN="../IMPLEMENTATION_PLAN.md"
 SYNC_MARKER="<!-- SYNCED_FROM_CORTEX: $(date +%Y-%m-%d) -->"
 LOG_PREFIX="[SYNC]"
 

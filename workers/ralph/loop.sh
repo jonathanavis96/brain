@@ -1004,10 +1004,10 @@ run_once() {
   fi
 
   # Check if all tasks are done (for true completion)
-  if [[ -f "$RALPH/IMPLEMENTATION_PLAN.md" ]]; then
+  if [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
     local unchecked_count
     # Note: grep -c returns exit 1 when count is 0, so we capture output first then default
-    unchecked_count=$(grep -cE '^\s*-\s*\[ \]' "$RALPH/IMPLEMENTATION_PLAN.md" 2>/dev/null) || unchecked_count=0
+    unchecked_count=$(grep -cE '^\s*-\s*\[ \]' "$ROOT/workers/IMPLEMENTATION_PLAN.md" 2>/dev/null) || unchecked_count=0
     if [[ "$unchecked_count" -eq 0 ]]; then
       # All tasks done - run final verification
       if run_verifier; then
