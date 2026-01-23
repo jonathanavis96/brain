@@ -42,7 +42,7 @@
   - Check all .sh files for absolute paths that should be relative
   - **AC:** All scripts use $ROOT or relative paths consistently
 
-- [ ] **3.5.2** Audit workers/cerebras/ scripts for hardcoded paths  
+- [x] **3.5.2** Audit workers/cerebras/ scripts for hardcoded paths  
   - Check all .sh files for absolute paths that should be relative
   - **AC:** All scripts use $ROOT or relative paths consistently
 
