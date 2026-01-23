@@ -1,8 +1,8 @@
 # Cortex Implementation Plan
 
-## Phase 0-CRITICAL: Fix Broken Task Monitor (2 tasks)
+## Phase 0-CRITICAL: Fix Broken Task Monitor & Sync Issues (4 tasks)
 
-**Goal:** Fix `current_ralph_tasks.sh` which is broken due to path change from task 9.1.3 (moved IMPLEMENTATION_PLAN.md to workers/).
+**Goal:** Fix `current_ralph_tasks.sh` (broken due to path change) and fix sync timestamp format.
 
 ### Phase 0-C.1: Fix Path References (2 tasks)
 
@@ -12,6 +12,15 @@
   - **AC:** Template matches worker file path reference
 
 **Root Cause:** Task 9.1.3 moved `workers/ralph/IMPLEMENTATION_PLAN.md` → `workers/IMPLEMENTATION_PLAN.md` but didn't update the path in `current_ralph_tasks.sh`.
+
+### Phase 0-C.2: Fix Sync Timestamp Format (2 tasks)
+
+- [ ] **0.C.3** Fix `workers/ralph/sync_cortex_plan.sh` line 17 - change `$(date +%Y-%m-%d)` to `$(date '+%Y-%m-%d %H:%M:%S')` for full timestamp
+  - **AC:** Sync marker shows `SYNCED_FROM_CORTEX: 2026-01-23 16:45:00` format (with HH:MM:SS)
+- [ ] **0.C.4** Fix `templates/ralph/sync_cortex_plan.sh` - same fix for template consistency
+  - **AC:** Template matches worker file timestamp format
+
+**Note:** Sync is ONE-WAY only (Cortex → Ralph). Ralph takes tasks and logs completions to THUNK.md. No reverse sync needed.
 
 ---
 

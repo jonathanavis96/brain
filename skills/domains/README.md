@@ -7,12 +7,14 @@ This directory contains **technical domain knowledge** - reusable patterns, conv
 ## When to Use It
 
 Create a skill file in `skills/domains/` when you:
+
 - Discover a reusable technical pattern (e.g., authentication flows, caching strategies)
 - Document an architectural decision that applies broadly (e.g., API design patterns)
 - Capture implementation best practices for a specific technology area
 - Need to share technical knowledge across multiple projects
 
 **Examples of domain topics:**
+
 - Authentication patterns (OAuth2, JWT, session management) → `backend/`
 - Caching strategies (LRU, Redis patterns, React Query) → `backend/`
 - API design patterns (REST conventions, error handling) → `backend/`
