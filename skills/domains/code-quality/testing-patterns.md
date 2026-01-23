@@ -9,6 +9,7 @@ Testing is fundamental to software quality, but teams often struggle with test o
 ## When to Use It
 
 Reference this KB file when:
+
 - Setting up testing infrastructure for a new project
 - Organizing test files and choosing naming conventions
 - Deciding between unit, integration, or e2e tests for a feature
@@ -18,6 +19,7 @@ Reference this KB file when:
 - Improving test coverage strategically
 
 **Specific triggers:**
+
 - Starting a new project and need to set up testing
 - Bug found in production that should have been caught by tests
 - Test suite taking too long to run (>5 minutes for unit tests)
@@ -31,7 +33,7 @@ Reference this KB file when:
 ### Test Types at a Glance
 
 | Type | Scope | Speed | When to Use |
-|------|-------|-------|-------------|
+| ---- | ----- | ----- | ----------- |
 | **Unit** | Single function/method | Fast (ms) | Pure logic, utilities, transformations |
 | **Integration** | Multiple modules | Medium (s) | API endpoints, database queries, services |
 | **E2E** | Full user flow | Slow (min) | Critical paths: login, checkout, signup |
@@ -41,7 +43,7 @@ Reference this KB file when:
 ### Testing Pyramid Ratio
 
 | Level | Percentage | Characteristics |
-|-------|------------|-----------------|
+| ----- | ---------- | --------------- |
 | Unit | 70% | Fast, isolated, many tests |
 | Integration | 20% | Module interactions, some mocking |
 | E2E | 10% | Critical paths only, slow but realistic |
@@ -49,7 +51,7 @@ Reference this KB file when:
 ### Common Mistakes
 
 | ❌ Don't | ✅ Do |
-|---------|------|
+| --------- | ------ |
 | Test implementation details | Test behavior and outputs |
 | Mock everything | Mock only external dependencies |
 | Write tests after bugs | Write tests with features (TDD) |
@@ -62,7 +64,7 @@ Reference this KB file when:
 ### File Naming Conventions
 
 | Language | Pattern | Example |
-|----------|---------|---------|
+| -------- | ------- | ------- |
 | JavaScript/TypeScript | `*.test.ts` or `*.spec.ts` | `Button.test.tsx` |
 | Python | `test_*.py` | `test_auth.py` |
 | Go | `*_test.go` | `auth_test.go` |
@@ -74,7 +76,7 @@ Reference this KB file when:
 
 The testing pyramid guides how many tests to write at each level:
 
-```
+```text
        /\
       /e2e\      Few (slow, expensive, brittle)
      /------\
@@ -85,11 +87,13 @@ The testing pyramid guides how many tests to write at each level:
 ```
 
 **Guidelines:**
+
 - **70% unit tests**: Fast, isolated, test individual functions/methods
 - **20% integration tests**: Test module interactions, database queries, API endpoints
 - **10% e2e tests**: Critical user journeys only (login, checkout, core workflows)
 
 **Why this ratio:**
+
 - Unit tests are fast (milliseconds), run frequently during development
 - Integration tests catch connection issues between components
 - E2e tests are slow (seconds/minutes) but validate real user experience
@@ -101,7 +105,7 @@ The testing pyramid guides how many tests to write at each level:
 
 Place test files next to the code they test:
 
-```
+```text
 src/
 ├── components/
 │   ├── Button.tsx
@@ -119,11 +123,13 @@ src/
 ```
 
 **When to use:**
+
 - React, Next.js, Node.js projects
 - Component-heavy applications
 - Small to medium-sized codebases
 
 **Advantages:**
+
 - Easy to find tests for a given file
 - Tests move with code during refactoring
 - Clear 1:1 relationship between code and tests
@@ -134,7 +140,7 @@ src/
 
 Separate tests from source code:
 
-```
+```text
 project/
 ├── src/
 │   ├── auth.py
@@ -147,11 +153,13 @@ project/
 ```
 
 **When to use:**
+
 - Python, Go, Java, Rust projects
 - Library/package development
 - Large codebases with many test utilities
 
 **Advantages:**
+
 - Clean separation of production and test code
 - Easier to exclude tests from production builds
 - Shared test fixtures in `tests/conftest.py` (pytest)
@@ -197,6 +205,7 @@ describe('formatPrice', () => {
 ```
 
 **Best practices:**
+
 - **One assertion per test** (or closely related assertions)
 - **Descriptive test names** that read like specifications
 - **Arrange-Act-Assert** pattern for clarity
@@ -241,6 +250,7 @@ class TestValidateEmail:
 ```
 
 **Best practices:**
+
 - **Use `pytest.mark.parametrize`** for testing multiple inputs
 - **Group related tests** in classes
 - **Use fixtures** for shared setup (see Fixtures section)
@@ -304,6 +314,7 @@ func TestDivide(t *testing.T) {
 ```
 
 **Best practices:**
+
 - **Table-driven tests** for multiple scenarios
 - **Use `t.Run()`** for subtests with clear names
 - **Check both return value and error**
@@ -356,6 +367,7 @@ describe('greetUser', () => {
 ```
 
 **When to mock:**
+
 - External API calls (HTTP requests)
 - Database queries
 - File system operations
@@ -363,6 +375,7 @@ describe('greetUser', () => {
 - Random number generators
 
 **When NOT to mock:**
+
 - Pure functions (no side effects)
 - Simple utility functions
 - Code under test (only mock dependencies)
@@ -419,6 +432,7 @@ class TestSendEmail:
 ```
 
 **Best practices:**
+
 - **Use `@patch` decorator** to replace dependencies
 - **Verify mock was called correctly** with `assert_called_once_with`
 - **Mock at the usage point**, not the import point
@@ -467,12 +481,14 @@ def test_get_user(db_session, sample_user):
 ```
 
 **Fixture scopes:**
+
 - **function** (default): Run before each test
 - **class**: Run once per test class
 - **module**: Run once per test file
 - **session**: Run once per test suite
 
 **When to use fixtures:**
+
 - Database setup/teardown
 - Creating test data
 - Initializing API clients
@@ -629,6 +645,7 @@ test.describe('Login flow', () => {
 ```
 
 **E2E best practices:**
+
 - **Test critical paths only**: Login, checkout, core workflows
 - **Use data-testid attributes** instead of CSS selectors
 - **Run against staging environment**, not production
@@ -640,18 +657,21 @@ test.describe('Login flow', () => {
 Coverage metrics help identify untested code, but 100% coverage doesn't guarantee quality.
 
 **Recommended targets:**
+
 - **Critical paths**: 90-100% coverage (authentication, payments, data loss scenarios)
 - **Business logic**: 80-90% coverage
 - **UI components**: 60-80% coverage
 - **Utility functions**: 80-90% coverage
 
 **What to focus on:**
+
 - Business-critical features
 - Complex algorithms
 - Error handling paths
 - Edge cases
 
 **What to skip:**
+
 - Generated code
 - Third-party library wrappers (test your usage, not the library)
 - Trivial getters/setters
@@ -703,7 +723,7 @@ jobs:
       - name: Run integration tests
         run: npm run test:integration
         env:
-          DATABASE_URL: postgresql://test:test@localhost:5432/test
+          DATABASE_URL: postgresql://testuser:testpass@localhost:5432/testdb  # pragma: allowlist secret
       
       - name: Upload coverage
         uses: codecov/codecov-action@v3
@@ -712,6 +732,7 @@ jobs:
 ```
 
 **Best practices:**
+
 - **Fail fast**: Run unit tests before integration tests
 - **Parallel execution**: Run test suites in parallel when possible
 - **Cache dependencies**: Speed up builds with dependency caching
@@ -824,6 +845,7 @@ it('updates user name', async () => {
 ### Quick Reference: Test Commands
 
 **JavaScript (Jest):**
+
 ```bash
 npm test                    # Run all tests
 npm test -- --watch         # Watch mode
@@ -832,6 +854,7 @@ npm test Button             # Run tests matching "Button"
 ```
 
 **Python (pytest):**
+
 ```bash
 pytest                      # Run all tests
 pytest -v                   # Verbose output
@@ -842,6 +865,7 @@ pytest -x                   # Stop on first failure
 ```
 
 **Go:**
+
 ```bash
 go test ./...               # Run all tests
 go test -v ./...            # Verbose output
