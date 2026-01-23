@@ -13,12 +13,12 @@
 
 ### 0-C.1: Fix Path References
 
-- [ ] **0.C.1** Fix `workers/ralph/current_ralph_tasks.sh` line 25 - change `PLAN_FILE="$RALPH_DIR/IMPLEMENTATION_PLAN.md"` to `PLAN_FILE="$RALPH_DIR/../IMPLEMENTATION_PLAN.md"`
-- [ ] **0.C.2** Fix `templates/ralph/current_ralph_tasks.sh` - same path fix for template
+- [x] **0.C.1** Fix `workers/ralph/current_ralph_tasks.sh` line 25 - change `PLAN_FILE="$RALPH_DIR/IMPLEMENTATION_PLAN.md"` to `PLAN_FILE="$RALPH_DIR/../IMPLEMENTATION_PLAN.md"`
+- [x] **0.C.2** Fix `templates/ralph/current_ralph_tasks.sh` - same path fix for template
 
 ### 0-C.2: Rewrite Sync Script
 
-- [ ] **0.C.3** Rewrite `workers/ralph/sync_cortex_plan.sh`:
+- [x] **0.C.3** Rewrite `workers/ralph/sync_cortex_plan.sh`:
   - Fix timestamp: `$(date +%Y-%m-%d)` → `$(date '+%Y-%m-%d %H:%M:%S')`
   - Remove per-task `<!-- SYNCED_FROM_CORTEX -->` markers
   - Single marker at section header only
