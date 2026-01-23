@@ -430,19 +430,42 @@ main() {
             ;;
         esac
 
-        if [[ -n "$protected_file" ]] && is_lint_only_change "$protected_file" "$hash_file"; then
-          # Auto-approve lint-only changes
-          local new_hash
-          new_hash="$(auto_regen_protected_hash "$protected_file" "$hash_file" "$root_hash_file")"
-          {
-            echo "[WARN] $id (lint-fix auto-approved)"
-            echo "  desc: $desc"
-            echo "  file: $protected_file"
-            echo "  action: hash auto-regenerated (lint-only changes detected)"
-            echo "  new_hash: $new_hash"
-          } >>"$REPORT_FILE"
-          warn=$((warn + 1))
-          # Don't set overall_fail - this is now a WARN not FAIL
+        if [[ -n "$protected_file" ]]; then
+          if is_lint_only_change "$protected_file" "$hash_file"; then
+            # Auto-approve lint-only changes
+            local new_hash
+            new_hash="$(auto_regen_protected_hash "$protected_file" "$hash_file" "$root_hash_file")"
+            {
+              echo "[WARN] $id (lint-fix auto-approved)"
+              echo "  desc: $desc"
+              echo "  file: $protected_file"
+              echo "  action: hash auto-regenerated (lint-only changes detected)"
+              echo "  new_hash: $new_hash"
+            } >>"$REPORT_FILE"
+            warn=$((warn + 1))
+          else
+            # Protected file changed - WARN (not FAIL) and log for human review
+            local change_log="${VERIFY_DIR}/protected_changes.log"
+            local timestamp diff_stat
+            timestamp="$(date '+%Y-%m-%d %H:%M:%S')"
+            diff_stat="$(git diff --stat HEAD -- "$protected_file" 2>/dev/null | tail -1)"
+            [[ -z "$diff_stat" ]] && diff_stat="(no git diff available)"
+            {
+              echo "[$timestamp] $protected_file"
+              echo "  changes: $diff_stat"
+              echo "  review: git diff HEAD -- $protected_file"
+              echo ""
+            } >>"$change_log"
+            {
+              echo "[WARN] $id (protected file changed - human review required)"
+              echo "  desc: $desc"
+              echo "  file: $protected_file"
+              echo "  changes: $diff_stat"
+              echo "  logged: $change_log"
+            } >>"$REPORT_FILE"
+            warn=$((warn + 1))
+          fi
+          # Don't set overall_fail - protected files are warnings now
           rm -f "$tmp_stdout" "$tmp_stderr" "$tmp_rc"
           reset_block
           return 0
