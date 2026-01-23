@@ -1812,6 +1812,38 @@ class Agent:
 
 
 # =============================================================================
+# Project Context Loading
+# =============================================================================
+
+
+def load_project_context(cwd: str | None = None) -> str:
+    """
+    Load ONLY essential context: AGENTS.md guidelines.
+
+    The agent should use tools (read_file, bash) to get anything else it needs.
+    This follows the RovoDev pattern: inject AGENTS.md, let the agent explore.
+    """
+    work_dir = Path(cwd or ".")
+    context_parts = []
+
+    # AGENTS.md - project guidelines (the main context file)
+    agents_file = work_dir / "AGENTS.md"
+    if not agents_file.exists():
+        agents_file = work_dir / "workers" / "ralph" / "AGENTS.md"
+
+    if agents_file.exists():
+        try:
+            content = agents_file.read_text()
+            # Include full AGENTS.md - it's the core guidance
+            context_parts.append(f"""## Project Guidelines (AGENTS.md)
+{content}""")
+        except Exception:
+            pass
+
+    return "\n\n".join(context_parts)
+
+
+# =============================================================================
 # Main Entry Point
 # =============================================================================
 
@@ -1918,30 +1950,3 @@ Environment:
 
 if __name__ == "__main__":
     main()
-
-
-def load_project_context(cwd: str | None = None) -> str:
-    """
-    Load ONLY essential context: AGENTS.md guidelines.
-
-    The agent should use tools (read_file, bash) to get anything else it needs.
-    This follows the RovoDev pattern: inject AGENTS.md, let the agent explore.
-    """
-    work_dir = Path(cwd or ".")
-    context_parts = []
-
-    # AGENTS.md - project guidelines (the main context file)
-    agents_file = work_dir / "AGENTS.md"
-    if not agents_file.exists():
-        agents_file = work_dir / "workers" / "ralph" / "AGENTS.md"
-
-    if agents_file.exists():
-        try:
-            content = agents_file.read_text()
-            # Include full AGENTS.md - it's the core guidance
-            context_parts.append(f"""## Project Guidelines (AGENTS.md)
-{content}""")
-        except Exception:
-            pass
-
-    return "\n\n".join(context_parts)

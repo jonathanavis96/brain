@@ -63,6 +63,11 @@ if [[ -f ".gitignore" ]]; then
   fi
 fi
 
+# Create .initialized marker to indicate successful initialization
+# This marker is used by loop.sh to distinguish bootstrap mode from security mode
+touch .verify/.initialized
+echo "  ✓ Created .verify/.initialized marker"
+
 echo ""
 echo "✅ Verifier baselines initialized!"
 echo ""

@@ -20,22 +20,22 @@ mkdir -p .verify
 echo "Generating hash baselines..."
 
 if [[ -f "rules/AC.rules" ]]; then
-  sha256sum rules/AC.rules | cut -d' ' -f1 > .verify/ac.sha256
+  sha256sum rules/AC.rules | cut -d' ' -f1 >.verify/ac.sha256
   echo "  ✓ rules/AC.rules → .verify/ac.sha256"
 fi
 
 if [[ -f "loop.sh" ]]; then
-  sha256sum loop.sh | cut -d' ' -f1 > .verify/loop.sha256
+  sha256sum loop.sh | cut -d' ' -f1 >.verify/loop.sha256
   echo "  ✓ loop.sh → .verify/loop.sha256"
 fi
 
 if [[ -f "verifier.sh" ]]; then
-  sha256sum verifier.sh | cut -d' ' -f1 > .verify/verifier.sha256
+  sha256sum verifier.sh | cut -d' ' -f1 >.verify/verifier.sha256
   echo "  ✓ verifier.sh → .verify/verifier.sha256"
 fi
 
 if [[ -f "PROMPT.md" ]]; then
-  sha256sum PROMPT.md | cut -d' ' -f1 > .verify/prompt.sha256
+  sha256sum PROMPT.md | cut -d' ' -f1 >.verify/prompt.sha256
   echo "  ✓ PROMPT.md → .verify/prompt.sha256"
 fi
 
@@ -54,14 +54,19 @@ if [[ -f ".gitignore" ]]; then
 
   # Add missing entries if any found
   if [[ ${#entries_to_add[@]} -gt 0 ]]; then
-    echo "" >> .gitignore
-    echo "# Verifier runtime outputs (do not track)" >> .gitignore
+    echo "" >>.gitignore
+    echo "# Verifier runtime outputs (do not track)" >>.gitignore
     for entry in "${entries_to_add[@]}"; do
-      echo "$entry" >> .gitignore
+      echo "$entry" >>.gitignore
     done
     echo "  ✓ Updated .gitignore (added ${#entries_to_add[@]} entries)"
   fi
 fi
+
+# Create .initialized marker to indicate successful initialization
+# This marker is used by loop.sh to distinguish bootstrap mode from security mode
+touch .verify/.initialized
+echo "  ✓ Created .verify/.initialized marker"
 
 echo ""
 echo "✅ Verifier baselines initialized!"
