@@ -1106,11 +1106,11 @@ if [[ -n "$PROMPT_ARG" ]]; then
         echo ""
       fi
       echo "To regenerate baselines for these files:"
-      echo "  cd brain/ralph"
-      echo "  sha256sum loop.sh | cut -d' ' -f1 > .verify/loop.sha256"
-      echo "  sha256sum PROMPT.md | cut -d' ' -f1 > .verify/prompt.sha256"
-      echo "  sha256sum verifier.sh | cut -d' ' -f1 > .verify/verifier.sha256"
-      echo "  sha256sum rules/AC.rules | cut -d' ' -f1 > .verify/ac.sha256"
+      echo "  cd workers/ralph"
+      echo "  sha256sum loop.sh | cut -d' ' -f1 > ../.verify/loop.sha256"
+      echo "  sha256sum PROMPT.md | cut -d' ' -f1 > ../.verify/prompt.sha256"
+      echo "  sha256sum verifier.sh | cut -d' ' -f1 > ../.verify/verifier.sha256"
+      echo "  sha256sum rules/AC.rules | cut -d' ' -f1 > ../.verify/ac.sha256"
       echo ""
       echo "After resolving, re-run the loop to continue."
       exit 1
@@ -1199,11 +1199,11 @@ else
         echo ""
       fi
       echo "To regenerate baselines for these files:"
-      echo "  cd brain/ralph"
-      echo "  sha256sum loop.sh | cut -d' ' -f1 > .verify/loop.sha256"
-      echo "  sha256sum PROMPT.md | cut -d' ' -f1 > .verify/prompt.sha256"
-      echo "  sha256sum verifier.sh | cut -d' ' -f1 > .verify/verifier.sha256"
-      echo "  sha256sum rules/AC.rules | cut -d' ' -f1 > .verify/ac.sha256"
+      echo "  cd workers/ralph"
+      echo "  sha256sum loop.sh | cut -d' ' -f1 > ../.verify/loop.sha256"
+      echo "  sha256sum PROMPT.md | cut -d' ' -f1 > ../.verify/prompt.sha256"
+      echo "  sha256sum verifier.sh | cut -d' ' -f1 > ../.verify/verifier.sha256"
+      echo "  sha256sum rules/AC.rules | cut -d' ' -f1 > ../.verify/ac.sha256"
       echo ""
       echo "After resolving, re-run the loop to continue."
       exit 1
