@@ -35,7 +35,7 @@
   - **Fixes:** Protected.1
   - **Note:** This is a HUMAN task - Ralph cannot modify hash baselines
 
-- [ ] **9.1.3** Sync `loop.sh` template with workers version
+- [x] **9.1.3** Sync `loop.sh` template with workers version
   - **AC:** Hygiene.TemplateSync.2 check passes
   - **Fixes:** Hygiene.TemplateSync.2
 
