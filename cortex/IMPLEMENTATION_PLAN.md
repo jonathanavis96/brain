@@ -38,41 +38,13 @@
 
 ---
 
-## Phase 2: Shell Script Linting
+## Phase 2: Lint Issues (Dynamic)
 
-### Phase 2.2: Template Shellcheck Issues
+**Note:** Auto-fix runs before each BUILD iteration. Check verifier output for remaining issues.
 
-- [ ] **2.2.2** Fix SC2034 (unused CONFIG_FLAG) in `templates/cortex/cortex.bash` line 107
-- [ ] **2.2.3** Fix SC2086 (unquoted CONFIG_FLAG) in `templates/cortex/one-shot.sh` lines 257, 261
-- [ ] **2.2.4** Fix SC2162 (read without -r) in `templates/ralph/current_ralph_tasks.sh` lines 261, 558
-- [ ] **2.2.5** Fix SC2162 (read without -r) in `templates/ralph/loop.sh` lines 457, 498
-- [ ] **2.2.6** Fix SC2002 (useless cat) in `templates/ralph/loop.sh` line 666
-- [ ] **2.2.7** Fix SC2086 (unquoted attach_flag) in `templates/ralph/loop.sh` line 765
-- [ ] **2.2.8** Fix SC2034 (unused week_num) in `templates/ralph/pr-batch.sh` line 103
-- [ ] **2.2.9** Fix SC2162 (read without -r) in `templates/ralph/pr-batch.sh` line 191
-- [ ] **2.2.10** Fix SC2162 (read without -r) in `templates/ralph/thunk_ralph_tasks.sh` line 379
-
-### Phase 2.3: workers/ralph/ Shellcheck Issues
-
-- [ ] **2.3.1** Fix SC2034 (unused week_num) in `workers/ralph/pr-batch.sh` line 102
-- [ ] **2.3.2** Fix SC2162 (read without -r) in `workers/ralph/pr-batch.sh` line 190
-- [ ] **2.3.3** Fix SC2155 (declare/assign separately) in `workers/ralph/render_ac_status.sh` lines 25,26,29,30,31,32,111,114
-- [ ] **2.3.4** Fix SC2129 (consolidate redirects) in `workers/ralph/sync_cortex_plan.sh` line 160
-- [ ] **2.3.5** Fix SC2086 (quote variable) in `workers/ralph/sync_cortex_plan.sh` line 164
-- [ ] **2.3.6** Fix SC2129 (consolidate redirects) in `workers/ralph/sync_cortex_plan.sh` line 168
-- [ ] **2.3.7** Fix SC2162 (read without -r) in `workers/ralph/thunk_ralph_tasks.sh` line 379
-- [ ] **2.3.8** Fix SC2094 (read/write same file) in `workers/ralph/verifier.sh` lines 395-396 - **PROTECTED FILE**
-
-### Phase 2.4: Markdownlint Issues
-
-- [ ] **2.4.1** Fix MD032 (blank lines around lists) in markdown files
-- [ ] **2.4.2** Fix MD031 (blank lines around fences) in markdown files
-- [ ] **2.4.3** Fix MD022 (blank lines around headings) in markdown files
-
-### Phase 2.6: Final Verification
-
-- [ ] **2.6.1** Run full pre-commit and verify all pass
-  - **AC:** `pre-commit run --all-files` exits with code 0
+- [ ] **2.1** Fix any `[WARN]` items from verifier output
+  - **AC:** `bash verifier.sh` shows 0 WARN items
+  - **Note:** Focus on non-auto-fixable issues (shellcheck in protected files, MD040 language tags)
 
 ---
 
@@ -83,7 +55,7 @@
 ### Phase 3.2: Create `workers/cerebras/` Directory
 
 - [x] **3.2.1** Create `workers/cerebras/` directory structure
-- [ ] **3.2.2** Copy `loop.sh` template to `workers/cerebras/loop.sh`
+- [x] **3.2.2** Copy `loop.sh` template to `workers/cerebras/loop.sh`
 - [ ] **3.2.3** Create `workers/cerebras/NEURONS.md` (cerebras-specific structure map)
 
 ### Phase 3.3: Create Cerebras-specific `loop.sh`
@@ -185,9 +157,9 @@
 
 ---
 
-## Phase 6: Fix Verifier WARNs
+## Phase 6: Template Sync & Cleanup
 
-**Goal:** Resolve all 9 WARN-level checks from verifier so they pass cleanly.
+**Goal:** Ensure templates stay in sync with workers.
 
 ### Phase 6.1: Template Sync Issues
 
@@ -199,38 +171,7 @@
   - **AC:** Hygiene.TemplateSync.2 check passes
   - **Note:** This is a PROTECTED file - may need hash baseline update after sync
 
-### Phase 6.2: Markdown Balanced Fences
-
-- [ ] **6.2.1** Fix unbalanced code fences in `workers/ralph/NEURONS.md`
-  - **AC:** `grep -c "^\`\`\`[a-z]" workers/ralph/NEURONS.md` equals `grep -c "^\`\`\`$" workers/ralph/NEURONS.md`
-  - **Fix:** Ensure every opening fence has a matching closing fence
-
-- [x] **6.2.2** Fix unbalanced code fences in `workers/ralph/AGENTS.md`
-  - **AC:** Opens equals closes for code fences
-  - **Note:** This is a PROTECTED file - will need hash baseline update
-
-- [ ] **6.2.3** Fix unbalanced code fences in `workers/ralph/THOUGHTS.md`
-  - **AC:** Opens equals closes for code fences
-
-### Phase 6.3: Shellcheck Issues
-
-- [ ] **6.3.1** Fix shellcheck issues in `workers/ralph/loop.sh`
-  - **AC:** `shellcheck -e SC1091 workers/ralph/loop.sh` returns 0 errors
-  - **Note:** PROTECTED file - needs human approval for changes + hash update
-
-- [ ] **6.3.2** Fix shellcheck issues in `workers/ralph/verifier.sh`
-  - **AC:** `shellcheck -e SC1091 workers/ralph/verifier.sh` returns 0 errors
-  - **Note:** PROTECTED file - needs human approval for changes + hash update
-
-- [ ] **6.3.3** Fix shellcheck issues in `workers/ralph/current_ralph_tasks.sh`
-  - **AC:** `shellcheck -e SC1091 workers/ralph/current_ralph_tasks.sh` returns 0 errors
-
-- [ ] **6.3.4** Fix shellcheck issues in `workers/ralph/thunk_ralph_tasks.sh`
-  - **AC:** `shellcheck -e SC1091 workers/ralph/thunk_ralph_tasks.sh` returns 0 errors
-
-**Acceptance Criteria for Phase 6:**
-
-- [ ] `bash workers/ralph/verifier.sh` shows 0 WARN (all checks PASS)
+**Note:** Lint issues (shellcheck, markdownlint) are handled dynamically by Phase 2. Check verifier output for current state.
 
 ---
 
