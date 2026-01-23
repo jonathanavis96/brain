@@ -140,7 +140,7 @@
 
 ### Phase 8.1: Core Implementation (3 tasks)
 
-- [ ] **8.1.1** Add ETA display line below progress bar
+- [x] **8.1.1** Add ETA display line below progress bar
   - Format: `ETA: HH:MM:SS` or `ETA: --:--:--` when no data
   - Show `ETA: Complete` when remaining_tasks = 0
   - **AC:** ETA line visible below progress bar
