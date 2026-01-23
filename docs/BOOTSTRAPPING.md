@@ -120,6 +120,38 @@ All generators validate required fields and exit with clear error messages:
 - Missing `Purpose:` → "Error: Purpose is required"
 - Input file not found → "Error: Input file not found"
 
+## Known Issues
+
+### Don't Copy `workers/` Directory
+
+**Issue:** The `workers/ralph/` directory from the Brain repo should NOT be copied to bootstrapped projects. It contains Brain-specific Ralph infrastructure for self-improvement, not project-specific worker files.
+
+**What went wrong:** The Jacqui website bootstrap accidentally included `workers/ralph/` which created confusion about where Ralph was supposed to work.
+
+**Fix:** Ensure `new-project.sh` and manual bootstrapping exclude:
+- `workers/` (Brain's internal worker configs)
+- Any Brain-specific directories not meant for project scaffolding
+
+**Project structure should be:**
+
+```
+project/
+├── cortex/          # Manager layer (planning)
+├── ralph/           # Worker layer (execution) ← project-specific
+├── src/             # Source code
+└── ...
+```
+
+NOT:
+
+```
+project/
+├── cortex/
+├── ralph/
+├── workers/ralph/   # ❌ Brain-specific, don't copy
+└── ...
+```
+
 ## See Also
 
 - **[new-project.sh](../new-project.sh)** - Main bootstrap script

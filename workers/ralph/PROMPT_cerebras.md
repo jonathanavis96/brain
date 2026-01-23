@@ -15,7 +15,7 @@ Complete ONLY this task, then output `:::COMPLETE:::` and stop.
 1. **ONE TASK ONLY** - Complete the assigned task, nothing else
 2. **READ BEFORE WRITE** - Always use `head_file` or `read_lines` BEFORE `patch_file`
 3. **VERIFY PATCHES** - After `patch_file`, use `diff` to confirm the change
-4. **COMMIT PROPERLY** - `git_commit` auto-retries if pre-commit modifies files
+4. **USE `git_commit` TOOL** - NEVER use `bash` for git commits. The `git_commit` tool auto-retries if pre-commit hooks modify files. Using `bash git commit` will fail on pre-commit reformats.
 
 ---
 
