@@ -177,7 +177,7 @@ usage() {
   cat <<'EOF'
 Usage:
   loop.sh [--prompt <path>] [--iterations N] [--plan-every N] [--yolo|--no-yolo]
-          [--runner rovodev|opencode|cerebras] [--model <model>] [--branch <name>] [--dry-run] [--no-monitors]
+          [--runner rovodev|opencode] [--model <model>] [--branch <name>] [--dry-run] [--no-monitors]
           [--opencode-serve] [--opencode-port N] [--opencode-attach <url>] [--opencode-format json|text]
           [--rollback [N]] [--resume]
 
@@ -185,7 +185,7 @@ Defaults:
   --iterations 1
   --plan-every 3
   --runner      rovodev
-  --model       Sonnet 4.5 (rovodev) or Grok Code (opencode), Llama models (cerebras). Use --model auto for rovodev config.
+  --model       Sonnet 4.5 (rovodev) or Grok Code (opencode). Use --model auto for rovodev config.
   --branch      Defaults to <repo>-work (e.g., brain-work, NeoQueue-work)
   If --prompt is NOT provided, loop alternates:
     - PLAN on iteration 1 and every N iterations
@@ -201,11 +201,9 @@ Model Selection:
                     Or provide a full model ID directly.
 
 Runner Selection:
-  --runner rovodev|opencode|cerebras
+  --runner rovodev|opencode
                    rovodev: uses acli rovodev run (default)
                    opencode: uses opencode run (provider/model). See: opencode models
-                   cerebras: uses Cerebras agentic runner with tool execution
-                            (requires CEREBRAS_API_KEY env var, shows token usage)
 
 Branch Workflow:
   --branch <name>  Work on specified branch (creates if needed, switches to it)
@@ -415,91 +413,6 @@ resolve_model_opencode() {
   esac
 }
 
-# Resolve model shortcut to Cerebras model ID
-# Available models: https://inference-docs.cerebras.ai/introduction
-resolve_model_cerebras() {
-  local model="$1"
-  case "$model" in
-    llama4 | llama-4 | scout)
-      echo "llama-4-scout-17b"
-      ;;
-    llama4-large | maverick)
-      echo "llama-4-maverick-17b"
-      ;;
-    llama3 | llama-3 | llama3-8b)
-      echo "llama3.1-8b"
-      ;;
-    llama3-large | llama3-70b)
-      echo "llama3.1-70b"
-      ;;
-    qwen | qwen3)
-      echo "qwen-3-32b"
-      ;;
-    qwen-large | qwen-235b)
-      echo "qwen-3-235b-a22b-instruct-2507"
-      ;;
-    glm | glm4 | glm-4.7)
-      echo "zai-glm-4.7"
-      ;;
-    auto | latest | "")
-      echo "llama-4-scout-17b"
-      ;;
-    *)
-      echo "$model"
-      ;;
-  esac
-}
-
-# Run Cerebras API call (OpenAI-compatible endpoint)
-run_cerebras_api() {
-  local prompt_file="$1"
-  local model="$2"
-  local output_file="$3"
-
-  if [[ -z "${CEREBRAS_API_KEY:-}" ]]; then
-    echo "ERROR: CEREBRAS_API_KEY environment variable not set"
-    echo "Get your API key from: https://cloud.cerebras.ai"
-    return 1
-  fi
-
-  # Create JSON payload using jq for proper escaping
-  local json_payload
-  json_payload=$(jq -n \
-    --arg model "$model" \
-    --rawfile content "$prompt_file" \
-    '{
-      model: $model,
-      messages: [{role: "user", content: $content}],
-      max_tokens: 16384,
-      temperature: 0.3
-    }')
-
-  # Make API call
-  local response
-  response=$(curl -sS "https://api.cerebras.ai/v1/chat/completions" \
-    -H "Authorization: Bearer $CEREBRAS_API_KEY" \
-    -H "Content-Type: application/json" \
-    -d "$json_payload" 2>&1)
-
-  local rc=$?
-  if [[ $rc -ne 0 ]]; then
-    echo "ERROR: Cerebras API call failed (curl exit $rc)"
-    echo "$response"
-    return 1
-  fi
-
-  # Check for API error
-  if echo "$response" | jq -e '.error' >/dev/null 2>&1; then
-    echo "ERROR: Cerebras API error:"
-    echo "$response" | jq -r '.error.message // .error'
-    return 1
-  fi
-
-  # Extract and output the response content
-  echo "$response" | jq -r '.choices[0].message.content' | tee "$output_file"
-  return 0
-}
-
 # Setup model config - default to Sonnet 4.5 for Ralph loops
 CONFIG_FLAG=""
 TEMP_CONFIG=""
@@ -508,8 +421,6 @@ TEMP_CONFIG=""
 if [[ -z "$MODEL_ARG" ]]; then
   if [[ "$RUNNER" == "opencode" ]]; then
     MODEL_ARG="grok" # Default for OpenCode
-  elif [[ "$RUNNER" == "cerebras" ]]; then
-    MODEL_ARG="glm" # Default for Cerebras (GLM 4.7 - strong coding model)
   else
     MODEL_ARG="sonnet" # Default for RovoDev
   fi
@@ -517,8 +428,6 @@ fi
 
 if [[ "$RUNNER" == "opencode" ]]; then
   RESOLVED_MODEL="$(resolve_model_opencode "$MODEL_ARG")"
-elif [[ "$RUNNER" == "cerebras" ]]; then
-  RESOLVED_MODEL="$(resolve_model_cerebras "$MODEL_ARG")"
 else
   RESOLVED_MODEL="$(resolve_model "$MODEL_ARG")"
 fi
@@ -878,6 +787,19 @@ run_once() {
       echo ""
     fi
 
+    # Inject current verifier summary (BUILD mode gets fresh state after auto-fix)
+    if [[ "$phase" == "build" ]] && [[ -f "$VERIFY_REPORT" ]]; then
+      echo "# CURRENT VERIFIER STATE (after auto-fix)"
+      echo "# Auto-fix has already run. Focus only on WARN/FAIL items below."
+      echo ""
+      # Extract just the summary section
+      sed -n '/^SUMMARY$/,/^$/p' "$VERIFY_REPORT" 2>/dev/null || true
+      echo ""
+      # Show WARN and FAIL items only
+      grep -E "^\[WARN\]|\[FAIL\]" "$VERIFY_REPORT" 2>/dev/null || echo "# All checks passing!"
+      echo ""
+    fi
+
     # Inject AGENTS.md (standard Ralph pattern: PROMPT.md + AGENTS.md)
     # NEURONS.md and THOUGHTS.md are read via subagent when needed (too large for base context)
     echo "# AGENTS.md - Operational Guide"
@@ -899,17 +821,17 @@ run_once() {
       echo "⚠️ **CRITICAL: This is a dry-run. DO NOT commit any changes.**"
       echo ""
       echo "Your task:"
-      echo "1. Read IMPLEMENTATION_PLAN.md and identify the first unchecked task"
+      echo "1. Read workers/IMPLEMENTATION_PLAN.md and identify the first unchecked task"
       echo "2. Analyze what changes would be needed to implement it"
       echo "3. Show file diffs or describe modifications you would make"
-      echo "4. Update IMPLEMENTATION_PLAN.md with detailed notes about your findings"
+      echo "4. Update workers/IMPLEMENTATION_PLAN.md with detailed notes about your findings"
       echo "5. DO NOT use git commit - stop after analysis"
       echo ""
       echo "Output format:"
       echo "- List files that would be created/modified"
       echo "- Show code snippets or diffs for key changes"
       echo "- Document any risks or dependencies discovered"
-      echo "- Add findings to IMPLEMENTATION_PLAN.md under 'Discoveries & Notes'"
+      echo "- Add findings to workers/IMPLEMENTATION_PLAN.md under 'Discoveries & Notes'"
       echo ""
       echo "This is a preview only. No commits will be made."
     fi
@@ -928,18 +850,6 @@ run_once() {
     if [[ $rc -ne 0 ]]; then
       echo "❌ OpenCode failed (exit $rc). See: $log"
       tail -n 80 "$log" || true
-      return 1
-    fi
-  elif [[ "$RUNNER" == "cerebras" ]]; then
-    echo "🧠 Running Cerebras Agent with model: ${RESOLVED_MODEL}"
-    # Use the agentic Python runner that supports tool execution
-    if ! python3 "$RALPH/cerebras_agent.py" \
-      --prompt "$prompt_with_mode" \
-      --model "$RESOLVED_MODEL" \
-      --max-turns 15 \
-      --cwd "$ROOT" \
-      --output "$log"; then
-      echo "❌ Cerebras Agent failed. See: $log"
       return 1
     fi
   else
@@ -1004,10 +914,10 @@ run_once() {
   fi
 
   # Check if all tasks are done (for true completion)
-  if [[ -f "$RALPH/IMPLEMENTATION_PLAN.md" ]]; then
+  if [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
     local unchecked_count
     # Note: grep -c returns exit 1 when count is 0, so we capture output first then default
-    unchecked_count=$(grep -cE '^\s*-\s*\[ \]' "$RALPH/IMPLEMENTATION_PLAN.md" 2>/dev/null) || unchecked_count=0
+    unchecked_count=$(grep -cE '^\s*-\s*\[ \]' "$ROOT/workers/IMPLEMENTATION_PLAN.md" 2>/dev/null) || unchecked_count=0
     if [[ "$unchecked_count" -eq 0 ]]; then
       # All tasks done - run final verification
       if run_verifier; then
@@ -1126,23 +1036,6 @@ if [[ "$RUNNER" == "opencode" ]]; then
   }
 fi
 
-# Fail fast if cerebras runner but dependencies not found
-if [[ "$RUNNER" == "cerebras" ]]; then
-  command -v python3 >/dev/null 2>&1 || {
-    echo "ERROR: python3 not found in PATH (required for Cerebras runner)"
-    exit 1
-  }
-  if [[ ! -f "$RALPH/cerebras_agent.py" ]]; then
-    echo "ERROR: cerebras_agent.py not found at $RALPH/cerebras_agent.py"
-    exit 1
-  fi
-  if [[ -z "${CEREBRAS_API_KEY:-}" ]]; then
-    echo "ERROR: CEREBRAS_API_KEY environment variable not set"
-    echo "Get your API key from: https://cloud.cerebras.ai"
-    exit 1
-  fi
-fi
-
 # Health check for attach endpoint (TCP port check)
 if [[ -n "${OPENCODE_ATTACH:-}" ]]; then
   hostport="${OPENCODE_ATTACH#http://}"
@@ -1213,11 +1106,11 @@ if [[ -n "$PROMPT_ARG" ]]; then
         echo ""
       fi
       echo "To regenerate baselines for these files:"
-      echo "  cd brain/ralph"
-      echo "  sha256sum loop.sh | cut -d' ' -f1 > .verify/loop.sha256"
-      echo "  sha256sum PROMPT.md | cut -d' ' -f1 > .verify/prompt.sha256"
-      echo "  sha256sum verifier.sh | cut -d' ' -f1 > .verify/verifier.sha256"
-      echo "  sha256sum rules/AC.rules | cut -d' ' -f1 > .verify/ac.sha256"
+      echo "  cd workers/ralph"
+      echo "  sha256sum loop.sh | cut -d' ' -f1 > ../.verify/loop.sha256"
+      echo "  sha256sum PROMPT.md | cut -d' ' -f1 > ../.verify/prompt.sha256"
+      echo "  sha256sum verifier.sh | cut -d' ' -f1 > ../.verify/verifier.sha256"
+      echo "  sha256sum rules/AC.rules | cut -d' ' -f1 > ../.verify/ac.sha256"
       echo ""
       echo "After resolving, re-run the loop to continue."
       exit 1
@@ -1306,11 +1199,11 @@ else
         echo ""
       fi
       echo "To regenerate baselines for these files:"
-      echo "  cd brain/ralph"
-      echo "  sha256sum loop.sh | cut -d' ' -f1 > .verify/loop.sha256"
-      echo "  sha256sum PROMPT.md | cut -d' ' -f1 > .verify/prompt.sha256"
-      echo "  sha256sum verifier.sh | cut -d' ' -f1 > .verify/verifier.sha256"
-      echo "  sha256sum rules/AC.rules | cut -d' ' -f1 > .verify/ac.sha256"
+      echo "  cd workers/ralph"
+      echo "  sha256sum loop.sh | cut -d' ' -f1 > ../.verify/loop.sha256"
+      echo "  sha256sum PROMPT.md | cut -d' ' -f1 > ../.verify/prompt.sha256"
+      echo "  sha256sum verifier.sh | cut -d' ' -f1 > ../.verify/verifier.sha256"
+      echo "  sha256sum rules/AC.rules | cut -d' ' -f1 > ../.verify/ac.sha256"
       echo ""
       echo "After resolving, re-run the loop to continue."
       exit 1
@@ -1331,7 +1224,32 @@ else
       fi
       run_once "$PLAN_PROMPT" "plan" "$i" || run_result=$?
     else
+      # Auto-fix lint issues before BUILD iteration
+      echo "Running auto-fix for lint issues..."
+      if [[ -f "$RALPH/fix-markdown.sh" ]]; then
+        (cd "$ROOT" && bash "$RALPH/fix-markdown.sh" . 2>/dev/null) || true
+      fi
+      if command -v pre-commit &>/dev/null; then
+        (cd "$ROOT" && pre-commit run --all-files 2>/dev/null) || true
+      fi
+
+      # Run verifier to get current state (Ralph will see WARN/FAIL in context)
+      echo "Running verifier to check current state..."
+      (cd "$RALPH" && bash verifier.sh 2>/dev/null) || true
+      echo ""
+
       run_once "$BUILD_PROMPT" "build" "$i" || run_result=$?
+
+      # Sync completions back to Cortex after BUILD iterations
+      if [[ -f "$RALPH/sync_completions_to_cortex.sh" ]]; then
+        echo "Syncing completions to Cortex..."
+        if (cd "$RALPH" && bash sync_completions_to_cortex.sh) 2>&1; then
+          echo "✓ Completions synced to Cortex"
+        else
+          echo "⚠ Completions sync failed (non-blocking)"
+        fi
+        echo ""
+      fi
     fi
     # Check if Ralph signaled completion (exit code 42)
     if [[ $run_result -eq 42 ]]; then
