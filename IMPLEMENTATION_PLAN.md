@@ -16,7 +16,7 @@ The brain repository has **two implementation plans**:
 **Current Status Summary:**
 
 - ✅ **Phase 0-Sync** - Infrastructure setup COMPLETE
-- ⚠️ **Phase 0-Warn** - Verifier warnings resolved, markdown lint tasks added (22/41 complete: 2 shfmt complete, 4 cortex MD complete, 6 verifier warnings complete, 10 shellcheck complete; 8 new MD tasks pending across cortex/analysis/ and skills/)
+- ⚠️ **Phase 0-Warn** - Verifier warnings resolved, markdown lint tasks added (22/44 complete: 2 shfmt complete, 4 cortex MD complete, 6 verifier warnings complete, 10 shellcheck complete; 11 new MD tasks pending across skills/ and templates/)
 - ✅ **Phase 0-A/B** - Cortex manager pack COMPLETE (31/31 tasks)
 - ✅ **Phase 0-Quick** - Quick wins COMPLETE (8/8 tasks)
 - 📋 **Phase 1-8** - Shell cleanup, documentation, optimization (0/49 complete)
@@ -74,9 +74,15 @@ See **workers/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown.
 
 - [x] **WARN.MD.15.skills** Fix MD violations in `skills/domains/code-quality/token-efficiency.md` - MD060 (table spacing) - Fixed table separator lines to include spaces around pipes for "compact" style
 - [x] **WARN.MD.16.skills** Fix MD violations in `skills/domains/ralph/bootstrap-patterns.md` - MD032 (blanks around lists), MD031 (blanks around fences)
-- [ ] **WARN.MD.17.skills** Fix MD violations in `skills/domains/websites/qa/acceptance-criteria.md` - MD022 (blanks around headings), MD031 (blanks around fences), MD034 (bare URLs) - 20+ violations
+- [x] **WARN.MD.17.skills** Fix MD violations in `skills/domains/websites/qa/acceptance-criteria.md` - MD022 (blanks around headings), MD031 (blanks around fences), MD034 (bare URLs) - 20+ violations
 - [ ] **WARN.MD.18.skills** Fix MD violations in `skills/projects/README.md` - MD032 (blanks around lists)
 - [ ] **WARN.MD.19.skills** Fix MD violations in `skills/self-improvement/SKILL_TEMPLATE.md` - MD022 (blanks around headings), MD032 (blanks around lists)
+- [ ] **WARN.MD.20.skills** Fix MD violations in `skills/domains/websites/architecture/sitemap-builder.md` - MD032 (blanks around lists), MD022 (blanks around headings), MD031 (blanks around fences), MD040 (fence language tags)
+- [ ] **WARN.MD.21.skills** Fix MD violations in `skills/domains/websites/build/analytics-tracking.md` - MD032 (blanks around lists), MD022 (blanks around headings), MD031 (blanks around fences)
+
+#### Template Files (NEW - from pre-commit scan)
+
+- [ ] **WARN.MD.22.templates** Fix MD violations in `templates/cortex/AGENTS.project.md` - MD022 (blanks around headings), MD032 (blanks around lists), MD031 (blanks around fences), MD034 (bare URLs)
 
 ### Verifier Warnings (AUTO CHECK FAILED - WARN GATE) (MEDIUM Priority)
 

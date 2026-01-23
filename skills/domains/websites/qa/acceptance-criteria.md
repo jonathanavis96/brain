@@ -5,7 +5,7 @@ Defines clear "done" criteria and verifies every requirement is met before launc
 ## Quick Reference
 
 | Category | Example Criteria |
-|----------|------------------|
+| ---------- | ------------------ |
 | Functional | Form submits successfully, links work |
 | Visual | Matches design, responsive |
 | Performance | Lighthouse 90+, LCP < 2.5s |
@@ -15,6 +15,7 @@ Defines clear "done" criteria and verifies every requirement is met before launc
 ## Trigger Conditions
 
 Use this skill when:
+
 - Starting any website project (define upfront)
 - Ready to call something "done"
 - Client asks "is it finished?"
@@ -26,6 +27,7 @@ Use this skill when:
 ## Page: [Page Name]
 
 ### Functional
+
 - [ ] All links work (no 404s)
 - [ ] Form submits and sends email
 - [ ] Form shows success message
@@ -33,6 +35,7 @@ Use this skill when:
 - [ ] All CTAs link to correct destinations
 
 ### Visual
+
 - [ ] Matches approved design
 - [ ] Responsive: mobile, tablet, desktop
 - [ ] Images load correctly
@@ -40,12 +43,14 @@ Use this skill when:
 - [ ] No layout shifts
 
 ### Content
+
 - [ ] All copy is final (no lorem ipsum)
 - [ ] No typos or grammar errors
 - [ ] Images have alt text
 - [ ] Contact info is correct
 
 ### Performance
+
 - [ ] Lighthouse Performance: 90+
 - [ ] Lighthouse Accessibility: 90+
 - [ ] Lighthouse Best Practices: 90+
@@ -53,6 +58,7 @@ Use this skill when:
 - [ ] Page loads in < 3 seconds
 
 ### SEO
+
 - [ ] Unique title tag
 - [ ] Meta description present
 - [ ] H1 present and unique
@@ -61,12 +67,14 @@ Use this skill when:
 - [ ] Sitemap generated
 
 ### Cross-Browser
+
 - [ ] Chrome ✓
 - [ ] Firefox ✓
 - [ ] Safari ✓
 - [ ] Edge ✓
 - [ ] Mobile Safari ✓
 - [ ] Mobile Chrome ✓
+
 ```
 
 ## Project-Level Criteria
@@ -75,6 +83,7 @@ Use this skill when:
 ## Project Acceptance Criteria
 
 ### Before Launch
+
 - [ ] All pages complete per page checklists
 - [ ] SSL certificate active (https://)
 - [ ] Custom domain connected
@@ -87,56 +96,70 @@ Use this skill when:
 - [ ] Social sharing preview looks correct
 
 ### Performance Targets
+
 - [ ] All pages Lighthouse 90+
 - [ ] LCP < 2.5s on mobile
 - [ ] CLS < 0.1
 - [ ] Total page weight < 1MB
 
 ### Legal/Compliance
+
 - [ ] Privacy policy page (if collecting data)
 - [ ] Cookie consent (if needed for region)
 - [ ] Accessibility WCAG 2.1 AA
 
 ### Client Sign-off
+
 - [ ] Client reviewed all pages
 - [ ] Content approved
 - [ ] Design approved
 - [ ] Ready for launch confirmation
+
 ```
 
 ## Verification Commands
 
 ### Lighthouse CLI
+
 ```bash
 # Run Lighthouse audit
 npx lighthouse https://yoursite.com --output=json --output-path=./report.json
 
 # Quick score check
 npx lighthouse https://yoursite.com --only-categories=performance,accessibility,best-practices,seo
+
 ```
 
 ### Link Checker
+
 ```bash
 # Check for broken links
 npx broken-link-checker https://yoursite.com --ordered --recursive
+
 ```
 
 ### HTML Validation
+
 ```bash
 # Validate HTML
 npx html-validate ./dist/**/*.html
+
 ```
 
 ### Schema Validation
-Test at: https://validator.schema.org/
+
+Test at: <https://validator.schema.org/>
 
 ### Open Graph Preview
-Test at: https://www.opengraph.xyz/
+
+Test at: <https://www.opengraph.xyz/>
 
 ## Checklist by Page Type
 
 ### Homepage Checklist
+
 ```markdown
+
 - [ ] Hero headline clear and compelling
 - [ ] Primary CTA visible above fold
 - [ ] Trust elements present (credentials, logos)
@@ -144,26 +167,35 @@ Test at: https://www.opengraph.xyz/
 - [ ] Testimonials display correctly
 - [ ] Final CTA section present
 - [ ] Footer links all work
+
 ```
 
 ### About Page Checklist
+
 ```markdown
+
 - [ ] Professional photo loads
 - [ ] Bio content complete
 - [ ] Credentials visible
 - [ ] CTA to contact/services
+
 ```
 
 ### Services Page Checklist
+
 ```markdown
+
 - [ ] All services listed
 - [ ] Clear descriptions
 - [ ] Pricing or "contact for pricing"
 - [ ] CTAs for each service
+
 ```
 
 ### Contact Page Checklist
+
 ```markdown
+
 - [ ] Form submits successfully
 - [ ] Confirmation message shows
 - [ ] Email received (test it!)
@@ -171,6 +203,7 @@ Test at: https://www.opengraph.xyz/
 - [ ] Email clickable
 - [ ] Address/map if applicable
 - [ ] Alternative contact methods listed
+
 ```
 
 ## Definition of Done
@@ -187,7 +220,7 @@ A page is "done" when:
 ## Common Mistakes
 
 | Mistake | Why It's Wrong | Do This Instead |
-|---------|----------------|-----------------|
+| --------- | ---------------- | ----------------- |
 | No written criteria | "Done" is subjective | Define upfront |
 | Testing only desktop | Mobile users suffer | Test all breakpoints |
 | Skipping form test | Forms often break | Submit real test |
@@ -203,6 +236,7 @@ A page is "done" when:
 ## Acceptance Criteria: Jacqui Howles Website
 
 ### Homepage
+
 - [x] Hero: "Find your calm. Rebuild your confidence."
 - [x] CTA: "Book Your First Session" → /contact
 - [x] Trust line: HPCSA registration visible
@@ -214,6 +248,7 @@ A page is "done" when:
 - [x] Mobile: hamburger menu works
 
 ### About Page
+
 - [x] Full bio content
 - [x] Professional photo
 - [x] Credentials section
@@ -221,6 +256,7 @@ A page is "done" when:
 - [x] CTA to contact
 
 ### Services Page
+
 - [x] Individual therapy section
 - [x] Couples therapy section
 - [x] Coaching section
@@ -228,6 +264,7 @@ A page is "done" when:
 - [x] CTAs per service
 
 ### Contact Page
+
 - [x] Form: name, email, message
 - [x] Form submits to Formspree ✓
 - [x] Email received (tested 2026-01-22) ✓
@@ -237,6 +274,7 @@ A page is "done" when:
 - [x] Alternative: WhatsApp link
 
 ### Technical
+
 - [x] Lighthouse Performance: 94
 - [x] Lighthouse Accessibility: 100
 - [x] Lighthouse Best Practices: 100
@@ -246,6 +284,7 @@ A page is "done" when:
 - [x] Analytics (Plausible) tracking
 
 ### SEO
+
 - [x] All pages have unique titles
 - [x] All pages have meta descriptions
 - [x] Schema: LocalBusiness + FAQPage
@@ -254,9 +293,11 @@ A page is "done" when:
 - [x] robots.txt configured
 
 ### Client Approval
+
 - [x] Content reviewed and approved
 - [x] Design approved
 - [x] Ready for launch: YES
+
 ```
 
 ## Related Skills
