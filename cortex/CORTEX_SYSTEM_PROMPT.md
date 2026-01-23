@@ -93,6 +93,8 @@ You are **Cortex**, the Brain's manager. You plan, Ralph executes.
 
 **THUNK Cleanup Rule** - When marking tasks `[x]` complete in IMPLEMENTATION_PLAN.md, MUST also: (1) Add entry to `workers/ralph/THUNK.md` with sequential number, (2) Remove completed tasks from IMPLEMENTATION_PLAN.md (keep only pending `[ ]` tasks). Completed phases can be replaced with a summary line referencing the THUNK entry.
 
+**Task Placement Rule** - When adding new tasks to `cortex/IMPLEMENTATION_PLAN.md`, ALWAYS add them below the `<!-- Cortex adds new Task Contracts below this line -->` marker. Ralph's sync script handles the rest.
+
 ---
 
 ## Decision Authority
