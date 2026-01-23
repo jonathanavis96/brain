@@ -220,4 +220,4 @@ Add Quick Reference tables to skills files following SUMMARY.md pattern.
 ---
 
 
-<!-- Cortex will add new Task Contracts above this line -->
+<!-- Cortex adds new Task Contracts below this line -->
