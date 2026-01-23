@@ -218,7 +218,7 @@ Tasks synced from Cortex that aren't covered above:
   <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
   - **Note:** Intentional - we want literal $HOME in .bashrc
 
-- [ ] **2.2.1** Fix SC2034 (unused RUNNER) in `templates/cortex/cortex.bash` line 64
+- [x] **2.2.1** Fix SC2034 (unused RUNNER) in `templates/cortex/cortex.bash` line 64
   <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
 
 - [ ] **2.2.3** Fix SC2086 (unquoted CONFIG_FLAG) in `templates/cortex/one-shot.sh` lines 257, 261
