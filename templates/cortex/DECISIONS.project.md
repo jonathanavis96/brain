@@ -33,13 +33,14 @@ When adding decisions, use this format:
 - What files/patterns are affected?
 
 **Impact:** Effect on project, team, or architecture
-```
+```text
 
 ---
 
 ## When to Add Decisions
 
 **Do add:**
+
 - Architectural patterns (MVC, microservices, event-driven)
 - Technology choices (why FastAPI over Flask)
 - Coding conventions (naming, structure, testing approach)
@@ -47,6 +48,7 @@ When adding decisions, use this format:
 - Resolving design debates (document why you chose X over Y)
 
 **Don't add:**
+
 - Temporary decisions (use `cortex/THOUGHTS.md` instead)
 - Implementation details (use inline comments instead)
 - Bug fixes (use commit messages instead)

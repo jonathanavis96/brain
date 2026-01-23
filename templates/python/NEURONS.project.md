@@ -17,7 +17,7 @@ Last updated: [TIMESTAMP]
 
 ## Directory Structure
 
-```
+```text
 [PROJECT_LOCATION]/
 ├── README.md                    # Project overview and setup
 ├── requirements.txt             # Python dependencies (pip)
@@ -54,7 +54,7 @@ Last updated: [TIMESTAMP]
 │
 └── skills/                     # Project-specific knowledge base
     └── [domain].md             # Domain patterns/conventions
-```
+```text
 
 ## [Main Package/Module] Structure
 
@@ -69,7 +69,7 @@ Last updated: [TIMESTAMP]
 
 ### Module Organization
 
-```
+```text
 [package-name]/
 ├── __init__.py              # Public API: imports, version
 ├── __main__.py              # CLI entry point
@@ -92,7 +92,7 @@ Last updated: [TIMESTAMP]
 └── config/                  # Configuration
     ├── __init__.py
     └── settings.py          # Configuration management
-```
+```text
 
 ## [Tests] Structure
 
@@ -120,7 +120,7 @@ pytest --cov=[package-name] --cov-report=html
 
 # Run specific test
 pytest tests/test_[module].py::test_function_name
-```
+```text
 
 ## Configuration Management
 
@@ -128,12 +128,12 @@ pytest tests/test_[module].py::test_function_name
 
 **File**: `.env` (git-ignored, copy from `.env.example`)
 
-```
+```text
 # Example variables
 DATABASE_URL=postgresql://localhost/dbname
 API_KEY=your_api_key_here
 DEBUG=True
-```
+```text
 
 ### Configuration Files
 
@@ -159,7 +159,7 @@ pip install -r requirements.txt
 
 # Install in development mode (editable)
 pip install -e .
-```
+```text
 
 ### Dependency Files
 
@@ -192,19 +192,22 @@ mypy [src/]
 
 # Generate documentation
 sphinx-build -b html docs/ docs/_build/
-```
+```text
 
 ## Entry Points
 
 ### CLI Entry Point
+
 - **File**: `[package-name]/__main__.py` or `[package-name]/cli.py`
 - **Run**: `python -m [package-name]` or `python cli.py`
 
 ### API Entry Point (if applicable)
+
 - **File**: `[package-name]/app.py` or `[package-name]/api/app.py`
 - **Run**: `uvicorn [package-name].app:app` (FastAPI) or `flask run` (Flask)
 
 ### Script Entry Points (if applicable)
+
 - **Location**: `scripts/` directory
 - **Purpose**: One-off utilities, data migration, deployment helpers
 
@@ -232,6 +235,7 @@ This project leverages brain repository knowledge:
 ## Framework-Specific Notes
 
 ### [Django Projects]
+
 - **Settings**: `[project]/settings.py`
 - **URLs**: `[project]/urls.py`
 - **Apps**: `[app_name]/` directories
@@ -239,6 +243,7 @@ This project leverages brain repository knowledge:
 - **Admin**: Registered models in `[app]/admin.py`
 
 ### [FastAPI Projects]
+
 - **Main App**: `app.py` or `main.py`
 - **Routers**: `routers/` or `api/routes/`
 - **Dependencies**: Dependency injection via `Depends()`
@@ -246,6 +251,7 @@ This project leverages brain repository knowledge:
 - **Run**: `uvicorn [module]:app --reload`
 
 ### [Flask Projects]
+
 - **Main App**: `app.py` or `__init__.py`
 - **Blueprints**: `blueprints/` or organized by feature
 - **Templates**: `templates/` directory
@@ -253,6 +259,7 @@ This project leverages brain repository knowledge:
 - **Run**: `flask run` or `python app.py`
 
 ### [CLI Projects]
+
 - **Parser**: `argparse`, `click`, or `typer`
 - **Entry Point**: `cli.py` or `__main__.py`
 - **Subcommands**: Organized by feature/domain
@@ -261,30 +268,34 @@ This project leverages brain repository knowledge:
 ## Common Tasks
 
 ### Add a New Feature
+
 1. Create module in `[src/]/[feature_name].py`
 2. Add tests in `tests/test_[feature_name].py`
 3. Update `__init__.py` if exposing public API
 4. Update documentation if needed
 
 ### Add a New Dependency
+
 1. Add to `requirements.txt` (or `pyproject.toml`)
 2. Run `pip install -r requirements.txt`
 3. Update README.md with any setup changes
 
 ### Debug Issues
+
 1. Enable debug logging in configuration
 2. Use Python debugger: `import pdb; pdb.set_trace()`
 3. Check logs/output
 4. Run specific test: `pytest tests/test_module.py::test_function -v`
 
 ### Performance Profiling
+
 ```bash
 # Profile script execution
 python -m cProfile -o output.prof script.py
 
 # Visualize profile
 snakeviz output.prof
-```
+```text
 
 ## Notes
 

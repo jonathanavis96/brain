@@ -14,6 +14,7 @@ Optimizes call-to-action button text, placement, and frequency for maximum conve
 ## Trigger Conditions
 
 Use this skill when:
+
 - Page has no clear CTA
 - CTA text is generic ("Submit", "Click Here")
 - Only one CTA on a long page
@@ -22,36 +23,40 @@ Use this skill when:
 ## CTA Text Formulas
 
 ### Formula 1: Action + Outcome
-```
+
+```text
 [Verb] + [What they get]
 
 "Book Your First Session"
 "Get Your Free Quote"
 "Start Your Journey"
 "Download the Guide"
-```
+```text
 
 ### Formula 2: First Person
-```
+
+```text
 "Get My Free [thing]"
 "Start My Trial"
 "Book My Consultation"
-```
+```text
 
 ### Formula 3: Urgency
-```
+
+```text
 "Claim Your Spot"
 "Reserve Your Place"
 "Get Started Today"
-```
+```text
 
 ### Formula 4: Low Friction
-```
+
+```text
 "See How It Works"
 "Learn More"
 "View Examples"
 "Take the Quiz"
-```
+```text
 
 ## Button Text by Industry
 
@@ -66,20 +71,22 @@ Use this skill when:
 ## CTA Placement Rules
 
 ### Rule 1: Above the Fold
+
 Always have a CTA visible without scrolling.
 
-```
+```text
 [Hero]
   - Headline
   - Subheadline
   - [Primary CTA Button]
   - Secondary link (optional)
-```
+```text
 
 ### Rule 2: After Value Sections
+
 Place CTA after you've established value.
 
-```
+```text
 [Services Section]
   - Service cards
   - [CTA: "Book a Consultation"]
@@ -87,28 +94,30 @@ Place CTA after you've established value.
 [Testimonials Section]
   - Social proof
   - [CTA: "Join Them"]
-```
+```text
 
 ### Rule 3: End of Page
+
 Final CTA before footer.
 
-```
+```text
 [Final CTA Section]
   - Headline: "Ready to get started?"
   - [Primary CTA]
   - Alternative: "Or call us at..."
-```
+```text
 
 ### Rule 4: Repeat Strategically
+
 On long pages, repeat CTA every 2-3 sections.
 
-```
+```text
 Hero → CTA
 Services → CTA
 Testimonials → CTA
 FAQ → CTA
 Footer CTA Section → CTA
-```
+```text
 
 **NOT** after every section (feels desperate).
 
@@ -130,7 +139,7 @@ Footer CTA Section → CTA
 **Tertiary** (navigation)
 - Text links
 - "See all services →"
-```
+```text
 
 ## Visual CTA Design
 
@@ -208,7 +217,7 @@ Section end: [Book Your First Session]
 "Ready to take the first step?"
 [Book Your First Session]
 "Prefer to talk? Call [number] or WhatsApp"
-```
+```text
 
 ## Related Skills
 

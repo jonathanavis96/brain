@@ -118,7 +118,7 @@ function SearchIndex({ items }: Props) {
   
   return <SearchResults index={index} query={query} />
 }
-```
+```text
 
 **When to use:**
 
@@ -181,7 +181,7 @@ function UserProfile({ userId }: Props) {
   if (state.status === 'success') return <div>{state.data.name}</div>
   return null
 }
-```
+```text
 
 **When to use:**
 
@@ -232,7 +232,7 @@ function ThemeToggle() {
     </button>
   )
 }
-```
+```text
 
 #### Performance optimization
 
@@ -256,7 +256,7 @@ const NotificationsContext = createContext(notifications) // Changes often
     </CartProvider>
   </ThemeProvider>
 </UserProvider>
-```
+```text
 
 **When to use:**
 
@@ -311,7 +311,7 @@ function CartButton() {
   const clearCart = useCartStore(state => state.clearCart)
   return <button onClick={clearCart}>Clear Cart</button>
 }
-```
+```text
 
 **Persist to localStorage:**
 
@@ -331,7 +331,7 @@ export const useCartStore = create(
     }
   )
 )
-```
+```text
 
 **When to use:**
 
@@ -398,7 +398,7 @@ function UserProfile() {
     </div>
   )
 }
-```
+```text
 
 **When to use:**
 
@@ -486,7 +486,7 @@ function UserPosts({ userId }: Props) {
   
   return <PostList posts={posts} />
 }
-```
+```text
 
 **When to use:**
 
@@ -559,7 +559,7 @@ function StaticConfig() {
   const { data } = useImmutableSWR('/api/config', fetcher)
   return <div>{data.appName}</div>
 }
-```
+```text
 
 **When to use:**
 
@@ -623,7 +623,7 @@ function SignupForm() {
     </form>
   )
 }
-```
+```text
 
 **When to use:**
 
@@ -684,7 +684,7 @@ function ProductList() {
     </div>
   )
 }
-```
+```text
 
 **When to use:**
 
@@ -745,7 +745,7 @@ function ProductList({ products }: Props) {
   
   return <List items={filteredProducts} />
 }
-```
+```text
 
 **When to use:**
 
@@ -786,7 +786,7 @@ function UncontrolledInput() {
   
   return <input ref={inputRef} defaultValue="" />
 }
-```
+```text
 
 **Use controlled when:**
 
@@ -828,7 +828,7 @@ Need to manage state?
 │  ├─ Changes rarely → Context (Pattern 3)
 │  ├─ Changes frequently → Zustand (Pattern 4)
 │  └─ Very complex + need middleware → Redux Toolkit (Pattern 5)
-```
+```text
 
 ## Common Pitfalls
 
@@ -853,7 +853,7 @@ function App() {
   const [user, setUser] = useState(null)
   return <Dashboard user={user} />
 }
-```
+```text
 
 **Solution:** Start with local state and props. Only introduce global state when prop drilling becomes painful (3+ levels).
 
@@ -887,7 +887,7 @@ function UserProfile({ userId }: Props) {
   })
   // Automatic caching, deduplication, refetching, error handling
 }
-```
+```text
 
 **Solution:** Use React Query or SWR for all server state. Save useState/Redux for client-only state.
 
@@ -922,7 +922,7 @@ function Counter() {
     return () => clearInterval(interval)
   }, [])
 }
-```
+```text
 
 **Solution:** Use functional updates (`setState(prev => ...)`) when new state depends on old state.
 
@@ -959,7 +959,7 @@ function AppProvider({ children }: Props) {
 // ✅ Better: Split contexts by update frequency
 const UserContext = createContext(user)
 const UserActionsContext = createContext({ setUser })
-```
+```text
 
 **Solution:** Memoize context values, or split contexts to isolate frequently changing data.
 

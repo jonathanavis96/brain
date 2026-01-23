@@ -33,7 +33,7 @@ In PLANNING mode, you MUST end with:
 
 ```text
 :::BUILD_READY:::
-```
+```text
 
 This signals loop.sh to proceed to BUILD mode. Without this marker, the iteration is wasted.
 
@@ -77,7 +77,7 @@ When you encounter multiple instances of the same issue type (e.g., SC2155, SC20
 npm run type-check
 npm run lint
 npm test
-```
+```text
 
 ## Self-Improvement Protocol
 

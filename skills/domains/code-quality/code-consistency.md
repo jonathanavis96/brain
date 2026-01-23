@@ -31,7 +31,7 @@ create_new_era() {
 # thunk_monitor.sh - THUNK viewer and manager
 #
 # Displays THUNK entries. Press 'e' to create new era (modifies THUNK.md).
-```
+```text
 
 ### Usage Comments Must Match Script Name
 
@@ -48,7 +48,7 @@ create_new_era() {
 # ✅ Better - dynamic (can't go stale)
 #!/usr/bin/env bash
 # Usage: $(basename "$0") [options]
-```
+```text
 
 ### Audit Comments When Changing Code
 
@@ -78,7 +78,7 @@ grep -r "KB" --include="*.md" .
 # - Template files that generate new projects
 # - Error messages and user-facing strings
 # - Variable names (consider renaming KB_PATH → SKILLS_PATH)
-```
+```text
 
 ### Consistency Verification Script
 
@@ -102,7 +102,7 @@ grep -rn "$OLD_TERM" --include="*.sh" . | grep -v "\.git"
 # Find in help text
 echo -e "\n## Help/usage text:"
 grep -rn "usage\|Usage\|USAGE" --include="*.sh" -A5 . | grep -i "$OLD_TERM"
-```
+```text
 
 ## Parsing Consistency
 
@@ -144,7 +144,7 @@ archive_tasks() {
         in_section=false
     fi
 }
-```
+```text
 
 ### Cache Key Collisions
 
@@ -158,7 +158,7 @@ local cache_key=$(echo -n "${section}:${task_desc}" | md5sum | cut -d' ' -f1)
 
 # ✅ Better - include full context
 local cache_key=$(printf '%s' "$section|$task_label|$task_desc" | md5sum | cut -d' ' -f1)
-```
+```text
 
 ## Format Consistency
 
@@ -176,7 +176,7 @@ local cache_key=$(printf '%s' "$section|$task_label|$task_desc" | md5sum | cut -
 # Enforce in scripts:
 DATE_FORMAT="%Y-%m-%d"
 current_date=$(date +"$DATE_FORMAT")
-```
+```text
 
 ### Shebang Lines
 
@@ -189,7 +189,7 @@ current_date=$(date +"$DATE_FORMAT")
 # ✅ Right - consistent portable shebang
 #!/usr/bin/env bash   # All bash scripts
 #!/usr/bin/env python3  # All Python scripts
-```
+```text
 
 ### Quoting Style
 
@@ -202,7 +202,7 @@ echo "${variable}"
 # ✅ Right - always quote, use ${} for clarity
 echo "${variable}"
 echo "${array[@]}"
-```
+```text
 
 ## Code Duplication
 
@@ -236,7 +236,7 @@ is_section_header() {
 }
 
 # ... other shared functions
-```
+```text
 
 ```bash
 # current_ralph_tasks.sh
@@ -244,7 +244,7 @@ source "${SCRIPT_DIR}/lib/parsing.sh"
 
 # thunk_ralph_tasks.sh  
 source "${SCRIPT_DIR}/lib/parsing.sh"
-```
+```text
 
 ## Verification Checklist
 

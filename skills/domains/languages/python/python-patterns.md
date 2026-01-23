@@ -27,7 +27,7 @@ now = datetime.now(timezone.utc)
 # ✅ Right - Python 3.11+ shortcut
 from datetime import datetime, UTC
 now = datetime.now(UTC)
-```
+```text
 
 ### ISO 8601 Formatting
 
@@ -42,7 +42,7 @@ timestamp = now.replace(microsecond=0).isoformat() + "Z"
 # ✅ Right - ISO 8601 with timezone
 timestamp = now.isoformat()
 # Output: "2026-01-20T02:15:00+00:00"
-```
+```text
 
 ### Parsing Datetimes
 
@@ -63,7 +63,7 @@ def parse_datetime(date_string: str) -> datetime | None:
     except ValueError as e:
         print(f"Invalid datetime format: {date_string} ({e})")
         return None
-```
+```text
 
 ## f-String Best Practices
 
@@ -81,7 +81,7 @@ error = "Something went wrong"
 # ✅ Right - f-string with actual interpolation
 message = f"Hello, {username}!"
 error = f"Failed to process {filename}: {reason}"
-```
+```text
 
 ### Avoid Overly Simple f-Strings
 
@@ -95,7 +95,7 @@ result = str(value)
 # ✅ Right - f-string adds context
 result = f"Value: {value}"
 result = f"{count} items found"
-```
+```text
 
 ### f-String Formatting
 
@@ -113,7 +113,7 @@ f"{name:^20}"            # Center in 20 chars
 
 # Debug (Python 3.8+)
 f"{variable=}"           # "variable=42" - shows name and value
-```
+```text
 
 ## JSON Error Handling
 
@@ -144,7 +144,7 @@ def load_json(path: str | Path) -> dict | None:
     except PermissionError:
         print(f"Permission denied: {path}")
         return None
-```
+```text
 
 ### Validate JSON Structure
 
@@ -170,7 +170,7 @@ def get_config_value(data: dict, *keys, default=None):
     return current
 
 value = get_config_value(data, "nested", "key", "value", default="fallback")
-```
+```text
 
 ## Exception Handling
 
@@ -200,7 +200,7 @@ except Exception as e:
     # Only as last resort, and re-raise or log properly
     logging.exception("Unexpected error")
     raise
-```
+```text
 
 ### Context in Error Messages
 
@@ -212,7 +212,7 @@ except json.JSONDecodeError:
 # ✅ Right - helpful context
 except json.JSONDecodeError as e:
     print(f"Invalid JSON in {filepath} at line {e.lineno}: {e.msg}")
-```
+```text
 
 ## Type Hints (Python 3.10+)
 
@@ -234,7 +234,7 @@ def process(items: list[str]) -> dict[str, int] | None:
 
 def get_value(key: str) -> str | None:
     pass
-```
+```text
 
 ### Use `from __future__ import annotations`
 
@@ -246,7 +246,7 @@ class Node:
     # Can reference Node before it's fully defined
     def add_child(self, child: Node) -> None:
         pass
-```
+```text
 
 ## File Handling
 
@@ -261,7 +261,7 @@ f.close()  # May not run if exception occurs!
 # ✅ Right - context manager
 with open("file.txt", "r", encoding="utf-8") as f:
     content = f.read()
-```
+```text
 
 ### Always Specify Encoding
 
@@ -273,7 +273,7 @@ with open("file.txt") as f:
 # ✅ Right - explicit UTF-8
 with open("file.txt", "r", encoding="utf-8") as f:
     content = f.read()
-```
+```text
 
 ## Import Organization
 
@@ -292,7 +292,7 @@ import yaml
 # Local imports (blank line separator)
 from .utils import helper_function
 from .config import settings
-```
+```text
 
 ## Import Scope Best Practices
 
@@ -331,7 +331,7 @@ def my_function():
         pass
     
     time.sleep(2)  # Works fine
-```
+```text
 
 ### Why This Happens
 

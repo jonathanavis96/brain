@@ -17,6 +17,7 @@ Creates readable, hierarchical typography with proper font pairing, sizes, and l
 ## Trigger Conditions
 
 Use this skill when:
+
 - Setting up design system
 - Text feels hard to read
 - Hierarchy is unclear
@@ -25,42 +26,46 @@ Use this skill when:
 ## Font Pairing Patterns
 
 ### Pattern 1: Same Family (Safest)
+
 Use one font family with different weights.
 
 ```css
 /* Clean, consistent */
 --font-heading: 'Inter', sans-serif;
 --font-body: 'Inter', sans-serif;
-```
+```text
 
 **Good choices:** Inter, DM Sans, Nunito, Source Sans Pro
 
 ### Pattern 2: Sans + Sans (Modern)
+
 Two sans-serifs with different personalities.
 
 ```css
 /* Headings bold, body neutral */
 --font-heading: 'DM Sans', sans-serif;
 --font-body: 'Inter', sans-serif;
-```
+```text
 
 ### Pattern 3: Serif + Sans (Classic)
+
 Serif headings for elegance, sans body for readability.
 
 ```css
 /* Elegant but readable */
 --font-heading: 'Playfair Display', serif;
 --font-body: 'Inter', sans-serif;
-```
+```text
 
 ### Pattern 4: Display + Body (Expressive)
+
 Distinctive display font for headings only.
 
 ```css
 /* Personality in headings */
 --font-heading: 'Fraunces', serif;
 --font-body: 'Inter', sans-serif;
-```
+```text
 
 ## Font Selection by Personality
 
@@ -89,7 +94,7 @@ Use a consistent scale. The 1.25 ratio works well:
 --text-4xl: 2.25rem;  /* 36px */
 --text-5xl: 3rem;     /* 48px */
 --text-6xl: 3.75rem;  /* 60px */
-```
+```text
 
 ## Line Height Rules
 
@@ -107,7 +112,7 @@ Use a consistent scale. The 1.25 ratio works well:
 p, li, blockquote {
   max-width: 65ch; /* ~65 characters */
 }
-```
+```text
 
 | Width | Effect |
 |-------|--------|
@@ -134,14 +139,15 @@ h1 {
     font-size: 3.75rem; /* 60px desktop */
   }
 }
-```
+```text
 
 Or use `clamp()`:
+
 ```css
 h1 {
   font-size: clamp(2rem, 5vw, 3.75rem);
 }
-```
+```text
 
 ## Common Mistakes
 
@@ -217,7 +223,7 @@ p {
   font-size: 0.875rem;
   line-height: 1.5;
 }
-```
+```text
 
 ## Related Skills
 

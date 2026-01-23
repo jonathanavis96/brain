@@ -19,7 +19,7 @@ cleanup() {
     exit "$exit_code"  # Preserve original exit code
 }
 trap cleanup EXIT
-```
+```text
 
 ### Trap Signals
 
@@ -33,7 +33,7 @@ trap cleanup EXIT
 ```bash
 # Multiple signals
 trap cleanup EXIT INT TERM
-```
+```text
 
 ## Temporary Files
 
@@ -48,7 +48,7 @@ TEMP_FILE=$(mktemp /tmp/myapp.XXXXXX)
 
 # ✅ Temp directory
 TEMP_DIR=$(mktemp -d)
-```
+```text
 
 ### Always Clean Up
 
@@ -72,7 +72,7 @@ TEMP_DIR=$(mktemp -d)
 
 # Use temp resources...
 echo "data" > "$TEMP_FILE"
-```
+```text
 
 ### Common Mistakes
 
@@ -89,7 +89,7 @@ TEMP_FILE="/tmp/myfile.txt"  # Race condition, insecure
 cleanup() { rm -f "$TEMP_FILE"; }
 trap cleanup EXIT
 TEMP_FILE=$(mktemp)  # If this fails, cleanup uses empty var
-```
+```text
 
 ## State Restoration
 
@@ -113,7 +113,7 @@ for f in *.txt; do
 done
 
 eval "$old_nullglob"  # Restore original state
-```
+```text
 
 ### Directory Changes
 
@@ -135,7 +135,7 @@ original_dir=$(pwd)
 cd /some/path
 do_work
 cd "$original_dir"
-```
+```text
 
 ### Environment Variables
 
@@ -151,7 +151,7 @@ export PATH="$old_path"
     export PATH="/custom/path:$PATH"
     run_command
 )  # PATH restored automatically
-```
+```text
 
 ## Complex Cleanup
 
@@ -193,7 +193,7 @@ make_temp_file() {
     TEMP_FILES+=("$f")
     echo "$f"
 }
-```
+```text
 
 ### Cleanup with Error Info
 
@@ -212,7 +212,7 @@ cleanup() {
     exit "$exit_code"
 }
 trap 'cleanup $LINENO' EXIT ERR
-```
+```text
 
 ## Lock Files
 
@@ -234,7 +234,7 @@ if ! (set -o noclobber; echo $$ > "$LOCK_FILE") 2>/dev/null; then
 fi
 
 # ... script logic ...
-```
+```text
 
 ## Background Process Cleanup
 
@@ -264,7 +264,7 @@ BACKGROUND_PID=$!
 kill "$BACKGROUND_PID"
 wait "$BACKGROUND_PID"
 BACKGROUND_PID=""  # Clear so cleanup doesn't double-kill
-```
+```text
 
 ## Related
 

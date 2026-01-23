@@ -14,6 +14,7 @@ Creates clear, specific, non-fluffy hero headlines and subheadlines that communi
 ## Trigger Conditions
 
 Use this skill when:
+
 - Writing hero section copy
 - Current headline is vague ("Welcome to our website")
 - Value isn't immediately clear
@@ -21,11 +22,12 @@ Use this skill when:
 
 ## The Value Proposition Formula
 
-```
+```text
 [End result/transformation] + [for specific audience] + [without common pain/objection]
-```
+```text
 
 **Examples:**
+
 - "Build websites 10x faster — without writing code"
 - "Find your calm. Rebuild your confidence." (for therapy)
 - "Fresh meals delivered — no cooking, no cleanup"
@@ -33,52 +35,58 @@ Use this skill when:
 ## Headline Patterns That Work
 
 ### Pattern 1: Outcome-Focused
+
 What the customer GETS, not what you DO.
 
-```
+```text
 ❌ "Professional Therapy Services"
 ✅ "Find your calm. Rebuild your confidence."
 
 ❌ "Web Development Agency"
 ✅ "Websites that turn visitors into customers"
-```
+```text
 
 ### Pattern 2: Problem-Solution
+
 Acknowledge the pain, offer the solution.
 
-```
+```text
 "Tired of [pain point]? [Solution statement]."
 
 "Tired of feeling overwhelmed? Get clarity in your first session."
-```
+```text
 
 ### Pattern 3: Specific + Credible
+
 Numbers and specifics build trust.
 
-```
+```text
 "Join 10,000+ professionals who [outcome]"
 "Reduce anxiety in 6 weeks with evidence-based therapy"
-```
+```text
 
 ### Pattern 4: Question Hook
+
 Engage with a question they're already asking.
 
-```
+```text
 "Ready to feel like yourself again?"
 "What would you do with 10 extra hours a week?"
-```
+```text
 
 ### Pattern 5: Simple Statement
+
 Sometimes direct is best.
 
-```
+```text
 "Therapy that works."
 "Email marketing for creators."
-```
+```text
 
 ## Subheadline Rules
 
 The subheadline supports the headline with:
+
 - WHO it's for (if not in headline)
 - HOW it works (method/approach)
 - KEY differentiator (what makes you different)
@@ -86,7 +94,7 @@ The subheadline supports the headline with:
 ```markdown
 **Headline:** Find your calm. Rebuild your confidence.
 **Subheadline:** Professional therapy for anxiety, trauma, and life transitions — online or in-person in Johannesburg.
-```
+```text
 
 ## Hero Section Structure
 
@@ -106,7 +114,7 @@ The subheadline supports the headline with:
    
 5. **Secondary CTA** (optional)
    - Lower commitment option
-```
+```text
 
 ## Common Mistakes
 
@@ -122,6 +130,7 @@ The subheadline supports the headline with:
 ## Testing Your Value Proposition
 
 Ask these questions:
+
 1. **Clear?** Can someone understand in 5 seconds?
 2. **Specific?** Does it apply only to you?
 3. **Compelling?** Does it make someone want to learn more?
@@ -155,7 +164,7 @@ Ask these questions:
 - "Rebuild your confidence" speaks to identity/transitions
 - Subheadline covers who, what, where
 - Trust line handles credibility immediately
-```
+```text
 
 ## Related Skills
 

@@ -27,7 +27,7 @@ sessions:
   persistenceDir: ${PERSISTENCE_DIR:-.rovodev/sessions}
 logging:
   path: ${LOG_DIR:-./logs}
-```
+```text
 
 ### Use Environment Variables with Defaults
 
@@ -40,7 +40,7 @@ CONFIG_DIR="${CONFIG_DIR:-$HOME/.config/myapp}"
 
 # ✅ Right - XDG compliant
 CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/myapp"
-```
+```text
 
 ### Relative Paths from Script Location
 
@@ -51,7 +51,7 @@ source ./lib/utils.sh
 # ✅ Right - relative to script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/lib/utils.sh"
-```
+```text
 
 ### Cross-Platform Path Handling
 
@@ -72,7 +72,7 @@ if [[ -d "/mnt/c" ]]; then
 else
     WIN_HOME=""
 fi
-```
+```text
 
 ## Template Pattern
 
@@ -83,7 +83,7 @@ project/
 ├── config.yml           # .gitignored - real config
 ├── config.template.yml  # tracked - template with placeholders
 └── .gitignore          # ignores config.yml
-```
+```text
 
 ### Template File Example
 
@@ -101,7 +101,7 @@ timeout_secs: ${TIMEOUT:-30}
 
 # Paths - use env vars or defaults
 persistence_dir: ${PERSISTENCE_DIR:-.data/sessions}
-```
+```text
 
 ### Setup Script
 
@@ -129,7 +129,7 @@ fi
 envsubst < "$TEMPLATE" > "$CONFIG"
 echo "Created: $CONFIG"
 echo "Please review and update placeholder values."
-```
+```text
 
 ## Environment Variable Override
 
@@ -156,7 +156,7 @@ while [[ $# -gt 0 ]]; do
         *) shift ;;
     esac
 done
-```
+```text
 
 ### Document All Environment Variables
 
@@ -169,7 +169,7 @@ done
 | `APP_LOG_LEVEL` | `info` | Logging verbosity |
 | `APP_TIMEOUT` | `30` | Request timeout in seconds |
 | `APP_API_KEY` | (required) | API key for authentication |
-```
+```text
 
 ## Secrets Management
 
@@ -183,7 +183,7 @@ done
 *_secret.txt
 config.yml      # Real config with secrets
 !config.template.yml  # Template is OK to commit
-```
+```text
 
 ### Use .env Files
 
@@ -191,14 +191,14 @@ config.yml      # Real config with secrets
 # .env (gitignored)
 API_KEY=sk-abc123...
 DATABASE_URL=postgres://user:pass@host/db  # pragma: allowlist secret
-```
+```text
 
 ```bash
 # Load .env in scripts
 if [[ -f .env ]]; then
     export $(grep -v '^#' .env | xargs)
 fi
-```
+```text
 
 ### Validate Required Secrets
 
@@ -206,7 +206,7 @@ fi
 # Fail fast if required secrets missing
 : "${API_KEY:?API_KEY environment variable is required}"
 : "${DATABASE_URL:?DATABASE_URL environment variable is required}"
-```
+```text
 
 ## Configuration Validation
 
@@ -236,7 +236,7 @@ validate_config() {
 
     return $errors
 }
-```
+```text
 
 ### Provide Helpful Error Messages
 
@@ -253,7 +253,7 @@ if [[ ! -f "$CONFIG" ]]; then
     echo "  # Edit config.yml with your values" >&2
     exit 1
 fi
-```
+```text
 
 ## YAML-Specific Patterns
 
@@ -271,7 +271,7 @@ else
     echo "WARNING: yq not installed, using sed (fragile)" >&2
     sed -i "s/modelId:.*/modelId: $NEW_MODEL/" config.yml
 fi
-```
+```text
 
 ### Validate YAML Syntax
 
@@ -283,7 +283,7 @@ if command -v yq &>/dev/null; then
         exit 1
     }
 fi
-```
+```text
 
 ## Common Mistakes Summary
 

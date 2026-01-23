@@ -7,9 +7,11 @@ This document provides a human-friendly overview of the Brain repository structu
 ## Top-Level Folders
 
 ### `cortex/` - Manager Layer (Opus 4.5)
+
 **Purpose:** High-level planning, task delegation, and strategic oversight.
 
 **Key Files:**
+
 - `CORTEX_SYSTEM_PROMPT.md` - Cortex's identity, role, and operational rules
 - `REPO_MAP.md` - This file - navigation guide for the repository
 - `DECISIONS.md` - Architectural decisions and conventions (stability anchor)
@@ -20,6 +22,7 @@ This document provides a human-friendly overview of the Brain repository structu
 - `snapshot.sh` - Generates current state summary for Cortex context
 
 **What Cortex Can Modify:**
+
 - `cortex/IMPLEMENTATION_PLAN.md` - Task contracts for workers
 - `cortex/THOUGHTS.md` - Cortex's own thinking space
 - Root-level `IMPLEMENTATION_PLAN.md` - When delegating to Ralph
@@ -28,15 +31,18 @@ This document provides a human-friendly overview of the Brain repository structu
 - `skills/self-improvement/SKILL_BACKLOG.md` - Skill promotion queue
 
 **What Cortex Cannot Modify:**
+
 - Worker prompts (e.g., `workers/ralph/PROMPT.md`)
 - Loop scripts (e.g., `workers/ralph/loop.sh`)
 - Verifier scripts (e.g., `workers/ralph/verifier.sh`)
 - Source code implementations (workers execute, Cortex delegates)
 
 ### `workers/` - Execution Layer (Currently: ralph/)
+
 **Purpose:** Task execution, implementation, and iteration.
 
 **Current Workers:**
+
 - `ralph/` - Shell-based loop executor (Sonnet 4.5)
   - `loop.sh` - Main execution loop (PLAN/BUILD cycles)
   - `PROMPT.md` - Ralph's instructions and operational rules
@@ -51,9 +57,11 @@ This document provides a human-friendly overview of the Brain repository structu
 **Workflow:** Cortex writes task contracts → Ralph executes → Ralph reports progress → Cortex reviews
 
 ### `skills/` - Knowledge Base
+
 **Purpose:** Reusable patterns, best practices, and self-improvement system.
 
 **Structure:**
+
 - `SUMMARY.md` - Overview and error quick reference (START HERE)
 - `index.md` - Complete catalog of all available skills
 - `conventions.md` - Guidelines for authoring new skills
@@ -66,6 +74,7 @@ This document provides a human-friendly overview of the Brain repository structu
   - `SKILL_TEMPLATE.md` - Template for creating new skill files
 
 **Usage Pattern:**
+
 1. Start with `SUMMARY.md` for overview
 2. Check `index.md` for catalog
 3. Consult specific skill files only when needed
@@ -74,13 +83,16 @@ This document provides a human-friendly overview of the Brain repository structu
 **Note:** External references (like React best practices) have been moved to individual project repositories. The brain repository focuses on worker infrastructure and skills.
 
 ### `templates/` - Project Scaffolding
+
 **Purpose:** Templates for bootstrapping new Ralph-enabled projects.
 
 **Structure:**
+
 - Template files for different project types (backend, python, ralph)
 - Generator scripts located in `workers/ralph/generators/` folder (if present)
 
 **Common Templates:**
+
 - `AGENTS.project.md` - Operational guide template
 - `NEURONS.project.md` - Repository map template
 - `THOUGHTS.project.md` - Project goals template
@@ -88,24 +100,29 @@ This document provides a human-friendly overview of the Brain repository structu
 - `ralph/` - Ralph-specific templates (loop.sh, verifier.sh, etc.)
 
 ### `.verify/` - Validation Infrastructure
+
 **Purpose:** Acceptance criteria enforcement, hash guards, and waiver system.
 
 **Key Files:**
+
 - `latest.txt` - Most recent verifier output (check for PASS/FAIL/WARN)
 - `*.sha256` - Hash guards for protected files
 - `waiver_requests/` - Pending waiver requests (legitimately failed rules)
 - `waivers/` - Approved waivers (TOTP-protected)
 
 **Protected Files (hash-guarded):**
+
 - `workers/ralph/loop.sh`
 - `workers/ralph/verifier.sh`
 - `workers/ralph/PROMPT.md`
 - `rules/AC.rules`
 
 ### `rules/` - Acceptance Criteria
+
 **Purpose:** Automated validation rules for verifier.sh.
 
 **Key Files:**
+
 - `AC.rules` - Core acceptance criteria (protected by hash guard)
 - `AC-hygiene-additions.rules` - Extended hygiene checks
 - `MANUAL_APPROVALS.rules` - Human-gated changes
@@ -113,9 +130,11 @@ This document provides a human-friendly overview of the Brain repository structu
 **Note:** Workers cannot modify these files - they are enforced by the verifier.
 
 ### `docs/` - Project Documentation
+
 **Purpose:** Design decisions, change logs, edge case handling.
 
 **Key Files:**
+
 - `BOOTSTRAPPING.md` - How to create new Ralph-enabled projects
 - `CHANGES.md` - Project changelog
 - `EDGE_CASES.md` - Detailed examples and error recovery
@@ -123,9 +142,11 @@ This document provides a human-friendly overview of the Brain repository structu
 - `TEST_SCENARIOS.md` - Validation scenarios
 
 ### `.maintenance/` - Repository Health
+
 **Purpose:** Maintenance tracking and verification.
 
 **Key Files:**
+
 - `MAINTENANCE.md` - Current maintenance items
 - `MAINTENANCE_LOG.md` - Historical maintenance log
 - `verify-brain.sh` - Repository health check script
@@ -168,44 +189,56 @@ This document provides a human-friendly overview of the Brain repository structu
 ## Navigation Tips
 
 ### "I need to understand the project goals"
+
 → Read `THOUGHTS.md` (root level)
 
 ### "I need to see what tasks are active"
+
 → Read `IMPLEMENTATION_PLAN.md` (root level)
 
 ### "I need to know what's been completed"
+
 → Read `THUNK.md`
 
 ### "I need to understand the codebase structure"
+
 → Read `NEURONS.md` (root level or `workers/ralph/`)
 
 ### "I need to learn a specific skill/pattern"
+
 → Start with `skills/SUMMARY.md` → `skills/index.md` → specific skill file
 
 ### "I need to check if something failed"
+
 → Read `.verify/latest.txt` (look for `[FAIL]` or `[WARN]`)
 
 ### "I need to bootstrap a new project"
+
 → Read `docs/BOOTSTRAPPING.md`
 
 ### "I need to fix a verifier failure"
+
 → Read `skills/SUMMARY.md` → Error Quick Reference table
 
 ### "I need to understand Ralph's workflow"
+
 → Read `skills/domains/ralph/ralph-patterns.md`
 
 ### "I need to create a new skill"
+
 → Read `skills/self-improvement/SKILL_TEMPLATE.md`
 
 ### "I need architectural context"
+
 → Read `cortex/DECISIONS.md` (after it's created)
 
 ### "I need operational procedures"
+
 → Read `cortex/docs/RUNBOOK.md` or `AGENTS.md`
 
 ## Workflow Summary
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                     Brain Repository                         │
 │                                                              │
@@ -231,7 +264,7 @@ This document provides a human-friendly overview of the Brain repository structu
 │                           │  (Knowledge Base)   │          │
 │                           └─────────────────────┘          │
 └─────────────────────────────────────────────────────────────┘
-```
+```text
 
 ## File Count Reference (for freshness checks)
 

@@ -12,6 +12,7 @@ The brain repository is a unique project that serves as both a knowledge base AN
 ## When to Use It
 
 Reference this skill file when:
+
 - Working on the brain repository itself (not a project created from brain)
 - Running the brain's own Ralph loop (`loop.sh`)
 - Creating or modifying templates in `templates/`
@@ -20,6 +21,7 @@ Reference this skill file when:
 - Troubleshooting brain-specific issues
 
 **Specific triggers:**
+
 - Editing files in `brain/templates/`
 - Modifying `brain/` Ralph prompts (PROMPT.md, loop.sh)
 - Running `brain/loop.sh`
@@ -32,7 +34,7 @@ Reference this skill file when:
 
 The brain repository has a unique dual role:
 
-```
+```text
 brain/
 ├── skills/                # Knowledge base (the "source code" for knowledge)
 ├── references/            # Read-only reference materials (45 React rules)
@@ -42,7 +44,7 @@ brain/
 ├── new-project.sh         # Bootstrap script
 ├── verifier.sh            # Validation script
 └── AGENTS.md              # Guidance for agents working ON brain
-```
+```text
 
 **Key insight:** The brain repository IS a project itself, and uses Ralph to evolve.
 
@@ -51,11 +53,13 @@ brain/
 This is critical to understand:
 
 **When working IN the brain repository:**
+
 - Skill references use **local paths**: `skills/SUMMARY.md`, `references/react-best-practices/HOTLIST.md`
 - Brain's Ralph prompts use **local paths**: `skills/SUMMARY.md`
 - AGENTS.md references are **local**: `skills/conventions.md`
 
 **When in templates (for NEW projects):**
+
 - Skill references use **relative paths from project root**: `../brain/skills/SUMMARY.md`
 - Templates assume project is sibling to brain: `../brain/`
 - Template prompts use **relative paths**: `../../brain/skills/SUMMARY.md`
@@ -74,13 +78,14 @@ Read `skills/SUMMARY.md`
 
 <!-- In brain/templates/ralph/PROMPT.md (relative paths, for projects) -->
 Read `../../brain/skills/SUMMARY.md`
-```
+```text
 
 ### Brain Self-Improvement with Ralph
 
 The brain repository has its own Ralph loop at `loop.sh`:
 
 **How it works:**
+
 1. Brain's `IMPLEMENTATION_PLAN.md` contains improvement tasks for the brain itself
 2. Running `loop.sh` executes the brain's Ralph loop
 3. Ralph reads brain's skills (local paths), implements top task from IMPLEMENTATION_PLAN.md
@@ -88,6 +93,7 @@ The brain repository has its own Ralph loop at `loop.sh`:
 5. Progress logged to `THUNK.md`
 
 **What Ralph considers "source code" for the brain:**
+
 - Templates in `templates/`
 - Skill files in `skills/`
 - Scripts: `new-project.sh`, `verifier.sh`, `loop.sh`
@@ -95,6 +101,7 @@ The brain repository has its own Ralph loop at `loop.sh`:
 - Ralph infrastructure: root directory files
 
 **Brain's Ralph does NOT modify:**
+
 - `references/react-best-practices/rules/` (45 files, read-only reference material)
 
 ### Skill File Categories
@@ -102,12 +109,14 @@ The brain repository has its own Ralph loop at `loop.sh`:
 The brain organizes knowledge into two categories:
 
 **Domains (`skills/domains/`):**
+
 - Reusable technical patterns
 - Cross-project knowledge
 - Technology-specific patterns
 - Example: `auth-patterns.md`, `caching-patterns.md`
 
 **Projects (`skills/projects/`):**
+
 - Project-specific conventions
 - Single-project context
 - Deployment specifics
@@ -118,6 +127,7 @@ The brain organizes knowledge into two categories:
 The brain includes `verifier.sh` to ensure integrity:
 
 **What it checks:**
+
 - Acceptance criteria from `rules/AC.rules`
 - Protected file hashes (loop.sh, verifier.sh, PROMPT.md, rules/AC.rules)
 - Shellcheck hygiene gates
@@ -125,15 +135,17 @@ The brain includes `verifier.sh` to ensure integrity:
 - Template hash baselines
 
 **Usage:**
+
 ```bash
 ./verifier.sh          # Run validation
-```
+```text
 
 ### Bootstrap Script
 
 The `new-project.sh` script creates new projects with intelligent generator inference:
 
 **Enhanced features:**
+
 - Pre-flight checks (templates exist, name valid, directory available)
 - Tech stack inference from project idea file
 - Automatic generation of NEURONS.md, THOUGHTS.md, IMPLEMENTATION_PLAN.md
@@ -141,25 +153,29 @@ The `new-project.sh` script creates new projects with intelligent generator infe
 - Post-creation validation
 
 **Usage:**
+
 ```bash
 ./new-project.sh my-project-idea.md    # Create project from idea file
-```
+```text
 
 ### Template Maintenance
 
 When updating templates, ensure consistency:
 
 **Path patterns:**
+
 - Templates use local paths (copied into project)
 - Skill references remain relative to brain repository
 
 **Progressive disclosure order:**
+
 1. `../brain/skills/SUMMARY.md`
 2. `../brain/references/react-best-practices/HOTLIST.md`
 3. `../brain/references/react-best-practices/INDEX.md` (only if needed)
 4. `../brain/references/react-best-practices/rules/*` (only specific rules)
 
 **Required sections in skill files:**
+
 - `## Why This Exists`
 - `## When to Use It`
 - `## Details`
@@ -167,18 +183,21 @@ When updating templates, ensure consistency:
 ### Common Brain-Specific Tasks
 
 **Adding a new skill file:**
+
 1. Create file in `skills/domains/` or `skills/projects/`
 2. Follow Why/When/Details structure
 3. Update `skills/SUMMARY.md` and `skills/index.md` with link
 4. Run `./verifier.sh` to verify
 
 **Updating templates:**
+
 1. Edit files in `templates/`
 2. Ensure template integrity maintained
 3. Test with generators if applicable
 4. Run `./verifier.sh`
 
 **Running brain's Ralph loop:**
+
 1. Add tasks to `IMPLEMENTATION_PLAN.md`
 2. Run `./loop.sh --iterations 10`
 3. Ralph implements tasks, validates with `verifier.sh`
@@ -194,16 +213,19 @@ When updating templates, ensure consistency:
 ### Decision History
 
 **Why templates are copied to projects:**
+
 - Projects are self-contained with their own Ralph infrastructure
 - Generators intelligently adapt templates to project type
 - Each project has customized NEURONS.md, THOUGHTS.md, IMPLEMENTATION_PLAN.md
 
 **Why brain has its own Ralph loop:**
+
 - Brain needs to evolve and improve itself
 - Meta-approach: brain uses its own tools for self-improvement
 - IMPLEMENTATION_PLAN.md tracks brain's own improvement tasks
 
 **Why validation script is necessary:**
+
 - Ensures acceptance criteria pass before commits
 - Protects critical files with hash verification
 - Catches hygiene issues (shellcheck, markdown formatting)

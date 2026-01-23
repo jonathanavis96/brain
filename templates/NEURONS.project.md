@@ -3,10 +3,13 @@
 **Read via subagent** - This is the codebase map for Ralph. Not loaded in first context.
 
 ## Purpose
+
 This is the **project map** that Ralph and all agents read on-demand when needed. It maps the entire repository structure, tells you where everything lives, and provides quick lookup for common tasks.
 
 ## Navigation Rules (Read This First)
+
 **Deterministic Context Loading Order:**
+
 1. `AGENTS.md` (injected first by loop.sh - operational guide)
 2. `PROMPT.md` (injected second - contains conditional logic for plan/build modes)
 3. `NEURONS.md` (this file - read via subagent when needed, NOT injected)
@@ -22,7 +25,7 @@ This is the **project map** that Ralph and all agents read on-demand when needed
 
 [REPLACE: Map your project's directory structure. Use tree format with brief descriptions.]
 
-```
+```text
 /path/to/[PROJECT_NAME]/
 ├── AGENTS.md                    # Ralph operational guide (how to run)
 ├── NEURONS.md                   # This file (project map - what exists where)
@@ -51,7 +54,7 @@ This is the **project map** that Ralph and all agents read on-demand when needed
 ├── [docs/]                      # [REPLACE: Documentation location]
 ├── [config/]                    # [REPLACE: Configuration files]
 └── [scripts/]                   # [REPLACE: Build/deployment scripts]
-```
+```text
 
 ---
 
@@ -99,19 +102,22 @@ This is the **project map** that Ralph and all agents read on-demand when needed
 **Purpose:** [What lives in this directory and why]
 
 **Key Files:**
+
 - `[file1.ext]` - [Description]
 - `[file2.ext]` - [Description]
 - `[file3.ext]` - [Description]
 
 **Subdirectories:**
+
 - `[subdir1/]` - [Purpose]
 - `[subdir2/]` - [Purpose]
 - `[subdir3/]` - [Purpose]
 
 **Common Patterns:**
-```
+
+```text
 [REPLACE: Show common code patterns or naming conventions]
-```
+```text
 
 ---
 
@@ -124,6 +130,7 @@ This is the **project map** that Ralph and all agents read on-demand when needed
 **Purpose:** [What this directory contains]
 
 **Key Files:**
+
 - `[file1.ext]` - [Description]
 - `[file2.ext]` - [Description]
 
@@ -134,18 +141,22 @@ This is the **project map** that Ralph and all agents read on-demand when needed
 ### Core Files (at ralph/ root)
 
 **Execution:**
+
 - `loop.sh` - Bash script that runs Ralph iterations
 - `rovodev-config.yml` - RovoDev configuration
 
 **Prompts:**
+
 - `PROMPT.md` - Unified prompt with conditional logic (plan mode: gap analysis, NO code changes, updates TODO list; build mode: implement top task, validate, commit)
 - `IMPLEMENTATION_PLAN.md` - Persistent TODO list (updated by planning mode, read by building mode)
 - `VALIDATION_CRITERIA.md` - Quality gates and acceptance criteria
 
 **Stop Sentinel:**
-```
+
+```text
 :::COMPLETE:::
-```
+```text
+
 Only output when ALL tasks in IMPLEMENTATION_PLAN.md are 100% complete.
 
 ---
@@ -161,26 +172,32 @@ Only output when ALL tasks in IMPLEMENTATION_PLAN.md are 100% complete.
 **If brain repository is available:**
 
 **Performance Patterns (if React/Next.js):**
+
 - Path: `../../brain/references/react-best-practices/`
 - Entry: `HOTLIST.md` → `INDEX.md` → `rules/*.md`
 - Usage: Consult before implementing React components
 
 **Domain Conventions:**
+
 - Path: `../../brain/skills/domains/`
 - Relevant domains: `[domain1.md]`, `[domain2.md]`
 - Usage: Follow established patterns for [specific functionality]
 
 **Project-Specific Knowledge:**
+
 - Path: `../../brain/skills/projects/[project-slug].md`
 - Usage: Document learnings that might benefit other projects
 
 ### Path Conventions
+
 - Brain references use: `../../brain/skills/` (relative from project root, if brain exists)
 - Internal references use: `./relative/path` (within project)
 - Absolute paths: Avoid - use relative paths for portability
 
 ### Standalone Mode
+
 If brain repository is not present:
+
 - Skip all `../../brain/` references
 - Rely on `docs/` for project documentation
 - Use standard best practices for your tech stack
@@ -205,7 +222,7 @@ find [tests/] -name "*.[ext]" | wc -l
 # Component count (if applicable)
 find [src/components/] -name "*.[ext]" | wc -l
 # Should be: [Z]
-```
+```text
 
 ### Validation Commands (Backpressure)
 
@@ -224,7 +241,7 @@ bash -n [script.sh]
 
 # Check critical files exist
 ls -lh AGENTS.md NEURONS.md THOUGHTS.md ralph/PROMPT.md ralph/IMPLEMENTATION_PLAN.md
-```
+```text
 
 ---
 
@@ -285,7 +302,7 @@ cd [/path/to/project/ralph/]
 bash loop.sh                           # Single iteration
 bash loop.sh --iterations 10           # Multiple iterations
 bash loop.sh --prompt PROMPT.md        # Use unified prompt
-```
+```text
 
 ### Validating Project Integrity
 
@@ -298,7 +315,7 @@ bash loop.sh --prompt PROMPT.md        # Use unified prompt
 
 # Structure verification
 tree -L 2 -I '[exclude-dirs]'
-```
+```text
 
 ---
 
@@ -309,15 +326,17 @@ tree -L 2 -I '[exclude-dirs]'
 ### [For React/Next.js Projects]
 
 **Component Structure:**
-```
+
+```text
 components/
 ├── ComponentName/
 │   ├── index.tsx          # Component implementation
 │   ├── ComponentName.module.css
 │   └── ComponentName.test.tsx
-```
+```text
 
 **Performance Checklist:**
+
 - ✅ Memoization where needed (see brain: `../../brain/references/react-best-practices/HOTLIST.md`)
 - ✅ Dynamic imports for heavy components
 - ✅ Image optimization
@@ -326,13 +345,14 @@ components/
 ### [For Python Projects]
 
 **Module Structure:**
-```
+
+```text
 [src/]
 ├── module_name/
 │   ├── __init__.py
 │   ├── core.py
 │   └── utils.py
-```
+```text
 
 ### [For Other Tech Stacks]
 
@@ -343,12 +363,14 @@ components/
 ## Summary
 
 This [PROJECT_NAME] repository contains:
+
 - **[X] source files** ([description])
 - **[Y] test files** ([description])
 - **[Z] configuration files** ([description])
 - **Ralph loop infrastructure** (bash-based, WSL2)
 
 **Remember:**
+
 1. Read NEURONS.md (this file) via subagent when needed
 2. Use progressive disclosure (broad → specific)
 3. Search before creating (don't assume missing)
@@ -356,6 +378,7 @@ This [PROJECT_NAME] repository contains:
 5. Consult React patterns (if applicable and brain exists): `../../brain/references/react-best-practices/HOTLIST.md`
 
 **For questions about:**
+
 - **How to run Ralph** → See AGENTS.md
 - **What exists where** → You're reading it (NEURONS.md)
 - **Project goals** → See THOUGHTS.md

@@ -17,24 +17,31 @@ Skills for building conversion-focused websites. Organized by workflow phase.
 ## Skill Categories
 
 ### Discovery (3 skills)
+
 Requirements gathering, audience mapping, scope control.
 
 ### Architecture (3 skills)  
+
 Sitemap structure, section composition, tech stack decisions.
 
 ### Design (4 skills)
+
 Visual direction, typography, color systems, spacing/layout.
 
 ### Copywriting (3 skills)
+
 Value propositions, objection handling, CTA optimization.
 
 ### Build (6 skills)
+
 Component development, mobile-first, performance, SEO, forms, analytics.
 
 ### QA (3 skills)
+
 Acceptance criteria, visual QA, accessibility compliance.
 
 ### Launch (2 skills)
+
 Deployment, finishing polish pass.
 
 ## Core 10 (Start Here)
@@ -66,7 +73,7 @@ For most projects, these 10 skills cover 80% of needs:
 
 These skills integrate with Ralph's PLAN/BUILD cycle:
 
-```
+```text
 PLAN mode:
   → requirements-distiller (understand scope)
   → section-composer (plan structure)
@@ -78,7 +85,7 @@ BUILD mode:
   → performance (optimize)
   → qa skills (verify)
   → finishing-pass (polish)
-```
+```text
 
 ## Related
 

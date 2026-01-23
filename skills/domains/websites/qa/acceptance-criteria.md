@@ -75,7 +75,7 @@ Use this skill when:
 - [ ] Mobile Safari ✓
 - [ ] Mobile Chrome ✓
 
-```
+```text
 
 ## Project-Level Criteria
 
@@ -115,7 +115,7 @@ Use this skill when:
 - [ ] Design approved
 - [ ] Ready for launch confirmation
 
-```
+```text
 
 ## Verification Commands
 
@@ -128,7 +128,7 @@ npx lighthouse https://yoursite.com --output=json --output-path=./report.json
 # Quick score check
 npx lighthouse https://yoursite.com --only-categories=performance,accessibility,best-practices,seo
 
-```
+```text
 
 ### Link Checker
 
@@ -136,7 +136,7 @@ npx lighthouse https://yoursite.com --only-categories=performance,accessibility,
 # Check for broken links
 npx broken-link-checker https://yoursite.com --ordered --recursive
 
-```
+```text
 
 ### HTML Validation
 
@@ -144,7 +144,7 @@ npx broken-link-checker https://yoursite.com --ordered --recursive
 # Validate HTML
 npx html-validate ./dist/**/*.html
 
-```
+```text
 
 ### Schema Validation
 
@@ -168,7 +168,7 @@ Test at: <https://www.opengraph.xyz/>
 - [ ] Final CTA section present
 - [ ] Footer links all work
 
-```
+```text
 
 ### About Page Checklist
 
@@ -179,7 +179,7 @@ Test at: <https://www.opengraph.xyz/>
 - [ ] Credentials visible
 - [ ] CTA to contact/services
 
-```
+```text
 
 ### Services Page Checklist
 
@@ -190,7 +190,7 @@ Test at: <https://www.opengraph.xyz/>
 - [ ] Pricing or "contact for pricing"
 - [ ] CTAs for each service
 
-```
+```text
 
 ### Contact Page Checklist
 
@@ -204,7 +204,7 @@ Test at: <https://www.opengraph.xyz/>
 - [ ] Address/map if applicable
 - [ ] Alternative contact methods listed
 
-```
+```text
 
 ## Definition of Done
 
@@ -298,7 +298,7 @@ A page is "done" when:
 - [x] Design approved
 - [x] Ready for launch: YES
 
-```
+```text
 
 ## Related Skills
 

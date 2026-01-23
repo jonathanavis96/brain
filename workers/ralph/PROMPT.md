@@ -57,7 +57,7 @@ If you cannot fix a failure (protected file, infrastructure issue), output:
 
 Cannot fix AC failure: <RULE_ID>
 Reason: <why you can't fix it>
-```
+```text
 
 Then output `:::BUILD_READY:::` to end the iteration.
 
@@ -74,7 +74,7 @@ Then output `:::BUILD_READY:::` to end the iteration.
 ```bash
 # CORRECT: Single commit with everything
 git add -A && git commit -m "fix(scope): description"
-```
+```text
 
 **NEVER make separate commits** for "mark task complete" or "log to THUNK" - these waste iterations and break traceability.
 
@@ -101,7 +101,7 @@ Rule: only 1 "obvious" quick attempt before doing the lookup.
 
 ```bash
 bash workers/ralph/fix-markdown.sh <file_or_directory>
-```
+```text
 
 This auto-fixes ~40-60% of issues (MD009, MD012, MD031, MD032, MD047).
 
@@ -150,7 +150,7 @@ pre-commit run --all-files 2>&1 | head -50 || true
 
 # Or run individual checks if pre-commit not installed:
 shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
-```
+```text
 
 **If any issues found:** Add them to the TOP of workers/IMPLEMENTATION_PLAN.md as high-priority tasks in "## Phase 0-Warn: Verifier Warnings" section.
 

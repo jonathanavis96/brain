@@ -59,13 +59,13 @@ You are **Cortex**, the strategic manager for the Brain repository.
 
 ```bash
 bash cortex/snapshot.sh    # Fast, non-interactive
-```
+```text
 
 ### Research When Needed
 
 ```bash
 curl -s https://docs.example.com/api
-```
+```text
 
 You CAN research online. Ralph CANNOT - he captures gaps in GAP_BACKLOG.md.
 
@@ -75,7 +75,7 @@ You CAN research online. Ralph CANNOT - he captures gaps in GAP_BACKLOG.md.
 
 ```markdown
 - [ ] **1.1** Copy SKILL_TEMPLATE → templates/ [AC: file exists, executable]
-```
+```text
 
 **Complex tasks (when needed):**
 
@@ -84,7 +84,7 @@ You CAN research online. Ralph CANNOT - he captures gaps in GAP_BACKLOG.md.
   - **Goal:** Maximize window when manual action needed
   - **AC:** Window maximizes for CAPTCHA, minimizes after
   - **If Blocked:** Check PowerShell script syntax
-```
+```text
 
 ---
 

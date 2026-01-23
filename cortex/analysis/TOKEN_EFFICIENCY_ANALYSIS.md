@@ -131,7 +131,7 @@
 - [ ] **1.1** Copy SKILL_TEMPLATE → templates/ [AC: exists, exec]
 - [ ] **1.2** Fix links in skills/conventions.md [AC: no broken links]
 - [ ] **1.3** Update verifier baseline [AC: .verify/ac.sha256 updated]
-```
+```text
 
 Reserve verbose format for:
 

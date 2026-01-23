@@ -8,6 +8,7 @@ Created: {{CREATION_DATE}}
 ---
 
 ## Era: {{INITIAL_ERA_NAME}}
+
 Started: {{CREATION_DATE}}
 
 | THUNK # | Original # | Priority | Description | Completed |
@@ -21,20 +22,24 @@ Started: {{CREATION_DATE}}
 **Purpose:** Permanent append-only log of all completed tasks from IMPLEMENTATION_PLAN.md.
 
 **Key Concepts:**
+
 - **THUNK #** = Globally sequential number (never resets, always increments)
 - **Original #** = Task number from IMPLEMENTATION_PLAN.md (e.g., "1.1", "T5.3")
 - **Era** = Logical grouping of tasks from a plan phase
 
 **Auto-Append Behavior:**
+
 - When you mark a task `[x]` in IMPLEMENTATION_PLAN.md, `thunk_ralph_tasks.sh` detects it
 - Task is automatically appended to THUNK.md with next sequential THUNK #
 - Duplicate prevention: Tasks are matched by description to avoid re-adding
 
 **Monitor Integration:**
+
 - `current_ralph_tasks.sh` - Shows only uncompleted `[ ]` tasks
 - `thunk_ralph_tasks.sh` - Shows completed tasks from this file
 
 **Hotkeys in thunk_ralph_tasks.sh:**
+
 - `[r]` - Refresh display (clears screen, re-reads THUNK.md)
 - `[f]` - Force sync (scan IMPLEMENTATION_PLAN.md for new completions)
 - `[e]` - Start new era (prompts for name)

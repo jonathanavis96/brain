@@ -141,7 +141,7 @@ export class ErrorBoundary extends Component<Props, State> {
     return this.props.children;
   }
 }
-```
+```text
 
 **Usage:**
 
@@ -175,7 +175,7 @@ function Dashboard() {
     </div>
   );
 }
-```
+```text
 
 **When to use:**
 
@@ -261,7 +261,7 @@ export class ExternalServiceError extends AppError {
     );
   }
 }
-```
+```text
 
 **Usage:**
 
@@ -290,7 +290,7 @@ export async function GET(request: Request) {
     return handleApiError(error);
   }
 }
-```
+```text
 
 ### API Error Response Format
 
@@ -365,7 +365,7 @@ export function validationError(errors: Record<string, string[]>): Response {
 
   return Response.json(response, { status: 400 });
 }
-```
+```text
 
 **Client-side handling:**
 
@@ -416,7 +416,7 @@ export async function apiRequest<T>(
     );
   }
 }
-```
+```text
 
 ### Async Error Handling
 
@@ -449,7 +449,7 @@ async function fetchUserData(userId: string) {
     throw error;
   }
 }
-```
+```text
 
 #### Pattern 2: Promise chains with .catch()
 
@@ -466,7 +466,7 @@ fetch('/api/data')
     console.error('Pipeline failed:', error);
     showErrorToUser(error.message);
   });
-```
+```text
 
 #### Pattern 3: Event handler errors (not caught by error boundaries)
 
@@ -532,7 +532,7 @@ function SmartButton() {
   
   return <button onClick={handleClick}>Click</button>;
 }
-```
+```text
 
 ### Error Logging and Monitoring
 
@@ -583,7 +583,7 @@ export function captureMessage(message: string, level: 'info' | 'warning' | 'err
     Sentry.captureMessage(message, level);
   }
 }
-```
+```text
 
 **Structured logging:**
 
@@ -663,7 +663,7 @@ export async function POST(request: Request) {
     return handleApiError(error);
   }
 }
-```
+```text
 
 ### Retry Logic and Circuit Breakers
 
@@ -734,7 +734,7 @@ const data = await withRetry(
     }
   }
 );
-```
+```text
 
 **Circuit breaker pattern:**
 
@@ -822,7 +822,7 @@ export async function processPayment(paymentData: any) {
     return response.json();
   });
 }
-```
+```text
 
 ### Form Validation Errors
 
@@ -904,7 +904,7 @@ export function UserForm() {
     </form>
   );
 }
-```
+```text
 
 ### Global Error Handler (Node.js)
 
@@ -946,7 +946,7 @@ export function setupGlobalErrorHandlers() {
     process.exit(0);
   });
 }
-```
+```text
 
 ### Common Mistakes to Avoid
 

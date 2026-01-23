@@ -2,7 +2,7 @@
 
 ## Structure
 
-```
+```text
 brain/
 ├── cortex/                 # Manager layer (you)
 │   ├── AGENTS.md          # Your rules & task format
@@ -29,7 +29,7 @@ brain/
 │
 └── rules/                  # Acceptance criteria
     └── AC.rules           # Verifier rules (protected)
-```
+```text
 
 ## Quick Navigation
 

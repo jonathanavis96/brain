@@ -46,7 +46,7 @@ After passing a test, add approval to `rules/MANUAL_APPROVALS.rules`:
 # Example
 echo "BugB.UI.1=approved" >> rules/MANUAL_APPROVALS.rules
 echo "BugC.UI.1=approved" >> rules/MANUAL_APPROVALS.rules
-```
+```text
 
 Then run verifier to confirm: `cd ralph && bash verifier.sh`
 

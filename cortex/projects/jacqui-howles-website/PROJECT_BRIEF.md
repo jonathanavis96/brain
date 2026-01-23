@@ -1,7 +1,7 @@
 # Project Brief: Jacqui Howles Psychology Website
 
 **Client:** Jacqui Howles (solo counselling psychologist)
-**Existing Site:** https://www.jacquichowles.com/
+**Existing Site:** <https://www.jacquichowles.com/>
 **Deadline:** 14th February 2026 (Psychology Today renewal date - $276/year)
 **Status:** Discovery phase
 
@@ -12,6 +12,7 @@
 These are the actual confirmed details from the conversation with Jacqui/Jono:
 
 ### Timeline & Logistics
+
 - 14th Feb resubbed Psychology Today - need site before then ($276/year)
 - Beginning of Jan paid for domain - can transfer domain
 - Client describes current website creation as "horrible process"
@@ -22,6 +23,7 @@ These are the actual confirmed details from the conversation with Jacqui/Jono:
 **1) Content stays (current site detail set)**
 
 Keep all existing copy themes and detail blocks already on the site:
+
 - Full "About" narrative (background, Wits, CSVR, work across Africa, The Gambia, UNDP, online base, etc.)
 - "How I work" (psychodynamic primary + other modalities, safe relationship-focused approach)
 - "What I work with" list (trauma/PTSD/complex PTSD, depression incl postpartum, anxiety, grief, burnout, transitions, identity, couples, etc.)
@@ -88,14 +90,16 @@ The following is a ChatGPT-generated prompt that can be referenced for ideas, bu
 You are an expert conversion-focused web strategist + UX copywriter for solo psychology practices.
 
 **Context**
+
 - Client: Jacqui Howles (solo counselling psychologist).
-- Existing site: https://www.jacquichowles.com/
+- Existing site: <https://www.jacquichowles.com/>
 - You must first read that site to understand:
   - Current page structure: Home, About, Services, Contact
   - Current tone and all existing content blocks (do not drop details)
   - Current CTAs and trust markers already present
 
 **Non-negotiables (do NOT remove any details)**
+
 - Keep ALL existing details and meaning currently on the site, including:
   - Full bio/story and background
   - Approach ("how I work") and modalities framing
@@ -106,23 +110,27 @@ You are an expert conversion-focused web strategist + UX copywriter for solo psy
 - Your job is to RESTRUCTURE and RE-PRESENT the information for better clarity and conversion, not to cut content.
 
 **Project goals**
+
 - Improve the website so it attracts and converts more suitable clients.
 - Keep the overall feel calm, welcoming, and professional (not overly feminine).
 - Avoid "information overload" on the landing page while still preserving all details across the site.
 - Make the site less text-heavy by using layout patterns (quotes, images/photos, spacing, short sections) without losing content.
 
 **Required additions**
+
 - Re-add "in-person services" alongside online services (clearly and accurately).
 - Add Psychology Today verification (client will provide verification code; include a placeholder and specify where it should go).
 - Text will be edited by Jacqui later, so keep copy modular and easy to tweak.
 
 **Design + style direction**
+
 - Clean and simple text presentation
 - Rounded / softer font feel (not harsh, square, or overly clinical)
 - Use quotes, images, and photos so pages aren't walls of text
 - Keep navigation simple and consistent; make CTAs easy to find
 
 **What to produce**
+
 1) A conversion-optimised site blueprint that keeps all existing details:
    - For each page (Home, About, Services, Contact):
      - Section-by-section outline (ordered)
@@ -145,6 +153,7 @@ You are an expert conversion-focused web strategist + UX copywriter for solo psy
    - In-person logistics (where, when, availability, pricing differences if any)
 
 **Constraints**
+
 - Preserve meaning and completeness: no content should be lost, only reorganised and improved.
 - Write in clear, simple language that a general audience understands.
 - Prioritise a clean, calming user experience and an obvious booking/contact path.
@@ -156,6 +165,7 @@ You are an expert conversion-focused web strategist + UX copywriter for solo psy
 ## Related Skills
 
 Reference these Brain skills during the project:
+
 - `skills/domains/websites/discovery/requirements-distiller.md`
 - `skills/domains/websites/architecture/section-composer.md`
 - `skills/domains/websites/copywriting/value-proposition.md`

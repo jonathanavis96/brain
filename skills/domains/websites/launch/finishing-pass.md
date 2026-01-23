@@ -15,6 +15,7 @@ Final polish: spacing tightening, copy refinement, button hierarchy, and visual 
 ## Trigger Conditions
 
 Use this skill when:
+
 - Site is "done" but needs polish
 - Before client review
 - Before launch
@@ -49,7 +50,7 @@ Read every word on the site.
 - [ ] Clear and specific
 - [ ] Consistent wording
 - [ ] Compelling (not generic)
-```
+```text
 
 ### Pass 2: Visual
 
@@ -85,7 +86,7 @@ Step back and look at overall visual balance.
 - [ ] Hover states feel good
 - [ ] Transitions smooth (not jarring)
 - [ ] Icons consistent size/style
-```
+```text
 
 ### Pass 3: Technical
 
@@ -123,7 +124,7 @@ Test every interactive element.
 - [ ] All pages have descriptions
 - [ ] OG images set
 - [ ] Schema valid
-```
+```text
 
 ### Pass 4: Device Testing
 
@@ -154,7 +155,7 @@ Test on real devices if possible.
 - [ ] Safari
 - [ ] Firefox
 - [ ] Edge (if needed)
-```
+```text
 
 ### Pass 5: Fresh Eyes
 
@@ -182,11 +183,12 @@ Look at site as if seeing it for first time.
 - [ ] Would you trust this business?
 - [ ] Would you contact them?
 - [ ] Anything feel "off"?
-```
+```text
 
 ## Common Polish Items
 
 ### Spacing Fixes
+
 ```css
 /* Tighten section that feels loose */
 .section { padding: 4rem 0; } /* was 6rem */
@@ -196,9 +198,10 @@ Look at site as if seeing it for first time.
 
 /* Fix awkward gap */
 .heading + .text { margin-top: 0.5rem; } /* was 1rem */
-```
+```text
 
 ### Typography Fixes
+
 ```css
 /* Prevent widows in headings */
 h1, h2 {
@@ -210,9 +213,10 @@ h1, h2 {
 
 /* Tighten loose heading */
 h1 { letter-spacing: -0.02em; }
-```
+```text
 
 ### Button Hierarchy
+
 ```html
 <!-- Clear primary/secondary distinction -->
 <Button variant="primary">Book Now</Button>
@@ -221,9 +225,10 @@ h1 { letter-spacing: -0.02em; }
 <!-- Not two competing primaries -->
 ❌ <Button variant="primary">Book Now</Button>
 ❌ <Button variant="primary">Contact Us</Button>
-```
+```text
 
 ### Image Polish
+
 ```html
 <!-- Ensure consistent aspect ratios -->
 <div class="aspect-[4/3]">
@@ -232,7 +237,7 @@ h1 { letter-spacing: -0.02em; }
 
 <!-- Add subtle shadow to lift images -->
 <img class="shadow-lg rounded-lg" ... />
-```
+```text
 
 ## Pre-Launch Final Check
 
@@ -261,7 +266,7 @@ h1 { letter-spacing: -0.02em; }
 - [ ] Old site redirected (if applicable)
 - [ ] Team notified
 - [ ] Monitoring in place
-```
+```text
 
 ## Common Mistakes
 
@@ -317,7 +322,7 @@ h1 { letter-spacing: -0.02em; }
 4. Contact form success message was generic → personalized
 
 ### Ready for Launch ✓
-```
+```text
 
 ## Related Skills
 

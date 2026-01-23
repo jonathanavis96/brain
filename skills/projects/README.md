@@ -49,7 +49,7 @@ Every project skill file must follow this structure:
 
 [Project-specific conventions, patterns, and knowledge]
 [Can include multiple subsections as needed]
-```
+```text
 
 ## Contributing
 

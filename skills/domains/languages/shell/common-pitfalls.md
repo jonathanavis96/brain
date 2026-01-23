@@ -54,7 +54,7 @@ shellcheck -e SC2034,SC2155 script.sh
 
 # Specify shell dialect
 shellcheck -s bash script.sh
-```
+```text
 
 ## Quoting
 
@@ -70,7 +70,7 @@ cp $src $dest
 echo "$filename"
 cp "$src" "$dest"
 [[ "$var" = "value" ]]
-```
+```text
 
 ### When Quoting Is Optional
 
@@ -83,7 +83,7 @@ if (( count > 5 )); then  # No quotes needed
 
 # Array indices
 echo "${array[$i]}"  # No quotes on $i
-```
+```text
 
 ### Command Substitution
 
@@ -99,7 +99,7 @@ for f in "$files"; do  # Single string
 # ✅ Better - use arrays
 files=(*.txt)
 for f in "${files[@]}"; do
-```
+```text
 
 ## Test Constructs
 
@@ -113,7 +113,7 @@ for f in "${files[@]}"; do
 # ✅ Right - bash [[ ]] is safer
 [[ -z "$var" ]]
 [[ "$var" = "value" ]]
-```
+```text
 
 ### String vs Numeric Comparison
 
@@ -129,7 +129,7 @@ for f in "${files[@]}"; do
 # Or use (( )) for arithmetic
 (( num == 5 ))
 (( num > 0 ))
-```
+```text
 
 ### Regex Matching
 
@@ -141,7 +141,7 @@ fi
 
 # ❌ Wrong - quoted regex is literal
 [[ "$str" =~ "^[0-9]+$" ]]  # Looks for literal ^[0-9]+$
-```
+```text
 
 ## Loops
 
@@ -164,7 +164,7 @@ done
 while IFS= read -r -d '' f; do
     echo "$f"
 done < <(find . -name "*.txt" -print0)
-```
+```text
 
 ### Reading Lines
 
@@ -183,7 +183,7 @@ done < file.txt
 while IFS= read -r line; do
     count=$((count + 1))
 done < <(some_command)
-```
+```text
 
 ## Command Substitution
 
@@ -197,7 +197,7 @@ nested=`echo \`inner\``
 # ✅ Right - $() nests cleanly
 output=$(command)
 nested=$(echo $(inner))
-```
+```text
 
 ### Capturing Exit Codes
 
@@ -210,7 +210,7 @@ if ! output=$(failing_command 2>&1); then
     echo "Failed: $output" >&2
     exit 1
 fi
-```
+```text
 
 ## Arithmetic
 
@@ -227,7 +227,7 @@ count=$[$count + 1]
 ((count++))
 ((count += 5))
 result=$((a + b * c))
-```
+```text
 
 ### Floating Point
 
@@ -239,7 +239,7 @@ result=$((3 / 2))  # Result: 1
 # ✅ Right - use bc or awk
 result=$(echo "scale=2; 3/2" | bc)  # Result: 1.50
 result=$(awk 'BEGIN {printf "%.2f", 3/2}')
-```
+```text
 
 ## Here Documents
 
@@ -260,7 +260,7 @@ EOF
 cat <<-EOF
 	Indented content
 EOF
-```
+```text
 
 ## Process Substitution
 
@@ -272,7 +272,7 @@ diff <(sort file1.txt) <(sort file2.txt)
 while read -r line; do
     echo "Got: $line"
 done < <(some_command)
-```
+```text
 
 ## Terminal and TTY Detection
 
@@ -296,7 +296,7 @@ tput_safe() {
     [[ -t 1 ]] && tput "$@"
 }
 tput_safe cup 10 0
-```
+```text
 
 ### Color Output Guards
 
@@ -313,7 +313,7 @@ else
     RESET=''
 fi
 echo -e "${GREEN}Success${RESET}"
-```
+```text
 
 ### Interactive vs Non-Interactive
 
@@ -326,7 +326,7 @@ else
     # Non-interactive - use defaults
     answer="y"
 fi
-```
+```text
 
 ## Magic Numbers and Constants
 
@@ -347,7 +347,7 @@ if (( count > MAX_RETRIES )); then
     echo "Exceeded retry limit"
 fi
 sleep "$POLL_INTERVAL_SECS"
-```
+```text
 
 ### Layout Constants
 
@@ -359,7 +359,7 @@ local visible_rows=$((LINES - 8))  # What is 8?
 # Footer: blank + separator + total + separator + blank + 3 hotkey lines
 readonly FOOTER_HEIGHT=8
 local visible_rows=$((LINES - FOOTER_HEIGHT))
-```
+```text
 
 ### Exit Codes
 
@@ -374,7 +374,7 @@ readonly EXIT_CONFIG_ERROR=2
 readonly EXIT_RUNTIME_ERROR=3
 
 exit "$EXIT_CONFIG_ERROR"
-```
+```text
 
 ## Code Duplication and DRY
 
@@ -397,7 +397,7 @@ source "${SCRIPT_DIR}/lib/utils.sh"
 
 # script2.sh
 source "${SCRIPT_DIR}/lib/utils.sh"
-```
+```text
 
 ### Create a Shared Library
 
@@ -417,7 +417,7 @@ die() { log_error "$@"; exit 1; }
 
 # Usage in other scripts:
 # source "${SCRIPT_DIR}/lib/common.sh"
-```
+```text
 
 ### When Duplication Is Acceptable
 

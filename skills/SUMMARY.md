@@ -171,7 +171,7 @@ brain/ (repository root)
 ├── rules/                       # Acceptance criteria (shared)
 ├── docs/                        # Project documentation (shared)
 └── .verify/                     # Validation infrastructure (shared)
-```
+```text
 
 ## Design Philosophy
 

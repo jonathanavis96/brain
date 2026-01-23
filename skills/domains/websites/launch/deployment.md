@@ -15,6 +15,7 @@ Deploys sites with SSL, redirects, canonical URLs, and proper staging vs product
 ## Trigger Conditions
 
 Use this skill when:
+
 - Ready to make site live
 - Setting up staging environment
 - Connecting custom domain
@@ -60,11 +61,12 @@ Use this skill when:
 - [ ] All pages accessible
 - [ ] Forms working
 - [ ] Analytics receiving data
-```
+```text
 
 ## Vercel Deployment
 
 ### Initial Setup
+
 ```bash
 # Install Vercel CLI
 npm i -g vercel
@@ -74,37 +76,42 @@ vercel
 
 # Deploy to production
 vercel --prod
-```
+```text
 
 ### Git Integration
+
 1. Connect GitHub repo to Vercel
 2. Push to `main` → auto-deploys to production
 3. Push to other branches → preview deployments
 
 ### Environment Variables
+
 ```bash
 # Set via CLI
 vercel env add ANALYTICS_ID
 
 # Or in Vercel Dashboard:
 # Settings → Environment Variables
-```
+```text
 
 ### Custom Domain
+
 1. Vercel Dashboard → Project → Domains
 2. Add domain: `jacquihowles.com`
 3. Configure DNS at registrar:
-   ```
+
+   ```text
    Type: A
    Name: @
    Value: 76.76.21.21
-   
+
    Type: CNAME
    Name: www
    Value: cname.vercel-dns.com
-   ```
+   ```text
 
 ### Redirects (`vercel.json`)
+
 ```json
 {
   "redirects": [
@@ -112,11 +119,12 @@ vercel env add ANALYTICS_ID
     { "source": "/blog/:slug", "destination": "/articles/:slug", "permanent": true }
   ]
 }
-```
+```text
 
 ## Netlify Deployment
 
 ### Initial Setup
+
 ```bash
 # Install Netlify CLI
 npm i -g netlify-cli
@@ -126,9 +134,10 @@ netlify deploy
 
 # Deploy to production
 netlify deploy --prod
-```
+```text
 
 ### netlify.toml
+
 ```toml
 [build]
   command = "npm run build"
@@ -144,107 +153,120 @@ netlify deploy --prod
   [headers.values]
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
-```
+```text
 
 ### Custom Domain
+
 1. Netlify Dashboard → Domain Settings
 2. Add custom domain
 3. Configure DNS:
-   ```
+
+   ```text
    Type: A
    Name: @
    Value: 75.2.60.5
-   
+
    Type: CNAME
    Name: www
    Value: your-site.netlify.app
-   ```
+   ```text
 
 ## Cloudflare Pages
 
 ### Setup
+
 1. Connect GitHub repo
 2. Configure build settings:
    - Build command: `npm run build`
    - Output directory: `dist`
 
 ### Custom Domain
+
 1. Add site to Cloudflare (free plan)
 2. Update nameservers at registrar
 3. Pages → Custom domains → Add
 
 ### _redirects file
-```
+
+```text
 /old-page /new-page 301
 /blog/* /articles/:splat 301
-```
+```text
 
 ## SSL/HTTPS
 
 All modern hosts provide free SSL via Let's Encrypt.
 
 ### Verify HTTPS
+
 ```bash
 # Check certificate
 curl -vI https://yoursite.com 2>&1 | grep -i "ssl\|certificate"
-```
+```text
 
 ### Force HTTPS
+
 Most hosts do this automatically. If not:
 
-```
+```text
 # Netlify _redirects
 http://yoursite.com/* https://yoursite.com/:splat 301!
 
 # Vercel (automatic)
 # Cloudflare (automatic)
-```
+```text
 
 ### Fix Mixed Content
+
 If HTTPS but browser shows "not secure":
+
 ```html
 <!-- Change all http:// to https:// or use protocol-relative -->
 <img src="https://example.com/image.jpg" />
 
 <!-- Or let browser decide -->
 <img src="//example.com/image.jpg" />
-```
+```text
 
 ## WWW vs Non-WWW
 
 Pick one and redirect the other:
 
 ### Redirect www → non-www
+
 ```json
 // vercel.json
 {
   "redirects": [
-    { 
-      "source": "https://www.jacquihowles.com/:path*", 
-      "destination": "https://jacquihowles.com/:path*", 
-      "permanent": true 
+    {
+      "source": "https://www.jacquihowles.com/:path*",
+      "destination": "https://jacquihowles.com/:path*",
+      "permanent": true
     }
   ]
 }
-```
+```text
 
 ### Canonical URLs
+
 ```html
 <head>
   <link rel="canonical" href="https://jacquihowles.com/about" />
 </head>
-```
+```text
 
 ## Staging vs Production
 
 ### Branch-Based (Recommended)
-```
+
+```text
 main branch    → production (jacquihowles.com)
 staging branch → staging (staging.jacquihowles.com)
 feature/*      → preview URLs (auto-generated)
-```
+```text
 
 ### Environment Variables
+
 ```bash
 # Production
 SITE_URL=https://jacquihowles.com
@@ -253,7 +275,7 @@ ANALYTICS_ID=G-XXXXXXXX
 # Staging
 SITE_URL=https://staging.jacquihowles.com
 ANALYTICS_ID=G-STAGING  # Or disable analytics
-```
+```text
 
 ## Security Headers
 
@@ -272,7 +294,7 @@ ANALYTICS_ID=G-STAGING  # Or disable analytics
     }
   ]
 }
-```
+```text
 
 ## Common Mistakes
 
@@ -315,7 +337,7 @@ ANALYTICS_ID=G-STAGING  # Or disable analytics
     }
   ]
 }
-```
+```text
 
 ```markdown
 ## Deployment Checklist
@@ -341,7 +363,7 @@ ANALYTICS_ID=G-STAGING  # Or disable analytics
 - [x] All pages work
 - [x] Form submits
 - [x] Analytics tracking
-```
+```text
 
 ## Related Skills
 

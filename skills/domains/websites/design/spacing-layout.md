@@ -29,7 +29,7 @@ Creates consistent grid systems, section spacing, and visual rhythm.
 --space-20: 5rem;    /* 80px */
 --space-24: 6rem;    /* 96px */
 --space-32: 8rem;    /* 128px */
-```
+```text
 
 ## Container Widths
 
@@ -39,7 +39,7 @@ Creates consistent grid systems, section spacing, and visual rhythm.
 --container-lg: 1024px;  /* Standard content */
 --container-xl: 1280px;  /* Wide content */
 --container-2xl: 1536px; /* Full-width sections */
-```
+```text
 
 ## Section Spacing Pattern
 
@@ -63,11 +63,12 @@ section {
     padding-bottom: var(--space-12);
   }
 }
-```
+```text
 
 ## Grid Systems
 
 ### Simple Container
+
 ```css
 .container {
   width: 100%;
@@ -81,9 +82,10 @@ section {
     padding: 0 var(--space-8); /* 32px gutters */
   }
 }
-```
+```text
 
 ### CSS Grid Layout
+
 ```css
 /* 12-column grid */
 .grid {
@@ -96,9 +98,10 @@ section {
 .col-6 { grid-column: span 6; }  /* Half */
 .col-4 { grid-column: span 4; }  /* Third */
 .col-3 { grid-column: span 3; }  /* Quarter */
-```
+```text
 
 ### Flexbox Layout
+
 ```css
 /* Card grid */
 .card-grid {
@@ -110,7 +113,7 @@ section {
 .card {
   flex: 1 1 300px; /* Flexible, min 300px */
 }
-```
+```text
 
 ## Visual Rhythm Rules
 
@@ -193,7 +196,7 @@ section {
 .stack > * + * {
   margin-top: var(--space-4);
 }
-```
+```text
 
 ## Related Skills
 

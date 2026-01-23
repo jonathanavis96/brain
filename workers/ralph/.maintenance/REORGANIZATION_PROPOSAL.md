@@ -41,7 +41,7 @@ The `brain/ralph/` root has 26 files + 8 directories. It's cluttered:
 
 ## Proposed Structure
 
-```
+```text
 brain/ralph/
 ├── .gitignore
 ├── .maintenance/           # Consistency checks (keep)
@@ -89,7 +89,7 @@ brain/ralph/
 ├── old_sh/                 # KEEP (or delete?)
 ├── skills/                 # KEEP
 └── templates/              # KEEP (needs internal cleanup)
-```
+```text
 
 ---
 

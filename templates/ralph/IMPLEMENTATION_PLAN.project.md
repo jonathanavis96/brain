@@ -8,6 +8,7 @@ Last updated: [YYYY-MM-DD HH:MM:SS]
 Incorporate any relevant maintenance items into the appropriate priority section below.
 
 > **Note:** When maintenance items are completed:
+>
 > 1. Remove from `.maintenance/MAINTENANCE.md`
 > 2. Log completion in `.maintenance/MAINTENANCE_LOG.md`
 > 3. Remove from the MAINTENANCE section at the bottom of this plan
@@ -17,6 +18,7 @@ Incorporate any relevant maintenance items into the appropriate priority section
 [REPLACE: Describe what exists today. What has been built so far? What works? What's incomplete?]
 
 Example structure:
+
 - **Feature X:** Status description
 - **Module Y:** Status description
 - **Infrastructure Z:** Status description
@@ -67,6 +69,7 @@ Example: "Build a complete [system/feature] that [specific outcome]"
 [REPLACE: Track important learnings, blockers, or decisions made during implementation.]
 
 Example entries:
+
 - **[Date] Discovery:** Found that X requires Y - added Task Z
 - **[Date] Blocker:** Task A blocked by external dependency - documented workaround
 - **[Date] Decision:** Chose approach X over Y because [reason]
@@ -76,12 +79,14 @@ Example entries:
 ## How to Use This File
 
 **For Ralph (Planning Mode):**
+
 - Analyze current state vs. goals from THOUGHTS.md
 - Update task priorities based on dependencies
 - Add newly discovered tasks
 - Remove or archive completed tasks
 
 **For Ralph (Building Mode):**
+
 - Read this file FIRST every iteration
 - Find the FIRST unchecked `[ ]` task (top to bottom through priorities)
 - Implement ONLY that ONE task
@@ -90,6 +95,7 @@ Example entries:
 - Commit and STOP
 
 **For Manual Review:**
+
 - Check that priorities make sense (dependencies first, polish last)
 - Verify task descriptions are actionable (not vague)
 - Ensure completion criteria are clear
@@ -97,22 +103,25 @@ Example entries:
 ## Task Format Guidelines
 
 **Good task format:**
+
 ```markdown
 - [ ] **Task X:** Build authentication module
   - Implement JWT token generation and validation
   - Add middleware for protected routes
   - Create login/logout endpoints
   - Target: All auth endpoints working, tests pass
-```
+```text
 
 **Bad task format:**
+
 ```markdown
 - [ ] Make auth better (too vague)
 - [ ] Fix everything (not actionable)
 - [ ] Refactor (no scope or outcome defined)
-```
+```text
 
 **Task Characteristics:**
+
 - **Actionable:** Clear what needs to be done
 - **Scoped:** One coherent unit of work
 - **Measurable:** Obvious when it's complete
@@ -125,4 +134,4 @@ Example entries:
 <!-- Auto-populated by verify-brain.sh - items below are consistency/housekeeping tasks -->
 <!-- When completed, remove from here AND from .maintenance/MAINTENANCE.md -->
 
-_No maintenance items currently pending._
+*No maintenance items currently pending.*

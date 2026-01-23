@@ -84,7 +84,7 @@ The testing pyramid guides how many tests to write at each level:
    /----------\
   /   unit     \ Many (fast, cheap, stable)
  /--------------\
-```
+```text
 
 **Guidelines:**
 
@@ -120,7 +120,7 @@ src/
 └── utils/
     ├── formatDate.ts
     └── formatDate.test.ts
-```
+```text
 
 **When to use:**
 
@@ -150,7 +150,7 @@ project/
     ├── test_auth.py
     ├── test_cache.py
     └── test_utils.py
-```
+```text
 
 **When to use:**
 
@@ -202,7 +202,7 @@ describe('formatPrice', () => {
     expect(formatPrice(1235)).toBe('$12.35');
   });
 });
-```
+```text
 
 **Best practices:**
 
@@ -247,7 +247,7 @@ class TestValidateEmail:
     ])
     def test_edge_cases(self, email, expected):
         assert validate_email(email) == expected
-```
+```text
 
 **Best practices:**
 
@@ -311,7 +311,7 @@ func TestDivide(t *testing.T) {
         })
     }
 }
-```
+```text
 
 **Best practices:**
 
@@ -364,7 +364,7 @@ describe('greetUser', () => {
     await expect(greetUser('123')).rejects.toThrow('Network error');
   });
 });
-```
+```text
 
 **When to mock:**
 
@@ -429,7 +429,7 @@ class TestSendEmail:
         result = send_email('user@example.com', 'Hello', 'Body')
         
         assert result == False
-```
+```text
 
 **Best practices:**
 
@@ -478,7 +478,7 @@ def test_get_user(db_session, sample_user):
     """Test retrieving a user."""
     user = db_session.query(User).filter_by(email='test@example.com').first()
     assert user.name == 'Test User'
-```
+```text
 
 **Fixture scopes:**
 
@@ -529,7 +529,7 @@ describe('User operations', () => {
     expect(user).not.toBeNull();
   });
 });
-```
+```text
 
 ### Integration Testing
 
@@ -576,7 +576,7 @@ describe('POST /api/users', () => {
     expect(response.body.error).toContain('Invalid email');
   });
 });
-```
+```text
 
 #### Database Integration (Python)
 
@@ -607,7 +607,7 @@ class TestUserRepository:
         
         updated = user_repo.find_by_id(user.id)
         assert updated.name == 'New Name'
-```
+```text
 
 ### End-to-End Testing
 
@@ -642,7 +642,7 @@ test.describe('Login flow', () => {
     await expect(page.locator('.error')).toContainText('Invalid credentials');
   });
 });
-```
+```text
 
 **E2E best practices:**
 
@@ -688,7 +688,7 @@ pytest --cov=src --cov-report=html
 
 # Go
 go test -cover ./...
-```
+```text
 
 ### CI/CD Integration
 
@@ -729,7 +729,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           files: ./coverage/coverage-final.json
-```
+```text
 
 **Best practices:**
 
@@ -754,7 +754,7 @@ it('shows loading spinner while fetching user', () => {
   render(<UserProfile userId="123" />);
   expect(screen.getByRole('progressbar')).toBeInTheDocument();
 });
-```
+```text
 
 #### 2. Flaky Tests (Non-Deterministic)
 
@@ -771,7 +771,7 @@ it('updates after delay', async () => {
   triggerUpdate();
   await waitFor(() => expect(getValue()).toBe('updated'), { timeout: 1000 });
 });
-```
+```text
 
 #### 3. Overly Complex Test Setup
 
@@ -800,7 +800,7 @@ it('calculates total with discount', () => {
   
   expect(cart.getTotal()).toBe(22.5);
 });
-```
+```text
 
 #### 4. Testing Multiple Things at Once
 
@@ -840,7 +840,7 @@ it('updates user name', async () => {
   const updated = await findUser(user.id);
   expect(updated.name).toBe('Bob');
 });
-```
+```text
 
 ### Quick Reference: Test Commands
 
@@ -851,7 +851,7 @@ npm test                    # Run all tests
 npm test -- --watch         # Watch mode
 npm test -- --coverage      # With coverage
 npm test Button             # Run tests matching "Button"
-```
+```text
 
 **Python (pytest):**
 
@@ -862,7 +862,7 @@ pytest --cov=src            # With coverage
 pytest tests/test_auth.py   # Run specific file
 pytest -k "test_login"      # Run tests matching name
 pytest -x                   # Stop on first failure
-```
+```text
 
 **Go:**
 
@@ -871,7 +871,7 @@ go test ./...               # Run all tests
 go test -v ./...            # Verbose output
 go test -cover ./...        # With coverage
 go test -run TestAdd        # Run specific test
-```
+```text
 
 ## See Also
 

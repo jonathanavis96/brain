@@ -55,38 +55,44 @@
 ## Key Principles
 
 ### 1. Let Ralph Ralph
+
 - Don't prescribe everything upfront
 - Observe failure patterns, add "signs" reactively
 - Signs can be: prompt text, AGENTS.md entries, utilities in codebase
 
 ### 2. Specs Drive Everything
+
 - `specs/*.md` - Requirements docs for each "topic of concern"
 - One topic of concern = one spec file
 - One spec → many tasks
 - "Topic Scope Test": Can you describe it in one sentence without "and"?
 
 ### 3. AGENTS.md is Operational Learnings
+
 - Updated **by the weaver during BUILD** when patterns discovered
 - Contains "signs" - patterns discovered, how to build/test
 - NOT a massive identity document
 - Lean (~3KB max)
 
 ### 4. The Plan is Disposable
+
 - If it's wrong, throw it out, and start over
 - Generated from specs, not hand-crafted
 
 ### 5. Move Outside the Loop
+
 - You sit ON the loop, not IN it
 - Observe and course correct
 - Tune it like a guitar - observe failures, add signs
 
 ### 6. Backpressure
+
 - Run tests after implementation (validation step)
 - Prevents "cheating" - can't claim done without tests passing
 
 ## Loom Project Structure (Reference)
 
-```
+```text
 loom/
 ├── .agents/workflows/     # Workflow definitions
 ├── specs/                 # 50+ spec files (topics of concern)
@@ -100,7 +106,7 @@ loom/
 ├── TODO.md               # High-level todos
 ├── hidave.md             # Current focus/plan
 └── crates/               # Rust source code
-```
+```text
 
 ### AGENTS.md Structure (from Loom)
 
@@ -126,7 +132,7 @@ loom/
 
 ## Anti-patterns
 - (operational learnings about what NOT to do)
-```
+```text
 
 ### prompt.md Structure (from Loom)
 
@@ -139,7 +145,7 @@ study hidave.md and pick the most important thing to do
 IMPORTANT:
 - update the hidave plan when the task is done
 - commit and push when you are done
-```
+```text
 
 ## What This Means for Our Brain Repo
 
@@ -195,11 +201,13 @@ IMPORTANT:
 ### The Critical Difference from Our Cortex
 
 **Ghuntley's model:**
+
 - Planning = Human + AI conversation (interactive)
 - Building = AI loop (autonomous)
 - The human IS the manager, AI assists
 
 **Our current Cortex model:**
+
 - Planning = Cortex AI (semi-autonomous)
 - Building = Ralph AI (autonomous)
 - AI is the manager
@@ -207,6 +215,7 @@ IMPORTANT:
 ### Conversational Continuity Problem
 
 In planning mode, the AI should:
+
 - ✅ Remember what was discussed earlier in the conversation
 - ✅ Understand references without re-explanation ("the thing we talked about")
 - ✅ Build on previous context naturally
@@ -224,7 +233,7 @@ This is why Ghuntley uses terminal conversations for planning - the AI maintains
 
 ### Proposed Cortex Chat Mode
 
-```
+```text
 cortex.bash (current) → planning conversation
 - Load context once at start
 - Human and AI discuss, iterate, refine
@@ -233,12 +242,12 @@ cortex.bash (current) → planning conversation
 
 one-shot.sh → quick status/updates
 - Fast snapshot, answer one question, done
-```
+```text
 
 ---
 
 ## References
 
-- https://ghuntley.com/ralph/
-- https://github.com/ghuntley/how-to-ralph-wiggum
-- https://github.com/ghuntley/loom
+- <https://ghuntley.com/ralph/>
+- <https://github.com/ghuntley/how-to-ralph-wiggum>
+- <https://github.com/ghuntley/loom>

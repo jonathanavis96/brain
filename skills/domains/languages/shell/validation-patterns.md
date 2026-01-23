@@ -37,7 +37,7 @@ find . -name "*.sh" -exec bash -n {} \; -print
 for script in *.sh; do
   bash -n "$script" || exit 1
 done
-```
+```text
 
 **What it catches:**
 
@@ -59,7 +59,7 @@ find . -name "*.sh" -exec shellcheck -e SC1091 {} \;
 
 # Batch check with error counting
 shellcheck *.sh 2>&1 | grep -c "error:" || echo "All checks passed"
-```
+```text
 
 **Common exclusions:**
 
@@ -88,7 +88,7 @@ find . -name "*.sh" ! -perm -u+x -exec chmod +x {} \;
 for script in bin/*; do
   [[ -x "$script" ]] || { echo "NOT EXECUTABLE: $script"; exit 1; }
 done
-```
+```text
 
 **What it catches:**
 
@@ -110,7 +110,7 @@ find . -name "*.json" -exec jq empty {} \;
 # Validate and extract value
 version=$(jq -r '.version' package.json)
 [[ -n "$version" ]] || { echo "Missing version field"; exit 1; }
-```
+```text
 
 **What it catches:**
 
@@ -135,7 +135,7 @@ grep -rn "curl.*://.*:.*@" --include="*.sh"
 for file in .env .secrets credentials.json; do
   [[ -f "$file" ]] && ! grep -q "^${file}$" .gitignore && echo "WARNING: $file not in .gitignore"
 done
-```
+```text
 
 **What it catches:**
 
@@ -158,7 +158,7 @@ done
 # Check version requirements (e.g., bash 4+)
 bash_version=$(bash --version | head -1 | grep -oP '\d+\.\d+')
 [[ "${bash_version%%.*}" -ge 4 ]] || { echo "Bash 4+ required"; exit 1; }
-```
+```text
 
 **What it catches:**
 
@@ -187,7 +187,7 @@ if [[ -d tests/ ]]; then
     bash "$test" || exit 1
   done
 fi
-```
+```text
 
 **What it catches:**
 
@@ -208,14 +208,14 @@ fi
 ```bash
 # All shell scripts must parse without errors
 find . -name "*.sh" -exec bash -n {} \; -print
-```
+```text
 
 ### Static Analysis
 
 ```bash
 # ShellCheck with standard exclusions
 shellcheck -e SC1091 *.sh lib/*.sh bin/*
-```
+```text
 
 ### Permissions
 
@@ -223,21 +223,21 @@ shellcheck -e SC1091 *.sh lib/*.sh bin/*
 # All .sh files and bin/* must be executable
 find . -name "*.sh" ! -perm -u+x
 find bin/ -type f ! -perm -u+x
-```
+```text
 
 ### JSON Validation
 
 ```bash
 # All JSON configs must be valid
 find . -name "*.json" -exec jq empty {} \;
-```
+```text
 
 ### Security
 
 ```bash
 # No hardcoded secrets
 ! grep -rn "password\|secret\|api_key" --include="*.sh" --include="*.json"
-```
+```text
 
 ### Dependencies
 
@@ -246,7 +246,7 @@ find . -name "*.json" -exec jq empty {} \;
 for tool in jq curl git; do
   command -v "$tool" &>/dev/null || exit 1
 done
-```
+```text
 
 ## Manual Checks
 
@@ -258,7 +258,7 @@ done
 
 ```text
 (end of markdown example)
-```
+```text
 
 
 ## Integration with Ralph Templates
@@ -278,7 +278,7 @@ Before completing iteration:
 2. **Linting:** `shellcheck -e SC1091 *.sh`
 3. **Permissions:** `find . -name "*.sh" ! -perm -u+x` (should be empty)
 4. **Security:** `! grep -rn "password\|secret" --include="*.sh"`
-```
+```text
 
 ### VALIDATION_CRITERIA.md
 
@@ -299,7 +299,7 @@ repos:
     hooks:
       - id: shfmt
         args: ["-w", "-i", "2"]
-```
+```text
 
 ## Common Pitfalls
 
@@ -311,14 +311,14 @@ repos:
 # In shell-only project
 npm run lint
 npm run test
-```
+```text
 
 **Correct:**
 
 ```bash
 shellcheck *.sh
 bash tests/run_tests.sh
-```
+```text
 
 ### 2. Ignoring Executable Permissions
 
@@ -342,7 +342,7 @@ bash tests/run_tests.sh
 ```bash
 # Assume config.json is valid
 version=$(jq -r '.version' config.json)
-```
+```text
 
 **Correct:**
 
@@ -350,7 +350,7 @@ version=$(jq -r '.version' config.json)
 # Validate first, then use
 jq empty config.json || exit 1
 version=$(jq -r '.version' config.json)
-```
+```text
 
 ### 4. No Dependency Checks
 
@@ -370,7 +370,7 @@ for dep in "${DEPS[@]}"; do
     exit 1
   }
 done
-```
+```text
 
 
 ## Related Skills

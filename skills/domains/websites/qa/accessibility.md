@@ -16,6 +16,7 @@ Ensures WCAG 2.1 AA compliance: contrast, focus states, keyboard navigation, scr
 ## Trigger Conditions
 
 Use this skill when:
+
 - Building any website (accessibility is required, not optional)
 - Lighthouse accessibility score < 90
 - Users report issues
@@ -37,10 +38,11 @@ background: #ffffff;
 color: #9ca3af; /* gray-400 */
 background: #ffffff;
 /* Contrast: 2.5:1 ✗ */
-```
+```text
 
 **Test with:**
-- https://webaim.org/resources/contrastchecker/
+
+- <https://webaim.org/resources/contrastchecker/>
 - Chrome DevTools (inspect element → color picker)
 
 ### 2. Keyboard Navigation
@@ -63,7 +65,7 @@ All interactive elements must be reachable via Tab key.
 <main id="main-content">
   <!-- Content -->
 </main>
-```
+```text
 
 ```css
 /* Skip link - hidden until focused */
@@ -80,7 +82,7 @@ All interactive elements must be reachable via Tab key.
 .skip-link:focus {
   top: 0;
 }
-```
+```text
 
 ### 3. Focus States
 
@@ -105,7 +107,7 @@ button:focus-visible {
   outline: 2px solid var(--primary-500);
   outline-offset: 2px;
 }
-```
+```text
 
 ### 4. Alt Text
 
@@ -122,7 +124,7 @@ button:focus-visible {
 <img src="/jacqui.jpg" alt="image" />
 <img src="/jacqui.jpg" alt="photo.jpg" />
 <img src="/jacqui.jpg" /> <!-- Missing! -->
-```
+```text
 
 ### 5. Semantic HTML
 
@@ -147,7 +149,7 @@ button:focus-visible {
 <div class="header">
   <div class="nav">...</div>
 </div>
-```
+```text
 
 ### 6. Form Accessibility
 
@@ -184,7 +186,7 @@ button:focus-visible {
   <!-- Clear submit button -->
   <button type="submit">Send Message</button>
 </form>
-```
+```text
 
 ### 7. Heading Hierarchy
 
@@ -198,7 +200,7 @@ button:focus-visible {
 <!-- ❌ Skipping levels -->
 <h1>Page Title</h1>
   <h3>Subsection</h3> <!-- Skipped h2! -->
-```
+```text
 
 ## ARIA When Needed
 
@@ -229,25 +231,28 @@ Only use ARIA when HTML semantics aren't enough:
 <div aria-live="polite" aria-busy="true">
   Loading...
 </div>
-```
+```text
 
 ## Testing Accessibility
 
 ### Automated Tools
+
 ```bash
 # Lighthouse (built into Chrome)
 # DevTools → Lighthouse → Accessibility
 
 # axe-core CLI
 npx @axe-core/cli https://yoursite.com
-```
+```text
 
 ### Browser Extensions
+
 - axe DevTools
 - WAVE
 - Accessibility Insights
 
 ### Manual Testing
+
 1. **Keyboard only:** Tab through entire page
 2. **Screen reader:** Test with VoiceOver (Mac) or NVDA (Windows)
 3. **Zoom:** 200% zoom, still usable?
@@ -284,7 +289,7 @@ npx @axe-core/cli https://yoursite.com
 - [ ] Semantic elements used
 - [ ] ARIA used correctly (if at all)
 - [ ] Works with screen readers
-```
+```text
 
 ## Common Mistakes
 
@@ -341,7 +346,7 @@ npx @axe-core/cli https://yoursite.com
   </footer>
 </body>
 </html>
-```
+```text
 
 ```css
 /* Focus styles */
@@ -366,7 +371,7 @@ button:focus-visible {
 .skip-link:focus {
   top: 16px;
 }
-```
+```text
 
 ## Related Skills
 

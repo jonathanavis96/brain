@@ -9,12 +9,14 @@
 ## Problem Summary
 
 **Current Behavior:**
+
 - Window attempts to move to left monitor
 - `Move-Window` function uses `SWP_SHOWWINDOW` flag which shows the window
 - This conflicts with minimize operation
 - No maximize function exists for showing window when manual action needed
 
 **Expected Behavior:**
+
 - Move to left monitor (minimize if `--show` not used)
 - Stay minimized during automation
 - **MAXIMIZE and bring to front** when manual action needed (CAPTCHA, refresh, etc.)
@@ -35,6 +37,7 @@
 - **Changes:**
   1. Add `SW_MAXIMIZE` constant (value: 3) to Win32 class
   2. Create `Maximize-Window` function:
+
      ```powershell
      function Maximize-Window {
          param([IntPtr]$Handle)
@@ -42,7 +45,9 @@
          return $result
      }
      ```
+
   3. Add "maximize" case to switch statement:
+
      ```powershell
      "maximize" {
          $window = Find-ChromeWindow -ProcessId $ProcessId
@@ -61,6 +66,7 @@
          }
      }
      ```
+
   4. Update valid actions help text to include "maximize"
 
 - **AC:**
@@ -81,9 +87,11 @@
 - **Changes:**
   1. Remove `SWP_SHOWWINDOW` from flags in Move-Window function
   2. Change line 125 to:
+
      ```powershell
      $flags = [Win32]::SWP_NOACTIVATE -bor [Win32]::SWP_NOZORDER
      ```
+
   3. Keep the restore logic (lines 119-122) for when window is minimized during move
 
 - **AC:**
@@ -101,6 +109,7 @@
 - **Files:** `src/windows_window_manager.py`
 - **Changes:**
   1. Add `maximize_window` method to `WindowsWindowManager` class:
+
      ```python
      def maximize_window(self, window_handle: str, pid: Optional[int] = None) -> bool:
          """Maximize window.
@@ -125,7 +134,9 @@
              logger.error(f"Failed to maximize window: {output}")
              return False
      ```
+
   2. Add module-level `show_browser` function:
+
      ```python
      def show_browser(window_handle: Optional[str] = None, pid: Optional[int] = None) -> bool:
          """
@@ -171,13 +182,16 @@
      - Manual refresh prompts (Attempt 2, Attempt 3)
      - Manual site name entry prompts
   3. Before `input("Press Enter...")` prompts, add:
+
      ```python
      # Show browser for manual action
      if AUTO_HIDE_BROWSER and window_id:
          logger.info("Showing browser for manual action...")
          show_browser(window_id, pid=self.browser_pid)
      ```
+
   4. After manual action complete, re-hide:
+
      ```python
      # Hide browser again after manual action
      if AUTO_HIDE_BROWSER and window_id:
@@ -198,6 +212,7 @@
 ## Testing Plan
 
 **Full Integration Test:**
+
 1. Run `./bin/create-account.sh` (without --show flag)
 2. Observe: Window moves to left monitor and minimizes immediately
 3. When CAPTCHA appears: Window maximizes automatically
@@ -206,6 +221,7 @@
 6. Repeat for any additional manual actions
 
 **Expected Result:**
+
 - ✅ Window on left monitor throughout
 - ✅ Minimized when no action needed
 - ✅ Maximized when CAPTCHA/manual action needed
@@ -216,6 +232,7 @@
 ## Dependencies
 
 **None** - All tasks can be done independently, but test order:
+
 1. 0-W.1 (PowerShell maximize)
 2. 0-W.2 (Fix move flags)
 3. 0-W.3 (Python wrapper)

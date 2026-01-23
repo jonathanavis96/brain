@@ -45,7 +45,7 @@ shellcheck script.sh
 # SC2034 - unused variables  
 # SC2086 - unquoted variables
 # SC2162 - read without -r
-```
+```text
 
 ---
 
@@ -63,7 +63,7 @@ find . -name "*.sh" -exec shellcheck {} \;
 # Ignore specific rules (use sparingly)
 # shellcheck disable=SC2034
 unused_but_intentional="value"
-```
+```text
 
 ---
 

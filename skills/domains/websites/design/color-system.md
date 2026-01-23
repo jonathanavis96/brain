@@ -17,6 +17,7 @@ Creates cohesive color palette with primary, secondary, accent, and neutral colo
 ## Trigger Conditions
 
 Use this skill when:
+
 - Creating new design system
 - Colors feel random or clashing
 - Accessibility contrast failing
@@ -64,7 +65,7 @@ If client has brand color, use it as primary. If not, choose based on:
 - 200-800: Range
 - 900: Near black (#111827)
 - 950: Darkest
-```
+```text
 
 ### 3. Define Semantic Colors
 
@@ -74,7 +75,7 @@ If client has brand color, use it as primary. If not, choose based on:
 --color-warning: #F59E0B;
 --color-error: #EF4444;
 --color-info: #3B82F6;
-```
+```text
 
 ### 4. Check Contrast
 
@@ -85,11 +86,12 @@ If client has brand color, use it as primary. If not, choose based on:
 | UI components | 3:1 | AA |
 | Enhanced | 7:1 | AAA |
 
-Use: https://webaim.org/resources/contrastchecker/
+Use: <https://webaim.org/resources/contrastchecker/>
 
 ## Color Palette Templates
 
 ### Calm & Professional (Therapy/Healthcare)
+
 ```css
 /* Primary - Sage Green */
 --primary-50: #F0F5F1;
@@ -110,9 +112,10 @@ Use: https://webaim.org/resources/contrastchecker/
 --gray-50: #FAFAF9;
 --gray-500: #78716C;
 --gray-900: #292524;
-```
+```text
 
 ### Modern & Clean (SaaS/Tech)
+
 ```css
 /* Primary - Blue */
 --primary-50: #EFF6FF;
@@ -131,9 +134,10 @@ Use: https://webaim.org/resources/contrastchecker/
 --gray-50: #F8FAFC;
 --gray-500: #64748B;
 --gray-900: #0F172A;
-```
+```text
 
 ### Warm & Friendly (Local Business)
+
 ```css
 /* Primary - Warm Orange */
 --primary-50: #FFF7ED;
@@ -148,7 +152,7 @@ Use: https://webaim.org/resources/contrastchecker/
 --gray-50: #FAFAF9;
 --gray-500: #78716C;
 --gray-900: #1C1917;
-```
+```text
 
 ## Usage Guidelines
 
@@ -175,7 +179,7 @@ Use: https://webaim.org/resources/contrastchecker/
 --button-primary-hover: var(--primary-600);
 --link-color: var(--primary-600);
 --link-hover: var(--primary-700);
-```
+```text
 
 ## Common Mistakes
 
@@ -243,7 +247,7 @@ Use: https://webaim.org/resources/contrastchecker/
   --button-primary: var(--primary-500);
   --button-hover: var(--primary-600);
 }
-```
+```text
 
 ## Related Skills
 

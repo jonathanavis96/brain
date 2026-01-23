@@ -5,12 +5,14 @@ Generated: 2026-01-16 13:18:58
 ## Summary
 
 ### MAIN Target
+
 - **Target Path**: `/path/to/brain_staging/main`
 - **Files Copied**: 108
 - **Failed/Missing**: 0
 - **Status**: ✓ SUCCESS
 
 ### ROVO Target
+
 - **Target Path**: `/path/to/brain_staging/rovo`
 - **Files Copied**: 31
 - **Failed/Missing**: 0
@@ -19,6 +21,7 @@ Generated: 2026-01-16 13:18:58
 ## Top-Level Folders Created
 
 ### MAIN
+
 - AGENTS.md
 - IMPLEMENTATION_PLAN.md
 - KNOWN_ISSUES.md
@@ -42,6 +45,7 @@ Generated: 2026-01-16 13:18:58
 - validate-templates.ps1
 
 ### ROVO
+
 - AGENTS.md
 - CTRL_C_FIX_SUMMARY.md
 - Generate-EmailVariations.ps1

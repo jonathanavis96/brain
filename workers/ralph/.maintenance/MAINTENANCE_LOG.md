@@ -4,12 +4,12 @@ Audit trail of completed/removed maintenance items.
 
 ## Format
 
-```
+```text
 ### YYYY-MM-DD
 - [x] Item description
   - Resolution: What was done
   - Commit: (optional) commit hash
-```
+```text
 
 ---
 

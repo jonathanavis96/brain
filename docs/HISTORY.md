@@ -21,15 +21,17 @@ Three critical bugs in the Ralph monitoring system:
 **Location:** `current_ralph_tasks.sh` `extract_tasks()` function
 
 **Issue:** Current logic:
+
 ```bash
 elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
     in_task_section=false  # BUG: exits on ANY ### header
 fi
-```
+```text
 
 When parser hits `### Phase 4:` under `## HIGH PRIORITY`, it doesn't contain "HIGH PRIORITY" literal text, so it exits the task section. All subsequent `- [ ]` lines under that phase are ignored.
 
 **Document structure:**
+
 ```markdown
 ## HIGH PRIORITY           ← Enters section (has "HIGH PRIORITY")
 ### Phase 4: ...           ← BUG: Exits section (matches ^###)
@@ -37,7 +39,7 @@ When parser hits `### Phase 4:` under `## HIGH PRIORITY`, it doesn't contain "HI
 - [ ] P4A.1 Task...        ← SKIPPED!
 #### Phase 4B: ...
 - [ ] P4B.1 Task...        ← SKIPPED!
-```
+```text
 
 **Fix:** Only exit on `##` (major sections), not `###` or `####` (subsections).
 
@@ -46,12 +48,14 @@ When parser hits `### Phase 4:` under `## HIGH PRIORITY`, it doesn't contain "HI
 **Location:** `current_ralph_tasks.sh` display logic
 
 **Issue chain:**
+
 1. Startup messages ("Starting Ralph Task Monitor...") occupy rows 0-3
 2. `display_tasks()` uses `tput cup 0 0` assuming row 0 is empty
 3. Differential update logic (`ROW_CONTENT` cache) tracks wrong row positions
 4. Result: Headers render multiple times, footers accumulate
 
-**Fix:** 
+**Fix:**
+
 - Add `clear` after startup messages before first render
 - Always do full redraw (remove differential update path)
 - Simple is robust
@@ -61,11 +65,13 @@ When parser hits `### Phase 4:` under `## HIGH PRIORITY`, it doesn't contain "HI
 **Location:** `thunk_ralph_tasks.sh` `scan_for_new_completions()` function
 
 **Issue:** Script watches IMPLEMENTATION_PLAN.md and tries to sync `[x]` tasks to THUNK.md. This is:
+
 1. Redundant - Ralph should append to THUNK.md directly
 2. Confusing - Output says "Scanning IMPLEMENTATION_PLAN.md"
 3. Wrong responsibility - Monitor should only display, not modify
 
 **Fix:**
+
 - Remove auto-sync logic entirely
 - Watch ONLY THUNK.md
 - Ralph appends to THUNK.md when completing tasks (add instruction to PROMPT.md)
@@ -75,20 +81,23 @@ When parser hits `### Phase 4:` under `## HIGH PRIORITY`, it doesn't contain "HI
 #### D1: Section Parsing State Machine
 
 Simple two-variable state:
+
 - `in_task_section` (bool) - Are we inside a priority section?
 - `current_priority` (string) - "HIGH" / "MEDIUM" / "LOW" / ""
 
 Transitions:
+
 - `## HIGH PRIORITY` → in_task_section=true, current_priority="HIGH"
 - `## MEDIUM PRIORITY` → in_task_section=true, current_priority="MEDIUM"  
 - `## LOW PRIORITY` → in_task_section=true, current_priority="LOW"
 - `## <anything else>` → in_task_section=false, current_priority=""
-- `### ` or `#### ` → NO STATE CHANGE (subsections stay in parent context)
+- `###` or `####` → NO STATE CHANGE (subsections stay in parent context)
 - `- [ ] Task` when in_task_section → extract with current_priority
 
 #### D2: Display Strategy
 
 Always full redraw:
+
 ```bash
 display_tasks() {
     clear
@@ -97,7 +106,7 @@ display_tasks() {
     # draw tasks
     # draw footer
 }
-```
+```text
 
 No row cache. No differential updates. Parsing 100 tasks takes <50ms - imperceptible.
 
@@ -115,7 +124,7 @@ Current format has alignment issues. New format:
 |THUNK # | TASK ID | Priority | Date       | Time     | Description
 |--------|---------|----------|------------|----------|------------------------------
 |   1    | P4B.1   | HIGH     | 2026-01-18 | 21:45:00 | Implement line-count tracking
-```
+```text
 
 Include both date AND time for completion tracking.
 
@@ -124,6 +133,7 @@ Include both date AND time for completion tracking.
 All monitor bugs fixed and validated through comprehensive testing (THUNK entries #160-166). New era started for brain repository maintenance tasks.
 
 **Key Deliverables:**
+
 - ✅ Fixed task extraction parser (handles nested sections correctly)
 - ✅ Fixed display rendering (full redraw, no corruption)
 - ✅ Simplified THUNK monitor (watch-only, no auto-sync)
@@ -137,12 +147,14 @@ All monitor bugs fixed and validated through comprehensive testing (THUNK entrie
 
 **Task Completed:**
 Fixed all 4 references to non-existent QUICKSTART.md in skills/projects/brain-example.md:
+
 - Line 94: Removed from documentation list
 - Line 219: Changed to README.md (developer onboarding guide)
 - Line 238: Changed to README.md in contributing guide
 - Line 244: Changed to README.md in references section
 
 **Validation:**
+
 - ✓ No QUICKSTART.md references remain in active documentation
 - ✓ All references now point to README.md (which exists and serves as onboarding guide)
 - ✓ Repository documentation now fully consistent
@@ -153,6 +165,7 @@ Fixed all 4 references to non-existent QUICKSTART.md in skills/projects/brain-ex
 Brain repository is production-ready. One minor documentation inconsistency found that should be fixed for accuracy.
 
 **Gap Identified:**
+
 - skills/projects/brain-example.md references non-existent QUICKSTART.md file (4 references found)
 - These should be removed or replaced with README.md references
 - Impact: Low (cosmetic issue, doesn't block functionality)
@@ -205,6 +218,7 @@ Zero critical gaps found. Brain repository is production-ready and self-sustaini
 | Documentation | ✅ Accurate | README.md comprehensive |
 
 **Recommendations:**
+
 1. No immediate action required
 2. Future enhancement: Consider adding Windows PowerShell equivalents to templates (low priority)
 3. Future enhancement: Add more KB domain patterns as projects need them (organic growth)
@@ -215,6 +229,7 @@ The brain repository exceeds its stated goals. All infrastructure is in place, v
 ---
 
 **Overall Assessment (2026-01-16):**
+
 - ✅ Bootstrap system: Fast, reliable, tested
 - ✅ Knowledge base: Comprehensive domain coverage
 - ✅ Templates: Consistent, validated, multi-stack support
@@ -225,6 +240,7 @@ The brain repository exceeds its stated goals. All infrastructure is in place, v
 **All gaps identified are low priority enhancements**, not blockers. Future work should be organic - add features when specific project needs emerge, not speculatively.
 
 **Comparison to THOUGHTS.md Goals:**
+
 - ✅ Goal 1 (Fix documentation inconsistencies): templates/README.md already correct
 - ✅ Goal 2 (Identify missing infrastructure): Analysis complete, zero critical gaps
 - ⏸️ Goal 3 (Enhance template robustness): Deferred - current templates sufficient
@@ -232,6 +248,7 @@ The brain repository exceeds its stated goals. All infrastructure is in place, v
 - ⏸️ Goal 5 (KB growth strategy): Deferred - organic growth working
 
 **Validation Results:**
+
 - ✓ All bash scripts pass syntax check (loop.sh, watch_ralph_tasks.sh, new-project.sh, brain-doctor.sh, test-bootstrap.sh, 3 generators)
 - ✓ All 12 KB domain files have "## Why This Exists" header
 - ✓ React rules count: 45 (validated)

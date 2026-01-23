@@ -12,39 +12,44 @@ cp templates/NEW_PROJECT_IDEA.template.md my-project-idea.md
 # 2. Bootstrap complete project structure
 bash new-project.sh my-project-idea.md
 # Creates GitHub repo, clones locally, generates all Ralph files
-```
+```text
 
 ## Generator Scripts
 
 Three specialized generators create Ralph infrastructure files from your project idea:
 
 ### generate-neurons.sh
+
 **Purpose:** Creates NEURONS.md (codebase map) with intelligent structure inference
 
 ```bash
 bash generators/generate-neurons.sh INPUT_IDEA.md OUTPUT_NEURONS.md
-```
+```text
 
 **Intelligence features:**
+
 - Infers project type from tech stack (web-app, api, cli, python-general, etc.)
 - Generates directory structure matching conventions (Next.js, Django, FastAPI, Python, CLI)
 - Creates tech-specific file location guides
 - Generates validation commands per project type
 
 **Required fields in INPUT_IDEA.md:**
+
 - `Project:` or `# Project:` (name)
 - `Tech Stack:` (comma-separated technologies)
 - `Purpose:` (one-line description)
 - `Location:` (optional, defaults to `/path/to/{project}`)
 
 ### generate-thoughts.sh
+
 **Purpose:** Creates THOUGHTS.md (goals, success criteria, design decisions)
 
 ```bash
 bash generators/generate-thoughts.sh INPUT_IDEA.md OUTPUT_THOUGHTS.md
-```
+```text
 
 **Intelligence features:**
+
 - Infers project type description from tech stack
 - Generates appropriate skills/patterns references (React, Auth, etc.)
 - Creates Definition of Done criteria tailored to project type
@@ -53,13 +58,15 @@ bash generators/generate-thoughts.sh INPUT_IDEA.md OUTPUT_THOUGHTS.md
 **Required fields:** Same as generate-neurons.sh
 
 ### generate-implementation-plan.sh
+
 **Purpose:** Creates IMPLEMENTATION_PLAN.md (task breakdown)
 
 ```bash
 bash generators/generate-implementation-plan.sh INPUT_IDEA.md OUTPUT_IMPLEMENTATION_PLAN.md
-```
+```text
 
 **Intelligence features:**
+
 - Parses Goals field into structured tasks
 - Generates phase structure based on project type (setup, core, features, polish, deploy)
 - Creates tech-specific acceptance criteria
@@ -88,7 +95,7 @@ bash generators/generate-implementation-plan.sh my-api-idea.md IMPLEMENTATION_PL
 
 # Or use new-project.sh to do everything
 bash new-project.sh my-api-idea.md
-```
+```text
 
 ## Template Types
 
@@ -115,6 +122,7 @@ When `new-project.sh` isn't suitable (existing repo, custom setup):
 ## Error Handling
 
 All generators validate required fields and exit with clear error messages:
+
 - Missing `Project:` → "Error: PROJECT_NAME is required"
 - Missing `Tech Stack:` → "Error: Tech Stack is required"
 - Missing `Purpose:` → "Error: Purpose is required"
@@ -129,28 +137,29 @@ All generators validate required fields and exit with clear error messages:
 **What went wrong:** The Jacqui website bootstrap accidentally included `workers/ralph/` which created confusion about where Ralph was supposed to work.
 
 **Fix:** Ensure `new-project.sh` and manual bootstrapping exclude:
+
 - `workers/` (Brain's internal worker configs)
 - Any Brain-specific directories not meant for project scaffolding
 
 **Project structure should be:**
 
-```
+```text
 project/
 ├── cortex/          # Manager layer (planning)
 ├── ralph/           # Worker layer (execution) ← project-specific
 ├── src/             # Source code
 └── ...
-```
+```text
 
 NOT:
 
-```
+```text
 project/
 ├── cortex/
 ├── ralph/
 ├── workers/ralph/   # ❌ Brain-specific, don't copy
 └── ...
-```
+```text
 
 ## See Also
 

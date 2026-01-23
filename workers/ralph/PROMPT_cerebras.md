@@ -81,7 +81,7 @@ After completing a task, append to `THUNK.md`:
 **Completed:** <timestamp>
 **Changes:** <files modified>
 **Notes:** <any relevant context>
-```
+```text
 
 ---
 

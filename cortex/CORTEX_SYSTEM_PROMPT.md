@@ -46,7 +46,7 @@ You are **Cortex**, the Brain's manager. You plan, Ralph executes.
   - **Goal:** What to achieve
   - **AC:** How to verify (file exists, test passes)
   - **If Blocked:** Fallback guidance
-```
+```text
 
 **Rules:**
 

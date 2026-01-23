@@ -14,6 +14,7 @@ Builds reusable, consistent components with clean structure and maintainable cod
 ## Trigger Conditions
 
 Use this skill when:
+
 - Building any website UI
 - Components are inconsistent
 - Code is duplicated across pages
@@ -22,7 +23,8 @@ Use this skill when:
 ## Component Architecture
 
 ### File Structure (Astro/React)
-```
+
+```text
 src/
 ├── components/
 │   ├── ui/           # Primitives
@@ -49,11 +51,12 @@ src/
     ├── index.astro
     ├── about.astro
     └── contact.astro
-```
+```text
 
 ## Component Patterns
 
 ### Pattern 1: Props Interface
+
 Define clear, typed props.
 
 ```astro
@@ -83,9 +86,10 @@ const {
     <slot />
   </button>
 )}
-```
+```text
 
 ### Pattern 2: Slots for Flexibility
+
 Use slots for customizable content.
 
 ```astro
@@ -105,9 +109,10 @@ const { class: className } = Astro.props;
     <slot name="footer" />
   </div>
 </div>
-```
+```text
 
 Usage:
+
 ```astro
 <Card>
   <img slot="image" src="/photo.jpg" alt="" />
@@ -115,9 +120,10 @@ Usage:
   <p>Description here</p>
   <Button slot="footer">Learn More</Button>
 </Card>
-```
+```text
 
 ### Pattern 3: Section Components
+
 Self-contained page sections.
 
 ```astro
@@ -152,7 +158,7 @@ const { headline, subheadline, ctaText, ctaHref, trustLine, image } = Astro.prop
     )}
   </div>
 </section>
-```
+```text
 
 ## Using shadcn/ui Pattern
 
@@ -194,18 +200,20 @@ export function Button({ className, variant, size, ...props }: ButtonProps) {
     <button className={cn(buttonVariants({ variant, size }), className)} {...props} />
   );
 }
-```
+```text
 
 ## CSS Organization
 
 ### Option 1: Tailwind Classes
+
 ```astro
 <button class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors">
   Click Me
 </button>
-```
+```text
 
 ### Option 2: CSS Modules / Scoped
+
 ```astro
 <button class="btn">Click Me</button>
 
@@ -220,14 +228,15 @@ export function Button({ className, variant, size, ...props }: ButtonProps) {
     background: var(--color-primary-600);
   }
 </style>
-```
+```text
 
 ### Option 3: Hybrid (Tailwind + CSS Variables)
+
 ```astro
 <button class="bg-[var(--primary)] text-white px-6 py-3 rounded-lg">
   Click Me
 </button>
-```
+```text
 
 ## Common Mistakes
 
@@ -244,7 +253,7 @@ export function Button({ className, variant, size, ...props }: ButtonProps) {
 
 **Project:** Psychology practice website (Astro)
 
-```
+```text
 src/
 ├── components/
 │   ├── ui/
@@ -274,7 +283,7 @@ src/
     ├── about.astro
     ├── services.astro
     └── contact.astro
-```
+```text
 
 ## Related Skills
 
