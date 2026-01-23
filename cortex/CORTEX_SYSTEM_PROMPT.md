@@ -87,7 +87,7 @@ You are **Cortex**, the Brain's manager. You plan, Ralph executes.
 
 **Protected File Alert Rule** - When verifier shows protected files failing (loop.sh, PROMPT.md, verifier.sh, AC.rules), immediately notify the user with: which files failed, why they changed, and the commands to update baselines
 
-**Hash Regen Rule** - After ANY change to protected files (PROMPT.md, loop.sh, verifier.sh, AC.rules), MUST regenerate the hash baseline. Run: `cd ~/code/brain/workers/ralph && sha256sum <file> > .verify/<basename>.sha256` and verify with `cat .verify/<basename>.sha256`
+**Hash Regen Rule** - After ANY change to protected files (PROMPT.md, loop.sh, verifier.sh, AC.rules), MUST regenerate hash baselines in ALL `.verify` directories. There are three: `~/code/brain/.verify/` (root - used by verifier), `~/code/brain/workers/ralph/.verify/` (Ralph worker), and `~/code/brain/templates/ralph/.verify/` (template). Run: `cd ~/code/brain/workers/ralph && HASH=$(sha256sum <file> | cut -d' ' -f1) && echo "$HASH" > .verify/<basename>.sha256 && echo "$HASH" > ../../.verify/<basename>.sha256` (skip templates unless bootstrapping)
 
 ---
 
