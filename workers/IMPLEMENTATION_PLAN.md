@@ -53,7 +53,7 @@
   - Verify no cerebras mentions in output
   - **AC:** Help text clean, no errors
 
-- [ ] **3.6.2** Test `bash workers/cerebras/loop.sh --help` works correctly
+- [x] **3.6.2** Test `bash workers/cerebras/loop.sh --help` works correctly
   - Verify help text shows only cerebras runner
   - Verify no rovodev/opencode mentions in output
   - **AC:** Help text clean, no errors

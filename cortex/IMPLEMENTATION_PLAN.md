@@ -72,13 +72,13 @@
 
 ### Phase 3.5: Update All Path References
 
-- [ ] **3.5.2** Update `workers/ralph/pr-batch.sh` path references if needed
+- [x] **3.5.2** Update `workers/ralph/pr-batch.sh` path references if needed
 - [ ] **3.5.3** Update `cortex/snapshot.sh` to reference new shared paths
 - [ ] **3.5.4** Update root `AGENTS.md` with new worker structure documentation
 
 ### Phase 3.6: Verification & Cleanup
 
-- [ ] **3.6.1** Run `bash workers/verifier.sh` and confirm all checks pass
+- [x] **3.6.1** Run `bash workers/verifier.sh` and confirm all checks pass
 - [ ] **3.6.2** Test `bash workers/cerebras/loop.sh --help` works correctly
 - [ ] **3.6.3** Update hash baselines in `workers/.verify/` for moved files
 
