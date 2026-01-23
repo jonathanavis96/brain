@@ -10,14 +10,14 @@ You are Ralph. AGENTS.md was injected above. Mode is in the header.
 
 If your prompt header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
-1. **STOP** - Do not pick a new task from IMPLEMENTATION_PLAN.md
+1. **STOP** - Do not pick a new task from workers/IMPLEMENTATION_PLAN.md
 2. **READ** `.verify/latest.txt` to understand what failed
 3. **FIX** the failing acceptance criteria listed in `# FAILED_RULES:`
 4. **COMMIT** your fix with message: `fix(ralph): resolve AC failure <RULE_ID>`
 5. **THEN** output `:::BUILD_READY:::` so the verifier can re-run
 
 If `.verify/latest.txt` contains `[WARN]` lines:
-1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of IMPLEMENTATION_PLAN.md (after header, before other phases)
+1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of workers/IMPLEMENTATION_PLAN.md (after header, before other phases)
 2. **⚠️ DO NOT create "## Verifier Warnings" without the "Phase 0-Warn:" prefix** - This breaks the task monitor!
 3. **LIST** each as: `- [ ] WARN.<RULE_ID>.<filename> - <description>` (include filename to prevent duplicate IDs)
 4. **NEVER use numbered lists (1. 2. 3.)** - ALWAYS use checkbox format `- [ ]`
@@ -65,7 +65,7 @@ Then output `:::BUILD_READY:::` to end the iteration.
 
 1. ✅ The code/doc fix itself
 2. ✅ THUNK.md entry (append to current era table)
-3. ✅ IMPLEMENTATION_PLAN.md update (mark task `[x]`)
+3. ✅ workers/IMPLEMENTATION_PLAN.md update (mark task `[x]`)
 
 ```bash
 # CORRECT: Single commit with everything
@@ -74,7 +74,7 @@ git add -A && git commit -m "fix(scope): description"
 
 **NEVER make separate commits** for "mark task complete" or "log to THUNK" - these waste iterations and break traceability.
 
-**If you commit code without updating THUNK.md and IMPLEMENTATION_PLAN.md, you have NOT completed the task.**
+**If you commit code without updating THUNK.md and workers/IMPLEMENTATION_PLAN.md, you have NOT completed the task.**
 
 ---
 
@@ -105,7 +105,7 @@ Rule: only 1 "obvious" quick attempt before doing the lookup.
 ### Context Gathering (up to 100 parallel subagents)
 - Study `skills/SUMMARY.md` for overview and `skills/index.md` for available skills
 - Study THOUGHTS.md for project goals
-- Study IMPLEMENTATION_PLAN.md (if exists)
+- Study workers/IMPLEMENTATION_PLAN.md (if exists)
 - Compare specs vs current codebase
 - Search for gaps between intent and implementation
 
@@ -118,10 +118,10 @@ pre-commit run --all-files 2>&1 | head -50 || true
 # Or run individual checks if pre-commit not installed:
 shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
 ```
-**If any issues found:** Add them to the TOP of IMPLEMENTATION_PLAN.md as high-priority tasks in "## Phase 0-Warn: Verifier Warnings" section.
+**If any issues found:** Add them to the TOP of workers/IMPLEMENTATION_PLAN.md as high-priority tasks in "## Phase 0-Warn: Verifier Warnings" section.
 
 ### Actions
-1. Create/update IMPLEMENTATION_PLAN.md:
+1. Create/update workers/IMPLEMENTATION_PLAN.md:
    - **⚠️ CRITICAL:** ALL task sections MUST be "## Phase X:" format (e.g., "## Phase 0-Quick: Quick Wins", "## Phase 1: Maintenance")
    - **⚠️ NEVER create these non-phase sections:** "## Overview", "## Quick Wins" (without Phase prefix), "## Verifier Warnings" (without Phase prefix), "## Maintenance Check", "## TODO Items"
    - **⚠️ CORRECT format:** "## Phase 0-Warn: Verifier Warnings", "## Phase 0-Quick: Quick Wins", "## Phase 1: Core Features"
@@ -148,14 +148,14 @@ shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
 
 ### Context Gathering (up to 100 parallel subagents)
 - Study `skills/SUMMARY.md` for overview and `skills/index.md` for available skills
-- Study THOUGHTS.md and IMPLEMENTATION_PLAN.md
+- Study THOUGHTS.md and workers/IMPLEMENTATION_PLAN.md
 - Search codebase - **don't assume things are missing**
 - Check NEURONS.md for codebase map
 - Use Brain Skills: `skills/SUMMARY.md` → `references/HOTLIST.md` → specific rules only if needed
 
 ### Actions
 1. **CHECK FOR VERIFIER WARNINGS FIRST:**
-   - If `IMPLEMENTATION_PLAN.md` has a "## Verifier Warnings" section with unchecked `- [ ]` tasks:
+   - If `workers/IMPLEMENTATION_PLAN.md` has a "## Verifier Warnings" section with unchecked `- [ ]` tasks:
      - Pick ONE warning task (prioritize High > Medium > Low)
      - Fix that warning
      - Mark it complete `- [x]` in the Verifier Warnings section
@@ -170,9 +170,9 @@ shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
 
 4. Validate per AGENTS.md commands
 
-5. **SINGLE COMMIT RULE:** Commit ALL changes together (code fix + THUNK.md + IMPLEMENTATION_PLAN.md):
+5. **SINGLE COMMIT RULE:** Commit ALL changes together (code fix + THUNK.md + workers/IMPLEMENTATION_PLAN.md):
    - Log completion to THUNK.md (append to current era table)
-   - Mark task `[x]` in IMPLEMENTATION_PLAN.md
+   - Mark task `[x]` in workers/IMPLEMENTATION_PLAN.md
    - **NEVER make separate commits** for "mark task complete" or "log to THUNK" - these waste iterations
    ```bash
    git add -A && git commit -m "<type>(<scope>): <summary>
@@ -185,9 +185,9 @@ shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
    ```
 
 6. **DISCOVERY DEFER RULE:** If you discover new issues while fixing:
-   - **DO NOT** update IMPLEMENTATION_PLAN.md with new tasks during BUILD mode
+   - **DO NOT** update workers/IMPLEMENTATION_PLAN.md with new tasks during BUILD mode
    - **DO** note them in your commit message body (e.g., "Note: also found SC2034 in foo.sh")
-   - **WAIT** until PLAN mode to add new tasks to IMPLEMENTATION_PLAN.md
+   - **WAIT** until PLAN mode to add new tasks to workers/IMPLEMENTATION_PLAN.md
    - This prevents "docs(plan): add new task" spam commits
 
 7. **Self-Improvement Check:** If you used undocumented knowledge/procedure/tooling:
@@ -255,7 +255,7 @@ When fixing issues, search the ENTIRE repo: `rg "pattern" $ROOT` not just `worke
 - **No destructive commands** (`rm -rf`, deleting directories) unless plan task explicitly says so
 - **Search before creating** - Verify something doesn't exist before adding it
 - **One task per BUILD** - No batching, no "while I'm here" extras (EXCEPT: same-file warnings - batch those)
-- **Never remove uncompleted items** - NEVER delete `[ ]` tasks from IMPLEMENTATION_PLAN.md
+- **Never remove uncompleted items** - NEVER delete `[ ]` tasks from workers/IMPLEMENTATION_PLAN.md
 - **Never delete completed tasks** - Mark tasks `[x]` complete but NEVER delete them (they stay forever as history)
 - **Never delete sections** - NEVER remove entire sections (## Phase X:, ## Verifier Warnings, etc.) even if all tasks are complete
 - **Never use numbered lists** - ALL tasks must use checkbox format `- [ ]` or `- [x]`, NEVER `1. 2. 3.`
