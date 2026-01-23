@@ -7,6 +7,7 @@ Skills files in the brain repository follow specific conventions to ensure consi
 ## When to Use It
 
 Reference this document when:
+
 - Creating a new skills file in `skills/domains/` or `skills/projects/`
 - Reviewing or updating existing skills files
 - Contributing knowledge back to the brain repository
@@ -45,19 +46,22 @@ Every skills file **must** follow this four-section structure:
 
 ### Section Guidelines
 
-**Why This Exists**
+#### Why This Exists
+
 - Provide context and motivation
 - Explain the problem this knowledge solves
 - Keep it brief (1-3 paragraphs)
 - Help readers quickly decide if this is relevant
 
-**When to Use It**
+#### When to Use It
+
 - Be specific and actionable
 - Include concrete triggers or scenarios
 - Use bullet points for clarity
 - Think: "What situations warrant reading this?"
 
-**Quick Reference** ⭐ (Most Important for Usability)
+#### Quick Reference ⭐ (Most Important for Usability)
+
 - Provide scannable tables for fast lookup
 - Include a "key concepts" or "at a glance" table
 - Always include a "Common Mistakes" table with ❌/✅ format
@@ -65,7 +69,8 @@ Every skills file **must** follow this four-section structure:
 - This section enables quick answers without reading the whole file
 - Tables should be self-contained - reader shouldn't need Details section for basic use
 
-**Details**
+#### Details
+
 - Contains the actual knowledge
 - Can have multiple subsections
 - Include code examples where helpful
@@ -81,18 +86,20 @@ Every skills file **must** follow this four-section structure:
 - **Keep it concise**: 2-4 words ideal, avoid unnecessary words
 
 **Good examples:**
+
 - `auth-patterns.md`
 - `caching-strategies.md`
 - `api-design-conventions.md`
 
 **Bad examples:**
+
 - `AuthPatterns.md` (wrong case)
 - `pattern.md` (too vague)
 - `authentication-pattern-for-oauth-and-jwt.md` (too long)
 
 ### Directory Structure
 
-```
+```text
 skills/
 ├── SUMMARY.md              # Skills index - always update when adding files
 ├── conventions.md          # This file
@@ -106,7 +113,7 @@ skills/
 
 ## Domain vs Project Skills
 
-### Use `skills/domains/` when:
+### Use `skills/domains/` when
 
 ✅ Pattern applies to **multiple projects**  
 ✅ Technical solution is **reusable**  
@@ -114,12 +121,13 @@ skills/
 ✅ Content is **framework or tool-specific**
 
 **Examples:**
+
 - Authentication patterns (OAuth2, JWT, session management)
 - Caching strategies (LRU, Redis, React Query patterns)
 - API design conventions (REST, error handling, versioning)
 - State management approaches (Context, Zustand, server state)
 
-### Use `skills/projects/` when:
+### Use `skills/projects/` when
 
 ✅ Specific to **one project or codebase**  
 ✅ Context about **project history or decisions**  
@@ -127,6 +135,7 @@ skills/
 ✅ Information about **specific integrations or dependencies**
 
 **Examples:**
+
 - Project-specific file structure conventions
 - Custom component library usage
 - Project deployment processes
@@ -141,6 +150,7 @@ skills/
    - Project-specific → `skills/projects/`
 
 2. **Create the file with required structure**
+
    ```markdown
    # [Title]
    
@@ -188,7 +198,7 @@ When updating skills files:
 ### Formatting
 
 - **Headers**: Use `##` for main sections, `###` for subsections
-- **Code blocks**: Always specify language (````markdown`, ````javascript`, etc.)
+- **Code blocks**: Always specify language (`markdown`, `javascript`, etc.)
 - **Lists**: Use `-` for bullets, `1.` for numbered lists
 - **Emphasis**: Use **bold** for key terms, `code` for inline code
 - **Links**: Use relative paths: `[link](../path/to/file.md)`
@@ -208,38 +218,50 @@ When implementing OAuth2 authentication:
    window.location.href = authUrl;
    ```
 
-2. **Handle callback**
+1. **Handle callback**
+
    - Verify state parameter
    - Exchange code for tokens
    - Store tokens securely
 
 **Security considerations:**
+
 - Always validate state parameter (prevents CSRF)
 - Use PKCE for public clients
 - Store refresh tokens in httpOnly cookies
+
+```text
+(end of code example)
 ```
 
 ## Common Mistakes to Avoid
 
 ❌ **Missing required sections**
+
 - Every skills file needs Why/When/Details
 
 ❌ **Vague "When to Use It" sections**
+
 - Be specific about scenarios and triggers
 
 ❌ **Creating orphaned files**
+
 - Always update SUMMARY.md when adding files
 
 ❌ **Duplicating existing content**
+
 - Check existing skills files first, consider updating instead
 
 ❌ **Using absolute paths**
+
 - Use relative paths: `../references/...` not `/brain/references/...`
 
 ❌ **Mixing domain and project knowledge**
+
 - Keep domain knowledge reusable, project knowledge specific
 
 ❌ **Over-engineering**
+
 - Don't create skills files for trivial or obvious patterns
 
 ## Validation Checklist
