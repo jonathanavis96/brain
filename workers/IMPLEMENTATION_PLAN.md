@@ -27,7 +27,7 @@ These are all false positives - shellcheck passes, files are in sync:
 
 ### Phase 3.4: Clean Ralph's `loop.sh` (3 tasks)
 
-- [ ] **3.4.1** Remove `resolve_model_cerebras()` function from `workers/ralph/loop.sh`
+- [x] **3.4.1** Remove `resolve_model_cerebras()` function from `workers/ralph/loop.sh`
 - [ ] **3.4.2** Remove cerebras runner option from `workers/ralph/loop.sh`
 - [ ] **3.4.3** Simplify runner detection to only rovodev/opencode
 
