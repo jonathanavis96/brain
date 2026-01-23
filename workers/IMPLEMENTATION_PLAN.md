@@ -93,4 +93,36 @@ These are all false positives - shellcheck passes, files are in sync:
 
 ---
 
+## Phase 7: ETA Timer for current_ralph_tasks.sh
+
+**Goal:** Show estimated time to completion based on rolling average of task durations.
+
+### Phase 7.1: Core Implementation (3 tasks)
+
+- [ ] **7.1.1** Add ETA display line below progress bar
+  - Format: `ETA: HH:MM:SS` or `ETA: --:--:--` when no data
+  - Show `ETA: Complete` when remaining_tasks = 0
+  - **AC:** ETA line visible below progress bar
+
+- [ ] **7.1.2** Track THUNK entry timestamps for duration calculation
+  - Session-only (no persistence)
+  - Record timestamp when new THUNK entry detected
+  - Calculate duration between consecutive entries
+  - **AC:** Duration tracked in memory array
+
+- [ ] **7.1.3** Implement rolling average ETA calculation
+  - First task: ETA = task1_time × remaining_tasks
+  - Nth task: ETA = average(all_task_times) × remaining_tasks
+  - Update ETA display on each THUNK change
+  - **AC:** ETA updates correctly as tasks complete
+
+### Phase 7.2: Template Sync (1 task)
+
+- [ ] **7.2.1** Sync changes to `templates/ralph/current_ralph_tasks.sh`
+  - **AC:** `diff workers/ralph/current_ralph_tasks.sh templates/ralph/current_ralph_tasks.sh` returns no output
+
+**AC:** ETA timer shows accurate estimates based on observed task completion times
+
+---
+
 <!-- Cortex adds new Task Contracts below this line -->
