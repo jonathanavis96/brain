@@ -9,6 +9,7 @@ Robust error handling is critical for production applications, yet it's often im
 ## When to Use It
 
 Reference this KB file when:
+
 - Implementing error boundaries in React applications
 - Designing API error responses and status codes
 - Setting up error logging and monitoring (Sentry, Datadog, etc.)
@@ -19,6 +20,7 @@ Reference this KB file when:
 - Handling form validation errors
 
 **Specific triggers:**
+
 - User story mentions "error handling", "validation", or "monitoring"
 - Need to prevent errors from crashing the entire application
 - Debugging production issues without sufficient error context
@@ -30,7 +32,7 @@ Reference this KB file when:
 ### Error Types and Handling
 
 | Error Type | HTTP Status | User Message | Log Level |
-|------------|-------------|--------------|-----------|
+| --- | --- | --- | --- |
 | **Validation** | 400 | Show field errors | `warn` |
 | **Authentication** | 401 | "Please log in" | `info` |
 | **Authorization** | 403 | "Access denied" | `warn` |
@@ -42,7 +44,7 @@ Reference this KB file when:
 ### Error Response Format
 
 | Field | Required | Description |
-|-------|----------|-------------|
+| --- | --- | --- |
 | `error` | Yes | Error type/code |
 | `message` | Yes | Human-readable message |
 | `details` | No | Field-level errors for validation |
@@ -52,7 +54,7 @@ Reference this KB file when:
 ### Common Mistakes
 
 | ❌ Don't | ✅ Do |
-|---------|------|
+| --- | --- |
 | Expose stack traces to users | Log internally, show generic message |
 | Catch all exceptions silently | Catch specific errors, re-throw unknown |
 | Return 200 with error in body | Use proper HTTP status codes |
@@ -65,7 +67,7 @@ Reference this KB file when:
 ### Error Handling by Context
 
 | Context | Pattern |
-|---------|---------|
+| --- | --- |
 | React Components | Error Boundaries with fallback UI |
 | API Routes | try/catch + consistent error response |
 | Async/Await | try/catch or `.catch()` |
@@ -176,11 +178,13 @@ function Dashboard() {
 ```
 
 **When to use:**
+
 - Wrap entire app to catch unhandled errors
 - Wrap individual features/sections for isolation
 - Protect third-party components that might throw
 
 **Limitations:**
+
 - Only catches errors in child components during render, lifecycle methods, and constructors
 - Does NOT catch errors in event handlers, async code, or server-side rendering
 
@@ -418,7 +422,7 @@ export async function apiRequest<T>(
 
 Handle errors in promises, async/await, and event handlers properly.
 
-**Pattern 1: Async/await with try/catch**
+#### Pattern 1: Async/await with try/catch
 
 ```typescript
 // ✅ GOOD: Explicit error handling
@@ -447,7 +451,7 @@ async function fetchUserData(userId: string) {
 }
 ```
 
-**Pattern 2: Promise chains with .catch()**
+#### Pattern 2: Promise chains with .catch()
 
 ```typescript
 // ✅ GOOD: Catch at the end of chain
@@ -464,7 +468,7 @@ fetch('/api/data')
   });
 ```
 
-**Pattern 3: Event handler errors (not caught by error boundaries)**
+#### Pattern 3: Event handler errors (not caught by error boundaries)
 
 ```typescript
 // ❌ BAD: Unhandled errors in event handlers
@@ -947,6 +951,7 @@ export function setupGlobalErrorHandlers() {
 ### Common Mistakes to Avoid
 
 1. **Swallowing errors silently:**
+
    ```typescript
    // ❌ BAD
    try {
@@ -966,6 +971,7 @@ export function setupGlobalErrorHandlers() {
    ```
 
 2. **Exposing sensitive error details to users:**
+
    ```typescript
    // ❌ BAD: Leaks database details
    catch (error) {
@@ -982,6 +988,7 @@ export function setupGlobalErrorHandlers() {
    ```
 
 3. **Not validating error types before accessing properties:**
+
    ```typescript
    // ❌ BAD: Assumes error shape
    catch (error) {
@@ -1001,6 +1008,7 @@ export function setupGlobalErrorHandlers() {
    ```
 
 4. **Not handling async errors in event handlers:**
+
    ```typescript
    // ❌ BAD: Unhandled promise rejection
    <button onClick={async () => await fetchData()}>Click</button>
@@ -1016,6 +1024,7 @@ export function setupGlobalErrorHandlers() {
    ```
 
 5. **Retrying on non-transient errors:**
+
    ```typescript
    // ❌ BAD: Retries validation errors
    await withRetry(() => createUser(invalidData));
