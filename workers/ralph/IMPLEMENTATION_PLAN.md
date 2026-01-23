@@ -848,7 +848,7 @@ Source: `analysis/CODERABBIT_REVIEW_ANALYSIS.md` - Design Decisions (human appro
   - If `verifier.sh` missing AND `.verify/.initialized` exists → hard-fail (security)
   - If `verifier.sh` missing AND no `.initialized` → soft-fail (bootstrap mode)
 - [x] **5.2** `templates/ralph/loop.sh` - Apply same fix to template
-- [ ] **5.3** `init_verifier_baselines.sh` - Create `.verify/.initialized` marker after successful init
+- [x] **5.3** `init_verifier_baselines.sh` - Create `.verify/.initialized` marker after successful init
 
 ## Phase 5-2: Gitignore Personal Config
 
