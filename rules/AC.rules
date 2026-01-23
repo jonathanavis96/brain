@@ -117,8 +117,7 @@ instructions=Run thunk_ralph_tasks.sh, mark a task [x] in IMPLEMENTATION_PLAN.md
 mode=auto
 gate=warn
 desc=thunk_ralph_tasks.sh matches template
-cmd=diff -q thunk_ralph_tasks.sh ../../templates/ralph/thunk_ralph_tasks.sh 2>/dev/null && echo "match" || echo "differ"
-expect_stdout=match
+cmd=diff -q thunk_ralph_tasks.sh ../../templates/ralph/thunk_ralph_tasks.sh 2>/dev/null
 expect_exit=0
 
 # =============================================================================
