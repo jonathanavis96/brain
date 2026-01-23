@@ -1,6 +1,6 @@
 # Cortex Implementation Plan
 
-## Phase 0-CRITICAL: Fix Broken Task Monitor & Sync Issues (4 tasks)
+## Phase 0-CRITICAL: Fix Broken Task Monitor & Sync Issues (8 tasks)
 
 **Goal:** Fix `current_ralph_tasks.sh` (broken due to path change) and fix sync timestamp format.
 
@@ -24,7 +24,7 @@
   - Ensure script only APPENDS new tasks, never touches existing tasks/checkboxes
   - Flatten Cortex grouped format into atomic tasks for Ralph
   - **AC:** `bash sync_cortex_plan.sh --dry-run` shows clean output without per-task markers
-- [ ] **0.C.4** Fix `templates/ralph/sync_cortex_plan.sh` - same rewrite for template consistency
+- [x] **0.C.4** Fix `templates/ralph/sync_cortex_plan.sh` - same rewrite for template consistency
   - **AC:** Template matches worker file
 - [ ] **0.C.5** Clean up `workers/IMPLEMENTATION_PLAN.md`:
   - Remove duplicate "Phase 0-Synced" sections (merge into one)
@@ -32,7 +32,35 @@
   - Preserve Ralph's completed checkboxes `[x]`
   - **AC:** Only one "Phase 0-Synced" section exists, no inline sync markers
 
-**Sync Model:** ONE-WAY append-only (Cortex → Ralph). Ralph owns his checkboxes. Cortex adds new tasks to synced section only.
+### Phase 0-C.3: Fix Sync Script Duplicate Detection Bug (4 tasks)
+
+**Problem:** Sync script copies entire Cortex plan instead of just new sections. It matches sections by Phase ID regex but titles/counts differ between plans, causing false "new section" detection.
+
+**Solution:** Use exact full-header-line matching + track synced headers in `.last_sync` file.
+
+- [ ] **0.C.6** Rewrite sync detection logic in `workers/ralph/sync_cortex_plan.sh`:
+  - Create `workers/ralph/.last_sync` file to track synced section headers (full lines)
+  - Match sections by **exact header line** (not regex-extracted Phase ID)
+  - Only append sections whose headers don't exist in Ralph's plan
+  - Update `.last_sync` after successful sync
+  - **AC:** `bash sync_cortex_plan.sh --dry-run` on unchanged plans shows "No new sections"
+  - **AC:** Adding new Phase to Cortex plan syncs ONLY that phase
+
+- [ ] **0.C.7** Add `--reset` flag to sync script:
+  - Clears `.last_sync` file
+  - Allows re-bootstrapping if plans diverge
+  - **AC:** `bash sync_cortex_plan.sh --reset` clears state and reports success
+
+- [ ] **0.C.8** Sync template: Copy fixed `workers/ralph/sync_cortex_plan.sh` to `templates/ralph/sync_cortex_plan.sh`
+  - **AC:** `diff workers/ralph/sync_cortex_plan.sh templates/ralph/sync_cortex_plan.sh` returns no output
+
+- [ ] **0.C.9** Test sync end-to-end:
+  - Add dummy `## Phase 99: Test Sync (1 task)` to Cortex plan
+  - Run sync, verify only Phase 99 appears in Ralph's plan (no duplicates)
+  - Remove test phase from both plans
+  - **AC:** No duplicate sections created, sync log shows "1 sections added"
+
+**Sync Model:** ONE-WAY append-only (Cortex → Ralph). Ralph owns his checkboxes. Track synced headers in `.last_sync`.
 
 ---
 
@@ -49,8 +77,8 @@
 
 ## Current Status
 
-**Last Updated:** 2026-01-23 20:25:00  
-**Progress:** 69 pending tasks across 6 phases  
+**Last Updated:** 2026-01-23 20:45:00  
+**Progress:** 73 pending tasks across 6 phases  
 **Verifier:** 52 PASS, 0 FAIL, 9 WARN
 
 ---
@@ -113,9 +141,9 @@ Add Quick Reference tables to skills files following SUMMARY.md pattern.
 
 ### Phase 2.5: shfmt Formatting (2 tasks)
 
-- [ ] **2.5.1** Fix shfmt formatting in `workers/ralph/current_ralph_tasks.sh`
+- [x] **2.5.1** Fix shfmt formatting in `workers/ralph/current_ralph_tasks.sh`
   - **Fix:** Run `shfmt -w -i 2 workers/ralph/current_ralph_tasks.sh`
-- [ ] **2.5.2** Fix shfmt formatting in `workers/ralph/thunk_ralph_tasks.sh`
+- [x] **2.5.2** Fix shfmt formatting in `workers/ralph/thunk_ralph_tasks.sh`
   - **Fix:** Run `shfmt -w -i 2 workers/ralph/thunk_ralph_tasks.sh`
 
 ### Phase 2.6: Final Verification (1 task)
@@ -131,7 +159,7 @@ Add Quick Reference tables to skills files following SUMMARY.md pattern.
 
 ### Phase 3.1: Create Shared Infrastructure in `/workers/` (3 tasks)
 
-- [ ] **3.1.1** Move `workers/ralph/VALIDATION_CRITERIA.md` → `workers/VALIDATION_CRITERIA.md`
+- [x] **3.1.1** Move `workers/ralph/VALIDATION_CRITERIA.md` → `workers/VALIDATION_CRITERIA.md`
 - [ ] **3.1.2** Move `workers/ralph/sync_cortex_plan.sh` → `workers/sync_cortex_plan.sh`
 - [ ] **3.1.3** Move `workers/ralph/render_ac_status.sh` → `workers/render_ac_status.md`
 
