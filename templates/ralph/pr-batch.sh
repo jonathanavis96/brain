@@ -10,7 +10,9 @@ set -euo pipefail
 #   pr-batch.sh --status           # Show pending changes without creating PR
 #   pr-batch.sh --setup            # Initial setup: create work branch
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Get absolute path to this script, then go up one level for ROOT
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(dirname "$SCRIPT_DIR")"
 cd "$ROOT"
 
 # Work branch - replaced by new-project.sh during scaffolding
