@@ -8,6 +8,43 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
+## Phase 11: Verifier False Positive Fixes
+
+**Goal:** Fix verifier checks that produce false positives, eliminating need for 23 waiver requests.
+
+### Phase 11.1: Template Sync Detection
+
+- [x] **11.1.1** Fix Hygiene.TemplateSync.1 and Hygiene.TemplateSync.2 checks
+  - Current: Diff check reports mismatch when files are identical
+  - Fix: Use `diff -q` exit code instead of parsing output
+  - **AC:** Identical files report PASS, different files report WARN
+
+- [ ] **11.1.2** Fix Template.1 check (thunk_ralph_tasks.sh sync)
+  - Same issue as above - false positive on identical files
+  - **AC:** `diff -q workers/ralph/thunk_ralph_tasks.sh templates/ralph/thunk_ralph_tasks.sh` matches verifier result
+
+### Phase 11.2: Shellcheck Detection
+
+- [ ] **11.2.1** Fix Lint.Shellcheck.* checks regex
+  - Current: Verifier regex incorrectly detects shellcheck issues
+  - Fix: Check shellcheck exit code (0 = pass) instead of parsing output
+  - **AC:** Files that pass `shellcheck -e SC1091 <file>` with exit 0 report PASS
+
+### Phase 11.3: Markdown Fence Counting
+
+- [ ] **11.3.1** Fix Lint.Markdown.*BalancedFences regex
+  - Current: `^```[a-z]` matches directory tree lines with backticks (e.g., `├── .verify/`)
+  - Fix: Use `^```[a-z]+$` or `^```[a-z]+ *$` to match only fence lines
+  - **AC:** NEURONS.md and THOUGHTS.md report balanced fences
+
+### Phase 11.4: Cleanup Stale Waivers
+
+- [ ] **11.4.1** Delete all waiver requests in `.verify/waiver_requests/`
+  - These are all false positives that will be fixed by 11.1-11.3
+  - **AC:** `.verify/waiver_requests/` directory is empty or contains only new valid requests
+
+**Phase AC:** `bash workers/ralph/verifier.sh` shows WARN: 0 without any waivers
+
 ## Phase 9: Verifier Warnings Cleanup
 
 **Goal:** Resolve all WARN items from verifier to achieve 0 warnings.
