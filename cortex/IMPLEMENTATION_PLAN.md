@@ -404,4 +404,83 @@ Defer until Phases 1-3 complete.
 
 Ongoing - run `bash workers/ralph/.maintenance/verify-brain.sh` after Phase 1.3 fix.
 
+---
+
+## Phase 9: Worker Separation - Ralph/Cerebras (Priority: HIGH)
+
+**Goal:** Separate `workers/ralph/` into two distinct workers: `workers/ralph/` (rovodev/opencode) and `workers/cerebras/` (cerebras API runner). Shared infrastructure moves to `workers/`.
+
+**Background:** The current `loop.sh` has 3 runners mixed together. This separation:
+
+- Makes each worker self-contained and focused
+- Shared files (verifier, task lists) live in parent `workers/` folder
+- Easier to maintain and extend each runner independently
+
+### Phase 9.1: Create Shared Infrastructure in `/workers/`
+
+- [ ] **9.1.1** Move `workers/ralph/.verify/` → `workers/.verify/`
+- [ ] **9.1.2** Move `workers/ralph/verifier.sh` → `workers/verifier.sh`
+- [ ] **9.1.3** Move `workers/ralph/IMPLEMENTATION_PLAN.md` → `workers/IMPLEMENTATION_PLAN.md`
+- [ ] **9.1.4** Move `workers/ralph/THUNK.md` → `workers/THUNK.md`
+- [ ] **9.1.5** Move `workers/ralph/VALIDATION_CRITERIA.md` → `workers/VALIDATION_CRITERIA.md`
+- [ ] **9.1.6** Move `workers/ralph/thunk_ralph_tasks.sh` → `workers/thunk_ralph_tasks.sh`
+- [ ] **9.1.7** Move `workers/ralph/sync_cortex_plan.sh` → `workers/sync_cortex_plan.sh`
+- [ ] **9.1.8** Move `workers/ralph/init_verifier_baselines.sh` → `workers/init_verifier_baselines.sh`
+- [ ] **9.1.9** Move `workers/ralph/render_ac_status.sh` → `workers/render_ac_status.sh`
+
+### Phase 9.2: Create `workers/cerebras/` Directory
+
+- [ ] **9.2.1** Create `workers/cerebras/` directory
+- [ ] **9.2.2** Move `workers/ralph/cerebras_agent.py` → `workers/cerebras/cerebras_agent.py`
+- [ ] **9.2.3** Move `workers/ralph/PROMPT_cerebras.md` → `workers/cerebras/PROMPT_cerebras.md`
+- [ ] **9.2.4** Move `workers/ralph/CEREBRAS_AGENT.md` → `workers/cerebras/AGENTS.md` (rename)
+- [ ] **9.2.5** Create `workers/cerebras/NEURONS.md` (cerebras-specific structure map)
+- [ ] **9.2.6** Create `workers/cerebras/README.md` (cerebras worker documentation)
+
+### Phase 9.3: Create Cerebras-specific `loop.sh`
+
+- [ ] **9.3.1** Copy `workers/ralph/loop.sh` → `workers/cerebras/loop.sh`
+- [ ] **9.3.2** Remove rovodev runner code from `workers/cerebras/loop.sh`
+- [ ] **9.3.3** Remove opencode runner code from `workers/cerebras/loop.sh`
+- [ ] **9.3.4** Update path references in `workers/cerebras/loop.sh` to use `../verifier.sh`, `../IMPLEMENTATION_PLAN.md`, etc.
+- [ ] **9.3.5** Set default runner to `cerebras` (remove runner selection logic)
+
+### Phase 9.4: Clean Ralph's `loop.sh`
+
+- [ ] **9.4.1** Remove `resolve_model_cerebras()` function from `workers/ralph/loop.sh`
+- [ ] **9.4.2** Remove `run_cerebras_api()` function from `workers/ralph/loop.sh`
+- [ ] **9.4.3** Remove cerebras runner dispatch code from `workers/ralph/loop.sh`
+- [ ] **9.4.4** Remove cerebras dependency checks from `workers/ralph/loop.sh`
+- [ ] **9.4.5** Remove `--runner cerebras` option from help text and argument parsing
+- [ ] **9.4.6** Update path references in `workers/ralph/loop.sh` to use `../verifier.sh`, `../IMPLEMENTATION_PLAN.md`, etc.
+
+### Phase 9.5: Update All Path References
+
+- [ ] **9.5.1** Update `workers/ralph/current_ralph_tasks.sh` to reference `../IMPLEMENTATION_PLAN.md`
+- [ ] **9.5.2** Update `workers/ralph/new-project.sh` path references if needed
+- [ ] **9.5.3** Update `workers/ralph/pr-batch.sh` path references if needed
+- [ ] **9.5.4** Update `workers/ralph/ralph.sh` path references if needed
+- [ ] **9.5.5** Update `cortex/snapshot.sh` to reference new shared paths
+- [ ] **9.5.6** Update `cortex/AGENTS.md` with new worker structure documentation
+- [ ] **9.5.7** Update root `AGENTS.md` with new worker structure documentation
+- [ ] **9.5.8** Update root `NEURONS.md` with new directory structure
+
+### Phase 9.6: Verification & Cleanup
+
+- [ ] **9.6.1** Run `bash workers/verifier.sh` and confirm all checks pass
+- [ ] **9.6.2** Test `bash workers/ralph/loop.sh --help` works correctly
+- [ ] **9.6.3** Test `bash workers/cerebras/loop.sh --help` works correctly
+- [ ] **9.6.4** Remove any leftover cerebras files from `workers/ralph/`
+- [ ] **9.6.5** Update hash baselines in `workers/.verify/` for moved files
+- [ ] **9.6.6** Commit with message: `refactor(workers): separate ralph and cerebras into distinct workers`
+
+**Acceptance Criteria:**
+
+- [ ] `workers/ralph/loop.sh` only has rovodev and opencode runners
+- [ ] `workers/cerebras/loop.sh` only has cerebras runner
+- [ ] Shared files exist in `workers/` (verifier.sh, IMPLEMENTATION_PLAN.md, THUNK.md, etc.)
+- [ ] Both `loop.sh` scripts reference shared files correctly
+- [ ] `bash workers/verifier.sh` passes all checks
+- [ ] No cerebras-related files remain in `workers/ralph/`
+
 <!-- Cortex will add new Task Contracts above this line -->

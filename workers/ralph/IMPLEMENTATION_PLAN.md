@@ -894,6 +894,106 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
 
 ---
 
+## Phase 0-Synced: Tasks from Cortex
+
+- [ ] **0.0** Implement sync_cortex_plan.sh script
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+  - **Priority:** CRITICAL (blocks all other Cortex → Ralph task delegation)
+  - **Goal:** Implement the task synchronization mechanism described in `cortex/docs/TASK_SYNC_PROTOCOL.md`
+  - **Context:**
+    - Currently, there is NO automatic sync from `cortex/IMPLEMENTATION_PLAN.md` → `workers/ralph/IMPLEMENTATION_PLAN.md`
+    - The protocol is documented but the script doesn't exist yet
+    - Without this, Cortex must manually copy tasks or user must do it
+  - **Implementation:**
+    1. Create `workers/ralph/sync_cortex_plan.sh`
+    2. Implement logic from TASK_SYNC_PROTOCOL.md:
+       - Read `cortex/IMPLEMENTATION_PLAN.md`
+       - Extract tasks from Phase sections
+       - Check if task already synced (via `<!-- SYNCED_FROM_CORTEX: YYYY-MM-DD -->` marker)
+       - Append new tasks to `workers/ralph/IMPLEMENTATION_PLAN.md`
+       - Add sync markers to newly synced tasks
+    3. Integrate into `workers/ralph/loop.sh` startup sequence:
+
+- [ ] **0.1** Update README.md with setup instructions
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+  - **Goal:** Add installation and quick start documentation
+  - **Context:**
+    - New `setup.sh` script installs `cortex` and `ralph` commands globally
+    - Users need clear instructions on getting started
+    - **DO NOT merge to main** - there's a pending PR that needs fixing first
+  - **Implementation:** Add these sections to `README.md`:
+  
+    ```markdown
+    ## Quick Start
+
+- [ ] **1.3.1** In `parse_new_thunk_entries()`, before redrawing footer, clear the OLD footer lines (9 lines starting at old `LAST_CONTENT_ROW`)
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **1.3.3** Test: Run `thunk_ralph_tasks.sh`, complete a task in another terminal, verify footer moves down cleanly
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.1.1** Move `workers/ralph/.verify/` → `workers/.verify/`
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.1.3** Move `workers/ralph/IMPLEMENTATION_PLAN.md` → `workers/IMPLEMENTATION_PLAN.md`
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.1.5** Move `workers/ralph/VALIDATION_CRITERIA.md` → `workers/VALIDATION_CRITERIA.md`
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.1.7** Move `workers/ralph/sync_cortex_plan.sh` → `workers/sync_cortex_plan.sh`
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.1.9** Move `workers/ralph/render_ac_status.sh` → `workers/render_ac_status.sh`
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.2.1** Create `workers/cerebras/` directory
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.2.3** Move `workers/ralph/PROMPT_cerebras.md` → `workers/cerebras/PROMPT_cerebras.md`
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.2.5** Create `workers/cerebras/NEURONS.md` (cerebras-specific structure map)
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.3.1** Copy `workers/ralph/loop.sh` → `workers/cerebras/loop.sh`
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.3.3** Remove opencode runner code from `workers/cerebras/loop.sh`
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.3.5** Set default runner to `cerebras` (remove runner selection logic)
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.4.1** Remove `resolve_model_cerebras()` function from `workers/ralph/loop.sh`
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.4.3** Remove cerebras runner dispatch code from `workers/ralph/loop.sh`
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.4.5** Remove `--runner cerebras` option from help text and argument parsing
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.5.1** Update `workers/ralph/current_ralph_tasks.sh` to reference `../IMPLEMENTATION_PLAN.md`
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.5.3** Update `workers/ralph/pr-batch.sh` path references if needed
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.5.5** Update `cortex/snapshot.sh` to reference new shared paths
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.5.7** Update root `AGENTS.md` with new worker structure documentation
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.6.1** Run `bash workers/verifier.sh` and confirm all checks pass
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.6.3** Test `bash workers/cerebras/loop.sh --help` works correctly
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+
+- [ ] **9.6.5** Update hash baselines in `workers/.verify/` for moved files
+  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
 
 ## Phase 7: Maintenance Items
 
