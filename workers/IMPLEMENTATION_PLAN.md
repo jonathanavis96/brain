@@ -8,15 +8,6 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
-## Phase 10: Sync Script Bug Fix
-
-**Goal:** Fix sync_cortex_plan.sh crash when .last_sync is empty.
-
-- [x] **10.1** Fix empty `.last_sync` file causing "bad array subscript" error
-  - In `sync_cortex_plan.sh`, skip empty lines when reading `.last_sync`
-  - Add: `[[ -z "$header_line" ]] && continue` inside the while loop
-  - **AC:** `echo "" > .last_sync && bash sync_cortex_plan.sh --verbose` runs without error
-
 ## Phase 9: Verifier Warnings Cleanup
 
 **Goal:** Resolve all WARN items from verifier to achieve 0 warnings.
@@ -72,3 +63,14 @@
   - **Fixes:** Lint.Markdown.ThoughtsBalancedFences
 
 **Phase AC:** `bash workers/ralph/verifier.sh` shows WARN: 0
+
+---
+
+## Phase 10: Sync Script Bug Fix
+
+**Goal:** Fix sync_cortex_plan.sh crash when .last_sync is empty.
+
+- [x] **10.1** Fix empty `.last_sync` file causing "bad array subscript" error
+  - In `sync_cortex_plan.sh`, skip empty lines when reading `.last_sync`
+  - Add: `[[ -z "$header_line" ]] && continue` inside the while loop
+  - **AC:** `echo "" > .last_sync && bash sync_cortex_plan.sh --verbose` runs without error
