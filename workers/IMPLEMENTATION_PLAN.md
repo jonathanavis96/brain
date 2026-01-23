@@ -151,7 +151,7 @@
   - Calculate duration between consecutive entries
   - **AC:** Duration tracked in memory array
 
-- [ ] **8.1.3** Implement rolling average ETA calculation
+- [x] **8.1.3** Implement rolling average ETA calculation
   - First task: ETA = task1_time × remaining_tasks
   - Nth task: ETA = average(all_task_times) × remaining_tasks
   - Update ETA display on each THUNK change
