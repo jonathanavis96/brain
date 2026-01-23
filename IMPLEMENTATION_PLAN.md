@@ -84,7 +84,7 @@ See **workers/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown.
 - [x] **WARN.MD.24.skills** Fix MD violations in `skills/domains/backend/api-design-patterns.md` - MD032, MD022, MD031 violations
 - [x] **WARN.MD.25.skills** Fix MD violations in `skills/domains/backend/auth-patterns.md` - MD032, MD022, MD031 violations
 - [x] **WARN.MD.26.skills** Fix MD violations in `skills/domains/backend/caching-patterns.md` - MD032, MD022, MD031 violations
-- [ ] **WARN.MD.27.skills** Fix MD violations in `skills/domains/backend/config-patterns.md` - MD032, MD022, MD031 violations
+- [x] **WARN.MD.27.skills** Fix MD violations in `skills/domains/backend/config-patterns.md` - Fixed MD060 (table spacing - 2 tables using compact style with spaces), MD040 (fence language tag - added `text` tag to directory tree), markdownlint now passes with 0 errors (13 violations resolved)
 - [ ] **WARN.MD.28.skills** Fix MD violations in `skills/domains/backend/database-patterns.md` - MD032, MD022, MD031 violations
 - [ ] **WARN.MD.29.skills** Fix MD violations in `skills/domains/backend/error-handling-patterns.md` - MD032, MD031, MD036 violations
 - [ ] **WARN.MD.30.skills** Fix MD violations in `skills/domains/code-quality/testing-patterns.md` - MD032, MD022, MD031 violations
