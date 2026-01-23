@@ -116,7 +116,7 @@ is_lint_only_change() {
   [[ -z "$diff_output" ]] && return 1
 
   # Define safe lint-fix patterns (additions/removals that are lint-only)
-  # These patterns match common shellcheck fixes
+  # These patterns match common shellcheck and markdownlint fixes
   local safe_patterns=(
     # SC2162: read without -r
     '^[+-][[:space:]]*read -r'
@@ -132,6 +132,12 @@ is_lint_only_change() {
     # SC2129: consolidating redirects with braces
     '^[+-][[:space:]]*{$'
     '^[+-][[:space:]]*}[[:space:]]*>>'
+    # Markdown: code fence changes (with/without language tag)
+    # shellcheck disable=SC2016 # Literal backticks intended, not expansion
+    '^[+-]```[a-z]*$'
+    '^[+-]```$'
+    # Markdown: blank line additions/removals (MD031, MD032)
+    '^[+-]$'
   )
 
   # Extract only the +/- lines (actual changes, not context)
