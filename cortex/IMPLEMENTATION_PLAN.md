@@ -160,7 +160,7 @@ Add Quick Reference tables to skills files following SUMMARY.md pattern.
 ### Phase 3.1: Create Shared Infrastructure in `/workers/` (3 tasks)
 
 - [x] **3.1.1** Move `workers/ralph/VALIDATION_CRITERIA.md` → `workers/VALIDATION_CRITERIA.md`
-- [ ] **3.1.2** Move `workers/ralph/sync_cortex_plan.sh` → `workers/sync_cortex_plan.sh`
+- [x] **3.1.2** Move `workers/ralph/sync_cortex_plan.sh` → `workers/sync_cortex_plan.sh`
 - [ ] **3.1.3** Move `workers/ralph/render_ac_status.sh` → `workers/render_ac_status.md`
 
 ### Phase 3.2: Create `workers/cerebras/` Directory (3 tasks)
