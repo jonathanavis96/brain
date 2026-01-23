@@ -101,12 +101,12 @@ Phases 0, 2, 3, 4, 5, 6 completed - see `workers/ralph/THUNK.md` for details.
 
 ### Phase 11.1: Template Sync Detection
 
-- [ ] **11.1.1** Fix Hygiene.TemplateSync.1 and Hygiene.TemplateSync.2 checks
+- [x] **11.1.1** Fix Hygiene.TemplateSync.1 and Hygiene.TemplateSync.2 checks
   - Current: Diff check reports mismatch when files are identical
   - Fix: Use `diff -q` exit code instead of parsing output
   - **AC:** Identical files report PASS, different files report WARN
 
-- [ ] **11.1.2** Fix Template.1 check (thunk_ralph_tasks.sh sync)
+- [x] **11.1.2** Fix Template.1 check (thunk_ralph_tasks.sh sync)
   - Same issue as above - false positive on identical files
   - **AC:** `diff -q workers/ralph/thunk_ralph_tasks.sh templates/ralph/thunk_ralph_tasks.sh` matches verifier result
 
