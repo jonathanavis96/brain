@@ -32,12 +32,12 @@
 
 ### Phase 9.2: Shellcheck Warnings in Protected Files
 
-- [ ] **9.2.1** Fix shellcheck issues in `workers/ralph/loop.sh`
+- [x] **9.2.1** Fix shellcheck issues in `workers/ralph/loop.sh`
   - **AC:** `shellcheck -e SC1091 workers/ralph/loop.sh` returns 0 warnings
   - **Fixes:** Lint.Shellcheck.LoopSh
   - **Note:** Protected file - will need hash baseline update after
 
-- [ ] **9.2.2** Fix shellcheck issues in `workers/ralph/verifier.sh`
+- [x] **9.2.2** Fix shellcheck issues in `workers/ralph/verifier.sh`
   - **AC:** `shellcheck -e SC1091 workers/ralph/verifier.sh` returns 0 warnings
   - **Fixes:** Lint.Shellcheck.VerifierSh
   - **Note:** Protected file - will need hash baseline update after
