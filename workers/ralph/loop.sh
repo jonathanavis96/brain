@@ -1332,6 +1332,17 @@ else
       run_once "$PLAN_PROMPT" "plan" "$i" || run_result=$?
     else
       run_once "$BUILD_PROMPT" "build" "$i" || run_result=$?
+
+      # Sync completions back to Cortex after BUILD iterations
+      if [[ -f "$RALPH/sync_completions_to_cortex.sh" ]]; then
+        echo "Syncing completions to Cortex..."
+        if (cd "$RALPH" && bash sync_completions_to_cortex.sh) 2>&1; then
+          echo "✓ Completions synced to Cortex"
+        else
+          echo "⚠ Completions sync failed (non-blocking)"
+        fi
+        echo ""
+      fi
     fi
     # Check if Ralph signaled completion (exit code 42)
     if [[ $run_result -eq 42 ]]; then
