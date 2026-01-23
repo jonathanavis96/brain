@@ -79,7 +79,7 @@
 ### Phase 3.6: Verification & Cleanup
 
 - [x] **3.6.1** Run `bash workers/verifier.sh` and confirm all checks pass
-- [ ] **3.6.2** Test `bash workers/cerebras/loop.sh --help` works correctly
+- [x] **3.6.2** Test `bash workers/cerebras/loop.sh --help` works correctly
 - [ ] **3.6.3** Update hash baselines in `workers/.verify/` for moved files
 
 ### Phase 3.7: Additional Shellcheck Fixes for Separation

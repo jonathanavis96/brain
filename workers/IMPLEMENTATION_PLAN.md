@@ -66,7 +66,7 @@
 
 ### Phase 5.1: Fix template path references (4 tasks)
 
-- [ ] **5.1.1** Update `templates/AGENTS.project.md` - change "ralph/" references to "workers/ralph/"
+- [x] **5.1.1** Update `templates/AGENTS.project.md` - change "ralph/" references to "workers/ralph/"
   - Fix all path examples in documentation sections
   - Update directory structure diagrams
   - **AC:** No bare "ralph/" paths remain (all are "workers/ralph/")
