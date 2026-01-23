@@ -60,7 +60,7 @@ See `workers/ralph/README.md` for detailed monitor features and hotkeys.
 | `NEURONS.md` | Repository structure map |
 | `THOUGHTS.md` | Strategic vision, goals, success criteria |
 | `IMPLEMENTATION_PLAN.md` | Current task backlog (root level) |
-| `workers/ralph/IMPLEMENTATION_PLAN.md` | Ralph-specific tasks |
+| `workers/IMPLEMENTATION_PLAN.md` | Shared worker tasks (Ralph, Cerebras, etc.) |
 | `workers/ralph/THUNK.md` | Completed task log |
 | `skills/SUMMARY.md` | Skills overview and error reference |
 | `skills/index.md` | Complete skills catalog |

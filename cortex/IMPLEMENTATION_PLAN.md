@@ -5,7 +5,7 @@
 **Workflow:**
 
 1. Cortex creates/updates Task Contracts in this file
-2. Ralph's `loop.sh` syncs this file to `workers/ralph/IMPLEMENTATION_PLAN.md` at startup
+2. Ralph's `loop.sh` syncs this file to `workers/IMPLEMENTATION_PLAN.md` at startup
 3. Ralph works through tasks, marking them complete in his local copy
 4. Cortex reviews Ralph's progress and creates new contracts as needed
 
@@ -127,7 +127,7 @@ The `workers/ralph/.maintenance/verify-brain.sh` script reports `skills/index.md
   - **Priority:** CRITICAL (blocks all other Cortex → Ralph task delegation)
   - **Goal:** Implement the task synchronization mechanism described in `cortex/docs/TASK_SYNC_PROTOCOL.md`
   - **Context:**
-    - Currently, there is NO automatic sync from `cortex/IMPLEMENTATION_PLAN.md` → `workers/ralph/IMPLEMENTATION_PLAN.md`
+    - Currently, there is NO automatic sync from `cortex/IMPLEMENTATION_PLAN.md` → `workers/IMPLEMENTATION_PLAN.md`
     - The protocol is documented but the script doesn't exist yet
     - Without this, Cortex must manually copy tasks or user must do it
   - **Implementation:**
@@ -136,7 +136,7 @@ The `workers/ralph/.maintenance/verify-brain.sh` script reports `skills/index.md
        - Read `cortex/IMPLEMENTATION_PLAN.md`
        - Extract tasks from Phase sections
        - Check if task already synced (via `<!-- SYNCED_FROM_CORTEX: YYYY-MM-DD -->` marker)
-       - Append new tasks to `workers/ralph/IMPLEMENTATION_PLAN.md`
+       - Append new tasks to `workers/IMPLEMENTATION_PLAN.md`
        - Add sync markers to newly synced tasks
     3. Integrate into `workers/ralph/loop.sh` startup sequence:
 
@@ -156,7 +156,7 @@ The `workers/ralph/.maintenance/verify-brain.sh` script reports `skills/index.md
     ```text
     - [ ] `workers/ralph/sync_cortex_plan.sh` exists and is executable
     - [ ] Script reads from `cortex/IMPLEMENTATION_PLAN.md`
-    - [ ] Script appends new tasks to `workers/ralph/IMPLEMENTATION_PLAN.md`
+    - [ ] Script appends new tasks to `workers/IMPLEMENTATION_PLAN.md`
     - [ ] Synced tasks have `<!-- SYNCED_FROM_CORTEX: YYYY-MM-DD -->` markers
     - [ ] Duplicate tasks are NOT created (check for existing markers)
     - [ ] `loop.sh` calls sync script at startup in PLAN mode
@@ -420,7 +420,7 @@ Ongoing - run `bash workers/ralph/.maintenance/verify-brain.sh` after Phase 1.3 
 
 - [ ] **9.1.1** Move `workers/ralph/.verify/` → `workers/.verify/`
 - [ ] **9.1.2** Move `workers/ralph/verifier.sh` → `workers/verifier.sh`
-- [ ] **9.1.3** Move `workers/ralph/IMPLEMENTATION_PLAN.md` → `workers/IMPLEMENTATION_PLAN.md`
+- [x] **9.1.3** Move `workers/ralph/IMPLEMENTATION_PLAN.md` → `workers/IMPLEMENTATION_PLAN.md`
 - [ ] **9.1.4** Move `workers/ralph/THUNK.md` → `workers/THUNK.md`
 - [ ] **9.1.5** Move `workers/ralph/VALIDATION_CRITERIA.md` → `workers/VALIDATION_CRITERIA.md`
 - [ ] **9.1.6** Move `workers/ralph/thunk_ralph_tasks.sh` → `workers/thunk_ralph_tasks.sh`

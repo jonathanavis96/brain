@@ -90,7 +90,7 @@ curl -s https://raw.githubusercontent.com/user/repo/main/README.md
 
 ```bash
 # Next tasks
-grep -E '^\- \[ \]' workers/ralph/IMPLEMENTATION_PLAN.md | head -5
+grep -E '^\- \[ \]' workers/IMPLEMENTATION_PLAN.md | head -5
 
 # Recent completions
 grep -E '^\| [0-9]+' workers/ralph/THUNK.md | tail -5

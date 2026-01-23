@@ -188,7 +188,7 @@
 **Status:** COMPLETE - sync_cortex_plan.sh implemented and tested
 
 - [x] **0.S.1** Implement sync_cortex_plan.sh script
-  - **Goal:** Create automated task sync from `cortex/IMPLEMENTATION_PLAN.md` → `workers/ralph/IMPLEMENTATION_PLAN.md`
+  - **Goal:** Create automated task sync from `cortex/IMPLEMENTATION_PLAN.md` → `workers/IMPLEMENTATION_PLAN.md`
   - **Context:**
     - Protocol fully documented: `cortex/docs/TASK_SYNC_PROTOCOL.md` (343 lines)
     - Script location: `workers/ralph/sync_cortex_plan.sh` (doesn't exist yet)
@@ -901,7 +901,7 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
   - **Priority:** CRITICAL (blocks all other Cortex → Ralph task delegation)
   - **Goal:** Implement the task synchronization mechanism described in `cortex/docs/TASK_SYNC_PROTOCOL.md`
   - **Context:**
-    - Currently, there is NO automatic sync from `cortex/IMPLEMENTATION_PLAN.md` → `workers/ralph/IMPLEMENTATION_PLAN.md`
+    - Currently, there is NO automatic sync from `cortex/IMPLEMENTATION_PLAN.md` → `workers/IMPLEMENTATION_PLAN.md`
     - The protocol is documented but the script doesn't exist yet
     - Without this, Cortex must manually copy tasks or user must do it
   - **Implementation:**
@@ -910,7 +910,7 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
        - Read `cortex/IMPLEMENTATION_PLAN.md`
        - Extract tasks from Phase sections
        - Check if task already synced (via `<!-- SYNCED_FROM_CORTEX: YYYY-MM-DD -->` marker)
-       - Append new tasks to `workers/ralph/IMPLEMENTATION_PLAN.md`
+       - Append new tasks to `workers/IMPLEMENTATION_PLAN.md`
        - Add sync markers to newly synced tasks
     3. Integrate into `workers/ralph/loop.sh` startup sequence:
 
@@ -935,7 +935,7 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
 - [x] **9.1.1** Move `workers/ralph/.verify/` → `workers/.verify/`
   <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
 
-- [ ] **9.1.3** Move `workers/ralph/IMPLEMENTATION_PLAN.md` → `workers/IMPLEMENTATION_PLAN.md`
+- [x] **9.1.3** Move `workers/ralph/IMPLEMENTATION_PLAN.md` → `workers/IMPLEMENTATION_PLAN.md`
   <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
 
 - [ ] **9.1.5** Move `workers/ralph/VALIDATION_CRITERIA.md` → `workers/VALIDATION_CRITERIA.md`

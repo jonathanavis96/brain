@@ -33,13 +33,13 @@ echo ""
 
 # 2. Ralph Status
 echo "## Ralph"
-if [[ -f "workers/ralph/IMPLEMENTATION_PLAN.md" ]]; then
-    ralph_total=$(grep -cE '^\- \[(x|~| |\?)\] \*\*[0-9]' workers/ralph/IMPLEMENTATION_PLAN.md || echo "0")
-    ralph_done=$(grep -cE '^\- \[x\] \*\*[0-9]' workers/ralph/IMPLEMENTATION_PLAN.md || echo "0")
+if [[ -f "workers/IMPLEMENTATION_PLAN.md" ]]; then
+    ralph_total=$(grep -cE '^\- \[(x|~| |\?)\] \*\*[0-9]' workers/IMPLEMENTATION_PLAN.md || echo "0")
+    ralph_done=$(grep -cE '^\- \[x\] \*\*[0-9]' workers/IMPLEMENTATION_PLAN.md || echo "0")
     echo "Tasks: ${ralph_done}/${ralph_total}"
     echo ""
     echo "Next:"
-    grep -E '^\- \[ \] \*\*[0-9]' workers/ralph/IMPLEMENTATION_PLAN.md | head -3 || echo "None"
+    grep -E '^\- \[ \] \*\*[0-9]' workers/IMPLEMENTATION_PLAN.md | head -3 || echo "None"
 else
     echo "No IMPLEMENTATION_PLAN.md"
 fi
