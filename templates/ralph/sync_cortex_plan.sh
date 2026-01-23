@@ -4,7 +4,7 @@
 # Purpose: Automatically synchronize high-level tasks from Cortex's strategic
 #          plan to Ralph's execution plan.
 #
-# Usage:   bash sync_cortex_plan.sh [--dry-run] [--verbose]
+# Usage:   bash sync_cortex_plan.sh [--dry-run] [--verbose] [--reset]
 #
 # Called by: loop.sh (before each iteration)
 #
@@ -15,12 +15,13 @@ set -euo pipefail
 # Paths (relative to workers/ralph/)
 CORTEX_PLAN="../../cortex/IMPLEMENTATION_PLAN.md"
 RALPH_PLAN="../IMPLEMENTATION_PLAN.md"
-SYNC_MARKER="<!-- SYNCED_FROM_CORTEX: $(date '+%Y-%m-%d %H:%M:%S') -->"
+LAST_SYNC_FILE=".last_sync"
 LOG_PREFIX="[SYNC]"
 
 # Options
 DRY_RUN=false
 VERBOSE=false
+RESET=false
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -31,6 +32,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --verbose)
       VERBOSE=true
+      shift
+      ;;
+    --reset)
+      RESET=true
       shift
       ;;
     *)
@@ -55,6 +60,17 @@ log_error() {
   echo "$LOG_PREFIX [ERROR] $*" >&2
 }
 
+# Handle --reset flag
+if [[ "$RESET" == "true" ]]; then
+  if [[ -f "$LAST_SYNC_FILE" ]]; then
+    rm -f "$LAST_SYNC_FILE"
+    log_info "Sync state cleared - .last_sync file removed"
+  else
+    log_info "No sync state to clear - .last_sync file doesn't exist"
+  fi
+  exit 0
+fi
+
 # Check if cortex plan exists
 if [[ ! -f "$CORTEX_PLAN" ]]; then
   log_error "Cortex plan not found: $CORTEX_PLAN"
@@ -67,18 +83,15 @@ if [[ ! -f "$RALPH_PLAN" ]]; then
   log_info "Bootstrap mode - creating Ralph's plan from Cortex"
 
   if [[ "$DRY_RUN" == "true" ]]; then
-    log_info "[DRY RUN] Would copy $CORTEX_PLAN → $RALPH_PLAN with sync markers"
+    log_info "[DRY RUN] Would copy $CORTEX_PLAN → $RALPH_PLAN"
     exit 0
   fi
 
-  # Copy cortex plan and add single sync marker at section headers only
-  while IFS= read -r line; do
-    echo "$line"
-    # Add marker after section headers (lines starting with "## Phase")
-    if [[ "$line" =~ ^##[[:space:]]Phase ]]; then
-      echo "$SYNC_MARKER"
-    fi
-  done <"$CORTEX_PLAN" >"$RALPH_PLAN"
+  # Copy cortex plan
+  cp "$CORTEX_PLAN" "$RALPH_PLAN"
+
+  # Record all synced headers
+  grep "^## Phase" "$CORTEX_PLAN" >"$LAST_SYNC_FILE"
 
   log_info "Bootstrap complete - Ralph's plan created"
   exit 0
@@ -89,59 +102,60 @@ log_verbose "Incremental sync mode"
 
 # Check if cortex plan is newer
 if [[ "$CORTEX_PLAN" -nt "$RALPH_PLAN" ]]; then
-  log_info "Cortex plan has updates - checking for new tasks"
+  log_info "Cortex plan has updates - checking for new sections"
 else
   log_verbose "No updates needed - Ralph's plan is current"
   exit 0
 fi
 
-log_info "Cortex plan has updates - checking for new tasks"
+# Read already-synced headers from .last_sync file
+declare -A synced_headers
+if [[ -f "$LAST_SYNC_FILE" ]]; then
+  while IFS= read -r header_line; do
+    synced_headers["$header_line"]=1
+    log_verbose "Already synced: $header_line"
+  done <"$LAST_SYNC_FILE"
+fi
 
-# Extract sections from Ralph's plan that have sync markers
-declare -A synced_sections
-current_section=""
+# Find the Cortex sync marker in Ralph's plan
+marker_line=$(grep -n "^<!-- Cortex adds new Task Contracts below this line -->" "$RALPH_PLAN" | cut -d: -f1 || echo "")
 
-while IFS= read -r line; do
-  # Check for section headers
-  if [[ "$line" =~ ^##[[:space:]]Phase[[:space:]]([0-9A-Z-]+): ]]; then
-    current_section="${BASH_REMATCH[1]}"
-  elif [[ "$line" =~ SYNCED_FROM_CORTEX ]] && [[ -n "$current_section" ]]; then
-    synced_sections["$current_section"]=1
-    log_verbose "Already synced section: Phase $current_section"
-  fi
-done <"$RALPH_PLAN"
+if [[ -z "$marker_line" ]]; then
+  log_error "Sync marker not found in Ralph's plan"
+  log_error "Expected: <!-- Cortex adds new Task Contracts below this line -->"
+  exit 1
+fi
 
-# Find new sections in Cortex plan (append-only model)
+# Extract new sections from Cortex plan
 new_sections_found=0
 tmp_file=$(mktemp)
 in_new_section=false
 
 while IFS= read -r line; do
   # Check if this is a section header
-  if [[ "$line" =~ ^##[[:space:]]Phase[[:space:]]([0-9A-Z-]+): ]]; then
-    phase_id="${BASH_REMATCH[1]}"
-
-    # Check if this section is already synced
-    if [[ -z "${synced_sections[$phase_id]:-}" ]]; then
-      log_info "New section found: Phase $phase_id"
+  if [[ "$line" =~ ^##[[:space:]]Phase ]]; then
+    # Check if this header is already synced
+    if [[ -z "${synced_headers[$line]:-}" ]]; then
+      log_info "New section found: $line"
       new_sections_found=$((new_sections_found + 1))
       in_new_section=true
 
-      # Add section header and sync marker
-      {
-        echo "$line"
-        echo "$SYNC_MARKER"
-        echo ""
-      } >>"$tmp_file"
+      # Add blank line before section (except first)
+      if [[ "$new_sections_found" -gt 1 ]]; then
+        echo "" >>"$tmp_file"
+      fi
+
+      # Add section header
+      echo "$line" >>"$tmp_file"
     else
       in_new_section=false
     fi
   elif [[ "$in_new_section" == "true" ]]; then
     # Copy all content from new section until next section header
     if [[ "$line" =~ ^##[[:space:]]Phase ]]; then
-      # Hit next section, stop copying
+      # Hit next section, stop copying this section
       in_new_section=false
-      # Don't echo this line - it will be processed in next iteration
+      # Process this line in next iteration (don't echo yet)
       continue
     fi
     echo "$line" >>"$tmp_file"
@@ -154,18 +168,35 @@ if [[ "$new_sections_found" -eq 0 ]]; then
   exit 0
 fi
 
-# Append new sections to Ralph's plan
+# Show what would be added in dry-run mode
 if [[ "$DRY_RUN" == "true" ]]; then
-  log_info "[DRY RUN] Would append $new_sections_found new sections:"
+  log_info "[DRY RUN] Would append $new_sections_found new sections below line $marker_line:"
   cat "$tmp_file"
   rm -f "$tmp_file"
   exit 0
 fi
 
-log_info "Appending $new_sections_found new sections to Ralph's plan"
+log_info "Appending $new_sections_found new sections to Ralph's plan (after line $marker_line)"
 
-# Append at end (append-only model)
-cat "$tmp_file" >>"$RALPH_PLAN"
+# Insert new sections after the marker line
+# Create temporary output file
+tmp_output=$(mktemp)
+
+# Copy lines 1 through marker_line, add blank line, append new sections
+{
+  head -n "$marker_line" "$RALPH_PLAN"
+  echo ""
+  cat "$tmp_file"
+} >"$tmp_output"
+
+# Append remainder of Ralph's plan (after marker line)
+tail -n +$((marker_line + 1)) "$RALPH_PLAN" >>"$tmp_output"
+
+# Replace Ralph's plan with updated version
+mv "$tmp_output" "$RALPH_PLAN"
+
+# Update .last_sync with all headers from Cortex (not just new ones)
+grep "^## Phase" "$CORTEX_PLAN" >"$LAST_SYNC_FILE"
 
 rm -f "$tmp_file"
 log_info "Sync complete - $new_sections_found sections added"
