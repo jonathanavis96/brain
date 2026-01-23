@@ -2,8 +2,30 @@
 
 **Status:** Ready for BUILD execution  
 **Branch:** `brain-work`  
-**Last Updated:** 2026-01-23 14:45:00  
-**Progress:** 60 pending tasks across 5 phases
+**Last Updated:** 2026-01-23 17:00:00  
+**Progress:** Phases 1-5 active
+
+---
+
+## Phase 0-CRITICAL: Fix Broken Task Monitor & Sync (5 tasks)
+
+**Goal:** Fix `current_ralph_tasks.sh` (broken path) and sync script issues.
+
+### 0-C.1: Fix Path References
+
+- [ ] **0.C.1** Fix `workers/ralph/current_ralph_tasks.sh` line 25 - change `PLAN_FILE="$RALPH_DIR/IMPLEMENTATION_PLAN.md"` to `PLAN_FILE="$RALPH_DIR/../IMPLEMENTATION_PLAN.md"`
+- [ ] **0.C.2** Fix `templates/ralph/current_ralph_tasks.sh` - same path fix for template
+
+### 0-C.2: Rewrite Sync Script
+
+- [ ] **0.C.3** Rewrite `workers/ralph/sync_cortex_plan.sh`:
+  - Fix timestamp: `$(date +%Y-%m-%d)` → `$(date '+%Y-%m-%d %H:%M:%S')`
+  - Remove per-task `<!-- SYNCED_FROM_CORTEX -->` markers
+  - Single marker at section header only
+  - Append-only model (never touch existing tasks)
+- [ ] **0.C.4** Fix `templates/ralph/sync_cortex_plan.sh` - same rewrite
+
+**AC:** `bash current_ralph_tasks.sh` shows tasks; sync markers only at section headers
 
 ---
 
@@ -29,13 +51,12 @@ Add Quick Reference tables to skills files following SUMMARY.md pattern.
 - [x] **2.1.1** Fix SC2016 in `setup.sh` line 70 - grep pattern with literal $HOME
   - **Note:** False positive - single quotes intentional for literal string search
 - [x] **2.1.2** Fix SC2129 in `setup.sh` line 75 - consolidate multiple redirects
-  - **Fix:** Combine echo statements into single redirect block
 - [x] **2.1.3** Fix SC2016 in `setup.sh` line 77 - echo with literal $HOME
   - **Note:** Intentional - we want literal $HOME in .bashrc
 
 ### Phase 2.2: Template Shellcheck Issues (10 tasks)
 
-- [ ] **2.2.1** Fix SC2034 (unused RUNNER) in `templates/cortex/cortex.bash` line 64
+- [x] **2.2.1** Fix SC2034 (unused RUNNER) in `templates/cortex/cortex.bash` line 64
 - [ ] **2.2.2** Fix SC2034 (unused CONFIG_FLAG) in `templates/cortex/cortex.bash` line 107
 - [ ] **2.2.3** Fix SC2086 (unquoted CONFIG_FLAG) in `templates/cortex/one-shot.sh` lines 257, 261
 - [ ] **2.2.4** Fix SC2162 (read without -r) in `templates/ralph/current_ralph_tasks.sh` lines 261, 558
@@ -66,9 +87,7 @@ Add Quick Reference tables to skills files following SUMMARY.md pattern.
 ### Phase 2.5: shfmt Formatting (2 tasks)
 
 - [ ] **2.5.1** Fix shfmt formatting in `workers/ralph/current_ralph_tasks.sh`
-  - **Fix:** Run `shfmt -w -i 2 workers/ralph/current_ralph_tasks.sh`
 - [ ] **2.5.2** Fix shfmt formatting in `workers/ralph/thunk_ralph_tasks.sh`
-  - **Fix:** Run `shfmt -w -i 2 workers/ralph/thunk_ralph_tasks.sh`
 
 ### Phase 2.6: Final Verification (1 task)
 
@@ -105,9 +124,9 @@ Add Quick Reference tables to skills files following SUMMARY.md pattern.
 - [ ] **3.4.2** Remove cerebras runner dispatch code from `workers/ralph/loop.sh`
 - [ ] **3.4.3** Remove `--runner cerebras` option from help text and argument parsing
 
-### Phase 3.5: Update All Path References (4 tasks)
+### Phase 3.5: Update All Path References (3 tasks)
 
-- [ ] **3.5.1** Update `workers/ralph/current_ralph_tasks.sh` to reference `../IMPLEMENTATION_PLAN.md`
+- [x] **3.5.1** Update `workers/ralph/current_ralph_tasks.sh` to reference `../IMPLEMENTATION_PLAN.md` → **MOVED to Phase 0-CRITICAL as 0.C.1**
 - [ ] **3.5.2** Update `workers/ralph/pr-batch.sh` path references if needed
 - [ ] **3.5.3** Update `cortex/snapshot.sh` to reference new shared paths
 - [ ] **3.5.4** Update root `AGENTS.md` with new worker structure documentation
@@ -119,8 +138,6 @@ Add Quick Reference tables to skills files following SUMMARY.md pattern.
 - [ ] **3.6.3** Update hash baselines in `workers/.verify/` for moved files
 
 ### Phase 3.7: Additional Shellcheck Fixes for Separation (10 tasks)
-
-These were discovered during pre-commit scans and relate to the separation work:
 
 - [ ] **3.7.1** Fix SC2034 (unused SECTION_HEADER) in `workers/ralph/current_ralph_tasks.sh` line 53
 - [ ] **3.7.2** Fix SC2034 (unused FIRST_RUN) in `workers/ralph/current_ralph_tasks.sh` line 90
@@ -149,9 +166,7 @@ These were discovered during pre-commit scans and relate to the separation work:
 
 ---
 
-## Phase 5: Cortex Plan Sync (from cortex/IMPLEMENTATION_PLAN.md)
-
-Tasks synced from Cortex that aren't covered above:
+## Phase 5: Documentation & Terminology (6 tasks)
 
 ### Task 5.1: Update README.md with setup instructions
 
@@ -197,237 +212,4 @@ Tasks synced from Cortex that aren't covered above:
 
 ---
 
-<!-- Cortex will add new Task Contracts above this line -->
-
-## Phase 0-Synced: Synced Tasks from Cortex
-
-- [x] **1.1** Add Quick Reference table to `skills/domains/code-quality/code-hygiene.md`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [x] **1.3** Add Quick Reference table to `skills/domains/languages/shell/strict-mode.md`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [x] **1.5** Add Quick Reference table to `skills/domains/backend/database-patterns.md`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [x] **2.1.1** Fix SC2016 in `setup.sh` line 70 - grep pattern with literal $HOME
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-  - **Note:** False positive - single quotes intentional for literal string search
-
-- [x] **2.1.3** Fix SC2016 in `setup.sh` line 77 - echo with literal $HOME
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-  - **Note:** Intentional - we want literal $HOME in .bashrc
-
-- [x] **2.2.1** Fix SC2034 (unused RUNNER) in `templates/cortex/cortex.bash` line 64
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.2.3** Fix SC2086 (unquoted CONFIG_FLAG) in `templates/cortex/one-shot.sh` lines 257, 261
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.2.5** Fix SC2162 (read without -r) in `templates/ralph/loop.sh` lines 457, 498
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.2.7** Fix SC2086 (unquoted attach_flag) in `templates/ralph/loop.sh` line 765
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.2.9** Fix SC2162 (read without -r) in `templates/ralph/pr-batch.sh` line 191
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.3.1** Fix SC2034 (unused week_num) in `workers/ralph/pr-batch.sh` line 102
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.3.3** Fix SC2155 (declare/assign separately) in `workers/ralph/render_ac_status.sh` lines 25,26,29,30,31,32,111,114
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.3.5** Fix SC2086 (quote variable) in `workers/ralph/sync_cortex_plan.sh` line 164
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.3.7** Fix SC2162 (read without -r) in `workers/ralph/thunk_ralph_tasks.sh` line 379
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.4.1** Fix MD032 (blank lines around lists) in markdown files
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.4.3** Fix MD022 (blank lines around headings) in markdown files
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.5.1** Fix shfmt formatting in `workers/ralph/current_ralph_tasks.sh`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-  - **Fix:** Run `shfmt -w -i 2 workers/ralph/current_ralph_tasks.sh`
-
-- [ ] **2.6.1** Run full pre-commit and verify all pass
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-  - **AC:** `pre-commit run --all-files` exits with code 0
-
-- [ ] **3.1.1** Move `workers/ralph/VALIDATION_CRITERIA.md` → `workers/VALIDATION_CRITERIA.md`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.1.3** Move `workers/ralph/render_ac_status.sh` → `workers/render_ac_status.md`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.2.1** Create `workers/cerebras/` directory
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.2.3** Create `workers/cerebras/NEURONS.md` (cerebras-specific structure map)
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.3.1** Copy `workers/ralph/loop.sh` → `workers/cerebras/loop.sh`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.3.3** Set default runner to `cerebras` (remove runner selection logic)
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.4.1** Remove `resolve_model_cerebras()` function from `workers/ralph/loop.sh`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.4.3** Remove `--runner cerebras` option from help text and argument parsing
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.5.1** Update `workers/ralph/current_ralph_tasks.sh` to reference `../IMPLEMENTATION_PLAN.md`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.5.3** Update `cortex/snapshot.sh` to reference new shared paths
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.6.1** Run `bash workers/verifier.sh` and confirm all checks pass
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.6.3** Update hash baselines in `workers/.verify/` for moved files
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.7.1** Fix SC2034 (unused SECTION_HEADER) in `workers/ralph/current_ralph_tasks.sh` line 53
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.7.3** Fix SC2086 (unquoted var) in `workers/ralph/current_ralph_tasks.sh` line 488
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.7.5** Fix SC2086 (unquoted phase7_line) in `workers/ralph/current_ralph_tasks.sh` line 515
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.7.7** Fix SC2162 (read -r) in `workers/ralph/current_ralph_tasks.sh` lines 261, 558
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.7.9** Fix SC2002 (useless cat) in `workers/ralph/loop.sh` line 666
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **4.1** Run `shfmt -w -i 2 workers/ralph/*.sh templates/ralph/*.sh` to normalize all shell scripts
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-  - **AC:** `shfmt -d workers/ralph/*.sh templates/ralph/*.sh` returns no diff
-
-- [ ] **5.1.1** Add Quick Start section to README.md
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **5.1.3** Add available commands examples
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **5.2.1** Update `templates/AGENTS.project.md`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **5.2.3** Update `templates/python/AGENTS.project.md`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **5.3.1** Copy `skills/self-improvement/SKILL_TEMPLATE.md` to `templates/ralph/SKILL_TEMPLATE.md`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **5.4.1** Edit `templates/NEURONS.project.md` - replace "Brain KB" with "Brain Skills"
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **5.5.1** In `parse_new_thunk_entries()`, clear OLD footer lines before redrawing
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **5.6.1** Update `workers/ralph/.maintenance/verify-brain.sh` to use correct paths
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-## Phase 0-Synced: Tasks from Cortex
-
-- [x] **1.2** Add Quick Reference table to `skills/domains/languages/shell/common-pitfalls.md`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [x] **1.4** Add Quick Reference table to `skills/domains/languages/shell/variable-patterns.md`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [x] **2.1.2** Fix SC2129 in `setup.sh` line 75 - consolidate multiple redirects
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-  - **Fix:** Combine echo statements into single redirect block
-
-- [ ] **2.2.2** Fix SC2034 (unused CONFIG_FLAG) in `templates/cortex/cortex.bash` line 107
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.2.4** Fix SC2162 (read without -r) in `templates/ralph/current_ralph_tasks.sh` lines 261, 558
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.2.6** Fix SC2002 (useless cat) in `templates/ralph/loop.sh` line 666
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.2.8** Fix SC2034 (unused week_num) in `templates/ralph/pr-batch.sh` line 103
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.2.10** Fix SC2162 (read without -r) in `templates/ralph/thunk_ralph_tasks.sh` line 379
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.3.2** Fix SC2162 (read without -r) in `workers/ralph/pr-batch.sh` line 190
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.3.4** Fix SC2129 (consolidate redirects) in `workers/ralph/sync_cortex_plan.sh` line 160
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.3.6** Fix SC2129 (consolidate redirects) in `workers/ralph/sync_cortex_plan.sh` line 168
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.3.8** Fix SC2094 (read/write same file) in `workers/ralph/verifier.sh` lines 395-396 - **PROTECTED FILE**
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.4.2** Fix MD031 (blank lines around fences) in markdown files
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **2.5.2** Fix shfmt formatting in `workers/ralph/thunk_ralph_tasks.sh`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-  - **Fix:** Run `shfmt -w -i 2 workers/ralph/thunk_ralph_tasks.sh`
-
-- [ ] **3.1.2** Move `workers/ralph/sync_cortex_plan.sh` → `workers/sync_cortex_plan.sh`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.2.2** Move `workers/ralph/PROMPT_cerebras.md` → `workers/cerebras/PROMPT_cerebras.md`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.3.2** Remove opencode runner code from `workers/cerebras/loop.sh`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.4.2** Remove cerebras runner dispatch code from `workers/ralph/loop.sh`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.5.2** Update `workers/ralph/pr-batch.sh` path references if needed
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.5.4** Update root `AGENTS.md` with new worker structure documentation
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.6.2** Test `bash workers/cerebras/loop.sh --help` works correctly
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.7.2** Fix SC2034 (unused FIRST_RUN) in `workers/ralph/current_ralph_tasks.sh` line 90
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.7.4** Fix SC2155 (local/assign) in `workers/ralph/current_ralph_tasks.sh` line 509
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.7.6** Fix SC2155 (local/assign) in `workers/ralph/pr-batch.sh` lines 102, 190
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.7.8** Fix SC2162 (read -r) in `workers/ralph/loop.sh` lines 457, 498
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **3.7.10** Fix SC2086 (unquoted attach_flag) in `workers/ralph/loop.sh` line 765
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **5.1.2** Document what setup.sh does
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **5.2.2** Update `templates/backend/AGENTS.project.md`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **5.2.4** Update `templates/cortex/AGENTS.project.md`
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
-
-- [ ] **5.5.2** Update `LAST_CONTENT_ROW` BEFORE redrawing footer
-  <!-- SYNCED_FROM_CORTEX: 2026-01-23 -->
+<!-- Cortex adds new tasks above this line via sync_cortex_plan.sh -->
