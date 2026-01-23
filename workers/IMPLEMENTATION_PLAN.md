@@ -79,7 +79,7 @@
 
 - [x] **3.1.1** Create `workers/shared/` directory for common functions
 - [x] **3.1.2** Extract common functions from `loop.sh` to `workers/shared/common.sh`
-- [ ] **3.1.3** Create `workers/shared/verifier_common.sh` for shared verification logic
+- [x] **3.1.3** Create `workers/shared/verifier_common.sh` for shared verification logic
 
 ### Phase 3.2: Create `workers/cerebras/` Directory (3 tasks)
 
