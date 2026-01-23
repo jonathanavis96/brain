@@ -35,3 +35,4 @@ ralph/test-rovodev-integration.sh
 .venv/
 .git.new-only-backup/
 *.har
+rovodev-config.local.yml
