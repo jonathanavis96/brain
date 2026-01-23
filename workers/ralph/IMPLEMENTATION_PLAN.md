@@ -917,7 +917,7 @@ Review each item against the rewritten IMPLEMENTATION_PLAN.md. For each:
 
 ### Phase 7-2: Template Maintenance Section
 
-- [ ] **7.2.1** Add `## MAINTENANCE` section to `templates/ralph/PROMPT.md`
+- [x] **7.2.1** Add `## MAINTENANCE` section to `templates/ralph/PROMPT.md`
   - **Note:** templates/ralph/PROMPT.md appears to exist (maintenance script found it)
   - **AC:** `grep -c '## MAINTENANCE' templates/ralph/PROMPT.md` returns non-zero
   - **Commit:** `docs(templates): add MAINTENANCE section to PROMPT.md`

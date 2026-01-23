@@ -4,7 +4,7 @@ You are Ralph. Mode is passed by loop.sh header.
 
 ## Core Mechanics
 
-Read `../brain/workers/ralph/PROMPT.md` for full Ralph loop mechanics (PLANNING vs BUILDING modes, commit flow, stop conditions).
+Read `../brain/templates/ralph/PROMPT.md` for full Ralph loop mechanics (PLANNING vs BUILDING modes, commit flow, stop conditions).
 
 ## Project Context Files
 
