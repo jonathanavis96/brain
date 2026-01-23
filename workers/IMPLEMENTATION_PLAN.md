@@ -45,7 +45,7 @@
 
 ### Phase 3.1: Create Shared Infrastructure in `/workers/` (3 tasks)
 
-- [ ] **3.1.1** Create `workers/shared/` directory for common functions
+- [x] **3.1.1** Create `workers/shared/` directory for common functions
 - [ ] **3.1.2** Extract common functions from `loop.sh` to `workers/shared/common.sh`
 - [ ] **3.1.3** Create `workers/shared/verifier_common.sh` for shared verification logic
 
