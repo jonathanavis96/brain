@@ -89,6 +89,16 @@ bash cortex/snapshot.sh
 - ❌ Wrong: `2026-01-21 20:15` (missing seconds)
 - ❌ Wrong: `2026-01-21` (missing time)
 
+## Markdown Creation Standards
+
+When creating `.md` files, ALWAYS:
+
+1. **Add language tags to code blocks** - Use ` ```bash `, ` ```text `, never bare ` ``` `
+2. **Add blank lines** before/after code blocks, lists, and headings
+3. **Run `markdownlint <file>`** before committing
+
+See `skills/self-improvement/SKILL_TEMPLATE.md` Pre-Commit Checklist for details.
+
 ## Remember
 
 - **You plan, Ralph executes** - Don't implement code yourself
