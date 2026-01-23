@@ -9,13 +9,13 @@
 | Failed Rule Pattern | What It Means | Where to Find Fix |
 |---------------------|---------------|-------------------|
 | `Protected.*` | Protected file hash mismatch (loop.sh, verifier.sh, PROMPT.md modified) | **HUMAN INTERVENTION REQUIRED** - You cannot fix this. Report to human. |
-| `Hygiene.Shellcheck.1` | SC2034: Unused variables in current_ralph_tasks.sh | [Shell Variable Patterns](domains/shell/variable-patterns.md) - See "SC2034: Unused Variable" |
-| `Hygiene.Shellcheck.2` | SC2155: Declare and assign separately in current_ralph_tasks.sh | [Shell Variable Patterns](domains/shell/variable-patterns.md) - See "SC2155: Masked Return Values" |
-| `Hygiene.Shellcheck.3` | SC2034: Unused variables in thunk_ralph_tasks.sh | [Shell Variable Patterns](domains/shell/variable-patterns.md) |
-| `Hygiene.Shellcheck.4` | SC2155: Declare and assign separately in thunk_ralph_tasks.sh | [Shell Variable Patterns](domains/shell/variable-patterns.md) |
-| `Hygiene.Markdown.*` | Missing code fence language tags, duplicate headings | [Markdown Patterns](domains/markdown-patterns.md) - See MD040, MD024 |
-| `Hygiene.TermSync.*` | Terminology inconsistency in documentation | [Code Consistency](domains/code-consistency.md) |
-| `Hygiene.TemplateSync.*` | Template files out of sync | [Code Consistency](domains/code-consistency.md) |
+| `Hygiene.Shellcheck.1` | SC2034: Unused variables in current_ralph_tasks.sh | [Shell Variable Patterns](domains/languages/shell/variable-patterns.md) - See "SC2034: Unused Variable" |
+| `Hygiene.Shellcheck.2` | SC2155: Declare and assign separately in current_ralph_tasks.sh | [Shell Variable Patterns](domains/languages/shell/variable-patterns.md) - See "SC2155: Masked Return Values" |
+| `Hygiene.Shellcheck.3` | SC2034: Unused variables in thunk_ralph_tasks.sh | [Shell Variable Patterns](domains/languages/shell/variable-patterns.md) |
+| `Hygiene.Shellcheck.4` | SC2155: Declare and assign separately in thunk_ralph_tasks.sh | [Shell Variable Patterns](domains/languages/shell/variable-patterns.md) |
+| `Hygiene.Markdown.*` | Missing code fence language tags, duplicate headings | [Markdown Patterns](domains/code-quality/markdown-patterns.md) - See MD040, MD024 |
+| `Hygiene.TermSync.*` | Terminology inconsistency in documentation | [Code Consistency](domains/code-quality/code-consistency.md) |
+| `Hygiene.TemplateSync.*` | Template files out of sync | [Code Consistency](domains/code-quality/code-consistency.md) |
 | `AntiCheat.*` | Forbidden pattern/marker detected in code | **Remove the flagged marker/phrase from your code** |
 | `freshness_check` | Verifier infrastructure issue (run_id mismatch) | **HUMAN INTERVENTION REQUIRED** - Report to human |
 | `init_baselines` | Verifier baseline initialization failed | **HUMAN INTERVENTION REQUIRED** - Report to human |
@@ -24,13 +24,13 @@
 
 | Error Type | Symptoms | Skill Reference |
 |------------|----------|-----------------|
-| **Shell/Bash errors** | Command not found, syntax errors, exit code != 0 | [Shell README](domains/shell/README.md), [Common Pitfalls](domains/shell/common-pitfalls.md) |
-| **ShellCheck warnings** | SC2034, SC2155, SC2086, etc. | [Variable Patterns](domains/shell/variable-patterns.md), [Strict Mode](domains/shell/strict-mode.md) |
-| **Python errors** | ImportError, AttributeError, TypeError, scope errors ("cannot access local variable") | [Python Patterns](domains/python-patterns.md) |
-| **API/HTTP errors** | 401, 403, 429, 500, timeout | [Error Handling Patterns](domains/error-handling-patterns.md), [API Design Patterns](domains/api-design-patterns.md) |
-| **Git errors** | Merge conflicts, detached HEAD, push rejected | [Deployment Patterns](domains/deployment-patterns.md) |
-| **JSON/Config errors** | Parse errors, missing keys, invalid values | [Config Patterns](domains/config-patterns.md) |
-| **Test failures** | Assert errors, mock issues, timeout | [Testing Patterns](domains/testing-patterns.md) |
+| **Shell/Bash errors** | Command not found, syntax errors, exit code != 0 | [Shell README](domains/languages/shell/README.md), [Common Pitfalls](domains/languages/shell/common-pitfalls.md) |
+| **ShellCheck warnings** | SC2034, SC2155, SC2086, etc. | [Variable Patterns](domains/languages/shell/variable-patterns.md), [Strict Mode](domains/languages/shell/strict-mode.md) |
+| **Python errors** | ImportError, AttributeError, TypeError, scope errors ("cannot access local variable") | [Python Patterns](domains/languages/python/python-patterns.md) |
+| **API/HTTP errors** | 401, 403, 429, 500, timeout | [Error Handling Patterns](domains/backend/error-handling-patterns.md), [API Design Patterns](domains/backend/api-design-patterns.md) |
+| **Git errors** | Merge conflicts, detached HEAD, push rejected | [Deployment Patterns](domains/infrastructure/deployment-patterns.md) |
+| **JSON/Config errors** | Parse errors, missing keys, invalid values | [Config Patterns](domains/backend/config-patterns.md) |
+| **Test failures** | Assert errors, mock issues, timeout | [Testing Patterns](domains/code-quality/testing-patterns.md) |
 | **Build/compile errors** | Missing dependencies, syntax errors | Check project-specific docs in [Projects](projects/) |
 
 ### Quick Action Guide
@@ -85,12 +85,12 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
   - [Error Handling Patterns](domains/backend/error-handling-patterns.md) - Exception handling, error boundaries, retry strategies
   - [Security Patterns](domains/infrastructure/security-patterns.md) - Input validation, secrets management, secure defaults
   - [State Management Patterns](domains/infrastructure/state-management-patterns.md) - React state, global stores, persistence
-  - **[Shell Scripting](domains/shell/README.md)** - Bash best practices, ShellCheck patterns, cleanup/traps
-    - [Strict Mode](domains/shell/strict-mode.md) - `set -euo pipefail` patterns
-    - [Variable Patterns](domains/shell/variable-patterns.md) - SC2155, SC2034, scoping
-    - [Cleanup Patterns](domains/shell/cleanup-patterns.md) - Traps, temp files, state restoration
-    - [Common Pitfalls](domains/shell/common-pitfalls.md) - TTY guards, magic numbers, DRY
-    - [Validation Patterns](domains/shell/validation-patterns.md) - Shell project validation (syntax, shellcheck, permissions, security)
+  - **[Shell Scripting](domains/languages/shell/README.md)** - Bash best practices, ShellCheck patterns, cleanup/traps
+    - [Strict Mode](domains/languages/shell/strict-mode.md) - `set -euo pipefail` patterns
+    - [Variable Patterns](domains/languages/shell/variable-patterns.md) - SC2155, SC2034, scoping
+    - [Cleanup Patterns](domains/languages/shell/cleanup-patterns.md) - Traps, temp files, state restoration
+    - [Common Pitfalls](domains/languages/shell/common-pitfalls.md) - TTY guards, magic numbers, DRY
+    - [Validation Patterns](domains/languages/shell/validation-patterns.md) - Shell project validation (syntax, shellcheck, permissions, security)
   - **[Website Development](domains/websites/README.md)** - Website development overview
     - **Architecture**
       - [Section Composer](domains/websites/architecture/section-composer.md) - Section-based page composition
