@@ -123,7 +123,7 @@
 
 ### Task 5.2: Fix KB→Skills terminology in templates
 
-- [ ] **5.2.1** Update `templates/AGENTS.project.md`
+- [x] **5.2.1** Update `templates/AGENTS.project.md`
 - [ ] **5.2.2** Update `templates/backend/AGENTS.project.md`
 - [ ] **5.2.3** Update `templates/python/AGENTS.project.md`
 - [ ] **5.2.4** Update `templates/cortex/AGENTS.project.md`
