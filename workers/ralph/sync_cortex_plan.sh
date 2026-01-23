@@ -117,8 +117,8 @@ if [[ -f "$LAST_SYNC_FILE" ]]; then
   done <"$LAST_SYNC_FILE"
 fi
 
-# Find the Cortex sync marker in Ralph's plan
-marker_line=$(grep -n "^<!-- Cortex adds new Task Contracts below this line -->" "$RALPH_PLAN" | cut -d: -f1 || echo "")
+# Find the Cortex sync marker in Ralph's plan (take first occurrence)
+marker_line=$(grep -n "^<!-- Cortex adds new Task Contracts below this line -->" "$RALPH_PLAN" | head -1 | cut -d: -f1 || echo "")
 
 if [[ -z "$marker_line" ]]; then
   log_error "Sync marker not found in Ralph's plan"
