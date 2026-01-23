@@ -82,7 +82,7 @@ See **workers/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown.
 
 **Note:** These are from the latest verifier run (2026-01-23 14:07:49). Each warning needs investigation to determine if it's a real issue or requires a waiver.
 
-- [x] **WARN.Template.1.workers-ralph** Template.1 (auto check failed but warn gate) - Investigate template synchronization issue in workers/ralph/
+- [x] **WARN.Template.1.workers-ralph** Template.1 (auto check failed but warn gate) - Files already synchronized (identical md5sums), warning was stale from previous verifier run
 - [x] **WARN.Hygiene.TemplateSync.1** Hygiene.TemplateSync.1 (auto check failed but warn gate) - Fixed case statement indentation in workers/ralph/current_ralph_tasks.sh to match templates/ralph/ (converted 2-space to 4-space indentation inside case block)
 - [x] **WARN.Hygiene.TemplateSync.2** Hygiene.TemplateSync.2 (auto check failed but warn gate) - Already resolved, templates and workers match, no diff found
 - [x] **WARN.Lint.Shellcheck.LoopSh** Lint.Shellcheck.LoopSh (auto check failed but warn gate) - Already resolved, shellcheck passes with 0 violations

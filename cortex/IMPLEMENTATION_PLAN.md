@@ -23,11 +23,11 @@
 
 Add Quick Reference tables to skills files following SUMMARY.md pattern.
 
-- [ ] **1.1** Add Quick Reference table to `skills/domains/code-quality/code-hygiene.md`
-- [ ] **1.2** Add Quick Reference table to `skills/domains/languages/shell/common-pitfalls.md`
-- [ ] **1.3** Add Quick Reference table to `skills/domains/languages/shell/strict-mode.md`
-- [ ] **1.4** Add Quick Reference table to `skills/domains/languages/shell/variable-patterns.md`
-- [ ] **1.5** Add Quick Reference table to `skills/domains/backend/database-patterns.md`
+- [x] **1.1** Add Quick Reference table to `skills/domains/code-quality/code-hygiene.md`
+- [x] **1.2** Add Quick Reference table to `skills/domains/languages/shell/common-pitfalls.md`
+- [x] **1.3** Add Quick Reference table to `skills/domains/languages/shell/strict-mode.md`
+- [x] **1.4** Add Quick Reference table to `skills/domains/languages/shell/variable-patterns.md`
+- [x] **1.5** Add Quick Reference table to `skills/domains/backend/database-patterns.md`
 
 **AC:** Each file has a Quick Reference section  
 **Commit:** `docs(skills): add Quick Reference tables`
@@ -38,11 +38,11 @@ Add Quick Reference tables to skills files following SUMMARY.md pattern.
 
 ### Phase 2.1: setup.sh Issues (3 tasks)
 
-- [ ] **2.1.1** Fix SC2016 in `setup.sh` line 70 - grep pattern with literal $HOME
+- [x] **2.1.1** Fix SC2016 in `setup.sh` line 70 - grep pattern with literal $HOME
   - **Note:** False positive - single quotes intentional for literal string search
-- [ ] **2.1.2** Fix SC2129 in `setup.sh` line 75 - consolidate multiple redirects
+- [x] **2.1.2** Fix SC2129 in `setup.sh` line 75 - consolidate multiple redirects
   - **Fix:** Combine echo statements into single redirect block
-- [ ] **2.1.3** Fix SC2016 in `setup.sh` line 77 - echo with literal $HOME
+- [x] **2.1.3** Fix SC2016 in `setup.sh` line 77 - echo with literal $HOME
   - **Note:** Intentional - we want literal $HOME in .bashrc
 
 ### Phase 2.2: Template Shellcheck Issues (10 tasks)
