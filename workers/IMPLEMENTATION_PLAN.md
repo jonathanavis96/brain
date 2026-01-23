@@ -93,32 +93,61 @@ These are all false positives - shellcheck passes, files are in sync:
 
 ---
 
-## Phase 7: ETA Timer for current_ralph_tasks.sh
+## Phase 7: Protected File Warning Mode
+
+**Goal:** Change protected file hash checks from blocking failures to warnings with change tracking.
+
+### Phase 7.1: Modify verifier behavior (2 tasks)
+
+- [ ] **7.1.1** Change Protected.* checks from FAIL to WARN in `workers/ralph/verifier.sh`
+  - Keep hash comparison logic
+  - Output `[WARN]` instead of `[FAIL]`
+  - Don't increment failure count for protected file mismatches
+  - **AC:** Protected file mismatches show WARN, loop continues
+
+- [ ] **7.1.2** Create `.verify/protected_changes.log` to track changes
+  - On hash mismatch, append: timestamp, filename, lines added/removed (from `git diff --stat`)
+  - Human can review this file to see what changed
+  - **AC:** File exists and logs changes when protected files modified
+
+### Phase 7.2: Update baselines and templates (2 tasks)
+
+- [ ] **7.2.1** Regenerate verifier.sh hash baselines after modification
+  - **AC:** `sha256sum verifier.sh` matches `.verify/verifier.sha256`
+
+- [ ] **7.2.2** Sync changes to `templates/ralph/verifier.sh`
+  - **AC:** `diff workers/ralph/verifier.sh templates/ralph/verifier.sh` returns no output
+
+**AC:** Protected file changes warn but don't block, changes logged for human review
+
+---
+
+## Phase 8: ETA Timer for current_ralph_tasks.sh
 
 **Goal:** Show estimated time to completion based on rolling average of task durations.
 
-### Phase 7.1: Core Implementation (3 tasks)
+### Phase 8.1: Core Implementation (3 tasks)
 
-- [ ] **7.1.1** Add ETA display line below progress bar
+- [ ] **8.1.1** Add ETA display line below progress bar
   - Format: `ETA: HH:MM:SS` or `ETA: --:--:--` when no data
   - Show `ETA: Complete` when remaining_tasks = 0
   - **AC:** ETA line visible below progress bar
 
-- [ ] **7.1.2** Track THUNK entry timestamps for duration calculation
+- [ ] **8.1.2** Track THUNK entry timestamps for duration calculation
   - Session-only (no persistence)
   - Record timestamp when new THUNK entry detected
   - Calculate duration between consecutive entries
   - **AC:** Duration tracked in memory array
 
-- [ ] **7.1.3** Implement rolling average ETA calculation
+- [ ] **8.1.3** Implement rolling average ETA calculation
   - First task: ETA = task1_time × remaining_tasks
   - Nth task: ETA = average(all_task_times) × remaining_tasks
   - Update ETA display on each THUNK change
   - **AC:** ETA updates correctly as tasks complete
 
-### Phase 7.2: Template Sync (1 task)
+### Phase 8.2: Template Sync (1 task)
 
-- [ ] **7.2.1** Sync changes to `templates/ralph/current_ralph_tasks.sh`
+- [ ] **8.2.1** Sync changes to `templates/ralph/current_ralph_tasks.sh`
   - **AC:** `diff workers/ralph/current_ralph_tasks.sh templates/ralph/current_ralph_tasks.sh` returns no output
 
 **AC:** ETA timer shows accurate estimates based on observed task completion times
