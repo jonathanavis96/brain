@@ -128,3 +128,26 @@ Common ways the agent fails here:
 
 **Result:**
 <what was produced>
+
+---
+
+## Pre-Commit Checklist (REQUIRED)
+
+Before committing any new markdown file, verify:
+
+- [ ] **Code blocks have language tags** - Use ` ```bash `, ` ```python `, ` ```text `, etc. Never bare ` ``` `
+- [ ] **Blank line before/after code blocks** - Required by MD031
+- [ ] **Blank line before/after lists** - Required by MD032
+- [ ] **Blank line after headings** - Required by MD022
+- [ ] **Run lint check** - `markdownlint <file>` shows no errors
+
+**Common language tags:**
+
+| Content Type | Tag |
+|--------------|-----|
+| Shell commands | `bash` |
+| Python code | `python` |
+| JSON/config | `json` |
+| Directory trees | `text` |
+| Generic output | `text` |
+| Markdown examples | `markdown` |

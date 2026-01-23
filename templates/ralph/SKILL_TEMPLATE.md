@@ -95,14 +95,14 @@ This skill is complete when these exist:
 ### At a Glance
 
 | Concept | Description | Example |
-|---------|-------------|---------|
+| --------- | ------------- | --------- |
 | `<key-concept-1>` | <what it means> | <brief example> |
 | `<key-concept-2>` | <what it means> | <brief example> |
 
 ### Common Mistakes
 
 | ❌ Don't | ✅ Do | Why |
-|----------|-------|-----|
+| ---------- | ------- | ----- |
 | <bad pattern> | <good pattern> | <brief explanation> |
 | <bad pattern> | <good pattern> | <brief explanation> |
 
@@ -111,7 +111,7 @@ This skill is complete when these exist:
 Common ways the agent fails here:
 
 | Failure Mode | Mitigation |
-|--------------|------------|
+| -------------- | ------------ |
 | <failure mode 1> | <how to avoid/fix> |
 | <failure mode 2> | <how to avoid/fix> |
 
@@ -123,7 +123,31 @@ Common ways the agent fails here:
 **Steps taken:**
 
 1. <step 1>
+
 2. <step 2>
 
 **Result:**
 <what was produced>
+
+---
+
+## Pre-Commit Checklist (REQUIRED)
+
+Before committing any new markdown file, verify:
+
+- [ ] **Code blocks have language tags** - Use ` ```bash `, ` ```python `, ` ```text `, etc. Never bare ` ``` `
+- [ ] **Blank line before/after code blocks** - Required by MD031
+- [ ] **Blank line before/after lists** - Required by MD032
+- [ ] **Blank line after headings** - Required by MD022
+- [ ] **Run lint check** - `markdownlint <file>` shows no errors
+
+**Common language tags:**
+
+| Content Type | Tag |
+|--------------|-----|
+| Shell commands | `bash` |
+| Python code | `python` |
+| JSON/config | `json` |
+| Directory trees | `text` |
+| Generic output | `text` |
+| Markdown examples | `markdown` |
