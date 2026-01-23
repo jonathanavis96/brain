@@ -9,6 +9,7 @@ Deploying applications to production involves complex decisions around CI/CD pip
 ## When to Use It
 
 Reference this KB file when:
+
 - Setting up CI/CD pipelines for automated deployments
 - Containerizing applications with Docker
 - Managing environment variables across dev/staging/production
@@ -19,6 +20,7 @@ Reference this KB file when:
 - Troubleshooting deployment failures
 
 **Specific triggers:**
+
 - Need to deploy a new application to production
 - Deployment failures causing downtime
 - Database migrations breaking production
@@ -30,56 +32,56 @@ Reference this KB file when:
 
 ### Deployment Strategies
 
-| Strategy | Downtime | Risk | Rollback | Best For |
-|----------|----------|------|----------|----------|
-| **Rolling** | Zero | Low | Slow | Stateless apps, k8s default |
-| **Blue/Green** | Zero | Low | Instant | Critical apps, databases |
-| **Canary** | Zero | Very Low | Instant | High-traffic, gradual rollout |
-| **Recreate** | Yes | Medium | Slow | Dev/staging, breaking changes |
-| **Feature Flags** | Zero | Very Low | Instant | Gradual features, A/B tests |
+| Strategy          | Downtime | Risk     | Rollback | Best For                      |
+|-------------------|----------|----------|----------|-------------------------------|
+| **Rolling**       | Zero     | Low      | Slow     | Stateless apps, k8s default   |
+| **Blue/Green**    | Zero     | Low      | Instant  | Critical apps, databases      |
+| **Canary**        | Zero     | Very Low | Instant  | High-traffic, gradual rollout |
+| **Recreate**      | Yes      | Medium   | Slow     | Dev/staging, breaking changes |
+| **Feature Flags** | Zero     | Very Low | Instant  | Gradual features, A/B tests   |
 
 ### CI/CD Pipeline Stages
 
-| Stage | Purpose | Fail = Block? |
-|-------|---------|---------------|
-| **Lint** | Code style, syntax | Yes |
-| **Unit Tests** | Logic correctness | Yes |
-| **Build** | Compile, bundle | Yes |
-| **Integration Tests** | API, database | Yes |
-| **Security Scan** | Vulnerabilities | Yes (critical) |
-| **Deploy to Staging** | Pre-prod validation | Yes |
-| **E2E Tests** | User flows | Yes |
-| **Deploy to Production** | Release | N/A |
+| Stage                    | Purpose             | Fail = Block?  |
+|--------------------------|---------------------|----------------|
+| **Lint**                 | Code style, syntax  | Yes            |
+| **Unit Tests**           | Logic correctness   | Yes            |
+| **Build**                | Compile, bundle     | Yes            |
+| **Integration Tests**    | API, database       | Yes            |
+| **Security Scan**        | Vulnerabilities     | Yes (critical) |
+| **Deploy to Staging**    | Pre-prod validation | Yes            |
+| **E2E Tests**            | User flows          | Yes            |
+| **Deploy to Production** | Release             | N/A            |
 
 ### Environment Configuration
 
-| Environment | Purpose | Data | Debug |
-|-------------|---------|------|-------|
-| **Local** | Development | Mock/seed | Full |
-| **Staging** | Testing | Copy of prod | Full |
-| **Production** | Live users | Real | Minimal |
+| Environment    | Purpose     | Data         | Debug   |
+|----------------|-------------|--------------|---------|
+| **Local**      | Development | Mock/seed    | Full    |
+| **Staging**    | Testing     | Copy of prod | Full    |
+| **Production** | Live users  | Real         | Minimal |
 
 ### Common Mistakes
 
-| ❌ Don't | ✅ Do |
-|---------|------|
-| Deploy without tests | Gate on test success |
-| Manual deployments | Automate with CI/CD |
-| Same config everywhere | Environment-specific configs |
-| Deploy database + code together | Migrate DB first, then deploy |
-| No rollback plan | Blue/green or quick revert |
-| Skip staging | Always test in staging first |
-| Deploy on Fridays | Deploy early in week |
-| No health checks | Liveness + readiness probes |
+| ❌ Don't                        | ✅ Do                           |
+|---------------------------------|---------------------------------|
+| Deploy without tests            | Gate on test success            |
+| Manual deployments              | Automate with CI/CD             |
+| Same config everywhere          | Environment-specific configs    |
+| Deploy database + code together | Migrate DB first, then deploy   |
+| No rollback plan                | Blue/green or quick revert      |
+| Skip staging                    | Always test in staging first    |
+| Deploy on Fridays               | Deploy early in week            |
+| No health checks                | Liveness + readiness probes     |
 
 ### Health Check Endpoints
 
-| Endpoint | Purpose | Response |
-|----------|---------|----------|
-| `/health` | Basic liveness | `200 OK` |
-| `/health/live` | Is process running? | `200` or `503` |
-| `/health/ready` | Can handle traffic? | `200` or `503` |
-| `/health/detailed` | Debug info (internal only) | JSON with deps status |
+| Endpoint            | Purpose                    | Response                  |
+|---------------------|----------------------------|---------------------------|
+| `/health`           | Basic liveness             | `200 OK`                  |
+| `/health/live`      | Is process running?        | `200` or `503`            |
+| `/health/ready`     | Can handle traffic?        | `200` or `503`            |
+| `/health/detailed`  | Debug info (internal only) | JSON with deps status     |
 
 ## Details
 
@@ -159,6 +161,7 @@ jobs:
 ```
 
 **Key principles:**
+
 - ✅ Run tests before deploying (gate deployments on test success)
 - ✅ Deploy only from main/production branch
 - ✅ Use secrets management (never hardcode credentials)
@@ -232,7 +235,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
-      - DATABASE_URL=postgresql://postgres:password@db:5432/myapp
+      - DATABASE_URL=postgresql://postgres:password@db:5432/myapp  # pragma: allowlist secret
       - REDIS_URL=redis://redis:6379
     depends_on:
       - db
@@ -264,6 +267,7 @@ volumes:
 ```
 
 **Key principles:**
+
 - ✅ Use multi-stage builds to minimize image size
 - ✅ Run as non-root user for security
 - ✅ Use `.dockerignore` to exclude unnecessary files
@@ -306,7 +310,7 @@ export const env = envSchema.parse(process.env);
 ```bash
 # .env.example (commit this)
 NODE_ENV=development
-DATABASE_URL=postgresql://postgres:password@localhost:5432/myapp
+DATABASE_URL=postgresql://postgres:password@localhost:5432/myapp  # pragma: allowlist secret
 REDIS_URL=redis://localhost:6379
 JWT_SECRET=your-secret-key-min-32-chars-long
 NEXT_PUBLIC_API_URL=http://localhost:3000
@@ -323,6 +327,7 @@ PORT=3000
 ```
 
 **Key principles:**
+
 - ✅ Validate environment variables at startup (fail fast)
 - ✅ Use `NEXT_PUBLIC_` prefix only for client-safe values
 - ✅ Never commit `.env.local` or `.env.production` to git
@@ -340,20 +345,23 @@ PORT=3000
 
 **Safe migration strategy:**
 
-**Phase 1: Add new column (backward compatible)**
+#### Phase 1: Add new column (backward compatible)
+
 ```sql
 -- Migration 001: Add new column with default
 ALTER TABLE users ADD COLUMN full_name VARCHAR(255) DEFAULT '';
 ```
 
 Deploy code that populates `full_name` but still reads from old columns:
+
 ```typescript
 // Code reads old columns, writes to both
 const user = await db.user.findUnique({ where: { id } });
 const fullName = user.full_name || `${user.first_name} ${user.last_name}`;
 ```
 
-**Phase 2: Backfill data**
+#### Phase 2: Backfill data
+
 ```sql
 -- Migration 002: Backfill existing data
 UPDATE users 
@@ -361,7 +369,8 @@ SET full_name = CONCAT(first_name, ' ', last_name)
 WHERE full_name = '';
 ```
 
-**Phase 3: Remove old columns (after all code updated)**
+#### Phase 3: Remove old columns (after all code updated)
+
 ```sql
 -- Migration 003: Remove old columns
 ALTER TABLE users DROP COLUMN first_name;
@@ -386,6 +395,7 @@ npx prisma migrate dev --name revert_full_name
 ```
 
 **Key principles:**
+
 - ✅ Always make migrations backward compatible
 - ✅ Deploy schema changes before code changes
 - ✅ Test migrations on staging with production-like data
@@ -525,6 +535,7 @@ spec:
 ```
 
 **Key principles:**
+
 - ✅ Implement health check endpoints (`/health`, `/ready`)
 - ✅ Use graceful shutdown to finish in-flight requests
 - ✅ Deploy new version alongside old (rolling update)
@@ -601,6 +612,7 @@ npx prisma migrate dev --name rollback_add_column
 ```
 
 **Key principles:**
+
 - ✅ Tag every release with semantic version
 - ✅ Keep previous 3-5 versions readily available
 - ✅ Automate rollback process (tested regularly)
@@ -695,6 +707,7 @@ groups:
 ```
 
 **Key principles:**
+
 - ✅ Use structured logging (JSON format)
 - ✅ Log request IDs for tracing
 - ✅ Monitor key metrics (error rate, latency, throughput)
