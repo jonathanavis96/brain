@@ -878,6 +878,19 @@ run_once() {
       echo ""
     fi
 
+    # Inject current verifier summary (BUILD mode gets fresh state after auto-fix)
+    if [[ "$phase" == "build" ]] && [[ -f "$VERIFY_REPORT" ]]; then
+      echo "# CURRENT VERIFIER STATE (after auto-fix)"
+      echo "# Auto-fix has already run. Focus only on WARN/FAIL items below."
+      echo ""
+      # Extract just the summary section
+      sed -n '/^SUMMARY$/,/^$/p' "$VERIFY_REPORT" 2>/dev/null || true
+      echo ""
+      # Show WARN and FAIL items only
+      grep -E "^\[WARN\]|\[FAIL\]" "$VERIFY_REPORT" 2>/dev/null || echo "# All checks passing!"
+      echo ""
+    fi
+
     # Inject AGENTS.md (standard Ralph pattern: PROMPT.md + AGENTS.md)
     # NEURONS.md and THOUGHTS.md are read via subagent when needed (too large for base context)
     echo "# AGENTS.md - Operational Guide"
@@ -1331,6 +1344,20 @@ else
       fi
       run_once "$PLAN_PROMPT" "plan" "$i" || run_result=$?
     else
+      # Auto-fix lint issues before BUILD iteration
+      echo "Running auto-fix for lint issues..."
+      if [[ -f "$RALPH/fix-markdown.sh" ]]; then
+        (cd "$ROOT" && bash "$RALPH/fix-markdown.sh" . 2>/dev/null) || true
+      fi
+      if command -v pre-commit &>/dev/null; then
+        (cd "$ROOT" && pre-commit run --all-files 2>/dev/null) || true
+      fi
+
+      # Run verifier to get current state (Ralph will see WARN/FAIL in context)
+      echo "Running verifier to check current state..."
+      (cd "$RALPH" && bash verifier.sh 2>/dev/null) || true
+      echo ""
+
       run_once "$BUILD_PROMPT" "build" "$i" || run_result=$?
 
       # Sync completions back to Cortex after BUILD iterations

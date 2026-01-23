@@ -132,17 +132,19 @@ code with language
 
 ---
 
-## Markdown Fix Protocol
+## Verifier-First Workflow
 
-**Before making manual markdown fixes, ALWAYS run the auto-fix script first:**
+**Auto-fix runs automatically before every BUILD iteration.** The loop runs:
 
-```bash
-bash workers/ralph/fix-markdown.sh <file_or_directory>
-```text
+1. `fix-markdown.sh` - fixes ~40-60% of markdown issues
+2. `pre-commit run --all-files` - fixes shell/python/yaml issues
+3. `verifier.sh` - checks current state
 
-This auto-fixes ~40-60% of issues (MD009, MD012, MD031, MD032, MD047).
+**You receive the verifier output in your context.** Focus ONLY on remaining `[WARN]` and `[FAIL]` items.
 
-**Only these need manual fixes:**
+**If verifier shows all passing:** Skip lint tasks and work on feature tasks instead.
+
+**Only these need manual fixes (not auto-fixable):**
 
 | Rule | Fix |
 | ---- | --- |
@@ -151,7 +153,7 @@ This auto-fixes ~40-60% of issues (MD009, MD012, MD031, MD032, MD047).
 | MD024 | Make duplicate headings unique |
 | MD036 | Convert **bold** to #### heading |
 
-**Anti-pattern:** Don't make 30+ individual `find_and_replace_code` calls - this wastes tokens and iterations. Use the script first, then batch remaining fixes efficiently.
+**Anti-pattern:** Don't make 30+ individual `find_and_replace_code` calls - this wastes tokens and iterations. Batch remaining fixes efficiently.
 
 See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
 
@@ -177,19 +179,15 @@ See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
 - Compare specs vs current codebase
 - Search for gaps between intent and implementation
 
-### Pre-Planning Lint Check (MANDATORY)
+### Pre-Planning State Check
 
-Before planning tasks, run linting tools to discover issues:
+**Note:** Auto-fix and verifier run automatically before BUILD iterations. For PLAN mode, check verifier output:
 
 ```bash
-# Run pre-commit if available (catches shell, markdown, python issues)
-pre-commit run --all-files 2>&1 | head -50 || true
+cat .verify/latest.txt | grep -E "SUMMARY|\[WARN\]|\[FAIL\]"
+```
 
-# Or run individual checks if pre-commit not installed:
-shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
-```text
-
-**If any issues found:** Add them to the TOP of workers/IMPLEMENTATION_PLAN.md as high-priority tasks in "## Phase 0-Warn: Verifier Warnings" section.
+**If WARN/FAIL items exist:** Prioritize fixing them before feature work. Add to "## Phase 0-Warn: Verifier Warnings" section if not already tracked.
 
 ### Actions
 
