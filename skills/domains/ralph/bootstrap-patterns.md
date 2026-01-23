@@ -12,6 +12,7 @@ New projects require consistent initialization with templates, documentation, an
 - **Creating project variants**: Use tech stack parameters to customize bootstrap output
 
 **Triggers for bootstrap:**
+
 - "I need to create a new [backend/python/ralph] project"
 - "Set up a new microservice with [tech stack]"
 - "Initialize project structure for [goals]"
@@ -20,23 +21,31 @@ New projects require consistent initialization with templates, documentation, an
 
 ### Architecture Overview
 
-```
+```text
 new-project.sh (orchestrator)
     ↓
+
 1. Collect inputs (interactive prompts)
+
     ↓
+
 2. Invoke HIGH INTELLIGENCE generators
+
     ├── generate-thoughts.sh      (THOUGHTS.md - project goals)
     ├── generate-neurons.sh       (NEURONS.md - codebase map)
     └── generate-implementation-plan.sh (IMPLEMENTATION_PLAN.md - tasks)
     ↓
+
 3. Copy static templates
+
     ├── templates/AGENTS.project.md
     ├── templates/[stack]/VALIDATION_CRITERIA.project.md
     └── templates/[stack]/NEURONS.project.md (fallback)
     ↓
+
 4. Git initialization (optional)
-```
+
+```text
 
 **Execution time:** ~14 seconds for complete project bootstrap
 
@@ -49,6 +58,7 @@ The three generators use bash to parse tech stack specifications and infer appro
 **Purpose:** Generate project goals, success criteria, and knowledge base references
 
 **Intelligence features:**
+
 - Parses tech stack into structured format (backend, database, auth, etc.)
 - Infers relevant KB references (e.g., FastAPI → api-design-patterns.md, PostgreSQL → database-patterns.md)
 - Generates Definition of Done categories based on project type
@@ -56,19 +66,22 @@ The three generators use bash to parse tech stack specifications and infer appro
 - Infers source code structure expectations
 
 **Key sections generated:**
+
 ```markdown
 ## Project Definition
 ## Goals
 ## Success Criteria
 ## Relevant Knowledge
 ## Definition of Done
-```
+
+```text
 
 #### 2. generate-neurons.sh (714 lines)
 
 **Purpose:** Generate codebase map showing directory structure and conventions
 
 **Intelligence features:**
+
 - Infers directory structure from tech stack (backend vs python vs ralph)
 - Generates file type conventions (where to find routes, models, tests)
 - Creates quick reference commands (test runners, linters, servers)
@@ -76,15 +89,18 @@ The three generators use bash to parse tech stack specifications and infer appro
 - Builds "I need to..." task mapping table
 
 **Key sections generated:**
+
 ```markdown
 ## Directory Structure
 ## File Conventions
 ## Quick Reference
 ## Validation Commands
 ### "I need to..."
-```
+
+```text
 
 **Example inference:**
+
 - Input: `backend,fastapi,postgresql`
 - Output: FastAPI project structure with `app/`, `tests/`, `alembic/`, PostgreSQL connection patterns
 
@@ -93,6 +109,7 @@ The three generators use bash to parse tech stack specifications and infer appro
 **Purpose:** Generate prioritized task list from project goals
 
 **Intelligence features:**
+
 - Parses goals into structured tasks (setup, features, testing, deployment)
 - Generates phase structure based on project type
 - Creates feature tasks from goal descriptions
@@ -100,6 +117,7 @@ The three generators use bash to parse tech stack specifications and infer appro
 - Organizes tasks by priority (High/Medium/Low)
 
 **Key sections generated:**
+
 ```markdown
 ## Current State
 ## Goal
@@ -107,13 +125,15 @@ The three generators use bash to parse tech stack specifications and infer appro
 ### High Priority
 ### Medium Priority
 ### Low Priority
-```
+
+```text
 
 ### Template System
 
 Templates provide static baseline content that doesn't require inference:
 
-```
+```text
+
 templates/
 ├── AGENTS.project.md              # Operational guide (all projects)
 ├── NEURONS.project.md             # Generic codebase map (fallback)
@@ -131,11 +151,13 @@ templates/
     ├── PROMPT.project.md
     ├── RALPH.md
     └── VALIDATION_CRITERIA.project.md
-```
+
+```text
 
 **Template naming convention:** `*.project.md` indicates template files
 
 **Template selection logic:**
+
 1. Check for stack-specific template: `templates/{stack}/FILE.project.md`
 2. Fall back to generic template: `templates/FILE.project.md`
 3. Skip if neither exists (generator will create it)
@@ -143,6 +165,7 @@ templates/
 ### Why Bash for Generators?
 
 **Decision rationale:**
+
 - **Speed:** Bash text processing is fast (~14 seconds for 3 generators)
 - **Simplicity:** No dependencies, runs everywhere (WSL2, Linux, macOS)
 - **String manipulation:** sed/awk/heredocs are perfect for template generation
@@ -150,6 +173,7 @@ templates/
 - **Maintainability:** Inline documentation with `# HIGH INTELLIGENCE` markers
 
 **Trade-offs:**
+
 - More verbose than Python/Node.js for complex logic
 - Requires bash knowledge for maintenance
 - Limited error handling compared to modern languages
@@ -157,12 +181,14 @@ templates/
 ### Template Evolution Strategy
 
 **When to update templates:**
+
 - Pattern discovered in 3+ projects → extract to template
 - Convention changes (e.g., testing framework migration)
 - New tech stack support (add new templates/ subdirectory)
 - Security or performance best practices evolve
 
 **How to update templates:**
+
 1. Modify template file in `templates/` or `templates/{stack}/`
 2. Test with `new-project.sh` in scratch directory
 3. Update NEURONS.md if new files added
@@ -170,6 +196,7 @@ templates/
 5. Commit with message: "Update {stack} template: {change}"
 
 **Versioning approach:**
+
 - Templates don't have version numbers
 - Evolution tracked via git history
 - Breaking changes documented in commit messages
@@ -178,19 +205,23 @@ templates/
 ### Bootstrap Workflow
 
 **Interactive mode (default):**
+
 ```bash
 cd /path/to/brain/ralph
 bash new-project.sh
 # Prompts for: project name, type, tech stack, goals
 # Generates files in ../projects/{project-name}/
-```
+
+```text
 
 **Non-interactive mode (future):**
+
 ```bash
 bash new-project.sh --name myapp --type backend \
   --stack "fastapi,postgresql,redis" \
   --goals "Build REST API for user management"
-```
+
+```text
 
 ### Generator Maintenance
 
@@ -206,6 +237,7 @@ bash new-project.sh --name myapp --type backend \
 5. Document patterns in relevant KB files
 
 **Testing generators:**
+
 ```bash
 # Test in scratch directory
 mkdir -p /tmp/test-bootstrap
@@ -217,24 +249,29 @@ bash /path/to/brain/ralph/new-project.sh
 # Validate generated files
 ls -la
 grep "HIGH INTELLIGENCE" ../brain/ralph/generators/*.sh
-```
+
+```text
 
 ### Common Patterns
 
 **Heredoc usage for multi-line generation:**
+
 ```bash
 cat >> "$OUTPUT_FILE" << EOF
 # Generated Section
 Content with variable expansion: $PROJECT_NAME
 EOF
-```
+
+```text
 
 **Conditional generation based on tech stack:**
+
 ```bash
 if [[ "$TECH_STACK" == *"postgresql"* ]]; then
   echo "- Database migrations (Alembic)" >> "$OUTPUT_FILE"
 fi
-```
+
+```text
 
 **Parallel generator execution:**
 Currently sequential (new-project.sh calls each generator in order).
@@ -243,6 +280,7 @@ Future optimization: Run generators in parallel with `&` and `wait`.
 ### Bootstrap Testing (Future)
 
 **Automated test approach:**
+
 ```bash
 # Test bootstrap creates expected files
 for stack in backend python ralph; do
@@ -267,17 +305,20 @@ for stack in backend python ralph; do
   # Cleanup
   rm -rf "$test_dir"
 done
-```
+
+```text
 
 ### Performance Metrics
 
 **Current bootstrap performance:**
+
 - Generator execution: ~2-3 seconds per generator
 - Template copying: <1 second
 - Git initialization: ~1 second
 - Total time: ~14 seconds
 
 **Optimization opportunities:**
+
 - Parallel generator execution: ~50% time reduction (theoretical)
 - Pre-compiled templates: Minimal gain (I/O already fast)
 - Caching KB references: Not worth complexity
