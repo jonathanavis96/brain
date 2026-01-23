@@ -1,26 +1,31 @@
 # AGENTS.md - Ralph Loop (Brain Repo Self-Improvement)
 
 ## First Step: Read the Brain Map
+
 **Before any task, read NEURONS.md via subagent** - it maps the brain repository structure.
 
 ## Purpose
+
 Ralph loop for brain repository self-improvement. Runs PLAN/BUILD cycles to maintain knowledge base and templates.
 
 ## Prerequisites
+
 - **Environment:** WSL (Windows Subsystem for Linux) on Windows 11 with Ubuntu
 - **Shell:** bash (comes with WSL Ubuntu)
-- **Atlassian CLI:** `acli` - https://developer.atlassian.com/cloud/cli/
+- **Atlassian CLI:** `acli` - <https://developer.atlassian.com/cloud/cli/>
 - **RovoDev:** `acli rovodev auth && acli rovodev usage site`
 
 ## Environment Notes
 
 **WSL/Windows 11 Specifics:**
+
 - Working directory: `/mnt/c/...` or `/home/...` depending on where repository is cloned
 - Git line endings: Use `core.autocrlf=input` to avoid CRLF issues
 - File permissions: WSL handles Unix permissions on Windows filesystem
 - Path separators: Use Unix-style `/` paths (WSL translates automatically)
 
 ## How to Run
+
 ```bash
 cd /path/to/brain/workers/ralph/
 bash loop.sh                    # Single iteration
@@ -42,12 +47,15 @@ Ralph uses two complementary monitors for real-time task tracking:
 See README.md for detailed monitor features and hotkeys.
 
 ## Loop Stop Sentinel
+
 Ralph outputs when ALL tasks complete:
+
 ```text
 :::COMPLETE:::
 ```
 
 ## Troubleshooting
+
 - **acli not found**: Add to PATH in ~/.bashrc
 - **Loop doesn't stop**: Check `:::COMPLETE:::` output
 - **Ralph batches tasks**: See PROMPT.md "EXACTLY ONE task" emphasis
@@ -55,7 +63,31 @@ Ralph outputs when ALL tasks complete:
 
 See README.md for design philosophy, safety features, and detailed documentation.
 
+## Markdown Fixes - Use Auto-Fix First
+
+**Before making manual markdown fixes, ALWAYS run the auto-fix script:**
+
+```bash
+bash workers/ralph/fix-markdown.sh <file_or_directory>
+```
+
+This auto-fixes ~40-60% of issues (MD009, MD012, MD031, MD032, MD047).
+
+**Only these need manual fixes:**
+
+| Rule | Fix |
+| ---- | --- |
+| MD040 | Add language after ``` (e.g., ```bash) |
+| MD060 | Add spaces around table pipes |
+| MD024 | Make duplicate headings unique |
+| MD036 | Convert **bold** to #### heading |
+
+**Anti-pattern:** Don't make 30+ individual `find_and_replace_code` calls. Use the script first, then batch remaining fixes.
+
+See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
+
 ## See Also
+
 - **README.md** - Design philosophy, validation, safety features, architecture
 - **VALIDATION_CRITERIA.md** - Quality gates and validation commands
 - **NEURONS.md** - Brain repository map
