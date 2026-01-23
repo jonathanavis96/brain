@@ -16,13 +16,12 @@ The brain repository has **two implementation plans**:
 **Current Status Summary:**
 
 - ✅ **Phase 0-Sync** - Infrastructure setup COMPLETE
-- ⚠️ **Phase 0-Warn** - Verifier warnings resolved, 3 new shellcheck warnings added (30/33 complete, 6 awaiting waiver)
+- ⚠️ **Phase 0-Warn** - Verifier warnings resolved, markdown lint tasks added (22/41 complete: 2 shfmt complete, 4 cortex MD complete, 6 verifier warnings complete, 10 shellcheck complete; 8 new MD tasks pending across cortex/analysis/ and skills/)
 - ✅ **Phase 0-A/B** - Cortex manager pack COMPLETE (31/31 tasks)
 - ✅ **Phase 0-Quick** - Quick wins COMPLETE (8/8 tasks)
 - 📋 **Phase 1-8** - Shell cleanup, documentation, optimization (0/49 complete)
-- 🚨 **NEW: Pre-commit scan** - Discovered shfmt formatting violations in workers/ralph/new-project.sh (needs tab→space conversion to match project standard)
 
-See **workers/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown (123 tasks total).
+See **workers/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown.
 
 ---
 
@@ -56,12 +55,28 @@ See **workers/IMPLEMENTATION_PLAN.md** for the complete tactical breakdown (123 
 
 ### Markdown Lint Warnings (LOW Priority)
 
-**Note:** ~100+ markdown lint violations discovered across cortex/ files. These are formatting issues (blank lines, table spacing) that don't affect functionality. Will batch-fix by file in BUILD mode.
+**Note:** ~100+ markdown lint violations discovered across multiple files via `pre-commit run --all-files`. These are formatting issues (blank lines, table spacing, fence tags) that don't affect functionality. Will batch-fix by file in BUILD mode.
+
+#### Cortex Files (COMPLETED)
 
 - [x] **WARN.MD.1-4** Fix all MD violations in `cortex/AGENTS.md` - MD032 (blank lines around lists), MD022 (blank lines around headings), MD031 (blank lines around fences), MD060 (table spacing)
 - [x] **WARN.MD.5-6** Fix all MD violations in `cortex/CORTEX_SYSTEM_PROMPT.md` - MD032 (blank lines around lists), MD060 (table spacing)
 - [x] **WARN.MD.7-10** Fix all MD violations in `cortex/DECISIONS.md` - MD022 (blank lines around headings), MD032 (blank lines around lists), MD031 (blank lines around fences), MD038 (spaces in code spans)
 - [x] **WARN.MD.11** Fix all MD violations in `cortex/IMPLEMENTATION_PLAN.md` - MD032, MD031, MD060, MD009 (multiple formatting issues)
+
+#### Analysis Files (NEW - from pre-commit scan)
+
+- [ ] **WARN.MD.12.analysis** Fix MD violations in `cortex/analysis/AGENT_LOADING_ANALYSIS.md` - MD032 (blanks around lists), MD031 (blanks around fences), MD040 (fence language tags) - 30+ violations
+- [ ] **WARN.MD.13.analysis** Fix MD violations in `cortex/analysis/ROVO_SETUP_TASKS.md` - MD022 (blanks around headings), MD032 (blanks around lists)
+- [ ] **WARN.MD.14.analysis** Fix MD violations in `cortex/analysis/TOKEN_EFFICIENCY_ANALYSIS.md` - MD032 (blanks around lists), MD031 (blanks around fences)
+
+#### Skills Files (NEW - from pre-commit scan)
+
+- [ ] **WARN.MD.15.skills** Fix MD violations in `skills/domains/code-quality/token-efficiency.md` - MD032 (blanks around lists), MD031 (blanks around fences), MD038 (code span spaces)
+- [ ] **WARN.MD.16.skills** Fix MD violations in `skills/domains/ralph/bootstrap-patterns.md` - MD032 (blanks around lists), MD031 (blanks around fences)
+- [ ] **WARN.MD.17.skills** Fix MD violations in `skills/domains/websites/qa/acceptance-criteria.md` - MD022 (blanks around headings), MD031 (blanks around fences), MD034 (bare URLs) - 20+ violations
+- [ ] **WARN.MD.18.skills** Fix MD violations in `skills/projects/README.md` - MD032 (blanks around lists)
+- [ ] **WARN.MD.19.skills** Fix MD violations in `skills/self-improvement/SKILL_TEMPLATE.md` - MD022 (blanks around headings), MD032 (blanks around lists)
 
 ### Verifier Warnings (AUTO CHECK FAILED - WARN GATE) (MEDIUM Priority)
 
