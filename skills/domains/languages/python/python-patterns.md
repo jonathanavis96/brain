@@ -5,7 +5,7 @@
 ## Quick Reference
 
 | Issue | Problem | Fix |
-|-------|---------|-----|
+| ----- | ------- | --- |
 | `datetime.utcnow()` | Deprecated, naive datetime | `datetime.now(timezone.utc)` |
 | `f"static"` | f-string without placeholders | Use regular `"static"` |
 | `json.load()` no try | Crashes on malformed JSON | Wrap in try/except |
@@ -336,6 +336,7 @@ def my_function():
 ### Why This Happens
 
 When you import inside a try block:
+
 1. Python creates a local variable in that block's scope
 2. After the try block ends, that local variable is out of scope
 3. References to that name outside the block fail with "cannot access local variable"
@@ -349,7 +350,7 @@ When you import inside a try block:
 ## Common Mistakes Summary
 
 | Mistake | Problem | Fix |
-|---------|---------|-----|
+| ------- | ------- | --- |
 | `datetime.utcnow()` | Deprecated, naive | `datetime.now(timezone.utc)` |
 | `f"static"` | Unnecessary f-string | Regular `"static"` |
 | `json.load()` bare | Crashes on bad JSON | try/except JSONDecodeError |

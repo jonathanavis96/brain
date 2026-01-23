@@ -16,7 +16,7 @@
 - [x] **WARN.MD.01.skills** Fix MD violations in `skills/domains/infrastructure/deployment-patterns.md`
 - [x] **WARN.MD.02.skills** Fix MD violations in `skills/domains/infrastructure/security-patterns.md`
 - [x] **WARN.MD.03.skills** Fix MD violations in `skills/domains/infrastructure/state-management-patterns.md`
-- [ ] **WARN.MD.04.skills** Fix MD violations in `skills/domains/languages/python/python-patterns.md`
+- [x] **WARN.MD.04.skills** Fix MD violations in `skills/domains/languages/python/python-patterns.md`
 - [ ] **WARN.MD.05.skills** Fix MD violations in `skills/domains/languages/shell/README.md`
 - [ ] **WARN.MD.06.skills** Fix MD violations in `skills/domains/ralph/ralph-patterns.md`
 - [ ] **WARN.MD.07.skills** Fix MD violations in `skills/domains/websites/README.md`
