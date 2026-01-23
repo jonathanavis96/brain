@@ -5,7 +5,7 @@ Sets up GA4, conversion tracking, and event tracking to measure site performance
 ## Quick Reference
 
 | Tool | Purpose | Privacy |
-|------|---------|---------|
+| ------ | --------- | --------- |
 | **GA4** | Full analytics | Requires consent in EU |
 | **Plausible** | Privacy-focused | No consent needed |
 | **Fathom** | Privacy-focused | No consent needed |
@@ -15,6 +15,7 @@ Sets up GA4, conversion tracking, and event tracking to measure site performance
 ## Trigger Conditions
 
 Use this skill when:
+
 - Launching any website
 - Need to track conversions
 - Want to understand user behavior
@@ -23,6 +24,7 @@ Use this skill when:
 ## GA4 Setup
 
 ### Basic Installation
+
 ```html
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXX"></script>
@@ -35,6 +37,7 @@ Use this skill when:
 ```
 
 ### Astro Integration
+
 ```astro
 ---
 // BaseLayout.astro
@@ -56,6 +59,7 @@ const GA_ID = import.meta.env.PUBLIC_GA_ID;
 ```
 
 ### With Cookie Consent
+
 ```html
 <script>
   // Only load GA after consent
@@ -85,6 +89,7 @@ const GA_ID = import.meta.env.PUBLIC_GA_ID;
 ```
 
 ### Track Custom Events (Plausible)
+
 ```html
 <a href="/contact" onclick="plausible('CTA Click', {props: {location: 'hero'}})">
   Book Now
@@ -99,14 +104,16 @@ const GA_ID = import.meta.env.PUBLIC_GA_ID;
 ## Conversion Tracking
 
 ### Define Conversions
+
 | Conversion | Event Name | Value |
-|------------|------------|-------|
+| ------------ | ------------ | ------- |
 | Contact form submit | `form_submit` | High |
 | Phone click | `phone_click` | Medium |
 | Email click | `email_click` | Medium |
 | CTA click | `cta_click` | Low |
 
 ### GA4 Event Tracking
+
 ```javascript
 // Track CTA clicks
 document.querySelectorAll('[data-track-cta]').forEach(el => {
@@ -137,6 +144,7 @@ document.querySelectorAll('a[href^="tel:"]').forEach(el => {
 ```
 
 ### Track Outbound Links
+
 ```javascript
 document.querySelectorAll('a[href^="http"]').forEach(link => {
   if (!link.href.includes(window.location.hostname)) {
@@ -172,6 +180,7 @@ Then configure triggers and tags in GTM interface.
 ## Key Metrics to Track
 
 ### For Service Business (Therapy Practice)
+
 ```markdown
 ## Metrics Dashboard
 
@@ -209,12 +218,12 @@ Then configure triggers and tags in GTM interface.
 
 Track marketing campaigns:
 
-```
+```text
 https://jacquihowles.com/?utm_source=google&utm_medium=cpc&utm_campaign=therapy-johannesburg
 ```
 
 | Parameter | Purpose | Example |
-|-----------|---------|---------|
+| ----------- | --------- | --------- |
 | `utm_source` | Traffic source | google, facebook, newsletter |
 | `utm_medium` | Marketing medium | cpc, email, social |
 | `utm_campaign` | Campaign name | spring-promo |
@@ -223,7 +232,7 @@ https://jacquihowles.com/?utm_source=google&utm_medium=cpc&utm_campaign=therapy-
 ## Common Mistakes
 
 | Mistake | Why It's Wrong | Do This Instead |
-|---------|----------------|-----------------|
+| --------- | ---------------- | ----------------- |
 | No analytics at all | Flying blind | Add basic tracking |
 | Tracking everything | Data overload | Track meaningful conversions |
 | No conversion goals | Can't measure success | Define 2-3 key conversions |
@@ -234,11 +243,13 @@ https://jacquihowles.com/?utm_source=google&utm_medium=cpc&utm_campaign=therapy-
 ## Testing Your Tracking
 
 ### GA4 DebugView
+
 1. Install Google Analytics Debugger extension
 2. Visit your site
 3. Check GA4 → Configure → DebugView
 
 ### Browser Console
+
 ```javascript
 // Check if gtag is loaded
 console.log(typeof gtag); // Should be 'function'
@@ -248,6 +259,7 @@ console.log(window.dataLayer);
 ```
 
 ### Real-Time Reports
+
 GA4 → Reports → Realtime → See events as they happen
 
 ## Example
@@ -298,6 +310,7 @@ const isProd = import.meta.env.PROD;
 ```
 
 Usage in components:
+
 ```astro
 <Button href="/contact" data-track="Book Consultation Click">
   Book Your First Session
