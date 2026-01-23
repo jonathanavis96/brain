@@ -67,7 +67,7 @@
 ### Phase 3.4: Clean Ralph's `loop.sh`
 
 - [x] **3.4.1** Remove `resolve_model_cerebras()` function from `workers/ralph/loop.sh`
-- [ ] **3.4.2** Remove cerebras runner dispatch code from `workers/ralph/loop.sh`
+- [x] **3.4.2** Remove cerebras runner dispatch code from `workers/ralph/loop.sh`
 - [ ] **3.4.3** Remove `--runner cerebras` option from help text and argument parsing
 
 ### Phase 3.5: Update All Path References

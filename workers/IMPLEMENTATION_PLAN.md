@@ -26,67 +26,71 @@
 
 **Goal:** Separate Ralph and Cerebras into independent workers.
 
-### Phase 3.3: Create Cerebras-specific `loop.sh` (3 tasks)
-
-- [x] **3.3.1** Remove rovodev runner code from `workers/cerebras/loop.sh`
-- [x] **3.3.2** Remove opencode runner code from `workers/cerebras/loop.sh`
-- [x] **3.3.3** Set default runner to `cerebras` (remove runner selection logic)
-
-### Phase 3.4: Clean Ralph's `loop.sh` (3 tasks)
+### Phase 3.4: Clean Ralph's `loop.sh` (1 task remaining)
 
 - [x] **3.4.1** Remove `resolve_model_cerebras()` function from `workers/ralph/loop.sh`
 - [x] **3.4.2** Remove cerebras runner option from `workers/ralph/loop.sh`
 - [ ] **3.4.3** Simplify runner detection to only rovodev/opencode
+  - Verify no cerebras references remain in workers/ralph/loop.sh
+  - Update usage/help text to remove cerebras mentions
+  - **AC:** `rg -i cerebras workers/ralph/loop.sh` returns 0 results
 
-### Phase 3.5: Update All Path References (3 tasks)
+### Phase 3.5: Verify Path References (2 tasks)
 
-- [ ] **3.5.1** Update `workers/ralph/` scripts to use relative paths
-- [ ] **3.5.2** Update `workers/cerebras/` scripts to use relative paths
-- [ ] **3.5.3** Update any hardcoded paths in templates
+- [ ] **3.5.1** Audit workers/ralph/ scripts for hardcoded paths
+  - Check all .sh files for absolute paths that should be relative
+  - **AC:** All scripts use $ROOT or relative paths consistently
 
-### Phase 3.6: Verification & Cleanup (3 tasks)
+- [ ] **3.5.2** Audit workers/cerebras/ scripts for hardcoded paths  
+  - Check all .sh files for absolute paths that should be relative
+  - **AC:** All scripts use $ROOT or relative paths consistently
 
-- [ ] **3.6.1** Verify `workers/ralph/loop.sh` works independently
-- [ ] **3.6.2** Verify `workers/cerebras/loop.sh` works independently
-- [ ] **3.6.3** Remove any remaining duplicate code
+### Phase 3.6: Worker Independence Testing (2 tasks)
+
+- [ ] **3.6.1** Test `bash workers/ralph/loop.sh --help` works correctly
+  - Verify help text shows only rovodev/opencode runners
+  - Verify no cerebras mentions in output
+  - **AC:** Help text clean, no errors
+
+- [ ] **3.6.2** Test `bash workers/cerebras/loop.sh --help` works correctly
+  - Verify help text shows only cerebras runner
+  - Verify no rovodev/opencode mentions in output
+  - **AC:** Help text clean, no errors
 
 **AC:** Both workers run independently with no shared state
 
 ---
 
-## Phase 5: Documentation & Terminology
+## Phase 5: Documentation & Maintenance
 
-### Phase 5.1: Update README.md with setup instructions
+### Phase 5.1: Fix template path references (4 tasks)
 
-- [ ] **5.1.1** Add Quick Start section to README.md
-- [ ] **5.1.2** Document what setup.sh does
-- [ ] **5.1.3** Add available commands examples
+- [ ] **5.1.1** Update `templates/AGENTS.project.md` - change "ralph/" references to "workers/ralph/"
+  - Fix all path examples in documentation sections
+  - Update directory structure diagrams
+  - **AC:** No bare "ralph/" paths remain (all are "workers/ralph/")
 
-### Phase 5.2: Fix AGENTS.md template paths
+- [ ] **5.1.2** Update `templates/backend/AGENTS.project.md` - change "ralph/" to "workers/ralph/"
+  - **AC:** Consistent path references
 
-- [ ] **5.2.1** Update `templates/AGENTS.project.md`
-- [ ] **5.2.2** Update `templates/backend/AGENTS.project.md`
-- [ ] **5.2.3** Update `templates/python/AGENTS.project.md`
-- [ ] **5.2.4** Update `templates/cortex/AGENTS.project.md`
+- [ ] **5.1.3** Update `templates/python/AGENTS.project.md` - change "ralph/" to "workers/ralph/"
+  - **AC:** Consistent path references
 
-### Phase 5.4: Fix "Brain KB" terminology
+- [ ] **5.1.4** Update `templates/cortex/CORTEX_SYSTEM_PROMPT.project.md` - change "ralph/" to "workers/ralph/"
+  - **AC:** Consistent path references
 
-- [ ] **5.4.1** Edit `templates/NEURONS.project.md` - replace "Brain KB" with "Brain Skills"
+### Phase 5.2: Fix maintenance scripts (1 task)
 
-**AC:** `rg "Brain KB" templates/ | wc -l` returns 0
+- [ ] **5.2.1** Update `workers/ralph/.maintenance/verify-brain.sh` to use correct paths
+  - Replace any hardcoded paths with $ROOT-based paths
+  - **AC:** `bash workers/ralph/.maintenance/verify-brain.sh` runs without errors
 
-### Phase 5.5: Fix thunk_ralph_tasks.sh footer display bug
+### Phase 5.3: Monitor improvements (1 task)
 
-- [ ] **5.5.1** In `parse_new_thunk_entries()`, clear OLD footer lines before redrawing
-- [ ] **5.5.2** Update `LAST_CONTENT_ROW` BEFORE redrawing footer
-
-**AC:** Footer repositions cleanly when new thunks appear
-
-### Phase 5.6: Fix maintenance script paths
-
-- [ ] **5.6.1** Update `workers/ralph/.maintenance/verify-brain.sh` to use correct paths
-
-**AC:** `bash workers/ralph/.maintenance/verify-brain.sh` reports 0 issues
+- [ ] **5.3.1** Fix thunk_ralph_tasks.sh footer display bug
+  - In `parse_new_thunk_entries()`, clear OLD footer lines before redrawing
+  - Update `LAST_CONTENT_ROW` BEFORE redrawing footer
+  - **AC:** Footer repositions cleanly when new thunks appear
 
 ---
 
@@ -94,9 +98,9 @@
 
 **Goal:** Keep templates in sync with workers.
 
-- [ ] **6.1.1** Sync `workers/ralph/current_ralph_tasks.sh` → `templates/ralph/current_ralph_tasks.sh`
+- [x] **6.1.1** Sync `workers/ralph/current_ralph_tasks.sh` → `templates/ralph/current_ralph_tasks.sh`
+  - Completed in THUNK #504
   - **AC:** `diff workers/ralph/current_ralph_tasks.sh templates/ralph/current_ralph_tasks.sh` returns no output
-  - **Note:** Workers version has performance optimizations (pure bash vs sed/cut)
 
 ---
 
