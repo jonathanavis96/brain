@@ -132,7 +132,7 @@
 
 ### Task 5.3: Copy SKILL_TEMPLATE to templates
 
-- [ ] **5.3.1** Copy `skills/self-improvement/SKILL_TEMPLATE.md` to `templates/ralph/SKILL_TEMPLATE.md`
+- [x] **5.3.1** Copy `skills/self-improvement/SKILL_TEMPLATE.md` to `templates/ralph/SKILL_TEMPLATE.md`
 
 **AC:** File exists and matches source
 
