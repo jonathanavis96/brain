@@ -376,9 +376,18 @@ main() {
     fi
 
     if [[ -n "$expect_stdout_regex" ]]; then
-      if ! printf "%s" "$stdout_norm" | grep -Eq "$expect_stdout_regex"; then
-        pass_check=0
-        reasons+=("stdout regex mismatch expected=/$expect_stdout_regex/ got='${stdout_norm}'")
+      # Handle empty stdout: printf "%s" "" produces no output, breaking grep
+      # Use echo to ensure there's at least a newline for grep to process
+      if [[ -z "$stdout_norm" ]]; then
+        if ! echo "" | grep -Eq "$expect_stdout_regex"; then
+          pass_check=0
+          reasons+=("stdout regex mismatch expected=/$expect_stdout_regex/ got='${stdout_norm}'")
+        fi
+      else
+        if ! printf "%s" "$stdout_norm" | grep -Eq "$expect_stdout_regex"; then
+          pass_check=0
+          reasons+=("stdout regex mismatch expected=/$expect_stdout_regex/ got='${stdout_norm}'")
+        fi
       fi
     fi
 
