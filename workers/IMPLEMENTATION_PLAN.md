@@ -21,7 +21,7 @@
 
 ## Phase 0-CRITICAL: Fix Broken Task Monitor & Sync (1 remaining)
 
-- [ ] **0.C.4** Fix `templates/ralph/sync_cortex_plan.sh` - same rewrite as workers version
+- [x] **0.C.4** Fix `templates/ralph/sync_cortex_plan.sh` - same rewrite as workers version
 
 **AC:** Sync markers only at section headers
 
