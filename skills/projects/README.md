@@ -7,6 +7,7 @@ This directory contains **project-specific knowledge** - conventions, decisions,
 ## When to Use It
 
 Create a skill file in `skills/projects/` when you:
+
 - Document project-specific conventions (file structure, naming patterns)
 - Capture project context that agents need to know
 - Record project-specific technical decisions or constraints
@@ -14,6 +15,7 @@ Create a skill file in `skills/projects/` when you:
 - Document project-specific gotchas or quirks
 
 **Examples of project topics:**
+
 - Project-specific API conventions and endpoint patterns
 - Custom component libraries and usage guidelines
 - Project-specific deployment processes or requirements
@@ -61,11 +63,13 @@ After creating a new project skill file:
 ## Domain vs Project Skills
 
 **Use `skills/domains/`** when:
+
 - ✅ Pattern applies to multiple projects
 - ✅ Technical solution is reusable
 - ✅ Knowledge is architectural or technology-focused
 
 **Use `skills/projects/`** when:
+
 - ✅ Specific to one project or codebase
 - ✅ Context about project history or decisions
 - ✅ Project-specific conventions or requirements
