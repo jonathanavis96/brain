@@ -6,9 +6,9 @@ set -euo pipefail
 # Resolve script directory (follow symlink if needed)
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do
-	DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
-	SOURCE="$(readlink "$SOURCE")"
-	[[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+  DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
 done
 SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
 BRAIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
@@ -28,7 +28,7 @@ echo ""
 
 # Usage help
 usage() {
-	cat <<EOF
+  cat <<EOF
 Usage: bash cortex/chat.sh [OPTIONS]
 
 Cortex Interactive Chat - Direct conversation with the Brain manager.
@@ -64,40 +64,40 @@ MODEL_ARG="opus" # Default to Opus 4.5 for Cortex strategic planning
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
-	case "$1" in
-		-h | --help)
-			usage
-			exit 0
-			;;
-		--model)
-			MODEL_ARG="${2:-}"
-			shift 2
-			;;
-		*)
-			echo "Unknown argument: $1" >&2
-			usage
-			exit 2
-			;;
-	esac
+  case "$1" in
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    --model)
+      MODEL_ARG="${2:-}"
+      shift 2
+      ;;
+    *)
+      echo "Unknown argument: $1" >&2
+      usage
+      exit 2
+      ;;
+  esac
 done
 
 # Model resolution (same logic as one-shot.sh)
 RESOLVED_MODEL=""
 if [[ -n "$MODEL_ARG" ]]; then
-	case "$MODEL_ARG" in
-		opus)
-			RESOLVED_MODEL="anthropic.claude-opus-4-5-20251101-v1:0"
-			;;
-		sonnet)
-			RESOLVED_MODEL="anthropic.claude-sonnet-4-20250514-v1:0"
-			;;
-		auto)
-			RESOLVED_MODEL=""
-			;;
-		*)
-			RESOLVED_MODEL="$MODEL_ARG"
-			;;
-	esac
+  case "$MODEL_ARG" in
+    opus)
+      RESOLVED_MODEL="anthropic.claude-opus-4-5-20251101-v1:0"
+      ;;
+    sonnet)
+      RESOLVED_MODEL="anthropic.claude-sonnet-4-20250514-v1:0"
+      ;;
+    auto)
+      RESOLVED_MODEL=""
+      ;;
+    *)
+      RESOLVED_MODEL="$MODEL_ARG"
+      ;;
+  esac
 fi
 
 echo ""
@@ -109,7 +109,7 @@ SNAPSHOT_OUTPUT=$(bash "${SCRIPT_DIR}/snapshot.sh")
 
 # Create Cortex system prompt for config
 CORTEX_SYSTEM_PROMPT=$(
-	cat <<EOF
+  cat <<EOF
 $(cat "${SCRIPT_DIR}/AGENTS.md")
 
 ---
@@ -169,7 +169,7 @@ version: 1
 agent:
   additionalSystemPrompt: |
 $(while IFS= read -r line; do
-	echo "    $line"
+  echo "    $line"
 done <<<"$CORTEX_SYSTEM_PROMPT")
   streaming: true
   temperature: 0.3
@@ -177,9 +177,9 @@ EOF
 
 # Add model if specified
 if [[ -n "$RESOLVED_MODEL" ]]; then
-	echo "  modelId: ${RESOLVED_MODEL}" >>"$CONFIG_FILE"
+  echo "  modelId: ${RESOLVED_MODEL}" >>"$CONFIG_FILE"
 else
-	echo "  modelId: auto" >>"$CONFIG_FILE"
+  echo "  modelId: auto" >>"$CONFIG_FILE"
 fi
 
 # Launch interactive chat (NO message argument = interactive mode)
@@ -192,9 +192,9 @@ rm -f "$CONFIG_FILE"
 echo ""
 echo -e "${CYAN}========================================${NC}"
 if [[ $EXIT_CODE -eq 0 ]]; then
-	echo -e "${GREEN}✓ Chat session ended${NC}"
+  echo -e "${GREEN}✓ Chat session ended${NC}"
 else
-	echo -e "${YELLOW}⚠ Chat session ended with code ${EXIT_CODE}${NC}"
+  echo -e "${YELLOW}⚠ Chat session ended with code ${EXIT_CODE}${NC}"
 fi
 echo -e "${CYAN}========================================${NC}"
 
