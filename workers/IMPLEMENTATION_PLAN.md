@@ -11,7 +11,7 @@
 These are all false positives - shellcheck passes, files are in sync:
 
 - [x] **WARN.TemplateSync.1.current** Sync current_ralph_tasks.sh to template (workers has perf optimizations)
-- [ ] **WARN.TemplateSync.2.loop** loop.sh path differences - BY DESIGN (workers/ralph/ vs ralph/)
+- [x] **WARN.TemplateSync.2.loop** loop.sh path differences - BY DESIGN (workers/ralph/ vs ralph/)
 
 ---
 
@@ -21,7 +21,7 @@ These are all false positives - shellcheck passes, files are in sync:
 
 ### Phase 3.3: Create Cerebras-specific `loop.sh` (3 tasks)
 
-- [ ] **3.3.1** Remove rovodev runner code from `workers/cerebras/loop.sh`
+- [x] **3.3.1** Remove rovodev runner code from `workers/cerebras/loop.sh`
 - [ ] **3.3.2** Remove opencode runner code from `workers/cerebras/loop.sh`
 - [ ] **3.3.3** Set default runner to `cerebras` (remove runner selection logic)
 
