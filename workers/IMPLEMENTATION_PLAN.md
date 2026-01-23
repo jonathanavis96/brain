@@ -30,7 +30,7 @@
 - [x] **0.W.2** Fix EOF in `cortex/IMPLEMENTATION_PLAN.md`
   - **AC:** `pre-commit run end-of-file-fixer --files cortex/IMPLEMENTATION_PLAN.md` passes
 
-- [ ] **0.W.3** Verify all pre-commit checks pass
+- [x] **0.W.3** Verify all pre-commit checks pass
   - **AC:** `pre-commit run --all-files` shows all checks passed
 
 ---
