@@ -91,29 +91,29 @@ hash_guard_check() {
 is_lint_only_change() {
   local file="$1"
   local hash_file="$2"
-  
+
   # Get the baseline hash
   local baseline_hash
   baseline_hash="$(head -n 1 "$hash_file" 2>/dev/null)"
   [[ -z "$baseline_hash" ]] && return 1
-  
+
   # Check if file is tracked and has uncommitted changes vs baseline
   # We need to compare current file against what the hash represents
   # Since we can't recover the original, we check git diff for patterns
-  
+
   # Get diff of the file (staged or unstaged)
   local diff_output
   diff_output="$(git diff HEAD -- "$file" 2>/dev/null || git diff -- "$file" 2>/dev/null || echo "")"
-  
+
   # If no diff, check if it's a committed change
   if [[ -z "$diff_output" ]]; then
     # File matches HEAD, but hash doesn't match baseline
     # This means someone committed a change - check last commit diff
     diff_output="$(git diff HEAD~1 HEAD -- "$file" 2>/dev/null || echo "")"
   fi
-  
+
   [[ -z "$diff_output" ]] && return 1
-  
+
   # Define safe lint-fix patterns (additions/removals that are lint-only)
   # These patterns match common shellcheck fixes
   local safe_patterns=(
@@ -132,13 +132,13 @@ is_lint_only_change() {
     '^[+-][[:space:]]*{$'
     '^[+-][[:space:]]*}[[:space:]]*>>'
   )
-  
+
   # Extract only the +/- lines (actual changes, not context)
   local change_lines
   change_lines="$(echo "$diff_output" | grep -E '^[+-]' | grep -v '^[+-]{3}' || echo "")"
-  
+
   [[ -z "$change_lines" ]] && return 1
-  
+
   # Check each change line against safe patterns
   local line safe all_safe=1
   while IFS= read -r line; do
@@ -162,8 +162,8 @@ is_lint_only_change() {
       all_safe=0
       break
     fi
-  done <<< "$change_lines"
-  
+  done <<<"$change_lines"
+
   return $((1 - all_safe))
 }
 
@@ -172,16 +172,16 @@ auto_regen_protected_hash() {
   local file="$1"
   local hash_file="$2"
   local root_hash_file="$3"
-  
+
   local new_hash
   new_hash="$(sha256sum "$file" | cut -d' ' -f1)"
-  
+
   # Update both hash files
-  echo "$new_hash" > "$hash_file"
+  echo "$new_hash" >"$hash_file"
   if [[ -n "$root_hash_file" && -f "$(dirname "$root_hash_file")" ]]; then
-    echo "$new_hash" > "$root_hash_file" 2>/dev/null || true
+    echo "$new_hash" >"$root_hash_file" 2>/dev/null || true
   fi
-  
+
   echo "$new_hash"
 }
 
@@ -417,7 +417,7 @@ main() {
             root_hash_file="$ROOT/.verify/prompt.sha256"
             ;;
         esac
-        
+
         if [[ -n "$protected_file" ]] && is_lint_only_change "$protected_file" "$hash_file"; then
           # Auto-approve lint-only changes
           local new_hash
@@ -436,7 +436,7 @@ main() {
           return 0
         fi
       fi
-      
+
       if [[ "$gate" == "block" ]]; then
         {
           echo "[FAIL] $id"
