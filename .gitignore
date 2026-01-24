@@ -41,3 +41,4 @@ __pycache__/
 
 # Runtime state (not committed)
 state/
+artifacts/rollflow_reports/*.json
