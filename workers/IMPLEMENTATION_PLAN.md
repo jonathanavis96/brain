@@ -128,7 +128,7 @@
 
 ### Phase 2.1: Verifier Cache Integration
 
-- [ ] **2.1.1** Update verifier.sh to use input-based cache keys
+- [x] **2.1.1** Update verifier.sh to use input-based cache keys
   - Each AC check computes key from: `check_id + target_file_hash`
   - On cache hit: reuse prior PASS/FAIL result
   - **AC:** Unchanged files skip re-verification
