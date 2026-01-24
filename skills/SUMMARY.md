@@ -77,6 +77,7 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
   - [Markdown Patterns](domains/code-quality/markdown-patterns.md) - Lint rules (MD040, MD024, MD050), documentation accuracy
   - [Python Patterns](domains/languages/python/python-patterns.md) - datetime, f-strings, JSON handling, type hints, import scope
   - [Testing Patterns](domains/code-quality/testing-patterns.md) - Unit, integration, e2e testing across Jest, pytest, Go testing
+  - [Research Patterns](domains/code-quality/research-patterns.md) - Systematic research methodology (CRAAP test, triangulation, source evaluation)
   - [Token Efficiency](domains/code-quality/token-efficiency.md) - Token optimization strategies for AI agents
   - [Ralph Loop Architecture](domains/ralph/ralph-patterns.md) - How Ralph works internally (subagents, tool visibility, execution flow)
   - [Bootstrap Patterns](domains/ralph/bootstrap-patterns.md) - Project bootstrapping, scaffold templates, initialization flows
