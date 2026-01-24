@@ -23,6 +23,9 @@ fi
 timestamp() { date +"%Y-%m-%d %H:%M:%S"; }
 git_head() { git rev-parse --short HEAD 2>/dev/null || echo "no-git"; }
 
+# Log cache config for Cortex visibility
+echo ":::VERIFIER_ENV::: CACHE_MODE=${CACHE_MODE:-unset} CACHE_SCOPE=${CACHE_SCOPE:-unset}" >&2
+
 trim_ws() {
   # trim trailing whitespace + CR
   printf "%s" "$1" | tr -d '\r' | sed 's/[[:space:]]*$//'

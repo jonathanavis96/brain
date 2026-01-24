@@ -344,6 +344,9 @@ CACHE_SCOPE="${CACHE_SCOPE:-verify,read}" # verify,read,llm_ro - comma-separated
 
 # Export cache variables so subprocesses (verifier.sh) inherit them
 export CACHE_MODE CACHE_SCOPE
+
+# Log cache config for Cortex visibility
+echo ":::CACHE_CONFIG::: mode=$CACHE_MODE scope=$CACHE_SCOPE exported=1" >&2
 FORCE_NO_CACHE=false
 FORCE_FRESH=false # Bypass all caching regardless of CACHE_MODE/SCOPE
 CONSECUTIVE_VERIFIER_FAILURES=0

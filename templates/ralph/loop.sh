@@ -326,7 +326,12 @@ ROLLBACK_MODE=false
 ROLLBACK_COUNT=1
 RESUME_MODE=false
 NO_MONITORS=false
-CACHE_SKIP=false
+CACHE_SKIP="${CACHE_SKIP:-false}"
+CACHE_MODE="${CACHE_MODE:-off}"           # off|record|use - controls cache behavior
+CACHE_SCOPE="${CACHE_SCOPE:-verify,read}" # verify,read,llm_ro - comma-separated list of allowed scopes
+
+# Export cache variables so subprocesses (verifier.sh) inherit them
+export CACHE_MODE CACHE_SCOPE
 CONSECUTIVE_VERIFIER_FAILURES=0
 
 # Parse args
