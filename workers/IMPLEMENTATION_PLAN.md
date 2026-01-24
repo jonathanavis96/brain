@@ -136,7 +136,7 @@
   - **AC:** Unit test with sample log containing 5 tool calls passes
   - **If Blocked:** Use regex-based parsing, handle edge cases iteratively
 
-- [ ] **12.2.3** Create `parsers/heuristic_parser.py` with hardcoded patterns
+- [x] **12.2.3** Create `parsers/heuristic_parser.py` with hardcoded patterns
   - Implement fallback parser with default regex patterns for unmarked logs
   - **Depends on:** 12.2.1
   - **Goal:** Fallback for logs without explicit markers
