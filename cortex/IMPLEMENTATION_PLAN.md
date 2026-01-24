@@ -213,7 +213,7 @@ Phases 0, 2, 3, 4, 5, 6 completed - see `workers/ralph/THUNK.md` for details.
 
 **Goal:** Implement CLI that produces reports from logs and updates cache DB.
 
-- [ ] **12.3.1** Implement report writer in `tools/rollflow_analyze/report.py`
+- [x] **12.3.1** Implement report writer in `tools/rollflow_analyze/report.py`
   - JSON output with tool_calls array + aggregates
   - Optional markdown summary
   - **Depends on:** 12.2.2 (or 12.2.3 for fallback)

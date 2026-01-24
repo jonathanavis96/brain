@@ -27,6 +27,10 @@ LOGDIR="$RALPH/logs"
 VERIFY_REPORT="$RALPH/.verify/latest.txt"
 mkdir -p "$LOGDIR"
 
+# Source shared utilities (includes RollFlow tracking functions)
+# shellcheck source=../shared/common.sh
+source "$(dirname "$RALPH")/shared/common.sh"
+
 # Cleanup logs older than 7 days on startup
 cleanup_old_logs() {
   local days="${1:-7}"
@@ -116,7 +120,59 @@ acquire_lock() {
     fi
   fi
 }
+
+release_lock() {
+  # Release file lock and remove lock file
+  if [[ -f "$LOCK_FILE" ]]; then
+    rm -f "$LOCK_FILE"
+  fi
+  # Close file descriptor if flock was used
+  exec 9>&- 2>/dev/null || true
+}
+
 acquire_lock
+
+# =============================================================================
+# Event Emission (provider-neutral markers)
+# =============================================================================
+# Emits lifecycle events to state/events.jsonl for external tooling.
+# Best-effort: never fails the loop if event emission fails.
+
+BRAIN_EVENT_SCRIPT="$ROOT/bin/brain-event"
+
+emit_event() {
+  # Best-effort event emission - never block the loop
+  if [[ -x "$BRAIN_EVENT_SCRIPT" ]]; then
+    "$BRAIN_EVENT_SCRIPT" --runner "${RUNNER:-unknown}" "$@" 2>/dev/null || true
+  fi
+}
+
+# Trap for error event on unexpected exit
+_loop_exit_code=0
+_loop_emitted_end=false
+
+cleanup_and_emit() {
+  local exit_code=$?
+
+  # Avoid double-emission
+  if [[ "$_loop_emitted_end" == "true" ]]; then
+    release_lock
+    exit $exit_code
+  fi
+  _loop_emitted_end=true
+
+  # Emit appropriate event based on exit code
+  if [[ $exit_code -ne 0 && $exit_code -ne 130 ]]; then
+    # Error exit (not SIGINT)
+    emit_event --event error --iter "${CURRENT_ITER:-0}" --status fail --code "$exit_code" --msg "loop exited unexpectedly"
+  fi
+
+  release_lock
+  exit $exit_code
+}
+
+# Will be set up after argument parsing
+CURRENT_ITER=0
 
 # Interrupt handling: First Ctrl+C = graceful exit, Second Ctrl+C = immediate exit
 INTERRUPT_COUNT=0
@@ -837,7 +893,17 @@ run_once() {
     fi
   } >"$prompt_with_mode"
 
-  # Feed prompt into selected runner
+  # Feed prompt into selected runner with RollFlow tracking markers
+  local tool_id tool_key start_ms end_ms duration_ms rc
+  local git_sha
+  git_sha="$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')"
+  tool_id="$(tool_call_id)"
+  tool_key="$(cache_key "$RUNNER" "{\"model\":\"$RESOLVED_MODEL\",\"phase\":\"$phase\",\"iter\":$iter}" "$git_sha")"
+  start_ms="$(($(date +%s%N) / 1000000))"
+
+  # Log tool call start
+  log_tool_start "$tool_id" "$RUNNER" "$tool_key" "$git_sha" | tee -a "$log"
+
   if [[ "$RUNNER" == "opencode" ]]; then
     # NOTE: Passing full prompt as CLI arg can hit shell/argv limits if prompt is huge.
     # If that happens, pivot to a file-based approach after validating basic integration.
@@ -845,16 +911,32 @@ run_once() {
     if [[ -n "${OPENCODE_ATTACH:-}" ]]; then
       attach_flag="--attach ${OPENCODE_ATTACH}"
     fi
-    opencode run "${attach_flag}" --model "${RESOLVED_MODEL}" --format "${OPENCODE_FORMAT}" "$(cat "$prompt_with_mode")" 2>&1 | tee "$log"
+    opencode run "${attach_flag}" --model "${RESOLVED_MODEL}" --format "${OPENCODE_FORMAT}" "$(cat "$prompt_with_mode")" 2>&1 | tee -a "$log"
     rc=$?
+
+    # Log tool call end
+    end_ms="$(($(date +%s%N) / 1000000))"
+    duration_ms="$((end_ms - start_ms))"
     if [[ $rc -ne 0 ]]; then
+      log_tool_end "$tool_id" "FAIL" "$rc" "$duration_ms" "OpenCode exit $rc" | tee -a "$log"
       echo "❌ OpenCode failed (exit $rc). See: $log"
       tail -n 80 "$log" || true
       return 1
     fi
+    log_tool_end "$tool_id" "PASS" "$rc" "$duration_ms" | tee -a "$log"
   else
     # Default: RovoDev
     script -q -c "cat \"$prompt_with_mode\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG}" "$log"
+    rc=$?
+
+    # Log tool call end
+    end_ms="$(($(date +%s%N) / 1000000))"
+    duration_ms="$((end_ms - start_ms))"
+    if [[ $rc -ne 0 ]]; then
+      log_tool_end "$tool_id" "FAIL" "$rc" "$duration_ms" "RovoDev exit $rc" | tee -a "$log"
+    else
+      log_tool_end "$tool_id" "PASS" "$rc" "$duration_ms" | tee -a "$log"
+    fi
   fi
 
   # Clean up temporary prompt
@@ -1068,10 +1150,23 @@ if [[ "$NO_MONITORS" == "false" ]]; then
   launch_monitors
 fi
 
+# Generate RollFlow run ID and log run start marker
+ROLLFLOW_RUN_ID="run-$(date +%s)-$$"
+export ROLLFLOW_RUN_ID
+log_run_start "$ROLLFLOW_RUN_ID"
+
+# Set up trap for error event on unexpected exit
+trap 'cleanup_and_emit' EXIT
+
 # Determine prompt strategy
 if [[ -n "$PROMPT_ARG" ]]; then
   PROMPT_FILE="$(resolve_prompt "$PROMPT_ARG")"
   for ((i = 1; i <= ITERATIONS; i++)); do
+    # Log iteration start marker for RollFlow tracking
+    log_iter_start "iter-$i" "$ROLLFLOW_RUN_ID"
+    CURRENT_ITER=$i
+    emit_event --event iteration_start --iter "$i"
+
     # Check for interrupt before starting iteration
     if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
       echo ""
@@ -1118,7 +1213,13 @@ if [[ -n "$PROMPT_ARG" ]]; then
 
     # Capture exit code without triggering set -e
     run_result=0
+    emit_event --event phase_start --iter "$i" --phase "custom"
     run_once "$PROMPT_FILE" "custom" "$i" || run_result=$?
+    if [[ $run_result -eq 0 ]]; then
+      emit_event --event phase_end --iter "$i" --phase "custom" --status ok
+    else
+      emit_event --event phase_end --iter "$i" --phase "custom" --status fail --code "$run_result"
+    fi
     # Check if Ralph signaled completion
     if [[ $run_result -eq 42 ]]; then
       echo ""
@@ -1161,10 +1262,16 @@ if [[ -n "$PROMPT_ARG" ]]; then
       # Reset counter on successful iteration
       CONSECUTIVE_VERIFIER_FAILURES=0
     fi
+    emit_event --event iteration_end --iter "$i" --status ok
   done
 else
   # Alternating plan/build
   for ((i = 1; i <= ITERATIONS; i++)); do
+    # Log iteration start marker for RollFlow tracking
+    log_iter_start "iter-$i" "$ROLLFLOW_RUN_ID"
+    CURRENT_ITER=$i
+    emit_event --event iteration_start --iter "$i"
+
     # Check for interrupt before starting iteration
     if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
       echo ""
@@ -1222,7 +1329,13 @@ else
         fi
         echo ""
       fi
+      emit_event --event phase_start --iter "$i" --phase "plan"
       run_once "$PLAN_PROMPT" "plan" "$i" || run_result=$?
+      if [[ $run_result -eq 0 ]]; then
+        emit_event --event phase_end --iter "$i" --phase "plan" --status ok
+      else
+        emit_event --event phase_end --iter "$i" --phase "plan" --status fail --code "$run_result"
+      fi
     else
       # Auto-fix lint issues before BUILD iteration
       echo "Running auto-fix for lint issues..."
@@ -1238,7 +1351,13 @@ else
       (cd "$RALPH" && bash verifier.sh 2>/dev/null) || true
       echo ""
 
+      emit_event --event phase_start --iter "$i" --phase "build"
       run_once "$BUILD_PROMPT" "build" "$i" || run_result=$?
+      if [[ $run_result -eq 0 ]]; then
+        emit_event --event phase_end --iter "$i" --phase "build" --status ok
+      else
+        emit_event --event phase_end --iter "$i" --phase "build" --status fail --code "$run_result"
+      fi
 
       # Sync completions back to Cortex after BUILD iterations
       if [[ -f "$RALPH/sync_completions_to_cortex.sh" ]]; then
@@ -1293,5 +1412,6 @@ else
       # Reset counter on successful iteration
       CONSECUTIVE_VERIFIER_FAILURES=0
     fi
+    emit_event --event iteration_end --iter "$i" --status ok
   done
 fi
