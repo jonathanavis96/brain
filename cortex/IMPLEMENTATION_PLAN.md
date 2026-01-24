@@ -13,8 +13,8 @@
 
 ## Current Status
 
-**Last Updated:** 2026-01-24 20:10:00  
-**Progress:** Fresh start - awaiting new phase definition
+**Last Updated:** 2026-01-24 20:45:00  
+**Progress:** Phase 1 - Scope-based cache redesign (20 tasks)
 
 ---
 
@@ -33,138 +33,164 @@ Key milestones:
 
 <!-- Cortex adds new Task Contracts below this line -->
 
-## Phase 1: Cache System End-to-End Testing
+## Phase 1: Scope-Based Cache Redesign
 
-**Goal:** Prove the RollFlow cache pipeline works before locking in semantics or architecture.
+**Goal:** Replace iteration-level caching with input-based caching that only skips idempotent operations.
 
-**Definition of Done:** Two Ralph runs demonstrate cache population (run 1) and cache hits/skips (run 2), with verifiable differences in tool execution counts.
+**Core Rule:** Cache things that are idempotent (same inputs = same outputs). Never cache BUILD/task execution.
 
-**Test Strategy:**
+**What to cache:**
 
-- Run 1: Execute deterministic tool calls, populate cache DB
-- Run 2: Same calls should hit cache and skip execution
-- Verify: Analyzer report shows hits/misses, DB has entries, outcomes identical
+- ✅ Verifiers: shellcheck, grep, lint (keyed by file hashes)
+- ✅ Read operations: file reads, directory listings (keyed by path + mtime)
+- ✅ Read-only LLM phases: reports, analysis, summaries (explicit opt-in)
+- ❌ BUILD/PLAN phases: Never cache (these advance state)
 
-### Phase 1.1: Create Minimal Test Task
+### Phase 1.1: Design and Document
 
-- [ ] **1.1.1** Create `workers/ralph/test_cache_task.md` - a minimal prompt
-  - Task: Read 3 specific files, run `git status`, output a summary
-  - Files: `README.md`, `AGENTS.md`, `NEURONS.md` (stable, always exist)
-  - **AC:** Prompt file exists, is under 50 lines, produces deterministic tool calls
-  - **Note:** This is a throwaway test prompt, not production
+- [ ] **1.1.1** Create `docs/CACHE_DESIGN.md` with scope definitions
+  - Define scopes: `verify`, `read`, `llm_ro` (read-only LLM)
+  - Document phase-to-scope mapping
+  - Explain why BUILD/PLAN never get LLM caching
+  - **AC:** Design doc exists, reviewed
 
-- [ ] **1.1.2** Add `--test-cache` flag to loop.sh
-  - When set: Use `test_cache_task.md` as prompt, run exactly 1 iteration
-  - Skip verifier (test-only mode)
-  - **AC:** `bash loop.sh --test-cache` runs without error, produces log with TOOL markers
+- [ ] **1.1.2** Define phase-to-scope mapping in code comments
+  - `PLAN` → no LLM cache (creates new tasks)
+  - `BUILD` → no LLM cache (executes tasks, changes files)
+  - `VERIFY` → `verify` scope (shellcheck, lint - cacheable)
+  - `REPORT` → `llm_ro` scope (read-only analysis - cacheable)
+  - **AC:** Mapping documented in loop.sh header
 
-### Phase 1.2: Run Cache Population Test (Record Mode)
+### Phase 1.2: Input-Based Cache Keys
 
-- [ ] **1.2.1** Execute first test run (cache miss expected)
-  - Command: `CACHE_SKIP=1 bash loop.sh --test-cache`
-  - Expected: All `::CACHE_MISS::` markers, no `::CACHE_HIT::`
-  - **AC:** Log shows 4+ TOOL_CALL_START/END pairs, all CACHE_MISS
+- [ ] **1.2.1** Add `file_content_hash()` function to `common.sh`
+  - `file_content_hash <path>` → sha256 of file contents
+  - **AC:** Function exists, returns consistent hash for same content
 
-- [ ] **1.2.2** Verify cache DB populated after run 1
-  - Check: `sqlite3 artifacts/rollflow_cache/cache.sqlite "SELECT COUNT(*) FROM pass_cache"`
-  - Expected: At least 1 entry (ideally 4+ for our test tools)
-  - **AC:** pass_cache has entries, fail_log is empty or minimal
+- [ ] **1.2.2** Add `tree_hash()` function to `common.sh`
+  - `tree_hash <dir>` → hash of directory tree state (files + mtimes)
+  - **AC:** Function exists, changes when any file in dir changes
 
-### Phase 1.3: Run Cache Hit Test (Use Mode)
+- [ ] **1.2.3** Refactor `cache_key()` for verifier tools
+  - New signature: `cache_key <tool> <target_file_or_dir>`
+  - Key = `tool_name + file_content_hash(target)`
+  - **AC:** Same file = same key, regardless of iteration
 
-- [ ] **1.3.1** Execute second test run (cache hits expected)
-  - Command: `CACHE_SKIP=1 bash loop.sh --test-cache` (same as before)
-  - Expected: Some `::CACHE_HIT::` markers, fewer tool executions
-  - **AC:** Log shows at least 1 CACHE_HIT, total TOOL_CALL count reduced vs run 1
+### Phase 1.3: Implement CACHE_MODE and CACHE_SCOPE
 
-- [ ] **1.3.2** Compare run 1 vs run 2 metrics
-  - Use analyzer: `rollflow_analyze --log-dir workers/ralph/logs --out /tmp/test_report.json`
-  - Compare: tool call counts, cache hit ratio, time saved estimate
-  - **AC:** Report shows cache_advice.potential_skips > 0, time_saved_ms > 0
+- [ ] **1.3.1** Add `CACHE_MODE=off|record|use` to loop.sh
+  - `off` = no caching at all (current default)
+  - `record` = run everything, store PASS results
+  - `use` = check cache first, skip on hit, record misses
+  - **AC:** All three modes work correctly
 
-### Phase 1.4: Verify Correctness
+- [ ] **1.3.2** Add `CACHE_SCOPE=verify,read,llm_ro` to loop.sh
+  - Comma-separated list of active cache types
+  - Default: `verify,read` (safe defaults, no LLM caching)
+  - **AC:** Scopes correctly filter which caches are checked
 
-- [ ] **1.4.1** Confirm outcomes identical between runs
-  - Both runs should produce same "pass" result (no false failures from caching)
-  - **AC:** Exit code 0 on both runs, no verifier regressions
+- [ ] **1.3.3** Hard-block `llm_ro` scope for BUILD/PLAN phases
+  - Even if user sets `CACHE_SCOPE=llm_ro`, ignore for BUILD/PLAN
+  - Log warning: "llm_ro scope ignored for BUILD phase"
+  - **AC:** BUILD phase always calls LLM
 
-- [ ] **1.4.2** Test cache invalidation on git SHA change
-  - Make a trivial commit (e.g., touch a file, commit)
-  - Run again with `CACHE_SKIP=1`
-  - Expected: Cache misses (SHA changed invalidates cache)
-  - **AC:** CACHE_MISS on all calls after SHA change
+### Phase 1.4: Safety Guards
 
-- [ ] **1.4.3** Cleanup test artifacts
-  - Remove `test_cache_task.md`
-  - Clear test entries from cache DB (or document as acceptable test data)
-  - **AC:** No test-only files left in repo
+- [ ] **1.4.1** Add pending task check before any cache skip
+  - If `IMPLEMENTATION_PLAN.md` has `- [ ]` tasks and phase=BUILD → force run
+  - **AC:** BUILD with pending tasks always executes
 
-**Phase AC:** Cache system demonstrated working with measurable skip behavior
+- [ ] **1.4.2** Add `--force-fresh` flag
+  - Bypasses all caching regardless of CACHE_MODE/SCOPE
+  - Useful for debugging stale cache issues
+  - **AC:** Flag works, all operations run fresh
+
+- [ ] **1.4.3** Deprecate `CACHE_SKIP` with migration path
+  - Map `CACHE_SKIP=1` → `CACHE_MODE=use CACHE_SCOPE=verify,read`
+  - Log: "CACHE_SKIP is deprecated, use CACHE_MODE and CACHE_SCOPE"
+  - **AC:** Old flag still works with warning
+
+### Phase 1.5: Update Both Workers
+
+- [ ] **1.5.1** Update `workers/ralph/loop.sh` with new cache logic
+  - Remove iteration-level LLM caching
+  - Add phase guards
+  - **AC:** Ralph respects new cache design
+
+- [ ] **1.5.2** Update `workers/cerebras/loop.sh` with new cache logic
+  - Same changes as Ralph
+  - **AC:** Cerebras respects new cache design
+
+- [ ] **1.5.3** Update `workers/shared/common.sh` with new functions
+  - Add file_content_hash, tree_hash
+  - Update cache_key signature
+  - **AC:** Shared functions available to all workers
+
+### Phase 1.6: Testing
+
+- [ ] **1.6.1** Test verifier caching works
+  - Run verifier twice on unchanged repo → expect cache hits
+  - Modify a file → expect cache miss for that file's checks
+  - **AC:** Verifier cache behaves correctly
+
+- [ ] **1.6.2** Test BUILD phase never skips LLM
+  - Set `CACHE_MODE=use CACHE_SCOPE=verify,read,llm_ro`
+  - Run BUILD with pending task
+  - **AC:** LLM still called (llm_ro blocked for BUILD)
+
+- [ ] **1.6.3** Test task queue safety guard
+  - With pending tasks, cache should not prevent execution
+  - **AC:** Pending tasks always trigger BUILD execution
+
+**Phase AC:** Caching accelerates checks/analysis but never suppresses work
 
 ---
 
-## Phase 2: Rename Cache Flag (After Testing)
+## Phase 2: Verifier-Specific Caching (Optional Enhancement)
 
-**Goal:** Replace confusing `CACHE_SKIP` with clearer semantics.
+**Goal:** Apply caching specifically to verifier.sh checks for faster verification loops.
 
-**Depends on:** Phase 1 complete (need to see actual behavior before naming)
+**Depends on:** Phase 1 complete
 
-**Options to evaluate:**
+### Phase 2.1: Verifier Cache Integration
 
-- Option A: `CACHE_MODE=off|record|use` (most flexible)
-- Option B: `USE_CACHE=1` + `CACHE_RECORD=1` (boolean pair)
-- Option C: `CACHE_ENABLED=1` (simple toggle)
+- [ ] **2.1.1** Update verifier.sh to use input-based cache keys
+  - Each AC check computes key from: `check_id + target_file_hash`
+  - On cache hit: reuse prior PASS/FAIL result
+  - **AC:** Unchanged files skip re-verification
 
-### Phase 2.1: Implement New Flag
+- [ ] **2.1.2** Add cache invalidation on rule change
+  - Include `rules/AC.rules` hash in cache key
+  - Rule change → all checks re-run
+  - **AC:** Editing AC.rules invalidates all cached results
 
-- [ ] **2.1.1** Choose flag semantics based on Phase 1 learnings
-  - Document decision in `cortex/DECISIONS.md`
-  - **AC:** Decision recorded with rationale
-
-- [ ] **2.1.2** Update `loop.sh` to use new flag name
-  - Keep `CACHE_SKIP` as deprecated alias (warn on use)
-  - **AC:** New flag works, old flag warns but still functions
-
-- [ ] **2.1.3** Update `workers/shared/common.sh` cache functions
-  - Align function names/behavior with new semantics
-  - **AC:** No references to old naming in new code
-
-- [ ] **2.1.4** Update documentation
-  - `loop.sh --help`, `README.md`, any skill docs mentioning cache
-  - **AC:** All docs use new naming consistently
-
-**Phase AC:** New cache flag in use, `CACHE_SKIP` deprecated with warning
+**Phase AC:** Verifier runs faster on unchanged files
 
 ---
 
 ## Phase 3: Per-Agent Cache Isolation (If Needed)
 
-**Goal:** Prevent cache cross-talk between workers if Phase 1 reveals issues.
+**Goal:** Prevent cache cross-talk between workers.
 
-**Depends on:** Phase 1 complete (may not be needed if logical separation suffices)
+**Depends on:** Phase 1 complete
 
-**Decision point:** After Phase 1, evaluate:
+**Decision:** Evaluate after Phase 1 testing whether isolation is needed.
 
-- Did Ralph/Cerebras cache entries conflict?
-- Is agent dimension already in cache key sufficient?
-- Do different workers need different TTL/config?
+### Phase 3.1: Evaluate Need
 
-### Phase 3.1: Evaluate Isolation Need
+- [ ] **3.1.1** Check if current design already isolates agents
+  - Cache key includes tool name (ralph vs cerebras)
+  - If keys already differ → no isolation needed
+  - **AC:** Decision documented
 
-- [ ] **3.1.1** Analyze cache keys from Phase 1 test
-  - Check if agent/worker is already part of key
-  - **AC:** Decision documented: physical vs logical vs none
-
-### Phase 3.2: Implement Isolation (if chosen)
+### Phase 3.2: Implement If Needed
 
 - [ ] **3.2.1** Option A: Physical separation
-  - Move cache to `workers/<agent>/cache/cache.sqlite`
-  - Update `CACHE_DB` path resolution in common.sh
-  - **AC:** Each worker has own cache directory
+  - `workers/<agent>/cache/cache.sqlite`
+  - **AC:** Each worker has own cache DB
 
-- [ ] **3.2.2** Option B: Logical separation (namespace keys)
-  - Add `agent=<name>` to cache key computation
-  - Keep single DB but keys won't collide
+- [ ] **3.2.2** Option B: Logical separation
+  - Add `agent=<name>` to all cache keys
   - **AC:** Same tool+args for different agents = different keys
 
-**Phase AC:** Cache isolation strategy implemented (or documented as unnecessary)
+**Phase AC:** Cache isolation implemented or documented as unnecessary
