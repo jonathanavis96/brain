@@ -60,3 +60,27 @@ After creating a new skill, check if it affects agent behavior:
 - If the skill changes how agents should operate → Update `AGENTS.md`
 - If the skill changes prompts → Update `PROMPT.md` or templates
 - If the skill affects validation → Update `VALIDATION_CRITERIA.md`
+
+## Rule 6: Conversation Persistence
+
+Before ending any session where substantial knowledge was discussed, write a summary to the appropriate `.md` file.
+
+**Triggers (any of these):**
+
+- Decisions were made about architecture, approach, or strategy
+- User explained domain knowledge, requirements, or context
+- Multiple options were evaluated and one was chosen
+- A problem was diagnosed and root cause identified
+- New patterns, conventions, or procedures were established
+
+**Destinations:**
+
+| Content Type | Write To |
+|--------------|----------|
+| Strategic decisions | `DECISIONS.md` or `cortex/DECISIONS.md` |
+| Knowledge gaps | `skills/self-improvement/GAP_BACKLOG.md` |
+| Project context/goals | `THOUGHTS.md` |
+| Reusable patterns | `skills/domains/<topic>/<skill>.md` |
+| Research/meeting notes | `cortex/docs/` or project docs |
+
+**Format:** Date, what was discussed/decided, why (rationale), follow-up actions.
