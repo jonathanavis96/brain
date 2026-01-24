@@ -235,7 +235,7 @@ Usage:
   loop.sh [--prompt <path>] [--iterations N] [--plan-every N] [--yolo|--no-yolo]
           [--runner rovodev|opencode] [--model <model>] [--branch <name>] [--dry-run] [--no-monitors]
           [--opencode-serve] [--opencode-port N] [--opencode-attach <url>] [--opencode-format json|text]
-          [--rollback [N]] [--resume]
+          [--cache-skip] [--rollback [N]] [--resume]
 
 Defaults:
   --iterations 1
@@ -269,6 +269,7 @@ Branch Workflow:
 Safety Features:
   --dry-run       Preview changes without committing (appends instruction to prompt)
   --no-monitors   Skip auto-launching monitor terminals (useful for CI/CD or headless environments)
+  --cache-skip    Enable cache lookup to skip redundant tool calls (requires RollFlow cache DB)
   --rollback [N]  Undo last N Ralph commits (default: 1). Requires confirmation.
   --resume        Resume from last incomplete iteration (checks for uncommitted changes)
 
@@ -325,6 +326,7 @@ ROLLBACK_MODE=false
 ROLLBACK_COUNT=1
 RESUME_MODE=false
 NO_MONITORS=false
+CACHE_SKIP=false
 CONSECUTIVE_VERIFIER_FAILURES=0
 
 # Parse args
@@ -384,6 +386,11 @@ while [[ $# -gt 0 ]]; do
       ;;
     --no-monitors)
       NO_MONITORS=true
+      shift
+      ;;
+    --cache-skip)
+      # shellcheck disable=SC2034  # Used in future cache lookup logic (12.4.2.4)
+      CACHE_SKIP=true
       shift
       ;;
     --rollback)

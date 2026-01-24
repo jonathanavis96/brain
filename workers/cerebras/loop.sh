@@ -178,7 +178,7 @@ usage() {
 Usage:
   loop.sh [--prompt <path>] [--iterations N] [--plan-every N] [--yolo|--no-yolo]
           [--model <model>] [--branch <name>] [--task <desc>] [--dry-run]
-          [--no-monitors] [--rollback [N]] [--resume]
+          [--no-monitors] [--force-build] [--rollback [N]] [--resume]
 
 Defaults:
   --iterations 1
@@ -215,6 +215,7 @@ Task Injection:
 Safety Features:
   --dry-run       Preview changes without committing (uses a test task)
   --no-monitors   Skip auto-launching monitor terminals (useful for CI/CD or headless environments)
+  --force-build   Force BUILD mode even on iteration 1 (bypasses automatic PLAN on first iteration)
   --rollback [N]  Undo last N Ralph commits (default: 1). Requires confirmation.
   --resume        Resume from last incomplete iteration (checks for uncommitted changes)
 
@@ -244,6 +245,9 @@ Examples:
   # Run without monitor terminals (useful for CI/CD)
   bash cerebras/loop.sh --no-monitors --iterations 5
 
+  # Force BUILD mode on iteration 1 (skip automatic PLAN)
+  bash cerebras/loop.sh --force-build --iterations 1
+
   # Rollback last 2 iterations
   bash cerebras/loop.sh --rollback 2
 
@@ -264,6 +268,7 @@ ROLLBACK_MODE=false
 ROLLBACK_COUNT=1
 RESUME_MODE=false
 NO_MONITORS=false
+FORCE_BUILD=false
 CONSECUTIVE_VERIFIER_FAILURES=0
 
 # Parse args
@@ -307,6 +312,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --no-monitors)
       NO_MONITORS=true
+      shift
+      ;;
+    --force-build)
+      FORCE_BUILD=true
       shift
       ;;
     --rollback)
@@ -1154,7 +1163,11 @@ else
 
     # Capture exit code without triggering set -e
     run_result=0
-    if [[ $i -eq 1 ]] || ((PLAN_EVERY > 0 && ((i - 1) % PLAN_EVERY == 0))); then
+    # Determine mode: --force-build bypasses the "iteration 1 = PLAN" rule
+    if [[ $FORCE_BUILD == "true" ]]; then
+      # Force BUILD mode regardless of iteration number
+      run_once "$BUILD_PROMPT" "build" "$i" || run_result=$?
+    elif [[ $i -eq 1 ]] || ((PLAN_EVERY > 0 && ((i - 1) % PLAN_EVERY == 0))); then
       # Sync tasks from Cortex before PLAN mode
       if [[ -f "$CEREBRAS/sync_cortex_plan.sh" ]]; then
         echo "Syncing tasks from Cortex..."

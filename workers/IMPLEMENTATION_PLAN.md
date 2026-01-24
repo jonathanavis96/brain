@@ -24,12 +24,21 @@
 
 **Goal:** Resolve verifier hanging issue preventing validation.
 
-- [ ] **0-Infra.1** Investigate verifier.sh hanging during execution (HIGH PRIORITY)
+- [x] **0-Infra.1** Investigate verifier.sh hanging during execution (HIGH PRIORITY)
   - Verifier runs but produces no output and hangs indefinitely
   - Shellcheck passes on all files (loop.sh, verifier.sh, current_ralph_tasks.sh, thunk_ralph_tasks.sh)
   - Likely issue in AC.rules parsing loop or command execution
   - **AC:** `bash workers/ralph/verifier.sh` completes within 30 seconds and produces report
   - **Status:** HUMAN INTERVENTION REQUIRED - Protected file infrastructure issue
+  - **Investigation findings:**
+    - verifier.sh hangs at line 538 (while IFS= read -r line loop)
+    - Debug trace shows infinite loop reading same lines from rules/AC.rules
+    - File reading works in isolation (tested with timeout - completes in <1s)
+    - Issue appears to be in flush_block() nested function interaction with main loop
+    - verifier.sh is PROTECTED FILE (hash matches baseline: 8c2c7db7...)
+    - Cannot modify protected file per PROMPT rules
+    - Latest report has only header (6 lines), no test results
+  - **Recommendation:** Human must debug and fix verifier.sh - this blocks all verification workflows
 
 ---
 
@@ -76,7 +85,7 @@
   - **AC:** Analyzer updates DB after processing logs
   - **If Blocked:** Use JSONL file as simpler alternative to SQLite
 
-- [ ] **12.4.2** Add `CACHE_SKIP=1` flag support to loop.sh
+- [x] **12.4.2** Add `CACHE_SKIP=1` flag support to loop.sh
   - **Status:** Ready to implement (marker emission confirmed stable)
   - **Depends on:** 12.1.2, 12.4.1
   - **AC:** Repeated run shows at least one skip for previously PASS call
