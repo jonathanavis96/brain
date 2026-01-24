@@ -1015,8 +1015,8 @@ run_once() {
   tool_key="${RUNNER,,}|${phase}|${prompt_hash:0:16}|${git_sha}"
   start_ms="$(($(date +%s%N) / 1000000))"
 
-  # Check cache if CACHE_SKIP is enabled and neither FORCE_NO_CACHE nor FORCE_FRESH is set
-  if [[ "$CACHE_SKIP" == "true" && "$FORCE_NO_CACHE" != "true" && "$FORCE_FRESH" != "true" ]]; then
+  # Check cache if CACHE_SKIP or CACHE_MODE=use is enabled and neither FORCE_NO_CACHE nor FORCE_FRESH is set
+  if [[ ("$CACHE_SKIP" == "true" || "$CACHE_MODE" == "use") && "$FORCE_NO_CACHE" != "true" && "$FORCE_FRESH" != "true" ]]; then
     # Safety check: If BUILD phase has pending tasks, force fresh run (task 1.4.1)
     if [[ "$phase" == "build" ]]; then
       local plan_file="${ROOT}/workers/IMPLEMENTATION_PLAN.md"
