@@ -120,6 +120,16 @@ acquire_lock() {
     fi
   fi
 }
+
+release_lock() {
+  # Release file lock and remove lock file
+  if [[ -f "$LOCK_FILE" ]]; then
+    rm -f "$LOCK_FILE"
+  fi
+  # Close file descriptor if flock was used
+  exec 9>&- 2>/dev/null || true
+}
+
 acquire_lock
 
 # =============================================================================
@@ -131,10 +141,10 @@ acquire_lock
 BRAIN_EVENT_SCRIPT="$ROOT/bin/brain-event"
 
 emit_event() {
-    # Best-effort event emission - never block the loop
-    if [[ -x "$BRAIN_EVENT_SCRIPT" ]]; then
-        "$BRAIN_EVENT_SCRIPT" --runner "${RUNNER:-unknown}" "$@" 2>/dev/null || true
-    fi
+  # Best-effort event emission - never block the loop
+  if [[ -x "$BRAIN_EVENT_SCRIPT" ]]; then
+    "$BRAIN_EVENT_SCRIPT" --runner "${RUNNER:-unknown}" "$@" 2>/dev/null || true
+  fi
 }
 
 # Trap for error event on unexpected exit
@@ -142,28 +152,27 @@ _loop_exit_code=0
 _loop_emitted_end=false
 
 cleanup_and_emit() {
-    local exit_code=$?
+  local exit_code=$?
 
-    # Avoid double-emission
-    if [[ "$_loop_emitted_end" == "true" ]]; then
-        release_lock
-        exit $exit_code
-    fi
-    _loop_emitted_end=true
-
-    # Emit appropriate event based on exit code
-    if [[ $exit_code -ne 0 && $exit_code -ne 130 ]]; then
-        # Error exit (not SIGINT)
-        emit_event --event error --iter "${CURRENT_ITER:-0}" --status fail --code "$exit_code" --msg "loop exited unexpectedly"
-    fi
-
+  # Avoid double-emission
+  if [[ "$_loop_emitted_end" == "true" ]]; then
     release_lock
     exit $exit_code
+  fi
+  _loop_emitted_end=true
+
+  # Emit appropriate event based on exit code
+  if [[ $exit_code -ne 0 && $exit_code -ne 130 ]]; then
+    # Error exit (not SIGINT)
+    emit_event --event error --iter "${CURRENT_ITER:-0}" --status fail --code "$exit_code" --msg "loop exited unexpectedly"
+  fi
+
+  release_lock
+  exit $exit_code
 }
 
 # Will be set up after argument parsing
 CURRENT_ITER=0
-
 
 # Interrupt handling: First Ctrl+C = graceful exit, Second Ctrl+C = immediate exit
 INTERRUPT_COUNT=0
@@ -321,84 +330,84 @@ CONSECUTIVE_VERIFIER_FAILURES=0
 # Parse args
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --prompt)
-      PROMPT_ARG="${2:-}"
+  --prompt)
+    PROMPT_ARG="${2:-}"
+    shift 2
+    ;;
+  --iterations)
+    ITERATIONS="${2:-}"
+    shift 2
+    ;;
+  --plan-every)
+    PLAN_EVERY="${2:-}"
+    shift 2
+    ;;
+  --yolo)
+    YOLO_FLAG="--yolo"
+    shift
+    ;;
+  --no-yolo)
+    YOLO_FLAG=""
+    shift
+    ;;
+  --runner)
+    RUNNER="${2:-}"
+    shift 2
+    ;;
+  --opencode-serve)
+    OPENCODE_SERVE=true
+    shift
+    ;;
+  --opencode-port)
+    OPENCODE_PORT="${2:-4096}"
+    shift 2
+    ;;
+  --opencode-attach)
+    OPENCODE_ATTACH="${2:-}"
+    shift 2
+    ;;
+  --opencode-format)
+    OPENCODE_FORMAT="${2:-default}"
+    shift 2
+    ;;
+  --model)
+    MODEL_ARG="${2:-}"
+    shift 2
+    ;;
+  --branch)
+    BRANCH_ARG="${2:-}"
+    shift 2
+    ;;
+  --dry-run)
+    DRY_RUN=true
+    shift
+    ;;
+  --no-monitors)
+    NO_MONITORS=true
+    shift
+    ;;
+  --rollback)
+    ROLLBACK_MODE=true
+    if [[ -n "${2:-}" && "$2" =~ ^[0-9]+$ ]]; then
+      ROLLBACK_COUNT="$2"
       shift 2
-      ;;
-    --iterations)
-      ITERATIONS="${2:-}"
-      shift 2
-      ;;
-    --plan-every)
-      PLAN_EVERY="${2:-}"
-      shift 2
-      ;;
-    --yolo)
-      YOLO_FLAG="--yolo"
+    else
       shift
-      ;;
-    --no-yolo)
-      YOLO_FLAG=""
-      shift
-      ;;
-    --runner)
-      RUNNER="${2:-}"
-      shift 2
-      ;;
-    --opencode-serve)
-      OPENCODE_SERVE=true
-      shift
-      ;;
-    --opencode-port)
-      OPENCODE_PORT="${2:-4096}"
-      shift 2
-      ;;
-    --opencode-attach)
-      OPENCODE_ATTACH="${2:-}"
-      shift 2
-      ;;
-    --opencode-format)
-      OPENCODE_FORMAT="${2:-default}"
-      shift 2
-      ;;
-    --model)
-      MODEL_ARG="${2:-}"
-      shift 2
-      ;;
-    --branch)
-      BRANCH_ARG="${2:-}"
-      shift 2
-      ;;
-    --dry-run)
-      DRY_RUN=true
-      shift
-      ;;
-    --no-monitors)
-      NO_MONITORS=true
-      shift
-      ;;
-    --rollback)
-      ROLLBACK_MODE=true
-      if [[ -n "${2:-}" && "$2" =~ ^[0-9]+$ ]]; then
-        ROLLBACK_COUNT="$2"
-        shift 2
-      else
-        shift
-      fi
-      ;;
-    --resume)
-      RESUME_MODE=true
-      shift
-      ;;
-    -h | --help)
-      usage
-      exit 0
-      ;;
-    *)
-      echo "Unknown arg: $1" >&2
-      usage
-      exit 2
-      ;;
+    fi
+    ;;
+  --resume)
+    RESUME_MODE=true
+    shift
+    ;;
+  -h | --help)
+    usage
+    exit 0
+    ;;
+  *)
+    echo "Unknown arg: $1" >&2
+    usage
+    exit 2
+    ;;
   esac
 done
 
@@ -413,22 +422,22 @@ MODEL_SONNET_4="anthropic.claude-sonnet-4-20250514-v1:0"
 resolve_model() {
   local model="$1"
   case "$model" in
-    opus | opus4.5 | opus45)
-      echo "$MODEL_OPUS_45"
-      ;;
-    sonnet | sonnet4.5 | sonnet45)
-      echo "$MODEL_SONNET_45"
-      ;;
-    sonnet4)
-      echo "$MODEL_SONNET_4"
-      ;;
-    latest | auto)
-      # Use system default - don't override config
-      echo ""
-      ;;
-    *)
-      echo "$model"
-      ;;
+  opus | opus4.5 | opus45)
+    echo "$MODEL_OPUS_45"
+    ;;
+  sonnet | sonnet4.5 | sonnet45)
+    echo "$MODEL_SONNET_45"
+    ;;
+  sonnet4)
+    echo "$MODEL_SONNET_4"
+    ;;
+  latest | auto)
+    # Use system default - don't override config
+    echo ""
+    ;;
+  *)
+    echo "$model"
+    ;;
   esac
 }
 
@@ -437,26 +446,26 @@ resolve_model() {
 resolve_model_opencode() {
   local model="$1"
   case "$model" in
-    grok | grokfast | grok-code-fast-1)
-      # Confirmed via opencode models
-      echo "opencode/grok-code"
-      ;;
-    opus | opus4.5 | opus45)
-      # Placeholder - anthropic not available in current setup
-      echo "opencode/gpt-5-nano"
-      ;; # Fallback to available model
-    sonnet | sonnet4.5 | sonnet45)
-      # Placeholder - anthropic not available
-      echo "opencode/gpt-5-nano"
-      ;; # Fallback
-    latest | auto)
-      # Let OpenCode decide its own default if user explicitly asked for auto/latest
-      echo ""
-      ;;
-    *)
-      # Pass through (user provided provider/model already, or an OpenCode alias)
-      echo "$model"
-      ;;
+  grok | grokfast | grok-code-fast-1)
+    # Confirmed via opencode models
+    echo "opencode/grok-code"
+    ;;
+  opus | opus4.5 | opus45)
+    # Placeholder - anthropic not available in current setup
+    echo "opencode/gpt-5-nano"
+    ;; # Fallback to available model
+  sonnet | sonnet4.5 | sonnet45)
+    # Placeholder - anthropic not available
+    echo "opencode/gpt-5-nano"
+    ;; # Fallback
+  latest | auto)
+    # Let OpenCode decide its own default if user explicitly asked for auto/latest
+    echo ""
+    ;;
+  *)
+    # Pass through (user provided provider/model already, or an OpenCode alias)
+    echo "$model"
+    ;;
   esac
 }
 
@@ -1207,9 +1216,9 @@ if [[ -n "$PROMPT_ARG" ]]; then
     emit_event --event phase_start --iter "$i" --phase "custom"
     run_once "$PROMPT_FILE" "custom" "$i" || run_result=$?
     if [[ $run_result -eq 0 ]]; then
-        emit_event --event phase_end --iter "$i" --phase "custom" --status ok
+      emit_event --event phase_end --iter "$i" --phase "custom" --status ok
     else
-        emit_event --event phase_end --iter "$i" --phase "custom" --status fail --code "$run_result"
+      emit_event --event phase_end --iter "$i" --phase "custom" --status fail --code "$run_result"
     fi
     # Check if Ralph signaled completion
     if [[ $run_result -eq 42 ]]; then
@@ -1323,9 +1332,9 @@ else
       emit_event --event phase_start --iter "$i" --phase "plan"
       run_once "$PLAN_PROMPT" "plan" "$i" || run_result=$?
       if [[ $run_result -eq 0 ]]; then
-          emit_event --event phase_end --iter "$i" --phase "plan" --status ok
+        emit_event --event phase_end --iter "$i" --phase "plan" --status ok
       else
-          emit_event --event phase_end --iter "$i" --phase "plan" --status fail --code "$run_result"
+        emit_event --event phase_end --iter "$i" --phase "plan" --status fail --code "$run_result"
       fi
     else
       # Auto-fix lint issues before BUILD iteration
@@ -1345,9 +1354,9 @@ else
       emit_event --event phase_start --iter "$i" --phase "build"
       run_once "$BUILD_PROMPT" "build" "$i" || run_result=$?
       if [[ $run_result -eq 0 ]]; then
-          emit_event --event phase_end --iter "$i" --phase "build" --status ok
+        emit_event --event phase_end --iter "$i" --phase "build" --status ok
       else
-          emit_event --event phase_end --iter "$i" --phase "build" --status fail --code "$run_result"
+        emit_event --event phase_end --iter "$i" --phase "build" --status fail --code "$run_result"
       fi
 
       # Sync completions back to Cortex after BUILD iterations
