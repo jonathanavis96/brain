@@ -889,10 +889,30 @@ class Agent:
                         pr("    [context file - will prune after STATE]", S.YEL)
 
                     # Detect STATE summary in think() - single-slot storage
-                    is_state_think = (
-                        name == "think"
-                        and "state" in args.get("thought", "").lower()[:100]
-                    )
+                    # Lenient detection: explicit "STATE:" OR planning-like content
+                    is_state_think = False
+                    if name == "think":
+                        thought = args.get("thought", "")
+                        thought_lower = thought.lower()[:200]
+                        # Explicit STATE marker (preferred)
+                        if "state:" in thought_lower or "state =" in thought_lower:
+                            is_state_think = True
+                        # Heuristic: planning/iteration thoughts count as state
+                        elif any(
+                            kw in thought_lower
+                            for kw in [
+                                "starting iteration",
+                                "next step",
+                                "task=",
+                                "task =",
+                                "goal:",
+                                "12.",  # Task IDs like 12.4.1
+                                "implement",
+                                "will edit",
+                                "will modify",
+                            ]
+                        ):
+                            is_state_think = True
                     if is_state_think:
                         # Replace existing STATE (single-slot, not append)
                         self._state_content = args.get("thought", "")
@@ -936,9 +956,24 @@ class Agent:
                     )
                     self._needs_state = False  # Only remind once
 
-                # Standard pruning for message count
-                if len(self.messages) > 12:
-                    self.messages = self._prune_messages(self.messages)
+                # Standard pruning for message count (configurable via env)
+                prune_at = int(os.getenv("CEREBRAS_PRUNE_AT", "28"))
+                keep_recent = int(os.getenv("CEREBRAS_KEEP_LAST", "16"))
+                if len(self.messages) > prune_at:
+                    self.messages = self._prune_messages(self.messages, keep_recent)
+                    # Re-inject persistent state after pruning to prevent amnesia
+                    if self._state_content:
+                        state_msg = {
+                            "role": "system",
+                            "content": (
+                                "PERSISTENT_STATE (do not re-read context files):\n"
+                                f"{self._state_content}\n"
+                                "Proceed from this state. Do not restart reconnaissance."
+                            ),
+                        }
+                        # Insert after system prompt (position 1)
+                        self.messages.insert(1, state_msg)
+                        pr("    [re-injected persistent state after prune]", S.GRN)
 
             elif not content:
                 pr("Empty response", S.YEL)
