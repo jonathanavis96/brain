@@ -112,7 +112,7 @@
     - Default: disabled (no caching behavior)
     - **AC:** `CACHE_SKIP=1 bash loop.sh` enables cache checking
 
-  - [ ] **12.4.2.4** Integrate cache lookup before tool execution in `run_once()`
+  - [x] **12.4.2.4** Integrate cache lookup before tool execution in `run_once()`
     - Before `log_tool_start`: if CACHE_SKIP enabled, call `lookup_cache_pass "$tool_key"`
     - If hit: log `::CACHE_HIT::`, skip tool execution, continue to next iteration
     - If miss: log `::CACHE_MISS::`, proceed with normal execution
