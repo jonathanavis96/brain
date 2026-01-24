@@ -118,7 +118,7 @@
     - If miss: log `::CACHE_MISS::`, proceed with normal execution
     - **AC:** Cache hit skips tool call, cache miss runs tool normally
 
-  - [ ] **12.4.2.5** Add cache skip metrics to run summary
+  - [x] **12.4.2.5** Add cache skip metrics to run summary
     - Track: cache_hits, cache_misses, time_saved_ms
     - Display at end of run: "Cache: X hits (saved Yms), Z misses"
     - **AC:** Run summary shows cache statistics
