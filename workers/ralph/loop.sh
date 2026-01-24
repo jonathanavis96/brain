@@ -329,6 +329,11 @@ NO_MONITORS=false
 CACHE_SKIP="${CACHE_SKIP:-false}"
 CONSECUTIVE_VERIFIER_FAILURES=0
 
+# Cache metrics tracking
+CACHE_HITS=0
+CACHE_MISSES=0
+TIME_SAVED_MS=0
+
 # Parse args
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -912,18 +917,40 @@ run_once() {
   if [[ "$CACHE_SKIP" == "true" ]]; then
     if lookup_cache_pass "$tool_key"; then
       # Cache hit - skip tool execution
+      # Query saved duration from cache
+      local saved_ms=0
+      local cache_db="${CACHE_DB:-artifacts/rollflow_cache/cache.sqlite}"
+      if [[ -f "$cache_db" ]]; then
+        saved_ms=$(python3 -c "
+import sqlite3
+try:
+    conn = sqlite3.connect('$cache_db')
+    cursor = conn.execute('SELECT last_duration_ms FROM pass_cache WHERE cache_key = ?', ('$tool_key',))
+    row = cursor.fetchone()
+    conn.close()
+    print(row[0] if row and row[0] else 0)
+except Exception:
+    print(0)
+" 2>/dev/null) || saved_ms=0
+      fi
+
       log_cache_hit "$tool_key" "$RUNNER"
+      CACHE_HITS=$((CACHE_HITS + 1))
+      TIME_SAVED_MS=$((TIME_SAVED_MS + saved_ms))
+
       echo ""
       echo "========================================"
       echo "✓ Cache hit - skipping tool execution"
       echo "Key: $tool_key"
       echo "Tool: $RUNNER"
+      echo "Saved: ${saved_ms}ms"
       echo "========================================"
       echo ""
       return 0
     else
       # Cache miss - proceed with execution
       log_cache_miss "$tool_key" "$RUNNER"
+      CACHE_MISSES=$((CACHE_MISSES + 1))
     fi
   fi
 
@@ -1180,6 +1207,16 @@ fi
 ROLLFLOW_RUN_ID="run-$(date +%s)-$$"
 export ROLLFLOW_RUN_ID
 log_run_start "$ROLLFLOW_RUN_ID"
+
+# Print cache status reminder if enabled
+if [[ "$CACHE_SKIP" == "true" ]]; then
+  echo ""
+  echo "========================================"
+  echo "🚀 Cache skip enabled"
+  echo "Redundant tool calls will be skipped"
+  echo "========================================"
+  echo ""
+fi
 
 # Set up trap for error event on unexpected exit
 trap 'cleanup_and_emit' EXIT
@@ -1440,4 +1477,20 @@ else
     fi
     emit_event --event iteration_end --iter "$i" --status ok
   done
+fi
+
+# Print cache statistics summary at end of run
+if [[ "$CACHE_SKIP" == "true" ]]; then
+  echo ""
+  echo "========================================"
+  echo "📊 Cache Statistics"
+  echo "========================================"
+  echo "Cache hits:   $CACHE_HITS"
+  echo "Cache misses: $CACHE_MISSES"
+  if [[ $CACHE_HITS -gt 0 ]]; then
+    TIME_SAVED_SEC=$((TIME_SAVED_MS / 1000))
+    echo "Time saved:   ${TIME_SAVED_SEC}s (${TIME_SAVED_MS}ms)"
+  fi
+  echo "========================================"
+  echo ""
 fi
