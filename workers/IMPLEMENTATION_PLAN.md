@@ -106,7 +106,7 @@
   - Modify a file → expect cache miss for that file's checks
   - **AC:** Verifier cache behaves correctly
 
-- [ ] **1.6.2** Test BUILD phase never skips LLM
+- [x] **1.6.2** Test BUILD phase never skips LLM
   - Set `CACHE_MODE=use CACHE_SCOPE=verify,read,llm_ro`
   - Run BUILD with pending task
   - **AC:** LLM still called (llm_ro blocked for BUILD)
