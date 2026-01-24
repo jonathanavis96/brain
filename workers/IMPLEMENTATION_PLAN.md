@@ -53,7 +53,7 @@
   - Add infrastructure as code (Terraform, CloudFormation)
   - **AC:** File has 3 new sections with code examples
 
-- [ ] **5.3.2** Create `skills/domains/infrastructure/observability-patterns.md`
+- [x] **5.3.2** Create `skills/domains/infrastructure/observability-patterns.md`
   - Logging, metrics, tracing (OpenTelemetry)
   - Alerting strategies and runbooks
   - Debugging production issues
