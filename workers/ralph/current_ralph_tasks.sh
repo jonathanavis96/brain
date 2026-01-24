@@ -291,13 +291,17 @@ archive_completed_tasks() {
 
   # Extract completed tasks
   while IFS= read -r line; do
-    if [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+    # Detect Phase sections (## Phase X: Description)
+    if [[ "$line" =~ ^##[[:space:]]+Phase[[:space:]]+[^:]+:[[:space:]]* ]]; then
+      in_task_section=true
+    elif [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
       in_task_section=true
     elif [[ "$line" =~ Medium[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
       in_task_section=true
     elif [[ "$line" =~ Low[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
       in_task_section=true
-    elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
+    elif [[ "$line" =~ ^##[[:space:]]+ ]] && [[ ! "$line" =~ ^##[[:space:]]+Phase[[:space:]]+ ]]; then
+      # Exit task section on ## headers that are NOT Phase sections
       in_task_section=false
     fi
 
@@ -316,13 +320,17 @@ archive_completed_tasks() {
   # Write new file without completed tasks, add archive at end
   {
     while IFS= read -r line; do
-      if [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+      # Detect Phase sections (## Phase X: Description)
+      if [[ "$line" =~ ^##[[:space:]]+Phase[[:space:]]+[^:]+:[[:space:]]* ]]; then
+        in_task_section=true
+      elif [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
         in_task_section=true
       elif [[ "$line" =~ Medium[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
         in_task_section=true
       elif [[ "$line" =~ Low[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
         in_task_section=true
-      elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
+      elif [[ "$line" =~ ^##[[:space:]]+ ]] && [[ ! "$line" =~ ^##[[:space:]]+Phase[[:space:]]+ ]]; then
+        # Exit task section on ## headers that are NOT Phase sections
         in_task_section=false
       fi
 
@@ -367,13 +375,17 @@ clear_completed_tasks() {
   # Write new file without completed tasks
   {
     while IFS= read -r line; do
-      if [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+      # Detect Phase sections (## Phase X: Description)
+      if [[ "$line" =~ ^##[[:space:]]+Phase[[:space:]]+[^:]+:[[:space:]]* ]]; then
+        in_task_section=true
+      elif [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
         in_task_section=true
       elif [[ "$line" =~ Medium[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
         in_task_section=true
       elif [[ "$line" =~ Low[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
         in_task_section=true
-      elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
+      elif [[ "$line" =~ ^##[[:space:]]+ ]] && [[ ! "$line" =~ ^##[[:space:]]+Phase[[:space:]]+ ]]; then
+        # Exit task section on ## headers that are NOT Phase sections
         in_task_section=false
       fi
 
