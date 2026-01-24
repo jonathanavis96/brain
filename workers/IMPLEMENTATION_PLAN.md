@@ -27,7 +27,7 @@
   - Explain why BUILD/PLAN never get LLM caching
   - **AC:** Design doc exists, reviewed
 
-- [ ] **1.1.2** Define phase-to-scope mapping in code comments
+- [x] **1.1.2** Define phase-to-scope mapping in code comments
   - `PLAN` → no LLM cache (creates new tasks)
   - `BUILD` → no LLM cache (executes tasks, changes files)
   - `VERIFY` → `verify` scope (shellcheck, lint - cacheable)

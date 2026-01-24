@@ -337,6 +337,42 @@ CACHE_SKIP="${CACHE_SKIP:-false}"
 FORCE_NO_CACHE=false
 CONSECUTIVE_VERIFIER_FAILURES=0
 
+# =============================================================================
+# Cache Scope Mapping by Phase
+# =============================================================================
+#
+# Ralph loop operates in different phases, each with distinct cache safety requirements:
+#
+# PHASE            | ALLOWED SCOPES        | RATIONALE
+# -----------------|----------------------|---------------------------------------------
+# PLAN             | verify, read         | LLM must reason fresh - planning requires
+#                  |                      | full context and creative problem-solving
+# -----------------|----------------------|---------------------------------------------
+# BUILD            | verify, read         | LLM must execute tasks fresh - caching would
+#                  |                      | cause Ralph to skip work and report "done"
+#                  |                      | without actually implementing changes
+# -----------------|----------------------|---------------------------------------------
+# VERIFY (future)  | verify, read, llm_ro | Safe to cache: verifier checks deterministic
+#                  |                      | rules, read-only LLM analysis has no state
+#                  |                      | side effects
+# -----------------|----------------------|---------------------------------------------
+# REPORT (future)  | verify, read, llm_ro | Safe to cache: report generation is read-only
+#                  |                      | and deterministic based on logs
+# -----------------|----------------------|---------------------------------------------
+#
+# Cache Scopes:
+#   - verify: Deterministic checks (shellcheck, markdownlint, hash validation)
+#   - read:   File reads, git operations (cached by path+mtime)
+#   - llm_ro: Read-only LLM analysis (cached by prompt+git_sha, no state mutation)
+#
+# Current Implementation (Phase 12.4.x):
+#   CACHE_SKIP flag enables caching for all phases (emergency brake for debugging)
+#   Phase 1.x will implement proper scope enforcement with hard-blocks for llm_ro
+#   in PLAN/BUILD phases regardless of CACHE_SKIP setting.
+#
+# See docs/CACHE_DESIGN.md for full design rationale and safety analysis.
+# =============================================================================
+
 # Cache metrics tracking
 CACHE_HITS=0
 CACHE_MISSES=0
