@@ -14,7 +14,7 @@
 
 ### Phase 5.1: Frontend/UI Skills
 
-- [ ] **5.1.1** Create `skills/domains/frontend/README.md` with frontend overview
+- [x] **5.1.1** Create `skills/domains/frontend/README.md` with frontend overview
   - Cover: React, Vue, Angular, state management, component patterns
   - Link to existing website skills for context
   - **AC:** README exists with 3+ framework references
