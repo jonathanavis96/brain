@@ -74,12 +74,10 @@ When you discover a new convention, architectural decision, or project-specific 
 
 1. If you used undocumented knowledge/procedure/tooling:
    - Search `../../brain/skills/` for existing matching skill
-   - Search `../../brain/skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
-   - If not found: append new entry to `GAP_BACKLOG.md`
-2. If a gap is clear, specific, and recurring:
-   - Add to `../../brain/skills/self-improvement/SKILL_BACKLOG.md`
-   - Create skill file using `SKILL_TEMPLATE.md`
-   - Update `../../brain/skills/index.md`
+   - Search `cortex/GAP_CAPTURE.md` for existing local gap entry
+   - If not found: append new entry to `cortex/GAP_CAPTURE.md`
+   - Create marker: `touch cortex/.gap_pending`
+2. Brain's Cortex will sync gaps on next session (see Rule 6: Marker Protocol)
 
 ## Parallelism Rule
 

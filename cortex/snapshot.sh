@@ -48,3 +48,26 @@ echo ""
 # 3. Recent Commits
 echo "## Commits"
 git log --oneline -5 2>/dev/null || echo "None"
+echo ""
+
+# 4. Pending Gaps from sibling projects
+pending_gaps=()
+shopt -s nullglob
+for marker in "${BRAIN_ROOT}"/../*/cortex/.gap_pending; do
+  [[ -f "$marker" ]] && pending_gaps+=("$marker")
+done
+shopt -u nullglob
+
+if [[ ${#pending_gaps[@]} -gt 0 ]]; then
+  echo "## Pending Gaps"
+  echo "⚠️ ${#pending_gaps[@]} project(s) have pending gaps:"
+  for marker in "${pending_gaps[@]}"; do
+    project_dir=$(dirname "$(dirname "$marker")")
+    project_name=$(basename "$project_dir")
+    gap_file="$(dirname "$marker")/GAP_CAPTURE.md"
+    count=$(grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2}' "$gap_file" 2>/dev/null) || count=0
+    echo "  - $project_name: $count gap(s)"
+  done
+  echo ""
+  echo "Run: bash cortex/sync_gaps.sh"
+fi

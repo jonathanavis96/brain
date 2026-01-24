@@ -86,11 +86,12 @@ npm test
 If you used undocumented knowledge/procedure/tooling:
 
 1. Search `../brain/skills/` for existing matching skill
-2. Search `../brain/skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
-3. If not found: append new entry to `GAP_BACKLOG.md`
-4. If gap is clear, specific, and recurring: promote to `SKILL_BACKLOG.md`
+2. Search `cortex/GAP_CAPTURE.md` for existing local gap entry
+3. If not found: append new entry to `cortex/GAP_CAPTURE.md`
+4. Create marker: `touch cortex/.gap_pending`
+5. Brain's Cortex will sync gaps on next session
 
-See `../brain/skills/self-improvement/GAP_CAPTURE_RULES.md` for details.
+See `../brain/skills/self-improvement/GAP_CAPTURE_RULES.md` for details (Rule 6: Marker Protocol).
 
 ## Project-Specific Notes
 

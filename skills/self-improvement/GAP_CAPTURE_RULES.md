@@ -61,7 +61,32 @@ After creating a new skill, check if it affects agent behavior:
 - If the skill changes prompts → Update `PROMPT.md` or templates
 - If the skill affects validation → Update `VALIDATION_CRITERIA.md`
 
-## Rule 6: Conversation Persistence
+## Rule 6: Cross-Project Gap Capture (Marker Protocol)
+
+Projects capture gaps locally, then sync to brain. This avoids token cost of scanning.
+
+### For Project Agents
+
+1. **Capture gap** in `cortex/GAP_CAPTURE.md` (local to project)
+2. **Create marker**: `touch cortex/.gap_pending`
+3. Brain's Cortex will detect and sync on next session
+
+### For Brain Cortex
+
+1. `snapshot.sh` checks for `../**/cortex/.gap_pending` markers
+2. If found, reports pending gaps count
+3. Run `bash cortex/sync_gaps.sh` to:
+   - Read each project's `cortex/GAP_CAPTURE.md`
+   - Deduplicate by title (skip if already in `GAP_BACKLOG.md`)
+   - Append new gaps to `GAP_BACKLOG.md`
+   - Clear project's `GAP_CAPTURE.md` and remove marker
+
+### Token Efficiency
+
+- **No pending gaps**: Zero token cost (bash glob only)
+- **Gaps pending**: Minimal cost (read only flagged files)
+
+## Rule 7: Conversation Persistence
 
 Before ending any session where substantial knowledge was discussed, write a summary to the appropriate `.md` file.
 
