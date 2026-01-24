@@ -15,7 +15,7 @@
 **Status:** 🔄 In progress - 7 warnings detected (2026-01-24)
 
 - [x] **WARN.Template.1.thunk** Template.1: thunk_ralph_tasks.sh differs from template - Files are actually identical (verified with diff), false positive from verifier output parsing - Waiver requested
-- [ ] **WARN.TemplateSync.1.current** Hygiene.TemplateSync.1: current_ralph_tasks.sh differs from template - Files are actually identical (verified with diff), false positive from verifier output parsing
+- [x] **WARN.TemplateSync.1.current** Hygiene.TemplateSync.1: current_ralph_tasks.sh differs from template - Files are byte-identical (cmp + sha256sum verified), false positive from diff -q - Waiver WVR-2026-01-24-003 requested
 - [ ] **WARN.TemplateSync.2.loop** Hygiene.TemplateSync.2: loop.sh differs from template - Intentional divergence: workers/ralph/loop.sh has cache-skip feature (--cache-skip flag, CACHE_SKIP variable) not in templates/ralph/loop.sh
 - [ ] **WARN.Shellcheck.LoopSh** Lint.Shellcheck.LoopSh: shellcheck warnings in loop.sh - Need to verify shellcheck output (likely SC2034 on CACHE_SKIP which is marked for future use)
 - [ ] **WARN.Shellcheck.VerifierSh** Lint.Shellcheck.VerifierSh: shellcheck warnings in verifier.sh - Need to verify shellcheck output
