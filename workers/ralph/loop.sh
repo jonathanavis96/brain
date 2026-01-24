@@ -235,7 +235,7 @@ Usage:
   loop.sh [--prompt <path>] [--iterations N] [--plan-every N] [--yolo|--no-yolo]
           [--runner rovodev|opencode] [--model <model>] [--branch <name>] [--dry-run] [--no-monitors]
           [--opencode-serve] [--opencode-port N] [--opencode-attach <url>] [--opencode-format json|text]
-          [--cache-skip] [--rollback [N]] [--resume]
+          [--cache-skip] [--force-no-cache] [--rollback [N]] [--resume]
 
 Defaults:
   --iterations 1
@@ -267,11 +267,12 @@ Branch Workflow:
                    Then run pr-batch.sh to create PRs to main
 
 Safety Features:
-  --dry-run       Preview changes without committing (appends instruction to prompt)
-  --no-monitors   Skip auto-launching monitor terminals (useful for CI/CD or headless environments)
-  --cache-skip    Enable cache lookup to skip redundant tool calls (requires RollFlow cache DB)
-  --rollback [N]  Undo last N Ralph commits (default: 1). Requires confirmation.
-  --resume        Resume from last incomplete iteration (checks for uncommitted changes)
+  --dry-run         Preview changes without committing (appends instruction to prompt)
+  --no-monitors     Skip auto-launching monitor terminals (useful for CI/CD or headless environments)
+  --cache-skip      Enable cache lookup to skip redundant tool calls (requires RollFlow cache DB)
+  --force-no-cache  Disable cache lookup even if CACHE_SKIP=1 (forces all tools to run)
+  --rollback [N]    Undo last N Ralph commits (default: 1). Requires confirmation.
+  --resume          Resume from last incomplete iteration (checks for uncommitted changes)
 
 OpenCode Options:
   --opencode-serve      Start local OpenCode server for faster runs (implies --opencode-attach localhost:4096)
@@ -306,6 +307,12 @@ Examples:
 
   # Resume after error
   bash ralph/loop.sh --resume
+
+  # Enable cache skip to speed up repeated runs
+  bash ralph/loop.sh --cache-skip --iterations 5
+
+  # Force all tools to run even with cache enabled
+  CACHE_SKIP=1 bash ralph/loop.sh --force-no-cache --iterations 1
 EOF
 }
 
@@ -327,6 +334,7 @@ ROLLBACK_COUNT=1
 RESUME_MODE=false
 NO_MONITORS=false
 CACHE_SKIP="${CACHE_SKIP:-false}"
+FORCE_NO_CACHE=false
 CONSECUTIVE_VERIFIER_FAILURES=0
 
 # Cache metrics tracking
@@ -396,6 +404,10 @@ while [[ $# -gt 0 ]]; do
     --cache-skip)
       # shellcheck disable=SC2034  # Used in future cache lookup logic (12.4.2.4)
       CACHE_SKIP=true
+      shift
+      ;;
+    --force-no-cache)
+      FORCE_NO_CACHE=true
       shift
       ;;
     --rollback)
@@ -913,8 +925,8 @@ run_once() {
   tool_key="$(cache_key "$RUNNER" "{\"model\":\"$RESOLVED_MODEL\",\"phase\":\"$phase\",\"iter\":$iter}" "$git_sha")"
   start_ms="$(($(date +%s%N) / 1000000))"
 
-  # Check cache if CACHE_SKIP is enabled
-  if [[ "$CACHE_SKIP" == "true" ]]; then
+  # Check cache if CACHE_SKIP is enabled and FORCE_NO_CACHE is not set
+  if [[ "$CACHE_SKIP" == "true" && "$FORCE_NO_CACHE" != "true" ]]; then
     if lookup_cache_pass "$tool_key"; then
       # Cache hit - skip tool execution
       # Query saved duration from cache
