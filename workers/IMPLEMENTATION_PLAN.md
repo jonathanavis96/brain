@@ -33,7 +33,7 @@
 
 ### Phase 5.2: Testing and QA Skills
 
-- [ ] **5.2.1** Expand `skills/domains/code-quality/testing-patterns.md`
+- [x] **5.2.1** Expand `skills/domains/code-quality/testing-patterns.md`
   - Add test doubles (mocks, stubs, fakes, spies)
   - Add property-based testing patterns
   - Add mutation testing guidance
