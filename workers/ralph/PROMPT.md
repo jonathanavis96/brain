@@ -163,6 +163,8 @@ See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
 
 **Start:** `STATUS | branch=<branch> | runner=<rovodev|opencode> | model=<model>`
 
+**Model detection:** Report the model from your system info (e.g., `anthropic.claude-sonnet-4-5-20250929-v1:0`). If unknown, use `auto`. Do NOT guess or use outdated model names.
+
 **Progress:** `PROGRESS | phase=<plan|build> | step=<short> | tasks=<done>/<total> | file=<path>`
 
 **End:** `:::PLAN_READY:::` or `:::BUILD_READY:::` on its own line.
