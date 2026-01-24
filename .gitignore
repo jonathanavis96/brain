@@ -36,3 +36,5 @@ ralph/test-rovodev-integration.sh
 .git.new-only-backup/
 *.har
 rovodev-config.local.yml
+__pycache__/
+*.pyc
