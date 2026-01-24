@@ -47,7 +47,7 @@
 
 ### Phase 5.3: DevOps and Infrastructure Skills
 
-- [ ] **5.3.1** Expand `skills/domains/infrastructure/deployment-patterns.md`
+- [x] **5.3.1** Expand `skills/domains/infrastructure/deployment-patterns.md`
   - Add container orchestration (Kubernetes, Docker Swarm)
   - Add service mesh patterns (Istio, Linkerd)
   - Add infrastructure as code (Terraform, CloudFormation)

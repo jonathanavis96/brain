@@ -39,6 +39,8 @@ Reference this KB file when:
 | **Canary**        | Zero     | Very Low | Instant  | High-traffic, gradual rollout |
 | **Recreate**      | Yes      | Medium   | Slow     | Dev/staging, breaking changes |
 | **Feature Flags** | Zero     | Very Low | Instant  | Gradual features, A/B tests   |
+| **Shadow**        | Zero     | Very Low | N/A      | Test new version with prod traffic |
+| **A/B Testing**   | Zero     | Low      | Instant  | Compare versions, user experiments |
 
 ### CI/CD Pipeline Stages
 
@@ -738,6 +740,627 @@ groups:
 - **Static websites** - Simple hosting (Netlify/Vercel) handles deployment automatically
 - **Serverless functions** - Platform manages deployment (AWS Lambda, Vercel Functions)
 - **Very early prototypes** - Manual deployment acceptable initially (but plan for automation)
+
+**Note:** Even for simple projects, basic CI/CD (automated tests + deployment) provides significant value. Start simple and expand as needs grow.
+
+---
+
+### Blue/Green Deployment Pattern
+
+**Problem:** Need instant rollback capability and zero-downtime deployments for critical applications.
+
+**Solution:** Maintain two identical production environments (Blue and Green). Deploy to inactive environment, test, then switch traffic.
+
+**Implementation:**
+
+```bash
+# AWS with ELB/ALB
+# 1. Deploy new version to Green environment
+aws deploy create-deployment \
+  --application-name myapp \
+  --deployment-group-name green-env \
+  --s3-location bucket=mybucket,key=myapp-v2.zip
+
+# 2. Run smoke tests against Green
+curl https://green.myapp.com/health
+
+# 3. Switch traffic: Update load balancer target group
+aws elbv2 modify-listener \
+  --listener-arn arn:aws:elasticloadbalancing:... \
+  --default-actions TargetGroupArn=arn:aws:elasticloadbalancing:...green
+
+# 4. Monitor for issues (keep Blue running)
+# If problems detected, switch back to Blue instantly
+```
+
+**Kubernetes Blue/Green:**
+
+```yaml
+# blue-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-blue
+  labels:
+    app: myapp
+    version: blue
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: myapp
+        version: blue
+    spec:
+      containers:
+      - name: app
+        image: myapp:v1.2.2
+        ports:
+        - containerPort: 8080
+
+---
+# green-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-green
+  labels:
+    app: myapp
+    version: green
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+      version: green
+  template:
+    metadata:
+      labels:
+        app: myapp
+        version: green
+    spec:
+      containers:
+      - name: app
+        image: myapp:v1.2.3  # New version
+        ports:
+        - containerPort: 8080
+
+---
+# service.yaml - Switch traffic by changing selector
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+spec:
+  selector:
+    app: myapp
+    version: blue  # Change to 'green' to switch traffic
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  type: LoadBalancer
+```
+
+**Database considerations:**
+
+```sql
+-- Blue/Green with databases requires careful planning
+-- Option 1: Shared database (backward compatible changes only)
+-- Deploy schema changes first, then switch app traffic
+
+-- Option 2: Separate databases (full isolation)
+-- Replicate Blue DB to Green, test thoroughly
+-- Switch traffic, then migrate data back if rollback needed
+
+-- Example: Backward compatible change
+-- Phase 1: Add new column (nullable)
+ALTER TABLE users ADD COLUMN email_verified BOOLEAN DEFAULT FALSE;
+
+-- Phase 2: Deploy Green app (uses new column)
+-- Switch traffic to Green
+
+-- Phase 3: Backfill data
+UPDATE users SET email_verified = TRUE WHERE confirmed_at IS NOT NULL;
+
+-- Phase 4: Make column non-nullable (after Green stable)
+ALTER TABLE users ALTER COLUMN email_verified SET NOT NULL;
+```
+
+**Key principles:**
+
+- ✅ Two identical environments (same infrastructure, configs)
+- ✅ Deploy to inactive environment first
+- ✅ Run full smoke tests before switching
+- ✅ Instant rollback by switching back
+- ✅ Keep old environment running for 24-48h after switch
+- ✅ Database changes must be backward compatible OR use separate DBs
+
+**Trade-offs:**
+
+- **Pros:** Instant rollback, full pre-prod testing in prod-like environment, zero downtime
+- **Cons:** 2x infrastructure cost, database complexity, requires load balancer/DNS switching
+
+---
+
+### Canary Deployment Pattern
+
+**Problem:** Want to test new version with small subset of users before full rollout.
+
+**Solution:** Deploy new version to small percentage of servers/pods, gradually increase traffic if metrics look good.
+
+**Kubernetes Canary with Istio:**
+
+```yaml
+# canary-virtual-service.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: myapp
+spec:
+  hosts:
+  - myapp.example.com
+  http:
+  - match:
+    - headers:
+        x-canary:
+          exact: "true"
+    route:
+    - destination:
+        host: myapp
+        subset: canary
+  - route:
+    - destination:
+        host: myapp
+        subset: stable
+      weight: 90  # 90% to stable version
+    - destination:
+        host: myapp
+        subset: canary
+      weight: 10  # 10% to canary version
+```
+
+**Progressive rollout script:**
+
+```bash
+#!/bin/bash
+# canary-rollout.sh - Gradually increase canary traffic
+
+set -euo pipefail
+
+CANARY_WEIGHTS=(10 25 50 75 100)
+CHECK_INTERVAL=300  # 5 minutes between stages
+
+for weight in "${CANARY_WEIGHTS[@]}"; do
+  stable_weight=$((100 - weight))
+  
+  echo "Setting canary weight to ${weight}%..."
+  kubectl patch virtualservice myapp --type merge -p "
+    spec:
+      http:
+      - route:
+        - destination:
+            host: myapp
+            subset: stable
+          weight: ${stable_weight}
+        - destination:
+            host: myapp
+            subset: canary
+          weight: ${weight}
+  "
+  
+  echo "Waiting ${CHECK_INTERVAL}s for metrics..."
+  sleep "${CHECK_INTERVAL}"
+  
+  # Check error rate
+  error_rate=$(curl -s 'http://prometheus:9090/api/v1/query?query=rate(http_errors_total[5m])' | jq -r '.data.result[0].value[1]')
+  
+  if (( $(echo "$error_rate > 0.01" | bc -l) )); then
+    echo "❌ Error rate too high: ${error_rate}. Rolling back!"
+    kubectl patch virtualservice myapp --type merge -p "
+      spec:
+        http:
+        - route:
+          - destination:
+              host: myapp
+              subset: stable
+            weight: 100
+    "
+    exit 1
+  fi
+  
+  echo "✅ Metrics good at ${weight}% canary"
+done
+
+echo "🎉 Canary rollout complete!"
+```
+
+**Monitoring during canary:**
+
+```typescript
+// metrics.ts - Track canary metrics
+import { Counter, Histogram } from 'prom-client';
+
+const errorCounter = new Counter({
+  name: 'http_errors_total',
+  help: 'Total HTTP errors',
+  labelNames: ['version', 'status_code']
+});
+
+const latencyHistogram = new Histogram({
+  name: 'http_request_duration_seconds',
+  help: 'HTTP request latency',
+  labelNames: ['version', 'route'],
+  buckets: [0.1, 0.5, 1, 2, 5]
+});
+
+export function recordMetrics(version: string, route: string, statusCode: number, duration: number) {
+  if (statusCode >= 500) {
+    errorCounter.inc({ version, status_code: statusCode });
+  }
+  latencyHistogram.observe({ version, route }, duration);
+}
+
+// In request handler
+app.use((req, res, next) => {
+  const start = Date.now();
+  const version = process.env.APP_VERSION || 'unknown';
+  
+  res.on('finish', () => {
+    const duration = (Date.now() - start) / 1000;
+    recordMetrics(version, req.path, res.statusCode, duration);
+  });
+  
+  next();
+});
+```
+
+**Key principles:**
+
+- ✅ Start with small percentage (5-10%)
+- ✅ Monitor error rates, latency, business metrics
+- ✅ Gradually increase if metrics healthy
+- ✅ Instant rollback if issues detected
+- ✅ Use feature flags or routing rules to control traffic
+- ✅ Run for 24h at each stage before increasing
+
+**Trade-offs:**
+
+- **Pros:** Safe gradual rollout, early problem detection, minimal user impact
+- **Cons:** Slower rollout, requires sophisticated routing/monitoring, mixed versions in production
+
+---
+
+### Shadow Deployment Pattern
+
+**Problem:** Want to test new version with production traffic without affecting users.
+
+**Solution:** Mirror production traffic to new version, compare responses, but only serve stable version responses to users.
+
+**Implementation with Envoy/Istio:**
+
+```yaml
+# shadow-virtual-service.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: myapp
+spec:
+  hosts:
+  - myapp.example.com
+  http:
+  - route:
+    - destination:
+        host: myapp
+        subset: stable
+      weight: 100
+    mirror:
+      host: myapp
+      subset: shadow
+    mirrorPercentage:
+      value: 100.0  # Mirror 100% of traffic
+```
+
+**Response comparison script:**
+
+```python
+#!/usr/bin/env python3
+# compare-shadow-responses.py
+
+import requests
+import json
+import sys
+from dataclasses import dataclass
+from typing import Optional
+
+@dataclass
+class ResponseDiff:
+    status_match: bool
+    body_match: bool
+    latency_diff_ms: float
+    stable_status: int
+    shadow_status: int
+    
+def compare_responses(endpoint: str, stable_url: str, shadow_url: str) -> ResponseDiff:
+    """Send same request to both versions, compare responses."""
+    
+    # Send to stable
+    stable_start = time.time()
+    stable_resp = requests.get(f"{stable_url}{endpoint}")
+    stable_latency = (time.time() - stable_start) * 1000
+    
+    # Send to shadow
+    shadow_start = time.time()
+    shadow_resp = requests.get(f"{shadow_url}{endpoint}")
+    shadow_latency = (time.time() - shadow_start) * 1000
+    
+    return ResponseDiff(
+        status_match=stable_resp.status_code == shadow_resp.status_code,
+        body_match=stable_resp.text == shadow_resp.text,
+        latency_diff_ms=shadow_latency - stable_latency,
+        stable_status=stable_resp.status_code,
+        shadow_status=shadow_resp.status_code
+    )
+
+def main():
+    endpoints = ["/api/users", "/api/products", "/api/orders"]
+    stable_url = "https://stable.myapp.com"
+    shadow_url = "https://shadow.myapp.com"
+    
+    total_requests = 0
+    mismatches = 0
+    
+    for endpoint in endpoints:
+        for _ in range(100):  # Test each endpoint 100 times
+            diff = compare_responses(endpoint, stable_url, shadow_url)
+            total_requests += 1
+            
+            if not diff.status_match or not diff.body_match:
+                mismatches += 1
+                print(f"❌ Mismatch at {endpoint}: stable={diff.stable_status}, shadow={diff.shadow_status}")
+            
+            if diff.latency_diff_ms > 100:
+                print(f"⚠️  Latency regression at {endpoint}: +{diff.latency_diff_ms:.1f}ms")
+    
+    mismatch_rate = (mismatches / total_requests) * 100
+    print(f"\n📊 Results: {mismatches}/{total_requests} mismatches ({mismatch_rate:.2f}%)")
+    
+    sys.exit(0 if mismatch_rate < 1.0 else 1)
+
+if __name__ == "__main__":
+    main()
+```
+
+**Key principles:**
+
+- ✅ Users always get stable version response
+- ✅ Shadow version receives copy of all production traffic
+- ✅ Compare responses, latency, error rates
+- ✅ Safe way to test with real production load
+- ✅ Catch bugs before actual deployment
+
+**Trade-offs:**
+
+- **Pros:** Zero user risk, test with real traffic, catch production-only bugs
+- **Cons:** 2x backend load, no user feedback on shadow version, complex routing setup
+
+---
+
+### Feature Flag Deployment
+
+**Problem:** Want to deploy code without immediately enabling new features.
+
+**Solution:** Wrap new features in runtime flags, deploy code, enable features gradually per user/team/region.
+
+**Implementation:**
+
+```typescript
+// feature-flags.ts
+interface FeatureFlags {
+  newCheckout: boolean;
+  aiRecommendations: boolean;
+  darkMode: boolean;
+}
+
+class FeatureFlagService {
+  async getFlags(userId: string): Promise<FeatureFlags> {
+    // Check remote config (LaunchDarkly, Flagsmith, etc.)
+    const flags = await this.remoteFlagService.getFlags(userId);
+    
+    // Local overrides for testing
+    const localOverrides = this.getLocalOverrides();
+    
+    return { ...flags, ...localOverrides };
+  }
+  
+  async isEnabled(userId: string, flagName: keyof FeatureFlags): Promise<boolean> {
+    const flags = await this.getFlags(userId);
+    return flags[flagName] ?? false;
+  }
+  
+  // Percentage rollout
+  async isEnabledForPercentage(flagName: string, percentage: number): Promise<boolean> {
+    const hash = this.hashUserId(userId);
+    return (hash % 100) < percentage;
+  }
+}
+
+// Usage in application
+app.get('/checkout', async (req, res) => {
+  const userId = req.user.id;
+  const useNewCheckout = await featureFlags.isEnabled(userId, 'newCheckout');
+  
+  if (useNewCheckout) {
+    return res.render('new-checkout');
+  }
+  
+  return res.render('old-checkout');
+});
+```
+
+**LaunchDarkly example:**
+
+```typescript
+import LaunchDarkly from 'launchdarkly-node-server-sdk';
+
+const ldClient = LaunchDarkly.init(process.env.LAUNCHDARKLY_SDK_KEY);
+
+await ldClient.waitForInitialization();
+
+const user = {
+  key: req.user.id,
+  email: req.user.email,
+  custom: {
+    plan: req.user.plan,
+    region: req.user.region
+  }
+};
+
+const showNewFeature = await ldClient.variation('new-feature', user, false);
+```
+
+**Gradual rollout strategy:**
+
+```text
+1. Deploy code with feature flag OFF (default: false)
+2. Enable for internal users (dev team, QA)
+3. Enable for beta users (5% of production users)
+4. Monitor metrics for 24-48h
+5. Increase to 25% if metrics good
+6. Increase to 50% → 100% over next week
+7. Remove feature flag after stable for 2 weeks
+```
+
+**Key principles:**
+
+- ✅ Deploy code without enabling features
+- ✅ Enable features gradually per user cohort
+- ✅ Instant disable if issues found
+- ✅ A/B test different implementations
+- ✅ Clean up old flags after rollout complete
+
+---
+
+### CI/CD Pipeline Optimization
+
+**Problem:** CI/CD pipelines taking too long, blocking deployments.
+
+**Solution:** Parallelize jobs, cache dependencies, optimize Docker builds.
+
+**Optimized GitHub Actions:**
+
+```yaml
+# .github/workflows/optimized-deploy.yml
+name: Optimized Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  # Run lint, test, build in parallel
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+  
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+      - run: npm ci
+      - run: npm test -- --coverage
+      - uses: actions/upload-artifact@v3
+        with:
+          name: coverage
+          path: coverage/
+  
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/setup-buildx-action@v2
+      - uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository }}:${{ github.sha }}
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}:buildcache,mode=max
+  
+  # Deploy only after all checks pass
+  deploy:
+    needs: [lint, test, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to staging
+        run: |
+          kubectl set image deployment/myapp \
+            app=ghcr.io/${{ github.repository }}:${{ github.sha }}
+```
+
+**Docker build optimization:**
+
+```dockerfile
+# Multi-stage build with caching
+FROM node:18-alpine AS deps
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM node:18-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+
+# Copy only production dependencies
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY package.json ./
+
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+USER nextjs
+
+CMD ["npm", "start"]
+```
+
+**Key optimizations:**
+
+- ✅ Parallelize independent jobs (lint, test, build)
+- ✅ Cache dependencies (npm, pip, gem)
+- ✅ Use multi-stage Docker builds
+- ✅ Cache Docker layers between builds
+- ✅ Run only changed tests (if supported)
+- ✅ Skip CI for docs-only changes
+
+---
 
 **Note:** Even for simple projects, basic CI/CD (automated tests + deployment) provides significant value. Start simple and expand as needs grow.
 
