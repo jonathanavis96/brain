@@ -2,13 +2,250 @@
 
 **Last Updated:** 2026-01-24 (Plan Mode - Ralph Iteration)
 
-**Current Status:** ✅ Phase 1 (Scope-Based Cache Redesign) COMPLETE - All tasks 1.1.1 through 1.6.3 implemented and tested. Phase 2.1.1 (Verifier Cache Integration) COMPLETE. Phase 3.1.1 (Cache Isolation) COMPLETE - agents already isolated. Phase 0-Warn resolved (all warnings are false positives). Remaining work: Phase 2.1.2 (cache invalidation on rule change), Phase 3 decision on isolation implementation.
+**Current Status:** ✅ Phase 1 (Scope-Based Cache Redesign) COMPLETE. Phase 2.1.1 COMPLETE. Phase 3 COMPLETE. Phase 0-Warn resolved (verifier warnings are false positives requiring AC.rules regex updates). Phase 4 (Shared Cache Library) in progress - 6 tasks remaining for cross-worker cache infrastructure and Cortex integration.
 
 <!-- Cortex adds new Task Contracts below this line -->
+
+## Phase 5: Skills Knowledge Base Expansion
+
+**Goal:** Expand brain skills to cover more domains and improve existing documentation.
+
+**Priority:** Medium - Enhances agent capabilities and reduces knowledge gaps.
+
+### Phase 5.1: Frontend/UI Skills
+
+- [ ] **5.1.1** Create `skills/domains/frontend/README.md` with frontend overview
+  - Cover: React, Vue, Angular, state management, component patterns
+  - Link to existing website skills for context
+  - **AC:** README exists with 3+ framework references
+
+- [ ] **5.1.2** Create `skills/domains/frontend/react-patterns.md`
+  - Hooks best practices, component composition, performance optimization
+  - State management (Context, Redux, Zustand)
+  - Common pitfalls and solutions
+  - **AC:** File exists with 5+ pattern sections
+
+- [ ] **5.1.3** Create `skills/domains/frontend/accessibility-patterns.md`
+  - ARIA labels, keyboard navigation, screen reader support
+  - WCAG compliance checklist
+  - Testing tools and patterns
+  - **AC:** File exists with WCAG reference and testing section
+
+### Phase 5.2: Testing and QA Skills
+
+- [ ] **5.2.1** Expand `skills/domains/code-quality/testing-patterns.md`
+  - Add test doubles (mocks, stubs, fakes, spies)
+  - Add property-based testing patterns
+  - Add mutation testing guidance
+  - **AC:** File has 3 new major sections
+
+- [ ] **5.2.2** Create `skills/domains/code-quality/test-coverage-patterns.md`
+  - Coverage metrics interpretation (line, branch, function)
+  - When to aim for 100% coverage vs pragmatic targets
+  - Integration with CI/CD
+  - **AC:** File exists with metrics section and CI integration
+
+### Phase 5.3: DevOps and Infrastructure Skills
+
+- [ ] **5.3.1** Expand `skills/domains/infrastructure/deployment-patterns.md`
+  - Add container orchestration (Kubernetes, Docker Swarm)
+  - Add service mesh patterns (Istio, Linkerd)
+  - Add infrastructure as code (Terraform, CloudFormation)
+  - **AC:** File has 3 new sections with code examples
+
+- [ ] **5.3.2** Create `skills/domains/infrastructure/observability-patterns.md`
+  - Logging, metrics, tracing (OpenTelemetry)
+  - Alerting strategies and runbooks
+  - Debugging production issues
+  - **AC:** File exists with 3 pillars of observability
+
+- [ ] **5.3.3** Create `skills/domains/infrastructure/disaster-recovery-patterns.md`
+  - Backup strategies and restoration procedures
+  - RPO/RTO targets and planning
+  - Chaos engineering basics
+  - **AC:** File exists with DR planning checklist
+
+### Phase 5.4: Language-Specific Skills
+
+- [ ] **5.4.1** Create `skills/domains/languages/javascript/README.md`
+  - Modern JavaScript (ES6+) patterns
+  - Async patterns (Promises, async/await, generators)
+  - Module systems (ESM, CommonJS)
+  - **AC:** README exists with 5+ sections
+
+- [ ] **5.4.2** Create `skills/domains/languages/typescript/README.md`
+  - Type system fundamentals
+  - Generic patterns and advanced types
+  - Integration with JavaScript projects
+  - **AC:** README exists with type system section
+
+- [ ] **5.4.3** Create `skills/domains/languages/go/README.md`
+  - Go idioms and conventions
+  - Concurrency patterns (goroutines, channels)
+  - Error handling best practices
+  - **AC:** README exists with concurrency section
+
+### Phase 5.5: Domain-Specific Skills
+
+- [ ] **5.5.1** Create `skills/domains/data/README.md` with data engineering overview
+  - ETL/ELT patterns
+  - Data quality and validation
+  - Schema evolution
+  - **AC:** README exists with 3+ sections
+
+- [ ] **5.5.2** Create `skills/domains/ml/README.md` with ML/AI overview
+  - Model training and evaluation patterns
+  - Feature engineering
+  - Model deployment and monitoring
+  - **AC:** README exists with ML lifecycle coverage
+
+**Phase AC:** skills/ directory has 10+ new skill files covering frontend, testing, DevOps, and language domains
+
+## Phase 6: Template Improvements
+
+**Goal:** Enhance project templates with better defaults and more comprehensive coverage.
+
+**Priority:** Medium - Improves new project bootstrapping experience.
+
+### Phase 6.1: Language-Specific Templates
+
+- [ ] **6.1.1** Create `templates/javascript/` directory with JS/TS project template
+  - AGENTS.project.md, NEURONS.project.md, VALIDATION_CRITERIA.project.md
+  - package.json template with common scripts
+  - ESLint and Prettier configs
+  - **AC:** Directory exists with 5+ files
+
+- [ ] **6.1.2** Create `templates/go/` directory with Go project template
+  - AGENTS.project.md, NEURONS.project.md, VALIDATION_CRITERIA.project.md
+  - go.mod template and project structure
+  - golangci-lint config
+  - **AC:** Directory exists with 5+ files
+
+### Phase 6.2: Ralph Template Enhancements
+
+- [ ] **6.2.1** Add cache configuration guidance to `templates/ralph/PROMPT.md`
+  - Document CACHE_MODE, CACHE_SCOPE usage
+  - Explain when to use --force-fresh
+  - Add cache troubleshooting section
+  - **AC:** PROMPT.md has cache configuration section
+
+- [ ] **6.2.2** Update `templates/ralph/VALIDATION_CRITERIA.project.md` with cache validation
+  - Add cache correctness checks
+  - Add cache key stability validation
+  - **AC:** VALIDATION_CRITERIA has cache section
+
+### Phase 6.3: Website Template Improvements
+
+- [ ] **6.3.1** Expand `templates/website/` with more comprehensive starter
+  - Add Next.js/React starter structure
+  - Include Tailwind CSS configuration
+  - Add component library examples
+  - **AC:** Website template has working starter project
+
+**Phase AC:** templates/ directory has 2 new language templates and enhanced Ralph/website templates
+
+## Phase 7: Documentation and Maintenance
+
+**Goal:** Improve documentation quality and maintain existing files.
+
+**Priority:** Low - Nice-to-have improvements for clarity and completeness.
+
+### Phase 7.1: README Improvements
+
+- [ ] **7.1.1** Enhance root `README.md` with better onboarding flow
+  - Add quickstart guide for new users
+  - Add architecture diagram
+  - Add contribution guidelines
+  - **AC:** README has quickstart and architecture sections
+
+- [ ] **7.1.2** Create `CONTRIBUTING.md` with contribution guidelines
+  - How to add new skills
+  - How to update templates
+  - How to run Ralph locally
+  - **AC:** CONTRIBUTING.md exists with 3+ sections
+
+### Phase 7.2: Skills Index Maintenance
+
+- [ ] **7.2.1** Update `skills/index.md` with new skill files from Phase 5
+  - Add frontend skills section
+  - Add DevOps skills section
+  - Add language-specific skills
+  - **AC:** index.md includes all new skills
+
+- [ ] **7.2.2** Update `skills/SUMMARY.md` with enhanced error reference
+  - Add more error types from Phase 5 domains
+  - Add troubleshooting flowcharts
+  - **AC:** SUMMARY.md has 5+ new error types
+
+### Phase 7.3: Verifier Warnings Resolution
+
+- [ ] **7.3.1** Request AC.rules update for shellcheck regex
+  - Create human-readable explanation of verifier false positive
+  - Propose regex fix: accept empty stdout as PASS for shellcheck
+  - Document in `.verify/waiver_requests/` or similar
+  - **AC:** Human notified of AC.rules regex issue (Protected file - cannot modify)
+
+**Phase AC:** Documentation improved with better onboarding, all new skills indexed, verifier warnings documented for human resolution
+
+## Phase 4: Shared Cache Library + Cortex Support (Safety Net)
+
+**Goal:** Extract caching into shared infrastructure for waste-prevention + reliability across all runners.
+
+**Rationale:** Caching won't save huge tokens for "new thinking" work, but prevents waste from:
+
+- Reruns after crashes / network / rate-limit issues
+- Accidental double-runs
+- Retries where input didn't change
+- Repeated setup/analysis steps
+
+### Phase 4.1: Extract Cache Functions
+
+- [ ] **4.1.1** Create `workers/shared/cache.sh` with extracted functions
+  - Move from loop.sh: cache key generation, lookup/store, log helpers
+  - Export interface: `cache_should_use`, `cache_make_key`, `cache_try_load`, `cache_store`
+  - Include env parsing for `CACHE_MODE`, `CACHE_SCOPE`, `--force-fresh`
+  - **AC:** File exists, functions are callable, shellcheck passes
+
+### Phase 4.2: Refactor loop.sh to Use Shared Library
+
+- [ ] **4.2.1** Update `workers/ralph/loop.sh` to source shared cache library
+  - Replace inline cache logic with calls to `workers/shared/cache.sh`
+  - Keep exact semantics: `CACHE_MODE`, `CACHE_SCOPE`, BUILD/PLAN blocking
+  - **AC:** Before/after run shows identical cache hits/misses
+
+- [ ] **4.2.2** Update `workers/cerebras/loop.sh` to source shared cache library
+  - Same refactor as Ralph
+  - **AC:** Cerebras caching unchanged behaviorally
+
+### Phase 4.3: Add Cortex Caching
+
+- [ ] **4.3.1** Update `cortex/one-shot.sh` to source shared cache library
+  - Add `source workers/shared/cache.sh`
+  - Set `AGENT_NAME=cortex` explicitly
+  - Wrap `acli rovodev run` call with cache check/store
+  - **AC:** Same one-shot twice with no repo changes → Run 1: miss+store, Run 2: hit+skip
+
+### Phase 4.4: Fix Agent Isolation
+
+- [ ] **4.4.1** Replace RUNNER dependency with AGENT_NAME in cache keys
+  - Cache key "agent" field uses `AGENT_NAME` not `RUNNER`
+  - Fall back sanely if `AGENT_NAME` missing (log warning)
+  - **AC:** Ralph/Cortex/Cerebras with identical prompts don't share cache entries
+
+### Phase 4.5: Smoke Test
+
+- [ ] **4.5.1** Create `scripts/test_cache_smoke.sh` for cache correctness
+  - Test: same prompt + git state → cache hit on 2nd run
+  - Test: change git_sha → cache miss
+  - Test: `--force-fresh` → bypass even if entry exists
+  - Test: `CACHE_SCOPE=llm_ro` blocked during BUILD/PLAN
+  - **AC:** One command verifies caching works for loop.sh and one-shot.sh
+
 
 ## Phase 1: Scope-Based Cache Redesign ✅ COMPLETE
 
 **Status:** All tasks complete (1.1.1 through 1.6.3). Implemented 2026-01-24.
+
 
 **Goal:** Replace iteration-level caching with input-based caching that only skips idempotent operations.
 
