@@ -111,7 +111,7 @@
   - Run BUILD with pending task
   - **AC:** LLM still called (llm_ro blocked for BUILD)
 
-- [ ] **1.6.3** Test task queue safety guard
+- [x] **1.6.3** Test task queue safety guard
   - With pending tasks, cache should not prevent execution
   - **AC:** Pending tasks always trigger BUILD execution
 
