@@ -369,3 +369,33 @@ except Exception:
 
   return $?
 }
+
+# Log cache hit event for metrics tracking
+# Arguments:
+#   $1 - cache_key (string)
+#   $2 - tool_name (optional, for detailed logging)
+# Returns: Always 0 (logging should not fail the workflow)
+log_cache_hit() {
+  local cache_key="$1"
+  local tool_name="${2:-unknown}"
+
+  # Emit structured log line for metrics collection
+  echo "[CACHE_HIT] key=$cache_key tool=$tool_name timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >&2
+
+  return 0
+}
+
+# Log cache miss event for metrics tracking
+# Arguments:
+#   $1 - cache_key (string)
+#   $2 - tool_name (optional, for detailed logging)
+# Returns: Always 0 (logging should not fail the workflow)
+log_cache_miss() {
+  local cache_key="$1"
+  local tool_name="${2:-unknown}"
+
+  # Emit structured log line for metrics collection
+  echo "[CACHE_MISS] key=$cache_key tool=$tool_name timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >&2
+
+  return 0
+}

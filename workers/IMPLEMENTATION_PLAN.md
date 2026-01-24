@@ -102,7 +102,7 @@
     - Handle missing DB gracefully (treat as miss)
     - **AC:** `lookup_cache_pass "known_key"` returns 0, `lookup_cache_pass "unknown_key"` returns 1
 
-  - [ ] **12.4.2.2** Add `log_cache_hit()` and `log_cache_miss()` functions to `workers/shared/common.sh`
+  - [x] **12.4.2.2** Add `log_cache_hit()` and `log_cache_miss()` functions to `workers/shared/common.sh`
     - Format: `::CACHE_HIT:: key=<key> tool=<tool> saved_ms=<duration>`
     - Format: `::CACHE_MISS:: key=<key> tool=<tool>`
     - **AC:** Functions output correct marker format
