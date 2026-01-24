@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -782,10 +783,8 @@ class Agent:
         pr(f"{'─'*60}", S.CYN)
 
         # Detect verifier FAIL/WARN from prompt header (escape hatch for rereads)
-        if (
-            "LAST_VERIFIER_RESULT: FAIL" in prompt
-            or "LAST_VERIFIER_RESULT: WARN" in prompt
-        ):
+        # Must be at line start to avoid matching documentation text
+        if re.search(r"^# LAST_VERIFIER_RESULT: (FAIL|WARN)", prompt, re.MULTILINE):
             self._verifier_failed = True
             pr("  [verifier FAIL/WARN - context rereads allowed]", S.YEL)
 
