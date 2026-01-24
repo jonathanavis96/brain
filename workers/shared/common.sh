@@ -337,10 +337,11 @@ launch_monitors() {
 }
 
 # Query cache for a previously passed tool call
-# Args: $1 = cache_key
-# Returns: 0 if cache hit (key exists in pass_cache), 1 if cache miss
+# Args: $1 = cache_key, $2 = git_sha (optional, for staleness check)
+# Returns: 0 if cache hit (key exists in pass_cache and not stale), 1 if cache miss or stale
 lookup_cache_pass() {
   local cache_key="$1"
+  local current_git_sha="${2:-}"
   local cache_db="${CACHE_DB:-artifacts/rollflow_cache/cache.sqlite}"
 
   # Handle missing or invalid arguments
@@ -354,7 +355,37 @@ lookup_cache_pass() {
   fi
 
   # Query the pass_cache table for the cache_key
-  python3 -c "
+  # If git_sha is provided, also check for staleness (cached SHA != current SHA)
+  if [[ -n "$current_git_sha" ]]; then
+    # Staleness check enabled: compare git SHA
+    python3 -c "
+import sqlite3
+import sys
+import json
+try:
+    conn = sqlite3.connect('$cache_db')
+    cursor = conn.execute('SELECT meta_json FROM pass_cache WHERE cache_key = ?', ('$cache_key',))
+    row = cursor.fetchone()
+    conn.close()
+
+    if not row:
+        sys.exit(1)  # Cache miss
+
+    # Extract git_sha from meta_json
+    meta = json.loads(row[0]) if row[0] else {}
+    cached_sha = meta.get('git_sha', '')
+
+    # If cached SHA differs from current SHA, treat as stale (miss)
+    if cached_sha and cached_sha != '$current_git_sha':
+        sys.exit(1)  # Stale cache
+
+    sys.exit(0)  # Cache hit
+except Exception:
+    sys.exit(1)
+" 2>/dev/null
+  else
+    # No staleness check: just verify key exists
+    python3 -c "
 import sqlite3
 import sys
 try:
@@ -366,6 +397,7 @@ try:
 except Exception:
     sys.exit(1)
 " 2>/dev/null
+  fi
 
   return $?
 }
