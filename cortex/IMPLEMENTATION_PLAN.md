@@ -157,20 +157,20 @@ Phases 0, 2, 3, 4, 5, 6 completed - see `workers/ralph/THUNK.md` for details.
 
 **Goal:** Add minimal log markers so tool calls become reliable to parse.
 
-- [ ] **12.1.1** Add standardized START/END markers around tool calls in loop.sh
+- [x] **12.1.1** Add standardized START/END markers around tool calls in loop.sh
   - Add 2 log lines around every tool call:
     - `::TOOL_CALL_START:: id=<uuid> name=<tool> key=<cache_key> ts=<iso> git=<sha>`
     - `::TOOL_CALL_END:: id=<uuid> status=PASS|FAIL exit=<code> duration_ms=<n> err=<short>`
   - **AC:** Single iteration produces at least one well-formed START + END pair in logs
   - **If Blocked:** Start with simpler markers without cache_key, add key computation later
 
-- [ ] **12.1.2** Implement `cache_key` function in `workers/shared/common.sh`
+- [x] **12.1.2** Implement `cache_key` function in `workers/shared/common.sh`
   - cache_key = sha256 of: tool name + normalized args JSON + git SHA (optional)
   - **Goal:** Deterministic key for same tool+args across runs
   - **AC:** `source workers/shared/common.sh && cache_key "tool" '{"a":1}' == cache_key "tool" '{"a":1}'`
   - **If Blocked:** Use simple concatenation first, add JSON normalization later
 
-- [ ] **12.1.3** Add run_id and iteration_id markers to loop.sh
+- [x] **12.1.3** Add run_id and iteration_id markers to loop.sh
   - Write one header line per run + per iteration:
     - `::RUN:: id=<run_id> ts=<iso>`
     - `::ITER:: id=<iter_id> run_id=<run_id> ts=<iso>`
@@ -188,7 +188,7 @@ Phases 0, 2, 3, 4, 5, 6 completed - see `workers/ralph/THUNK.md` for details.
   - **AC:** `python -m tools.rollflow_analyze --help` works
   - **If Blocked:** Check PYTHONPATH includes tools/ directory
 
-- [ ] **12.2.2** Create `parsers/marker_parser.py`
+- [x] **12.2.2** Create `parsers/marker_parser.py`
   - Read logs line-by-line, match START/END markers, yield ToolCall objects
   - **Depends on:** 12.1.1, 12.2.1
   - **Goal:** Parse marker logs with >95% accuracy
