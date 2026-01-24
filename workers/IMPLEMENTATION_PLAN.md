@@ -51,7 +51,7 @@
 
 ### Phase 1.3: Implement CACHE_MODE and CACHE_SCOPE
 
-- [ ] **1.3.1** Add `CACHE_MODE=off|record|use` to loop.sh
+- [x] **1.3.1** Add `CACHE_MODE=off|record|use` to loop.sh
   - `off` = no caching at all (current default)
   - `record` = run everything, store PASS results
   - `use` = check cache first, skip on hit, record misses
