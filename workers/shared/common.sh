@@ -580,3 +580,64 @@ file_content_hash() {
     return 1
   fi
 }
+
+# Compute hash of directory tree state (files + mtimes)
+# Args: $1 = directory path
+# Returns: Prints 64-char hex hash to stdout, returns 0 on success
+# Example: hash=$(tree_hash "path/to/dir")
+# Note: Hash changes when any file in directory is added/removed/modified
+tree_hash() {
+  local dir_path="$1"
+
+  if [[ -z "$dir_path" ]]; then
+    echo "ERROR: tree_hash: directory path required" >&2
+    return 1
+  fi
+
+  if [[ ! -d "$dir_path" ]]; then
+    echo "ERROR: tree_hash: directory not found: $dir_path" >&2
+    return 1
+  fi
+
+  # Generate hash based on:
+  # 1. File paths (relative to dir_path)
+  # 2. File modification times
+  # 3. File sizes
+  # This creates a stable hash that changes when any file is added/removed/modified
+  local tree_state
+  tree_state=$(find "$dir_path" -type f -printf "%P %T@ %s\n" 2>/dev/null | sort)
+
+  # Fallback for systems without -printf (e.g., macOS)
+  if [[ -z "$tree_state" ]]; then
+    tree_state=$(find "$dir_path" -type f | sort | while IFS= read -r file; do
+      local rel_path="${file#"$dir_path"/}"
+      local mtime size
+      if stat -c "%Y %s" "$file" &>/dev/null; then
+        # GNU stat
+        mtime=$(stat -c "%Y" "$file")
+        size=$(stat -c "%s" "$file")
+      else
+        # BSD/macOS stat
+        mtime=$(stat -f "%m" "$file")
+        size=$(stat -f "%z" "$file")
+      fi
+      echo "$rel_path $mtime $size"
+    done)
+  fi
+
+  if [[ -z "$tree_state" ]]; then
+    # Empty directory or no files found
+    echo "d41d8cd98f00b204e9800998ecf8427e0000000000000000000000000000000" # Empty hash
+    return 0
+  fi
+
+  # Hash the tree state
+  if command -v sha256sum &>/dev/null; then
+    echo -n "$tree_state" | sha256sum | awk '{print $1}'
+  elif command -v shasum &>/dev/null; then
+    echo -n "$tree_state" | shasum -a 256 | awk '{print $1}'
+  else
+    echo "ERROR: tree_hash: neither sha256sum nor shasum available" >&2
+    return 1
+  fi
+}

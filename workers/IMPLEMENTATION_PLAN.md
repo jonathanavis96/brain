@@ -40,7 +40,7 @@
   - `file_content_hash <path>` → sha256 of file contents
   - **AC:** Function exists, returns consistent hash for same content
 
-- [ ] **1.2.2** Add `tree_hash()` function to `common.sh`
+- [x] **1.2.2** Add `tree_hash()` function to `common.sh`
   - `tree_hash <dir>` → hash of directory tree state (files + mtimes)
   - **AC:** Function exists, changes when any file in dir changes
 
