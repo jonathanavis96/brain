@@ -92,6 +92,101 @@ acquire_lock() {
   fi
 }
 
+# =============================================================================
+# RollFlow Tool Call Tracking
+# =============================================================================
+# Functions for generating cache keys and tracking tool calls for analysis.
+# Used by rollflow_analyze to detect duplicate/cacheable tool invocations.
+
+# Generate a stable cache key for a tool call
+# Args: $1 = tool name, $2 = args (JSON or string), $3 = git SHA (optional)
+# Output: SHA256 hash (first 16 chars for readability)
+# Example: cache_key "shellcheck" '{"file":"loop.sh"}' "abc123"
+cache_key() {
+  local tool_name="${1:-unknown}"
+  local args="${2:-}"
+  local git_sha="${3:-}"
+
+  # Normalize: lowercase tool name, sort JSON keys if valid JSON
+  local normalized_args
+  if echo "$args" | python3 -c "import sys,json; json.load(sys.stdin)" 2>/dev/null; then
+    # Valid JSON - normalize with sorted keys
+    normalized_args=$(echo "$args" | python3 -c "import sys,json; print(json.dumps(json.load(sys.stdin), sort_keys=True, separators=(',',':')))" 2>/dev/null || echo "$args")
+  else
+    # Not JSON - use as-is
+    normalized_args="$args"
+  fi
+
+  # Combine components and hash
+  local input="${tool_name,,}|${normalized_args}|${git_sha}"
+  echo -n "$input" | sha256sum | cut -c1-16
+}
+
+# Generate a unique tool call ID
+# Output: UUID-like identifier
+tool_call_id() {
+  # Use /proc/sys/kernel/random/uuid if available, otherwise generate from timestamp+random
+  if [[ -f /proc/sys/kernel/random/uuid ]]; then
+    cat /proc/sys/kernel/random/uuid
+  else
+    echo "$(date +%s%N)-$$-$RANDOM"
+  fi
+}
+
+# Log tool call start marker (for rollflow_analyze parsing)
+# Args: $1 = call_id, $2 = tool_name, $3 = cache_key, $4 = git_sha (optional)
+log_tool_start() {
+  local call_id="$1"
+  local tool_name="$2"
+  local key="$3"
+  local git_sha="${4:-$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')}"
+  local ts
+  ts="$(date -Iseconds)"
+
+  echo "::TOOL_CALL_START:: id=$call_id name=$tool_name key=$key ts=$ts git=$git_sha"
+}
+
+# Log tool call end marker (for rollflow_analyze parsing)
+# Args: $1 = call_id, $2 = status (PASS|FAIL), $3 = exit_code, $4 = duration_ms, $5 = error (optional)
+log_tool_end() {
+  local call_id="$1"
+  local status="$2"
+  local exit_code="$3"
+  local duration_ms="$4"
+  local err="${5:-}"
+
+  # Sanitize error message (no newlines, limit length)
+  err="${err//$'\n'/ }"
+  err="${err:0:100}"
+
+  if [[ -n "$err" ]]; then
+    echo "::TOOL_CALL_END:: id=$call_id status=$status exit=$exit_code duration_ms=$duration_ms err=$err"
+  else
+    echo "::TOOL_CALL_END:: id=$call_id status=$status exit=$exit_code duration_ms=$duration_ms"
+  fi
+}
+
+# Log run start marker
+# Args: $1 = run_id
+log_run_start() {
+  local run_id="$1"
+  local ts
+  ts="$(date -Iseconds)"
+  echo "::RUN:: id=$run_id ts=$ts"
+}
+
+# Log iteration start marker
+# Args: $1 = iter_id, $2 = run_id
+log_iter_start() {
+  local iter_id="$1"
+  local run_id="$2"
+  local ts
+  ts="$(date -Iseconds)"
+  echo "::ITER:: id=$iter_id run_id=$run_id ts=$ts"
+}
+
+# =============================================================================
+
 # Cleanup function for temp files and lock
 # Environment: Uses LOCK_FILE, TEMP_CONFIG
 cleanup() {
