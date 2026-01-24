@@ -84,7 +84,7 @@ Key milestones:
   - `use` = check cache first, skip on hit, record misses
   - **AC:** All three modes work correctly
 
-- [ ] **1.3.2** Add `CACHE_SCOPE=verify,read,llm_ro` to loop.sh
+- [x] **1.3.2** Add `CACHE_SCOPE=verify,read,llm_ro` to loop.sh
   - Comma-separated list of active cache types
   - Default: `verify,read` (safe defaults, no LLM caching)
   - **AC:** Scopes correctly filter which caches are checked

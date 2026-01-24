@@ -62,7 +62,7 @@
   - Default: `verify,read` (safe defaults, no LLM caching)
   - **AC:** Scopes correctly filter which caches are checked
 
-- [ ] **1.3.3** Hard-block `llm_ro` scope for BUILD/PLAN phases
+- [x] **1.3.3** Hard-block `llm_ro` scope for BUILD/PLAN phases
   - Even if user sets `CACHE_SCOPE=llm_ro`, ignore for BUILD/PLAN
   - Log warning: "llm_ro scope ignored for BUILD phase"
   - **AC:** BUILD phase always calls LLM
