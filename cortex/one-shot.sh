@@ -161,7 +161,7 @@ agent:
   modelId: $RESOLVED_MODEL
 EOFCONFIG
     fi
-    CONFIG_FLAG="--config-file $TEMP_CONFIG"
+    CONFIG_FLAG="--config-file=$TEMP_CONFIG"
     echo "Using model: $RESOLVED_MODEL"
   fi
 else
@@ -244,7 +244,7 @@ COMPOSITE_PROMPT="/tmp/cortex_prompt_$$_$(date +%s).md"
   echo "# Repository Map"
   echo ""
 
-  cat cortex/REPO_MAP.md
+  cat cortex/docs/REPO_MAP.md
 
 } >"$COMPOSITE_PROMPT"
 
