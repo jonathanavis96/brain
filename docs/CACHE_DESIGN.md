@@ -6,6 +6,29 @@ This document defines the caching strategy for the Ralph loop system. The cache 
 
 **Core Principle:** Cache things that are **idempotent** (same inputs = same outputs). Never cache operations that advance state or modify files.
 
+## At a Glance
+
+| Concept | Description | Example |
+|---------|-------------|---------|
+| `verify` scope | Cache verifier tool results | `shellcheck loop.sh` cached by file hash |
+| `read` scope | Cache file system reads | `cat PROMPT.md` cached by path+mtime |
+| `llm_ro` scope | Cache read-only LLM phases | REPORT phase cached by prompt+git_sha |
+| `CACHE_MODE` | Control cache behavior | `off`, `record`, `use` |
+| `CACHE_SCOPE` | Which caches are active | `verify,read` (default), `verify,read,llm_ro` |
+| Input-based keys | Keys derived from content, not iteration | Same file = same key across runs |
+| Phase guards | BUILD/PLAN never cache LLM | Hard-blocked regardless of CACHE_SCOPE |
+
+## Common Mistakes
+
+| ❌ Don't | ✅ Do | Why |
+|----------|-------|-----|
+| Cache BUILD/PLAN LLM calls | Only cache REPORT/ANALYZE LLM | BUILD advances state, caching skips work |
+| Use iteration number in cache key | Use file content hash in key | Iteration changes; content determines result |
+| Cache failures | Only cache PASS results | Failures may be transient, should retry |
+| Set `CACHE_SCOPE=llm_ro` for task execution | Use `CACHE_SCOPE=verify,read` | LLM caching is only safe for read-only phases |
+| Forget `--force-fresh` when debugging | Use `--force-fresh` to bypass cache | Stale cache can cause confusing behavior |
+| Assume cache hit = correct result | Verify outputs periodically | TTL and content hashing mitigate but don't eliminate staleness |
+
 ## Cache Scopes
 
 The Ralph loop supports three cache scopes, each targeting a different class of operations:
@@ -132,15 +155,46 @@ Iteration 2: PLAN cache hit → returns same 5 tasks → ignores new bugs found 
 
 ## Cache Configuration
 
-Cache behavior is controlled via:
+Cache behavior is controlled via environment variables, CLI flags, and config files.
 
-1. **Environment Variable:** `CACHE_SKIP=1` (enable cache checking)
-2. **CLI Flags:**
-   - `--cache-skip` - Enable cache (skip duplicate calls)
-   - `--force-no-cache` - Disable cache for this run (override CACHE_SKIP)
-3. **Config File:** `artifacts/rollflow_cache/config.yml`
+### Environment Variables
 
-### Configuration Options
+| Variable | Values | Default | Description |
+|----------|--------|---------|-------------|
+| `CACHE_MODE` | `off`, `record`, `use` | `off` | Cache behavior mode |
+| `CACHE_SCOPE` | Comma-separated list | `verify,read` | Which cache types are active |
+
+**CACHE_MODE values:**
+
+- `off` - No caching (default, safest)
+- `record` - Run everything, store PASS results for future use
+- `use` - Check cache first, skip on hit, record misses
+
+**CACHE_SCOPE values:**
+
+- `verify` - Cache verifier results (shellcheck, lint)
+- `read` - Cache file reads (cat, ls)
+- `llm_ro` - Cache read-only LLM phases (REPORT, ANALYZE only)
+
+### CLI Flags
+
+| Flag | Description |
+|------|-------------|
+| `--cache-mode MODE` | Set cache mode (off/record/use) |
+| `--cache-scope SCOPES` | Set cache scopes (comma-separated) |
+| `--force-fresh` | Bypass all caching for this run |
+
+### Deprecated (backwards compatibility)
+
+| Old | Maps To | Notes |
+|-----|---------|-------|
+| `CACHE_SKIP=1` | `CACHE_MODE=use CACHE_SCOPE=verify,read` | Logs deprecation warning |
+| `--cache-skip` | `--cache-mode use` | Logs deprecation warning |
+| `--force-no-cache` | `--force-fresh` | Alias, no warning |
+
+### Config File
+
+Location: `artifacts/rollflow_cache/config.yml`
 
 ```yaml
 # Non-cacheable tools (always run fresh)
@@ -263,31 +317,59 @@ fi
 ### Enable Cache for Verifiers Only
 
 ```bash
-export CACHE_SKIP=1
+export CACHE_MODE=use
 export CACHE_SCOPE="verify"
 bash loop.sh --iterations 10
 ```
 
-### Enable Cache with Read Operations
+### Enable Cache with Read Operations (Recommended Default)
 
 ```bash
-export CACHE_SKIP=1
+export CACHE_MODE=use
 export CACHE_SCOPE="verify,read"
 bash loop.sh
+```
+
+### Enable Cache with LLM for REPORT Phase
+
+```bash
+# Only use llm_ro for read-only phases like REPORT
+export CACHE_MODE=use
+export CACHE_SCOPE="verify,read,llm_ro"
+bash loop.sh --phase REPORT
+```
+
+### Record Mode (Populate Cache Without Skipping)
+
+```bash
+# First run: populate cache without skipping anything
+export CACHE_MODE=record
+bash loop.sh --iterations 1
+
+# Second run: use populated cache
+export CACHE_MODE=use
+bash loop.sh --iterations 5
 ```
 
 ### Force Fresh Run (Ignore Cache)
 
 ```bash
-# Environment variable set but want fresh run
-export CACHE_SKIP=1
-bash loop.sh --force-no-cache
+# Cache enabled but want fresh run for debugging
+export CACHE_MODE=use
+bash loop.sh --force-fresh
+```
+
+### CLI Flags (Alternative to Env Vars)
+
+```bash
+# Equivalent to CACHE_MODE=use CACHE_SCOPE=verify,read
+bash loop.sh --cache-mode use --cache-scope verify,read --iterations 5
 ```
 
 ### View Cache Statistics
 
 ```bash
-# After run with CACHE_SKIP=1, loop.sh prints:
+# After run with CACHE_MODE=use, loop.sh prints:
 # Cache Statistics:
 #   Hits: 42
 #   Misses: 8
