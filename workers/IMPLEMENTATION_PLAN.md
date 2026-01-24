@@ -129,7 +129,7 @@
 
   **Subtasks:**
 
-  - [ ] **12.4.3.1** Add `--force-no-cache` flag to bypass cache for single run
+  - [x] **12.4.3.1** Add `--force-no-cache` flag to bypass cache for single run
     - When set, disable cache lookup even if `CACHE_SKIP=1`
     - **AC:** `CACHE_SKIP=1 bash loop.sh --force-no-cache` runs all tools
 
