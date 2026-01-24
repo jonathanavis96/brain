@@ -783,8 +783,8 @@ class Agent:
         pr(f"{'─'*60}", S.CYN)
 
         # Detect verifier FAIL/WARN from prompt header (escape hatch for rereads)
-        # Must be at line start to avoid matching documentation text
-        if re.search(r"^# LAST_VERIFIER_RESULT: (FAIL|WARN)", prompt, re.MULTILINE):
+        # Uses machine marker #@VERIFIER: to avoid matching documentation text
+        if re.search(r"(?m)^#@VERIFIER:\s*(FAIL|WARN)\s*$", prompt):
             self._verifier_failed = True
             pr("  [verifier FAIL/WARN - context rereads allowed]", S.YEL)
 
