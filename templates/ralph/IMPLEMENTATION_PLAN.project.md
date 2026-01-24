@@ -27,6 +27,8 @@ Example structure:
 
 [REPLACE: What is this implementation plan trying to achieve? What's the end state?]
 
+<!-- Cortex adds new Task Contracts below this line -->
+
 Example: "Build a complete [system/feature] that [specific outcome]"
 
 ## Prioritized Tasks
