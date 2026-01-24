@@ -85,20 +85,6 @@
   - Error handling best practices
   - **AC:** README exists with concurrency section
 
-### Phase 5.5: Domain-Specific Skills
-
-- [ ] **5.5.1** Create `skills/domains/data/README.md` with data engineering overview
-  - ETL/ELT patterns
-  - Data quality and validation
-  - Schema evolution
-  - **AC:** README exists with 3+ sections
-
-- [ ] **5.5.2** Create `skills/domains/ml/README.md` with ML/AI overview
-  - Model training and evaluation patterns
-  - Feature engineering
-  - Model deployment and monitoring
-  - **AC:** README exists with ML lifecycle coverage
-
 **Phase AC:** skills/ directory has 10+ new skill files covering frontend, testing, DevOps, and language domains
 
 ## Phase 6: Template Improvements
