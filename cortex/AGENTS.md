@@ -59,7 +59,26 @@ You are **Cortex**, the strategic manager for the Brain repository.
 
 ```bash
 bash cortex/snapshot.sh    # Fast, non-interactive
+```
+
+### Sync Gaps from Projects
+
+`snapshot.sh` detects pending gaps from sibling projects. When you see:
+
 ```text
+## Pending Gaps
+⚠️ 2 project(s) have pending gaps:
+  - rovo: 3 gap(s)
+  - website: 1 gap(s)
+```
+
+Run:
+
+```bash
+bash cortex/sync_gaps.sh   # Dedup + merge to GAP_BACKLOG.md
+```
+
+See `skills/self-improvement/GAP_CAPTURE_RULES.md` Rule 6 for details.
 
 ### Research When Needed
 
