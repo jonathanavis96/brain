@@ -893,6 +893,21 @@ run_once() {
   ts="$(date +%F_%H%M%S)"
   local log="$LOGDIR/${ts}_iter${iter}_${phase}.log"
 
+  # Hard-block llm_ro scope for PLAN/BUILD phases (task 1.3.3)
+  # These phases must always call the LLM fresh to avoid skipping work
+  local effective_cache_scope="$CACHE_SCOPE"
+  if [[ "$phase" == "plan" || "$phase" == "build" ]]; then
+    if echo "$CACHE_SCOPE" | grep -q "llm_ro"; then
+      # Remove llm_ro from scope
+      effective_cache_scope=$(echo "$CACHE_SCOPE" | sed 's/,llm_ro//g; s/llm_ro,//g; s/llm_ro//g' | sed 's/^,//; s/,$//')
+      echo ""
+      echo "⚠️  llm_ro scope ignored for ${phase^^} phase (cache safety)"
+      echo "   Original scope: $CACHE_SCOPE"
+      echo "   Effective scope: $effective_cache_scope"
+      echo ""
+    fi
+  fi
+
   echo
   echo "========================================"
   echo "Ralph Loop"
