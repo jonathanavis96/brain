@@ -639,9 +639,18 @@ class CerebrasClient:
                     with urllib.request.urlopen(req, timeout=120) as resp:
                         data = json.loads(resp.read().decode())
 
-                # Track usage
+                # Track usage (prompt + completion = total)
                 if "usage" in data:
-                    self.total_tokens += data["usage"].get("total_tokens", 0)
+                    usage = data["usage"]
+                    prompt = usage.get("prompt_tokens", 0)
+                    completion = usage.get("completion_tokens", 0)
+                    total = usage.get("total_tokens", 0)
+                    self.total_tokens += total
+                    # Debug: show per-call breakdown
+                    pr(
+                        f"  [tokens: +{prompt}p +{completion}c = {total}t, cumulative: {self.total_tokens}]",
+                        S.GRY,
+                    )
                 return data
 
             except Exception as e:
@@ -678,6 +687,8 @@ class Agent:
         self._context_read_ids = []  # tool_call_ids for large context reads
         self._needs_state = False
         self._state_written = False
+        self._state_content = None  # Single-slot STATE storage
+        self._context_files_read = set()  # Track which context files have been read
 
     def _is_context_file_read(
         self, tool_name: str, args: dict, output_len: int
@@ -689,6 +700,23 @@ class Agent:
         if not any(path.endswith(cf) for cf in CONTEXT_FILES):
             return False
         return output_len > CONTEXT_SIZE_THRESHOLD
+
+    def _get_context_file_name(self, path: str) -> str | None:
+        """Extract context file name from path."""
+        for cf in CONTEXT_FILES:
+            if path.endswith(cf):
+                return cf
+        return None
+
+    def _should_block_reread(self, tool_name: str, args: dict) -> str | None:
+        """Check if this read should be blocked (already have STATE for it)."""
+        if tool_name not in ("read_file", "head_file"):
+            return None
+        path = args.get("path", "")
+        cf = self._get_context_file_name(path)
+        if cf and cf in self._context_files_read and self._state_content:
+            return cf
+        return None
 
     def _prune_context_reads(self, messages: list) -> list:
         """Remove large context file reads, keeping everything else."""
@@ -794,6 +822,21 @@ class Agent:
                         f"  → {name}({', '.join(f'{k}={repr(v)[:30]}' for k,v in args.items())})",
                         S.GRY,
                     )
+
+                    # Block reread of context files if we already have STATE
+                    blocked_file = self._should_block_reread(name, args)
+                    if blocked_file:
+                        output = f"[BLOCKED: {blocked_file} already read. Use existing STATE.]"
+                        pr(f"    ⊘ {output}", S.YEL)
+                        tool_results.append(
+                            {
+                                "role": "tool",
+                                "tool_call_id": tc["id"],
+                                "content": output,
+                            }
+                        )
+                        continue
+
                     result = execute_tool(name, args, self.cwd)
 
                     # Truncate large results
@@ -812,15 +855,24 @@ class Agent:
                     if self._is_context_file_read(name, args, len(result.output)):
                         self._context_read_ids.append(tc["id"])
                         self._needs_state = True
+                        # Track which context file was read
+                        cf = self._get_context_file_name(args.get("path", ""))
+                        if cf:
+                            self._context_files_read.add(cf)
                         pr("    [context file - will prune after STATE]", S.YEL)
 
-                    # Detect STATE summary in think() - triggers pruning
+                    # Detect STATE summary in think() - single-slot storage
                     if (
                         name == "think"
                         and "state" in args.get("thought", "").lower()[:100]
                     ):
+                        # Replace existing STATE (single-slot, not append)
+                        self._state_content = args.get("thought", "")
                         self._state_written = True
-                        pr("    [STATE written - pruning context reads]", S.GRN)
+                        pr(
+                            "    [STATE updated - single-slot, pruning context reads]",
+                            S.GRN,
+                        )
 
                     tool_results.append(
                         {"role": "tool", "tool_call_id": tc["id"], "content": output}
