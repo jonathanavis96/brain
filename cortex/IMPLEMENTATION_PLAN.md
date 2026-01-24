@@ -220,7 +220,7 @@ Phases 0, 2, 3, 4, 5, 6 completed - see `workers/ralph/THUNK.md` for details.
   - **AC:** Running on sample logs outputs valid JSON to `artifacts/rollflow_reports/`
   - **If Blocked:** Start with minimal JSON schema, add fields iteratively
 
-- [ ] **12.3.2** Implement aggregates + cache_advice in report
+- [x] **12.3.2** Implement aggregates + cache_advice in report
   - Calculate: pass_rate, fail_rate, top_failures_by_tool, slowest_tools
   - Count PASS calls with duplicate cache_key for potential skips
   - Estimate time saved from cached durations
