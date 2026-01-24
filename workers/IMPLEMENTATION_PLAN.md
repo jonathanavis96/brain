@@ -20,7 +20,7 @@
   - Integration with JavaScript projects
   - **AC:** README exists with type system section
 
-- [ ] **5.4.3** Create `skills/domains/languages/go/README.md`
+- [x] **5.4.3** Create `skills/domains/languages/go/README.md`
   - Go idioms and conventions
   - Concurrency patterns (goroutines, channels)
   - Error handling best practices
