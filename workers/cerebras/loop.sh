@@ -27,6 +27,10 @@ LOGDIR="$CEREBRAS/logs"
 VERIFY_REPORT="$CEREBRAS/.verify/latest.txt"
 mkdir -p "$LOGDIR"
 
+# Source shared utilities (includes RollFlow cache functions)
+# shellcheck source=../shared/common.sh
+source "$(dirname "$CEREBRAS")/shared/common.sh"
+
 # Cleanup logs older than 7 days on startup
 cleanup_old_logs() {
   local days="${1:-7}"
@@ -178,7 +182,8 @@ usage() {
 Usage:
   loop.sh [--prompt <path>] [--iterations N] [--plan-every N] [--yolo|--no-yolo]
           [--model <model>] [--branch <name>] [--task <desc>] [--dry-run]
-          [--no-monitors] [--force-build] [--rollback [N]] [--resume]
+          [--no-monitors] [--force-build] [--cache-skip] [--force-no-cache]
+          [--rollback [N]] [--resume]
 
 Defaults:
   --iterations 1
@@ -213,11 +218,13 @@ Task Injection:
                   Example: --task "Fix typo in README.md: change 'teh' to 'the'"
 
 Safety Features:
-  --dry-run       Preview changes without committing (uses a test task)
-  --no-monitors   Skip auto-launching monitor terminals (useful for CI/CD or headless environments)
-  --force-build   Force BUILD mode even on iteration 1 (bypasses automatic PLAN on first iteration)
-  --rollback [N]  Undo last N Ralph commits (default: 1). Requires confirmation.
-  --resume        Resume from last incomplete iteration (checks for uncommitted changes)
+  --dry-run         Preview changes without committing (uses a test task)
+  --no-monitors     Skip auto-launching monitor terminals (useful for CI/CD or headless environments)
+  --force-build     Force BUILD mode even on iteration 1 (bypasses automatic PLAN on first iteration)
+  --cache-skip      Enable cache lookup to skip redundant tool calls (requires RollFlow cache DB)
+  --force-no-cache  Disable cache lookup even if CACHE_SKIP=1 (forces all tools to run)
+  --rollback [N]    Undo last N Ralph commits (default: 1). Requires confirmation.
+  --resume          Resume from last incomplete iteration (checks for uncommitted changes)
 
 Requirements:
   - CEREBRAS_API_KEY environment variable must be set
@@ -253,6 +260,12 @@ Examples:
 
   # Resume after error
   bash cerebras/loop.sh --resume
+
+  # Enable cache skip to speed up repeated runs
+  bash cerebras/loop.sh --cache-skip --iterations 5
+
+  # Force all tools to run even with cache enabled
+  CACHE_SKIP=1 bash cerebras/loop.sh --force-no-cache --iterations 1
 EOF
 }
 
@@ -269,7 +282,14 @@ ROLLBACK_COUNT=1
 RESUME_MODE=false
 NO_MONITORS=false
 FORCE_BUILD=false
+CACHE_SKIP="${CACHE_SKIP:-false}"
+FORCE_NO_CACHE=false
 CONSECUTIVE_VERIFIER_FAILURES=0
+
+# Cache metrics tracking
+CACHE_HITS=0
+CACHE_MISSES=0
+TIME_SAVED_MS=0
 
 # Parse args
 while [[ $# -gt 0 ]]; do
@@ -316,6 +336,14 @@ while [[ $# -gt 0 ]]; do
       ;;
     --force-build)
       FORCE_BUILD=true
+      shift
+      ;;
+    --cache-skip)
+      CACHE_SKIP=true
+      shift
+      ;;
+    --force-no-cache)
+      FORCE_NO_CACHE=true
       shift
       ;;
     --rollback)
@@ -812,18 +840,79 @@ run_once() {
     fi
   } >"$prompt_with_mode"
 
+  # RollFlow tracking: compute cache key and check cache
+  local tool_id tool_key start_ms end_ms duration_ms
+  local git_sha
+  git_sha="$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')"
+  tool_id="$(tool_call_id)"
+  tool_key="$(cache_key "cerebras" "{\"model\":\"$RESOLVED_MODEL\",\"phase\":\"$phase\",\"iter\":$iter}" "$git_sha")"
+  start_ms="$(($(date +%s%N) / 1000000))"
+
+  # Check cache if CACHE_SKIP is enabled and FORCE_NO_CACHE is not set
+  if [[ $CACHE_SKIP == "true" && $FORCE_NO_CACHE != "true" ]]; then
+    if lookup_cache_pass "$tool_key" "$git_sha"; then
+      # Cache hit - skip tool execution
+      local saved_ms=0
+      local cache_db="${CACHE_DB:-$ROOT/artifacts/rollflow_cache/cache.sqlite}"
+      if [[ -f $cache_db ]]; then
+        saved_ms=$(python3 -c "
+import sqlite3
+try:
+    conn = sqlite3.connect('$cache_db')
+    cursor = conn.execute('SELECT last_duration_ms FROM pass_cache WHERE cache_key = ?', ('$tool_key',))
+    row = cursor.fetchone()
+    conn.close()
+    print(row[0] if row and row[0] else 0)
+except Exception:
+    print(0)
+" 2>/dev/null) || saved_ms=0
+      fi
+
+      log_cache_hit "$tool_key" "cerebras"
+      CACHE_HITS=$((CACHE_HITS + 1))
+      TIME_SAVED_MS=$((TIME_SAVED_MS + saved_ms))
+
+      echo ""
+      echo "========================================"
+      echo "✓ Cache hit - skipping tool execution"
+      echo "Key: $tool_key"
+      echo "Tool: cerebras"
+      echo "Saved: ${saved_ms}ms"
+      echo "========================================"
+      echo ""
+      return 0
+    else
+      # Cache miss - proceed with execution
+      log_cache_miss "$tool_key" "cerebras"
+      CACHE_MISSES=$((CACHE_MISSES + 1))
+    fi
+  fi
+
+  # Log tool call start
+  log_tool_start "$tool_id" "cerebras" "$tool_key" "$git_sha" | tee -a "$log"
+
   # Feed prompt into Cerebras agent
   echo "🧠 Running Cerebras Agent with model: ${RESOLVED_MODEL}"
   # Use the agentic Python runner that supports tool execution
+  local rc=0
   if ! python3 "$CEREBRAS/cerebras_agent.py" \
     --prompt "$prompt_with_mode" \
     --model "$RESOLVED_MODEL" \
     --max-turns "${CEREBRAS_MAX_TURNS:-24}" \
     --cwd "$ROOT" \
     --output "$log"; then
+    rc=$?
+    end_ms="$(($(date +%s%N) / 1000000))"
+    duration_ms="$((end_ms - start_ms))"
+    log_tool_end "$tool_id" "FAIL" "$rc" "$duration_ms" "Cerebras Agent failed" | tee -a "$log"
     echo "❌ Cerebras Agent failed. See: $log"
     return 1
   fi
+
+  # Log tool call end (success)
+  end_ms="$(($(date +%s%N) / 1000000))"
+  duration_ms="$((end_ms - start_ms))"
+  log_tool_end "$tool_id" "PASS" "0" "$duration_ms" | tee -a "$log"
 
   # Clean up temporary prompt
   rm -f "$prompt_with_mode"
