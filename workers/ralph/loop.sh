@@ -896,8 +896,8 @@ run_verifier() {
 
     # Show cache summary (hits/misses) instead of 40+ individual lines
     local cache_hits cache_misses
-    cache_hits=$(grep -c '\[CACHE_HIT\]' "$cache_stderr" 2>/dev/null || echo "0")
-    cache_misses=$(grep -c '\[CACHE_MISS\]' "$cache_stderr" 2>/dev/null || echo "0")
+    cache_hits=$(grep -c '\[CACHE_HIT\]' "$cache_stderr" 2>/dev/null) || cache_hits=0
+    cache_misses=$(grep -c '\[CACHE_MISS\]' "$cache_stderr" 2>/dev/null) || cache_misses=0
     if [[ $((cache_hits + cache_misses)) -gt 0 ]]; then
       echo "📊 Cache: $cache_hits hits, $cache_misses misses"
     fi
@@ -912,8 +912,8 @@ run_verifier() {
   else
     # Show cache summary even on failure
     local cache_hits cache_misses
-    cache_hits=$(grep -c '\[CACHE_HIT\]' "$cache_stderr" 2>/dev/null || echo "0")
-    cache_misses=$(grep -c '\[CACHE_MISS\]' "$cache_stderr" 2>/dev/null || echo "0")
+    cache_hits=$(grep -c '\[CACHE_HIT\]' "$cache_stderr" 2>/dev/null) || cache_hits=0
+    cache_misses=$(grep -c '\[CACHE_MISS\]' "$cache_stderr" 2>/dev/null) || cache_misses=0
     if [[ $((cache_hits + cache_misses)) -gt 0 ]]; then
       echo "📊 Cache: $cache_hits hits, $cache_misses misses"
     fi
