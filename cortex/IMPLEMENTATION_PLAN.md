@@ -239,7 +239,7 @@ Phases 0, 2, 3, 4, 5, 6 completed - see `workers/ralph/THUNK.md` for details.
 
 **Goal:** Use PASS results to avoid rerunning identical tool calls.
 
-- [ ] **12.4.1** Implement SQLite cache DB in `tools/rollflow_analyze/cache_db.py`
+- [x] **12.4.1** Implement SQLite cache DB in `tools/rollflow_analyze/cache_db.py`
   - Tables: `pass_cache(cache_key PK, tool_name, last_pass_ts, last_duration_ms, meta_json)`
   - Tables: `fail_log(id PK, cache_key, tool_name, ts, exit_code, err_hash, err_excerpt)`
   - **Depends on:** 12.2.1, 12.3.1
