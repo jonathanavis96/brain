@@ -4,6 +4,8 @@
 
 **Current Status:** Phase 12 in progress (RollFlow Analyzer + Documentation Maintenance)
 
+<!-- Cortex adds new Task Contracts below this line -->
+
 ---
 
 ## Phase 0-Warn: Verifier Warnings
