@@ -164,6 +164,23 @@ Cache behavior is controlled via environment variables, CLI flags, and config fi
 | `CACHE_MODE` | `off`, `record`, `use` | `off` | Cache behavior mode |
 | `CACHE_SCOPE` | Comma-separated list | `verify,read` | Which cache types are active |
 
+**Important:** Both variables must be **exported** for subprocesses (like `verifier.sh`) to inherit them:
+
+```bash
+export CACHE_MODE=use
+export CACHE_SCOPE=verify,read
+bash loop.sh
+```
+
+The loop exports these automatically. If setting manually, always use `export`.
+
+**Verify caching works:**
+
+```bash
+bash tools/test_cache_inheritance.sh
+# Expected: "✅ SUCCESS: Cache is working!" with >0 cache hits
+```
+
 **CACHE_MODE values:**
 
 - `off` - No caching (default, safest)
