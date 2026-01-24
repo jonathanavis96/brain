@@ -1,8 +1,8 @@
 # Implementation Plan - Brain Repository
 
-**Last Updated:** 2026-01-24 (Plan Mode - Iteration 1)
+**Last Updated:** 2026-01-24 (Plan Mode - Ralph Iteration)
 
-**Current Status:** Phase 12 in progress (RollFlow Analyzer + Documentation Maintenance)
+**Current Status:** Phase 12 mostly complete (RollFlow Analyzer operational, cache skip deferred), Phase 13 complete, awaiting human waiver approval for 7 false positive warnings
 
 <!-- Cortex adds new Task Contracts below this line -->
 
@@ -41,7 +41,7 @@
 
 **Goal:** Build a system that parses Ralph/RollFlow loop logs, detects tool calls, labels PASS/FAIL, computes cache keys, and produces JSON reports + cache advice for loop efficiency.
 
-**Status:** Phases 12.1, 12.2 complete. Working on Phase 12.3 (CLI).
+**Status:** Phases 12.1-12.5 complete. Cache skip (12.4.2-12.4.3) deferred until marker emission stabilizes in production. Analyzer is fully operational.
 
 ### Phase 12.3: Analyzer CLI
 
@@ -80,15 +80,16 @@
   - **AC:** Analyzer updates DB after processing logs
   - **If Blocked:** Use JSONL file as simpler alternative to SQLite
 
-- [ ] **12.4.2** Add `CACHE_SKIP=1` flag support to loop.sh
+- [ ] **12.4.2** Add `CACHE_SKIP=1` flag support to loop.sh (DEFERRED - waiting for marker emission to stabilize)
   - Before calling tool: compute cache_key, check pass_cache
   - If hit: log `::CACHE_HIT:: key=<key> tool=<tool>`, skip tool call
   - If miss: log `::CACHE_MISS:: key=<key> tool=<tool>`, run normally
   - **Depends on:** 12.1.2, 12.4.1
   - **AC:** Repeated run shows at least one skip for previously PASS call
   - **If Blocked:** Start with logging only (no actual skip), add skip logic after validation
+  - **Note:** Deferred until marker emission is confirmed stable in production logs
 
-- [ ] **12.4.3** Add safety bypasses for cache skip
+- [ ] **12.4.3** Add safety bypasses for cache skip (DEFERRED - depends on 12.4.2)
   - Don't skip if: args include "force", git SHA changed, tool marked non-cacheable
   - Config: `rollflow_cache.yml` with `non_cacheable_tools: [...]`
   - **Depends on:** 12.4.2
@@ -99,24 +100,24 @@
 
 **Goal:** Prevent regressions and maintain stability as log formats evolve.
 
-- [ ] **12.5.1** Add unit tests for parsing in `tools/rollflow_analyze/tests/`
+- [x] **12.5.1** Add unit tests for parsing in `tools/rollflow_analyze/tests/`
   - Test cases: marker PASS, marker FAIL, missing END, interleaved calls, heuristic-only
   - **Depends on:** 12.2.2, 12.2.3
   - **AC:** `pytest tools/rollflow_analyze/tests/` passes
-  - **If Blocked:** Start with happy-path tests, add edge cases iteratively
+  - **Status:** 3 test files present (test_marker_parser.py, test_heuristic_parser.py, test_report_shape.py)
 
-- [ ] **12.5.2** Add golden report test
+- [x] **12.5.2** Add golden report test
   - Store sample log + expected JSON structure (not exact timestamps)
   - **Depends on:** 12.3.1
   - **AC:** Analyzer output matches expected structure + key fields
-  - **If Blocked:** Use snapshot testing approach, update golden on intentional changes
+  - **Status:** test_report_shape.py validates report structure
 
-- [ ] **12.5.3** Add README for extending regex patterns
+- [x] **12.5.3** Add README for extending regex patterns
   - Document how to tune heuristic parsing without code changes
   - Include examples and troubleshooting checklist
   - **Depends on:** 12.3.x, 12.4.x (enough is real)
   - **AC:** README at `tools/rollflow_analyze/README.md` with pattern extension guide
-  - **If Blocked:** Start with inline comments, extract to README later
+  - **Status:** README.md complete with pattern extension guide, troubleshooting, and usage examples
 
 **Phase AC:** `python -m tools.rollflow_analyze --log-dir workers/ralph/logs --out artifacts/rollflow_reports/latest.json` produces valid report
 
