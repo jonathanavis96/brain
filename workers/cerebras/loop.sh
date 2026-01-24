@@ -177,8 +177,8 @@ usage() {
   cat <<'EOF'
 Usage:
   loop.sh [--prompt <path>] [--iterations N] [--plan-every N] [--yolo|--no-yolo]
-          [--model <model>] [--branch <name>] [--dry-run] [--no-monitors]
-          [--rollback [N]] [--resume]
+          [--model <model>] [--branch <name>] [--task <desc>] [--dry-run]
+          [--no-monitors] [--rollback [N]] [--resume]
 
 Defaults:
   --iterations 1
@@ -208,8 +208,12 @@ Branch Workflow:
                    Default: <repo>-work (derived from git remote, e.g., brain-work)
                    Then run pr-batch.sh to create PRs to main
 
+Task Injection:
+  --task <desc>   Inject a specific task directly instead of reading IMPLEMENTATION_PLAN.md
+                  Example: --task "Fix typo in README.md: change 'teh' to 'the'"
+
 Safety Features:
-  --dry-run       Preview changes without committing (appends instruction to prompt)
+  --dry-run       Preview changes without committing (uses a test task)
   --no-monitors   Skip auto-launching monitor terminals (useful for CI/CD or headless environments)
   --rollback [N]  Undo last N Ralph commits (default: 1). Requires confirmation.
   --resume        Resume from last incomplete iteration (checks for uncommitted changes)
@@ -254,6 +258,7 @@ PLAN_EVERY=3
 PROMPT_ARG=""
 MODEL_ARG=""
 BRANCH_ARG=""
+TASK_ARG=""
 DRY_RUN=false
 ROLLBACK_MODE=false
 ROLLBACK_COUNT=1
@@ -295,6 +300,10 @@ while [[ $# -gt 0 ]]; do
     --dry-run)
       DRY_RUN=true
       shift
+      ;;
+    --task)
+      TASK_ARG="${2:-}"
+      shift 2
       ;;
     --no-monitors)
       NO_MONITORS=true
@@ -754,8 +763,18 @@ run_once() {
     # This reduces base prompt from ~6K tokens to ~200 tokens
     cat "$prompt_file"
 
+    # Inject task directly if --task was provided
+    if [[ -n $TASK_ARG ]]; then
+      echo ""
+      echo "---"
+      echo ""
+      echo "# YOUR TASK"
+      echo ""
+      echo "$TASK_ARG"
+      echo ""
+      echo "Complete this task, commit with git_commit, then output :::BUILD_READY:::"
     # Append dry-run instruction if enabled
-    if [[ $DRY_RUN == "true" ]]; then
+    elif [[ $DRY_RUN == "true" ]]; then
       echo ""
       echo "---"
       echo ""
