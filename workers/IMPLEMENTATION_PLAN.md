@@ -123,7 +123,7 @@
     - Display at end of run: "Cache: X hits (saved Yms), Z misses"
     - **AC:** Run summary shows cache statistics
 
-- [ ] **12.4.3** Add safety bypasses for cache skip
+- [x] **12.4.3** Add safety bypasses for cache skip
   - **Depends on:** 12.4.2
   - **AC:** Can mark tools as non-cacheable via config, force flag bypasses cache
 
@@ -138,12 +138,12 @@
     - Prevents stale cache hits after code changes
     - **AC:** Cache hit on same SHA, miss on different SHA
 
-  - [ ] **12.4.3.3** Create `rollflow_cache.yml` config file
+  - [x] **12.4.3.3** Create `rollflow_cache.yml` config file
     - Location: `artifacts/rollflow_cache/config.yml`
     - Schema: `non_cacheable_tools: [tool1, tool2]`, `max_cache_age_hours: 24`
     - **AC:** Config file parsed on startup, tools in list always run
 
-  - [ ] **12.4.3.4** Implement cache TTL expiration
+  - [x] **12.4.3.4** Implement cache TTL expiration
     - Skip cache hits older than `max_cache_age_hours` (default: 168 = 1 week)
     - **AC:** Old cache entries treated as misses
 
