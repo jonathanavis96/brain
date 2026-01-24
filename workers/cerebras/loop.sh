@@ -845,7 +845,11 @@ run_once() {
   local git_sha
   git_sha="$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')"
   tool_id="$(tool_call_id)"
-  tool_key="$(cache_key "cerebras" "{\"model\":\"$RESOLVED_MODEL\",\"phase\":\"$phase\",\"iter\":$iter}" "$git_sha")"
+  # Generate input-based cache key (prompt content hash + git SHA, NOT iteration number)
+  # This implements task 1.5.2: remove iteration-level caching, use content-based keys
+  local prompt_hash
+  prompt_hash="$(sha256sum "$prompt_with_mode" 2>/dev/null | cut -d' ' -f1 || echo 'unknown')"
+  tool_key="cerebras|${phase}|${prompt_hash:0:16}|${git_sha}"
   start_ms="$(($(date +%s%N) / 1000000))"
 
   # Check cache if CACHE_SKIP is enabled and FORCE_NO_CACHE is not set
