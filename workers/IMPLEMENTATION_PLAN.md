@@ -6,6 +6,22 @@
 
 ---
 
+## Phase 0-Warn: Verifier Warnings
+
+**Goal:** Track and resolve verifier warnings (manual review required items excluded).
+
+- [ ] **WARN.Template.1.thunk** Template.1 warning for thunk_ralph_tasks.sh - Waiver request WVR-2026-01-24-001 submitted (files are identical, false positive)
+- [ ] **WARN.TemplateSync.1.current** Hygiene.TemplateSync.1 warning for current_ralph_tasks.sh - Waiver request WVR-2026-01-24-002 submitted (files are identical, false positive)
+- [ ] **WARN.TemplateSync.2.loop** Hygiene.TemplateSync.2 warning for loop.sh - Waiver request WVR-2026-01-24-003 submitted (intentional brain-specific features: RollFlow tracking, event emission, shared utilities)
+- [ ] **WARN.Shellcheck.loop** Lint.Shellcheck.LoopSh warning - Waiver request WVR-2026-01-24-004 submitted (shellcheck passes with exit 0, false positive)
+- [ ] **WARN.Shellcheck.verifier** Lint.Shellcheck.VerifierSh warning - Waiver request WVR-2026-01-24-005 submitted (shellcheck passes with exit 0, false positive)
+- [ ] **WARN.Shellcheck.current** Lint.Shellcheck.CurrentRalphTasks warning - Waiver request WVR-2026-01-24-006 submitted (shellcheck passes with exit 0, false positive)
+- [ ] **WARN.Shellcheck.thunk** Lint.Shellcheck.ThunkRalphTasks warning - Waiver request WVR-2026-01-24-007 submitted (shellcheck passes with exit 0, false positive)
+
+**Note:** All 7 warnings have waiver requests submitted and are awaiting human approval. No code fixes needed.
+
+---
+
 ## Phase 0-Infra: Verifier Infrastructure Issue
 
 **Goal:** Resolve verifier hanging issue preventing validation.
@@ -29,14 +45,14 @@
 
 **Goal:** Implement CLI that produces reports from logs and updates cache DB.
 
-- [ ] **12.3.1** Implement report writer in `tools/rollflow_analyze/report.py`
+- [x] **12.3.1** Implement report writer in `tools/rollflow_analyze/report.py`
   - JSON output with tool_calls array + aggregates
   - Optional markdown summary
   - **Depends on:** 12.2.2 (or 12.2.3 for fallback)
   - **AC:** Running on sample logs outputs valid JSON to `artifacts/rollflow_reports/`
   - **If Blocked:** Start with minimal JSON schema, add fields iteratively
 
-- [ ] **12.3.2** Implement aggregates + cache_advice in report
+- [x] **12.3.2** Implement aggregates + cache_advice in report
   - Calculate: pass_rate, fail_rate, top_failures_by_tool, slowest_tools
   - Count PASS calls with duplicate cache_key for potential skips
   - Estimate time saved from cached durations

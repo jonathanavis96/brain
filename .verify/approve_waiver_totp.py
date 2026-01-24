@@ -80,7 +80,14 @@ def main():
     with open(approved_path, "w", encoding="utf-8") as f:
         f.write(content)
 
-    print(f"\nAPPROVED ✅  wrote {approved_path}")
+    # Auto-delete the request file after successful approval
+    try:
+        os.remove(req_path)
+        print(f"\nAPPROVED ✅  wrote {approved_path}")
+        print(f"Cleaned up request file: {req_path}")
+    except OSError:
+        print(f"\nAPPROVED ✅  wrote {approved_path}")
+        print(f"Note: Could not remove request file: {req_path}")
 
 
 if __name__ == "__main__":

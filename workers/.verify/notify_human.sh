@@ -102,8 +102,12 @@ if [[ "$RESULT" == OTP:* && -n "$WAIVER_REQUEST" && -f "$WAIVER_REQUEST" ]]; the
   VERIFY_SCRIPT="${REPO_ROOT}/.verify/approve_waiver_totp.py"
 
   if [[ -f "$VERIFY_SCRIPT" ]]; then
-    # Use expect-style input or direct Python call with OTP
-    export WAIVER_OTP="$OTP_CODE"
+    # Activate venv if available
+    VENV_ACTIVATE="${REPO_ROOT}/.venv/bin/activate"
+    if [[ -f "$VENV_ACTIVATE" ]]; then
+      # shellcheck source=/dev/null
+      source "$VENV_ACTIVATE"
+    fi
 
     # Call Python with OTP via stdin
     if echo "$OTP_CODE" | python3 "$VERIFY_SCRIPT" "$WAIVER_REQUEST" 2>/dev/null; then
