@@ -64,6 +64,7 @@ def main(argv: list[str] | None = None) -> int:
     from .parsers.marker_parser import MarkerParser
     from .parsers.heuristic_parser import HeuristicParser
     from .report import build_report, write_json_report, write_markdown_summary
+    from .models import ToolStatus
 
     parser = create_parser()
     args = parser.parse_args(argv)
@@ -172,9 +173,37 @@ def main(argv: list[str] | None = None) -> int:
             print(f"Error writing markdown summary: {e}", file=sys.stderr)
             return 1
 
-    # Step 6: TODO - Update cache DB (Phase 12.4.1)
-    # if args.cache_db:
-    #     update_cache_db(report, args.cache_db)
+    # Step 6: Update cache DB with PASS/FAIL results
+    if args.cache_db:
+        try:
+            from .cache_db import CacheDB
+
+            cache_db = CacheDB(args.cache_db)
+            if args.verbose:
+                print(f"Updating cache database: {args.cache_db}")
+
+            # Update cache with PASS results
+            pass_count = 0
+            fail_count = 0
+            for tool_call in tool_calls:
+                if tool_call.status == ToolStatus.PASS and tool_call.cache_key:
+                    cache_db.upsert_pass(tool_call)
+                    pass_count += 1
+                elif tool_call.status == ToolStatus.FAIL:
+                    cache_db.log_fail(tool_call)
+                    fail_count += 1
+
+            if args.verbose:
+                print(
+                    f"  Cached {pass_count} PASS result(s), logged {fail_count} FAIL(s)"
+                )
+                stats = cache_db.get_stats()
+                print(
+                    f"  Cache DB stats: {stats['pass_cache_entries']} entries, {stats['fail_log_entries']} failures"
+                )
+        except Exception as e:
+            print(f"Warning: Failed to update cache DB: {e}", file=sys.stderr)
+            # Don't fail the entire run if cache update fails
 
     return 0
 
