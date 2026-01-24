@@ -124,7 +124,7 @@
 
 **Goal:** Fix markdown linting issues and maintain documentation quality.
 
-- [ ] **13.1** Fix MD056 table column count errors in workers/ralph/THUNK.md
+- [x] **13.1** Fix MD056 table column count errors in workers/ralph/THUNK.md
   - Line 520: Expected 5 columns, got 6
   - Line 547: Expected 5 columns, got 7
   - **AC:** `markdownlint workers/ralph/THUNK.md` passes with no MD056 errors

@@ -228,7 +228,7 @@ Phases 0, 2, 3, 4, 5, 6 completed - see `workers/ralph/THUNK.md` for details.
   - **AC:** Report includes non-empty `aggregates` and `cache_advice` sections
   - **If Blocked:** Start with pass/fail counts only, add complex aggregates later
 
-- [ ] **12.3.3** Wire up CLI with streaming log processing
+- [x] **12.3.3** Wire up CLI with streaming log processing
   - Command: `rollflow_analyze --log-dir logs/ --out artifacts/rollflow_reports/latest.json`
   - Process file-by-file, line-by-line (never load huge logs into memory)
   - **Depends on:** 12.2.2, 12.3.1
