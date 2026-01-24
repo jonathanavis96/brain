@@ -2,11 +2,13 @@
 
 **Last Updated:** 2026-01-24 (Plan Mode - Ralph Iteration)
 
-**Current Status:** ✅ Phase 0-Warn resolved (all shellcheck warnings are false positives from empty stdout), Phase 0-Infra deferred (verifier working, infrastructure stable). Phase 1 (Cache Redesign) ready to begin - core implementation tasks remain. Phase 12 (RollFlow Analyzer) and Phase 13 (Documentation) complete.
+**Current Status:** ✅ Phase 1 (Scope-Based Cache Redesign) COMPLETE - All tasks 1.1.1 through 1.6.3 implemented and tested. Phase 2.1.1 (Verifier Cache Integration) COMPLETE. Phase 3.1.1 (Cache Isolation) COMPLETE - agents already isolated. Phase 0-Warn resolved (all warnings are false positives). Remaining work: Phase 2.1.2 (cache invalidation on rule change), Phase 3 decision on isolation implementation.
 
 <!-- Cortex adds new Task Contracts below this line -->
 
-## Phase 1: Scope-Based Cache Redesign
+## Phase 1: Scope-Based Cache Redesign ✅ COMPLETE
+
+**Status:** All tasks complete (1.1.1 through 1.6.3). Implemented 2026-01-24.
 
 **Goal:** Replace iteration-level caching with input-based caching that only skips idempotent operations.
 
@@ -122,9 +124,11 @@
 
 ## Phase 2: Verifier-Specific Caching (Optional Enhancement)
 
+**Status:** Phase 2.1.1 COMPLETE (verifier cache integration). Phase 2.1.2 remains (cache invalidation on rule change).
+
 **Goal:** Apply caching specifically to verifier.sh checks for faster verification loops.
 
-**Depends on:** Phase 1 complete
+**Depends on:** Phase 1 complete ✅
 
 ### Phase 2.1: Verifier Cache Integration
 
@@ -132,24 +136,28 @@
   - Each AC check computes key from: `check_id + target_file_hash`
   - On cache hit: reuse prior PASS/FAIL result
   - **AC:** Unchanged files skip re-verification
+  - **Completed:** 2026-01-24 (THUNK #592)
 
 - [ ] **2.1.2** Add cache invalidation on rule change
   - Include `rules/AC.rules` hash in cache key
   - Rule change → all checks re-run
   - **AC:** Editing AC.rules invalidates all cached results
+  - **Note:** Partially implemented - verifier.sh includes AC.rules hash in cache key (line in 2.1.1 implementation), but full invalidation testing needed
 
 **Phase AC:** Verifier runs faster on unchanged files
 
 ---
 
 
-## Phase 3: Per-Agent Cache Isolation (If Needed)
+## Phase 3: Per-Agent Cache Isolation ✅ COMPLETE
+
+**Status:** COMPLETE - Isolation already implemented, no additional work needed.
 
 **Goal:** Prevent cache cross-talk between workers.
 
-**Depends on:** Phase 1 complete
+**Depends on:** Phase 1 complete ✅
 
-**Decision:** Evaluate after Phase 1 testing whether isolation is needed.
+**Decision:** ✅ No additional isolation needed - cache keys already include agent-specific prefixes.
 
 ### Phase 3.1: Evaluate Need
 
@@ -158,18 +166,23 @@
   - If keys already differ → no isolation needed
   - **AC:** Decision documented
   - **Result:** ✅ Isolation already implemented - Ralph uses "rovodev" prefix, Cerebras uses "cerebras" prefix in cache keys, preventing collision
+  - **Completed:** 2026-01-24 (verified in docs/CACHE_DESIGN.md)
 
 ### Phase 3.2: Implement If Needed
 
-- [ ] **3.2.1** Option A: Physical separation
+**Status:** NOT NEEDED - Phase 3.1.1 confirmed isolation already exists.
+
+- [~] **3.2.1** Option A: Physical separation
   - `workers/<agent>/cache/cache.sqlite`
   - **AC:** Each worker has own cache DB
+  - **Status:** NOT NEEDED - logical separation via key prefixes is sufficient
 
-- [ ] **3.2.2** Option B: Logical separation
+- [~] **3.2.2** Option B: Logical separation
   - Add `agent=<name>` to all cache keys
   - **AC:** Same tool+args for different agents = different keys
+  - **Status:** ALREADY IMPLEMENTED - cache keys include RUNNER variable (rovodev vs cerebras)
 
-**Phase AC:** Cache isolation implemented or documented as unnecessary
+**Phase AC:** ✅ Cache isolation implemented via key prefixes
 
 ---
 
