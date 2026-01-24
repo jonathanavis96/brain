@@ -48,7 +48,9 @@ except ImportError:
 
 CEREBRAS_API_URL = "https://api.cerebras.ai/v1/chat/completions"
 DEFAULT_MODEL = "qwen-3-32b"
-DEFAULT_MAX_TURNS = 8  # Hard cap for token budget
+DEFAULT_MAX_TURNS = (
+    24  # Hard cap for token budget (24 allows read→implement→verify→commit cycle)
+)
 DEFAULT_MAX_TOKENS = 16384
 DEFAULT_TEMPERATURE = 0.2
 
