@@ -100,7 +100,7 @@ Key milestones:
   - If `IMPLEMENTATION_PLAN.md` has `- [ ]` tasks and phase=BUILD → force run
   - **AC:** BUILD with pending tasks always executes
 
-- [ ] **1.4.2** Add `--force-fresh` flag
+- [x] **1.4.2** Add `--force-fresh` flag
   - Bypasses all caching regardless of CACHE_MODE/SCOPE
   - Useful for debugging stale cache issues
   - **AC:** Flag works, all operations run fresh
