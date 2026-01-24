@@ -90,7 +90,7 @@
   - Add phase guards
   - **AC:** Ralph respects new cache design
 
-- [ ] **1.5.2** Update `workers/cerebras/loop.sh` with new cache logic
+- [x] **1.5.2** Update `workers/cerebras/loop.sh` with new cache logic
   - Same changes as Ralph
   - **AC:** Cerebras respects new cache design
 
