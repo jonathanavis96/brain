@@ -1,0 +1,29 @@
+# Example patterns configuration for heuristic parser
+# Copy to patterns.yaml and customize for your log format
+
+tool_start:
+  - 'Running tool[:\s]+(?P<name>\w+)'
+  - 'Executing[:\s]+(?P<name>\w+)'
+  - '\[TOOL\]\s+(?P<name>\w+)\s+started'
+  - '>>> (?P<name>\w+)'
+
+tool_pass:
+  - 'Tool\s+\w+\s+completed successfully'
+  - '\[PASS\]'
+  - 'exit\s*(?:code)?[:\s]*0\b'
+  - '✓|✔|PASSED|SUCCESS'
+
+tool_fail:
+  - 'Tool\s+\w+\s+failed'
+  - '\[FAIL\]'
+  - 'exit\s*(?:code)?[:\s]*[1-9]\d*'
+  - '✗|✘|FAILED|ERROR'
+  - 'Traceback \(most recent call last\)'
+
+exit_code:
+  - 'exit\s*(?:code)?[:\s]*(?P<code>\d+)'
+  - 'returned\s+(?P<code>\d+)'
+
+error_msg:
+  - '(?:Error|Exception)[:\s]+(?P<msg>.+?)(?:\n|$)'
+  - 'FATAL[:\s]+(?P<msg>.+?)(?:\n|$)'

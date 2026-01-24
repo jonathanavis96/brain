@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rollflow-analyze"
+version = "0.1.0"
+description = "RollFlow/Ralph loop log analyzer with caching advice"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+]
+
+[project.scripts]
+rollflow_analyze = "rollflow_analyze.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
