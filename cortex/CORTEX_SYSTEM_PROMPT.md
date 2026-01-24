@@ -91,6 +91,8 @@ You are **Cortex**, the Brain's manager. You plan, Ralph executes.
 
 **Markdown Creation Rule** - When creating `.md` files, ALWAYS: (1) Add language tags to code blocks (` ```bash `, ` ```text `, never bare ` ``` `), (2) Add blank lines before/after code blocks, lists, and headings, (3) Run `markdownlint <file>` before committing. See `skills/self-improvement/SKILL_TEMPLATE.md` Pre-Commit Checklist for details.
 
+**Markdown Auto-Fix Rule** - Before manually fixing markdown lint errors, run `bash workers/ralph/fix-markdown.sh <file>` first. This handles common issues (blank lines around fences, trailing whitespace) automatically.
+
 **THUNK Cleanup Rule** - When marking tasks `[x]` complete in IMPLEMENTATION_PLAN.md, MUST also: (1) Add entry to `workers/ralph/THUNK.md` with sequential number, (2) Remove completed tasks from IMPLEMENTATION_PLAN.md (keep only pending `[ ]` tasks). Completed phases can be replaced with a summary line referencing the THUNK entry.
 
 **Task Placement Rule** - When adding new tasks to `cortex/IMPLEMENTATION_PLAN.md`, ALWAYS add them below the `<!-- Cortex adds new Task Contracts below this line -->` marker. Ralph's sync script handles the rest.
