@@ -86,6 +86,9 @@ brain/ (repository root)
     ├── *.sha256                 # Hash guards for protected files
     ├── waivers/                 # Approved waivers (TOTP-protected)
     └── waiver_requests/         # Pending waiver requests
+
+```
+
 ```text
 
 ---
@@ -167,6 +170,8 @@ brain/ (repository root)
 
 **All KB files must have:**
 
+```
+
 ```markdown
 # Title
 
@@ -178,6 +183,9 @@ brain/ (repository root)
 
 ## Details
 [The actual knowledge]
+
+```
+
 ```text
 
 ---
@@ -209,9 +217,14 @@ brain/ (repository root)
 
 **Rule Count Validation:**
 
+```
+
 ```bash
 find references/react-best-practices/rules/ -name "*.md" | wc -l
 # Must always output: 45 (rule files only, excludes _template.md and _sections.md)
+
+```
+
 ```text
 
 **Usage Pattern:**
@@ -242,10 +255,15 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 
 **Bootstrap Process:**
 
+```
+
 ```bash
 # From brain repository root (not implemented in bash yet - legacy PowerShell)
 # ./new-project.ps1 -Name my-project
 # Creates: ../my-project/ with AGENTS.md, ralph/, specs/, src/
+
+```
+
 ```text
 
 ---
@@ -290,10 +308,15 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 
 **Running Cortex:**
 
+```
+
 ```bash
 cd /path/to/brain/
 bash cortex/run.sh              # Single review cycle
 bash cortex/run.sh --help       # Show usage
+
+```
+
 ```text
 
 ---
@@ -335,8 +358,13 @@ bash cortex/run.sh --help       # Show usage
 
 **Stop Sentinel:**
 
+```
+
 ```text
 :::COMPLETE:::
+
+```
+
 ```text
 
 Only output when ALL tasks in IMPLEMENTATION_PLAN.md are 100% complete.
@@ -407,6 +435,8 @@ Use for:
 
 ### Quick Checks
 
+```
+
 ```bash
 # KB file count
 find skills/ -name "*.md" | wc -l
@@ -431,9 +461,14 @@ find specs/ -name "*.md" | wc -l
 # Total .md files in brain/ root (excluding subdirs)
 find . -maxdepth 1 -name "*.md" | wc -l
 # Current: ~7 files (AGENTS, NEURONS, PROMPT, IMPLEMENTATION_PLAN, THOUGHTS, THUNK, README, VALIDATION_CRITERIA)
+
+```
+
 ```text
 
 ### Validation Commands (Backpressure)
+
+```
 
 ```bash
 # Verify file structure
@@ -452,6 +487,9 @@ bash -n loop.sh
 
 # Check AGENTS.md and NEURONS.md exist
 ls -lh AGENTS.md NEURONS.md
+
+```
+
 ```text
 
 ---
@@ -528,14 +566,21 @@ From `THOUGHTS.md`, the brain is successful when:
 
 ### Running Ralph Loop
 
+```
+
 ```bash
 cd /path/to/brain/workers/ralph/
 bash loop.sh                           # Single iteration
 bash loop.sh --iterations 10           # Multiple iterations
 bash loop.sh --prompt PROMPT.md        # Use unified prompt
+
+```
+
 ```text
 
 ### Validating Brain Integrity
+
+```
 
 ```bash
 # File counts
@@ -551,6 +596,9 @@ bash -n loop.sh
 
 # Directory structure
 tree -L 2 -I 'old_md|logs'
+
+```
+
 ```text
 
 ---
@@ -584,3 +632,5 @@ This brain repository contains:
 - **Project goals** → See THOUGHTS.md or cortex/THOUGHTS.md
 - **React patterns** → See references/react-best-practices/HOTLIST.md
 - **Manager/worker workflow** → See AGENTS.md "Manager/Worker Architecture" section
+
+```
