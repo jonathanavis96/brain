@@ -908,6 +908,25 @@ run_once() {
   tool_key="$(cache_key "$RUNNER" "{\"model\":\"$RESOLVED_MODEL\",\"phase\":\"$phase\",\"iter\":$iter}" "$git_sha")"
   start_ms="$(($(date +%s%N) / 1000000))"
 
+  # Check cache if CACHE_SKIP is enabled
+  if [[ "$CACHE_SKIP" == "true" ]]; then
+    if lookup_cache_pass "$tool_key"; then
+      # Cache hit - skip tool execution
+      log_cache_hit "$tool_key" "$RUNNER"
+      echo ""
+      echo "========================================"
+      echo "✓ Cache hit - skipping tool execution"
+      echo "Key: $tool_key"
+      echo "Tool: $RUNNER"
+      echo "========================================"
+      echo ""
+      return 0
+    else
+      # Cache miss - proceed with execution
+      log_cache_miss "$tool_key" "$RUNNER"
+    fi
+  fi
+
   # Log tool call start
   log_tool_start "$tool_id" "$RUNNER" "$tool_key" "$git_sha" | tee -a "$log"
 
