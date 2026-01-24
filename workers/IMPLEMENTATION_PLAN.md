@@ -69,7 +69,7 @@
 
 ### Phase 1.4: Safety Guards
 
-- [ ] **1.4.1** Add pending task check before any cache skip
+- [x] **1.4.1** Add pending task check before any cache skip
   - If `IMPLEMENTATION_PLAN.md` has `- [ ]` tasks and phase=BUILD → force run
   - **AC:** BUILD with pending tasks always executes
 
