@@ -226,6 +226,34 @@ cat .verify/latest.txt | grep -E "SUMMARY|\[WARN\]|\[FAIL\]"
 - Check NEURONS.md for codebase map
 - Use Brain Skills: `skills/SUMMARY.md` → `references/HOTLIST.md` → specific rules only if needed
 
+### Hard Rules (MUST FOLLOW - Prevents Read-Only Loops)
+
+1. **Pick exactly ONE task** from workers/IMPLEMENTATION_PLAN.md and complete it this iteration.
+
+2. **After reading IMPLEMENTATION_PLAN.md, your VERY NEXT step must be:**
+   - Read the relevant source file(s) to implement the chosen task
+   - NOT `.verify/latest.txt` again
+   - NOT re-reading IMPLEMENTATION_PLAN.md again
+
+3. **Every time you use think(), the thought MUST begin with:**
+
+   ```text
+   STATE: Task=<id>; Goal=<one sentence>; NextFiles=<comma list>; NextAction=<verb phrase>
+   ```
+
+   Example:
+
+   ```text
+   STATE: Task=12.4.1; Goal=Add --cache-ttl CLI flag; NextFiles=tools/rollflow_analyze/src/rollflow_analyze/cli.py; NextAction=Edit CLI parser to accept flag
+   ```
+
+4. **By Turn 8 you MUST have made at least ONE code edit (a file diff).**
+   If you have not edited a file by turn 8, stop reconnaissance and immediately open the relevant source file and implement.
+
+5. **Do not read `.verify/latest.txt` more than once per iteration** unless the task explicitly requires verifier debugging.
+
+6. **Do not re-read the same file twice** unless you need to verify your edits worked.
+
 ### Build Actions
 
 1. **CHECK FOR VERIFIER WARNINGS FIRST:**
