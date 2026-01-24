@@ -133,7 +133,7 @@
     - When set, disable cache lookup even if `CACHE_SKIP=1`
     - **AC:** `CACHE_SKIP=1 bash loop.sh --force-no-cache` runs all tools
 
-  - [ ] **12.4.3.2** Add git SHA staleness check
+  - [x] **12.4.3.2** Add git SHA staleness check
     - If current git SHA differs from cached entry's git SHA, treat as miss
     - Prevents stale cache hits after code changes
     - **AC:** Cache hit on same SHA, miss on different SHA

@@ -927,7 +927,7 @@ run_once() {
 
   # Check cache if CACHE_SKIP is enabled and FORCE_NO_CACHE is not set
   if [[ "$CACHE_SKIP" == "true" && "$FORCE_NO_CACHE" != "true" ]]; then
-    if lookup_cache_pass "$tool_key"; then
+    if lookup_cache_pass "$tool_key" "$git_sha"; then
       # Cache hit - skip tool execution
       # Query saved duration from cache
       local saved_ms=0
