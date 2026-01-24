@@ -1,8 +1,8 @@
 # Implementation Plan - Brain Repository
 
-**Last Updated:** 2026-01-25 01:08:00
+**Last Updated:** 2026-01-25 01:30:00
 
-**Current Status:** Phase 5 complete (all language READMEs done). Phase 6 ready to execute (template improvements - start with 6.2.x cache docs). Phase 7 queued (documentation). Phase 4 deferred (cache refactoring). Phase X queued (structured logging).
+**Current Status:** Phase 5 complete (all language READMEs done). Phase 6 ready to execute (template improvements - start with 6.2.x cache docs). Phase 7 queued (documentation). Phase 4 deferred (cache refactoring). Phase X queued (structured logging). All verifier warnings are false positives (7 waiver requests pending human approval).
 
 <!-- Cortex adds new Task Contracts below this line -->
 
@@ -10,9 +10,19 @@
 
 **Goal:** Resolve verifier warnings from latest run.
 
+**Status:** All 7 warnings are false positives. Waiver requests created and pending human approval:
+
+- Template.1: thunk_ralph_tasks.sh (files identical, diff bug)
+- Hygiene.TemplateSync.1: current_ralph_tasks.sh (files identical, diff bug)
+- Hygiene.TemplateSync.2: loop.sh (intentional divergence for brain-specific features)
+- Lint.Shellcheck.LoopSh: loop.sh (passes shellcheck with only SC1091 info-level)
+- Lint.Shellcheck.VerifierSh: verifier.sh (passes clean)
+- Lint.Shellcheck.CurrentRalphTasks: current_ralph_tasks.sh (passes clean)
+- Lint.Shellcheck.ThunkRalphTasks: thunk_ralph_tasks.sh (passes clean)
+
 - [x] **WARN.Cortex.FileSizeLimit.SYSTEM_PROMPT** Reduce cortex/CORTEX_SYSTEM_PROMPT.md to 150 lines (currently 161 lines)
-- [ ] **WARN.Hygiene.TemplateSync.1.current_ralph_tasks** Request waiver for current_ralph_tasks.sh Phase section detection logic
-- [ ] **WARN.Hygiene.TemplateSync.2.loop** Request waiver for loop.sh cache configuration enhancements
+- [x] **WARN.Hygiene.TemplateSync.1.current_ralph_tasks** Request waiver for current_ralph_tasks.sh (WVR-2026-01-24-003)
+- [x] **WARN.Hygiene.TemplateSync.2.loop** Request waiver for loop.sh (WVR-2026-01-24-002 + others)
 
 ## Phase 5: Skills Knowledge Base Expansion
 
