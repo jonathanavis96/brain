@@ -19,7 +19,7 @@
   - Link to existing website skills for context
   - **AC:** README exists with 3+ framework references
 
-- [ ] **5.1.2** Create `skills/domains/frontend/react-patterns.md`
+- [x] **5.1.2** Create `skills/domains/frontend/react-patterns.md`
   - Hooks best practices, component composition, performance optimization
   - State management (Context, Redux, Zustand)
   - Common pitfalls and solutions
