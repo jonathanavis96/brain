@@ -78,7 +78,7 @@
   - Useful for debugging stale cache issues
   - **AC:** Flag works, all operations run fresh
 
-- [ ] **1.4.3** Deprecate `CACHE_SKIP` with migration path
+- [x] **1.4.3** Deprecate `CACHE_SKIP` with migration path
   - Map `CACHE_SKIP=1` → `CACHE_MODE=use CACHE_SCOPE=verify,read`
   - Log: "CACHE_SKIP is deprecated, use CACHE_MODE and CACHE_SCOPE"
   - **AC:** Old flag still works with warning

@@ -345,6 +345,15 @@ FORCE_NO_CACHE=false
 FORCE_FRESH=false # Bypass all caching regardless of CACHE_MODE/SCOPE
 CONSECUTIVE_VERIFIER_FAILURES=0
 
+# Deprecation: CACHE_SKIP → CACHE_MODE/CACHE_SCOPE migration
+if [[ "${CACHE_SKIP}" == "true" ]]; then
+  echo "⚠️  WARNING: CACHE_SKIP is deprecated and will be removed in a future release."
+  echo "    Please use: CACHE_MODE=use CACHE_SCOPE=verify,read"
+  echo "    Automatically migrating for this run..."
+  CACHE_MODE="use"
+  CACHE_SCOPE="verify,read"
+fi
+
 # =============================================================================
 # Cache Scope Mapping by Phase
 # =============================================================================
