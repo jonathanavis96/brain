@@ -98,28 +98,44 @@ acquire_lock() {
 # Functions for generating cache keys and tracking tool calls for analysis.
 # Used by rollflow_analyze to detect duplicate/cacheable tool invocations.
 
-# Generate a stable cache key for a tool call
-# Args: $1 = tool name, $2 = args (JSON or string), $3 = git SHA (optional)
+# Generate a stable cache key for verifier tools based on file content
+# Args: $1 = tool name, $2 = target file or directory path
 # Output: SHA256 hash (first 16 chars for readability)
-# Example: cache_key "shellcheck" '{"file":"loop.sh"}' "abc123"
+# Example: cache_key "shellcheck" "loop.sh"
+# Note: Key = tool_name + file_content_hash(target) for files, or tool_name + tree_hash(target) for directories
 cache_key() {
   local tool_name="${1:-unknown}"
-  local args="${2:-}"
-  local git_sha="${3:-}"
+  local target_path="${2:-}"
 
-  # Normalize: lowercase tool name, sort JSON keys if valid JSON
-  local normalized_args
-  if echo "$args" | python3 -c "import sys,json; json.load(sys.stdin)" 2>/dev/null; then
-    # Valid JSON - normalize with sorted keys
-    normalized_args=$(echo "$args" | python3 -c "import sys,json; print(json.dumps(json.load(sys.stdin), sort_keys=True, separators=(',',':')))" 2>/dev/null || echo "$args")
-  else
-    # Not JSON - use as-is
-    normalized_args="$args"
+  # Handle missing target path
+  if [[ -z "$target_path" ]]; then
+    echo "ERROR: cache_key: target path required" >&2
+    return 1
   fi
 
-  # Combine components and hash
-  local input="${tool_name,,}|${normalized_args}|${git_sha}"
-  echo -n "$input" | sha256sum | cut -c1-16
+  # Determine if target is file or directory and compute appropriate hash
+  local content_hash
+  if [[ -f "$target_path" ]]; then
+    # File: use file_content_hash
+    content_hash=$(file_content_hash "$target_path") || return 1
+  elif [[ -d "$target_path" ]]; then
+    # Directory: use tree_hash
+    content_hash=$(tree_hash "$target_path") || return 1
+  else
+    echo "ERROR: cache_key: target not found or not a file/directory: $target_path" >&2
+    return 1
+  fi
+
+  # Combine tool name (lowercase) and content hash
+  local input="${tool_name,,}|${content_hash}"
+  if command -v sha256sum &>/dev/null; then
+    echo -n "$input" | sha256sum | cut -c1-16
+  elif command -v shasum &>/dev/null; then
+    echo -n "$input" | shasum -a 256 | cut -c1-16
+  else
+    echo "ERROR: cache_key: neither sha256sum nor shasum available" >&2
+    return 1
+  fi
 }
 
 # Generate a unique tool call ID
