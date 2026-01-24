@@ -270,6 +270,8 @@ Safety Features:
   --dry-run         Preview changes without committing (appends instruction to prompt)
   --no-monitors     Skip auto-launching monitor terminals (useful for CI/CD or headless environments)
   --cache-skip      Enable cache lookup to skip redundant tool calls (requires RollFlow cache DB)
+  --cache-mode <mode> Cache behavior: off (no caching, default), record (run everything, store PASS),
+                    use (check cache first, skip on hit, record misses)
   --force-no-cache  Disable cache lookup even if CACHE_SKIP=1 (forces all tools to run)
   --rollback [N]    Undo last N Ralph commits (default: 1). Requires confirmation.
   --resume          Resume from last incomplete iteration (checks for uncommitted changes)
@@ -334,6 +336,7 @@ ROLLBACK_COUNT=1
 RESUME_MODE=false
 NO_MONITORS=false
 CACHE_SKIP="${CACHE_SKIP:-false}"
+CACHE_MODE="${CACHE_MODE:-off}" # off|record|use - controls cache behavior
 FORCE_NO_CACHE=false
 CONSECUTIVE_VERIFIER_FAILURES=0
 
@@ -442,6 +445,10 @@ while [[ $# -gt 0 ]]; do
       CACHE_SKIP=true
       shift
       ;;
+    --cache-mode)
+      CACHE_MODE="${2:-}"
+      shift 2
+      ;;
     --force-no-cache)
       FORCE_NO_CACHE=true
       shift
@@ -470,6 +477,12 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+# Validate CACHE_MODE
+if [[ "$CACHE_MODE" != "off" && "$CACHE_MODE" != "record" && "$CACHE_MODE" != "use" ]]; then
+  echo "ERROR: Invalid CACHE_MODE='$CACHE_MODE'. Must be: off|record|use" >&2
+  exit 2
+fi
 
 # Model version configuration - SINGLE SOURCE OF TRUTH
 # Update these when new model versions are released
