@@ -87,6 +87,8 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
   - [Error Handling Patterns](domains/backend/error-handling-patterns.md) - Exception handling, error boundaries, retry strategies
   - [Security Patterns](domains/infrastructure/security-patterns.md) - Input validation, secrets management, secure defaults
   - [State Management Patterns](domains/infrastructure/state-management-patterns.md) - React state, global stores, persistence
+  - **[JavaScript Patterns](domains/languages/javascript/README.md)** - Modern JavaScript (ES6+), async patterns, module systems
+  - **[TypeScript Patterns](domains/languages/typescript/README.md)** - Type system fundamentals, generics, advanced types, JavaScript integration
   - **[Shell Scripting](domains/languages/shell/README.md)** - Bash best practices, ShellCheck patterns, cleanup/traps
     - [Strict Mode](domains/languages/shell/strict-mode.md) - `set -euo pipefail` patterns
     - [Variable Patterns](domains/languages/shell/variable-patterns.md) - SC2155, SC2034, scoping

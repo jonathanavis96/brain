@@ -62,6 +62,10 @@ Catalog of all skill files in the brain system.
 
 ### Languages
 
+#### JavaScript
+
+- [README.md](domains/languages/javascript/README.md) - Modern JavaScript (ES6+) patterns, async patterns, module systems
+
 #### Python
 
 - [python-patterns.md](domains/languages/python/python-patterns.md) - datetime, f-strings, JSON handling, type hints
@@ -74,6 +78,10 @@ Catalog of all skill files in the brain system.
 - [cleanup-patterns.md](domains/languages/shell/cleanup-patterns.md) - Traps, temp files, state restoration
 - [common-pitfalls.md](domains/languages/shell/common-pitfalls.md) - ShellCheck errors and gotchas
 - [validation-patterns.md](domains/languages/shell/validation-patterns.md) - Shell project validation (syntax, shellcheck, permissions, security)
+
+#### TypeScript
+
+- [README.md](domains/languages/typescript/README.md) - Type system fundamentals, generics, advanced types, JavaScript integration
 
 ### Ralph
 
