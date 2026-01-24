@@ -866,7 +866,11 @@ run_verifier() {
   RUN_ID="$(date +%s)-$$"
   export RUN_ID
 
-  if "$VERIFY_SCRIPT"; then
+  # Capture stderr to summarize cache metrics (avoid spamming 40+ lines)
+  local cache_stderr
+  cache_stderr=$(mktemp)
+
+  if "$VERIFY_SCRIPT" 2>"$cache_stderr"; then
     # Verify freshness: run_id.txt must match our RUN_ID
     if [[ -f "$RUN_ID_FILE" ]]; then
       local stored_id
@@ -875,6 +879,7 @@ run_verifier() {
         echo "❌ Freshness check FAILED: run_id mismatch"
         echo "   Expected: $RUN_ID"
         echo "   Got: $stored_id"
+        rm -f "$cache_stderr"
         LAST_VERIFIER_STATUS="FAIL"
         LAST_VERIFIER_FAILED_RULES="freshness_check"
         LAST_VERIFIER_FAIL_COUNT=1
@@ -882,11 +887,21 @@ run_verifier() {
       fi
     else
       echo "❌ Freshness check FAILED: run_id.txt not found"
+      rm -f "$cache_stderr"
       LAST_VERIFIER_STATUS="FAIL"
       LAST_VERIFIER_FAILED_RULES="freshness_check"
       LAST_VERIFIER_FAIL_COUNT=1
       return 1
     fi
+
+    # Show cache summary (hits/misses) instead of 40+ individual lines
+    local cache_hits cache_misses
+    cache_hits=$(grep -c '\[CACHE_HIT\]' "$cache_stderr" 2>/dev/null || echo "0")
+    cache_misses=$(grep -c '\[CACHE_MISS\]' "$cache_stderr" 2>/dev/null || echo "0")
+    if [[ $((cache_hits + cache_misses)) -gt 0 ]]; then
+      echo "📊 Cache: $cache_hits hits, $cache_misses misses"
+    fi
+    rm -f "$cache_stderr"
 
     echo "✅ All acceptance criteria passed! (run_id: $RUN_ID)"
     tail -10 "$RALPH/.verify/latest.txt" 2>/dev/null || true
@@ -895,6 +910,15 @@ run_verifier() {
     LAST_VERIFIER_FAIL_COUNT=0
     return 0
   else
+    # Show cache summary even on failure
+    local cache_hits cache_misses
+    cache_hits=$(grep -c '\[CACHE_HIT\]' "$cache_stderr" 2>/dev/null || echo "0")
+    cache_misses=$(grep -c '\[CACHE_MISS\]' "$cache_stderr" 2>/dev/null || echo "0")
+    if [[ $((cache_hits + cache_misses)) -gt 0 ]]; then
+      echo "📊 Cache: $cache_hits hits, $cache_misses misses"
+    fi
+    rm -f "$cache_stderr"
+
     echo "❌ Acceptance criteria FAILED"
     echo ""
     # Show header and summary, skip individual check results
