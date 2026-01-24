@@ -998,13 +998,24 @@ run_once() {
 
   # Check cache if CACHE_SKIP is enabled and FORCE_NO_CACHE is not set
   if [[ "$CACHE_SKIP" == "true" && "$FORCE_NO_CACHE" != "true" ]]; then
-    if lookup_cache_pass "$tool_key" "$git_sha"; then
-      # Cache hit - skip tool execution
-      # Query saved duration from cache
-      local saved_ms=0
-      local cache_db="${CACHE_DB:-artifacts/rollflow_cache/cache.sqlite}"
-      if [[ -f "$cache_db" ]]; then
-        saved_ms=$(python3 -c "
+    # Safety check: If BUILD phase has pending tasks, force fresh run (task 1.4.1)
+    if [[ "$phase" == "build" ]]; then
+      local plan_file="${ROOT}/workers/IMPLEMENTATION_PLAN.md"
+      if [[ -f "$plan_file" ]] && grep -q "^- \[ \]" "$plan_file"; then
+        echo ""
+        echo "========================================"
+        echo "⚠️  Cache disabled: pending tasks detected"
+        echo "BUILD phase with [ ] tasks requires fresh execution"
+        echo "========================================"
+        echo ""
+        # Skip cache lookup, proceed with normal execution
+      elif lookup_cache_pass "$tool_key" "$git_sha"; then
+        # Cache hit - skip tool execution
+        # Query saved duration from cache
+        local saved_ms=0
+        local cache_db="${CACHE_DB:-artifacts/rollflow_cache/cache.sqlite}"
+        if [[ -f "$cache_db" ]]; then
+          saved_ms=$(python3 -c "
 import sqlite3
 try:
     conn = sqlite3.connect('$cache_db')
@@ -1015,25 +1026,65 @@ try:
 except Exception:
     print(0)
 " 2>/dev/null) || saved_ms=0
+        fi
+
+        log_cache_hit "$tool_key" "$RUNNER"
+        CACHE_HITS=$((CACHE_HITS + 1))
+        TIME_SAVED_MS=$((TIME_SAVED_MS + saved_ms))
+
+        echo ""
+        echo "========================================"
+        echo "✓ Cache hit - skipping tool execution"
+        echo "Key: $tool_key"
+        echo "Tool: $RUNNER"
+        echo "Saved: ${saved_ms}ms"
+        echo "========================================"
+        echo ""
+        return 0
+      else
+        # Cache miss - proceed with execution
+        log_cache_miss "$tool_key" "$RUNNER"
+        CACHE_MISSES=$((CACHE_MISSES + 1))
       fi
-
-      log_cache_hit "$tool_key" "$RUNNER"
-      CACHE_HITS=$((CACHE_HITS + 1))
-      TIME_SAVED_MS=$((TIME_SAVED_MS + saved_ms))
-
-      echo ""
-      echo "========================================"
-      echo "✓ Cache hit - skipping tool execution"
-      echo "Key: $tool_key"
-      echo "Tool: $RUNNER"
-      echo "Saved: ${saved_ms}ms"
-      echo "========================================"
-      echo ""
-      return 0
     else
-      # Cache miss - proceed with execution
-      log_cache_miss "$tool_key" "$RUNNER"
-      CACHE_MISSES=$((CACHE_MISSES + 1))
+      # PLAN phase - check cache normally
+      if lookup_cache_pass "$tool_key" "$git_sha"; then
+        # Cache hit - skip tool execution
+        # Query saved duration from cache
+        local saved_ms=0
+        local cache_db="${CACHE_DB:-artifacts/rollflow_cache/cache.sqlite}"
+        if [[ -f "$cache_db" ]]; then
+          saved_ms=$(python3 -c "
+import sqlite3
+try:
+    conn = sqlite3.connect('$cache_db')
+    cursor = conn.execute('SELECT last_duration_ms FROM pass_cache WHERE cache_key = ?', ('$tool_key',))
+    row = cursor.fetchone()
+    conn.close()
+    print(row[0] if row and row[0] else 0)
+except Exception:
+    print(0)
+" 2>/dev/null) || saved_ms=0
+        fi
+
+        log_cache_hit "$tool_key" "$RUNNER"
+        CACHE_HITS=$((CACHE_HITS + 1))
+        TIME_SAVED_MS=$((TIME_SAVED_MS + saved_ms))
+
+        echo ""
+        echo "========================================"
+        echo "✓ Cache hit - skipping tool execution"
+        echo "Key: $tool_key"
+        echo "Tool: $RUNNER"
+        echo "Saved: ${saved_ms}ms"
+        echo "========================================"
+        echo ""
+        return 0
+      else
+        # Cache miss - proceed with execution
+        log_cache_miss "$tool_key" "$RUNNER"
+        CACHE_MISSES=$((CACHE_MISSES + 1))
+      fi
     fi
   fi
 
