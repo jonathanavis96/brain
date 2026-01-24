@@ -39,7 +39,7 @@
   - Add mutation testing guidance
   - **AC:** File has 3 new major sections
 
-- [ ] **5.2.2** Create `skills/domains/code-quality/test-coverage-patterns.md`
+- [x] **5.2.2** Create `skills/domains/code-quality/test-coverage-patterns.md`
   - Coverage metrics interpretation (line, branch, function)
   - When to aim for 100% coverage vs pragmatic targets
   - Integration with CI/CD
