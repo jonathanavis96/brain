@@ -16,46 +16,53 @@
 
 ### Template Sync False Positives (3 warnings)
 
-- [ ] **WARN.Template.1** - thunk_ralph_tasks.sh template sync (FALSE POSITIVE - files are identical)
+- [x] **WARN.Template.1** - thunk_ralph_tasks.sh template sync (FALSE POSITIVE - files are identical)
   - **Root cause:** AC.rules line 119 uses `diff -q` which outputs "Files X and Y differ\ndiffer" on mismatch, but also outputs this EXACT text when files are identical (exit 0 but stdout doesn't match "match")
   - **Verified:** `cd workers/ralph && diff -q thunk_ralph_tasks.sh ../../templates/ralph/thunk_ralph_tasks.sh` returns exit 0 with no output (files identical)
   - **Fix needed:** Change Template.1 to `expect_exit=0` only (remove expect_stdout), matching fix in task 11.1.2
   - **Priority:** MEDIUM - false positive but indicates AC.rules bug
+  - **Resolution:** Waiver WVR-2026-01-24-001 requested (AC.rules is protected, cannot modify)
 
-- [ ] **WARN.Hygiene.TemplateSync.1** - current_ralph_tasks.sh template sync (FALSE POSITIVE - files are identical)
+- [x] **WARN.Hygiene.TemplateSync.1** - current_ralph_tasks.sh template sync (FALSE POSITIVE - files are identical)
   - **Root cause:** Same as Template.1 - expects stdout="match" but diff -q outputs nothing when files identical
   - **Verified:** `cd workers/ralph && diff -q current_ralph_tasks.sh ../../templates/ralph/current_ralph_tasks.sh` returns exit 0 with no output
   - **Fix needed:** Change to `expect_exit=0` only (remove expect_stdout=match)
   - **Priority:** MEDIUM - false positive
+  - **Resolution:** Waiver WVR-2026-01-24-003 requested
 
-- [ ] **WARN.Hygiene.TemplateSync.2** - loop.sh template sync (FALSE POSITIVE - files are identical)
+- [x] **WARN.Hygiene.TemplateSync.2** - loop.sh template sync (FALSE POSITIVE - files are identical)
   - **Root cause:** Same issue - process substitution diff outputs nothing when identical
   - **Verified:** `cd workers/ralph && diff <(grep -v 'sha256\|MODEL_' loop.sh) <(grep -v 'sha256\|MODEL_' ../../templates/ralph/loop.sh)` returns exit 0 with no output
   - **Fix needed:** Change to `expect_exit=0` only (remove expect_stdout=match)
   - **Priority:** MEDIUM - false positive
+  - **Resolution:** Waiver WVR-2026-01-24-004 requested
 
 ### Shellcheck Regex False Positives (4 warnings)
 
-- [ ] **WARN.Lint.Shellcheck.LoopSh** - loop.sh shellcheck (FALSE POSITIVE - passes shellcheck)
+- [x] **WARN.Lint.Shellcheck.LoopSh** - loop.sh shellcheck (FALSE POSITIVE - passes shellcheck)
   - **Root cause:** AC.rules line 480 regex `(^$|ok|^In loop\.sh)` expects empty string to match `^$`, but verifier.sh line 378 uses `printf "%s" ""` which produces no output (not even newline), breaking grep -Eq
   - **Verified:** `cd workers/ralph && shellcheck -e SC1091 loop.sh` returns exit 0 with empty output (no issues)
   - **Fix needed:** verifier.sh needs to handle empty stdout differently (echo "" instead of printf "%s" "")
   - **Priority:** LOW - false positive, already fixed in task 11.1.1 but AC.rules still shows old behavior
+  - **Resolution:** Waiver WVR-2026-01-24-005 requested
 
-- [ ] **WARN.Lint.Shellcheck.VerifierSh** - verifier.sh shellcheck (FALSE POSITIVE - passes shellcheck)
+- [x] **WARN.Lint.Shellcheck.VerifierSh** - verifier.sh shellcheck (FALSE POSITIVE - passes shellcheck)
   - **Root cause:** Same regex issue as LoopSh
   - **Verified:** `cd workers/ralph && shellcheck -e SC1091 verifier.sh` returns exit 0 with empty output
   - **Priority:** LOW - false positive
+  - **Resolution:** Waiver WVR-2026-01-24-006 requested
 
-- [ ] **WARN.Lint.Shellcheck.CurrentRalphTasks** - current_ralph_tasks.sh shellcheck (FALSE POSITIVE - passes shellcheck)
+- [x] **WARN.Lint.Shellcheck.CurrentRalphTasks** - current_ralph_tasks.sh shellcheck (FALSE POSITIVE - passes shellcheck)
   - **Root cause:** Same regex issue
   - **Verified:** `cd workers/ralph && shellcheck -e SC1091 current_ralph_tasks.sh` returns exit 0 with empty output
   - **Priority:** LOW - false positive
+  - **Resolution:** Waiver WVR-2026-01-24-007 requested
 
-- [ ] **WARN.Lint.Shellcheck.ThunkRalphTasks** - thunk_ralph_tasks.sh shellcheck (FALSE POSITIVE - passes shellcheck)
+- [x] **WARN.Lint.Shellcheck.ThunkRalphTasks** - thunk_ralph_tasks.sh shellcheck (FALSE POSITIVE - passes shellcheck)
   - **Root cause:** Same regex issue
   - **Verified:** `cd workers/ralph && shellcheck -e SC1091 thunk_ralph_tasks.sh` returns exit 0 with empty output
   - **Priority:** LOW - false positive
+  - **Resolution:** Waiver WVR-2026-01-24-002 requested
 
 ### Summary
 
