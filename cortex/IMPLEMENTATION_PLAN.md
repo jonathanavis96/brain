@@ -265,19 +265,19 @@ Phases 0, 2, 3, 4, 5, 6 completed - see `workers/ralph/THUNK.md` for details.
 
 **Goal:** Prevent regressions and maintain stability as log formats evolve.
 
-- [ ] **12.5.1** Add unit tests for parsing in `tools/rollflow_analyze/tests/`
+- [x] **12.5.1** Add unit tests for parsing in `tools/rollflow_analyze/tests/`
   - Test cases: marker PASS, marker FAIL, missing END, interleaved calls, heuristic-only
   - **Depends on:** 12.2.2, 12.2.3
   - **AC:** `pytest tools/rollflow_analyze/tests/` passes
   - **If Blocked:** Start with happy-path tests, add edge cases iteratively
 
-- [ ] **12.5.2** Add golden report test
+- [x] **12.5.2** Add golden report test
   - Store sample log + expected JSON structure (not exact timestamps)
   - **Depends on:** 12.3.1
   - **AC:** Analyzer output matches expected structure + key fields
   - **If Blocked:** Use snapshot testing approach, update golden on intentional changes
 
-- [ ] **12.5.3** Add README for extending regex patterns
+- [x] **12.5.3** Add README for extending regex patterns
   - Document how to tune heuristic parsing without code changes
   - Include examples and troubleshooting checklist
   - **Depends on:** 12.3.x, 12.4.x (enough is real)
