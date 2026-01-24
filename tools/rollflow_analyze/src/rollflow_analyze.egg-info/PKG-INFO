@@ -1,0 +1,112 @@
+Metadata-Version: 2.4
+Name: rollflow-analyze
+Version: 0.1.0
+Summary: RollFlow/Ralph loop log analyzer with caching advice
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: pyyaml>=6.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.0; extra == "dev"
+
+# RollFlow Log Analyzer
+
+Parse Ralph/RollFlow loop logs to extract tool call metrics, detect PASS/FAIL status, and provide cache optimization advice.
+
+## Installation
+
+```bash
+cd tools/rollflow_analyze
+pip install -e .
+```
+
+## Usage
+
+```bash
+# Basic analysis
+rollflow_analyze --log-dir workers/ralph/logs --out artifacts/rollflow_reports/latest.json
+
+# With markdown summary
+rollflow_analyze --log-dir logs/ --out report.json --markdown
+
+# Force heuristic parser (for legacy logs without markers)
+rollflow_analyze --log-dir logs/ --parser heuristic
+
+# With custom patterns config
+rollflow_analyze --log-dir logs/ --parser heuristic --config my_patterns.yaml
+```
+
+## Output
+
+The analyzer produces a JSON report with:
+
+- **tool_calls**: Array of detected tool invocations with status, duration, cache_key
+- **aggregates**: Summary statistics (pass_rate, fail_rate, slowest_tools, etc.)
+- **cache_advice**: Recommendations for cache optimization (potential_skips, estimated_time_saved)
+
+## Parsers
+
+### Marker Parser (preferred)
+
+Parses logs containing explicit markers:
+
+```text
+::TOOL_CALL_START:: id=<uuid> name=<tool> key=<cache_key> ts=<iso> git=<sha>
+... tool output ...
+::TOOL_CALL_END:: id=<uuid> status=PASS|FAIL exit=<code> duration_ms=<n>
+```
+
+### Heuristic Parser (fallback)
+
+Uses regex patterns to detect tool calls in legacy logs. Configure patterns in `config/patterns.yaml`.
+
+## Extending Patterns
+
+1. Copy `src/rollflow_analyze/config/patterns.example.yaml` to `patterns.yaml`
+2. Add or modify regex patterns for your log format
+3. Each pattern category supports multiple alternatives (first match wins)
+
+### Pattern Categories
+
+| Category | Purpose | Required Named Group |
+|----------|---------|---------------------|
+| `tool_start` | Detect tool invocation | `(?P<name>...)` |
+| `tool_pass` | Detect success | None |
+| `tool_fail` | Detect failure | None |
+| `exit_code` | Extract exit code | `(?P<code>...)` |
+| `error_msg` | Extract error message | `(?P<msg>...)` |
+
+### Troubleshooting Patterns
+
+1. Test patterns with `grep -P` first
+2. Check for greedy vs non-greedy matching
+3. Use `--verbose` flag to see which patterns matched
+4. Patterns are case-insensitive by default
+
+## Cache Skip Integration
+
+When `CACHE_SKIP=1` is set in the loop:
+
+1. Loop computes cache_key before each tool call
+2. Checks `artifacts/rollflow_cache/cache.sqlite` for existing PASS
+3. If found: logs `::CACHE_HIT::` and skips execution
+4. If not: logs `::CACHE_MISS::` and runs normally
+5. On PASS: upserts to cache; on FAIL: logs but does NOT cache
+
+## Development
+
+```bash
+# Install dev dependencies
+pip install -e ".[dev]"
+
+# Run tests
+pytest
+
+# Run specific test
+pytest tests/test_marker_parser.py -v
+```
+
+## See Also
+
+- [Phase 12 Implementation Plan](../../cortex/IMPLEMENTATION_PLAN.md) - Task breakdown
+- [Sample Logs](samples/) - Example logs for testing

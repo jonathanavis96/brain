@@ -122,6 +122,49 @@ acquire_lock() {
 }
 acquire_lock
 
+# =============================================================================
+# Event Emission (provider-neutral markers)
+# =============================================================================
+# Emits lifecycle events to state/events.jsonl for external tooling.
+# Best-effort: never fails the loop if event emission fails.
+
+BRAIN_EVENT_SCRIPT="$ROOT/bin/brain-event"
+
+emit_event() {
+    # Best-effort event emission - never block the loop
+    if [[ -x "$BRAIN_EVENT_SCRIPT" ]]; then
+        "$BRAIN_EVENT_SCRIPT" --runner "${RUNNER:-unknown}" "$@" 2>/dev/null || true
+    fi
+}
+
+# Trap for error event on unexpected exit
+_loop_exit_code=0
+_loop_emitted_end=false
+
+cleanup_and_emit() {
+    local exit_code=$?
+
+    # Avoid double-emission
+    if [[ "$_loop_emitted_end" == "true" ]]; then
+        release_lock
+        exit $exit_code
+    fi
+    _loop_emitted_end=true
+
+    # Emit appropriate event based on exit code
+    if [[ $exit_code -ne 0 && $exit_code -ne 130 ]]; then
+        # Error exit (not SIGINT)
+        emit_event --event error --iter "${CURRENT_ITER:-0}" --status fail --code "$exit_code" --msg "loop exited unexpectedly"
+    fi
+
+    release_lock
+    exit $exit_code
+}
+
+# Will be set up after argument parsing
+CURRENT_ITER=0
+
+
 # Interrupt handling: First Ctrl+C = graceful exit, Second Ctrl+C = immediate exit
 INTERRUPT_COUNT=0
 INTERRUPT_RECEIVED=false
@@ -1103,12 +1146,17 @@ ROLLFLOW_RUN_ID="run-$(date +%s)-$$"
 export ROLLFLOW_RUN_ID
 log_run_start "$ROLLFLOW_RUN_ID"
 
+# Set up trap for error event on unexpected exit
+trap 'cleanup_and_emit' EXIT
+
 # Determine prompt strategy
 if [[ -n "$PROMPT_ARG" ]]; then
   PROMPT_FILE="$(resolve_prompt "$PROMPT_ARG")"
   for ((i = 1; i <= ITERATIONS; i++)); do
     # Log iteration start marker for RollFlow tracking
     log_iter_start "iter-$i" "$ROLLFLOW_RUN_ID"
+    CURRENT_ITER=$i
+    emit_event --event iteration_start --iter "$i"
 
     # Check for interrupt before starting iteration
     if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
@@ -1156,7 +1204,13 @@ if [[ -n "$PROMPT_ARG" ]]; then
 
     # Capture exit code without triggering set -e
     run_result=0
+    emit_event --event phase_start --iter "$i" --phase "custom"
     run_once "$PROMPT_FILE" "custom" "$i" || run_result=$?
+    if [[ $run_result -eq 0 ]]; then
+        emit_event --event phase_end --iter "$i" --phase "custom" --status ok
+    else
+        emit_event --event phase_end --iter "$i" --phase "custom" --status fail --code "$run_result"
+    fi
     # Check if Ralph signaled completion
     if [[ $run_result -eq 42 ]]; then
       echo ""
@@ -1199,12 +1253,15 @@ if [[ -n "$PROMPT_ARG" ]]; then
       # Reset counter on successful iteration
       CONSECUTIVE_VERIFIER_FAILURES=0
     fi
+    emit_event --event iteration_end --iter "$i" --status ok
   done
 else
   # Alternating plan/build
   for ((i = 1; i <= ITERATIONS; i++)); do
     # Log iteration start marker for RollFlow tracking
     log_iter_start "iter-$i" "$ROLLFLOW_RUN_ID"
+    CURRENT_ITER=$i
+    emit_event --event iteration_start --iter "$i"
 
     # Check for interrupt before starting iteration
     if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
@@ -1263,7 +1320,13 @@ else
         fi
         echo ""
       fi
+      emit_event --event phase_start --iter "$i" --phase "plan"
       run_once "$PLAN_PROMPT" "plan" "$i" || run_result=$?
+      if [[ $run_result -eq 0 ]]; then
+          emit_event --event phase_end --iter "$i" --phase "plan" --status ok
+      else
+          emit_event --event phase_end --iter "$i" --phase "plan" --status fail --code "$run_result"
+      fi
     else
       # Auto-fix lint issues before BUILD iteration
       echo "Running auto-fix for lint issues..."
@@ -1279,7 +1342,13 @@ else
       (cd "$RALPH" && bash verifier.sh 2>/dev/null) || true
       echo ""
 
+      emit_event --event phase_start --iter "$i" --phase "build"
       run_once "$BUILD_PROMPT" "build" "$i" || run_result=$?
+      if [[ $run_result -eq 0 ]]; then
+          emit_event --event phase_end --iter "$i" --phase "build" --status ok
+      else
+          emit_event --event phase_end --iter "$i" --phase "build" --status fail --code "$run_result"
+      fi
 
       # Sync completions back to Cortex after BUILD iterations
       if [[ -f "$RALPH/sync_completions_to_cortex.sh" ]]; then
@@ -1334,5 +1403,6 @@ else
       # Reset counter on successful iteration
       CONSECUTIVE_VERIFIER_FAILURES=0
     fi
+    emit_event --event iteration_end --iter "$i" --status ok
   done
 fi

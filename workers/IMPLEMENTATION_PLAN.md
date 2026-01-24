@@ -2,11 +2,198 @@
 
 **Status:** Active  
 **Branch:** `brain-work`  
-**Last Updated:** 2026-01-24 01:23:59
+**Last Updated:** 2026-01-24 14:10:00
 
 ---
 
 <!-- Cortex adds new Task Contracts below this line -->
+
+## Phase 0-Warn: Verifier Warnings
+
+**Goal:** Resolve verifier warnings before continuing with feature work.
+
+- [ ] **WARN.Protected.2.AC** - Protected file changed (rules/AC.rules) - human review required
+  - `rules/AC.rules` was modified in commit f7dda4c (task 11.1.2) to fix Template.1 check
+  - Change is legitimate: switched from stdout parsing to exit code only
+  - **HUMAN ACTION REQUIRED:** Update hash baseline with: `sha256sum rules/AC.rules > workers/ralph/.verify/ac.sha256`
+  - **Priority:** HIGH - blocks verifier PASS status
+  - **Note:** Ralph cannot update .sha256 files (human-only protected)
+
+- [ ] **WARN.Lint.Markdown.NeuronsBalancedFences** - False positive (waiver WVR-2026-01-24-002 exists)
+  - Verifier regex `^\`\`\`[a-z]` incorrectly matches directory tree characters
+  - NEURONS.md has balanced fences: 2 opens, 2 closes (verified manually)
+  - **Status:** Waiver requested, awaiting human approval
+
+- [ ] **WARN.Lint.Markdown.ThoughtsBalancedFences** - False positive (waiver WVR-2026-01-24-003 exists)
+  - Same regex issue as above
+  - THOUGHTS.md has balanced fences: 1 open, 1 close (verified manually)
+  - **Status:** Waiver requested, awaiting human approval
+
+---
+
+## Phase 12: RollFlow Log Analyzer
+
+**Goal:** Build a system that parses Ralph/RollFlow loop logs, detects tool calls, labels PASS/FAIL, computes cache keys, and produces JSON reports + cache advice for loop efficiency.
+
+**Definition of Done:** Running `python -m tools.rollflow_analyze --log-dir workers/ralph/logs --out artifacts/rollflow_reports/latest.json` produces a valid JSON report with tool calls, aggregates, and cache_advice. Optional `CACHE_SKIP=1` in loop.sh skips previously-passed identical tool calls.
+
+**Warnings (read first):**
+
+- Do not cache failures - A "FAIL" tool run must never be written into cache
+- Cache keys must be stable - Exclude volatile data (timestamps, random IDs) from keys
+- Logs are source of truth - This is read-only over logs, writes only cache artifacts + reports
+- Fail-fast remains - Loop can still fail-fast on tool failure; analyzer runs after iterations
+
+**Output Artifacts:**
+
+- `artifacts/rollflow_reports/latest.json`
+- `artifacts/rollflow_reports/<run_id>.json`
+- `artifacts/rollflow_cache/cache.sqlite` (or JSONL fallback)
+
+### Phase 12.1: Log Markers (Quick Wins)
+
+**Goal:** Add minimal log markers so tool calls become reliable to parse.
+
+- [x] **12.1.1** Add standardized START/END markers around tool calls in loop.sh
+  - Add 2 log lines around every tool call:
+    - `::TOOL_CALL_START:: id=<uuid> name=<tool> key=<cache_key> ts=<iso> git=<sha>`
+    - `::TOOL_CALL_END:: id=<uuid> status=PASS|FAIL exit=<code> duration_ms=<n> err=<short>`
+  - **AC:** Single iteration produces at least one well-formed START + END pair in logs
+  - **If Blocked:** Start with simpler markers without cache_key, add key computation later
+
+- [x] **12.1.2** Implement `cache_key` function in `workers/shared/common.sh`
+  - cache_key = sha256 of: tool name + normalized args JSON + git SHA (optional)
+  - **Goal:** Deterministic key for same tool+args across runs
+  - **AC:** `source workers/shared/common.sh && cache_key "tool" '{"a":1}' == cache_key "tool" '{"a":1}'`
+  - **If Blocked:** Use simple concatenation first, add JSON normalization later
+
+- [x] **12.1.3** Add run_id and iteration_id markers to loop.sh
+  - Write one header line per run + per iteration:
+    - `::RUN:: id=<run_id> ts=<iso>`
+    - `::ITER:: id=<iter_id> run_id=<run_id> ts=<iso>`
+  - **Depends on:** None (optional enhancement, improves reporting grouping)
+  - **AC:** Reports can group calls per run/iteration without guessing
+  - **If Blocked:** Check existing RUN_ID export in loop.sh, extend rather than duplicate
+
+### Phase 12.2: Data Model and Parser
+
+**Goal:** Define internal schema and parsing approach for tool call analysis.
+
+- [ ] **12.2.1** Create project skeleton at `tools/rollflow_analyze/`
+  - Scaffold already created with stub files (see `tools/rollflow_analyze/`)
+  - Verify: `__init__.py`, `cli.py`, `models.py`, `report.py`, `cache_db.py`, `parsers/`
+  - **AC:** `python -m tools.rollflow_analyze --help` works
+  - **If Blocked:** Check PYTHONPATH includes tools/ directory
+
+- [x] **12.2.2** Create `parsers/marker_parser.py`
+  - Read logs line-by-line, match START/END markers, yield ToolCall objects
+  - **Depends on:** 12.1.1, 12.2.1
+  - **Goal:** Parse marker logs with >95% accuracy
+  - **AC:** Unit test with sample log containing 5 tool calls passes
+  - **If Blocked:** Use regex-based parsing, handle edge cases iteratively
+
+- [ ] **12.2.3** Create `parsers/heuristic_parser.py` with hardcoded patterns
+  - Implement fallback parser with default regex patterns for unmarked logs
+  - **Depends on:** 12.2.1
+  - **Goal:** Fallback for logs without explicit markers
+  - **AC:** Can detect basic PASS/FAIL in unmarked legacy logs using built-in patterns
+  - **If Blocked:** Start with simple patterns, iterate on accuracy
+
+- [ ] **12.2.4** Add config-driven patterns loader for heuristic parser
+  - Load patterns from `config/patterns.yaml` with JSON schema validation
+  - **Depends on:** 12.2.3
+  - **Goal:** Make heuristic patterns configurable without code changes
+  - **AC:** Custom patterns in YAML override defaults, schema rejects invalid configs
+  - **If Blocked:** Keep hardcoded defaults as fallback when no config exists
+
+### Phase 12.3: Analyzer CLI
+
+**Goal:** Implement CLI that produces reports from logs and updates cache DB.
+
+- [ ] **12.3.1** Implement report writer in `tools/rollflow_analyze/report.py`
+  - JSON output with tool_calls array + aggregates
+  - Optional markdown summary
+  - **Depends on:** 12.2.2 (or 12.2.3 for fallback)
+  - **AC:** Running on sample logs outputs valid JSON to `artifacts/rollflow_reports/`
+  - **If Blocked:** Start with minimal JSON schema, add fields iteratively
+
+- [ ] **12.3.2** Implement aggregates + cache_advice in report
+  - Calculate: pass_rate, fail_rate, top_failures_by_tool, slowest_tools
+  - Count PASS calls with duplicate cache_key for potential skips
+  - Estimate time saved from cached durations
+  - **Depends on:** 12.3.1
+  - **AC:** Report includes non-empty `aggregates` and `cache_advice` sections
+  - **If Blocked:** Start with pass/fail counts only, add complex aggregates later
+
+- [ ] **12.3.3** Wire up CLI with streaming log processing
+  - Command: `rollflow_analyze --log-dir logs/ --out artifacts/rollflow_reports/latest.json`
+  - Process file-by-file, line-by-line (never load huge logs into memory)
+  - **Depends on:** 12.2.2, 12.3.1
+  - **AC:** Can process 100MB log directory without memory errors
+  - **If Blocked:** Test with smaller logs first, add streaming iteratively
+
+### Phase 12.4: Cache DB + Skip Logic
+
+**Goal:** Use PASS results to avoid rerunning identical tool calls.
+
+- [ ] **12.4.1** Implement SQLite cache DB in `tools/rollflow_analyze/cache_db.py`
+  - Tables: `pass_cache(cache_key PK, tool_name, last_pass_ts, last_duration_ms, meta_json)`
+  - Tables: `fail_log(id PK, cache_key, tool_name, ts, exit_code, err_hash, err_excerpt)`
+  - **Depends on:** 12.2.1, 12.3.1
+  - **AC:** Analyzer updates DB after processing logs
+  - **If Blocked:** Use JSONL file as simpler alternative to SQLite
+
+- [ ] **12.4.2** Add `CACHE_SKIP=1` flag support to loop.sh
+  - Before calling tool: compute cache_key, check pass_cache
+  - If hit: log `::CACHE_HIT:: key=<key> tool=<tool>`, skip tool call
+  - If miss: log `::CACHE_MISS:: key=<key> tool=<tool>`, run normally
+  - **Depends on:** 12.1.2, 12.4.1
+  - **AC:** Repeated run shows at least one skip for previously PASS call
+  - **If Blocked:** Start with logging only (no actual skip), add skip logic after validation
+
+- [ ] **12.4.3** Add safety bypasses for cache skip
+  - Don't skip if: args include "force", git SHA changed, tool marked non-cacheable
+  - Config: `rollflow_cache.yml` with `non_cacheable_tools: [...]`
+  - **Depends on:** 12.4.2
+  - **AC:** Can mark tools as non-cacheable via config, force flag bypasses cache
+  - **If Blocked:** Hardcode safety list first, make configurable later
+
+### Phase 12.5: Verification and Tests
+
+**Goal:** Prevent regressions and maintain stability as log formats evolve.
+
+- [ ] **12.5.1** Add unit tests for parsing in `tools/rollflow_analyze/tests/`
+  - Test cases: marker PASS, marker FAIL, missing END, interleaved calls, heuristic-only
+  - **Depends on:** 12.2.2, 12.2.3
+  - **AC:** `pytest tools/rollflow_analyze/tests/` passes
+  - **If Blocked:** Start with happy-path tests, add edge cases iteratively
+
+- [ ] **12.5.2** Add golden report test
+  - Store sample log + expected JSON structure (not exact timestamps)
+  - **Depends on:** 12.3.1
+  - **AC:** Analyzer output matches expected structure + key fields
+  - **If Blocked:** Use snapshot testing approach, update golden on intentional changes
+
+- [ ] **12.5.3** Add README for extending regex patterns
+  - Document how to tune heuristic parsing without code changes
+  - Include examples and troubleshooting checklist
+  - **Depends on:** 12.3.x, 12.4.x (enough is real)
+  - **AC:** README at `tools/rollflow_analyze/README.md` with pattern extension guide
+  - **If Blocked:** Start with inline comments, extract to README later
+
+**Phase AC:** `python -m tools.rollflow_analyze --log-dir workers/ralph/logs --out artifacts/rollflow_reports/latest.json` produces valid report
+
+---
+
+## Maintenance: RollFlow Analyzer (run every few iterations)
+
+**Checklist:**
+
+- [ ] Confirm marker lines still being emitted (no accidental removal)
+- [ ] Review top 3 failing tools in latest report; add better error classification
+- [ ] Watch for cache thrash (lots of misses due to unstable keys)
+  - Fix by normalizing args + excluding volatile fields from cache_key
+- [ ] Order expensive steps after stable steps to avoid miss cascades
 
 ## Phase 12: Documentation Maintenance
 

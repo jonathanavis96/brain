@@ -38,3 +38,6 @@ ralph/test-rovodev-integration.sh
 rovodev-config.local.yml
 __pycache__/
 *.pyc
+
+# Runtime state (not committed)
+state/
