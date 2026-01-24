@@ -59,7 +59,7 @@
   - Debugging production issues
   - **AC:** File exists with 3 pillars of observability
 
-- [ ] **5.3.3** Create `skills/domains/infrastructure/disaster-recovery-patterns.md`
+- [x] **5.3.3** Create `skills/domains/infrastructure/disaster-recovery-patterns.md`
   - Backup strategies and restoration procedures
   - RPO/RTO targets and planning
   - Chaos engineering basics

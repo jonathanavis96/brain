@@ -1027,6 +1027,8 @@ run_once() {
     if [[ "$phase" == "build" ]]; then
       local plan_file="${ROOT}/workers/IMPLEMENTATION_PLAN.md"
       if [[ -f "$plan_file" ]] && grep -q "^- \[ \]" "$plan_file"; then
+        local guard_ts=$(($(date +%s%N) / 1000000))
+        echo ":::CACHE_GUARD::: iter=${iter} allowed=0 reason=pending_tasks phase=BUILD ts=${guard_ts}" >&2
         echo ""
         echo "========================================"
         echo "⚠️  Cache disabled: pending tasks detected"
@@ -1036,6 +1038,8 @@ run_once() {
         # Skip cache lookup, proceed with normal execution
       elif lookup_cache_pass "$tool_key" "$git_sha"; then
         # Cache hit - skip tool execution
+        local guard_ts=$(($(date +%s%N) / 1000000))
+        echo ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=no_pending_tasks phase=BUILD ts=${guard_ts}" >&2
         # Query saved duration from cache
         local saved_ms=0
         local cache_db="${CACHE_DB:-artifacts/rollflow_cache/cache.sqlite}"
@@ -1068,6 +1072,8 @@ except Exception:
         return 0
       else
         # Cache miss - proceed with execution
+        local guard_ts=$(($(date +%s%N) / 1000000))
+        echo ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=no_pending_tasks phase=BUILD ts=${guard_ts}" >&2
         log_cache_miss "$tool_key" "$RUNNER"
         CACHE_MISSES=$((CACHE_MISSES + 1))
       fi
@@ -1075,6 +1081,8 @@ except Exception:
       # PLAN phase - check cache normally
       if lookup_cache_pass "$tool_key" "$git_sha"; then
         # Cache hit - skip tool execution
+        local guard_ts=$(($(date +%s%N) / 1000000))
+        echo ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=idempotent_check phase=PLAN ts=${guard_ts}" >&2
         # Query saved duration from cache
         local saved_ms=0
         local cache_db="${CACHE_DB:-artifacts/rollflow_cache/cache.sqlite}"
@@ -1107,6 +1115,8 @@ except Exception:
         return 0
       else
         # Cache miss - proceed with execution
+        local guard_ts=$(($(date +%s%N) / 1000000))
+        echo ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=idempotent_check phase=PLAN ts=${guard_ts}" >&2
         log_cache_miss "$tool_key" "$RUNNER"
         CACHE_MISSES=$((CACHE_MISSES + 1))
       fi
