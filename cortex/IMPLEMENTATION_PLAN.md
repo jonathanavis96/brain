@@ -159,7 +159,7 @@ Key milestones:
   - On cache hit: reuse prior PASS/FAIL result
   - **AC:** Unchanged files skip re-verification
 
-- [ ] **2.1.2** Add cache invalidation on rule change
+- [x] **2.1.2** Add cache invalidation on rule change
   - Include `rules/AC.rules` hash in cache key
   - Rule change → all checks re-run
   - **AC:** Editing AC.rules invalidates all cached results
@@ -185,12 +185,72 @@ Key milestones:
 
 ### Phase 3.2: Implement If Needed
 
-- [ ] **3.2.1** Option A: Physical separation
-  - `workers/<agent>/cache/cache.sqlite`
-  - **AC:** Each worker has own cache DB
+- [x] **3.2.1** Option A: Physical separation — **SKIPPED**
+  - Decision: Not needed per 3.1.1 evaluation
+  - Logical separation already exists via agent prefix in cache keys
 
-- [ ] **3.2.2** Option B: Logical separation
-  - Add `agent=<name>` to all cache keys
-  - **AC:** Same tool+args for different agents = different keys
+- [x] **3.2.2** Option B: Logical separation — **ALREADY IMPLEMENTED**
+  - Ralph uses `${RUNNER,,}` prefix, Cerebras uses `"cerebras"` prefix
+  - Keys already differ: `rovodev|phase|hash|sha` vs `cerebras|phase|hash|sha`
+  - **Note:** RUNNER-based isolation is fragile; Phase 4 will fix with explicit AGENT_NAME
 
-**Phase AC:** Cache isolation implemented or documented as unnecessary
+**Phase AC:** ✅ Cache isolation documented as already implemented (logical separation via agent prefix)
+
+---
+
+## Phase 4: Shared Cache Library + Cortex Support (Safety Net)
+
+**Goal:** Extract caching into shared infrastructure for waste-prevention + reliability across all runners.
+
+**Rationale:** Caching won't save huge tokens for "new thinking" work, but prevents waste from:
+
+- Reruns after crashes / network / rate-limit issues
+- Accidental double-runs
+- Retries where input didn't change
+- Repeated setup/analysis steps
+
+### Phase 4.1: Extract Cache Functions
+
+
+- [ ] **4.1.1** Create `workers/shared/cache.sh` with extracted functions
+  - Move from loop.sh: cache key generation, lookup/store, log helpers
+  - Export interface: `cache_should_use`, `cache_make_key`, `cache_try_load`, `cache_store`
+  - Include env parsing for `CACHE_MODE`, `CACHE_SCOPE`, `--force-fresh`
+  - **AC:** File exists, functions are callable, shellcheck passes
+
+### Phase 4.2: Refactor loop.sh to Use Shared Library
+
+- [ ] **4.2.1** Update `workers/ralph/loop.sh` to source shared cache library
+  - Replace inline cache logic with calls to `workers/shared/cache.sh`
+  - Keep exact semantics: `CACHE_MODE`, `CACHE_SCOPE`, BUILD/PLAN blocking
+  - **AC:** Before/after run shows identical cache hits/misses
+
+- [ ] **4.2.2** Update `workers/cerebras/loop.sh` to source shared cache library
+  - Same refactor as Ralph
+  - **AC:** Cerebras caching unchanged behaviorally
+
+### Phase 4.3: Add Cortex Caching
+
+- [ ] **4.3.1** Update `cortex/one-shot.sh` to source shared cache library
+  - Add `source workers/shared/cache.sh`
+  - Set `AGENT_NAME=cortex` explicitly
+  - Wrap `acli rovodev run` call with cache check/store
+  - **AC:** Same one-shot twice with no repo changes → Run 1: miss+store, Run 2: hit+skip
+
+### Phase 4.4: Fix Agent Isolation
+
+- [ ] **4.4.1** Replace RUNNER dependency with AGENT_NAME in cache keys
+  - Cache key "agent" field uses `AGENT_NAME` not `RUNNER`
+  - Fall back sanely if `AGENT_NAME` missing (log warning)
+  - **AC:** Ralph/Cortex/Cerebras with identical prompts don't share cache entries
+
+### Phase 4.5: Smoke Test
+
+- [ ] **4.5.1** Create `scripts/test_cache_smoke.sh` for cache correctness
+  - Test: same prompt + git state → cache hit on 2nd run
+  - Test: change git_sha → cache miss
+  - Test: `--force-fresh` → bypass even if entry exists
+  - Test: `CACHE_SCOPE=llm_ro` blocked during BUILD/PLAN
+  - **AC:** One command verifies caching works for loop.sh and one-shot.sh
+
+**Phase AC:** Cortex has safety-net caching, loop.sh uses shared infra, agent isolation is explicit
