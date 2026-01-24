@@ -364,6 +364,89 @@ diff -rq ../brain/templates/ralph/ ralph/ | grep "differ$"
 
 ---
 
+## Cache Configuration
+
+Ralph loop supports intelligent caching to skip redundant tool calls and speed up iterations. Caching is controlled via environment variables and CLI flags.
+
+### Cache Modes
+
+Set via `CACHE_MODE` environment variable:
+
+- **`off`** (default) - No caching, always run fresh
+- **`record`** - Execute all tools and store results for future use
+- **`use`** - Check cache first, skip execution if valid entry exists
+
+### Cache Scopes
+
+Set via `CACHE_SCOPE` environment variable (comma-separated list):
+
+- **`verify`** - Cache verifier checks (AC rules)
+- **`read`** - Cache file reads and searches
+- **`llm_ro`** - Cache LLM responses (read-only operations)
+
+**Default:** `CACHE_SCOPE=verify,read`
+
+**Important:** `llm_ro` scope is automatically blocked during BUILD and PLAN phases to ensure fresh thinking.
+
+### CLI Flags
+
+- **`--force-fresh`** - Bypass all caching regardless of CACHE_MODE/SCOPE (useful for debugging stale cache)
+- **`--cache-skip`** - Legacy flag (deprecated, use CACHE_MODE=use instead)
+
+### Examples
+
+**Enable caching for verifier and file reads:**
+
+```bash
+CACHE_MODE=use CACHE_SCOPE=verify,read bash loop.sh --iterations 5
+```
+
+**Record cache entries for future runs:**
+
+```bash
+CACHE_MODE=record CACHE_SCOPE=verify,read bash loop.sh
+```
+
+**Force fresh execution (ignore all cache):**
+
+```bash
+bash loop.sh --force-fresh --iterations 3
+```
+
+**BUILD/PLAN behavior:**
+
+During BUILD and PLAN phases, `llm_ro` scope is automatically filtered out even if specified. This ensures the agent always generates fresh responses for implementation work.
+
+```bash
+# Even with llm_ro, it will be removed during BUILD/PLAN
+CACHE_MODE=use CACHE_SCOPE=verify,read,llm_ro bash loop.sh
+# Effective scope during BUILD: verify,read
+```
+
+### Cache Invalidation
+
+Cache entries are automatically invalidated when:
+
+- Input content changes (different file hash, prompt, or git state)
+- Tool parameters change
+- 24-hour TTL expires (for llm_ro scope)
+
+### Troubleshooting
+
+**Cache not hitting:**
+
+- Check `:::CACHE_CONFIG:::` output in logs shows correct mode/scope
+- Verify git state hasn't changed (cache keys include git SHA)
+- Check cache database exists: `artifacts/rollflow_cache/cache.sqlite`
+
+**Stale cache entries:**
+
+- Use `--force-fresh` to bypass cache
+- Or set `CACHE_MODE=off` to disable caching
+- For persistent issues, delete cache DB and start fresh
+
+---
+
 ## Commit Format
 
 `<type>(<scope>): <summary>` where type is `feat|fix|docs|refactor|chore|test` and scope is `ralph|templates|skills|plan`.

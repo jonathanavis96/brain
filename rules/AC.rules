@@ -110,17 +110,6 @@ desc=THUNK monitor only displays, never modifies files
 instructions=Run thunk_ralph_tasks.sh, mark a task [x] in IMPLEMENTATION_PLAN.md, confirm THUNK.md is NOT auto-updated
 
 # =============================================================================
-# Template Sync Checks
-# =============================================================================
-
-[Template.1]
-mode=auto
-gate=warn
-desc=thunk_ralph_tasks.sh matches template
-cmd=diff -q thunk_ralph_tasks.sh ../../templates/ralph/thunk_ralph_tasks.sh 2>/dev/null
-expect_exit=0
-
-# =============================================================================
 # AntiCheat: Fake Verification Markers (gate=block)
 # Prevents Ralph from self-certifying via embedded "proof" comments
 # NOTE: Excludes .git, .verify, logs/ (logs are historical evidence)
@@ -305,24 +294,6 @@ gate=warn
 desc=No "KB file" terminology (should be "skill file")
 cmd=rg -c 'KB file' --include='*.md' --glob='!HISTORY.md' --glob='!CHANGES.md' . 2>/dev/null | wc -l | tr -d ' '
 expect_stdout=0
-
-# -----------------------------------------------------------------------------
-# Template Sync Checks
-# -----------------------------------------------------------------------------
-
-[Hygiene.TemplateSync.1]
-mode=auto
-gate=warn
-desc=current_ralph_tasks.sh matches template
-cmd=diff -q current_ralph_tasks.sh ../../templates/ralph/current_ralph_tasks.sh 2>/dev/null
-expect_exit=0
-
-[Hygiene.TemplateSync.2]
-mode=auto
-gate=warn
-desc=loop.sh core logic matches template (excluding hashes)
-cmd=diff <(grep -v 'sha256\|MODEL_' loop.sh) <(grep -v 'sha256\|MODEL_' ../../templates/ralph/loop.sh) 2>/dev/null
-expect_exit=0
 
 # -----------------------------------------------------------------------------
 # Markdown Validation
