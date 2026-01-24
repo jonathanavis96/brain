@@ -2,7 +2,7 @@
 
 **Last Updated:** 2026-01-25 (Plan Mode - Ralph Iteration 1)
 
-**Current Status:** ✅ Phase 1 (Scope-Based Cache Redesign) COMPLETE. Phase 2.1.1 COMPLETE. Phase 3 COMPLETE. Phase 5 in progress - 4 tasks remaining (disaster recovery, language READMEs). Phase 6-7 queued (templates and documentation). Phase 4 (Shared Cache Library) deferred - 6 tasks for cross-worker infrastructure.
+**Current Status:** ✅ Phase 1 (Scope-Based Cache Redesign) COMPLETE. Phase 2.1.1 COMPLETE. Phase 3 COMPLETE. Phase 5 nearly complete - 3 tasks remaining (TypeScript, Go language READMEs). Phase 0-Warn active - 1 actionable warning (Cortex prompt size). Phase 6-7 queued (templates and documentation). Phase 4 (Shared Cache Library) deferred - 6 tasks for cross-worker infrastructure.
 
 <!-- Cortex adds new Task Contracts below this line -->
 
@@ -413,21 +413,31 @@
 
 **Goal:** Track and resolve verifier warnings (manual review required items excluded).
 
-**Status:** ✅ RESOLVED - All 7 warnings are false positives from verifier regex matching empty stdout (2026-01-24)
+**Status:** 🟡 ACTIVE - 5 warnings (2 require human review, 2 intentional divergence, 1 actionable)
 
-**Analysis:**
+**Current Warnings (2026-01-25):**
 
-- **Template warnings (3):** Files are byte-identical or have intentional feature divergence
-  - thunk_ralph_tasks.sh: Identical to template (verified with diff)
-  - current_ralph_tasks.sh: Identical to template (verified with diff)
-  - loop.sh: Intentional divergence for --force-no-cache flag and CACHE_SKIP=false default (not in template)
-- **Shellcheck warnings (4):** All files pass shellcheck -e SC1091 with zero errors/warnings
-  - The verifier checks `stdout` against regex `/(^$|ok|^In <filename>)/`
-  - All shellcheck commands return empty stdout (clean pass), not "ok" or "In filename"
-  - Verifier interprets empty string as mismatch, flags as [WARN]
-  - **Root cause:** AC rule expects specific output format, but shellcheck returns nothing on success
+- [ ] **WARN.Protected.1** - loop.sh changed from baseline (manual review required)
+  - **Status:** HUMAN REVIEW REQUIRED - Protected file, cannot modify
+  
+- [ ] **WARN.Protected.2** - verifier.sh changed from baseline (manual review required)
+  - **Status:** HUMAN REVIEW REQUIRED - Protected file, cannot modify
+  
+- [ ] **WARN.TemplateSync.1** - current_ralph_tasks.sh differs from template
+  - **Status:** INTENTIONAL - Files are identical (verified with diff), false positive
+  
+- [ ] **WARN.TemplateSync.2** - loop.sh core logic differs from template
+  - **Status:** INTENTIONAL - Brain repo loop.sh has verifier state injection, auto-fix integration, Cortex sync (documented in waiver WVR-2026-01-23-011)
+  
+- [ ] **WARN.Cortex.FileSizeLimit** - cortex/CORTEX_SYSTEM_PROMPT.md exceeds 150 lines (161 lines)
+  - **Status:** ACTIONABLE - Need to refactor/split the prompt into smaller files
+  - **AC:** File reduced to ≤150 lines OR split into modular includes
 
-**Recommendation:** Update AC.rules shellcheck checks to accept empty stdout as PASS (requires human approval - protected file)
+**Historical Context:**
+
+- **2026-01-24:** All 7 warnings were false positives from verifier regex matching empty stdout
+- **Template warnings (3):** Files byte-identical or intentional feature divergence
+- **Shellcheck warnings (4):** All files pass shellcheck, verifier expects different output format
 
 ---
 
