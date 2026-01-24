@@ -6,6 +6,14 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
+## Phase 0-Warn: Verifier Warnings
+
+**Goal:** Resolve verifier warnings from latest run.
+
+- [x] **WARN.Cortex.FileSizeLimit.SYSTEM_PROMPT** Reduce cortex/CORTEX_SYSTEM_PROMPT.md to 150 lines (currently 161 lines)
+- [ ] **WARN.Hygiene.TemplateSync.1.current_ralph_tasks** Request waiver for current_ralph_tasks.sh Phase section detection logic
+- [ ] **WARN.Hygiene.TemplateSync.2.loop** Request waiver for loop.sh cache configuration enhancements
+
 ## Phase 5: Skills Knowledge Base Expansion
 
 **Goal:** Expand brain skills to cover more domains and improve existing documentation.
