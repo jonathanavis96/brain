@@ -44,6 +44,7 @@ Catalog of all skill files in the brain system.
 - [code-hygiene.md](domains/code-quality/code-hygiene.md) - Definition of Done checklists
 - [markdown-patterns.md](domains/code-quality/markdown-patterns.md) - Lint rules (MD040, MD024, MD050), documentation accuracy
 - [testing-patterns.md](domains/code-quality/testing-patterns.md) - Testing strategies and patterns
+- [research-patterns.md](domains/code-quality/research-patterns.md) - Systematic research methodology for gathering and evaluating information
 - [token-efficiency.md](domains/code-quality/token-efficiency.md) - Token optimization strategies for AI agents
 
 ### Infrastructure
