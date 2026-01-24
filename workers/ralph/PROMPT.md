@@ -216,6 +216,28 @@ cat .verify/latest.txt | grep -E "SUMMARY|\[WARN\]|\[FAIL\]"
 
 4. **STOP** - Do not output `:::COMPLETE:::`
 
+### Creating New Phases (Governance Rule)
+
+If you identify knowledge gaps or improvements that need **new Phase sections** (not just new tasks within existing phases):
+
+1. **PROPOSE, don't commit** - Describe the new phases in your response but DO NOT write them to IMPLEMENTATION_PLAN.md yet
+2. **Explain the rationale** - Why is this needed? What gaps does it fill?
+3. **Wait for approval** - Human or Cortex must approve before you add new phases
+4. **Exception:** `## Phase 0-Warn: Verifier Warnings` can be added immediately (urgent fixes)
+
+**Example proposal format:**
+
+```text
+PROPOSED NEW PHASES:
+- Phase 8: Frontend Skills Expansion
+  - Rationale: Brain is referenced by web projects, needs React/Vue patterns
+  - Tasks: 8.1.1 Create frontend README, 8.1.2 Add component patterns...
+
+Awaiting approval before adding to IMPLEMENTATION_PLAN.md.
+```
+
+**Why this rule exists:** New phases represent significant scope expansion. Cortex owns strategic planning; Ralph executes. Proposing allows review before commitment.
+
 ## BUILDING Mode (All other iterations)
 
 ### Context Gathering (up to 100 parallel subagents)
