@@ -75,7 +75,7 @@
   - **AC:** `diff -q workers/ralph/thunk_ralph_tasks.sh templates/ralph/thunk_ralph_tasks.sh` shows "match"
   - **Fixes:** Template.1
 
-- [ ] **9.1.2** Update `loop.sh` hash baseline (human approved change)
+- [x] **9.1.2** Update `loop.sh` hash baseline (human approved change)
   - Run: `cd workers/ralph && sha256sum loop.sh | cut -d' ' -f1 > .verify/loop.sha256`
   - Also update: `../../.verify/loop.sha256`
   - **AC:** Protected.1 check passes

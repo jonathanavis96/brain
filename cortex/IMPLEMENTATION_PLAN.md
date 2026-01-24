@@ -112,21 +112,21 @@ Phases 0, 2, 3, 4, 5, 6 completed - see `workers/ralph/THUNK.md` for details.
 
 ### Phase 11.2: Shellcheck Detection
 
-- [ ] **11.2.1** Fix Lint.Shellcheck.* checks regex
+- [x] **11.2.1** Fix Lint.Shellcheck.* checks regex
   - Current: Verifier regex incorrectly detects shellcheck issues
   - Fix: Check shellcheck exit code (0 = pass) instead of parsing output
   - **AC:** Files that pass `shellcheck -e SC1091 <file>` with exit 0 report PASS
 
 ### Phase 11.3: Markdown Fence Counting
 
-- [ ] **11.3.1** Fix Lint.Markdown.*BalancedFences regex
+- [x] **11.3.1** Fix Lint.Markdown.*BalancedFences regex
   - Current: `^```[a-z]` matches directory tree lines with backticks (e.g., `├── .verify/`)
   - Fix: Use `^```[a-z]+$` or `^```[a-z]+ *$` to match only fence lines
   - **AC:** NEURONS.md and THOUGHTS.md report balanced fences
 
 ### Phase 11.4: Cleanup Stale Waivers
 
-- [ ] **11.4.1** Delete all waiver requests in `.verify/waiver_requests/`
+- [x] **11.4.1** Delete all waiver requests in `.verify/waiver_requests/`
   - These are all false positives that will be fixed by 11.1-11.3
   - **AC:** `.verify/waiver_requests/` directory is empty or contains only new valid requests
 
