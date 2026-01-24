@@ -192,7 +192,11 @@
 **Checklist:**
 
 - [x] Confirm marker lines still being emitted (no accidental removal)
-- [ ] Review top 3 failing tools in latest report; add better error classification
+- [x] Review top 3 failing tools in latest report; add better error classification
+  - **Finding:** Marker emission NOT happening in loop.sh (ROLLFLOW_RUN_ID set but markers not emitted)
+  - **Sample report:** markdownlint (MD040/MD024 errors), build (RuntimeError:Missing_dependency)
+  - **test_with_cache report:** No tool failures (0 FAIL status entries)
+  - **Action needed:** Implement marker emission in loop.sh if rollflow analysis becomes priority
 - [ ] Watch for cache thrash (lots of misses due to unstable keys)
   - Fix by normalizing args + excluding volatile fields from cache_key
 - [ ] Order expensive steps after stable steps to avoid miss cascades
