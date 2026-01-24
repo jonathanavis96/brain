@@ -235,7 +235,7 @@ Usage:
   loop.sh [--prompt <path>] [--iterations N] [--plan-every N] [--yolo|--no-yolo]
           [--runner rovodev|opencode] [--model <model>] [--branch <name>] [--dry-run] [--no-monitors]
           [--opencode-serve] [--opencode-port N] [--opencode-attach <url>] [--opencode-format json|text]
-          [--cache-skip] [--force-no-cache] [--rollback [N]] [--resume]
+          [--cache-skip] [--force-no-cache] [--force-fresh] [--rollback [N]] [--resume]
 
 Defaults:
   --iterations 1
@@ -275,6 +275,7 @@ Safety Features:
   --cache-scope <scopes> Comma-separated list of cache scopes: verify,read,llm_ro
                     Default: verify,read (safe for all phases)
   --force-no-cache  Disable cache lookup even if CACHE_SKIP=1 (forces all tools to run)
+  --force-fresh     Bypass all caching regardless of CACHE_MODE/SCOPE (useful for debugging stale cache)
   --rollback [N]    Undo last N Ralph commits (default: 1). Requires confirmation.
   --resume          Resume from last incomplete iteration (checks for uncommitted changes)
 
@@ -341,6 +342,7 @@ CACHE_SKIP="${CACHE_SKIP:-false}"
 CACHE_MODE="${CACHE_MODE:-off}"           # off|record|use - controls cache behavior
 CACHE_SCOPE="${CACHE_SCOPE:-verify,read}" # verify,read,llm_ro - comma-separated list of allowed scopes
 FORCE_NO_CACHE=false
+FORCE_FRESH=false # Bypass all caching regardless of CACHE_MODE/SCOPE
 CONSECUTIVE_VERIFIER_FAILURES=0
 
 # =============================================================================
@@ -458,6 +460,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --force-no-cache)
       FORCE_NO_CACHE=true
+      shift
+      ;;
+    --force-fresh)
+      FORCE_FRESH=true
       shift
       ;;
     --rollback)
@@ -996,8 +1002,8 @@ run_once() {
   tool_key="$(cache_key "$RUNNER" "{\"model\":\"$RESOLVED_MODEL\",\"phase\":\"$phase\",\"iter\":$iter}" "$git_sha")"
   start_ms="$(($(date +%s%N) / 1000000))"
 
-  # Check cache if CACHE_SKIP is enabled and FORCE_NO_CACHE is not set
-  if [[ "$CACHE_SKIP" == "true" && "$FORCE_NO_CACHE" != "true" ]]; then
+  # Check cache if CACHE_SKIP is enabled and neither FORCE_NO_CACHE nor FORCE_FRESH is set
+  if [[ "$CACHE_SKIP" == "true" && "$FORCE_NO_CACHE" != "true" && "$FORCE_FRESH" != "true" ]]; then
     # Safety check: If BUILD phase has pending tasks, force fresh run (task 1.4.1)
     if [[ "$phase" == "build" ]]; then
       local plan_file="${ROOT}/workers/IMPLEMENTATION_PLAN.md"
