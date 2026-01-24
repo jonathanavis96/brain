@@ -85,7 +85,7 @@
 
 ### Phase 1.5: Update Both Workers
 
-- [ ] **1.5.1** Update `workers/ralph/loop.sh` with new cache logic
+- [x] **1.5.1** Update `workers/ralph/loop.sh` with new cache logic
   - Remove iteration-level LLM caching
   - Add phase guards
   - **AC:** Ralph respects new cache design
