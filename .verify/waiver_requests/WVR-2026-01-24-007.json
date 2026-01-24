@@ -1,0 +1,11 @@
+{
+  "waiver_id": "WVR-2026-01-24-007",
+  "rule_id": "Lint.Shellcheck.CurrentRalphTasks",
+  "scope": {
+    "paths": ["workers/ralph/current_ralph_tasks.sh"]
+  },
+  "reason": "False positive: shellcheck passes (exit 0, empty output), but AC.rules line 492 has no expect_exit or expect_stdout, causing verifier.sh to fail on empty stdout. Needs explicit expect_exit=0",
+  "created_by": "ralph",
+  "created_at": "2026-01-24",
+  "expires": "2026-02-23"
+}
