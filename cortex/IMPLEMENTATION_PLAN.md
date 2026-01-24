@@ -202,7 +202,7 @@ Phases 0, 2, 3, 4, 5, 6 completed - see `workers/ralph/THUNK.md` for details.
   - **AC:** Can detect basic PASS/FAIL in unmarked legacy logs using built-in patterns
   - **If Blocked:** Start with simple patterns, iterate on accuracy
 
-- [ ] **12.2.4** Add config-driven patterns loader for heuristic parser
+- [x] **12.2.4** Add config-driven patterns loader for heuristic parser
   - Load patterns from `config/patterns.yaml` with JSON schema validation
   - **Depends on:** 12.2.3
   - **Goal:** Make heuristic patterns configurable without code changes
