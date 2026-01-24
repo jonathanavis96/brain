@@ -101,7 +101,7 @@
 
 ### Phase 1.6: Testing
 
-- [ ] **1.6.1** Test verifier caching works
+- [x] **1.6.1** Test verifier caching works
   - Run verifier twice on unchanged repo → expect cache hits
   - Modify a file → expect cache miss for that file's checks
   - **AC:** Verifier cache behaves correctly
