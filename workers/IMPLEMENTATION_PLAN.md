@@ -21,7 +21,7 @@
 
 ### Phase 1.1: Design and Document
 
-- [ ] **1.1.1** Create `docs/CACHE_DESIGN.md` with scope definitions
+- [x] **1.1.1** Create `docs/CACHE_DESIGN.md` with scope definitions
   - Define scopes: `verify`, `read`, `llm_ro` (read-only LLM)
   - Document phase-to-scope mapping
   - Explain why BUILD/PLAN never get LLM caching
