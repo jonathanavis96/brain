@@ -36,7 +36,7 @@
 
 ### Phase 1.2: Input-Based Cache Keys
 
-- [ ] **1.2.1** Add `file_content_hash()` function to `common.sh`
+- [x] **1.2.1** Add `file_content_hash()` function to `common.sh`
   - `file_content_hash <path>` → sha256 of file contents
   - **AC:** Function exists, returns consistent hash for same content
 
