@@ -59,7 +59,18 @@ Follow in order:
   - **Factual**: "What is X?" → Look for authoritative sources
   - **Procedural**: "How do I X?" → Look for tutorials, docs, examples
   - **Evaluative**: "Should I use X or Y?" → Look for comparisons, trade-offs
-  - **Diagnostic**: "Why is X happening?" → Look for error docs, Stack Overflow, issues
+  - **Diagnostic**: "Why is X happening?" → Use **Five Whys** technique (see below)
+
+#### Five Whys Technique (for Diagnostic Questions)
+
+When debugging or investigating issues, iteratively ask "why?" to find root causes:
+
+1. **Problem:** "The API is returning 500 errors"
+2. **Why?** "The database query is timing out"
+3. **Why?** "The query is scanning the entire table"
+4. **Why?** "There's no index on the filter column"
+5. **Why?** "The migration that adds the index failed silently"
+6. **Root cause:** Missing index due to failed migration → Fix: Re-run migration, add alerting
 
 ### Step 2: Search Locally First
 
@@ -111,11 +122,40 @@ For each source, quickly assess:
 - List sources consulted
 - Identify remaining unknowns
 
+#### Rubber Duck Test
+
+Before finalizing, explain your findings out loud or in writing as if teaching someone else:
+
+- If you struggle to explain a part clearly → you don't fully understand it yet
+- If you catch yourself saying "I think..." or "probably..." → that's an uncertainty to investigate
+- If the explanation feels convoluted → the underlying concept may need more research
+
+This technique reveals gaps in understanding that silent reading misses.
+
 ### Step 7: Decide or Escalate
 
 - If confident: Proceed with implementation
 - If uncertain: Prototype to validate
 - If blocked: Document what you learned and escalate with specific questions
+
+#### When to Stop Researching
+
+Research is complete when ANY of these are true:
+
+| Signal | Example |
+|--------|---------|
+| **Saturation** | Last 2-3 sources repeated information you already found |
+| **Convergence** | Multiple independent sources agree on the answer |
+| **Diminishing returns** | Time spent >> value of marginal information |
+| **Actionable confidence** | You can explain your approach and defend it |
+| **Budget exhausted** | Hit your time/iteration limit |
+
+If stuck after hitting your budget, try **lateral thinking**:
+
+- Rephrase the question entirely
+- Search for the opposite ("why NOT to use X")
+- Look for adjacent problems that were solved
+- Ask: "Who else has this problem?" and search their domain
 
 ## 8) Output / Deliverables
 
@@ -168,12 +208,22 @@ Common ways the agent fails here:
 | Failure Mode | Mitigation |
 |--------------|------------|
 | Analysis paralysis - researching forever | Set explicit iteration budget (e.g., "max 5 iterations") |
-| Confirmation bias - only finding sources that agree | Actively search for counterarguments |
+| Confirmation bias - only finding sources that agree | Use the **Steel Man** technique (see below) |
 | Recency bias - assuming newest is best | Evaluate if older, stable solutions work better |
 | Authority fallacy - trusting big names blindly | Verify claims even from reputable sources |
 | Copy-paste errors - using code without adaptation | Understand the code, adapt to your context |
 | Outdated information - using old docs | Check version numbers and publish dates |
 | Scope creep - research expanding beyond original question | Re-read original question frequently |
+
+### Steel Man Technique (Counter Confirmation Bias)
+
+When you find a solution that "feels right," actively argue against it:
+
+1. **Search for criticisms:** "problems with X", "X vs Y", "why not use X"
+2. **Find the best counterargument:** What's the strongest case against your preferred solution?
+3. **Address it explicitly:** Can you refute it? Or does it reveal a real weakness?
+
+If you can't find ANY criticism of an approach, that's suspicious - either you're not looking hard enough, or it's too new to have feedback.
 
 ## 11) Minimal Example (repo-specific)
 
