@@ -254,7 +254,7 @@ Phases 0, 2, 3, 4, 5, 6 completed - see `workers/ralph/THUNK.md` for details.
   - **AC:** Repeated run shows at least one skip for previously PASS call
   - **If Blocked:** Start with logging only (no actual skip), add skip logic after validation
 
-- [ ] **12.4.3** Add safety bypasses for cache skip
+- [x] **12.4.3** Add safety bypasses for cache skip
   - Don't skip if: args include "force", git SHA changed, tool marked non-cacheable
   - Config: `rollflow_cache.yml` with `non_cacheable_tools: [...]`
   - **Depends on:** 12.4.2
