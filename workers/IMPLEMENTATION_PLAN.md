@@ -94,7 +94,7 @@
   - Same changes as Ralph
   - **AC:** Cerebras respects new cache design
 
-- [ ] **1.5.3** Update `workers/shared/common.sh` with new functions
+- [x] **1.5.3** Update `workers/shared/common.sh` with new functions
   - Add file_content_hash, tree_hash
   - Update cache_key signature
   - **AC:** Shared functions available to all workers
