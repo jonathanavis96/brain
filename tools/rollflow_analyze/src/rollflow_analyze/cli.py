@@ -61,6 +61,10 @@ def create_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     """Main entry point for CLI."""
+    from .parsers.marker_parser import MarkerParser
+    from .parsers.heuristic_parser import HeuristicParser
+    from .report import build_report, write_json_report, write_markdown_summary
+
     parser = create_parser()
     args = parser.parse_args(argv)
 
@@ -73,17 +77,106 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Error: Not a directory: {args.log_dir}", file=sys.stderr)
         return 1
 
-    # TODO: Implement analysis pipeline
-    # 1. Select parser (marker vs heuristic)
-    # 2. Stream through log files
-    # 3. Build report with aggregates
-    # 4. Update cache DB
-    # 5. Write output
+    if args.verbose:
+        print(f"Analyzing logs in: {args.log_dir}")
 
-    print(f"[NOT IMPLEMENTED] Would analyze logs in: {args.log_dir}")
-    print(f"[NOT IMPLEMENTED] Would write report to: {args.out}")
+    # Step 1: Select parser based on mode
+    if args.parser == "marker":
+        log_parser = MarkerParser()
+        if args.verbose:
+            print("Using marker parser (explicit START/END markers)")
+    elif args.parser == "heuristic":
+        log_parser = HeuristicParser(config_path=args.config)
+        if args.verbose:
+            print("Using heuristic parser (regex patterns)")
+    else:  # auto mode
+        # Try marker first, fallback to heuristic if no markers found
+        log_parser = MarkerParser()
+        if args.verbose:
+            print("Using auto mode (marker parser, will fallback if needed)")
 
-    return 2  # Exit code 2 = not implemented
+    # Step 2: Stream through log files and collect tool calls
+    tool_calls = []
+    log_files = sorted(args.log_dir.rglob("*.log"))
+
+    if not log_files:
+        # No .log files, try all files
+        log_files = [f for f in sorted(args.log_dir.rglob("*")) if f.is_file()]
+
+    if not log_files:
+        print(f"Error: No log files found in {args.log_dir}", file=sys.stderr)
+        return 1
+
+    if args.verbose:
+        print(f"Found {len(log_files)} log file(s) to process")
+
+    for log_file in log_files:
+        if args.verbose:
+            print(f"  Processing: {log_file.name}")
+
+        try:
+            # Stream parse file (generator-based, memory efficient)
+            for tool_call in log_parser.parse_file(log_file):
+                tool_calls.append(tool_call)
+        except Exception as e:
+            print(f"Warning: Failed to parse {log_file}: {e}", file=sys.stderr)
+            continue
+
+    if args.verbose:
+        print(f"Extracted {len(tool_calls)} tool call(s)")
+
+    # If auto mode and no tool calls found, try heuristic fallback
+    if args.parser == "auto" and len(tool_calls) == 0:
+        if args.verbose:
+            print("No markers found, falling back to heuristic parser")
+
+        log_parser = HeuristicParser(config_path=args.config)
+        tool_calls = []
+
+        for log_file in log_files:
+            if args.verbose:
+                print(f"  Re-processing: {log_file.name}")
+            try:
+                for tool_call in log_parser.parse_file(log_file):
+                    tool_calls.append(tool_call)
+            except Exception as e:
+                print(f"Warning: Failed to parse {log_file}: {e}", file=sys.stderr)
+                continue
+
+    if len(tool_calls) == 0:
+        print("Warning: No tool calls found in logs", file=sys.stderr)
+
+    # Step 3: Build report with aggregates and cache advice
+    report = build_report(tool_calls, run_id=None)
+
+    if args.verbose:
+        print(f"Report generated with {report.aggregates.total_calls} calls")
+
+    # Step 4: Write JSON output
+    try:
+        write_json_report(report, args.out)
+        if args.verbose:
+            print(f"JSON report written to: {args.out}")
+    except Exception as e:
+        print(f"Error writing JSON report: {e}", file=sys.stderr)
+        return 1
+
+    # Step 5: Optionally write markdown summary
+    if args.markdown:
+        md_path = args.out.with_suffix(".md")
+        try:
+            write_markdown_summary(report, md_path)
+            if args.verbose:
+                print(f"Markdown summary written to: {md_path}")
+        except Exception as e:
+            print(f"Error writing markdown summary: {e}", file=sys.stderr)
+            return 1
+
+    # Step 6: TODO - Update cache DB (Phase 12.4.1)
+    # if args.cache_db:
+    #     update_cache_db(report, args.cache_db)
+
+    return 0
 
 
 if __name__ == "__main__":
