@@ -1,0 +1,11 @@
+{
+  "waiver_id": "WVR-2026-01-23-013",
+  "rule_id": "Lint.Markdown.ThoughtsBalancedFences",
+  "scope": {
+    "paths": ["THOUGHTS.md has balanced fences (2 total = 1 pair at lines 49/51). Verifier fence counting logic appears incorrect."]
+  },
+  "reason": "low",
+  "created_by": "ralph",
+  "created_at": "2026-01-23",
+  "expires": "2026-02-22"
+}

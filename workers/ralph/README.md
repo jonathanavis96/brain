@@ -10,28 +10,6 @@ The **brain** repository is the shared consciousness for all projects - a centra
 
 ## Quick Start
 
-### Installation
-
-```bash
-# Clone the brain repository
-git clone <brain-repo-url> ~/code/brain
-cd ~/code/brain
-
-# Run setup to install cortex and ralph commands globally
-bash setup.sh
-
-# Verify installation
-cortex --help
-ralph --help
-```text
-
-**What `setup.sh` does:**
-
-- Creates `~/bin/cortex` symlink → `brain/cortex/cortex.bash`
-- Creates `~/bin/ralph` symlink → `brain/workers/ralph/ralph.sh`
-- Adds `~/bin` to your PATH (if not already present)
-- Verifies Atlassian CLI (`acli`) is installed
-
 ### Bootstrap a New Project
 
 ```bash
@@ -45,13 +23,12 @@ Tech Stack: Next.js, TypeScript, PostgreSQL, Docker
 Goals: MVP in 2 weeks, 1000 users in first month
 EOF
 
-# 2. Run bootstrap (using globally installed command)
-cd ~/code/brain
-bash workers/ralph/new-project.sh NEW_PROJECT_IDEA.md
+# 2. Run bootstrap
+bash new-project.sh NEW_PROJECT_IDEA.md
 
 # 3. Your project is ready!
 cd /path/to/your-project
-ralph loop --iterations 10
+bash ralph/loop.sh --iterations 10
 ```text
 
 **What gets created:**
@@ -69,56 +46,43 @@ ralph loop --iterations 10
 ```text
 brain/
 ├── README.md                      # This file
-├── .gitignore                     # Excludes logs, backups, old files
+├── AGENTS.md                      # How to run Ralph
+├── NEURONS.md                     # Brain repository map
+├── THOUGHTS.md                    # Vision & Ralph's mission
+├── IMPLEMENTATION_PLAN.md         # Current tasks for brain maintenance
 │
-└── ralph/                         # Main Ralph system
-    ├── AGENTS.md                  # How to run Ralph
-    ├── NEURONS.md                 # Brain repository map
-    ├── THOUGHTS.md                # Vision & Ralph's mission
-    ├── IMPLEMENTATION_PLAN.md     # Current tasks for brain maintenance
-    ├── PROMPT.md                  # Ralph instructions (PLAN/BUILD modes)
-    │
-    ├── kb/                        # Knowledge Base
-    │   ├── SUMMARY.md             # KB index
-    │   ├── conventions.md         # KB authoring guide
-    │   ├── domains/               # Reusable patterns (11 files)
-    │   │   ├── api-design-patterns.md
-    │   │   ├── auth-patterns.md
-    │   │   ├── bootstrap-patterns.md
-    │   │   ├── caching-patterns.md
-    │   │   ├── database-patterns.md
-    │   │   ├── deployment-patterns.md
-    │   │   ├── error-handling-patterns.md
-    │   │   ├── ralph-patterns.md
-    │   │   ├── security-patterns.md
-    │   │   ├── state-management-patterns.md
-    │   │   └── testing-patterns.md
-    │   └── projects/              # Project-specific knowledge
-    │       └── brain-example.md   # Brain repo conventions
-    │
-    ├── references/                # External best practices (READ-ONLY)
-    │   └── react-best-practices/  # 45 performance rules from Vercel
-    │       ├── HOTLIST.md         # Top 10 most applicable
-    │       ├── INDEX.md           # Categorized index
-    │       └── rules/             # Individual rule files
-    │
-    ├── templates/                 # Project bootstrap templates
-    │   ├── AGENTS.project.md      # Agent guidance
-    │   ├── THOUGHTS.project.md    # Vision template
-    │   ├── NEURONS.project.md     # Codebase map template
-    │   └── ralph/                 # Ralph infrastructure
-    │       ├── loop.sh            # Ralph runner
-    │       ├── PROMPT.project.md  # Unified prompt
-    │       └── IMPLEMENTATION_PLAN.project.md
-    │
-    ├── generators/                # HIGH INTELLIGENCE content generators
-    │   ├── generate-thoughts.sh   # Custom vision/goals
-    │   ├── generate-neurons.sh    # Tech-stack-aware map
-    │   └── generate-implementation-plan.sh
-    │
-    ├── new-project.sh             # Bootstrap orchestration
-    ├── loop.sh                    # Ralph loop (brain self-improvement)
-    └── watch_ralph_tasks.sh       # Interactive task monitor
+├── skills/                        # Skills & Knowledge Base (33 files)
+│   ├── SUMMARY.md                 # KB index
+│   ├── conventions.md             # KB authoring guide
+│   ├── domains/                   # Reusable patterns
+│   │   ├── auth-patterns.md       # OAuth2, JWT, sessions
+│   │   └── ralph-patterns.md      # Ralph loop architecture
+│   └── projects/                  # Project-specific knowledge
+│       └── brain-example.md       # Brain repo conventions
+│
+├── references/                    # External best practices (READ-ONLY)
+│   └── react-best-practices/      # 45 performance rules from Vercel
+│       ├── HOTLIST.md             # Top 10 most applicable
+│       ├── INDEX.md               # Categorized index
+│       └── rules/                 # Individual rule files
+│
+├── templates/                     # Project bootstrap templates
+│   ├── AGENTS.project.md          # Agent guidance
+│   ├── THOUGHTS.project.md        # Vision template
+│   ├── NEURONS.project.md         # Codebase map template
+│   └── ralph/                     # Ralph infrastructure
+│       ├── loop.sh                # Ralph runner
+│       ├── PROMPT.project.md      # Unified prompt
+│       └── IMPLEMENTATION_PLAN.project.md
+│
+├── generators/                    # HIGH INTELLIGENCE content generators
+│   ├── generate-thoughts.sh      # Custom vision/goals
+│   ├── generate-neurons.sh        # Tech-stack-aware map
+│   └── generate-implementation-plan.sh
+│
+├── new-project.sh                 # Bootstrap orchestration
+├── loop.sh                        # Ralph loop (brain self-improvement)
+└── watch_ralph_tasks.sh           # Interactive task monitor
 ```text
 
 ## Knowledge Base Usage
@@ -128,7 +92,7 @@ brain/
 Always start broad, drill down only when needed:
 
 ```markdown
-1. kb/SUMMARY.md                          → KB overview
+1. skills/SUMMARY.md                      → Skills overview
 2. references/react-best-practices/HOTLIST.md → Top 10 rules (covers 80% of scenarios)
 3. references/react-best-practices/INDEX.md   → Full categorized index (if needed)
 4. references/react-best-practices/rules/*    → Specific rule deep-dives
@@ -250,12 +214,12 @@ All templates use **bash-style forward slash paths**:
 
 ```markdown
 # Correct ✅
-../../brain/kb/SUMMARY.md
+../../brain/skills/SUMMARY.md
 ../../brain/references/react-best-practices/HOTLIST.md
 
 # Incorrect ❌
 ..\\brain\\kb\\SUMMARY.md                             # Windows backslashes
-/path/to/brain/kb/SUMMARY.md                 # Absolute paths (breaks portability)
+/path/to/brain/skills/SUMMARY.md             # Absolute paths (breaks portability)
 ```text
 
 **Why:** Cross-platform compatibility (WSL, Linux, macOS, Windows Git Bash)
@@ -268,7 +232,7 @@ All templates use **bash-style forward slash paths**:
 
    ```bash
    # Create new domain KB file
-   cat > kb/domains/my-pattern.md << 'EOF'
+   cat > skills/domains/my-pattern.md << 'EOF'
    # My Pattern
    
    ## Why This Exists
@@ -282,14 +246,14 @@ All templates use **bash-style forward slash paths**:
    EOF
    
    # Update index
-   echo "- [My Pattern](domains/my-pattern.md)" >> kb/SUMMARY.md
+   echo "- [My Pattern](domains/my-pattern.md)" >> skills/SUMMARY.md
    ```
 
 2. **Project-specific knowledge**:
 
    ```bash
    # Create project KB file
-   cat > kb/projects/my-project.md << 'EOF'
+   cat > skills/projects/my-project.md << 'EOF'
    # My Project
    
    ## Why This Exists
@@ -303,7 +267,7 @@ All templates use **bash-style forward slash paths**:
    EOF
    
    # Update index
-   echo "- [My Project](projects/my-project.md)" >> kb/SUMMARY.md
+   echo "- [My Project](projects/my-project.md)" >> skills/SUMMARY.md
    ```
 
 3. **React rules**: Don't modify `references/react-best-practices/rules/*` (read-only)
@@ -312,7 +276,7 @@ All templates use **bash-style forward slash paths**:
 
 1. Maintain bash path standard: `../../brain/`
 2. Test path depth matches template location
-3. Validate before committing
+3. Validate before completing task
 4. Document new conventions in `templates/README.md`
 
 ### Running Ralph on Brain
@@ -338,9 +302,10 @@ bash watch_ralph_tasks.sh
 - **IMPLEMENTATION_PLAN.md** - The persistent TODO list (actionable tasks only)
 - **VALIDATION_CRITERIA.md** - Quality gates and acceptance criteria (reference document)
 - **NEURONS.md** - Codebase map (read via subagent when needed, not first-load)
-- **One Iteration = One Unit** - Implement + validate + update plan + commit
+- **One Iteration = One Unit** - Implement + validate + update plan + STOP
 - **Don't Assume Missing** - Always search codebase before creating
-- **One Task Per Iteration** - BUILD mode: implement ONE task, commit, STOP
+- **One Task Per Iteration** - BUILD mode: implement ONE task, STOP (PLAN commits)
+- **PLAN Phase Commits** - All commits happen during planning phase with comprehensive messages
 
 **Safety Features:**
 
@@ -387,10 +352,10 @@ Ensure brain integrity:
 
 ```bash
 # File structure
-ls -la kb/ templates/ references/
+ls -la skills/ templates/ references/
 
-# KB file count (should be 16)
-find kb/ -name "*.md" | wc -l
+# KB file count (should be 7)
+find skills/ -name "*.md" | wc -l
 
 # React rules count (should be 45)
 find references/react-best-practices/rules/ -name "*.md" | wc -l
@@ -401,8 +366,8 @@ bash -n watch_ralph_tasks.sh
 bash -n new-project.sh
 
 # KB integrity (all files have required headers)
-grep -r "## Why This Exists" kb/domains/ kb/projects/
-grep -r "## When to Use It" kb/domains/ kb/projects/
+grep -r "## Why This Exists" skills/domains/ skills/projects/
+grep -r "## When to Use It" skills/domains/ skills/projects/
 ```text
 
 ## Key Principles
@@ -411,11 +376,11 @@ grep -r "## When to Use It" kb/domains/ kb/projects/
 2. **Progressive Disclosure** - Start with HOTLIST/SUMMARY, drill down only when needed
 3. **Token Efficiency** - Keep context files lean
 4. **Bash Paths Standard** - All templates use `../../brain/` (not Windows paths)
-5. **One Task Per Iteration** - BUILD mode: ONE task, validate, commit, STOP
+5. **One Task Per Iteration** - BUILD mode: ONE task, validate, STOP (no commit)
 6. **Documentation Reflects Reality** - Fix immediately if docs and code disagree
 7. **Templates Are Sacred** - Test thoroughly before changing (many projects depend on them)
 8. **Knowledge Grows Organically** - Add to KB when patterns emerge in 2+ projects
-9. **Validation Is Mandatory** - All changes must pass validation before commit
+9. **Validation Is Mandatory** - All changes must pass validation before stopping
 10. **Ralph Maintains Ralph** - Brain loop improves itself continuously
 
 ## Success Metrics
@@ -436,15 +401,15 @@ The brain repository is successful when:
 - **NEURONS.md** - Brain repository map (read this via subagent)
 - **THOUGHTS.md** - Vision, goals, and Ralph's 20 strategic questions
 - **templates/README.md** - Template documentation and path conventions
-- **kb/SUMMARY.md** - Knowledge base index
-- **kb/conventions.md** - KB authoring guidelines
+- **skills/SUMMARY.md** - Skills & knowledge base index
+- **skills/conventions.md** - Skills authoring guidelines
 
 ## Current Status (2026-01-16)
 
 - ✅ Bootstrap system functional (~14 second project creation)
 - ✅ 45 React best practices rules (complete Vercel Engineering set)
 - ✅ 3 HIGH INTELLIGENCE generators working
-- ✅ 7 KB files with proper structure
+- ✅ 33 KB files with proper structure
 - ✅ Interactive task monitor with hotkeys
 - ✅ Templates use bash paths consistently
 - ✅ Ralph loop maintains brain repository

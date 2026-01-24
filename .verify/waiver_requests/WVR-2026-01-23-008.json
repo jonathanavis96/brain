@@ -1,0 +1,11 @@
+{
+  "waiver_id": "WVR-2026-01-23-008",
+  "rule_id": "Template.1",
+  "scope": {
+    "paths": ["workers/ralph/thunk_ralph_tasks.sh"]
+  },
+  "reason": "Files are identical - diff -q returns 'match' and exit code 0, but verifier still marks as WARN. Manual verification confirms files match.",
+  "created_by": "ralph",
+  "created_at": "2026-01-23",
+  "expires": "2026-02-22"
+}
