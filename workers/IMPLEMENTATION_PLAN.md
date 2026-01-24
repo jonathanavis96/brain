@@ -107,7 +107,7 @@
     - Format: `::CACHE_MISS:: key=<key> tool=<tool>`
     - **AC:** Functions output correct marker format
 
-  - [ ] **12.4.2.3** Add `CACHE_SKIP` environment variable check in `loop.sh`
+  - [x] **12.4.2.3** Add `CACHE_SKIP` environment variable check in `loop.sh`
     - Parse `--cache-skip` CLI flag OR `CACHE_SKIP=1` env var
     - Default: disabled (no caching behavior)
     - **AC:** `CACHE_SKIP=1 bash loop.sh` enables cache checking
