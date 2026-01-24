@@ -96,7 +96,7 @@
 
   **Subtasks:**
 
-  - [ ] **12.4.2.1** Add `lookup_cache_pass()` function to `workers/shared/common.sh`
+  - [x] **12.4.2.1** Add `lookup_cache_pass()` function to `workers/shared/common.sh`
     - Query `artifacts/rollflow_cache/cache.sqlite` for cache_key in pass_cache table
     - Return 0 (hit) if found, 1 (miss) if not found
     - Handle missing DB gracefully (treat as miss)
