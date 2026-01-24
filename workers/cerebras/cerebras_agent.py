@@ -580,6 +580,8 @@ class CerebrasClient:
     def __init__(self, api_key: str):
         self.api_key = api_key
         self.total_tokens = 0
+        self.current_turn = 0
+        self.current_model = ""
 
     def chat(self, messages: list, model: str, tools: list = None) -> dict:
         """Call Cerebras API with retry."""
@@ -642,13 +644,16 @@ class CerebrasClient:
                 # Track usage (prompt + completion = total)
                 if "usage" in data:
                     usage = data["usage"]
-                    prompt = usage.get("prompt_tokens", 0)
-                    completion = usage.get("completion_tokens", 0)
+                    prompt_tok = usage.get("prompt_tokens", 0)
+                    completion_tok = usage.get("completion_tokens", 0)
                     total = usage.get("total_tokens", 0)
+                    cached = usage.get("cached_tokens", 0)
                     self.total_tokens += total
-                    # Debug: show per-call breakdown
+                    self.current_model = model
+                    # Debug: show per-call breakdown with model and turn
+                    cache_str = f" cached={cached}" if cached else ""
                     pr(
-                        f"  [tokens: +{prompt}p +{completion}c = {total}t, cumulative: {self.total_tokens}]",
+                        f"  [turn={self.current_turn} model={model} p={prompt_tok} c={completion_tok} t={total}{cache_str} cum={self.total_tokens}]",
                         S.GRY,
                     )
                 return data
@@ -689,6 +694,9 @@ class Agent:
         self._state_written = False
         self._state_content = None  # Single-slot STATE storage
         self._context_files_read = set()  # Track which context files have been read
+        self._verifier_failed = (
+            False  # Escape hatch: allow rereads after verifier FAIL/WARN
+        )
 
     def _is_context_file_read(
         self, tool_name: str, args: dict, output_len: int
@@ -709,11 +717,20 @@ class Agent:
         return None
 
     def _should_block_reread(self, tool_name: str, args: dict) -> str | None:
-        """Check if this read should be blocked (already have STATE for it)."""
+        """Check if this read should be blocked (already have STATE for it).
+
+        Allows reread if:
+        - verifier_failed flag is set (FAIL/WARN condition)
+        - No STATE exists yet
+        - File hasn't been read before
+        """
         if tool_name not in ("read_file", "head_file"):
             return None
         path = args.get("path", "")
         cf = self._get_context_file_name(path)
+        # Allow reread if verifier failed or no STATE exists
+        if self._verifier_failed:
+            return None  # Escape hatch: allow reread after verifier failure
         if cf and cf in self._context_files_read and self._state_content:
             return cf
         return None
@@ -764,6 +781,14 @@ class Agent:
         pr(f"Cerebras Agent | Model: {self.model} | Max turns: {max_turns}", S.CYN)
         pr(f"{'─'*60}", S.CYN)
 
+        # Detect verifier FAIL/WARN from prompt header (escape hatch for rereads)
+        if (
+            "LAST_VERIFIER_RESULT: FAIL" in prompt
+            or "LAST_VERIFIER_RESULT: WARN" in prompt
+        ):
+            self._verifier_failed = True
+            pr("  [verifier FAIL/WARN - context rereads allowed]", S.YEL)
+
         # TINY base prompt - agent reads context via tools (lazy loading)
         self.messages = [
             {
@@ -780,6 +805,7 @@ class Agent:
 
         for turn in range(max_turns):
             pr(f"\n── Turn {turn+1}/{max_turns} ──", S.GRY)
+            self.client.current_turn = turn + 1
 
             # Call API
             try:
@@ -862,21 +888,35 @@ class Agent:
                         pr("    [context file - will prune after STATE]", S.YEL)
 
                     # Detect STATE summary in think() - single-slot storage
-                    if (
+                    is_state_think = (
                         name == "think"
                         and "state" in args.get("thought", "").lower()[:100]
-                    ):
+                    )
+                    if is_state_think:
                         # Replace existing STATE (single-slot, not append)
                         self._state_content = args.get("thought", "")
                         self._state_written = True
+                        # Don't add STATE tool result to messages - we store it separately
+                        # Just add a minimal acknowledgment
+                        tool_results.append(
+                            {
+                                "role": "tool",
+                                "tool_call_id": tc["id"],
+                                "content": "[STATE saved]",
+                            }
+                        )
                         pr(
-                            "    [STATE updated - single-slot, pruning context reads]",
+                            "    [STATE saved - single-slot, not accumulating]",
                             S.GRN,
                         )
-
-                    tool_results.append(
-                        {"role": "tool", "tool_call_id": tc["id"], "content": output}
-                    )
+                    else:
+                        tool_results.append(
+                            {
+                                "role": "tool",
+                                "tool_call_id": tc["id"],
+                                "content": output,
+                            }
+                        )
 
                 self.messages.extend(tool_results)
 
