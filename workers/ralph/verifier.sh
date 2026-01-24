@@ -341,6 +341,74 @@ main() {
       return 0
     fi
 
+    # === CACHE LOOKUP ===
+    # Try to use cached result if CACHE_MODE allows and we have a valid cache key
+    local cache_key_value=""
+
+    # Extract target file/dir from command (heuristic: last argument or first .sh/.md file)
+    local target_path=""
+    if [[ "$cmd" =~ ([a-zA-Z0-9_/.-]+\.(sh|md|py|bash|rules)) ]]; then
+      target_path="${BASH_REMATCH[1]}"
+    fi
+
+    # Generate cache key if we have a target path
+    if [[ -n "$target_path" && -e "$target_path" ]]; then
+      # Source common.sh for cache functions if not already loaded
+      if ! declare -f cache_key &>/dev/null; then
+        COMMON_SH="$(dirname "$SCRIPT_DIR")/shared/common.sh"
+        if [[ -f "$COMMON_SH" ]]; then
+          # shellcheck source=../shared/common.sh
+          source "$COMMON_SH"
+        fi
+      fi
+
+      # Generate cache key: check_id + target_file_hash
+      if declare -f cache_key &>/dev/null; then
+        cache_key_value=$(cache_key "verifier:$id" "$target_path" 2>/dev/null) || cache_key_value=""
+      fi
+    fi
+
+    # Check cache if we have a key and caching is enabled
+    if [[ -n "$cache_key_value" && "${CACHE_MODE:-off}" == "use" ]]; then
+      local current_git_sha
+      current_git_sha=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+
+      # Include AC.rules hash in context to invalidate cache when rules change
+      local ac_rules_hash=""
+      if [[ -f "$AC_FILE" ]] && declare -f file_content_hash &>/dev/null; then
+        ac_rules_hash=$(file_content_hash "$AC_FILE" 2>/dev/null || echo "")
+      fi
+
+      # Append AC.rules hash to cache key for rule-change invalidation
+      if [[ -n "$ac_rules_hash" ]]; then
+        cache_key_value="${cache_key_value}:${ac_rules_hash:0:8}"
+      fi
+
+      if declare -f lookup_cache_pass &>/dev/null; then
+        if lookup_cache_pass "$cache_key_value" "$current_git_sha" "verifier:$id"; then
+          # Log cache hit and treat as PASS
+          if declare -f log_cache_hit &>/dev/null; then
+            log_cache_hit "$cache_key_value" "verifier:$id"
+          fi
+
+          {
+            echo "[PASS] $id (cached)"
+            echo "  desc: $desc"
+            echo "  cache_key: $cache_key_value"
+          } >>"$REPORT_FILE"
+          pass=$((pass + 1))
+          reset_block
+          return 0
+        else
+          # Cache miss - log it
+          if declare -f log_cache_miss &>/dev/null; then
+            log_cache_miss "$cache_key_value" "verifier:$id"
+          fi
+        fi
+      fi
+    fi
+    # === END CACHE LOOKUP ===
+
     local tmp_stdout tmp_stderr tmp_rc
     tmp_stdout="$(mktemp)"
     tmp_stderr="$(mktemp)"
@@ -405,6 +473,57 @@ main() {
           fi
         } >>"$REPORT_FILE"
         pass=$((pass + 1))
+
+        # === CACHE RECORDING ===
+        # Record PASS result in cache if we have a cache key and caching is enabled
+        if [[ -n "$cache_key_value" && ("${CACHE_MODE:-off}" == "record" || "${CACHE_MODE:-off}" == "use") ]]; then
+          # Record this PASS result in the cache database
+          local current_git_sha
+          current_git_sha=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+
+          local cache_db="${CACHE_DB:-artifacts/rollflow_cache/cache.sqlite}"
+          local cache_dir
+          cache_dir=$(dirname "$cache_db")
+
+          # Ensure cache directory exists
+          mkdir -p "$cache_dir"
+
+          # Record PASS in cache database using Python
+          python3 -c "
+import sqlite3
+import json
+from datetime import datetime
+try:
+    conn = sqlite3.connect('$cache_db')
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS pass_cache (
+            cache_key TEXT PRIMARY KEY,
+            tool_name TEXT,
+            last_pass_ts TEXT,
+            last_duration_ms INTEGER,
+            meta_json TEXT
+        )
+    ''')
+
+    meta = {
+        'git_sha': '$current_git_sha',
+        'check_id': '$id',
+        'target': '$target_path'
+    }
+
+    conn.execute('''
+        INSERT OR REPLACE INTO pass_cache (cache_key, tool_name, last_pass_ts, last_duration_ms, meta_json)
+        VALUES (?, ?, ?, ?, ?)
+    ''', ('$cache_key_value', 'verifier:$id', datetime.utcnow().isoformat() + 'Z', 0, json.dumps(meta)))
+
+    conn.commit()
+    conn.close()
+except Exception as e:
+    # Don't fail verification if cache recording fails
+    pass
+" 2>/dev/null || true
+        fi
+        # === END CACHE RECORDING ===
       else
         {
           echo "[SKIP] $id (auto ignored)"
