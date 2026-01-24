@@ -330,84 +330,84 @@ CONSECUTIVE_VERIFIER_FAILURES=0
 # Parse args
 while [[ $# -gt 0 ]]; do
   case "$1" in
-  --prompt)
-    PROMPT_ARG="${2:-}"
-    shift 2
-    ;;
-  --iterations)
-    ITERATIONS="${2:-}"
-    shift 2
-    ;;
-  --plan-every)
-    PLAN_EVERY="${2:-}"
-    shift 2
-    ;;
-  --yolo)
-    YOLO_FLAG="--yolo"
-    shift
-    ;;
-  --no-yolo)
-    YOLO_FLAG=""
-    shift
-    ;;
-  --runner)
-    RUNNER="${2:-}"
-    shift 2
-    ;;
-  --opencode-serve)
-    OPENCODE_SERVE=true
-    shift
-    ;;
-  --opencode-port)
-    OPENCODE_PORT="${2:-4096}"
-    shift 2
-    ;;
-  --opencode-attach)
-    OPENCODE_ATTACH="${2:-}"
-    shift 2
-    ;;
-  --opencode-format)
-    OPENCODE_FORMAT="${2:-default}"
-    shift 2
-    ;;
-  --model)
-    MODEL_ARG="${2:-}"
-    shift 2
-    ;;
-  --branch)
-    BRANCH_ARG="${2:-}"
-    shift 2
-    ;;
-  --dry-run)
-    DRY_RUN=true
-    shift
-    ;;
-  --no-monitors)
-    NO_MONITORS=true
-    shift
-    ;;
-  --rollback)
-    ROLLBACK_MODE=true
-    if [[ -n "${2:-}" && "$2" =~ ^[0-9]+$ ]]; then
-      ROLLBACK_COUNT="$2"
+    --prompt)
+      PROMPT_ARG="${2:-}"
       shift 2
-    else
+      ;;
+    --iterations)
+      ITERATIONS="${2:-}"
+      shift 2
+      ;;
+    --plan-every)
+      PLAN_EVERY="${2:-}"
+      shift 2
+      ;;
+    --yolo)
+      YOLO_FLAG="--yolo"
       shift
-    fi
-    ;;
-  --resume)
-    RESUME_MODE=true
-    shift
-    ;;
-  -h | --help)
-    usage
-    exit 0
-    ;;
-  *)
-    echo "Unknown arg: $1" >&2
-    usage
-    exit 2
-    ;;
+      ;;
+    --no-yolo)
+      YOLO_FLAG=""
+      shift
+      ;;
+    --runner)
+      RUNNER="${2:-}"
+      shift 2
+      ;;
+    --opencode-serve)
+      OPENCODE_SERVE=true
+      shift
+      ;;
+    --opencode-port)
+      OPENCODE_PORT="${2:-4096}"
+      shift 2
+      ;;
+    --opencode-attach)
+      OPENCODE_ATTACH="${2:-}"
+      shift 2
+      ;;
+    --opencode-format)
+      OPENCODE_FORMAT="${2:-default}"
+      shift 2
+      ;;
+    --model)
+      MODEL_ARG="${2:-}"
+      shift 2
+      ;;
+    --branch)
+      BRANCH_ARG="${2:-}"
+      shift 2
+      ;;
+    --dry-run)
+      DRY_RUN=true
+      shift
+      ;;
+    --no-monitors)
+      NO_MONITORS=true
+      shift
+      ;;
+    --rollback)
+      ROLLBACK_MODE=true
+      if [[ -n "${2:-}" && "$2" =~ ^[0-9]+$ ]]; then
+        ROLLBACK_COUNT="$2"
+        shift 2
+      else
+        shift
+      fi
+      ;;
+    --resume)
+      RESUME_MODE=true
+      shift
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown arg: $1" >&2
+      usage
+      exit 2
+      ;;
   esac
 done
 
@@ -422,22 +422,22 @@ MODEL_SONNET_4="anthropic.claude-sonnet-4-20250514-v1:0"
 resolve_model() {
   local model="$1"
   case "$model" in
-  opus | opus4.5 | opus45)
-    echo "$MODEL_OPUS_45"
-    ;;
-  sonnet | sonnet4.5 | sonnet45)
-    echo "$MODEL_SONNET_45"
-    ;;
-  sonnet4)
-    echo "$MODEL_SONNET_4"
-    ;;
-  latest | auto)
-    # Use system default - don't override config
-    echo ""
-    ;;
-  *)
-    echo "$model"
-    ;;
+    opus | opus4.5 | opus45)
+      echo "$MODEL_OPUS_45"
+      ;;
+    sonnet | sonnet4.5 | sonnet45)
+      echo "$MODEL_SONNET_45"
+      ;;
+    sonnet4)
+      echo "$MODEL_SONNET_4"
+      ;;
+    latest | auto)
+      # Use system default - don't override config
+      echo ""
+      ;;
+    *)
+      echo "$model"
+      ;;
   esac
 }
 
@@ -446,26 +446,26 @@ resolve_model() {
 resolve_model_opencode() {
   local model="$1"
   case "$model" in
-  grok | grokfast | grok-code-fast-1)
-    # Confirmed via opencode models
-    echo "opencode/grok-code"
-    ;;
-  opus | opus4.5 | opus45)
-    # Placeholder - anthropic not available in current setup
-    echo "opencode/gpt-5-nano"
-    ;; # Fallback to available model
-  sonnet | sonnet4.5 | sonnet45)
-    # Placeholder - anthropic not available
-    echo "opencode/gpt-5-nano"
-    ;; # Fallback
-  latest | auto)
-    # Let OpenCode decide its own default if user explicitly asked for auto/latest
-    echo ""
-    ;;
-  *)
-    # Pass through (user provided provider/model already, or an OpenCode alias)
-    echo "$model"
-    ;;
+    grok | grokfast | grok-code-fast-1)
+      # Confirmed via opencode models
+      echo "opencode/grok-code"
+      ;;
+    opus | opus4.5 | opus45)
+      # Placeholder - anthropic not available in current setup
+      echo "opencode/gpt-5-nano"
+      ;; # Fallback to available model
+    sonnet | sonnet4.5 | sonnet45)
+      # Placeholder - anthropic not available
+      echo "opencode/gpt-5-nano"
+      ;; # Fallback
+    latest | auto)
+      # Let OpenCode decide its own default if user explicitly asked for auto/latest
+      echo ""
+      ;;
+    *)
+      # Pass through (user provided provider/model already, or an OpenCode alias)
+      echo "$model"
+      ;;
   esac
 }
 
