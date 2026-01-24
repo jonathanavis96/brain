@@ -616,6 +616,64 @@
 
 ---
 
+## Phase X: Structured Logging (Cortex-readable)
+
+### X.3 Add `:::CACHE_GUARD:::` marker (highest priority)
+
+- [x] **X.3.1** Locate the cache safety guard where pending `[ ]` tasks force BUILD and disable cache (~line 1027 in `workers/ralph/loop.sh`).
+- [x] **X.3.2** Emit marker immediately after the decision is made:
+  - `:::CACHE_GUARD::: iter=<iter> allowed=0 reason=pending_tasks phase=BUILD ts=<epoch_ms>`
+  - `:::CACHE_GUARD::: iter=<iter> allowed=1 reason=no_pending_tasks phase=BUILD ts=<epoch_ms>`
+  - `:::CACHE_GUARD::: iter=<iter> allowed=1 reason=idempotent_check phase=PLAN ts=<epoch_ms>`
+- [x] **X.3.3** Ensure exactly **one** guard marker per cache decision path.
+- [ ] **X.3.4** Add a quick smoke check: run one BUILD iteration with pending tasks and confirm the marker appears with `allowed=0 reason=pending_tasks`.
+
+**Acceptance:** Cortex can always tell *why* caching is disabled/enabled from one line.
+
+### X.4 Add `iter=` and `ts=` fields to existing markers (quick win)
+
+- [ ] **X.4.1** Update `:::CACHE_CONFIG:::` to include `iter=` and `ts=`.
+- [ ] **X.4.2** Update `:::VERIFIER_ENV:::` to include `iter=` and `ts=`.
+
+**Acceptance:** Both markers have consistent fields: `iter=... ts=...`
+
+### X.2 Add `run_tool()` wrapper and TOOL markers (timing unlock)
+
+- [ ] **X.2.1** Implement `run_tool()` in `workers/ralph/loop.sh` that wraps tool invocations and emits:
+  - `:::TOOL_START::: iter=... id=... name=... ts=...`
+  - `:::TOOL_END::: iter=... id=... name=... status=PASS|FAIL duration_ms=... ts=...`
+- [ ] **X.2.2** Route the most important tool calls through `run_tool()` first (verifier checks, linting, git ops).
+- [ ] **X.2.3** Ensure TOOL_END is emitted even on failure (capture exit code first).
+
+**Acceptance:** No "unknown tool" in analysis, per-tool timing available.
+
+### X.1 Iteration + phase markers (lightweight, enables clean breakdowns)
+
+- [ ] **X.1.1** Emit:
+  - `:::ITER_START::: iter=... mode=PLAN|BUILD|VERIFY ts=...`
+  - `:::ITER_END::: iter=... status=PASS|FAIL duration_ms=... ts=...`
+- [ ] **X.1.2** Emit:
+  - `:::PHASE_START::: iter=... name=PLAN|BUILD|VERIFY ts=...`
+  - `:::PHASE_END::: iter=... name=... duration_ms=... ts=...`
+
+**Acceptance:** Cortex can calculate phase timing without guessing.
+
+### X.5 Update analyzer to parse markers into JSON (after markers exist)
+
+- [ ] **X.5.1** Update `rollflow_analyze` to parse `:::` markers.
+- [ ] **X.5.2** Output `artifacts/analysis/iter_###.json` with phase timings, tool timings, cache guard decisions, hits/misses, retries, tokens.
+
+**Acceptance:** Analyzer never prints "unknown tool", JSON is stable across runs.
+
+### X.6 Generate Review Pack from JSON + excerpt
+
+- [ ] **X.6.1** Generate `artifacts/review_packs/iter_###.md` from JSON.
+- [ ] **X.6.2** Attach `iter_###_excerpts.log` filtered to relevant markers + nearby lines.
+
+**Acceptance:** Review Pack includes cache guard status, timings table, top 5 slowest tools.
+
+---
+
 ## Completed Phases
 
 **Phase 11:** ✅ Verifier False Positive Fixes - All regex fixes applied, shellcheck passes
