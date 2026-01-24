@@ -335,3 +335,37 @@ launch_monitors() {
     echo ""
   fi
 }
+
+# Query cache for a previously passed tool call
+# Args: $1 = cache_key
+# Returns: 0 if cache hit (key exists in pass_cache), 1 if cache miss
+lookup_cache_pass() {
+  local cache_key="$1"
+  local cache_db="${CACHE_DB:-artifacts/rollflow_cache/cache.sqlite}"
+
+  # Handle missing or invalid arguments
+  if [[ -z "$cache_key" ]]; then
+    return 1 # No key provided, treat as miss
+  fi
+
+  # Handle missing DB gracefully
+  if [[ ! -f "$cache_db" ]]; then
+    return 1 # No cache DB, treat as miss
+  fi
+
+  # Query the pass_cache table for the cache_key
+  python3 -c "
+import sqlite3
+import sys
+try:
+    conn = sqlite3.connect('$cache_db')
+    cursor = conn.execute('SELECT cache_key FROM pass_cache WHERE cache_key = ?', ('$cache_key',))
+    row = cursor.fetchone()
+    conn.close()
+    sys.exit(0 if row else 1)
+except Exception:
+    sys.exit(1)
+" 2>/dev/null
+
+  return $?
+}
