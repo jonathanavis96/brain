@@ -182,7 +182,7 @@ Phases 0, 2, 3, 4, 5, 6 completed - see `workers/ralph/THUNK.md` for details.
 
 **Goal:** Define internal schema and parsing approach for tool call analysis.
 
-- [ ] **12.2.1** Create project skeleton at `tools/rollflow_analyze/`
+- [x] **12.2.1** Create project skeleton at `tools/rollflow_analyze/`
   - Scaffold already created with stub files (see `tools/rollflow_analyze/`)
   - Verify: `__init__.py`, `cli.py`, `models.py`, `report.py`, `cache_db.py`, `parsers/`
   - **AC:** `python -m tools.rollflow_analyze --help` works
