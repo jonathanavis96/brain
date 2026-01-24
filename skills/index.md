@@ -48,6 +48,12 @@ Catalog of all skill files in the brain system.
 - [research-cheatsheet.md](domains/code-quality/research-cheatsheet.md) - One-page quick reference for research patterns
 - [token-efficiency.md](domains/code-quality/token-efficiency.md) - Token optimization strategies for AI agents
 
+### Frontend
+
+- [README.md](domains/frontend/README.md) - Frontend development overview
+- [react-patterns.md](domains/frontend/react-patterns.md) - React hooks, composition, state management, performance
+- [accessibility-patterns.md](domains/frontend/accessibility-patterns.md) - ARIA, keyboard navigation, screen readers, WCAG compliance
+
 ### Infrastructure
 
 - [deployment-patterns.md](domains/infrastructure/deployment-patterns.md) - Deployment and CI/CD patterns

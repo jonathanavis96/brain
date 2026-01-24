@@ -25,7 +25,7 @@
   - Common pitfalls and solutions
   - **AC:** File exists with 5+ pattern sections
 
-- [ ] **5.1.3** Create `skills/domains/frontend/accessibility-patterns.md`
+- [x] **5.1.3** Create `skills/domains/frontend/accessibility-patterns.md`
   - ARIA labels, keyboard navigation, screen reader support
   - WCAG compliance checklist
   - Testing tools and patterns
