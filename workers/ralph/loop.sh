@@ -272,6 +272,8 @@ Safety Features:
   --cache-skip      Enable cache lookup to skip redundant tool calls (requires RollFlow cache DB)
   --cache-mode <mode> Cache behavior: off (no caching, default), record (run everything, store PASS),
                     use (check cache first, skip on hit, record misses)
+  --cache-scope <scopes> Comma-separated list of cache scopes: verify,read,llm_ro
+                    Default: verify,read (safe for all phases)
   --force-no-cache  Disable cache lookup even if CACHE_SKIP=1 (forces all tools to run)
   --rollback [N]    Undo last N Ralph commits (default: 1). Requires confirmation.
   --resume          Resume from last incomplete iteration (checks for uncommitted changes)
@@ -336,7 +338,8 @@ ROLLBACK_COUNT=1
 RESUME_MODE=false
 NO_MONITORS=false
 CACHE_SKIP="${CACHE_SKIP:-false}"
-CACHE_MODE="${CACHE_MODE:-off}" # off|record|use - controls cache behavior
+CACHE_MODE="${CACHE_MODE:-off}"           # off|record|use - controls cache behavior
+CACHE_SCOPE="${CACHE_SCOPE:-verify,read}" # verify,read,llm_ro - comma-separated list of allowed scopes
 FORCE_NO_CACHE=false
 CONSECUTIVE_VERIFIER_FAILURES=0
 
@@ -447,6 +450,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --cache-mode)
       CACHE_MODE="${2:-}"
+      shift 2
+      ;;
+    --cache-scope)
+      CACHE_SCOPE="${2:-}"
       shift 2
       ;;
     --force-no-cache)
