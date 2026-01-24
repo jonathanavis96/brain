@@ -138,11 +138,11 @@
   - **AC:** Unchanged files skip re-verification
   - **Completed:** 2026-01-24 (THUNK #592)
 
-- [ ] **2.1.2** Add cache invalidation on rule change
+- [x] **2.1.2** Add cache invalidation on rule change
   - Include `rules/AC.rules` hash in cache key
   - Rule change → all checks re-run
   - **AC:** Editing AC.rules invalidates all cached results
-  - **Note:** Partially implemented - verifier.sh includes AC.rules hash in cache key (line in 2.1.1 implementation), but full invalidation testing needed
+  - **Completed:** 2026-01-24 - Verified existing implementation works correctly (verifier.sh line 379-384 computes ac_rules_hash and appends to cache keys, tested with simulated rule change)
 
 **Phase AC:** Verifier runs faster on unchanged files
 
