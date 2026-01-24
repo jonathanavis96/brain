@@ -23,11 +23,14 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import random
 import re
 import subprocess
 import sys
 import time
 from dataclasses import dataclass
+from datetime import timezone
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 # Try requests, fall back to urllib
@@ -55,8 +58,35 @@ DEFAULT_MAX_TOKENS = 16384
 DEFAULT_TEMPERATURE = 0.2
 
 # Rate limits
-MAX_RETRIES = 5
-INITIAL_BACKOFF = 5
+MAX_RETRIES = int(os.getenv("CEREBRAS_MAX_RETRIES", "8"))
+INITIAL_BACKOFF = float(os.getenv("CEREBRAS_BACKOFF_BASE_S", "2.0"))
+MAX_BACKOFF = float(os.getenv("CEREBRAS_BACKOFF_CAP_S", "60.0"))
+MIN_REQUEST_INTERVAL = float(os.getenv("CEREBRAS_MIN_REQUEST_INTERVAL_S", "1.2"))
+
+
+def _parse_retry_after(headers) -> float | None:
+    """Parse Retry-After header (seconds or HTTP-date format)."""
+    ra = headers.get("Retry-After") if headers else None
+    if not ra:
+        return None
+    ra = str(ra).strip()
+    # Try as seconds first
+    try:
+        return max(0.0, float(ra))
+    except ValueError:
+        pass
+    # Try as HTTP-date
+    try:
+        dt = parsedate_to_datetime(ra)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        from datetime import datetime
+
+        now = datetime.now(timezone.utc)
+        return max(0.0, (dt - now).total_seconds())
+    except Exception:
+        return None
+
 
 # Context files that trigger gist-then-prune (paths end with these)
 CONTEXT_FILES = ("AGENTS.md", "NEURONS.md", "THOUGHTS.md")
@@ -585,9 +615,18 @@ class CerebrasClient:
         self.total_tokens = 0
         self.current_turn = 0
         self.current_model = ""
+        self._last_req_ts = 0.0  # For request throttling
+
+    def _throttle(self):
+        """Ensure minimum interval between requests to avoid bursting."""
+        now = time.time()
+        wait = MIN_REQUEST_INTERVAL - (now - self._last_req_ts)
+        if wait > 0:
+            time.sleep(wait)
+        self._last_req_ts = time.time()
 
     def chat(self, messages: list, model: str, tools: list = None) -> dict:
-        """Call Cerebras API with retry."""
+        """Call Cerebras API with retry, throttling, and proper 429 handling."""
         headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
@@ -603,15 +642,33 @@ class CerebrasClient:
 
         backoff = INITIAL_BACKOFF
         for attempt in range(MAX_RETRIES):
+            # Throttle requests to prevent bursting
+            self._throttle()
+
             try:
                 if HAS_REQUESTS:
                     r = requests.post(
                         CEREBRAS_API_URL, headers=headers, json=payload, timeout=120
                     )
                     if r.status_code == 429:
-                        pr(f"  Rate limited, waiting {backoff}s...", S.YEL)
-                        time.sleep(backoff)
-                        backoff = min(backoff * 2, 60)
+                        # Parse Retry-After header if present
+                        retry_after = _parse_retry_after(r.headers)
+                        if retry_after is not None:
+                            sleep_s = retry_after
+                        else:
+                            sleep_s = backoff
+                            # Only increase backoff if server didn't tell us what to do
+                            backoff = min(backoff * 2, MAX_BACKOFF)
+
+                        # Add jitter (0.75x - 1.25x) to prevent thundering herd
+                        sleep_s *= random.uniform(0.75, 1.25)
+                        sleep_s = min(sleep_s, MAX_BACKOFF)
+
+                        pr(
+                            f"  Rate limited (429), attempt {attempt+1}/{MAX_RETRIES}, waiting {sleep_s:.1f}s...",
+                            S.YEL,
+                        )
+                        time.sleep(sleep_s)
                         continue
                     if r.status_code == 422:
                         # 422 = bad request, don't retry - log and fail fast
@@ -663,9 +720,14 @@ class CerebrasClient:
 
             except Exception as e:
                 if attempt < MAX_RETRIES - 1:
-                    pr(f"  Retry {attempt+1}: {e}", S.YEL)
-                    time.sleep(backoff)
-                    backoff = min(backoff * 2, 60)
+                    # Add jitter to retry backoff
+                    sleep_s = backoff * random.uniform(0.75, 1.25)
+                    pr(
+                        f"  Retry {attempt+1}/{MAX_RETRIES}: {e} (waiting {sleep_s:.1f}s)",
+                        S.YEL,
+                    )
+                    time.sleep(sleep_s)
+                    backoff = min(backoff * 2, MAX_BACKOFF)
                 else:
                     raise
 
