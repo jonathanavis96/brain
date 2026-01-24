@@ -341,6 +341,9 @@ NO_MONITORS=false
 CACHE_SKIP="${CACHE_SKIP:-false}"
 CACHE_MODE="${CACHE_MODE:-off}"           # off|record|use - controls cache behavior
 CACHE_SCOPE="${CACHE_SCOPE:-verify,read}" # verify,read,llm_ro - comma-separated list of allowed scopes
+
+# Export cache variables so subprocesses (verifier.sh) inherit them
+export CACHE_MODE CACHE_SCOPE
 FORCE_NO_CACHE=false
 FORCE_FRESH=false # Bypass all caching regardless of CACHE_MODE/SCOPE
 CONSECUTIVE_VERIFIER_FAILURES=0
