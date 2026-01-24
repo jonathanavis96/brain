@@ -547,3 +547,36 @@ log_cache_miss() {
 
   return 0
 }
+
+# =============================================================================
+# File Hashing Utilities
+# =============================================================================
+# Functions for generating content-based hashes for cache key generation.
+
+# Compute SHA256 hash of file contents
+# Args: $1 = file path
+# Returns: Prints 64-char hex hash to stdout, returns 0 on success
+# Example: hash=$(file_content_hash "path/to/file.sh")
+file_content_hash() {
+  local file_path="$1"
+
+  if [[ -z "$file_path" ]]; then
+    echo "ERROR: file_content_hash: file path required" >&2
+    return 1
+  fi
+
+  if [[ ! -f "$file_path" ]]; then
+    echo "ERROR: file_content_hash: file not found: $file_path" >&2
+    return 1
+  fi
+
+  # Use sha256sum (Linux) or shasum (macOS)
+  if command -v sha256sum &>/dev/null; then
+    sha256sum "$file_path" | awk '{print $1}'
+  elif command -v shasum &>/dev/null; then
+    shasum -a 256 "$file_path" | awk '{print $1}'
+  else
+    echo "ERROR: file_content_hash: neither sha256sum nor shasum available" >&2
+    return 1
+  fi
+}
