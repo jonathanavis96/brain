@@ -71,14 +71,14 @@ Key milestones:
   - `tree_hash <dir>` → hash of directory tree state (files + mtimes)
   - **AC:** Function exists, changes when any file in dir changes
 
-- [ ] **1.2.3** Refactor `cache_key()` for verifier tools
+- [x] **1.2.3** Refactor `cache_key()` for verifier tools
   - New signature: `cache_key <tool> <target_file_or_dir>`
   - Key = `tool_name + file_content_hash(target)`
   - **AC:** Same file = same key, regardless of iteration
 
 ### Phase 1.3: Implement CACHE_MODE and CACHE_SCOPE
 
-- [ ] **1.3.1** Add `CACHE_MODE=off|record|use` to loop.sh
+- [x] **1.3.1** Add `CACHE_MODE=off|record|use` to loop.sh
   - `off` = no caching at all (current default)
   - `record` = run everything, store PASS results
   - `use` = check cache first, skip on hit, record misses
