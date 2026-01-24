@@ -1,0 +1,202 @@
+#!/usr/bin/env bash
+# =============================================================================
+# brain-event - Emit provider-neutral event markers to state/events.jsonl
+# =============================================================================
+#
+# Usage:
+#   brain-event --event <type> [--iter N] [--phase PHASE] [--status STATUS] [--msg "..."] [--code N]
+#
+# Arguments:
+#   --event TYPE    Required. One of: iteration_start, iteration_end, phase_start, phase_end, error
+#   --iter N        Optional. Iteration number (integer)
+#   --phase PHASE   Optional. Phase name (e.g., PLAN, BUILD, REFLECT)
+#   --status STATUS Optional. "ok" or "fail" (for *_end events and error)
+#   --msg "..."     Optional. Short message (max 200 chars, for error events)
+#   --code N        Optional. Exit code (for error events)
+#   --workspace DIR Optional. Override workspace path (defaults to repo root)
+#   --runner NAME   Optional. Runner label (e.g., "opencode", "rovodev", or omit)
+#
+# Output:
+#   Appends one JSON line to <repo>/state/events.jsonl
+#   Best-effort: never fails the caller; silently continues on write errors.
+#
+# Example:
+#   brain-event --event iteration_start --iter 1
+#   brain-event --event phase_start --iter 1 --phase BUILD
+#   brain-event --event phase_end --iter 1 --phase BUILD --status ok
+#   brain-event --event error --iter 1 --status fail --code 1 --msg "verifier failed"
+#
+# =============================================================================
+
+set -uo pipefail
+# Note: intentionally NOT using set -e so we can handle errors gracefully
+
+# Find repo root (go up from script location until we find .git or known markers)
+find_repo_root() {
+    local dir
+    dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+    while [[ "$dir" != "/" ]]; do
+        if [[ -d "$dir/.git" ]] || [[ -f "$dir/AGENTS.md" ]]; then
+            echo "$dir"
+            return 0
+        fi
+        dir="$(dirname "$dir")"
+    done
+
+    # Fallback: parent of bin/
+    echo "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+}
+
+# JSON-escape a string (handle quotes, backslashes, newlines)
+json_escape() {
+    local str="$1"
+    # Escape backslashes first, then quotes, then control chars
+    str="${str//\\/\\\\}"
+    str="${str//\"/\\\"}"
+    str="${str//$'\n'/\\n}"
+    str="${str//$'\r'/\\r}"
+    str="${str//$'\t'/\\t}"
+    echo "$str"
+}
+
+# Truncate string to max length
+truncate() {
+    local str="$1"
+    local max="${2:-200}"
+    if [[ ${#str} -gt $max ]]; then
+        echo "${str:0:$((max-3))}..."
+    else
+        echo "$str"
+    fi
+}
+
+# Parse arguments
+EVENT=""
+ITER=""
+PHASE=""
+STATUS=""
+MSG=""
+CODE=""
+WORKSPACE=""
+RUNNER=""
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --event)
+            EVENT="$2"
+            shift 2
+            ;;
+        --iter)
+            ITER="$2"
+            shift 2
+            ;;
+        --phase)
+            PHASE="$2"
+            shift 2
+            ;;
+        --status)
+            STATUS="$2"
+            shift 2
+            ;;
+        --msg)
+            MSG="$2"
+            shift 2
+            ;;
+        --code)
+            CODE="$2"
+            shift 2
+            ;;
+        --workspace)
+            WORKSPACE="$2"
+            shift 2
+            ;;
+        --runner)
+            RUNNER="$2"
+            shift 2
+            ;;
+        *)
+            # Skip unknown args (best-effort)
+            shift
+            ;;
+    esac
+done
+
+# Validate required arg
+if [[ -z "$EVENT" ]]; then
+    # Silent exit - best effort means don't complain
+    [[ "${DEBUG:-}" == "1" ]] && echo "brain-event: missing --event" >&2
+    exit 0
+fi
+
+# Validate event type
+case "$EVENT" in
+    iteration_start|iteration_end|phase_start|phase_end|error)
+        ;;
+    *)
+        [[ "${DEBUG:-}" == "1" ]] && echo "brain-event: unknown event type: $EVENT" >&2
+        exit 0
+        ;;
+esac
+
+# Determine workspace/repo root
+if [[ -z "$WORKSPACE" ]]; then
+    WORKSPACE="$(find_repo_root)"
+fi
+
+# Ensure state directory exists
+STATE_DIR="$WORKSPACE/state"
+EVENTS_FILE="$STATE_DIR/events.jsonl"
+
+if ! mkdir -p "$STATE_DIR" 2>/dev/null; then
+    [[ "${DEBUG:-}" == "1" ]] && echo "brain-event: cannot create $STATE_DIR" >&2
+    exit 0
+fi
+
+# Generate UTC timestamp (ISO8601)
+TS="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+
+# Build JSON object
+JSON="{"
+JSON+="\"ts\":\"$TS\""
+JSON+=",\"event\":\"$EVENT\""
+
+# Add optional fields if present
+if [[ -n "$ITER" ]]; then
+    JSON+=",\"iter\":$ITER"
+fi
+
+if [[ -n "$PHASE" ]]; then
+    JSON+=",\"phase\":\"$(json_escape "$PHASE")\""
+fi
+
+if [[ -n "$STATUS" ]]; then
+    JSON+=",\"status\":\"$(json_escape "$STATUS")\""
+fi
+
+if [[ -n "$MSG" ]]; then
+    MSG_TRUNCATED="$(truncate "$MSG" 200)"
+    JSON+=",\"msg\":\"$(json_escape "$MSG_TRUNCATED")\""
+fi
+
+if [[ -n "$CODE" ]]; then
+    JSON+=",\"code\":$CODE"
+fi
+
+# Always include workspace and pid
+JSON+=",\"workspace\":\"$(json_escape "$WORKSPACE")\""
+JSON+=",\"pid\":$$"
+
+# Add runner if provided
+if [[ -n "$RUNNER" ]]; then
+    JSON+=",\"runner\":\"$(json_escape "$RUNNER")\""
+fi
+
+JSON+="}"
+
+# Append to events file (best-effort)
+if ! echo "$JSON" >> "$EVENTS_FILE" 2>/dev/null; then
+    [[ "${DEBUG:-}" == "1" ]] && echo "brain-event: cannot write to $EVENTS_FILE" >&2
+fi
+
+exit 0
