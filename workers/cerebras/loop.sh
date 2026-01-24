@@ -749,15 +749,9 @@ run_once() {
       echo ""
     fi
 
-    # Inject AGENTS.md (standard Cerebras pattern: PROMPT.md + AGENTS.md)
-    # NEURONS.md and THOUGHTS.md are read via subagent when needed (too large for base context)
-    echo "# AGENTS.md - Operational Guide"
-    echo ""
-    cat "${CEREBRAS}/AGENTS.md"
-    echo ""
-    echo "---"
-    echo ""
-
+    # LAZY LOADING: Don't inject AGENTS.md/NEURONS.md/THOUGHTS.md
+    # Agent reads them via tools when needed, then writes STATE summary
+    # This reduces base prompt from ~6K tokens to ~200 tokens
     cat "$prompt_file"
 
     # Append dry-run instruction if enabled
@@ -765,24 +759,27 @@ run_once() {
       echo ""
       echo "---"
       echo ""
-      echo "# DRY-RUN MODE ACTIVE"
+      echo "# DRY-RUN MODE - TEST TASK"
       echo ""
-      echo "⚠️ **CRITICAL: This is a dry-run. DO NOT commit any changes.**"
+      echo "⚠️ **DO NOT commit any changes.**"
       echo ""
-      echo "Your task:"
-      echo "1. Read IMPLEMENTATION_PLAN.md and identify the first unchecked task"
-      echo "2. Analyze what changes would be needed to implement it"
-      echo "3. Show file diffs or describe modifications you would make"
-      echo "4. Update IMPLEMENTATION_PLAN.md with detailed notes about your findings"
-      echo "5. DO NOT use git commit - stop after analysis"
+      echo "## Your Task"
       echo ""
-      echo "Output format:"
-      echo "- List files that would be created/modified"
-      echo "- Show code snippets or diffs for key changes"
-      echo "- Document any risks or dependencies discovered"
-      echo "- Add findings to IMPLEMENTATION_PLAN.md under 'Discoveries & Notes'"
+      echo "Create a file \`tmp_rovodev_test.md\` with this content:"
       echo ""
-      echo "This is a preview only. No commits will be made."
+      echo '```markdown'
+      echo "# Test File"
+      echo ""
+      echo "Created by Cerebras agent dry-run test."
+      echo "Timestamp: $(date -Iseconds)"
+      echo '```'
+      echo ""
+      echo "## Steps"
+      echo "1. Use write_file to create tmp_rovodev_test.md"
+      echo "2. Use read_file to verify it was created"
+      echo "3. Output :::BUILD_READY:::"
+      echo ""
+      echo "Do NOT use git_commit. This is a test only."
     fi
   } >"$prompt_with_mode"
 
@@ -792,7 +789,7 @@ run_once() {
   if ! python3 "$CEREBRAS/cerebras_agent.py" \
     --prompt "$prompt_with_mode" \
     --model "$RESOLVED_MODEL" \
-    --max-turns 15 \
+    --max-turns 8 \
     --cwd "$ROOT" \
     --output "$log"; then
     echo "❌ Cerebras Agent failed. See: $log"
