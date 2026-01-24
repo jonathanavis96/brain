@@ -748,8 +748,9 @@ run_once() {
     echo ""
 
     # Inject verifier status from previous iteration (if any)
+    # Use machine marker #@VERIFIER: to avoid matching documentation text
     if [[ -n $LAST_VERIFIER_STATUS ]]; then
-      echo "# LAST_VERIFIER_RESULT: $LAST_VERIFIER_STATUS"
+      echo "#@VERIFIER: $LAST_VERIFIER_STATUS"
       if [[ $LAST_VERIFIER_STATUS == "FAIL" ]]; then
         echo "# FAILED_RULES: $LAST_VERIFIER_FAILED_RULES"
         echo "# FAILURE_COUNT: $LAST_VERIFIER_FAIL_COUNT"
