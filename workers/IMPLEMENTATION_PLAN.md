@@ -136,7 +136,7 @@
 
 **Checklist:**
 
-- [ ] Confirm marker lines still being emitted (no accidental removal)
+- [x] Confirm marker lines still being emitted (no accidental removal)
 - [ ] Review top 3 failing tools in latest report; add better error classification
 - [ ] Watch for cache thrash (lots of misses due to unstable keys)
   - Fix by normalizing args + excluding volatile fields from cache_key
