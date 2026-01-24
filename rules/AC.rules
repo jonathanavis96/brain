@@ -314,15 +314,15 @@ expect_stdout=0
 mode=auto
 gate=warn
 desc=current_ralph_tasks.sh matches template
-cmd=diff -q current_ralph_tasks.sh ../../templates/ralph/current_ralph_tasks.sh 2>/dev/null && echo "match" || echo "differ"
-expect_stdout=match
+cmd=diff -q current_ralph_tasks.sh ../../templates/ralph/current_ralph_tasks.sh 2>/dev/null
+expect_exit=0
 
 [Hygiene.TemplateSync.2]
 mode=auto
 gate=warn
 desc=loop.sh core logic matches template (excluding hashes)
-cmd=diff <(grep -v 'sha256\|MODEL_' loop.sh) <(grep -v 'sha256\|MODEL_' ../../templates/ralph/loop.sh) 2>/dev/null && echo "match" || echo "differ"
-expect_stdout=match
+cmd=diff <(grep -v 'sha256\|MODEL_' loop.sh) <(grep -v 'sha256\|MODEL_' ../../templates/ralph/loop.sh) 2>/dev/null
+expect_exit=0
 
 # -----------------------------------------------------------------------------
 # Markdown Validation

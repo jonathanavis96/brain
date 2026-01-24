@@ -5,6 +5,8 @@ import uuid
 from pathlib import Path
 from typing import Iterator
 
+import yaml
+
 from ..models import ToolCall, ToolStatus
 
 # Default patterns for common log formats
@@ -47,14 +49,98 @@ DEFAULT_PATTERNS = {
 class HeuristicParser:
     """Parse logs using regex heuristics when markers aren't available."""
 
-    def __init__(self, patterns: dict | None = None):
+    def __init__(self, patterns: dict | None = None, config_path: Path | None = None):
         """Initialize heuristic parser.
 
         Args:
-            patterns: Custom patterns dict, or None for defaults
+            patterns: Custom patterns dict, or None to load from config/defaults
+            config_path: Path to patterns YAML config file, or None for auto-discovery
         """
-        self.patterns = patterns or DEFAULT_PATTERNS
+        if patterns is not None:
+            # Explicit patterns override everything
+            self.patterns = patterns
+        elif config_path is not None:
+            # Load from explicit config path
+            self.patterns = self._load_config(config_path)
+        else:
+            # Auto-discover config or use defaults
+            self.patterns = self._auto_load_config()
+
         self._compiled = self._compile_patterns()
+
+    def _auto_load_config(self) -> dict:
+        """Auto-discover patterns.yaml in config directory, fallback to defaults."""
+        # Look for patterns.yaml next to patterns.example.yaml
+        config_dir = Path(__file__).parent.parent / "config"
+        config_file = config_dir / "patterns.yaml"
+
+        if config_file.exists():
+            return self._load_config(config_file)
+
+        # Fallback to defaults
+        return DEFAULT_PATTERNS
+
+    def _load_config(self, config_path: Path) -> dict:
+        """Load and validate patterns from YAML config.
+
+        Args:
+            config_path: Path to YAML config file
+
+        Returns:
+            Validated patterns dict
+
+        Raises:
+            ValueError: If config is invalid
+        """
+        try:
+            with open(config_path, "r", encoding="utf-8") as f:
+                config = yaml.safe_load(f)
+        except Exception as e:
+            raise ValueError(f"Failed to load config from {config_path}: {e}") from e
+
+        # Validate schema
+        if not isinstance(config, dict):
+            raise ValueError(f"Config must be a dict, got {type(config).__name__}")
+
+        # Validate expected categories
+        expected_categories = {
+            "tool_start",
+            "tool_pass",
+            "tool_fail",
+            "exit_code",
+            "error_msg",
+        }
+        for category in config:
+            if category not in expected_categories:
+                raise ValueError(
+                    f"Unknown pattern category '{category}'. "
+                    f"Expected one of: {expected_categories}"
+                )
+
+        # Validate each category is a list of strings
+        for category, patterns in config.items():
+            if not isinstance(patterns, list):
+                raise ValueError(
+                    f"Category '{category}' must be a list, got {type(patterns).__name__}"
+                )
+            for i, pattern in enumerate(patterns):
+                if not isinstance(pattern, str):
+                    raise ValueError(
+                        f"Pattern {i} in category '{category}' must be a string, "
+                        f"got {type(pattern).__name__}"
+                    )
+                # Test if pattern compiles
+                try:
+                    re.compile(pattern, re.IGNORECASE)
+                except re.error as e:
+                    raise ValueError(
+                        f"Invalid regex in category '{category}' pattern {i}: {e}"
+                    ) from e
+
+        # Merge with defaults (config overrides defaults for specified categories)
+        result = DEFAULT_PATTERNS.copy()
+        result.update(config)
+        return result
 
     def _compile_patterns(self) -> dict[str, list[re.Pattern]]:
         """Compile regex patterns."""
