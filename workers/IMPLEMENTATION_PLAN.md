@@ -28,7 +28,7 @@
 
 **Goal:** Add structured markers to loop.sh for better observability.
 
-- [ ] **X.3.4** Add smoke check for CACHE_GUARD marker
+- [x] **X.3.4** Add smoke check for CACHE_GUARD marker
 - [ ] **X.4.1** Update `:::CACHE_CONFIG:::` to include `iter=` and `ts=`
 - [ ] **X.4.2** Update `:::VERIFIER_ENV:::` to include `iter=` and `ts=`
 - [ ] **X.2.1** Implement `run_tool()` wrapper with TOOL_START/TOOL_END markers
