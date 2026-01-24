@@ -809,7 +809,7 @@ run_once() {
   if ! python3 "$CEREBRAS/cerebras_agent.py" \
     --prompt "$prompt_with_mode" \
     --model "$RESOLVED_MODEL" \
-    --max-turns 8 \
+    --max-turns "${CEREBRAS_MAX_TURNS:-24}" \
     --cwd "$ROOT" \
     --output "$log"; then
     echo "❌ Cerebras Agent failed. See: $log"
