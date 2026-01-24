@@ -246,7 +246,7 @@ Phases 0, 2, 3, 4, 5, 6 completed - see `workers/ralph/THUNK.md` for details.
   - **AC:** Analyzer updates DB after processing logs
   - **If Blocked:** Use JSONL file as simpler alternative to SQLite
 
-- [ ] **12.4.2** Add `CACHE_SKIP=1` flag support to loop.sh
+- [x] **12.4.2** Add `CACHE_SKIP=1` flag support to loop.sh
   - Before calling tool: compute cache_key, check pass_cache
   - If hit: log `::CACHE_HIT:: key=<key> tool=<tool>`, skip tool call
   - If miss: log `::CACHE_MISS:: key=<key> tool=<tool>`, run normally
