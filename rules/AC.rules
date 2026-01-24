@@ -505,21 +505,21 @@ expect_stdout_regex=(^$|ok|^In thunk_ralph)
 mode=auto
 gate=warn
 desc=NEURONS.md has balanced code fences (equal opens/closes)
-cmd=bash -c 'opens=$(grep -c "^\`\`\`[a-z]" NEURONS.md 2>/dev/null || echo 0); closes=$(grep -c "^\`\`\`$" NEURONS.md 2>/dev/null || echo 0); [[ "$opens" -eq "$closes" ]] && echo "ok ($opens pairs)" || echo "UNBALANCED: $opens opens, $closes closes"'
+cmd=bash -c $'BT=\'```\'; opens=$(grep -cE "^${BT}[a-z]" NEURONS.md 2>/dev/null || echo 0); closes=$(grep -cE "^${BT}$" NEURONS.md 2>/dev/null || echo 0); [[ "$opens" -eq "$closes" ]] && echo "ok ($opens pairs)" || echo "UNBALANCED: $opens opens, $closes closes"'
 expect_stdout_regex=^ok
 
 [Lint.Markdown.AgentsBalancedFences]
 mode=auto
 gate=warn
 desc=AGENTS.md has balanced code fences (equal opens/closes)
-cmd=bash -c 'opens=$(grep -c "^\`\`\`[a-z]" AGENTS.md 2>/dev/null || echo 0); closes=$(grep -c "^\`\`\`$" AGENTS.md 2>/dev/null || echo 0); [[ "$opens" -eq "$closes" ]] && echo "ok ($opens pairs)" || echo "UNBALANCED: $opens opens, $closes closes"'
+cmd=bash -c $'BT=\'```\'; opens=$(grep -cE "^${BT}[a-z]" AGENTS.md 2>/dev/null || echo 0); closes=$(grep -cE "^${BT}$" AGENTS.md 2>/dev/null || echo 0); [[ "$opens" -eq "$closes" ]] && echo "ok ($opens pairs)" || echo "UNBALANCED: $opens opens, $closes closes"'
 expect_stdout_regex=^ok
 
 [Lint.Markdown.ThoughtsBalancedFences]
 mode=auto
 gate=warn
 desc=THOUGHTS.md has balanced code fences (equal opens/closes)
-cmd=bash -c 'opens=$(grep -c "^\`\`\`[a-z]" THOUGHTS.md 2>/dev/null || echo 0); closes=$(grep -c "^\`\`\`$" THOUGHTS.md 2>/dev/null || echo 0); [[ "$opens" -eq "$closes" ]] && echo "ok ($opens pairs)" || echo "UNBALANCED: $opens opens, $closes closes"'
+cmd=bash -c $'BT=\'```\'; opens=$(grep -cE "^${BT}[a-z]" THOUGHTS.md 2>/dev/null || echo 0); closes=$(grep -cE "^${BT}$" THOUGHTS.md 2>/dev/null || echo 0); [[ "$opens" -eq "$closes" ]] && echo "ok ($opens pairs)" || echo "UNBALANCED: $opens opens, $closes closes"'
 expect_stdout_regex=^ok
 
 [Lint.PreCommit.ConfigExists]
