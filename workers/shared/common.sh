@@ -336,12 +336,94 @@ launch_monitors() {
   fi
 }
 
+# Load cache configuration from YAML file
+# Returns: Sets global variables NON_CACHEABLE_TOOLS (array), MAX_CACHE_AGE_HOURS (int)
+load_cache_config() {
+  local config_file="${CACHE_CONFIG:-artifacts/rollflow_cache/config.yml}"
+
+  # Default values
+  NON_CACHEABLE_TOOLS=()
+  MAX_CACHE_AGE_HOURS=168
+
+  # Load config if file exists
+  if [[ -f "$config_file" ]]; then
+    # Parse YAML using Python
+    local config_json
+    config_json=$(python3 -c "
+import yaml
+import json
+import sys
+try:
+    with open('$config_file', 'r') as f:
+        config = yaml.safe_load(f)
+        print(json.dumps(config))
+except Exception as e:
+    print('{}', file=sys.stderr)
+    sys.exit(0)
+" 2>/dev/null)
+
+    # Extract values
+    if [[ -n "$config_json" ]]; then
+      # Get non_cacheable_tools array
+      local tools_json
+      tools_json=$(echo "$config_json" | python3 -c "
+import json
+import sys
+config = json.load(sys.stdin)
+tools = config.get('non_cacheable_tools', [])
+if tools:
+    print(' '.join(tools))
+" 2>/dev/null)
+
+      if [[ -n "$tools_json" ]]; then
+        # shellcheck disable=SC2206
+        NON_CACHEABLE_TOOLS=($tools_json)
+      fi
+
+      # Get max_cache_age_hours
+      local age
+      age=$(echo "$config_json" | python3 -c "
+import json
+import sys
+config = json.load(sys.stdin)
+print(config.get('max_cache_age_hours', 168))
+" 2>/dev/null)
+
+      if [[ -n "$age" ]]; then
+        MAX_CACHE_AGE_HOURS="$age"
+      fi
+    fi
+  fi
+}
+
+# Check if a tool is in the non-cacheable list
+# Args: $1 = tool_name
+# Returns: 0 if non-cacheable, 1 if cacheable
+is_tool_non_cacheable() {
+  local tool_name="$1"
+
+  # Lazy load config on first call
+  if [[ -z "${NON_CACHEABLE_TOOLS+x}" ]]; then
+    load_cache_config
+  fi
+
+  # Check if tool is in non-cacheable list
+  for tool in "${NON_CACHEABLE_TOOLS[@]}"; do
+    if [[ "$tool" == "$tool_name" ]]; then
+      return 0 # Non-cacheable
+    fi
+  done
+
+  return 1 # Cacheable
+}
+
 # Query cache for a previously passed tool call
-# Args: $1 = cache_key, $2 = git_sha (optional, for staleness check)
+# Args: $1 = cache_key, $2 = git_sha (optional, for staleness check), $3 = tool_name (optional, for non-cacheable check)
 # Returns: 0 if cache hit (key exists in pass_cache and not stale), 1 if cache miss or stale
 lookup_cache_pass() {
   local cache_key="$1"
   local current_git_sha="${2:-}"
+  local tool_name="${3:-}"
   local cache_db="${CACHE_DB:-artifacts/rollflow_cache/cache.sqlite}"
 
   # Handle missing or invalid arguments
@@ -349,51 +431,85 @@ lookup_cache_pass() {
     return 1 # No key provided, treat as miss
   fi
 
+  # Check if tool is non-cacheable (from config)
+  if [[ -n "$tool_name" ]] && is_tool_non_cacheable "$tool_name"; then
+    return 1 # Tool is configured as non-cacheable
+  fi
+
   # Handle missing DB gracefully
   if [[ ! -f "$cache_db" ]]; then
     return 1 # No cache DB, treat as miss
   fi
 
+  # Load cache config to get TTL
+  if [[ -z "${MAX_CACHE_AGE_HOURS+x}" ]]; then
+    load_cache_config
+  fi
+
   # Query the pass_cache table for the cache_key
-  # If git_sha is provided, also check for staleness (cached SHA != current SHA)
+  # Check: 1) key exists, 2) git SHA match (if provided), 3) age < TTL
   if [[ -n "$current_git_sha" ]]; then
-    # Staleness check enabled: compare git SHA
+    # Staleness check enabled: compare git SHA and check TTL
     python3 -c "
 import sqlite3
 import sys
 import json
+from datetime import datetime, timedelta
 try:
     conn = sqlite3.connect('$cache_db')
-    cursor = conn.execute('SELECT meta_json FROM pass_cache WHERE cache_key = ?', ('$cache_key',))
+    cursor = conn.execute('SELECT last_pass_ts, meta_json FROM pass_cache WHERE cache_key = ?', ('$cache_key',))
     row = cursor.fetchone()
     conn.close()
 
     if not row:
         sys.exit(1)  # Cache miss
 
+    # Check TTL expiration
+    last_pass_ts = row[0]
+    max_age_hours = $MAX_CACHE_AGE_HOURS
+    cache_time = datetime.fromisoformat(last_pass_ts.replace('Z', '+00:00'))
+    age_hours = (datetime.utcnow() - cache_time.replace(tzinfo=None)).total_seconds() / 3600
+
+    if age_hours > max_age_hours:
+        sys.exit(1)  # Cache expired (too old)
+
     # Extract git_sha from meta_json
-    meta = json.loads(row[0]) if row[0] else {}
+    meta = json.loads(row[1]) if row[1] else {}
     cached_sha = meta.get('git_sha', '')
 
     # If cached SHA differs from current SHA, treat as stale (miss)
     if cached_sha and cached_sha != '$current_git_sha':
-        sys.exit(1)  # Stale cache
+        sys.exit(1)  # Stale cache (SHA mismatch)
 
     sys.exit(0)  # Cache hit
 except Exception:
     sys.exit(1)
 " 2>/dev/null
   else
-    # No staleness check: just verify key exists
+    # No staleness check: just verify key exists and check TTL
     python3 -c "
 import sqlite3
 import sys
+from datetime import datetime
 try:
     conn = sqlite3.connect('$cache_db')
-    cursor = conn.execute('SELECT cache_key FROM pass_cache WHERE cache_key = ?', ('$cache_key',))
+    cursor = conn.execute('SELECT last_pass_ts FROM pass_cache WHERE cache_key = ?', ('$cache_key',))
     row = cursor.fetchone()
     conn.close()
-    sys.exit(0 if row else 1)
+
+    if not row:
+        sys.exit(1)  # Cache miss
+
+    # Check TTL expiration
+    last_pass_ts = row[0]
+    max_age_hours = $MAX_CACHE_AGE_HOURS
+    cache_time = datetime.fromisoformat(last_pass_ts.replace('Z', '+00:00'))
+    age_hours = (datetime.utcnow() - cache_time.replace(tzinfo=None)).total_seconds() / 3600
+
+    if age_hours > max_age_hours:
+        sys.exit(1)  # Cache expired (too old)
+
+    sys.exit(0)  # Cache hit
 except Exception:
     sys.exit(1)
 " 2>/dev/null
