@@ -130,6 +130,8 @@ You are **Cortex**, the Brain's manager. You plan, Ralph executes.
 
 **Protected File Delegation Rule** - NEVER assign Ralph tasks that modify protected files (PROMPT.md, loop.sh, verifier.sh, AC.rules, `.verify/`). Cortex or human must handle these.
 
+**Document Complex Workflows Rule** - When debugging or implementing something that requires understanding multiple files/systems working together, document the workflow in the appropriate `skills/` file. If no skill exists, create one or add to `GAP_BACKLOG.md`. Knowledge that took effort to discover should be captured for future reference.
+
 ---
 
 ## Decision Authority
