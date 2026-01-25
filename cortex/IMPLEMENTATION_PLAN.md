@@ -13,12 +13,12 @@
 
 ## Current Status
 
-**Last Updated:** 2026-01-25 16:15:00  
-**Progress:** Cleaned plan - completed tasks removed. ~26 pending tasks across Phases 10, 9C, 0-Warn, 6, 7.
+**Last Updated:** 2026-01-25 21:05:00  
+**Progress:** Added CR-5 phase for low-priority CodeRabbit fixes. ~30 pending tasks across Phases CR-5, 9C, 0-Warn, 6, 7.
 
 **Active Phases:**
 
-- Phase 10: Plan Auto-Cleanup (6 tasks) - **NEW** automated task archival
+- Phase CR-5: CodeRabbit Low Priority (4 tasks) - remaining PR#5 fixes
 - Phase 9C: Task Optimization (11 tasks) - batching & decomposition
 - Phase 0-Warn: Verifier Warnings (2 tasks) - human intervention required
 - Phase 6: Template Improvements (3 tasks) - language templates
@@ -56,7 +56,6 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
   - **AC:** Snapshot output shows batching hints section when opportunities exist
   - **Detection:** Same error code (MDxxx, SCxxxx), same directory prefix, same file type
 
-- [x] **9C.1.2** Add task complexity tags to PROMPT_REFERENCE.md
   - **Goal:** Document `[S/M/L]` complexity convention for task estimation
   - **AC:** PROMPT_REFERENCE.md has "Task Complexity" section with realistic time estimates (S=2-3min, M=5-10min, L=10-20min)
 
