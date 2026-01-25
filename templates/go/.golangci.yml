@@ -1,0 +1,85 @@
+run:
+  timeout: 5m
+  tests: true
+  modules-download-mode: readonly
+
+linters:
+  enable:
+    - errcheck      # Check for unchecked errors
+    - gosimple      # Suggest code simplifications
+    - govet         # Reports suspicious constructs
+    - ineffassign   # Detects ineffectual assignments
+    - staticcheck   # Advanced static analysis
+    - unused        # Find unused code
+    - gofmt         # Check formatting
+    - goimports     # Check import organization
+    - misspell      # Check for common misspellings
+    - goconst       # Find repeated strings that could be constants
+    - gocyclo       # Check cyclomatic complexity
+    - dupl          # Find duplicate code
+    - gosec         # Security issues
+    - unconvert     # Unnecessary type conversions
+    - unparam       # Unused function parameters
+    - stylecheck    # Replacement for golint
+
+  disable:
+    - deadcode      # Deprecated (covered by unused)
+    - varcheck      # Deprecated (covered by unused)
+    - structcheck   # Deprecated (covered by unused)
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+
+  govet:
+    enable-all: true
+    disable:
+      - shadow
+
+  gocyclo:
+    min-complexity: 15
+
+  dupl:
+    threshold: 100
+
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+
+  misspell:
+    locale: US
+
+  unparam:
+    check-exported: false
+
+  unused:
+    check-exported: false
+
+  staticcheck:
+    checks: ["all"]
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+  # Exclude some linters from running on tests files
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - errcheck
+        - dupl
+        - gosec
+        - goconst
+
+    # Exclude known issues in legacy code or third-party code
+    - path: vendor/
+      linters:
+        - all
+
+output:
+  format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true

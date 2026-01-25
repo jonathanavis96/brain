@@ -107,6 +107,35 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
     - [Cleanup Patterns](domains/languages/shell/cleanup-patterns.md) - Traps, temp files, state restoration
     - [Common Pitfalls](domains/languages/shell/common-pitfalls.md) - TTY guards, magic numbers, DRY
     - [Validation Patterns](domains/languages/shell/validation-patterns.md) - Shell project validation (syntax, shellcheck, permissions, security)
+  - **[Marketing](domains/marketing/README.md)** - Marketing skills for CRO, SEO, content, strategy, and growth
+    - **CRO (Conversion Rate Optimization)**
+      - [Page CRO](domains/marketing/cro/page-cro.md) - Optimize marketing pages for conversions
+      - [Form CRO](domains/marketing/cro/form-cro.md) - Optimize forms for completion rates
+      - [Popup CRO](domains/marketing/cro/popup-cro.md) - Optimize popups and modals
+      - [Signup Flow CRO](domains/marketing/cro/signup-flow-cro.md) - Optimize signup/registration flows
+      - [Onboarding CRO](domains/marketing/cro/onboarding-cro.md) - Optimize post-signup activation
+      - [Paywall Upgrade CRO](domains/marketing/cro/paywall-upgrade-cro.md) - Optimize upgrade/paywall conversions
+      - [A/B Test Setup](domains/marketing/cro/ab-test-setup.md) - Set up and analyze A/B tests
+    - **SEO**
+      - [SEO Audit](domains/marketing/seo/seo-audit.md) - Audit and diagnose SEO issues
+      - [Programmatic SEO](domains/marketing/seo/programmatic-seo.md) - Build pages at scale for keywords
+      - [Schema Markup](domains/marketing/seo/schema-markup.md) - Add structured data markup
+    - **Content**
+      - [Copywriting](domains/marketing/content/copywriting.md) - Write marketing copy for pages
+      - [Copy Editing](domains/marketing/content/copy-editing.md) - Edit and improve existing copy
+      - [Email Sequence](domains/marketing/content/email-sequence.md) - Write email marketing sequences
+      - [Social Content](domains/marketing/content/social-content.md) - Create social media content
+    - **Strategy**
+      - [Pricing Strategy](domains/marketing/strategy/pricing-strategy.md) - Design pricing models and pages
+      - [Launch Strategy](domains/marketing/strategy/launch-strategy.md) - Plan product launches
+      - [Marketing Ideas](domains/marketing/strategy/marketing-ideas.md) - Generate marketing ideas
+      - [Marketing Psychology](domains/marketing/strategy/marketing-psychology.md) - Apply psychology to marketing
+      - [Competitor Alternatives](domains/marketing/strategy/competitor-alternatives.md) - Analyze competitors and positioning
+    - **Growth**
+      - [Free Tool Strategy](domains/marketing/growth/free-tool-strategy.md) - Build free tools for lead gen
+      - [Referral Program](domains/marketing/growth/referral-program.md) - Design referral programs
+      - [Paid Ads](domains/marketing/growth/paid-ads.md) - Run paid advertising campaigns
+      - [Analytics Tracking](domains/marketing/growth/analytics-tracking.md) - Set up analytics and tracking
   - **[Website Development](domains/websites/README.md)** - Website development overview
     - **Architecture**
       - [Section Composer](domains/websites/architecture/section-composer.md) - Section-based page composition

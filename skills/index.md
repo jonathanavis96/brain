@@ -110,6 +110,48 @@ Catalog of all skill files in the brain system.
 - debug-ralph-stuck.md - Troubleshoot Ralph loop issues
 - investigate-test-failures.md - Systematic test failure resolution
 
+### Marketing
+
+- [README.md](domains/marketing/README.md) - Marketing skills overview
+
+#### CRO (Conversion Rate Optimization)
+
+- [page-cro.md](domains/marketing/cro/page-cro.md) - Optimize marketing pages for conversions
+- [form-cro.md](domains/marketing/cro/form-cro.md) - Optimize forms for completion rates
+- [popup-cro.md](domains/marketing/cro/popup-cro.md) - Optimize popups and modals
+- [signup-flow-cro.md](domains/marketing/cro/signup-flow-cro.md) - Optimize signup/registration flows
+- [onboarding-cro.md](domains/marketing/cro/onboarding-cro.md) - Optimize post-signup activation
+- [paywall-upgrade-cro.md](domains/marketing/cro/paywall-upgrade-cro.md) - Optimize upgrade/paywall conversions
+- [ab-test-setup.md](domains/marketing/cro/ab-test-setup.md) - Set up and analyze A/B tests
+
+#### SEO
+
+- [seo-audit.md](domains/marketing/seo/seo-audit.md) - Audit and diagnose SEO issues
+- [programmatic-seo.md](domains/marketing/seo/programmatic-seo.md) - Build pages at scale for keywords
+- [schema-markup.md](domains/marketing/seo/schema-markup.md) - Add structured data markup
+
+#### Content
+
+- [copywriting.md](domains/marketing/content/copywriting.md) - Write marketing copy for pages
+- [copy-editing.md](domains/marketing/content/copy-editing.md) - Edit and improve existing copy
+- [email-sequence.md](domains/marketing/content/email-sequence.md) - Write email marketing sequences
+- [social-content.md](domains/marketing/content/social-content.md) - Create social media content
+
+#### Strategy
+
+- [pricing-strategy.md](domains/marketing/strategy/pricing-strategy.md) - Design pricing models and pages
+- [launch-strategy.md](domains/marketing/strategy/launch-strategy.md) - Plan product launches
+- [marketing-ideas.md](domains/marketing/strategy/marketing-ideas.md) - Generate marketing ideas
+- [marketing-psychology.md](domains/marketing/strategy/marketing-psychology.md) - Apply psychology to marketing
+- [competitor-alternatives.md](domains/marketing/strategy/competitor-alternatives.md) - Analyze competitors and positioning
+
+#### Growth
+
+- [free-tool-strategy.md](domains/marketing/growth/free-tool-strategy.md) - Build free tools for lead gen
+- [referral-program.md](domains/marketing/growth/referral-program.md) - Design referral programs
+- [paid-ads.md](domains/marketing/growth/paid-ads.md) - Run paid advertising campaigns
+- [analytics-tracking.md](domains/marketing/growth/analytics-tracking.md) - Set up analytics and tracking
+
 ### Websites
 
 - [README.md](domains/websites/README.md) - Website development overview
