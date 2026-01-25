@@ -51,3 +51,8 @@ Marketing skills for conversion optimization, SEO, content creation, strategy, a
 | [referral-program](growth/referral-program.md) | Design referral programs |
 | [paid-ads](growth/paid-ads.md) | Run paid advertising campaigns |
 | [analytics-tracking](growth/analytics-tracking.md) | Set up analytics and tracking |
+
+## Related
+
+- **[Website Development](../websites/README.md)** - Website-specific skills (design, build, QA)
+- **[Frontend Patterns](../frontend/README.md)** - React, accessibility, component patterns

@@ -92,3 +92,17 @@ BUILD mode:
 - `templates/websites/` - Starter templates for common site types
 - `skills/domains/backend/api-design-patterns.md` - If site needs API
 - `skills/domains/infrastructure/deployment-patterns.md` - General deployment patterns
+
+### Marketing Skills
+
+For conversion optimization and marketing-specific tasks, see `skills/domains/marketing/`:
+
+| Need | Marketing Skill |
+|------|-----------------|
+| Page conversion optimization | `marketing/cro/page-cro.md` |
+| A/B testing | `marketing/cro/ab-test-setup.md` |
+| SEO audit | `marketing/seo/seo-audit.md` |
+| Full copywriting (beyond hero) | `marketing/content/copywriting.md` |
+| Email sequences | `marketing/content/email-sequence.md` |
+| Pricing page strategy | `marketing/strategy/pricing-strategy.md` |
+| Launch planning | `marketing/strategy/launch-strategy.md` |

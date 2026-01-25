@@ -302,3 +302,6 @@ Sitemap: https://www.jacquihowles.com/sitemap.xml
 - `performance.md` - Page speed (ranking factor)
 - `qa/accessibility.md` - Overlaps with SEO best practices
 - `launch/deployment.md` - SSL, redirects, canonical
+- `../../marketing/seo/seo-audit.md` - Full SEO audit checklist
+- `../../marketing/seo/schema-markup.md` - Advanced structured data
+- `../../marketing/seo/programmatic-seo.md` - Build pages at scale for keywords
