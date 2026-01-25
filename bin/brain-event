@@ -84,44 +84,60 @@ RUNNER=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --event)
-      EVENT="${2-}"
       shift
-      [[ -n "${1-}" ]] && shift
+      if [[ -n "${1-}" && ! "$1" =~ ^-- ]]; then
+        EVENT="$1"
+        shift
+      fi
       ;;
     --iter)
-      ITER="${2-}"
       shift
-      [[ -n "${1-}" ]] && shift
+      if [[ -n "${1-}" && ! "$1" =~ ^-- ]]; then
+        ITER="$1"
+        shift
+      fi
       ;;
     --phase)
-      PHASE="${2-}"
       shift
-      [[ -n "${1-}" ]] && shift
+      if [[ -n "${1-}" && ! "$1" =~ ^-- ]]; then
+        PHASE="$1"
+        shift
+      fi
       ;;
     --status)
-      STATUS="${2-}"
       shift
-      [[ -n "${1-}" ]] && shift
+      if [[ -n "${1-}" && ! "$1" =~ ^-- ]]; then
+        STATUS="$1"
+        shift
+      fi
       ;;
     --msg)
-      MSG="${2-}"
       shift
-      [[ -n "${1-}" ]] && shift
+      if [[ -n "${1-}" && ! "$1" =~ ^-- ]]; then
+        MSG="$1"
+        shift
+      fi
       ;;
     --code)
-      CODE="${2-}"
       shift
-      [[ -n "${1-}" ]] && shift
+      if [[ -n "${1-}" && ! "$1" =~ ^-- ]]; then
+        CODE="$1"
+        shift
+      fi
       ;;
     --workspace)
-      WORKSPACE="${2-}"
       shift
-      [[ -n "${1-}" ]] && shift
+      if [[ -n "${1-}" && ! "$1" =~ ^-- ]]; then
+        WORKSPACE="$1"
+        shift
+      fi
       ;;
     --runner)
-      RUNNER="${2-}"
       shift
-      [[ -n "${1-}" ]] && shift
+      if [[ -n "${1-}" && ! "$1" =~ ^-- ]]; then
+        RUNNER="$1"
+        shift
+      fi
       ;;
     *)
       # Skip unknown args (best-effort)
