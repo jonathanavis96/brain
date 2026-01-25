@@ -26,13 +26,14 @@ If the `# VERIFIER STATUS` section shows `[WARN]` lines:
 3. **LIST** each as: `- [ ] WARN.<RULE_ID>.<filename> - <description>` (include filename to prevent duplicate IDs)
 4. **NEVER use numbered lists (1. 2. 3.)** - ALWAYS use checkbox format `- [ ]`
 5. **IGNORE** warnings marked `(manual review)` - these require human testing, not code fixes
-6. **FIX** warnings marked `(auto check failed but warn gate)` - these are real issues
-7. **NEVER** mark `[x]` until verifier confirms fix (re-run shows `[PASS]`)
-8. **NEVER** add "FALSE POSITIVE" notes - request waiver instead via `../.verify/request_waiver.sh`
-9. **Waivers are one-time-use** - After verifier uses a waiver, it's moved to `.used` and deleted. Only request waivers for issues you genuinely cannot fix.
-10. In BUILD mode: Fix ONE warning, mark `[?]`, commit. Verifier determines `[x]`.
-11. **BATCHING:** When multiple warnings are in the SAME FILE, fix them ALL in one iteration (e.g., 3 shellcheck warnings in loop.sh = 1 task).
-12. **CROSS-FILE BATCHING:** When the SAME fix type applies to multiple files (e.g., SC2162 "add -r to read" in 5 files), fix ALL files in ONE iteration. Group by fix type, not by file.
+6. **IGNORE** warnings prefixed with `Cortex.*` - these are Cortex's responsibility, not Ralph's
+7. **FIX** warnings marked `(auto check failed but warn gate)` - these are real issues (unless ignored per rules 5-6)
+8. **NEVER** mark `[x]` until verifier confirms fix (re-run shows `[PASS]`)
+9. **NEVER** add "FALSE POSITIVE" notes - request waiver instead via `../.verify/request_waiver.sh`
+10. **Waivers are one-time-use** - After verifier uses a waiver, it's moved to `.used` and deleted. Only request waivers for issues you genuinely cannot fix.
+11. In BUILD mode: Fix ONE warning, mark `[?]`, commit. Verifier determines `[x]`.
+12. **BATCHING:** When multiple warnings are in the SAME FILE, fix them ALL in one iteration (e.g., 3 shellcheck warnings in loop.sh = 1 task).
+13. **CROSS-FILE BATCHING:** When the SAME fix type applies to multiple files (e.g., SC2162 "add -r to read" in 5 files), fix ALL files in ONE iteration. Group by fix type, not by file.
 
 Common failure types:
 
