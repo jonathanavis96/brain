@@ -40,7 +40,7 @@
   - **Fix:** Update README to match actual config
   - **AC:** Documented shfmt flags match `.pre-commit-config.yaml`
 
-- [ ] **CR-6.5** Fix code-review-patterns.md example bugs (M11)
+- [x] **CR-6.5** Fix code-review-patterns.md example bugs (M11)
   - **File:** `skills/domains/code-quality/code-review-patterns.md` line 286
   - **Issue:** Code example has bugs or incorrect patterns
   - **Fix:** Review and correct the code example
