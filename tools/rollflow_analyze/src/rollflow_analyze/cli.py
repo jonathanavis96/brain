@@ -46,6 +46,11 @@ def create_parser() -> argparse.ArgumentParser:
         help="Also output a markdown summary alongside JSON",
     )
     parser.add_argument(
+        "--review-pack",
+        action="store_true",
+        help="Generate human-readable review pack in artifacts/review_packs/",
+    )
+    parser.add_argument(
         "--verbose",
         "-v",
         action="store_true",
@@ -64,6 +69,7 @@ def main(argv: list[str] | None = None) -> int:
     from .parsers.marker_parser import MarkerParser
     from .parsers.heuristic_parser import HeuristicParser
     from .report import build_report, write_json_report, write_markdown_summary
+    from .review_pack import write_review_pack
     from .models import ToolStatus
 
     parser = create_parser()
@@ -171,6 +177,28 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"Markdown summary written to: {md_path}")
         except Exception as e:
             print(f"Error writing markdown summary: {e}", file=sys.stderr)
+            return 1
+
+    # Step 5b: Optionally generate review pack
+    if args.review_pack:
+        # Extract iteration number from JSON output path (e.g., iter_001.json -> 001)
+        iter_match = args.out.stem
+        if iter_match.startswith("iter_"):
+            iter_num = iter_match.replace("iter_", "")
+        else:
+            iter_num = "latest"
+
+        # Derive review pack path relative to JSON output (same parent structure)
+        # artifacts/analysis/iter_001.json -> artifacts/review_packs/iter_001.md
+        review_pack_path = (
+            args.out.parent.parent / "review_packs" / f"iter_{iter_num}.md"
+        )
+        try:
+            write_review_pack(report, review_pack_path)
+            if args.verbose:
+                print(f"Review pack written to: {review_pack_path}")
+        except Exception as e:
+            print(f"Error writing review pack: {e}", file=sys.stderr)
             return 1
 
     # Step 6: Update cache DB with PASS/FAIL results
