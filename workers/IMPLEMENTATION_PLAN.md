@@ -36,7 +36,7 @@
 
 **Goal:** Fix broken links, dates, and markdown formatting issues.
 
-- [ ] **CR-2.1** Fix broken TypeScript README links
+- [x] **CR-2.1** Fix broken TypeScript README links
   - **Files:** `skills/domains/frontend/README.md`, `skills/domains/languages/javascript/README.md`
   - **Issue:** Links to `../languages/typescript/README.md` may be broken
   - **Fix:** Verify links work or update paths
