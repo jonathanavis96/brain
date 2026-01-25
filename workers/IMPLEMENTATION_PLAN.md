@@ -22,7 +22,7 @@
 - [x] **X.2.1** Implement `run_tool()` wrapper with TOOL_START/TOOL_END markers
 - [x] **X.2.2** Route important tool calls through `run_tool()`
 - [x] **X.2.3** Ensure TOOL_END emitted on failure
-- [ ] **X.1.1** Emit ITER_START/ITER_END markers
+- [x] **X.1.1** Emit ITER_START/ITER_END markers
 - [ ] **X.1.2** Emit PHASE_START/PHASE_END markers
 - [ ] **X.5.1** Update `rollflow_analyze` to parse `:::` markers
 - [ ] **X.5.2** Output `artifacts/analysis/iter_###.json`
