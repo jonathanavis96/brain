@@ -186,7 +186,7 @@
 
 ### Phase 7.1: Error Pattern Extraction
 
-- [ ] **7.1.1** Create `tools/gap_radar/extract_errors.sh`
+- [x] **7.1.1** Create `tools/gap_radar/extract_errors.sh`
   - Parse verifier output (`.verify/latest.txt`) for `[FAIL]` and `[WARN]` lines
   - Extract error codes (SC2155, MD040, etc.) and file paths
   - Output JSON: `{"error_code": "SC2155", "file": "loop.sh", "line": 42, "message": "..."}`
