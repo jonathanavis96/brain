@@ -1155,6 +1155,22 @@ run_once() {
       echo ""
     fi
 
+    # Inject remaining markdown lint errors (PLAN mode only)
+    # PLAN Ralph should see these so he can add tasks to fix them
+    if [[ "$phase" == "plan" ]] && [[ -n "${MARKDOWN_LINT_ERRORS:-}" ]]; then
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo "# MARKDOWN LINT ERRORS (add tasks to IMPLEMENTATION_PLAN.md)"
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo "#"
+      echo "# The following markdown errors could NOT be auto-fixed."
+      echo "# Add tasks to IMPLEMENTATION_PLAN.md to fix these issues."
+      echo "#"
+      echo "$MARKDOWN_LINT_ERRORS"
+      echo ""
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo ""
+    fi
+
     # Inject AGENTS.md (standard Ralph pattern: PROMPT.md + AGENTS.md)
     # NEURONS.md and THOUGHTS.md are read via subagent when needed (too large for base context)
     echo "# AGENTS.md - Operational Guide"
@@ -1809,6 +1825,21 @@ else
         cp "$ROOT/workers/IMPLEMENTATION_PLAN.md" "$PLAN_SNAPSHOT"
       fi
 
+      # Capture remaining markdown lint errors for PLAN phase
+      # PLAN Ralph should see these so he can add tasks to fix them
+      MARKDOWN_LINT_ERRORS=""
+      if command -v markdownlint &>/dev/null; then
+        echo "Checking for markdown lint errors..."
+        lint_output=$(markdownlint "$ROOT" 2>&1 | grep -E "error MD" | head -40) || true
+        if [[ -n "$lint_output" ]]; then
+          MARKDOWN_LINT_ERRORS="$lint_output"
+          echo "Found $(echo "$lint_output" | wc -l) markdown lint errors for PLAN review"
+        else
+          echo "No markdown lint errors found"
+        fi
+        unset lint_output
+      fi
+
       emit_event --event phase_start --iter "$i" --phase "plan"
       # Emit PHASE_START marker for rollflow_analyze (task X.1.2)
       phase_start_ts="$(($(date +%s%N) / 1000000))"
@@ -1830,6 +1861,7 @@ else
       echo "Running auto-fix for lint issues..."
       autofix_git_sha="$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')"
 
+      # Run fix-markdown to auto-fix what it can (BUILD phase only)
       if [[ -f "$RALPH/fix-markdown.sh" ]]; then
         fix_md_id="$(tool_call_id)"
         fix_md_key="fix-markdown|${autofix_git_sha}"
