@@ -10,6 +10,22 @@
 
 ---
 
+## Table of Contents
+
+- [What is this?](#what-is-this-plain-english)
+- [How it Works](#how-it-works)
+- [Quick Start Guide](#quick-start-guide)
+  - [Bootstrap a New Project](#-i-want-to-bootstrap-a-new-project)
+  - [Use as Skills Library](#-i-want-to-use-brain-as-a-skills-library)
+  - [Run Self-Improvement Loop](#-i-want-to-run-brains-self-improvement-loop)
+- [Repository Structure](#repository-structure)
+- [The Workers](#the-workers)
+- [Skills Library](#skills-library)
+- [Key Features](#key-features)
+- [Contributing](#contributing)
+
+---
+
 ## What is this? (Plain English)
 
 Imagine you have an AI coding assistant. Every time you start a new project, it starts from scratch - no memory of what worked before, no knowledge of your patterns, no reusable templates.
@@ -290,6 +306,22 @@ EOF
 # 2. Update the index
 # Edit skills/index.md to include the new skill
 ```
+
+---
+
+## Contributing to Brain
+
+Want to help improve the Brain? We welcome contributions!
+
+**→ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on:**
+
+- Adding new skills and patterns
+- Improving documentation
+- Fixing bugs and issues
+- Code quality standards
+- The pull request process
+
+All contributors should read [AGENTS.md](AGENTS.md) to understand how agents work with this repository.
 
 ---
 
