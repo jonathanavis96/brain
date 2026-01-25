@@ -230,7 +230,7 @@
   - Output gap entries in correct markdown format
   - **AC:** Suggested gaps match GAP_BACKLOG format
 
-- [ ] **7.3.2** Add `--dry-run` and `--auto-append` modes
+- [x] **7.3.2** Add `--dry-run` and `--auto-append` modes
   - `--dry-run`: Print suggestions without modifying files
   - `--auto-append`: Append to GAP_BACKLOG.md with timestamp
   - **AC:** Both modes work, auto-append preserves file structure
