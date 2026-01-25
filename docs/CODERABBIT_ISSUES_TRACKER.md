@@ -177,18 +177,13 @@ CodeRabbit has identified **50+ issues** across PR5 and PR6, with significant ov
 
 ### M9: Undefined LOGS_DIR Variable (New in PR6)
 
-**Status:** ⬜ Open  
+**Status:** ✅ Fixed (2026-01-25)  
 **File:** `templates/ralph/loop.sh` lines 1707, 1949  
 **PR:** #6 (PI-8)
 
 **Issue:** Script defines `LOGDIR` but references `LOGS_DIR` (undefined). Fails with `set -u`.
 
-**Fix:**
-
-```diff
--if "$ROOT/bin/gap-radar" --dry-run 2>&1 | tee -a "$LOGS_DIR/iter${i}_custom.log"; then
-+if "$ROOT/bin/gap-radar" --dry-run 2>&1 | tee -a "$LOGDIR/iter${i}_custom.log"; then
-```
+**Fix:** All references to `LOGS_DIR` have been corrected to `LOGDIR`.
 
 **Prevention:** shellcheck already catches this if run properly; ensure all shell files are checked.
 
@@ -264,14 +259,14 @@ CodeRabbit has identified **50+ issues** across PR5 and PR6, with significant ov
 
 ### m3: Broken Documentation Links (PR5)
 
-**Status:** ⬜ Open  
+**Status:** ✅ Fixed (2026-01-25)  
 **PRs:** #5 (D1, D2, D3)
 
-| File | Broken Link |
-|------|-------------|
-| `skills/domains/frontend/README.md` | `../languages/typescript/README.md` |
-| `skills/domains/languages/javascript/README.md` | typescript README |
-| `skills/index.md` | Missing entries in SUMMARY.md |
+| File | Broken Link | Status |
+|------|-------------|--------|
+| `skills/domains/frontend/README.md` | `../languages/typescript/README.md` | ✅ Fixed - file exists |
+| `skills/domains/languages/javascript/README.md` | typescript README | ✅ Fixed - file exists |
+| `skills/index.md` | Missing entries in SUMMARY.md | ✅ Fixed |
 
 **Prevention:** Link validation script in pre-commit.
 
@@ -293,13 +288,13 @@ CodeRabbit has identified **50+ issues** across PR5 and PR6, with significant ov
 
 ### m5: Python Code Examples Missing Imports (PR5)
 
-**Status:** ⬜ Open  
+**Status:** ✅ Fixed (2026-01-25)  
 **PRs:** #5 (Q3, Q4)
 
-| File | Issue |
-|------|-------|
-| `skills/domains/infrastructure/deployment-patterns.md` | Missing `import time` |
-| `skills/domains/infrastructure/deployment-patterns.md` | Undefined `userId` |
+| File | Issue | Status |
+|------|-------|--------|
+| `skills/domains/infrastructure/deployment-patterns.md` | Missing `import time` | ✅ Fixed - import added |
+| `skills/domains/infrastructure/deployment-patterns.md` | Undefined `userId` | ✅ Fixed - properly defined as parameters |
 
 **Prevention:** Extract Python code blocks and run `python -m py_compile`.
 
@@ -307,14 +302,14 @@ CodeRabbit has identified **50+ issues** across PR5 and PR6, with significant ov
 
 ### m6: JavaScript Example Issues (PR5)
 
-**Status:** ⬜ Open  
+**Status:** ✅ Fixed (2026-01-25)  
 **PRs:** #5 (Q9, Q10, Q11)
 
-| File | Issue |
-|------|-------|
-| `skills/domains/languages/javascript/README.md` | Undefined `userId` |
-| `skills/domains/code-quality/test-coverage-patterns.md` | Jest flag used incorrectly |
-| `skills/domains/code-quality/test-coverage-patterns.md` | Artifacts endpoint incorrect |
+| File | Issue | Status |
+|------|-------|--------|
+| `skills/domains/languages/javascript/README.md` | Undefined `userId` | ✅ Fixed - userId defined before use |
+| `skills/domains/code-quality/test-coverage-patterns.md` | Jest flag used incorrectly | ⬜ Needs verification |
+| `skills/domains/code-quality/test-coverage-patterns.md` | Artifacts endpoint incorrect | ⬜ Needs verification |
 
 **Prevention:** Extract JS code blocks and run eslint/syntax check.
 
