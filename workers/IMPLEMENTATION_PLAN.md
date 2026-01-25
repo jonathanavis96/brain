@@ -6,6 +6,89 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
+## Phase 0-Warn: Verifier Warnings
+
+**Goal:** Resolve verifier warnings from latest run.
+
+**Status:**
+
+
+## Phase 0: Structured Logging (Cortex-readable)
+
+**Goal:** Add structured markers to loop.sh for better observability.  
+**Status:** X.3.4, X.4.1 complete (see THUNK.md)
+
+- [ ] **X.4.2** Update `:::VERIFIER_ENV:::` to include `iter=` and `ts=`
+- [ ] **X.2.1** Implement `run_tool()` wrapper with TOOL_START/TOOL_END markers
+- [ ] **X.2.2** Route important tool calls through `run_tool()`
+- [ ] **X.2.3** Ensure TOOL_END emitted on failure
+- [ ] **X.1.1** Emit ITER_START/ITER_END markers
+- [ ] **X.1.2** Emit PHASE_START/PHASE_END markers
+- [ ] **X.5.1** Update `rollflow_analyze` to parse `:::` markers
+- [ ] **X.5.2** Output `artifacts/analysis/iter_###.json`
+- [ ] **X.6.1** Generate `artifacts/review_packs/iter_###.md` from JSON
+- [ ] **X.6.2** Attach filtered log excerpts
+
+## Phase 4: Shared Cache Library + Cortex Support (Safety Net)
+
+**Goal:** Extract caching into shared infrastructure for waste-prevention + reliability across all runners.
+
+**Rationale:** Caching won't save huge tokens for "new thinking" work, but prevents waste from:
+
+- Reruns after crashes / network / rate-limit issues
+- Accidental double-runs
+- Retries where input didn't change
+- Repeated setup/analysis steps
+
+### Phase 4.1: Extract Cache Functions
+
+- [ ] **4.1.1** Create `workers/shared/cache.sh` with extracted functions
+  - Move from loop.sh: cache key generation, lookup/store, log helpers
+  - Export interface: `cache_should_use`, `cache_make_key`, `cache_try_load`, `cache_store`
+  - Include env parsing for `CACHE_MODE`, `CACHE_SCOPE`, `--force-fresh`
+  - **AC:** File exists, functions are callable, shellcheck passes
+
+### Phase 4.2: Refactor loop.sh to Use Shared Library
+
+- [ ] **4.2.1** Update `workers/ralph/loop.sh` to source shared cache library
+  - Replace inline cache logic with calls to `workers/shared/cache.sh`
+  - Keep exact semantics: `CACHE_MODE`, `CACHE_SCOPE`, BUILD/PLAN blocking
+  - **AC:** Before/after run shows identical cache hits/misses
+
+- [ ] **4.2.2** Update `workers/cerebras/loop.sh` to source shared cache library
+  - Same refactor as Ralph
+  - **AC:** Cerebras caching unchanged behaviorally
+
+### Phase 4.3: Add Cortex Caching
+
+- [ ] **4.3.1** Update `cortex/one-shot.sh` to source shared cache library
+  - Add `source workers/shared/cache.sh`
+  - Set `AGENT_NAME=cortex` explicitly
+  - Wrap `acli rovodev run` call with cache check/store
+  - **AC:** Same one-shot twice with no repo changes → Run 1: miss+store, Run 2: hit+skip
+
+### Phase 4.4: Fix Agent Isolation
+
+- [ ] **4.4.1** Replace RUNNER dependency with AGENT_NAME in cache keys
+  - Cache key "agent" field uses `AGENT_NAME` not `RUNNER`
+  - Fall back sanely if `AGENT_NAME` missing (log warning)
+  - **AC:** Ralph/Cortex/Cerebras with identical prompts don't share cache entries
+
+### Phase 4.5: Smoke Test
+
+- [ ] **4.5.1** Create `scripts/test_cache_smoke.sh` for cache correctness
+  - Test: same prompt + git state → cache hit on 2nd run
+  - Test: change git_sha → cache miss
+  - Test: `--force-fresh` → bypass even if entry exists
+  - Test: `CACHE_SCOPE=llm_ro` blocked during BUILD/PLAN
+  - **AC:** One command verifies caching works for loop.sh and one-shot.sh
+
+## Phase 5: Skills Knowledge Base Expansion
+
+**Goal:** Expand brain skills to cover more domains and improve existing documentation.
+
+**Priority:** Medium - Enhances agent capabilities and reduces knowledge gaps.
+
 ## Phase 5: CodeRabbit PR #5 Fixes (Remaining)
 
 **Goal:** Fix remaining issues from CodeRabbit PR #5.  
@@ -14,7 +97,7 @@
 
 ### Phase 5.4: Code Example Fixes (Ralph)
 
-- [ ] **5.4.10** Fix `deployment-patterns.md` - grammar
+- [x] **5.4.10** Fix `deployment-patterns.md` - grammar
   - "backward compatible" → "backward-compatible"
   - **AC:** Hyphenated compound adjective
 
@@ -258,93 +341,6 @@
   - **AC:** SUMMARY includes playbooks section
 
 **Phase AC:** Playbook infrastructure exists, 6+ playbooks created, cross-referenced from skills
-
-
-## Phase 0-Warn: Verifier Warnings
-
-**Goal:** Resolve verifier warnings from latest run.
-
-**Status:**
-
-
-## Phase 0: Structured Logging (Cortex-readable)
-
-**Goal:** Add structured markers to loop.sh for better observability.  
-**Status:** X.3.4 complete (see THUNK.md)
-
-- [x] **X.4.1** Update `:::CACHE_CONFIG:::` to include `iter=` and `ts=`
-- [ ] **X.4.2** Update `:::VERIFIER_ENV:::` to include `iter=` and `ts=`
-- [ ] **X.2.1** Implement `run_tool()` wrapper with TOOL_START/TOOL_END markers
-- [ ] **X.2.2** Route important tool calls through `run_tool()`
-- [ ] **X.2.3** Ensure TOOL_END emitted on failure
-- [ ] **X.1.1** Emit ITER_START/ITER_END markers
-- [ ] **X.1.2** Emit PHASE_START/PHASE_END markers
-- [ ] **X.5.1** Update `rollflow_analyze` to parse `:::` markers
-- [ ] **X.5.2** Output `artifacts/analysis/iter_###.json`
-- [ ] **X.6.1** Generate `artifacts/review_packs/iter_###.md` from JSON
-- [ ] **X.6.2** Attach filtered log excerpts
-
-## Phase 4: Shared Cache Library + Cortex Support (Safety Net)
-
-**Goal:** Extract caching into shared infrastructure for waste-prevention + reliability across all runners.
-
-**Rationale:** Caching won't save huge tokens for "new thinking" work, but prevents waste from:
-
-- Reruns after crashes / network / rate-limit issues
-- Accidental double-runs
-- Retries where input didn't change
-- Repeated setup/analysis steps
-
-### Phase 4.1: Extract Cache Functions
-
-- [ ] **4.1.1** Create `workers/shared/cache.sh` with extracted functions
-  - Move from loop.sh: cache key generation, lookup/store, log helpers
-  - Export interface: `cache_should_use`, `cache_make_key`, `cache_try_load`, `cache_store`
-  - Include env parsing for `CACHE_MODE`, `CACHE_SCOPE`, `--force-fresh`
-  - **AC:** File exists, functions are callable, shellcheck passes
-
-### Phase 4.2: Refactor loop.sh to Use Shared Library
-
-- [ ] **4.2.1** Update `workers/ralph/loop.sh` to source shared cache library
-  - Replace inline cache logic with calls to `workers/shared/cache.sh`
-  - Keep exact semantics: `CACHE_MODE`, `CACHE_SCOPE`, BUILD/PLAN blocking
-  - **AC:** Before/after run shows identical cache hits/misses
-
-- [ ] **4.2.2** Update `workers/cerebras/loop.sh` to source shared cache library
-  - Same refactor as Ralph
-  - **AC:** Cerebras caching unchanged behaviorally
-
-### Phase 4.3: Add Cortex Caching
-
-- [ ] **4.3.1** Update `cortex/one-shot.sh` to source shared cache library
-  - Add `source workers/shared/cache.sh`
-  - Set `AGENT_NAME=cortex` explicitly
-  - Wrap `acli rovodev run` call with cache check/store
-  - **AC:** Same one-shot twice with no repo changes → Run 1: miss+store, Run 2: hit+skip
-
-### Phase 4.4: Fix Agent Isolation
-
-- [ ] **4.4.1** Replace RUNNER dependency with AGENT_NAME in cache keys
-  - Cache key "agent" field uses `AGENT_NAME` not `RUNNER`
-  - Fall back sanely if `AGENT_NAME` missing (log warning)
-  - **AC:** Ralph/Cortex/Cerebras with identical prompts don't share cache entries
-
-### Phase 4.5: Smoke Test
-
-- [ ] **4.5.1** Create `scripts/test_cache_smoke.sh` for cache correctness
-  - Test: same prompt + git state → cache hit on 2nd run
-  - Test: change git_sha → cache miss
-  - Test: `--force-fresh` → bypass even if entry exists
-  - Test: `CACHE_SCOPE=llm_ro` blocked during BUILD/PLAN
-  - **AC:** One command verifies caching works for loop.sh and one-shot.sh
-
-
-## Phase 5: Skills Knowledge Base Expansion
-
-**Goal:** Expand brain skills to cover more domains and improve existing documentation.
-
-**Priority:** Medium - Enhances agent capabilities and reduces knowledge gaps.
-
 
 ## Phase 6: Template Improvements
 

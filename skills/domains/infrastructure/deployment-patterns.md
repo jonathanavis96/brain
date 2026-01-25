@@ -347,7 +347,7 @@ PORT=3000
 
 **Safe migration strategy:**
 
-#### Phase 1: Add new column (backward compatible)
+#### Phase 1: Add new column (backward-compatible)
 
 ```sql
 -- Migration 001: Add new column with default
@@ -398,7 +398,7 @@ npx prisma migrate dev --name revert_full_name
 
 **Key principles:**
 
-- ✅ Always make migrations backward compatible
+- ✅ Always make migrations backward-compatible
 - ✅ Deploy schema changes before code changes
 - ✅ Test migrations on staging with production-like data
 - ✅ Use transactions for atomic migrations (PostgreSQL)
@@ -850,7 +850,7 @@ spec:
 
 ```sql
 -- Blue/Green with databases requires careful planning
--- Option 1: Shared database (backward compatible changes only)
+-- Option 1: Shared database (backward-compatible changes only)
 -- Deploy schema changes first, then switch app traffic
 
 -- Option 2: Separate databases (full isolation)
@@ -878,7 +878,7 @@ ALTER TABLE users ALTER COLUMN email_verified SET NOT NULL;
 - ✅ Run full smoke tests before switching
 - ✅ Instant rollback by switching back
 - ✅ Keep old environment running for 24-48h after switch
-- ✅ Database changes must be backward compatible OR use separate DBs
+- ✅ Database changes must be backward-compatible OR use separate DBs
 
 **Trade-offs:**
 
