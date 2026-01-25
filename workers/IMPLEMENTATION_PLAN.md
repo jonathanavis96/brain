@@ -476,7 +476,7 @@
 - [x] **5.4.1** Fix `deployment-patterns.md` - add `import time`
   - **AC:** Python example runs without NameError
 
-- [ ] **5.4.2** Fix `deployment-patterns.md` - `isEnabledForPercentage` userId
+- [x] **5.4.2** Fix `deployment-patterns.md` - `isEnabledForPercentage` userId
   - Add userId parameter to function signature
   - **AC:** TypeScript compiles
 
