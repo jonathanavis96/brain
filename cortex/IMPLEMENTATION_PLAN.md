@@ -216,7 +216,7 @@ Key milestones:
   - Keep exact semantics: `CACHE_MODE`, `CACHE_SCOPE`, BUILD/PLAN blocking
   - **AC:** Before/after run shows identical cache hits/misses
 
-- [ ] **4.2.2** Update `workers/cerebras/loop.sh` to source shared cache library
+- [x] **4.2.2** Update `workers/cerebras/loop.sh` to source shared cache library
   - Same refactor as Ralph
   - **AC:** Cerebras caching unchanged behaviorally
 
