@@ -172,6 +172,7 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
 ### Skills Directories
 
 - **[Domains](domains/README.md)** - Technical domain knowledge and reusable patterns (authentication, caching, API design, etc.)
+  - [Agent Observability Patterns](domains/infrastructure/agent-observability-patterns.md) - Event markers, iteration tracking, cache observability, tool instrumentation
   - [Authentication Patterns](domains/backend/auth-patterns.md) - OAuth2, JWT, session management
   - [Caching Patterns](domains/backend/caching-patterns.md) - Redis, in-memory, CDN, and browser caching strategies
   - [API Design Patterns](domains/backend/api-design-patterns.md) - REST, GraphQL, versioning, error handling
