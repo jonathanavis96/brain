@@ -240,7 +240,7 @@
   - **AC:** Skill covers marker emission, JSONL events, log correlation
   - **Priority:** HIGH
 
-- [ ] **12.1.2** Create `docs/MARKER_SCHEMA.md` - formal spec for all markers
+- [x] **12.1.2** Create `docs/MARKER_SCHEMA.md` - formal spec for all markers
   - **Goal:** Single source of truth for :::MARKER::: format
   - **Content:** All marker types, fields, examples, versioning policy
   - **AC:** Schema doc covers all markers in loop.sh, includes validation rules
