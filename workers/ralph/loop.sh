@@ -984,15 +984,30 @@ run_once() {
     fi
 
     # Inject current verifier summary (BUILD mode gets fresh state after auto-fix)
+    # IMPORTANT: This is the ONLY source of verifier info - DO NOT read .verify/latest.txt
     if [[ "$phase" == "build" ]] && [[ -f "$VERIFY_REPORT" ]]; then
-      echo "# CURRENT VERIFIER STATE (after auto-fix)"
-      echo "# Auto-fix has already run. Focus only on WARN/FAIL items below."
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo "# VERIFIER STATUS (injected by loop.sh - DO NOT read .verify/latest.txt)"
+      echo "# ═══════════════════════════════════════════════════════════════"
       echo ""
-      # Extract just the summary section
+      # Extract summary section
       sed -n '/^SUMMARY$/,/^$/p' "$VERIFY_REPORT" 2>/dev/null || true
       echo ""
-      # Show WARN and FAIL items only
-      grep -E "^\[WARN\]|\[FAIL\]" "$VERIFY_REPORT" 2>/dev/null || echo "# All checks passing!"
+      # Show WARN and FAIL items with full details
+      local warn_fail_count
+      warn_fail_count=$(grep -cE "^\[WARN\]|\[FAIL\]" "$VERIFY_REPORT" 2>/dev/null) || warn_fail_count=0
+      if [[ "$warn_fail_count" -gt 0 ]]; then
+        echo "# Issues requiring attention:"
+        grep -E "^\[WARN\]|\[FAIL\]" "$VERIFY_REPORT" 2>/dev/null
+        echo ""
+        # Include the desc/cmd/stdout for failed items
+        echo "# Details for failed checks:"
+        awk '/^\[FAIL\]/{p=1; print; next} p && /^  (desc|cmd|exit|stdout):/{print} p && /^\[/{p=0}' "$VERIFY_REPORT" 2>/dev/null || true
+      else
+        echo "# ✅ All checks passing!"
+      fi
+      echo ""
+      echo "# ═══════════════════════════════════════════════════════════════"
       echo ""
     fi
 
