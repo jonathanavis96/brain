@@ -198,7 +198,7 @@
   - Output same JSON format as 7.1.1
   - **AC:** Script extracts errors from sample log file
 
-- [ ] **7.1.3** Create `tools/gap_radar/patterns.yaml`
+- [x] **7.1.3** Create `tools/gap_radar/patterns.yaml`
   - Define regex patterns for common error types
   - Categories: shell, python, markdown, git, permissions, network
   - Include example matches for each pattern

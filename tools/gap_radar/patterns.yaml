@@ -1,0 +1,248 @@
+# Gap Radar - Error Pattern Definitions
+#
+# This file defines regex patterns for detecting common error types in logs.
+# Used by gap_radar tools to identify missing skills and knowledge gaps.
+#
+# Format:
+#   category:
+#     - name: Pattern name
+#       pattern: Regex pattern (PCRE)
+#       example: Example match
+#       severity: high|medium|low
+
+shell:
+  - name: ShellCheck SC2034
+    pattern: 'SC2034.*unused variable'
+    example: "SC2034: var appears unused. Verify use (or export if used externally)."
+    severity: medium
+
+  - name: ShellCheck SC2155
+    pattern: 'SC2155.*Declare and assign separately'
+    example: "SC2155: Declare and assign separately to avoid masking return values."
+    severity: high
+
+  - name: ShellCheck SC2086
+    pattern: 'SC2086.*Double quote to prevent globbing'
+    example: "SC2086: Double quote to prevent globbing and word splitting."
+    severity: medium
+
+  - name: ShellCheck SC2162
+    pattern: 'SC2162.*read without -r'
+    example: "SC2162: read without -r will mangle backslashes."
+    severity: low
+
+  - name: ShellCheck SC2002
+    pattern: 'SC2002.*Useless cat'
+    example: "SC2002: Useless cat. Consider 'cmd < file | ..' or 'cmd file | ..' instead."
+    severity: low
+
+  - name: ShellCheck SC1091
+    pattern: 'SC1091.*Not following'
+    example: "SC1091: Not following: file was not specified as input."
+    severity: low
+
+  - name: Bash syntax error
+    pattern: 'line \d+: syntax error'
+    example: "line 42: syntax error near unexpected token `fi'"
+    severity: high
+
+  - name: Command not found
+    pattern: 'command not found'
+    example: "bash: foobar: command not found"
+    severity: high
+
+  - name: Permission denied
+    pattern: 'Permission denied'
+    example: "bash: ./script.sh: Permission denied"
+    severity: medium
+
+  - name: File not found
+    pattern: 'No such file or directory'
+    example: "cat: config.yml: No such file or directory"
+    severity: medium
+
+markdown:
+  - name: Markdownlint MD040
+    pattern: 'MD040.*Fenced code blocks should have a language'
+    example: "MD040/fenced-code-language: Fenced code blocks should have a language specified"
+    severity: medium
+
+  - name: Markdownlint MD032
+    pattern: 'MD032.*Lists should be surrounded by blank lines'
+    example: "MD032/blanks-around-lists: Lists should be surrounded by blank lines"
+    severity: low
+
+  - name: Markdownlint MD024
+    pattern: 'MD024.*Multiple headings with the same content'
+    example: "MD024/no-duplicate-heading: Multiple headings with the same content"
+    severity: low
+
+  - name: Markdownlint MD022
+    pattern: 'MD022.*Headings should be surrounded by blank lines'
+    example: "MD022/blanks-around-headings: Headings should be surrounded by blank lines"
+    severity: low
+
+  - name: Markdownlint MD050
+    pattern: 'MD050.*Strong style should be consistent'
+    example: "MD050/strong-style: Strong style should be consistent"
+    severity: low
+
+  - name: Markdownlint MD060
+    pattern: 'MD060.*Table column count'
+    example: "MD060: Table column count differs from header"
+    severity: medium
+
+python:
+  - name: ImportError
+    pattern: 'ImportError: No module named'
+    example: "ImportError: No module named 'foobar'"
+    severity: high
+
+  - name: AttributeError
+    pattern: 'AttributeError:'
+    example: "AttributeError: 'NoneType' object has no attribute 'get'"
+    severity: high
+
+  - name: TypeError
+    pattern: 'TypeError:'
+    example: "TypeError: unsupported operand type(s) for +: 'int' and 'str'"
+    severity: high
+
+  - name: ValueError
+    pattern: 'ValueError:'
+    example: "ValueError: invalid literal for int() with base 10: 'abc'"
+    severity: medium
+
+  - name: KeyError
+    pattern: 'KeyError:'
+    example: "KeyError: 'missing_key'"
+    severity: medium
+
+  - name: NameError
+    pattern: 'NameError: name .* is not defined'
+    example: "NameError: name 'undefined_var' is not defined"
+    severity: high
+
+  - name: IndentationError
+    pattern: 'IndentationError:'
+    example: "IndentationError: expected an indented block"
+    severity: high
+
+  - name: SyntaxError
+    pattern: 'SyntaxError:'
+    example: "SyntaxError: invalid syntax"
+    severity: high
+
+  - name: UnboundLocalError
+    pattern: 'UnboundLocalError: cannot access local variable'
+    example: "UnboundLocalError: cannot access local variable 'x' where it is not associated with a value"
+    severity: high
+
+git:
+  - name: Merge conflict
+    pattern: 'CONFLICT \(content\): Merge conflict'
+    example: "CONFLICT (content): Merge conflict in file.txt"
+    severity: high
+
+  - name: Push rejected
+    pattern: 'error: failed to push'
+    example: "error: failed to push some refs to 'origin'"
+    severity: high
+
+  - name: Detached HEAD
+    pattern: 'You are in .detached HEAD. state'
+    example: "You are in 'detached HEAD' state"
+    severity: medium
+
+  - name: Uncommitted changes
+    pattern: 'error: Your local changes to the following files would be overwritten'
+    example: "error: Your local changes to the following files would be overwritten by merge"
+    severity: medium
+
+network:
+  - name: Connection refused
+    pattern: 'Connection refused'
+    example: "curl: (7) Failed to connect to localhost port 8080: Connection refused"
+    severity: high
+
+  - name: Timeout
+    pattern: 'Operation timed out'
+    example: "curl: (28) Operation timed out after 30000 milliseconds"
+    severity: high
+
+  - name: DNS resolution failed
+    pattern: 'Could not resolve host'
+    example: "curl: (6) Could not resolve host: example.invalid"
+    severity: high
+
+  - name: SSL certificate error
+    pattern: 'SSL certificate problem'
+    example: "curl: (60) SSL certificate problem: certificate has expired"
+    severity: high
+
+  - name: HTTP 401 Unauthorized
+    pattern: 'HTTP.*401'
+    example: "HTTP/1.1 401 Unauthorized"
+    severity: high
+
+  - name: HTTP 403 Forbidden
+    pattern: 'HTTP.*403'
+    example: "HTTP/1.1 403 Forbidden"
+    severity: high
+
+  - name: HTTP 404 Not Found
+    pattern: 'HTTP.*404'
+    example: "HTTP/1.1 404 Not Found"
+    severity: medium
+
+  - name: HTTP 429 Rate Limited
+    pattern: 'HTTP.*429'
+    example: "HTTP/1.1 429 Too Many Requests"
+    severity: high
+
+  - name: HTTP 500 Internal Server Error
+    pattern: 'HTTP.*500'
+    example: "HTTP/1.1 500 Internal Server Error"
+    severity: high
+
+permissions:
+  - name: Insufficient permissions
+    pattern: 'permission denied|insufficient permissions'
+    example: "Error: permission denied while trying to connect to the Docker daemon"
+    severity: high
+
+  - name: File already exists
+    pattern: 'File exists'
+    example: "mkdir: cannot create directory 'foo': File exists"
+    severity: low
+
+  - name: Disk quota exceeded
+    pattern: 'Disk quota exceeded'
+    example: "write: Disk quota exceeded"
+    severity: high
+
+  - name: Read-only filesystem
+    pattern: 'Read-only file system'
+    example: "touch: cannot touch 'file': Read-only file system"
+    severity: high
+
+tool_execution:
+  - name: Tool timeout
+    pattern: 'Execution timed out'
+    example: "Error: Execution timed out after 300 seconds"
+    severity: medium
+
+  - name: Tool rate limit
+    pattern: 'rate limit exceeded'
+    example: "Error: API rate limit exceeded. Retry after 60 seconds."
+    severity: high
+
+  - name: Tool authentication failed
+    pattern: 'authentication failed|invalid credentials'
+    example: "Error: authentication failed - invalid API key"
+    severity: high
+
+  - name: Tool not found
+    pattern: 'tool not found|command not available'
+    example: "Error: tool 'foobar' not found in available tools"
+    severity: high
