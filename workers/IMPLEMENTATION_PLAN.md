@@ -12,7 +12,7 @@
 
 **Note:** L1-L4 and L6 are in protected files (loop.sh, verifier.sh) - Ralph can prepare fixes but HUMAN must approve hash updates.
 
-- [ ] **CR-1.5** Fix `approve_waiver_totp.py` race condition
+- [x] **CR-1.5** Fix `approve_waiver_totp.py` race condition
   - **File:** `.verify/approve_waiver_totp.py` lines 83-90
   - **Issue:** Deletes request file before approval written, breaks `check_waiver.sh`
   - **Fix:** Keep or archive request file after approval

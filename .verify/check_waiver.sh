@@ -70,11 +70,22 @@ check_waiver() {
       continue
     fi
 
-    # Verify request hash (if request file exists)
+    # Verify request hash (check both active and archived locations)
     local request_file="${REQUESTS_DIR}/${waiver_id}.json"
+    local archived_file="${REQUESTS_DIR}/archived/${waiver_id}.json"
+
+    # Try active location first, then archived
     if [[ -f "$request_file" ]]; then
       local current_hash
       current_hash=$(sha256sum "$request_file" 2>/dev/null | cut -d' ' -f1)
+      if [[ "$current_hash" != "$request_hash" ]]; then
+        # Request was modified after approval - invalid
+        echo "WARNING: Waiver ${waiver_id} invalid - request modified after approval" >&2
+        continue
+      fi
+    elif [[ -f "$archived_file" ]]; then
+      local current_hash
+      current_hash=$(sha256sum "$archived_file" 2>/dev/null | cut -d' ' -f1)
       if [[ "$current_hash" != "$request_hash" ]]; then
         # Request was modified after approval - invalid
         echo "WARNING: Waiver ${waiver_id} invalid - request modified after approval" >&2
