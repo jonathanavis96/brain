@@ -381,7 +381,7 @@ Key milestones:
   - **AC:** Gap suggestions appear in Ralph logs
   - **If Blocked:** This modifies protected file - may need to defer or request waiver
 
-- [ ] **7.4.2** Create `bin/gap-radar` convenience wrapper
+- [x] **7.4.2** Create `bin/gap-radar` convenience wrapper
   - Runs full pipeline with sensible defaults
   - Options: `--since <date>`, `--from-log <file>`, `--append`
   - **AC:** `bin/gap-radar --help` shows usage

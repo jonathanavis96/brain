@@ -1665,6 +1665,19 @@ if [[ -n "$PROMPT_ARG" ]]; then
       # Reset counter on successful iteration
       CONSECUTIVE_VERIFIER_FAILURES=0
     fi
+
+    # Run gap radar after iteration completes (task 7.4.1)
+    if [[ -x "$ROOT/bin/gap-radar" ]]; then
+      echo ""
+      echo "Running gap radar analysis..."
+      if "$ROOT/bin/gap-radar" --dry-run 2>&1 | tee -a "$LOGS_DIR/iter${i}_custom.log"; then
+        echo "✓ Gap radar analysis complete"
+      else
+        echo "⚠ Gap radar analysis failed (non-blocking)"
+      fi
+      echo ""
+    fi
+
     emit_event --event iteration_end --iter "$i" --status ok
 
     # Emit ITER_END marker for rollflow_analyze (task X.1.1)
@@ -1858,6 +1871,22 @@ else
       # Reset counter on successful iteration
       CONSECUTIVE_VERIFIER_FAILURES=0
     fi
+
+    # Run gap radar after BUILD iteration completes (task 7.4.1)
+    # Only run for BUILD iterations (not PLAN)
+    if [[ "$i" -ne 1 ]] && ! ((PLAN_EVERY > 0 && ((i - 1) % PLAN_EVERY == 0))); then
+      if [[ -x "$ROOT/bin/gap-radar" ]]; then
+        echo ""
+        echo "Running gap radar analysis..."
+        if "$ROOT/bin/gap-radar" --dry-run 2>&1 | tee -a "$LOGS_DIR/iter${i}_build.log"; then
+          echo "✓ Gap radar analysis complete"
+        else
+          echo "⚠ Gap radar analysis failed (non-blocking)"
+        fi
+        echo ""
+      fi
+    fi
+
     emit_event --event iteration_end --iter "$i" --status ok
 
     # Emit ITER_END marker for rollflow_analyze (task X.1.1)
