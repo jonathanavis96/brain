@@ -19,7 +19,7 @@
   - **AC:** Running `bash cleanup_plan.sh --dry-run` shows what would be removed
   - **Constraints:** Preserve phase headers if they have pending tasks, preserve marker line
 
-- [ ] **10.1.2** Add `--archive` flag to append removed tasks to THUNK.md
+- [x] **10.1.2** Add `--archive` flag to append removed tasks to THUNK.md
   - **Goal:** Before deletion, append task summaries to THUNK.md with timestamp
   - **AC:** `bash cleanup_plan.sh --archive` moves tasks to THUNK.md then removes from plan
   - **Format:** `| YYYY-MM-DD | Task ID | Description | auto-cleanup |`
