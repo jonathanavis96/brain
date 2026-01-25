@@ -80,14 +80,17 @@ def main():
     with open(approved_path, "w", encoding="utf-8") as f:
         f.write(content)
 
-    # Auto-delete the request file after successful approval
+    # Archive the request file after successful approval (don't delete - check_waiver.sh needs it)
     try:
-        os.remove(req_path)
+        archive_dir = os.path.join(".verify", "waiver_requests", "archived")
+        os.makedirs(archive_dir, exist_ok=True)
+        archive_path = os.path.join(archive_dir, os.path.basename(req_path))
+        os.rename(req_path, archive_path)
         print(f"\nAPPROVED ✅  wrote {approved_path}")
-        print(f"Cleaned up request file: {req_path}")
-    except OSError:
+        print(f"Archived request file: {req_path} → {archive_path}")
+    except OSError as e:
         print(f"\nAPPROVED ✅  wrote {approved_path}")
-        print(f"Note: Could not remove request file: {req_path}")
+        print(f"Note: Could not archive request file: {req_path} ({e})")
 
 
 if __name__ == "__main__":
