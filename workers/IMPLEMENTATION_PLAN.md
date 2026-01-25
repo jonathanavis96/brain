@@ -34,7 +34,7 @@
   - **Fix:** Ensure all rows have 5 columns, escape pipes in content
   - **AC:** `markdownlint workers/ralph/THUNK.md` passes MD056
 
-- [ ] **CR-6.4** Fix shell README config mismatch (C2)
+- [x] **CR-6.4** Fix shell README config mismatch (C2)
   - **File:** `skills/domains/languages/shell/README.md` line 64
   - **Issue:** README documents shfmt config that doesn't match `.pre-commit-config.yaml`
   - **Fix:** Update README to match actual config
