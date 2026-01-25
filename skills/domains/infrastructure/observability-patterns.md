@@ -120,6 +120,7 @@ logger.info('Database query executed', extra={
 package main
 
 import (
+    "fmt"
     "net/http"
     "time"
     
