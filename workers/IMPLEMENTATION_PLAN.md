@@ -286,7 +286,7 @@
 
 ### Phase 8.2: Core Playbooks (Shell/Linting)
 
-- [ ] **8.2.1** Create `skills/playbooks/fix-shellcheck-failures.md`
+- [x] **8.2.1** Create `skills/playbooks/fix-shellcheck-failures.md`
   - Steps: Run shellcheck → Identify error code → Lookup in shell patterns → Apply fix → Re-run
   - Decision points: "Is this a false positive?" → waiver path
   - Links to: `shell/variable-patterns.md`, `shell/common-pitfalls.md`
