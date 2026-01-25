@@ -48,7 +48,7 @@
   - **Fix:** Add all missing skill entries
   - **AC:** `skills/index.md` lists all files in `skills/domains/` and `skills/playbooks/`
 
-- [ ] **CR-2.3** Fix markdown formatting in observability-patterns.md
+- [x] **CR-2.3** Fix markdown formatting in observability-patterns.md
   - **File:** `skills/domains/infrastructure/observability-patterns.md`
   - **Issue:** Stray duplicate closing fence
   - **Fix:** Remove extra backticks
