@@ -477,6 +477,10 @@ Key milestones:
 
 ---
 
+
+<!-- Cortex adds new Task Contracts below this line -->
+
+
 ## Phase 9C: Task Optimization (Batching + Decomposition)
 
 **Goal:** Use Phase 0 structured logs to identify batching and decomposition opportunities, reducing task overhead and improving iteration success rate.
@@ -567,6 +571,3 @@ Key milestones:
 - ≥3 batching opportunities identified with evidence
 - ≥2 decomposition opportunities documented
 - Recommendations actively used in planning
-
-
-<!-- Cortex adds new Task Contracts below this line -->
