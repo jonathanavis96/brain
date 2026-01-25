@@ -44,6 +44,7 @@ Catalog of all skill files in the brain system.
 - [bulk-edit-patterns.md](domains/code-quality/bulk-edit-patterns.md) - Bulk editing strategies and markdown auto-fix patterns
 - [code-consistency.md](domains/code-quality/code-consistency.md) - Documentation accuracy, terminology, parsing consistency
 - [code-hygiene.md](domains/code-quality/code-hygiene.md) - Definition of Done checklists
+- [code-review-patterns.md](domains/code-quality/code-review-patterns.md) - Code review checklist for regex, scope, examples, documentation quality
 - [markdown-patterns.md](domains/code-quality/markdown-patterns.md) - Lint rules (MD040, MD024, MD050), documentation accuracy
 - [research-cheatsheet.md](domains/code-quality/research-cheatsheet.md) - One-page quick reference for research patterns
 - [research-patterns.md](domains/code-quality/research-patterns.md) - Systematic research methodology for gathering and evaluating information
@@ -84,11 +85,11 @@ Catalog of all skill files in the brain system.
 #### Shell
 
 - [README.md](domains/languages/shell/README.md) - Shell scripting overview and quick reference
-- [strict-mode.md](domains/languages/shell/strict-mode.md) - Strict mode (`set -euo pipefail`) patterns
-- [variable-patterns.md](domains/languages/shell/variable-patterns.md) - SC2155, SC2034, scoping
 - [cleanup-patterns.md](domains/languages/shell/cleanup-patterns.md) - Traps, temp files, state restoration
 - [common-pitfalls.md](domains/languages/shell/common-pitfalls.md) - ShellCheck errors and gotchas
+- [strict-mode.md](domains/languages/shell/strict-mode.md) - Strict mode (`set -euo pipefail`) patterns
 - [validation-patterns.md](domains/languages/shell/validation-patterns.md) - Shell project validation (syntax, shellcheck, permissions, security)
+- [variable-patterns.md](domains/languages/shell/variable-patterns.md) - SC2155, SC2034, scoping
 
 #### TypeScript
 
