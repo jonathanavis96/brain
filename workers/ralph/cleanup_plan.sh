@@ -108,7 +108,7 @@ archive_tasks() {
       task="${task/TBD/$next_thunk}"
       # Insert before the last line (which should be blank)
       sed -i "$ i\\$task" "$THUNK_FILE"
-      ((next_thunk++))
+      next_thunk=$((next_thunk + 1))
     done
 
     echo "Archived ${#archived_tasks[@]} tasks to THUNK.md (THUNK #$((last_thunk_num + 1))-$((next_thunk - 1)))"
@@ -154,7 +154,7 @@ cleanup_plan() {
         echo "$line" >>"$temp_file"
       else
         skip_phase=true
-        ((removed_phases++))
+        removed_phases=$((removed_phases + 1))
         if [[ "$DRY_RUN" == "true" ]]; then
           echo "Would remove phase: $current_phase" >&2
         fi
@@ -169,7 +169,7 @@ cleanup_plan() {
 
     # Remove completed tasks, keep everything else
     if echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\[[xX]\]'; then
-      ((removed_count++))
+      removed_count=$((removed_count + 1))
       if [[ "$DRY_RUN" == "true" ]]; then
         echo "Would remove: $(echo "$line" | sed -E 's/^[[:space:]]*//')" >&2
       fi
