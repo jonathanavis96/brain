@@ -32,7 +32,7 @@
   - **Fix:** Define variables, correct Jest command
   - **AC:** JavaScript examples are correct and runnable
 
-- [ ] **CR-3.5** Fix grammar in deployment-patterns.md
+- [x] **CR-3.5** Fix grammar in deployment-patterns.md
   - **File:** `skills/domains/infrastructure/deployment-patterns.md`
   - **Issue:** "backward compatible" should be "backward-compatible"
   - **Fix:** Hyphenate compound adjective
