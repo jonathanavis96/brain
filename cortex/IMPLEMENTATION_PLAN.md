@@ -44,7 +44,7 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
 
 ### Phase 10.1: Cleanup Script
 
-- [ ] **10.1.1** Create `workers/ralph/cleanup_plan.sh`
+- [x] **10.1.1** Create `workers/ralph/cleanup_plan.sh`
   - **Goal:** Script that removes `[x]` lines and empty phase sections from IMPLEMENTATION_PLAN.md
   - **AC:** Running `bash cleanup_plan.sh --dry-run` shows what would be removed
   - **Constraints:** Preserve phase headers if they have pending tasks, preserve marker line

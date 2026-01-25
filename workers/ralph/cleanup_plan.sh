@@ -60,6 +60,61 @@ if [[ "$ARCHIVE" == "true" ]] && [[ ! -f "$THUNK_FILE" ]]; then
   exit 1
 fi
 
+# Archive completed tasks to THUNK.md
+archive_tasks() {
+  local -a archived_tasks=()
+  local current_date
+  current_date=$(date '+%Y-%m-%d')
+
+  echo "Collecting completed tasks for archiving..."
+
+  # Collect all completed tasks
+  while IFS= read -r line; do
+    if echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\[[xX]\]'; then
+      # Extract task info: - [x] **10.1.1** Description text
+      local task_id
+      local description
+      task_id=$(echo "$line" | sed -E 's/^[[:space:]]*-[[:space:]]*\[[xX]\][[:space:]]*\*\*([^*]+)\*\*.*/\1/')
+      description=$(echo "$line" | sed -E 's/^[[:space:]]*-[[:space:]]*\[[xX]\][[:space:]]*//')
+
+      archived_tasks+=("| TBD | $task_id | auto-cleanup | $description | $current_date |")
+    fi
+  done <"$PLAN_FILE"
+
+  if [[ ${#archived_tasks[@]} -eq 0 ]]; then
+    echo "No completed tasks to archive."
+    return
+  fi
+
+  if [[ "$DRY_RUN" == "true" ]]; then
+    echo ""
+    echo "Would archive ${#archived_tasks[@]} tasks to THUNK.md:"
+    for task in "${archived_tasks[@]}"; do
+      echo "  $task"
+    done
+    echo ""
+  else
+    # Find the last THUNK number in THUNK.md
+    local last_thunk_num
+    last_thunk_num=$(grep -oE '^\| [0-9]+ \|' "$THUNK_FILE" | tail -n1 | grep -oE '[0-9]+')
+    if [[ -z "$last_thunk_num" ]]; then
+      last_thunk_num=0
+    fi
+
+    # Append tasks to THUNK.md (before the final blank line)
+    local next_thunk=$((last_thunk_num + 1))
+    for task in "${archived_tasks[@]}"; do
+      # Replace TBD with actual THUNK number
+      task="${task/TBD/$next_thunk}"
+      # Insert before the last line (which should be blank)
+      sed -i "$ i\\$task" "$THUNK_FILE"
+      ((next_thunk++))
+    done
+
+    echo "Archived ${#archived_tasks[@]} tasks to THUNK.md (THUNK #$((last_thunk_num + 1))-$((next_thunk - 1)))"
+  fi
+}
+
 # Main cleanup logic - simplified single-pass approach
 cleanup_plan() {
   local temp_file
@@ -142,12 +197,13 @@ cleanup_plan() {
 }
 
 # Main execution
+echo "Cleaning up IMPLEMENTATION_PLAN.md..."
+
 if [[ "$ARCHIVE" == "true" ]]; then
-  echo "Note: --archive flag not yet implemented (task 10.1.2)"
-  echo "Proceeding with cleanup only..."
+  archive_tasks
+  echo ""
 fi
 
-echo "Cleaning up IMPLEMENTATION_PLAN.md..."
 cleanup_plan
 
 echo "Done"
