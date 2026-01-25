@@ -113,12 +113,14 @@ def retry_with_backoff(func, max_retries=3):
 **Example from PR#5:**
 
 ```python
-# ❌ BAD - userId never defined
+# ❌ BAD - userId never defined, murmurhash not imported, 'hash' shadows built-in
 def isEnabledForPercentage(flag, percentage):
     hash = murmurhash(flag + userId)  # Where does userId come from?
     return (hash % 100) < percentage
 
-# ✅ GOOD - parameter or explicit source
+# ✅ GOOD - parameter or explicit source, proper imports, no built-in shadowing
+from murmurhash import murmurhash
+
 def isEnabledForPercentage(flag, user_id, percentage):
     hash_value = murmurhash(f"{flag}{user_id}")
     return (hash_value % 100) < percentage
@@ -193,7 +195,7 @@ EOF
 **Example from PR#5:**
 
 ```python
-# ❌ BAD - status hardcoded, ignores actual response
+# ❌ BAD - status hardcoded, missing async def, missing import
 def metricsMiddleware(request, call_next):
     start = time.time()
     response = await call_next(request)
@@ -201,8 +203,10 @@ def metricsMiddleware(request, call_next):
     metrics.histogram("duration", duration, {"status": "200"})  # Wrong!
     return response
 
-# ✅ GOOD - uses actual status
-def metricsMiddleware(request, call_next):
+# ✅ GOOD - uses actual status, async def, complete imports
+import time
+
+async def metricsMiddleware(request, call_next):
     start = time.time()
     response = await call_next(request)
     duration = time.time() - start
