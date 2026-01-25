@@ -375,7 +375,7 @@ Key milestones:
 
 ### Phase 7.4: Integration Hook
 
-- [ ] **7.4.1** Add gap radar hook to `workers/ralph/loop.sh` (post-iteration)
+- [x] **7.4.1** Add gap radar hook to `workers/ralph/loop.sh` (post-iteration)
   - After BUILD iteration completes, run `gap_radar/suggest_gaps.sh --dry-run`
   - Log suggestions to iteration log (don't auto-modify GAP_BACKLOG)
   - **AC:** Gap suggestions appear in Ralph logs
