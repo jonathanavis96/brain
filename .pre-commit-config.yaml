@@ -109,6 +109,23 @@ repos:
           )$
 
   # ==========================================================================
+  # Shell Script Unit Tests
+  # ==========================================================================
+  - repo: local
+    hooks:
+      - id: bats-tests
+        name: bats-tests
+        description: Run bats unit tests for shell scripts
+        entry: >
+          bash -c "if command -v bats >/dev/null 2>&1; then
+          bats tests/unit/*.bats;
+          else echo 'WARN bats not installed, skipping unit tests' >&2; exit 0;
+          fi"
+        language: system
+        pass_filenames: false
+        files: \.(sh|bash|bats)$
+
+  # ==========================================================================
   # Protected File Hash Validation
   # ==========================================================================
   - repo: local

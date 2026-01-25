@@ -23,55 +23,55 @@
 
 ### Major Issues (Ralph Can Fix)
 
-  - **File:** `templates/ralph/loop.sh` lines 1707, 1949
-  - **Issue:** Script defines `LOGDIR` but references `LOGS_DIR` (undefined)
-  - **Fix:** Replace `$LOGS_DIR` with `$LOGDIR`
-  - **AC:** `grep -n 'LOGS_DIR' templates/ralph/loop.sh` returns empty
+- **File:** `templates/ralph/loop.sh` lines 1707, 1949
+- **Issue:** Script defines `LOGDIR` but references `LOGS_DIR` (undefined)
+- **Fix:** Replace `$LOGS_DIR` with `$LOGDIR`
+- **AC:** `grep -n 'LOGS_DIR' templates/ralph/loop.sh` returns empty
 
-  - **File:** `bin/brain-event` lines 84-125
-  - **Issue:** Flag parsing consumes next option when value missing
-  - **Fix:** Check if value looks like a flag before shifting
-  - **AC:** `--event --iter 1` doesn't treat `--iter` as event value
+- **File:** `bin/brain-event` lines 84-125
+- **Issue:** Flag parsing consumes next option when value missing
+- **Fix:** Check if value looks like a flag before shifting
+- **AC:** `--event --iter 1` doesn't treat `--iter` as event value
 
-  - **File:** `workers/ralph/THUNK.md` lines 748, 770-782
-  - **Issue:** Table rows have wrong column count, unescaped pipes
-  - **Fix:** Ensure all rows have 5 columns, escape pipes in content
-  - **AC:** `markdownlint workers/ralph/THUNK.md` passes MD056
+- **File:** `workers/ralph/THUNK.md` lines 748, 770-782
+- **Issue:** Table rows have wrong column count, unescaped pipes
+- **Fix:** Ensure all rows have 5 columns, escape pipes in content
+- **AC:** `markdownlint workers/ralph/THUNK.md` passes MD056
 
-  - **File:** `skills/domains/languages/shell/README.md` line 64
-  - **Issue:** README documents shfmt config that doesn't match `.pre-commit-config.yaml`
-  - **Fix:** Update README to match actual config
-  - **AC:** Documented shfmt flags match `.pre-commit-config.yaml`
+- **File:** `skills/domains/languages/shell/README.md` line 64
+- **Issue:** README documents shfmt config that doesn't match `.pre-commit-config.yaml`
+- **Fix:** Update README to match actual config
+- **AC:** Documented shfmt flags match `.pre-commit-config.yaml`
 
-  - **File:** `skills/domains/code-quality/code-review-patterns.md` line 286
-  - **Issue:** Code example has bugs or incorrect patterns
-  - **Fix:** Review and correct the code example
-  - **AC:** Code examples are syntactically valid and demonstrate correct patterns
+- **File:** `skills/domains/code-quality/code-review-patterns.md` line 286
+- **Issue:** Code example has bugs or incorrect patterns
+- **Fix:** Review and correct the code example
+- **AC:** Code examples are syntactically valid and demonstrate correct patterns
 
-  - **File:** `README.md` line 326
-  - **Issue:** Incorrect or misleading documentation
-  - **Fix:** Correct the documentation
-  - **AC:** Documentation accurately describes the feature/process
+- **File:** `README.md` line 326
+- **Issue:** Incorrect or misleading documentation
+- **Fix:** Correct the documentation
+- **AC:** Documentation accurately describes the feature/process
 
-  - **File:** `skills/domains/infrastructure/observability-patterns.md`
-  - **Issues:** PostgreSQL placeholder mismatch, stray fence, hardcoded status, SQL injection
-  - **Fix:** Correct all code examples
-  - **AC:** All code examples use consistent patterns and are secure
+- **File:** `skills/domains/infrastructure/observability-patterns.md`
+- **Issues:** PostgreSQL placeholder mismatch, stray fence, hardcoded status, SQL injection
+- **Fix:** Correct all code examples
+- **AC:** All code examples use consistent patterns and are secure
 
-  - **Files:** `skills/domains/frontend/README.md`, `skills/domains/languages/javascript/README.md`, `skills/index.md`
-  - **Issue:** Links to non-existent typescript README
-  - **Fix:** Create typescript README or update links
-  - **AC:** All internal links resolve to existing files
+- **Files:** `skills/domains/frontend/README.md`, `skills/domains/languages/javascript/README.md`, `skills/index.md`
+- **Issue:** Links to non-existent typescript README
+- **Fix:** Create typescript README or update links
+- **AC:** All internal links resolve to existing files
 
-  - **File:** `skills/domains/infrastructure/deployment-patterns.md`
-  - **Issue:** Missing `import time`, undefined `userId`
-  - **Fix:** Add missing imports, define or document variables
-  - **AC:** Python code examples are complete and runnable
+- **File:** `skills/domains/infrastructure/deployment-patterns.md`
+- **Issue:** Missing `import time`, undefined `userId`
+- **Fix:** Add missing imports, define or document variables
+- **AC:** Python code examples are complete and runnable
 
-  - **Files:** `skills/domains/languages/javascript/README.md`, `skills/domains/code-quality/test-coverage-patterns.md`
-  - **Issue:** Undefined `userId`, incorrect Jest flag
-  - **Fix:** Complete the examples
-  - **AC:** JavaScript examples are syntactically valid
+- **Files:** `skills/domains/languages/javascript/README.md`, `skills/domains/code-quality/test-coverage-patterns.md`
+- **Issue:** Undefined `userId`, incorrect Jest flag
+- **Fix:** Complete the examples
+- **AC:** JavaScript examples are syntactically valid
 
 - [x] **CR-6.11** Fix archive header parsing in current_ralph_tasks.sh (from CR-5) - Completed 2026-01-25 (THUNK #773)
 
@@ -110,7 +110,7 @@
   - **AC:** Hook blocks commits when hash mismatches detected
   - **Priority:** HIGH (recurring critical issue)
 
-- [ ] **POST-CR6.2** Create shell script unit test framework
+- [x] **POST-CR6.2** Create shell script unit test framework
   - **Goal:** Catch logic bugs in shell scripts (4 bugs in PR5, 3 in PR6)
   - **Implementation:** Setup bats-core framework, write tests for bin/brain-event flag parsing
   - **Files:** `tests/unit/`, `.pre-commit-config.yaml`
