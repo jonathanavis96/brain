@@ -79,7 +79,7 @@ class JsonFormatter(logging.Formatter):
             'module': record.module,
             'function': record.funcName,
         }
-        # Extract custom fields from record (passed via extra parameter)
+        # Extract custom fields from record.__dict__ (passed via logger's extra parameter)
         for key, value in record.__dict__.items():
             if key not in ['name', 'msg', 'args', 'created', 'filename', 'funcName',
                           'levelname', 'levelno', 'lineno', 'module', 'msecs',
@@ -311,10 +311,12 @@ def get_order(order_id):
 
 def fetch_from_db(order_id):
     with tracer.start_as_current_span("db.query") as span:
+        # SECURITY: Always use parameterized queries, never interpolate values into SQL
         span.set_attribute("db.statement", "SELECT * FROM orders WHERE id = ?")
         span.set_attribute("db.system", "postgresql")
-        # Actual DB query here (using parameterized query)
-        # cursor.execute("SELECT * FROM orders WHERE id = ?", (order_id,))
+        span.set_attribute("db.operation", "SELECT")
+        # Actual DB query here (using parameterized query to prevent SQL injection)
+        # cursor.execute("SELECT * FROM orders WHERE id = %s", (order_id,))
         return {"id": order_id, "status": "shipped", "customer_id": "123", "total": 99.99}
 ```
 

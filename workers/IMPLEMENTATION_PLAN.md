@@ -66,7 +66,7 @@
   - **Fix:** Add missing imports and define variables
   - **AC:** Python examples are syntactically correct and complete
 
-- [ ] **CR-3.2** Fix Python examples in observability-patterns.md
+- [x] **CR-3.2** Fix Python examples in observability-patterns.md
   - **File:** `skills/domains/infrastructure/observability-patterns.md`
   - **Issues:** `JsonFormatter.format` refs non-existent `record.extra`, hardcoded "200" status, SQL injection in span logging
   - **Fix:** Correct all example issues
