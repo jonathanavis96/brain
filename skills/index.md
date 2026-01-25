@@ -28,6 +28,8 @@ Catalog of all skill files in the brain system.
 
 ## Domains (Broadly Reusable)
 
+- [README.md](domains/README.md) - Domains overview and skill authoring guidelines
+
 ### Backend
 
 - [api-design-patterns.md](domains/backend/api-design-patterns.md) - REST API design patterns and conventions
@@ -43,9 +45,10 @@ Catalog of all skill files in the brain system.
 - [code-consistency.md](domains/code-quality/code-consistency.md) - Documentation accuracy, terminology, parsing consistency
 - [code-hygiene.md](domains/code-quality/code-hygiene.md) - Definition of Done checklists
 - [markdown-patterns.md](domains/code-quality/markdown-patterns.md) - Lint rules (MD040, MD024, MD050), documentation accuracy
-- [testing-patterns.md](domains/code-quality/testing-patterns.md) - Testing strategies and patterns
-- [research-patterns.md](domains/code-quality/research-patterns.md) - Systematic research methodology for gathering and evaluating information
 - [research-cheatsheet.md](domains/code-quality/research-cheatsheet.md) - One-page quick reference for research patterns
+- [research-patterns.md](domains/code-quality/research-patterns.md) - Systematic research methodology for gathering and evaluating information
+- [test-coverage-patterns.md](domains/code-quality/test-coverage-patterns.md) - Test coverage measurement and improvement strategies
+- [testing-patterns.md](domains/code-quality/testing-patterns.md) - Testing strategies and patterns
 - [token-efficiency.md](domains/code-quality/token-efficiency.md) - Token optimization strategies for AI agents
 
 ### Frontend
@@ -57,6 +60,8 @@ Catalog of all skill files in the brain system.
 ### Infrastructure
 
 - [deployment-patterns.md](domains/infrastructure/deployment-patterns.md) - Deployment and CI/CD patterns
+- [disaster-recovery-patterns.md](domains/infrastructure/disaster-recovery-patterns.md) - Backup, recovery, and business continuity patterns
+- [observability-patterns.md](domains/infrastructure/observability-patterns.md) - Logging, monitoring, tracing, and alerting patterns
 - [security-patterns.md](domains/infrastructure/security-patterns.md) - Security best practices
 - [state-management-patterns.md](domains/infrastructure/state-management-patterns.md) - State management patterns
 
@@ -91,24 +96,26 @@ Catalog of all skill files in the brain system.
 
 ### Ralph
 
-- [ralph-patterns.md](domains/ralph/ralph-patterns.md) - Ralph loop operational patterns
 - [bootstrap-patterns.md](domains/ralph/bootstrap-patterns.md) - Project bootstrapping patterns
+- [cache-debugging.md](domains/ralph/cache-debugging.md) - Cache debugging and troubleshooting patterns
 - [change-propagation.md](domains/ralph/change-propagation.md) - Change propagation and template sync
+- [ralph-patterns.md](domains/ralph/ralph-patterns.md) - Ralph loop operational patterns
 
 ### Playbooks (End-to-End Workflows)
 
 - [README.md](playbooks/README.md) - Playbook system overview and design philosophy
 - [PLAYBOOK_TEMPLATE.md](playbooks/PLAYBOOK_TEMPLATE.md) - Template for creating new playbooks
 
-**Available Playbooks:** (To be created in Phase 8)
+**Available Playbooks:**
 
-- fix-shellcheck-failures.md - Systematic resolution of ShellCheck warnings
-- fix-markdown-lint.md - Resolve markdown linting issues
-- resolve-verifier-failures.md - Debug and fix verifier gate failures
-- safe-template-sync.md - Synchronize changes between workers/ and templates/
-- bootstrap-new-project.md - Set up a new project from templates
-- debug-ralph-stuck.md - Troubleshoot Ralph loop issues
-- investigate-test-failures.md - Systematic test failure resolution
+- [bootstrap-new-project.md](playbooks/bootstrap-new-project.md) - Set up a new project from templates
+- [debug-ralph-stuck.md](playbooks/debug-ralph-stuck.md) - Troubleshoot Ralph loop issues
+- [fix-markdown-lint.md](playbooks/fix-markdown-lint.md) - Resolve markdown linting issues
+- [fix-shellcheck-failures.md](playbooks/fix-shellcheck-failures.md) - Systematic resolution of ShellCheck warnings
+- [investigate-test-failures.md](playbooks/investigate-test-failures.md) - Systematic test failure resolution
+- [resolve-verifier-failures.md](playbooks/resolve-verifier-failures.md) - Debug and fix verifier gate failures
+- [safe-template-sync.md](playbooks/safe-template-sync.md) - Synchronize changes between workers/ and templates/
+- [task-optimization-review.md](playbooks/task-optimization-review.md) - Review and optimize task definitions
 
 ### Marketing
 
