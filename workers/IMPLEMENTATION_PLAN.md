@@ -39,7 +39,7 @@
   - **Detection:** Same error code (MDxxx, SCxxxx), same directory prefix, same file type
   - **Completed:** 2026-01-25 - Added batching opportunity detection with error codes, directories, file types
 
-- [ ] **9C.1.2** Add task complexity tags to PROMPT_REFERENCE.md
+- [x] **9C.1.2** Add task complexity tags to PROMPT_REFERENCE.md
   - **Goal:** Document `[S/M/L]` complexity convention for task estimation
   - **AC:** PROMPT_REFERENCE.md has "Task Complexity" section with S=~90s, M=~300s, L=~600s guidelines
 
