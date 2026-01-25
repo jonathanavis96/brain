@@ -23,6 +23,7 @@
 - [x] **WARN.Cortex.FileSizeLimit.SYSTEM_PROMPT** Reduce cortex/CORTEX_SYSTEM_PROMPT.md to 150 lines (currently 161 lines) - ✅ Reduced to 121 lines
 - [x] **WARN.Hygiene.TemplateSync.1.current_ralph_tasks** Request waiver for current_ralph_tasks.sh (WVR-2026-01-24-003)
 - [x] **WARN.Hygiene.TemplateSync.2.loop** Request waiver for loop.sh (WVR-2026-01-24-002 + others)
+- [x] **WARN.Cortex.FileSizeLimit.AGENTS** Reduce cortex/AGENTS.md from 189 to ≤180 lines - ✅ Reduced to 168 lines
 
 ## Phase 0: Structured Logging (Cortex-readable)
 

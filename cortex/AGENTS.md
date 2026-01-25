@@ -82,11 +82,7 @@ See `skills/self-improvement/GAP_CAPTURE_RULES.md` Rule 6 for details.
 
 ### Research When Needed
 
-```bash
-curl -s https://docs.example.com/api
-```text
-
-You CAN research online. Ralph CANNOT - he captures gaps in GAP_BACKLOG.md.
+You CAN research online (Ralph CANNOT - he captures gaps in GAP_BACKLOG.md).
 
 ### Task Format
 
@@ -146,16 +142,8 @@ You CAN research online. Ralph CANNOT - he captures gaps in GAP_BACKLOG.md.
 
 ## Performance
 
-**DO:**
-
-- Read files directly (`cat`, `grep`)
-- Use `bash cortex/snapshot.sh`
-
-**DON'T:**
-
-- Call `loop.sh` (infinite loop - hangs 56+ seconds)
-- Call `current_ralph_tasks.sh` (interactive monitor)
-- Call `thunk_ralph_tasks.sh` (interactive viewer)
+- ✅ Read files directly (`cat`, `grep`), use `bash cortex/snapshot.sh`
+- ❌ Don't call `loop.sh` (infinite loop), `current_ralph_tasks.sh`, or `thunk_ralph_tasks.sh` (interactive tools)
 
 ---
 
@@ -174,15 +162,6 @@ You CAN research online. Ralph CANNOT - he captures gaps in GAP_BACKLOG.md.
 - **Task sync protocol:** `TASK_SYNC_PROTOCOL.md`
 - **Decisions log:** `DECISIONS.md`
 - **Strategic planning:** `THOUGHTS.md`
-
----
-
-## Architecture Note
-
-**`one-shot.sh` is Cortex-only.** Project-specific Ralph instances use `loop.sh` which injects context files (AGENTS.md, THOUGHTS.md) directly. The lean prompt pattern applies to both:
-
-- Brain Cortex: `cortex/one-shot.sh` injects context
-- Project Ralph: `loop.sh` injects context (no separate one-shot needed)
 
 ---
 
