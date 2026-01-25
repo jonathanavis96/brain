@@ -73,3 +73,25 @@ Rules:
   - Should add bash/shell template variant or make templates tech-stack aware
 - **Priority:** P1
 - **Status:** Promoted to SKILL_BACKLOG (2026-01-23)
+
+### 2026-01-25 — Custom Semantic Code Review Tool (LLM-Based Linting)
+
+- **Type:** Tooling
+- **Why useful:** Pre-commit hooks catch syntax/style issues but miss semantic bugs that require understanding code intent (logic errors, incomplete examples, subtle bugs)
+- **When triggered:** CodeRabbit PR#5 review caught issues that shellcheck/markdownlint/pre-commit missed
+- **Evidence:**
+  - **Regex capture delimiters:** Pattern `"([^"]+)"` captures delimiters in the group (CodeRabbit caught in cache_db.py line 124)
+  - **Dead code with undefined variables:** Cleanup blocks referencing variables never defined (e.g., error handlers using undeclared vars)
+  - **Incomplete code examples:** Missing imports (`import time`, `import os`), undefined variables (`userId` used without declaration)
+  - **Documentation quality:** Broken internal links, inconsistent terminology, examples that don't match description
+  - **Security issues:** SQL injection patterns in examples, hardcoded secrets
+  - Current tools cannot detect these - they require semantic understanding
+  - Need LLM-based tool that can:
+    - Parse code and understand intent
+    - Check code examples for completeness and correctness
+    - Verify documentation accuracy
+    - Detect logic errors and edge cases
+    - Run as pre-commit hook or CI check
+- **Priority:** P1
+- **Status:** Identified
+- **Related:** See `docs/CODERABBIT_PR5_ALL_ISSUES.md` for full list of semantic issues caught by CodeRabbit

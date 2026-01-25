@@ -63,7 +63,7 @@
     - Code example completeness
   - **AC:** Checklist section exists in AGENTS.md
 
-- [ ] **CR-4.3** Update GAP_BACKLOG with "custom CodeRabbit" need
+- [x] **CR-4.3** Update GAP_BACKLOG with "custom CodeRabbit" need
   - **File:** `skills/self-improvement/GAP_BACKLOG.md`
   - **Goal:** Track need for custom semantic linting tool
   - **AC:** Gap entry exists describing the need for LLM-based code review
