@@ -28,7 +28,7 @@
   - **Fix:** Check if value looks like a flag before shifting
   - **AC:** `--event --iter 1` doesn't treat `--iter` as event value
 
-- [ ] **CR-6.3** Fix THUNK.md table column mismatch (M10)
+- [x] **CR-6.3** Fix THUNK.md table column mismatch (M10)
   - **File:** `workers/ralph/THUNK.md` lines 748, 770-782
   - **Issue:** Table rows have wrong column count, unescaped pipes
   - **Fix:** Ensure all rows have 5 columns, escape pipes in content
