@@ -408,14 +408,14 @@ Key milestones:
   - Include placeholder examples
   - **AC:** Template is complete and usable
 
-- [ ] **8.1.3** Update `skills/index.md` with playbooks section
+- [x] **8.1.3** Update `skills/index.md` with playbooks section
   - Add new "## Playbooks" section
   - Link to playbook directory
   - **AC:** Index includes playbooks
 
 ### Phase 8.2: Core Playbooks (Shell/Linting)
 
-- [ ] **8.2.1** Create `skills/playbooks/fix-shellcheck-failures.md`
+- [x] **8.2.1** Create `skills/playbooks/fix-shellcheck-failures.md`
   - Steps: Run shellcheck → Identify error code → Lookup in shell patterns → Apply fix → Re-run
   - Decision points: "Is this a false positive?" → waiver path
   - Links to: `shell/variable-patterns.md`, `shell/common-pitfalls.md`
