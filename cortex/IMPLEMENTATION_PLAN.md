@@ -325,7 +325,7 @@ Key milestones:
   - Output JSON: `{"error_code": "SC2155", "file": "loop.sh", "line": 42, "message": "..."}`
   - **AC:** Script parses sample verifier output correctly
 
-- [ ] **7.1.2** Create `tools/gap_radar/extract_from_logs.sh`
+- [x] **7.1.2** Create `tools/gap_radar/extract_from_logs.sh`
   - Parse Ralph iteration logs for common failure patterns
   - Look for: Python tracebacks, shell errors, "command not found", lint failures
   - Output same JSON format as 7.1.1
