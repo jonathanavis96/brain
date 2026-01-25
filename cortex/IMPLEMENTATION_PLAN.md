@@ -36,6 +36,34 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
 
 <!-- Cortex adds new Task Contracts below this line -->
 
+## Phase 10: RovoDev Parser & Observability
+
+**Goal:** Build parser for RovoDev's ANSI tool output to enable complete tool visibility.
+
+**Context:** RovoDev emits tool calls in logs (`⬡ Calling <tool>:` / `⬢ Called <tool>:`), but rollflow_analyze doesn't parse this format yet.
+
+### Phase 10.1: RovoDev Parser
+
+- [ ] **10.1.1** Create RovoDev ANSI parser in `tools/rollflow_analyze/src/rollflow_analyze/parsers/`
+  - **Goal:** Parse RovoDev tool output format from logs
+  - **Input format:** `⬡ Calling <tool>:` (start), `⬢ Called <tool>:` (end), optional `N seconds` duration
+  - **Output:** ToolCall objects matching existing model
+  - **AC:** Parser extracts tool_name, start/end markers, duration from sample log
+  - **Test:** Add test file with sample RovoDev output
+
+- [ ] **10.1.2** Integrate RovoDev parser into rollflow_analyze pipeline
+  - **Goal:** Unified parsing across :::MARKER::: and RovoDev formats
+  - **AC:** `rollflow_analyze` reports include RovoDev tool calls
+  - **Depends on:** 10.1.1
+
+### Phase 10.2: Documentation
+
+- [ ] **10.2.1** Update docs/events.md with RovoDev format section
+  - **Goal:** Document RovoDev's tool output format alongside :::MARKER::: format
+  - **AC:** events.md has "RovoDev Format" section with examples
+
+---
+
 ## Phase 9C: Task Optimization (Batching + Decomposition)
 
 **Goal:** Use Phase 0 structured logs to identify batching and decomposition opportunities, reducing task overhead and improving iteration success rate.
