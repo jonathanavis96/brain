@@ -18,6 +18,10 @@
 
 **Active Phases:**
 
+- Phase 10: RovoDev Parser (3 tasks) - parser for tool visibility
+- Phase 11: Thread Persistence & Search (4 tasks) - searchable work history
+- Phase 12: Observability Improvements (4 tasks) - event schemas & tooling
+- Phase 13: Tool Registry (3 tasks) - declarative tool definitions
 - Phase 14: THUNK Dedup Bug Fix (3 tasks) - **HIGH** data integrity fix
 - Phase 15: Skill Dependency Graph (4 tasks) - **HIGH** reveals hidden structure
 - Phase 16: Anti-Patterns Library (6 tasks) - **HIGH** learning from failures
@@ -39,6 +43,140 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
 ---
 
 <!-- Cortex adds new Task Contracts below this line -->
+
+## Phase 10: RovoDev Parser & Observability
+
+**Goal:** Build parser for RovoDev's ANSI tool output to enable complete tool visibility.
+
+**Context:** RovoDev emits tool calls in logs (`⬡ Calling <tool>:` / `⬢ Called <tool>:`), but rollflow_analyze doesn't parse this format yet.
+
+### Phase 10.1: RovoDev Parser
+
+- [ ] **10.1.1** Create RovoDev ANSI parser in `tools/rollflow_analyze/src/rollflow_analyze/parsers/`
+  - **Goal:** Parse RovoDev tool output format from logs
+  - **Input format:** `⬡ Calling <tool>:` (start), `⬢ Called <tool>:` (end), optional `N seconds` duration
+  - **Output:** ToolCall objects matching existing model
+  - **AC:** Parser extracts tool_name, start/end markers, duration from sample log
+  - **Test:** Add test file with sample RovoDev output
+
+- [ ] **10.1.2** Integrate RovoDev parser into rollflow_analyze pipeline
+  - **Goal:** Unified parsing across :::MARKER::: and RovoDev formats
+  - **AC:** `rollflow_analyze` reports include RovoDev tool calls
+  - **Depends on:** 10.1.1
+
+### Phase 10.2: Documentation
+
+- [ ] **10.2.1** Update docs/events.md with RovoDev format section
+  - **Goal:** Document RovoDev's tool output format alongside :::MARKER::: format
+  - **AC:** events.md has "RovoDev Format" section with examples
+
+---
+
+## Phase 11: Thread Persistence & Search
+
+**Goal:** Enable searchable, queryable thread storage for agent work history.
+
+**Context:** THUNK.md is append-only markdown; rollflow_cache is SQLite. Need unified search across both.
+
+**Research:** `cortex/docs/research/thread-persistence-research.md`
+
+### Phase 11.1: Documentation & Skills
+
+- [ ] **11.1.1** Create `skills/domains/ralph/thread-search-patterns.md`
+  - **Goal:** Document search patterns for THUNK, git, and cache
+  - **AC:** Skill includes grep patterns for THUNK.md, git log examples, sqlite queries
+  - **Priority:** HIGH
+
+- [ ] **11.1.2** Build THUNK.md parser (Python script)
+  - **Goal:** Extract structured data from THUNK.md markdown table
+  - **Output:** JSON or SQLite with thunk_num, task_id, priority, description, date
+  - **AC:** Parser handles current THUNK format (800+ entries), outputs valid JSON
+  - **Priority:** MEDIUM
+
+### Phase 11.2: Tooling
+
+- [ ] **11.1.3** Create SQLite schema for unified thread storage
+  - **Goal:** Single database for threads, work_items, tool_executions
+  - **Schema:** See `cortex/docs/research/thread-persistence-research.md` Section 3.2
+  - **AC:** Schema created with FTS5 index on descriptions
+  - **Priority:** MEDIUM
+
+- [ ] **11.2.1** Build `bin/brain-search` CLI tool
+  - **Goal:** Quick lookups across THUNK, git, cache
+  - **Usage:** `brain-search "shellcheck"` → shows matching tasks, commits, tool calls
+  - **AC:** CLI returns results from at least 2 sources (THUNK + git)
+  - **Priority:** LOW
+
+---
+
+## Phase 12: Observability Improvements
+
+**Goal:** Formalize event schemas and improve observability tooling.
+
+**Context:** Brain has multiple event formats (:::MARKER:::, JSONL, RovoDev ANSI). Need unified documentation and tooling.
+
+**Research:** `cortex/docs/research/agent-observability-research.md`
+
+### Phase 12.1: Documentation & Skills
+
+- [ ] **12.1.1** Create `skills/domains/infrastructure/agent-observability-patterns.md`
+  - **Goal:** Document how to add observability to new tools/scripts
+  - **AC:** Skill covers marker emission, JSONL events, log correlation
+  - **Priority:** HIGH
+
+- [ ] **12.1.2** Create `docs/MARKER_SCHEMA.md` - formal spec for all markers
+  - **Goal:** Single source of truth for :::MARKER::: format
+  - **Content:** All marker types, fields, examples, versioning policy
+  - **AC:** Schema doc covers all markers in loop.sh, includes validation rules
+  - **Priority:** HIGH
+
+### Phase 12.2: Tooling
+
+- [ ] **12.2.1** Add real-time event watcher `bin/brain-event --watch`
+  - **Goal:** Live tail of events with filtering
+  - **Usage:** `brain-event --watch --filter="phase_end"`
+  - **AC:** Watcher shows new events in real-time from state/events.jsonl
+  - **Priority:** LOW
+
+- [ ] **12.2.2** Create cross-run aggregation queries for cache.sqlite
+  - **Goal:** Query patterns for analyzing tool performance across runs
+  - **Output:** Add to `skills/domains/ralph/cache-debugging.md`
+  - **AC:** At least 5 useful queries documented (slowest tools, fail rates, etc.)
+  - **Priority:** LOW
+
+---
+
+## Phase 13: Tool Registry
+
+**Goal:** Move from implicit tool definitions to declarative registry.
+
+**Context:** Tool cacheability is hardcoded in `case` statement. No discovery or permission model.
+
+**Research:** `cortex/docs/research/tool-registry-research.md`
+
+### Phase 13.1: Documentation & Skills
+
+- [ ] **13.1.1** Create `skills/domains/ralph/tool-wrapper-patterns.md`
+  - **Goal:** Document run_tool() usage, cache key generation, error handling
+  - **AC:** Skill covers wrapper API, cacheability rules, trap-based cleanup
+  - **Priority:** HIGH
+
+- [ ] **13.1.2** Extract non-cacheable tools to config file
+  - **Goal:** Move from hardcoded `case` to `config/non_cacheable_tools.txt`
+  - **Change:** Update `is_non_cacheable()` in loop.sh to read from file
+  - **AC:** Config file exists, loop.sh reads it, behavior unchanged
+  - **Priority:** MEDIUM
+
+### Phase 13.2: Registry Foundation
+
+- [ ] **13.2.1** Prototype YAML tool registry schema
+  - **Goal:** Define registry format with 10 common tools as examples
+  - **Location:** `config/tool-registry.yaml`
+  - **Content:** Tool definitions with type, command, cacheable, tags
+  - **AC:** Valid YAML with schema documented, covers shellcheck/markdownlint/git tools
+  - **Priority:** LOW
+
+---
 
 ## Phase 9C: Task Optimization (Batching + Decomposition)
 
