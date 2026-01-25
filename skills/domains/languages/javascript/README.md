@@ -168,6 +168,7 @@ function sql(strings, ...values) {
   // Custom string processing
   return { query: strings.join('?'), params: values };
 }
+const userId = 42;
 const query = sql`SELECT * FROM users WHERE id = ${userId}`;
 ```
 
