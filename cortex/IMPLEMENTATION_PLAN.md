@@ -129,7 +129,7 @@
   - **AC:** Skill covers marker emission, JSONL events, log correlation
   - **Priority:** HIGH
 
-- [ ] **12.1.2** Create `docs/MARKER_SCHEMA.md` - formal spec for all markers
+- [x] **12.1.2** Create `docs/MARKER_SCHEMA.md` - formal spec for all markers
   - **Goal:** Single source of truth for :::MARKER::: format
   - **Content:** All marker types, fields, examples, versioning policy
   - **AC:** Schema doc covers all markers in loop.sh, includes validation rules
@@ -512,5 +512,72 @@
   - **Goal:** Document usage and skill file requirements
   - **AC:** README explains how to run quiz and what makes skills quiz-compatible
   - **Depends:** 20.2.1
+
+---
+
+## Phase 21: Token Efficiency & Tool Consolidation
+
+**Goal:** Reduce Ralph's token usage by providing structured query tools and enforcing lean context loading.
+
+**Problem:** Ralph often opens large files (THUNK.md, IMPLEMENTATION_PLAN.md) when targeted queries would suffice. This wastes tokens and slows iterations.
+
+**Priority:** HIGH (directly improves iteration speed and cost)
+
+### Phase 21.1: Enhance thunk-parse with Query Capabilities
+
+- [ ] **21.1.1** Rename `bin/thunk-parse` → `tools/thunk_parser.py` [MEDIUM]
+  - **Goal:** Consolidate with other Python tools, follow naming convention
+  - **AC:** `python3 tools/thunk_parser.py --help` works, old `bin/thunk-parse` removed
+  - **Update:** Symlink `bin/thunk-parse` → `tools/thunk_parser.py` for backward compat
+
+- [ ] **21.1.2** Add `--query-id` option to thunk_parser.py [HIGH]
+  - **Goal:** Query THUNK by original task ID (e.g., "11.1.3")
+  - **Usage:** `python3 tools/thunk_parser.py --query-id "11.1.3" --json`
+  - **AC:** Returns JSON entry if found, empty if not
+  - **Token savings:** Replaces `grep "11.1.3" THUNK.md` with structured query
+
+- [ ] **21.1.3** Add `--last-id` option to thunk_parser.py [HIGH]
+  - **Goal:** Get last THUNK entry number for appends
+  - **Usage:** `python3 tools/thunk_parser.py --last-id`
+  - **AC:** Prints integer (e.g., "830")
+  - **Token savings:** Replaces `tail THUNK.md | grep | awk`
+
+- [ ] **21.1.4** Add `--search` option with keyword matching [MEDIUM]
+  - **Goal:** Search THUNK entries by keyword
+  - **Usage:** `python3 tools/thunk_parser.py --search "shellcheck" --limit 5`
+  - **AC:** Returns matching entries as JSON
+  - **Token savings:** Structured alternative to grep
+
+### Phase 21.2: Token Efficiency Policy for PROMPT.md
+
+- [ ] **21.2.1** Add "Read Budget" section to `workers/ralph/PROMPT.md` [HIGH]
+  - **Goal:** Explicit rules preventing broad file loading
+  - **Content:** Hard rules (no THUNK.md opens, no IMPL_PLAN opens without line slice)
+  - **AC:** PROMPT.md has "Read Budget" section with allowed/forbidden patterns
+  - **Reference:** Use `docs/TOOLS.md` for CLI alternatives
+
+- [ ] **21.2.2** Add "Required Startup Procedure" to PROMPT.md [MEDIUM]
+  - **Goal:** Ralph uses cheap commands first before any file reads
+  - **Content:** Step A (grep for task), Step B (ensure thunk DB exists)
+  - **AC:** PROMPT.md has startup procedure that minimizes reads
+
+- [ ] **21.2.3** Update `templates/ralph/PROMPT.md` with same changes [MEDIUM]
+  - **Goal:** Keep templates in sync
+  - **AC:** Template matches workers/ralph/PROMPT.md token efficiency sections
+  - **Depends:** 21.2.1, 21.2.2
+
+### Phase 21.3: Documentation Updates
+
+- [ ] **21.3.1** Update `skills/domains/ralph/thread-search-patterns.md` [MEDIUM]
+  - **Goal:** Reference CLI tools instead of raw grep/sed
+  - **AC:** Skill doc links to `docs/TOOLS.md`, shows CLI examples first
+
+- [ ] **21.3.2** Update `NEURONS.md` to reference `docs/TOOLS.md` [LOW]
+  - **Goal:** Easy discovery of tools reference
+  - **AC:** NEURONS.md has link in appropriate section
+
+- [ ] **21.3.3** Add tools reference to `skills/index.md` [LOW]
+  - **Goal:** Include tools in searchable skills index
+  - **AC:** Index has entry pointing to `docs/TOOLS.md`
 
 ---
