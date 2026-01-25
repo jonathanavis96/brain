@@ -30,6 +30,8 @@ mkdir -p "$LOGDIR"
 # Source shared utilities (includes RollFlow cache functions)
 # shellcheck source=../shared/common.sh
 source "$(dirname "$CEREBRAS")/shared/common.sh"
+# shellcheck source=../shared/cache.sh
+source "$(dirname "$CEREBRAS")/shared/cache.sh"
 
 # Cleanup logs older than 7 days on startup
 cleanup_old_logs() {
