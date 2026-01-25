@@ -1184,7 +1184,7 @@ class FeatureFlagService {
   }
   
   // Percentage rollout
-  async isEnabledForPercentage(flagName: string, percentage: number): Promise<boolean> {
+  async isEnabledForPercentage(userId: string, flagName: string, percentage: number): Promise<boolean> {
     const hash = this.hashUserId(userId);
     return (hash % 100) < percentage;
   }

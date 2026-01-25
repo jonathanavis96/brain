@@ -126,7 +126,7 @@ Key milestones:
 
 ### Phase 5.4: Code Example Fixes (Ralph)
 
-- [ ] **5.4.1** Fix `deployment-patterns.md` - add `import time`
+- [x] **5.4.1** Fix `deployment-patterns.md` - add `import time`
   - **AC:** Python example runs without NameError
 
 - [ ] **5.4.2** Fix `deployment-patterns.md` - `isEnabledForPercentage` userId
