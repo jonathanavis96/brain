@@ -188,7 +188,7 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
   - golangci-lint config
   - **AC:** Directory exists with 5+ files
 
-- [ ] **6.3.1** Create `templates/website/` with project scaffolding (pointers only)
+- [x] **6.3.1** Create `templates/website/` with project scaffolding (pointers only)
   - Create AGENTS.project.md, NEURONS.project.md, VALIDATION_CRITERIA.project.md
   - Include references to `skills/domains/websites/` and `skills/domains/marketing/`
   - **DO NOT duplicate skills content** - templates should point to brain, not copy it
