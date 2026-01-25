@@ -107,7 +107,7 @@ Key milestones:
   - Add frontend section entries
   - **AC:** All index.md entries have SUMMARY.md counterparts
 
-- [ ] **5.3.3** Fix incorrect dates (2026-01-25 → 2026-01-24)
+- [x] **5.3.3** Fix incorrect dates (2026-01-25 → 2026-01-24)
   - Files: `workers/IMPLEMENTATION_PLAN.md`, `skills/domains/languages/typescript/README.md`
   - **AC:** No future dates in Last Updated fields
 

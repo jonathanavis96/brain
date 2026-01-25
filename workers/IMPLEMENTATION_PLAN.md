@@ -77,10 +77,10 @@
   - Files: `workers/IMPLEMENTATION_PLAN.md`, `skills/domains/languages/typescript/README.md`
   - **AC:** No future dates in Last Updated fields
 
-- [ ] **5.3.4** Fix `workers/IMPLEMENTATION_PLAN.md` status mismatches
-  - Phase 2.1.2: Change "remains" to "COMPLETE"
-  - Phase 12.4.2-12.4.3: Reconcile "deferred" text with checked boxes
-  - **AC:** Status text matches checkbox state
+- [x] **5.3.4** Fix `workers/IMPLEMENTATION_PLAN.md` status mismatches (obsolete)
+  - Phase 2.1.2 and Phase 12 content no longer exist in file (removed in previous commits)
+  - No "remains" or "deferred" text found (verified via grep)
+  - **AC:** Status text matches checkbox state ✅ (N/A - content already removed)
 
 - [ ] **5.3.5** Fix markdown formatting in `workers/ralph/THUNK.md`
   - Escape pipe characters in table rows: `|` → `\|` or wrap in backticks
@@ -458,10 +458,10 @@
   - Files: `workers/IMPLEMENTATION_PLAN.md`, `skills/domains/languages/typescript/README.md`
   - **AC:** No future dates in Last Updated fields
 
-- [ ] **5.3.4** Fix `workers/IMPLEMENTATION_PLAN.md` status mismatches
-  - Phase 2.1.2: Change "remains" to "COMPLETE"
-  - Phase 12.4.2-12.4.3: Reconcile "deferred" text with checked boxes
-  - **AC:** Status text matches checkbox state
+- [x] **5.3.4** Fix `workers/IMPLEMENTATION_PLAN.md` status mismatches (obsolete)
+  - Phase 2.1.2 and Phase 12 content no longer exist in file (removed in previous commits)
+  - No "remains" or "deferred" text found (verified via grep)
+  - **AC:** Status text matches checkbox state ✅ (N/A - content already removed)
 
 - [ ] **5.3.5** Fix markdown formatting in `workers/ralph/THUNK.md`
   - Escape pipe characters in table rows: `|` → `\|` or wrap in backticks
