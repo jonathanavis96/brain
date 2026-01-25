@@ -31,6 +31,10 @@ mkdir -p "$LOGDIR"
 # shellcheck source=../shared/common.sh
 source "$(dirname "$RALPH")/shared/common.sh"
 
+# Source shared cache library
+# shellcheck source=../shared/cache.sh
+source "$(dirname "$RALPH")/shared/cache.sh"
+
 # Cleanup logs older than 7 days on startup
 cleanup_old_logs() {
   local days="${1:-7}"
@@ -156,6 +160,7 @@ cleanup_and_emit() {
 
   # Avoid double-emission
   if [[ "$_loop_emitted_end" == "true" ]]; then
+    cleanup
     release_lock
     exit $exit_code
   fi
@@ -167,6 +172,7 @@ cleanup_and_emit() {
     emit_event --event error --iter "${CURRENT_ITER:-0}" --status fail --code "$exit_code" --msg "loop exited unexpectedly"
   fi
 
+  cleanup
   release_lock
   exit $exit_code
 }
@@ -235,7 +241,7 @@ Usage:
   loop.sh [--prompt <path>] [--iterations N] [--plan-every N] [--yolo|--no-yolo]
           [--runner rovodev|opencode] [--model <model>] [--branch <name>] [--dry-run] [--no-monitors]
           [--opencode-serve] [--opencode-port N] [--opencode-attach <url>] [--opencode-format json|text]
-          [--cache-skip] [--rollback [N]] [--resume]
+          [--cache-skip] [--force-no-cache] [--force-fresh] [--rollback [N]] [--resume]
 
 Defaults:
   --iterations 1
@@ -267,11 +273,17 @@ Branch Workflow:
                    Then run pr-batch.sh to create PRs to main
 
 Safety Features:
-  --dry-run       Preview changes without committing (appends instruction to prompt)
-  --no-monitors   Skip auto-launching monitor terminals (useful for CI/CD or headless environments)
-  --cache-skip    Enable cache lookup to skip redundant tool calls (requires RollFlow cache DB)
-  --rollback [N]  Undo last N Ralph commits (default: 1). Requires confirmation.
-  --resume        Resume from last incomplete iteration (checks for uncommitted changes)
+  --dry-run         Preview changes without committing (appends instruction to prompt)
+  --no-monitors     Skip auto-launching monitor terminals (useful for CI/CD or headless environments)
+  --cache-skip      Enable cache lookup to skip redundant tool calls (requires RollFlow cache DB)
+  --cache-mode <mode> Cache behavior: off (no caching, default), record (run everything, store PASS),
+                    use (check cache first, skip on hit, record misses)
+  --cache-scope <scopes> Comma-separated list of cache scopes: verify,read,llm_ro
+                    Default: verify,read (safe for all phases)
+  --force-no-cache  Disable cache lookup even if CACHE_SKIP=1 (forces all tools to run)
+  --force-fresh     Bypass all caching regardless of CACHE_MODE/SCOPE (useful for debugging stale cache)
+  --rollback [N]    Undo last N Ralph commits (default: 1). Requires confirmation.
+  --resume          Resume from last incomplete iteration (checks for uncommitted changes)
 
 OpenCode Options:
   --opencode-serve      Start local OpenCode server for faster runs (implies --opencode-attach localhost:4096)
@@ -306,6 +318,12 @@ Examples:
 
   # Resume after error
   bash ralph/loop.sh --resume
+
+  # Enable cache skip to speed up repeated runs
+  bash ralph/loop.sh --cache-skip --iterations 5
+
+  # Force all tools to run even with cache enabled
+  CACHE_SKIP=1 bash ralph/loop.sh --force-no-cache --iterations 1
 EOF
 }
 
@@ -314,6 +332,7 @@ ITERATIONS=1
 PLAN_EVERY=3
 YOLO_FLAG="--yolo"
 RUNNER="rovodev"
+AGENT_NAME="ralph" # Agent identifier for cache isolation
 PROMPT_ARG=""
 MODEL_ARG=""
 BRANCH_ARG=""
@@ -331,8 +350,67 @@ CACHE_MODE="${CACHE_MODE:-off}"           # off|record|use - controls cache beha
 CACHE_SCOPE="${CACHE_SCOPE:-verify,read}" # verify,read,llm_ro - comma-separated list of allowed scopes
 
 # Export cache variables so subprocesses (verifier.sh) inherit them
-export CACHE_MODE CACHE_SCOPE
+export CACHE_MODE CACHE_SCOPE AGENT_NAME
+
+# Note: :::CACHE_CONFIG::: marker moved inside iteration loop (see line ~1452)
+# to include iter= and ts= fields per task X.4.1
+FORCE_NO_CACHE=false
+FORCE_FRESH=false # Bypass all caching regardless of CACHE_MODE/SCOPE
 CONSECUTIVE_VERIFIER_FAILURES=0
+
+# Deprecation: CACHE_SKIP → CACHE_MODE/CACHE_SCOPE migration
+# Accept truthy values: 1, true, yes, y, on (case-insensitive)
+cache_skip_lower=$(echo "${CACHE_SKIP}" | tr '[:upper:]' '[:lower:]')
+if [[ "${cache_skip_lower}" == "true" || "${cache_skip_lower}" == "1" ||
+  "${cache_skip_lower}" == "yes" || "${cache_skip_lower}" == "y" ||
+  "${cache_skip_lower}" == "on" ]]; then
+  echo "⚠️  WARNING: CACHE_SKIP is deprecated and will be removed in a future release."
+  echo "    Please use: CACHE_MODE=use CACHE_SCOPE=verify,read"
+  echo "    Automatically migrating for this run..."
+  CACHE_MODE="use"
+  CACHE_SCOPE="verify,read"
+fi
+
+# =============================================================================
+# Cache Scope Mapping by Phase
+# =============================================================================
+#
+# Ralph loop operates in different phases, each with distinct cache safety requirements:
+#
+# PHASE            | ALLOWED SCOPES        | RATIONALE
+# -----------------|----------------------|---------------------------------------------
+# PLAN             | verify, read         | LLM must reason fresh - planning requires
+#                  |                      | full context and creative problem-solving
+# -----------------|----------------------|---------------------------------------------
+# BUILD            | verify, read         | LLM must execute tasks fresh - caching would
+#                  |                      | cause Ralph to skip work and report "done"
+#                  |                      | without actually implementing changes
+# -----------------|----------------------|---------------------------------------------
+# VERIFY (future)  | verify, read, llm_ro | Safe to cache: verifier checks deterministic
+#                  |                      | rules, read-only LLM analysis has no state
+#                  |                      | side effects
+# -----------------|----------------------|---------------------------------------------
+# REPORT (future)  | verify, read, llm_ro | Safe to cache: report generation is read-only
+#                  |                      | and deterministic based on logs
+# -----------------|----------------------|---------------------------------------------
+#
+# Cache Scopes:
+#   - verify: Deterministic checks (shellcheck, markdownlint, hash validation)
+#   - read:   File reads, git operations (cached by path+mtime)
+#   - llm_ro: Read-only LLM analysis (cached by prompt+git_sha, no state mutation)
+#
+# Current Implementation (Phase 12.4.x):
+#   CACHE_SKIP flag enables caching for all phases (emergency brake for debugging)
+#   Phase 1.x will implement proper scope enforcement with hard-blocks for llm_ro
+#   in PLAN/BUILD phases regardless of CACHE_SKIP setting.
+#
+# See docs/CACHE_DESIGN.md for full design rationale and safety analysis.
+# =============================================================================
+
+# Cache metrics tracking
+CACHE_HITS=0
+CACHE_MISSES=0
+TIME_SAVED_MS=0
 
 # Parse args
 while [[ $# -gt 0 ]]; do
@@ -398,6 +476,22 @@ while [[ $# -gt 0 ]]; do
       CACHE_SKIP=true
       shift
       ;;
+    --cache-mode)
+      CACHE_MODE="${2:-}"
+      shift 2
+      ;;
+    --cache-scope)
+      CACHE_SCOPE="${2:-}"
+      shift 2
+      ;;
+    --force-no-cache)
+      FORCE_NO_CACHE=true
+      shift
+      ;;
+    --force-fresh)
+      FORCE_FRESH=true
+      shift
+      ;;
     --rollback)
       ROLLBACK_MODE=true
       if [[ -n "${2:-}" && "$2" =~ ^[0-9]+$ ]]; then
@@ -422,6 +516,12 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+# Validate CACHE_MODE
+if [[ "$CACHE_MODE" != "off" && "$CACHE_MODE" != "record" && "$CACHE_MODE" != "use" ]]; then
+  echo "ERROR: Invalid CACHE_MODE='$CACHE_MODE'. Must be: off|record|use" >&2
+  exit 2
+fi
 
 # Model version configuration - SINGLE SOURCE OF TRUTH
 # Update these when new model versions are released
@@ -739,7 +839,130 @@ check_protected_file_failures() {
   return 1 # no protected file failures
 }
 
+# =============================================================================
+# Structured Marker Emission (Phase 0 Observability)
+# =============================================================================
+# Markers are emitted to BOTH:
+#   1. stderr (for terminal visibility)
+#   2. CURRENT_LOG_FILE (for rollflow_analyze parsing)
+#
+# CURRENT_LOG_FILE is set by run_once() before tool execution.
+# If not set, markers only go to stderr.
+
+CURRENT_LOG_FILE=""
+
+# Emit a structured marker to stderr AND log file (if set)
+# Args: $1 = marker line
+emit_marker() {
+  local marker="$1"
+  # Always emit to stderr for terminal visibility
+  echo "$marker" >&2
+  # Also append to log file if set (for rollflow_analyze)
+  if [[ -n "$CURRENT_LOG_FILE" && -f "$CURRENT_LOG_FILE" ]]; then
+    echo "$marker" >>"$CURRENT_LOG_FILE"
+  fi
+}
+
+# Emit structured TOOL_START marker
+# Args: $1 = tool_id, $2 = tool_name, $3 = cache_key, $4 = git_sha
+log_tool_start() {
+  local tool_id="$1"
+  local tool_name="$2"
+  local cache_key="$3"
+  local git_sha="$4"
+  local ts
+  ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  emit_marker ":::TOOL_START::: id=${tool_id} tool=${tool_name} cache_key=${cache_key} git_sha=${git_sha} ts=${ts}"
+}
+
+# Emit structured TOOL_END marker
+# Args: $1 = tool_id, $2 = result (PASS/FAIL), $3 = exit_code, $4 = duration_ms, $5 = reason (optional)
+log_tool_end() {
+  local tool_id="$1"
+  local result="$2"
+  local exit_code="$3"
+  local duration_ms="$4"
+  local reason="${5:-}"
+  local ts
+  ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  if [[ -n "$reason" ]]; then
+    emit_marker ":::TOOL_END::: id=${tool_id} result=${result} exit=${exit_code} duration_ms=${duration_ms} reason=${reason} ts=${ts}"
+  else
+    emit_marker ":::TOOL_END::: id=${tool_id} result=${result} exit=${exit_code} duration_ms=${duration_ms} ts=${ts}"
+  fi
+}
+
+# Emit cache hit marker
+# Args: $1 = cache_key, $2 = tool_name
+log_cache_hit() {
+  local cache_key="$1"
+  local tool_name="$2"
+  local ts
+  ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  emit_marker ":::CACHE_HIT::: cache_key=${cache_key} tool=${tool_name} ts=${ts}"
+}
+
+# Emit cache miss marker
+# Args: $1 = cache_key, $2 = tool_name
+log_cache_miss() {
+  local cache_key="$1"
+  local tool_name="$2"
+  local ts
+  ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  emit_marker ":::CACHE_MISS::: cache_key=${cache_key} tool=${tool_name} ts=${ts}"
+}
+
+# Wrapper for tool execution with structured logging
+# Ensures TOOL_END marker is emitted even on failure (via trap)
+# Args: $1 = tool_id, $2 = tool_name, $3 = tool_key, $4 = git_sha, $5 = command to execute
+# Returns: exit code from command
+run_tool() {
+  local tool_id="$1"
+  local tool_name="$2"
+  local tool_key="$3"
+  local git_sha="$4"
+  local tool_command="$5"
+
+  local start_ms
+  local end_ms
+  local duration_ms
+  local rc
+
+  # Start timing
+  start_ms="$(($(date +%s%N) / 1000000))"
+
+  # Log tool start
+  log_tool_start "$tool_id" "$tool_name" "$tool_key" "$git_sha"
+
+  # Set up trap to ensure TOOL_END on failure/interrupt
+  # This trap handles signals (INT/TERM) and ensures cleanup before exit
+  trap 'end_ms="$(($(date +%s%N) / 1000000))"; duration_ms="$((end_ms - start_ms))"; log_tool_end "$tool_id" "FAIL" "130" "$duration_ms" "interrupted"; exit 130' INT TERM
+
+  # Execute command (with set +e to capture exit code without triggering set -e)
+  set +e
+  eval "$tool_command"
+  rc=$?
+  set -e
+
+  # Clear trap
+  trap - INT TERM
+
+  # Calculate duration
+  end_ms="$(($(date +%s%N) / 1000000))"
+  duration_ms="$((end_ms - start_ms))"
+
+  # Log tool end - ALWAYS emit this marker (pass or fail)
+  if [[ $rc -ne 0 ]]; then
+    log_tool_end "$tool_id" "FAIL" "$rc" "$duration_ms" "exit_code_$rc"
+  else
+    log_tool_end "$tool_id" "PASS" "$rc" "$duration_ms"
+  fi
+
+  return $rc
+}
+
 run_verifier() {
+  local iter="${1:-0}"
   if [[ ! -x "$VERIFY_SCRIPT" ]]; then
     # Check for .initialized marker to determine security vs bootstrap mode
     if [[ -f "$RALPH/.verify/.initialized" ]]; then
@@ -777,6 +1000,11 @@ run_verifier() {
   RUN_ID="$(date +%s)-$$"
   export RUN_ID
 
+  # Emit structured verifier environment marker
+  local verifier_ts
+  verifier_ts="$(date +%s)"
+  emit_marker ":::VERIFIER_ENV::: iter=${iter:-0} ts=${verifier_ts} run_id=${RUN_ID}"
+
   # Capture stderr to summarize cache metrics (avoid spamming 40+ lines)
   local cache_stderr
   cache_stderr=$(mktemp)
@@ -807,8 +1035,8 @@ run_verifier() {
 
     # Show cache summary (hits/misses) instead of 40+ individual lines
     local cache_hits cache_misses
-    cache_hits=$(grep -c '\[CACHE_HIT\]' "$cache_stderr" 2>/dev/null || echo "0")
-    cache_misses=$(grep -c '\[CACHE_MISS\]' "$cache_stderr" 2>/dev/null || echo "0")
+    cache_hits=$(grep -c '\[CACHE_HIT\]' "$cache_stderr" 2>/dev/null) || cache_hits=0
+    cache_misses=$(grep -c '\[CACHE_MISS\]' "$cache_stderr" 2>/dev/null) || cache_misses=0
     if [[ $((cache_hits + cache_misses)) -gt 0 ]]; then
       echo "📊 Cache: $cache_hits hits, $cache_misses misses"
     fi
@@ -823,8 +1051,8 @@ run_verifier() {
   else
     # Show cache summary even on failure
     local cache_hits cache_misses
-    cache_hits=$(grep -c '\[CACHE_HIT\]' "$cache_stderr" 2>/dev/null || echo "0")
-    cache_misses=$(grep -c '\[CACHE_MISS\]' "$cache_stderr" 2>/dev/null || echo "0")
+    cache_hits=$(grep -c '\[CACHE_HIT\]' "$cache_stderr" 2>/dev/null) || cache_hits=0
+    cache_misses=$(grep -c '\[CACHE_MISS\]' "$cache_stderr" 2>/dev/null) || cache_misses=0
     if [[ $((cache_hits + cache_misses)) -gt 0 ]]; then
       echo "📊 Cache: $cache_hits hits, $cache_misses misses"
     fi
@@ -848,6 +1076,26 @@ run_once() {
   local ts
   ts="$(date +%F_%H%M%S)"
   local log="$LOGDIR/${ts}_iter${iter}_${phase}.log"
+
+  # Set global log file for marker emission (Phase 0 observability)
+  # Touch the file first so emit_marker can append to it
+  touch "$log"
+  CURRENT_LOG_FILE="$log"
+
+  # Hard-block llm_ro scope for PLAN/BUILD phases (task 1.3.3)
+  # These phases must always call the LLM fresh to avoid skipping work
+  local effective_cache_scope="$CACHE_SCOPE"
+  if [[ "$phase" == "plan" || "$phase" == "build" ]]; then
+    if echo "$CACHE_SCOPE" | grep -q "llm_ro"; then
+      # Remove llm_ro from scope
+      effective_cache_scope=$(echo "$CACHE_SCOPE" | sed 's/,llm_ro//g; s/llm_ro,//g; s/llm_ro//g' | sed 's/^,//; s/,$//')
+      echo ""
+      echo "⚠️  llm_ro scope ignored for ${phase^^} phase (cache safety)"
+      echo "   Original scope: $CACHE_SCOPE"
+      echo "   Effective scope: $effective_cache_scope"
+      echo ""
+    fi
+  fi
 
   echo
   echo "========================================"
@@ -904,6 +1152,7 @@ run_once() {
       fi
       echo ""
       echo "# ═══════════════════════════════════════════════════════════════"
+      echo ""
     fi
 
     # Inject AGENTS.md (standard Ralph pattern: PROMPT.md + AGENTS.md)
@@ -948,18 +1197,129 @@ run_once() {
   local git_sha
   git_sha="$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')"
   tool_id="$(tool_call_id)"
-
-  # Create a temp file with model/phase/iter metadata for cache key generation
-  local cache_meta_file="/tmp/cache_meta_$$_${iter}.json"
-  echo "{\"model\":\"$RESOLVED_MODEL\",\"phase\":\"$phase\",\"iter\":$iter}" >"$cache_meta_file"
-  tool_key="$(cache_key "$RUNNER" "$cache_meta_file")"
-  rm -f "$cache_meta_file"
-
+  # Generate input-based cache key (prompt content hash + git SHA, NOT iteration number)
+  # This implements task 1.5.1: remove iteration-level caching, use content-based keys
+  local prompt_hash
+  prompt_hash="$(sha256sum "$prompt_with_mode" 2>/dev/null | cut -d' ' -f1 || echo 'unknown')"
+  # Use AGENT_NAME for cache key (task 4.4.1: agent isolation)
+  local agent_key="${AGENT_NAME:-${RUNNER}}"
+  if [[ -z "$AGENT_NAME" ]]; then
+    echo "⚠️  WARNING: AGENT_NAME not set, falling back to RUNNER for cache key" >&2
+  fi
+  tool_key="${agent_key,,}|${phase}|${prompt_hash:0:16}|${git_sha}"
   start_ms="$(($(date +%s%N) / 1000000))"
 
-  # Log tool call start
-  log_tool_start "$tool_id" "$RUNNER" "$tool_key" "$git_sha" | tee -a "$log"
+  # Check cache if CACHE_SKIP or CACHE_MODE=use is enabled and neither FORCE_NO_CACHE nor FORCE_FRESH is set
+  if [[ ("$CACHE_SKIP" == "true" || "$CACHE_MODE" == "use") && "$FORCE_NO_CACHE" != "true" && "$FORCE_FRESH" != "true" ]]; then
+    # Safety check: If BUILD phase has pending tasks, force fresh run (task 1.4.1)
+    if [[ "$phase" == "build" ]]; then
+      local plan_file="${ROOT}/workers/IMPLEMENTATION_PLAN.md"
+      if [[ -f "$plan_file" ]] && grep -q "^- \[ \]" "$plan_file"; then
+        local guard_ts=$(($(date +%s%N) / 1000000))
+        emit_marker ":::CACHE_GUARD::: iter=${iter} allowed=0 reason=pending_tasks phase=BUILD ts=${guard_ts}"
+        echo ""
+        echo "========================================"
+        echo "⚠️  Cache disabled: pending tasks detected"
+        echo "BUILD phase with [ ] tasks requires fresh execution"
+        echo "========================================"
+        echo ""
+        # Skip cache lookup, proceed with normal execution
+      elif lookup_cache_pass "$tool_key" "$git_sha" "${AGENT_NAME:-$RUNNER}"; then
+        # Cache hit - skip tool execution
+        local guard_ts=$(($(date +%s%N) / 1000000))
+        emit_marker ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=no_pending_tasks phase=BUILD ts=${guard_ts}"
+        # Query saved duration from cache
+        local saved_ms=0
+        local cache_db="${CACHE_DB:-artifacts/rollflow_cache/cache.sqlite}"
+        if [[ -f "$cache_db" ]]; then
+          saved_ms=$(python3 -c "
+import sqlite3
+try:
+    conn = sqlite3.connect('$cache_db')
+    cursor = conn.execute('SELECT last_duration_ms FROM pass_cache WHERE cache_key = ?', ('$tool_key',))
+    row = cursor.fetchone()
+    conn.close()
+    print(row[0] if row and row[0] else 0)
+except Exception:
+    print(0)
+" 2>/dev/null) || saved_ms=0
+        fi
 
+        log_cache_hit "$tool_key" "$RUNNER"
+        CACHE_HITS=$((CACHE_HITS + 1))
+        TIME_SAVED_MS=$((TIME_SAVED_MS + saved_ms))
+
+        echo ""
+        echo "========================================"
+        echo "✓ Cache hit - skipping tool execution"
+        echo "Key: $tool_key"
+        echo "Tool: $RUNNER"
+        echo "Saved: ${saved_ms}ms"
+        echo "========================================"
+        echo ""
+        # Cleanup temp config before early return
+        if [[ -n "${TEMP_CONFIG:-}" && -f "${TEMP_CONFIG:-}" ]]; then
+          rm -f "$TEMP_CONFIG"
+        fi
+        return 0
+      else
+        # Cache miss - proceed with execution
+        local guard_ts=$(($(date +%s%N) / 1000000))
+        emit_marker ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=no_pending_tasks phase=BUILD ts=${guard_ts}"
+        log_cache_miss "$tool_key" "${AGENT_NAME:-$RUNNER}"
+        CACHE_MISSES=$((CACHE_MISSES + 1))
+      fi
+    else
+      # PLAN phase - check cache normally
+      if lookup_cache_pass "$tool_key" "$git_sha" "${AGENT_NAME:-$RUNNER}"; then
+        # Cache hit - skip tool execution
+        local guard_ts=$(($(date +%s%N) / 1000000))
+        emit_marker ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=idempotent_check phase=PLAN ts=${guard_ts}"
+        # Query saved duration from cache
+        local saved_ms=0
+        local cache_db="${CACHE_DB:-artifacts/rollflow_cache/cache.sqlite}"
+        if [[ -f "$cache_db" ]]; then
+          saved_ms=$(python3 -c "
+import sqlite3
+try:
+    conn = sqlite3.connect('$cache_db')
+    cursor = conn.execute('SELECT last_duration_ms FROM pass_cache WHERE cache_key = ?', ('$tool_key',))
+    row = cursor.fetchone()
+    conn.close()
+    print(row[0] if row and row[0] else 0)
+except Exception:
+    print(0)
+" 2>/dev/null) || saved_ms=0
+        fi
+
+        log_cache_hit "$tool_key" "$RUNNER"
+        CACHE_HITS=$((CACHE_HITS + 1))
+        TIME_SAVED_MS=$((TIME_SAVED_MS + saved_ms))
+
+        echo ""
+        echo "========================================"
+        echo "✓ Cache hit - skipping tool execution"
+        echo "Key: $tool_key"
+        echo "Tool: $RUNNER"
+        echo "Saved: ${saved_ms}ms"
+        echo "========================================"
+        echo ""
+        # Cleanup temp config before early return
+        if [[ -n "${TEMP_CONFIG:-}" && -f "${TEMP_CONFIG:-}" ]]; then
+          rm -f "$TEMP_CONFIG"
+        fi
+        return 0
+      else
+        # Cache miss - proceed with execution
+        local guard_ts=$(($(date +%s%N) / 1000000))
+        emit_marker ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=idempotent_check phase=PLAN ts=${guard_ts}"
+        log_cache_miss "$tool_key" "${AGENT_NAME:-$RUNNER}"
+        CACHE_MISSES=$((CACHE_MISSES + 1))
+      fi
+    fi
+  fi
+
+  # Execute LLM call through run_tool() wrapper for structured logging
   if [[ "$RUNNER" == "opencode" ]]; then
     # NOTE: Passing full prompt as CLI arg can hit shell/argv limits if prompt is huge.
     # If that happens, pivot to a file-based approach after validating basic integration.
@@ -967,32 +1327,20 @@ run_once() {
     if [[ -n "${OPENCODE_ATTACH:-}" ]]; then
       attach_flag="--attach ${OPENCODE_ATTACH}"
     fi
-    opencode run "${attach_flag}" --model "${RESOLVED_MODEL}" --format "${OPENCODE_FORMAT}" "$(cat "$prompt_with_mode")" 2>&1 | tee -a "$log"
+    run_tool "$tool_id" "$RUNNER" "$tool_key" "$git_sha" \
+      "opencode run \"${attach_flag}\" --model \"${RESOLVED_MODEL}\" --format \"${OPENCODE_FORMAT}\" \"\$(cat \"$prompt_with_mode\")\" 2>&1 | tee -a \"$log\""
     rc=$?
 
-    # Log tool call end
-    end_ms="$(($(date +%s%N) / 1000000))"
-    duration_ms="$((end_ms - start_ms))"
     if [[ $rc -ne 0 ]]; then
-      log_tool_end "$tool_id" "FAIL" "$rc" "$duration_ms" "OpenCode exit $rc" | tee -a "$log"
       echo "❌ OpenCode failed (exit $rc). See: $log"
       tail -n 80 "$log" || true
       return 1
     fi
-    log_tool_end "$tool_id" "PASS" "$rc" "$duration_ms" | tee -a "$log"
   else
     # Default: RovoDev
-    script -q -c "cat \"$prompt_with_mode\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG}" "$log"
+    run_tool "$tool_id" "$RUNNER" "$tool_key" "$git_sha" \
+      "script -q -c \"cat \\\"$prompt_with_mode\\\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG}\" \"$log\""
     rc=$?
-
-    # Log tool call end
-    end_ms="$(($(date +%s%N) / 1000000))"
-    duration_ms="$((end_ms - start_ms))"
-    if [[ $rc -ne 0 ]]; then
-      log_tool_end "$tool_id" "FAIL" "$rc" "$duration_ms" "RovoDev exit $rc" | tee -a "$log"
-    else
-      log_tool_end "$tool_id" "PASS" "$rc" "$duration_ms" | tee -a "$log"
-    fi
   fi
 
   # Clean up temporary prompt
@@ -1014,7 +1362,7 @@ run_once() {
 
   # Run verifier after both PLAN and BUILD iterations
   if [[ "$phase" == "plan" ]] || [[ "$phase" == "build" ]]; then
-    if run_verifier; then
+    if run_verifier "$iter"; then
       echo ""
       echo "========================================"
       echo "🎉 ${phase^^} iteration verified successfully!"
@@ -1058,7 +1406,7 @@ run_once() {
     unchecked_count=$(grep -cE '^\s*-\s*\[ \]' "$ROOT/workers/IMPLEMENTATION_PLAN.md" 2>/dev/null) || unchecked_count=0
     if [[ "$unchecked_count" -eq 0 ]]; then
       # All tasks done - run final verification
-      if run_verifier; then
+      if run_verifier "$iter"; then
         echo ""
         echo "========================================"
         echo "🎉 All tasks complete and verified!"
@@ -1211,6 +1559,16 @@ ROLLFLOW_RUN_ID="run-$(date +%s)-$$"
 export ROLLFLOW_RUN_ID
 log_run_start "$ROLLFLOW_RUN_ID"
 
+# Print cache status reminder if enabled
+if [[ "$CACHE_SKIP" == "true" ]]; then
+  echo ""
+  echo "========================================"
+  echo "🚀 Cache skip enabled"
+  echo "Redundant tool calls will be skipped"
+  echo "========================================"
+  echo ""
+fi
+
 # Set up trap for error event on unexpected exit
 trap 'cleanup_and_emit' EXIT
 
@@ -1218,10 +1576,24 @@ trap 'cleanup_and_emit' EXIT
 if [[ -n "$PROMPT_ARG" ]]; then
   PROMPT_FILE="$(resolve_prompt "$PROMPT_ARG")"
   for ((i = 1; i <= ITERATIONS; i++)); do
+    # Initialize log file early for marker emission (Phase 0 observability)
+    iter_ts="$(date +%F_%H%M%S)"
+    CURRENT_LOG_FILE="$LOGDIR/${iter_ts}_iter${i}_custom.log"
+    touch "$CURRENT_LOG_FILE"
+
     # Log iteration start marker for RollFlow tracking
     log_iter_start "iter-$i" "$ROLLFLOW_RUN_ID"
     CURRENT_ITER=$i
+
+    # Emit ITER_START marker for rollflow_analyze (task X.1.1)
+    iter_start_ts="$(($(date +%s%N) / 1000000))"
+    emit_marker ":::ITER_START::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_start_ts"
+
     emit_event --event iteration_start --iter "$i"
+
+    # Log cache config for Cortex visibility (task X.4.1)
+    cache_config_ts="$(($(date +%s%N) / 1000000))"
+    emit_marker ":::CACHE_CONFIG::: mode=$CACHE_MODE scope=$CACHE_SCOPE exported=1 iter=$i ts=$cache_config_ts"
 
     # Check for interrupt before starting iteration
     if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
@@ -1270,11 +1642,20 @@ if [[ -n "$PROMPT_ARG" ]]; then
     # Capture exit code without triggering set -e
     run_result=0
     emit_event --event phase_start --iter "$i" --phase "custom"
+    # Emit PHASE_START marker for rollflow_analyze (task X.1.2)
+    phase_start_ts="$(($(date +%s%N) / 1000000))"
+    emit_marker ":::PHASE_START::: iter=$i phase=custom run_id=$ROLLFLOW_RUN_ID ts=$phase_start_ts"
     run_once "$PROMPT_FILE" "custom" "$i" || run_result=$?
     if [[ $run_result -eq 0 ]]; then
       emit_event --event phase_end --iter "$i" --phase "custom" --status ok
+      # Emit PHASE_END marker for rollflow_analyze (task X.1.2)
+      phase_end_ts="$(($(date +%s%N) / 1000000))"
+      emit_marker ":::PHASE_END::: iter=$i phase=custom status=ok run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts"
     else
       emit_event --event phase_end --iter "$i" --phase "custom" --status fail --code "$run_result"
+      # Emit PHASE_END marker for rollflow_analyze (task X.1.2)
+      phase_end_ts="$(($(date +%s%N) / 1000000))"
+      emit_marker ":::PHASE_END::: iter=$i phase=custom status=fail code=$run_result run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts"
     fi
     # Check if Ralph signaled completion
     if [[ $run_result -eq 42 ]]; then
@@ -1318,15 +1699,51 @@ if [[ -n "$PROMPT_ARG" ]]; then
       # Reset counter on successful iteration
       CONSECUTIVE_VERIFIER_FAILURES=0
     fi
+
+    # Run gap radar after iteration completes (task 7.4.1)
+    if [[ -x "$ROOT/bin/gap-radar" ]]; then
+      echo ""
+      echo "Running gap radar analysis..."
+      if "$ROOT/bin/gap-radar" --dry-run 2>&1 | tee -a "$LOGS_DIR/iter${i}_custom.log"; then
+        echo "✓ Gap radar analysis complete"
+      else
+        echo "⚠ Gap radar analysis failed (non-blocking)"
+      fi
+      echo ""
+    fi
+
     emit_event --event iteration_end --iter "$i" --status ok
+
+    # Emit ITER_END marker for rollflow_analyze (task X.1.1)
+    iter_end_ts="$(($(date +%s%N) / 1000000))"
+    emit_marker ":::ITER_END::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_end_ts"
   done
 else
   # Alternating plan/build
   for ((i = 1; i <= ITERATIONS; i++)); do
+    # Initialize log file early for marker emission (Phase 0 observability)
+    # Note: run_once() will update CURRENT_LOG_FILE with the actual phase-specific log
+    iter_ts="$(date +%F_%H%M%S)"
+    if [[ $i -eq 1 || $((i % PLAN_EVERY)) -eq 0 ]]; then
+      CURRENT_LOG_FILE="$LOGDIR/${iter_ts}_iter${i}_plan.log"
+    else
+      CURRENT_LOG_FILE="$LOGDIR/${iter_ts}_iter${i}_build.log"
+    fi
+    touch "$CURRENT_LOG_FILE"
+
     # Log iteration start marker for RollFlow tracking
     log_iter_start "iter-$i" "$ROLLFLOW_RUN_ID"
     CURRENT_ITER=$i
+
+    # Emit ITER_START marker for rollflow_analyze (task X.1.1)
+    iter_start_ts="$(($(date +%s%N) / 1000000))"
+    emit_marker ":::ITER_START::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_start_ts"
+
     emit_event --event iteration_start --iter "$i"
+
+    # Log cache config for Cortex visibility (task X.4.1)
+    cache_config_ts="$(($(date +%s%N) / 1000000))"
+    emit_marker ":::CACHE_CONFIG::: mode=$CACHE_MODE scope=$CACHE_SCOPE exported=1 iter=$i ts=$cache_config_ts"
 
     # Check for interrupt before starting iteration
     if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
@@ -1375,6 +1792,12 @@ else
     # Capture exit code without triggering set -e
     run_result=0
     if [[ "$i" -eq 1 ]] || ((PLAN_EVERY > 0 && ((i - 1) % PLAN_EVERY == 0))); then
+      # Snapshot plan BEFORE sync for drift detection (prevents direct-edit bypass)
+      PLAN_SNAPSHOT="$ROOT/.verify/plan_snapshot.md"
+      if [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
+        cp "$ROOT/workers/IMPLEMENTATION_PLAN.md" "$PLAN_SNAPSHOT"
+      fi
+
       # Sync tasks from Cortex before PLAN mode
       if [[ -f "$RALPH/sync_cortex_plan.sh" ]]; then
         echo "Syncing tasks from Cortex..."
@@ -1386,33 +1809,63 @@ else
         echo ""
       fi
       emit_event --event phase_start --iter "$i" --phase "plan"
+      # Emit PHASE_START marker for rollflow_analyze (task X.1.2)
+      phase_start_ts="$(($(date +%s%N) / 1000000))"
+      emit_marker ":::PHASE_START::: iter=$i phase=plan run_id=$ROLLFLOW_RUN_ID ts=$phase_start_ts"
       run_once "$PLAN_PROMPT" "plan" "$i" || run_result=$?
       if [[ $run_result -eq 0 ]]; then
         emit_event --event phase_end --iter "$i" --phase "plan" --status ok
+        # Emit PHASE_END marker for rollflow_analyze (task X.1.2)
+        phase_end_ts="$(($(date +%s%N) / 1000000))"
+        emit_marker ":::PHASE_END::: iter=$i phase=plan status=ok run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts"
       else
         emit_event --event phase_end --iter "$i" --phase "plan" --status fail --code "$run_result"
+        # Emit PHASE_END marker for rollflow_analyze (task X.1.2)
+        phase_end_ts="$(($(date +%s%N) / 1000000))"
+        emit_marker ":::PHASE_END::: iter=$i phase=plan status=fail code=$run_result run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts"
       fi
     else
       # Auto-fix lint issues before BUILD iteration
       echo "Running auto-fix for lint issues..."
+      autofix_git_sha="$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')"
+
       if [[ -f "$RALPH/fix-markdown.sh" ]]; then
-        (cd "$ROOT" && bash "$RALPH/fix-markdown.sh" . 2>/dev/null) || true
+        fix_md_id="$(tool_call_id)"
+        fix_md_key="fix-markdown|${autofix_git_sha}"
+        run_tool "$fix_md_id" "fix-markdown" "$fix_md_key" "$autofix_git_sha" \
+          "(cd \"$ROOT\" && bash \"$RALPH/fix-markdown.sh\" . 2>/dev/null) || true" || true
       fi
+
       if command -v pre-commit &>/dev/null; then
-        (cd "$ROOT" && pre-commit run --all-files 2>/dev/null) || true
+        precommit_id="$(tool_call_id)"
+        precommit_key="pre-commit|${autofix_git_sha}"
+        run_tool "$precommit_id" "pre-commit" "$precommit_key" "$autofix_git_sha" \
+          "(cd \"$ROOT\" && pre-commit run --all-files 2>/dev/null) || true" || true
       fi
 
       # Run verifier to get current state (Ralph will see WARN/FAIL in context)
       echo "Running verifier to check current state..."
-      (cd "$RALPH" && bash verifier.sh 2>/dev/null) || true
+      verifier_pre_id="$(tool_call_id)"
+      verifier_pre_key="verifier-pre-build|${autofix_git_sha}"
+      run_tool "$verifier_pre_id" "verifier" "$verifier_pre_key" "$autofix_git_sha" \
+        "(cd \"$RALPH\" && bash verifier.sh 2>/dev/null) || true" || true
       echo ""
 
       emit_event --event phase_start --iter "$i" --phase "build"
+      # Emit PHASE_START marker for rollflow_analyze (task X.1.2)
+      phase_start_ts="$(($(date +%s%N) / 1000000))"
+      emit_marker ":::PHASE_START::: iter=$i phase=build run_id=$ROLLFLOW_RUN_ID ts=$phase_start_ts"
       run_once "$BUILD_PROMPT" "build" "$i" || run_result=$?
       if [[ $run_result -eq 0 ]]; then
         emit_event --event phase_end --iter "$i" --phase "build" --status ok
+        # Emit PHASE_END marker for rollflow_analyze (task X.1.2)
+        phase_end_ts="$(($(date +%s%N) / 1000000))"
+        emit_marker ":::PHASE_END::: iter=$i phase=build status=ok run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts"
       else
         emit_event --event phase_end --iter "$i" --phase "build" --status fail --code "$run_result"
+        # Emit PHASE_END marker for rollflow_analyze (task X.1.2)
+        phase_end_ts="$(($(date +%s%N) / 1000000))"
+        emit_marker ":::PHASE_END::: iter=$i phase=build status=fail code=$run_result run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts"
       fi
 
       # Sync completions back to Cortex after BUILD iterations
@@ -1426,6 +1879,24 @@ else
         echo ""
       fi
     fi
+
+    # Plan drift detection: compare snapshot vs current plan
+    PLAN_SNAPSHOT="$ROOT/.verify/plan_snapshot.md"
+    if [[ -f "$PLAN_SNAPSHOT" ]] && [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
+      # Check for unexpected changes (tasks added directly, not via cortex sync)
+      snapshot_tasks=$(grep -c "^- \[ \]" "$PLAN_SNAPSHOT" 2>/dev/null || echo "0")
+      current_tasks=$(grep -c "^- \[ \]" "$ROOT/workers/IMPLEMENTATION_PLAN.md" 2>/dev/null || echo "0")
+      if [[ "$current_tasks" -gt "$snapshot_tasks" ]]; then
+        new_task_count=$((current_tasks - snapshot_tasks))
+        echo ""
+        echo "⚠️  Plan drift detected: $new_task_count new task(s) added directly to workers/IMPLEMENTATION_PLAN.md"
+        echo "    Tasks should be added via cortex/IMPLEMENTATION_PLAN.md and synced."
+        echo ""
+      fi
+      # Clean up snapshot
+      rm -f "$PLAN_SNAPSHOT"
+    fi
+
     # Check if Ralph signaled completion (exit code 42)
     if [[ $run_result -eq 42 ]]; then
       echo ""
@@ -1468,6 +1939,42 @@ else
       # Reset counter on successful iteration
       CONSECUTIVE_VERIFIER_FAILURES=0
     fi
+
+    # Run gap radar after BUILD iteration completes (task 7.4.1)
+    # Only run for BUILD iterations (not PLAN)
+    if [[ "$i" -ne 1 ]] && ! ((PLAN_EVERY > 0 && ((i - 1) % PLAN_EVERY == 0))); then
+      if [[ -x "$ROOT/bin/gap-radar" ]]; then
+        echo ""
+        echo "Running gap radar analysis..."
+        if "$ROOT/bin/gap-radar" --dry-run 2>&1 | tee -a "$LOGS_DIR/iter${i}_build.log"; then
+          echo "✓ Gap radar analysis complete"
+        else
+          echo "⚠ Gap radar analysis failed (non-blocking)"
+        fi
+        echo ""
+      fi
+    fi
+
     emit_event --event iteration_end --iter "$i" --status ok
+
+    # Emit ITER_END marker for rollflow_analyze (task X.1.1)
+    iter_end_ts="$(($(date +%s%N) / 1000000))"
+    emit_marker ":::ITER_END::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_end_ts"
   done
+fi
+
+# Print cache statistics summary at end of run
+if [[ "$CACHE_SKIP" == "true" ]]; then
+  echo ""
+  echo "========================================"
+  echo "📊 Cache Statistics"
+  echo "========================================"
+  echo "Cache hits:   $CACHE_HITS"
+  echo "Cache misses: $CACHE_MISSES"
+  if [[ $CACHE_HITS -gt 0 ]]; then
+    TIME_SAVED_SEC=$((TIME_SAVED_MS / 1000))
+    echo "Time saved:   ${TIME_SAVED_SEC}s (${TIME_SAVED_MS}ms)"
+  fi
+  echo "========================================"
+  echo ""
 fi
