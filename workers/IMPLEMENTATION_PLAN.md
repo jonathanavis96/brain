@@ -246,9 +246,9 @@
   - After BUILD iteration completes, run `gap_radar/suggest_gaps.sh --dry-run`
   - Log suggestions to iteration log (don't auto-modify GAP_BACKLOG)
   - **AC:** Gap suggestions appear in Ralph logs
-  - **If Blocked:** This modifies protected file - may need to defer or request waiver
+  - **BLOCKED:** Protected file (loop.sh hash-guarded) - requires human approval or waiver
 
-- [ ] **7.4.2** Create `bin/gap-radar` convenience wrapper
+- [x] **7.4.2** Create `bin/gap-radar` convenience wrapper
   - Runs full pipeline with sensible defaults
   - Options: `--since <date>`, `--from-log <file>`, `--append`
   - **AC:** `bin/gap-radar --help` shows usage
