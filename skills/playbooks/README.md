@@ -92,6 +92,11 @@ Common issues and solutions:
 - [Debug Ralph Stuck](./debug-ralph-stuck.md) - Troubleshoot Ralph loop issues
 - [Investigate Test Failures](./investigate-test-failures.md) - Systematic test failure resolution
 
+### Task Management Workflows
+
+- [Task Optimization Review](./task-optimization-review.md) - Identify batching and decomposition opportunities
+- [Decompose Large Tasks](./decompose-large-tasks.md) - Break down oversized tasks into atomic subtasks
+
 ## Contributing
 
 New playbooks should:
