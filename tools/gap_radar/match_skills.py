@@ -62,6 +62,8 @@ def find_skill_for_error(
     Returns:
         Skill file path if covered, None otherwise
     """
+    if not error_code:
+        return None
     for pattern, skill_file in skill_mappings.items():
         if re.search(pattern, error_code):
             return skill_file

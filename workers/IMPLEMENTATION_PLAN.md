@@ -224,7 +224,7 @@
 
 ### Phase 7.3: Auto-Append to GAP_BACKLOG
 
-- [ ] **7.3.1** Create `tools/gap_radar/suggest_gaps.sh`
+- [x] **7.3.1** Create `tools/gap_radar/suggest_gaps.sh`
   - Chain: extract_errors → match_skills → filter uncovered → format as gap entry
   - De-duplicate against existing `GAP_BACKLOG.md` entries
   - Output gap entries in correct markdown format

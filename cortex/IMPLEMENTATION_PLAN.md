@@ -350,7 +350,7 @@ Key milestones:
   - Update markdown patterns for MD040, MD032, etc.
   - **AC:** At least 10 skills have coverage tags
 
-- [ ] **7.2.3** Create `tools/gap_radar/coverage_report.py`
+- [x] **7.2.3** Create `tools/gap_radar/coverage_report.py`
   - Generate summary: total errors seen, % covered by skills, top uncovered
   - Output markdown table suitable for `GAP_BACKLOG.md` or standalone report
   - **AC:** Report runs and produces readable output

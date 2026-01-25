@@ -30,9 +30,9 @@ extract_errors() {
       local rule_id="${BASH_REMATCH[2]}"
       local description="${BASH_REMATCH[3]}"
 
-      # Try to extract error code (e.g., SC2155, MD040)
+      # Try to extract error code (e.g., SC2155, MD040, F821, E501)
       local error_code=""
-      if [[ "$description" =~ (SC[0-9]+|MD[0-9]+) ]]; then
+      if [[ "$description" =~ (SC[0-9]+|MD[0-9]+|[EF][0-9]+) ]]; then
         error_code="${BASH_REMATCH[1]}"
       fi
 
