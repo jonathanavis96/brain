@@ -303,7 +303,7 @@ Key milestones:
   - Add go-patterns, javascript-patterns entries
   - **AC:** Index lists all skill files
 
-- [ ] **6.6.2** Add "See Also" sections to isolated skill files
+- [x] **6.6.2** Add "See Also" sections to isolated skill files
   - Files like `cache-debugging.md` should link to related `caching-patterns.md`
   - **AC:** Skills have bidirectional links where relevant
 
