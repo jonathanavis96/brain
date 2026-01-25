@@ -24,7 +24,7 @@
   - **Fix:** Guard `$2` access with `${2:-}` check
   - **AC:** `bash -n bin/brain-event` passes; no unbound var errors when flag is last arg
 
-- [ ] **CR-1.8** Fix `cerebras_agent.py` state reinjection index
+- [x] **CR-1.8** Fix `cerebras_agent.py` state reinjection index
   - **File:** `workers/cerebras/cerebras_agent.py` lines 1021-1038
   - **Issue:** State reinjection at index 1 breaks `_prune_messages`
   - **Fix:** Insert after user message (index 2)
