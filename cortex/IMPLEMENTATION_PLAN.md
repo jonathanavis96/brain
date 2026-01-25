@@ -454,7 +454,7 @@ Key milestones:
   - Links to: `ralph/ralph-patterns.md`, `ralph/cache-debugging.md`
   - **AC:** Playbook covers common stuck scenarios
 
-- [ ] **8.4.2** Create `skills/playbooks/investigate-test-failures.md`
+- [x] **8.4.2** Create `skills/playbooks/investigate-test-failures.md`
   - Steps: Run tests → Parse output → Identify failure type → Fix or escalate
   - Covers: Python pytest, shell script tests, integration tests
   - Links to: `code-quality/testing-patterns.md`
