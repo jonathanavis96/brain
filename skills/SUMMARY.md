@@ -293,13 +293,14 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
 
 **Available playbooks:**
 
-- [Fix ShellCheck Failures](playbooks/fix-shellcheck-failures.md) - Systematic approach to resolving shellcheck warnings (SC2034, SC2155, SC2086)
-- [Fix Markdown Lint](playbooks/fix-markdown-lint.md) - Resolve markdown linting issues (MD040, MD032, MD024)
-- [Resolve Verifier Failures](playbooks/resolve-verifier-failures.md) - Handle verifier check failures with decision tree routing
-- [Safe Template Sync](playbooks/safe-template-sync.md) - Synchronize changes between workers/ and templates/
 - [Bootstrap New Project](playbooks/bootstrap-new-project.md) - Set up a new project from templates
 - [Debug Ralph Stuck](playbooks/debug-ralph-stuck.md) - Troubleshoot Ralph loop issues (stuck, repeated failures, infinite loops)
+- [Fix Markdown Lint](playbooks/fix-markdown-lint.md) - Resolve markdown linting issues (MD040, MD032, MD024)
+- [Fix ShellCheck Failures](playbooks/fix-shellcheck-failures.md) - Systematic approach to resolving shellcheck warnings (SC2034, SC2155, SC2086)
 - [Investigate Test Failures](playbooks/investigate-test-failures.md) - Systematic test failure resolution (pytest, bash, integration tests)
+- [Resolve Verifier Failures](playbooks/resolve-verifier-failures.md) - Handle verifier check failures with decision tree routing
+- [Safe Template Sync](playbooks/safe-template-sync.md) - Synchronize changes between workers/ and templates/
+- [Task Optimization Review](playbooks/task-optimization-review.md) - Review and optimize task definitions
 
 ## Skills Authoring
 

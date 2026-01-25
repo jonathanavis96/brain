@@ -45,7 +45,26 @@ shellcheck script.sh
 # SC2034 - unused variables  
 # SC2086 - unquoted variables
 # SC2162 - read without -r
-```text
+```
+
+**Formatting with shfmt:**
+
+```bash
+# Manual formatting (write changes):
+shfmt -i 2 -ci -w script.sh
+
+# Pre-commit check (diff only, no auto-fix):
+shfmt -d -i 2 -ci script.sh
+
+# Flags explained:
+#   -i 2  = 2-space indentation
+#   -ci   = indent case statement bodies
+#   -w    = write in place (manual use)
+#   -d    = diff mode (pre-commit config - check only)
+#
+# Note: Pre-commit uses `-d -i 2 -ci` (check only, no auto-fix)
+#       Manual fixes use `-i 2 -ci -w` (write changes)
+```
 
 ---
 

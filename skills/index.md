@@ -44,6 +44,7 @@ Catalog of all skill files in the brain system.
 - [bulk-edit-patterns.md](domains/code-quality/bulk-edit-patterns.md) - Bulk editing strategies and markdown auto-fix patterns
 - [code-consistency.md](domains/code-quality/code-consistency.md) - Documentation accuracy, terminology, parsing consistency
 - [code-hygiene.md](domains/code-quality/code-hygiene.md) - Definition of Done checklists
+- [code-review-patterns.md](domains/code-quality/code-review-patterns.md) - Code review checklist for regex, scope, examples, documentation quality
 - [markdown-patterns.md](domains/code-quality/markdown-patterns.md) - Lint rules (MD040, MD024, MD050), documentation accuracy
 - [research-cheatsheet.md](domains/code-quality/research-cheatsheet.md) - One-page quick reference for research patterns
 - [research-patterns.md](domains/code-quality/research-patterns.md) - Systematic research methodology for gathering and evaluating information
@@ -84,11 +85,11 @@ Catalog of all skill files in the brain system.
 #### Shell
 
 - [README.md](domains/languages/shell/README.md) - Shell scripting overview and quick reference
-- [strict-mode.md](domains/languages/shell/strict-mode.md) - Strict mode (`set -euo pipefail`) patterns
-- [variable-patterns.md](domains/languages/shell/variable-patterns.md) - SC2155, SC2034, scoping
 - [cleanup-patterns.md](domains/languages/shell/cleanup-patterns.md) - Traps, temp files, state restoration
 - [common-pitfalls.md](domains/languages/shell/common-pitfalls.md) - ShellCheck errors and gotchas
+- [strict-mode.md](domains/languages/shell/strict-mode.md) - Strict mode (`set -euo pipefail`) patterns
 - [validation-patterns.md](domains/languages/shell/validation-patterns.md) - Shell project validation (syntax, shellcheck, permissions, security)
+- [variable-patterns.md](domains/languages/shell/variable-patterns.md) - SC2155, SC2034, scoping
 
 #### TypeScript
 
@@ -116,6 +117,11 @@ Catalog of all skill files in the brain system.
 - [resolve-verifier-failures.md](playbooks/resolve-verifier-failures.md) - Debug and fix verifier gate failures
 - [safe-template-sync.md](playbooks/safe-template-sync.md) - Synchronize changes between workers/ and templates/
 - [task-optimization-review.md](playbooks/task-optimization-review.md) - Review and optimize task definitions
+
+### Projects
+
+- [README.md](projects/README.md) - Project-specific skills overview
+- [brain-example.md](projects/brain-example.md) - Example project-specific skill
 
 ### Marketing
 
@@ -223,5 +229,6 @@ Catalog of all skill files in the brain system.
 - [README.md](self-improvement/README.md) - Self-improvement system overview
 - [GAP_CAPTURE_RULES.md](self-improvement/GAP_CAPTURE_RULES.md) - Gap capture protocol
 - [GAP_BACKLOG.md](self-improvement/GAP_BACKLOG.md) - Raw gap capture log
+- [GAP_LOG_AND_AUTO_SKILL_SPEC.md](self-improvement/GAP_LOG_AND_AUTO_SKILL_SPEC.md) - Gap log structure and auto-skill generation spec
 - [SKILL_BACKLOG.md](self-improvement/SKILL_BACKLOG.md) - Promotion queue
 - [SKILL_TEMPLATE.md](self-improvement/SKILL_TEMPLATE.md) - Template for new skills

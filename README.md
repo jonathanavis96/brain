@@ -10,6 +10,22 @@
 
 ---
 
+## Table of Contents
+
+- [What is this?](#what-is-this-plain-english)
+- [How it Works](#how-it-works)
+- [Quick Start Guide](#quick-start-guide)
+  - [Bootstrap a New Project](#-i-want-to-bootstrap-a-new-project)
+  - [Use as Skills Library](#-i-want-to-use-brain-as-a-skills-library)
+  - [Run Self-Improvement Loop](#-i-want-to-run-brains-self-improvement-loop)
+- [Repository Structure](#repository-structure)
+- [The Workers](#the-workers)
+- [Skills Library](#skills-library)
+- [Key Features](#key-features)
+- [Contributing](#contributing)
+
+---
+
 ## What is this? (Plain English)
 
 Imagine you have an AI coding assistant. Every time you start a new project, it starts from scratch - no memory of what worked before, no knowledge of your patterns, no reusable templates.

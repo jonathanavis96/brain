@@ -4,6 +4,10 @@ Thank you for your interest in contributing to the Brain repository! This guide 
 
 ## Quick Start
 
+**New to Brain?** Start with the [README Quick Start Guide](README.md#quick-start-guide) to understand what Brain does and how to use it.
+
+**Ready to contribute?** Continue reading below.
+
 1. **Read the documentation first:**
    - [README.md](README.md) - Repository overview and onboarding
    - [NEURONS.md](NEURONS.md) - Repository structure map
