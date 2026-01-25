@@ -588,6 +588,13 @@ export async function OPTIONS(request: Request) {
 - See `database-patterns.md` for optimizing API data fetching
 - Consider libraries: `express`, `fastify`, `tRPC`, `Apollo GraphQL`, `Prisma`
 
+## See Also
+
+- **[Error Handling Patterns](error-handling-patterns.md)** - API error response formats and status codes
+- **[Caching Patterns](caching-patterns.md)** - HTTP caching headers and cache control
+- **[Database Patterns](database-patterns.md)** - Optimizing API data fetching and query performance
+- **[Auth Patterns](auth-patterns.md)** - API authentication and authorization
+
 ## References
 
 - [REST API Design Best Practices](https://stackoverflow.blog/2020/03/02/best-practices-for-rest-api-design/)

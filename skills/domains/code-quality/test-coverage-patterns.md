@@ -675,3 +675,9 @@ Before committing, verify:
 - [x] **Blank line before/after lists** - All lists have surrounding blank lines
 - [x] **Blank line after headings** - All headings followed by blank line
 - [x] **Run lint check** - Ready for `markdownlint skills/domains/code-quality/test-coverage-patterns.md`
+
+## See Also
+
+- **[Testing Patterns](testing-patterns.md)** - Unit, integration, and e2e testing strategies across frameworks
+- **[Code Hygiene](code-hygiene.md)** - Code quality practices including test maintenance
+- **[Error Handling Patterns](../backend/error-handling-patterns.md)** - Exception handling strategies to test

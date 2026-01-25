@@ -286,6 +286,13 @@ export default async function DashboardPage() {
 - See `async-api-routes.md` for handling authentication in API routes
 - Consider using libraries: `next-auth`, `Auth0`, `Clerk`, `Supabase Auth`
 
+## See Also
+
+- **[Security Patterns](../infrastructure/security-patterns.md)** - Security best practices and input validation
+- **[API Design Patterns](api-design-patterns.md)** - API authentication and authorization
+- **[Error Handling Patterns](error-handling-patterns.md)** - Authentication error handling
+- **[Database Patterns](database-patterns.md)** - Session storage (database vs Redis)
+
 ## References
 
 - [OAuth 2.0 Specification](https://oauth.net/2/)

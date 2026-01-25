@@ -795,6 +795,13 @@ await sendEmail(order);  // After transaction committed
 - See `testing-patterns.md` for database testing strategies (fixtures, transactions)
 - See `auth-patterns.md` for session storage (database vs Redis)
 
+## See Also
+
+- **[Caching Patterns](caching-patterns.md)** - Query result caching and cache invalidation strategies
+- **[Error Handling Patterns](error-handling-patterns.md)** - Database error handling and transaction rollback
+- **[Testing Patterns](../code-quality/testing-patterns.md)** - Database testing strategies (fixtures, transactions)
+- **[Auth Patterns](auth-patterns.md)** - Session storage (database vs Redis)
+
 ## References
 
 - [PostgreSQL Performance Tips](https://www.postgresql.org/docs/current/performance-tips.html)
