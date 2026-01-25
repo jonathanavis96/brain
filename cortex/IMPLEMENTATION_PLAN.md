@@ -474,6 +474,7 @@ Key milestones:
 
 **Phase AC:** Playbook infrastructure exists, 6+ playbooks created, cross-referenced from skills
 
+
 ---
 
 ## Phase 9C: Task Optimization (Batching + Decomposition)
@@ -484,15 +485,16 @@ Key milestones:
 
 ### Phase 9C.0: Prerequisites (Marker Pipeline Fix)
 
-- [ ] **9C.0.1** Ensure loop.sh captures stderr to log files
+- [x] **9C.0.1** Ensure loop.sh captures stderr to log files
   - **Goal:** Markers emitted to stderr (`>&2`) appear in log files
   - **AC:** `grep "^:::ITER_START:::" workers/ralph/logs/latest.log` returns actual emissions
-  - **Method:** Verify log redirection includes stderr (`exec &> >(tee -a "$LOG_FILE")` or `2>&1`)
+  - **Method:** Created `emit_marker()` function that writes to both stderr AND log file
+  - **Completed:** 2026-01-25 - Added CURRENT_LOG_FILE global, emit_marker() helper
 
-- [ ] **9C.0.2** Verify markers emit during execution (not just code display)
+- [x] **9C.0.2** Verify markers emit during execution (not just code display)
   - **Goal:** Run one iteration and confirm markers in log
   - **AC:** After `bash loop.sh --iterations 1`, log contains `:::ITER_START::: iter=1`
-  - **Diagnosis:** Current logs show code snippets with markers, not actual emissions
+  - **Completed:** 2026-01-25 - All 26 marker emissions converted to emit_marker()
 
 - [ ] **9C.0.3** Document RovoDev tool instrumentation limitation
   - **Goal:** Clarify that RovoDev's native tools bypass shell wrapper
@@ -516,6 +518,33 @@ Key milestones:
   - **Goal:** Standard format for batched tasks with multi-file scope
   - **AC:** Template shows batch task example with glob patterns and verification
 
+- [ ] **9C.2.B1** BATCH: Create language project templates (combines 6.1.1, 6.1.2, 6.3.1)
+  - **Scope:** Create `templates/javascript/`, `templates/go/`, expand `templates/website/`
+  - **Steps:**
+    1. Define standard template structure (AGENTS.md, NEURONS.md, THOUGHTS.md, VALIDATION_CRITERIA.md)
+    2. Create all three directories with standard files in one pass
+    3. Verify each directory has required files
+  - **AC:** All three template directories exist with standard structure
+  - **Replaces:** 6.1.1, 6.1.2, 6.3.1
+
+- [ ] **9C.2.B2** BATCH: Update skills documentation (combines 7.2.1, 7.2.2)
+  - **Scope:** `skills/index.md` + `skills/SUMMARY.md`
+  - **Steps:**
+    1. Scan `skills/domains/` and `skills/playbooks/` for all files
+    2. Update `skills/index.md` with any missing entries
+    3. Update `skills/SUMMARY.md` error reference and playbooks section
+  - **AC:** Both index files list all current skills, SUMMARY includes playbooks
+  - **Replaces:** 7.2.1, 7.2.2
+
+- [ ] **9C.2.B3** BATCH: Improve onboarding docs (combines 7.1.1, 7.1.2)
+  - **Scope:** Root `README.md` + new `CONTRIBUTING.md`
+  - **Steps:**
+    1. Enhance README.md onboarding flow (quick start, navigation)
+    2. Create CONTRIBUTING.md with guidelines
+    3. Cross-link between files
+  - **AC:** README has clear onboarding, CONTRIBUTING.md exists
+  - **Replaces:** 7.1.1, 7.1.2
+
 ### Phase 9C.3: Decomposition Detection
 
 - [ ] **9C.3.1** Add duration tracking to `current_ralph_tasks.sh` footer
@@ -538,5 +567,6 @@ Key milestones:
 - ≥3 batching opportunities identified with evidence
 - ≥2 decomposition opportunities documented
 - Recommendations actively used in planning
+
 
 <!-- Cortex adds new Task Contracts below this line -->

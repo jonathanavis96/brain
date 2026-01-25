@@ -1730,7 +1730,7 @@ else
       CURRENT_LOG_FILE="$LOGDIR/${iter_ts}_iter${i}_build.log"
     fi
     touch "$CURRENT_LOG_FILE"
-    
+
     # Log iteration start marker for RollFlow tracking
     log_iter_start "iter-$i" "$ROLLFLOW_RUN_ID"
     CURRENT_ITER=$i

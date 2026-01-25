@@ -359,7 +359,7 @@
   - Add examples for BUILD/PLAN cache behavior
   - **AC:** PROMPT.md has cache configuration section with examples
 
-- [ ] **6.2.2** Update `templates/ralph/VALIDATION_CRITERIA.project.md` with cache validation
+- [x] **6.2.2** Update `templates/ralph/VALIDATION_CRITERIA.project.md` with cache validation
   - Add cache smoke test commands
   - Document expected cache hit/miss patterns
   - Include troubleshooting guidance
