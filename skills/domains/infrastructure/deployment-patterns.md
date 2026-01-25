@@ -1188,6 +1188,17 @@ class FeatureFlagService {
     const hash = this.hashUserId(userId);
     return (hash % 100) < percentage;
   }
+  
+  private hashUserId(userId: string): number {
+    // Simple hash function for consistent user bucketing
+    let hash = 0;
+    for (let i = 0; i < userId.length; i++) {
+      const char = userId.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    return Math.abs(hash);
+  }
 }
 
 // Usage in application
