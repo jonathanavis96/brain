@@ -205,4 +205,4 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
 - [x] **7.1.2** Create `CONTRIBUTING.md` with contribution guidelines
 - [x] **7.2.1** Update `skills/index.md` with new skill files from Phase 5
 - [x] **7.2.2** Update `skills/SUMMARY.md` with enhanced error reference
-- [ ] **7.3.1** Request AC.rules update for shellcheck regex
+- [x] **7.3.1** Request AC.rules update for shellcheck regex
