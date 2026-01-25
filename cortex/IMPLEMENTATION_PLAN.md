@@ -91,7 +91,7 @@ Key milestones:
   - Guard `$2` access with `${2-}` or `$# -ge 2` checks
   - **AC:** `shellcheck bin/brain-event` passes, no unbound errors
 
-- [ ] **5.2.8** Fix `cerebras_agent.py` state reinjection (lines 1021-1038)
+- [x] **5.2.8** Fix `cerebras_agent.py` state reinjection (lines 1021-1038)
   - Insert state_msg after user message (index 2) not at index 1
   - **AC:** `_prune_messages` preserves system+user correctly
   - **If Blocked:** Message order must be: [0]=system, [1]=user, [2]=state_injection. The `_prune_messages` function expects system at 0 and user at 1. Find `messages.insert(1, state_msg)` and change to `messages.insert(2, state_msg)`
