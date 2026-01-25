@@ -1794,8 +1794,8 @@ else
     if [[ "$i" -eq 1 ]] || ((PLAN_EVERY > 0 && ((i - 1) % PLAN_EVERY == 0))); then
       # Snapshot plan BEFORE sync for drift detection (prevents direct-edit bypass)
       PLAN_SNAPSHOT="$ROOT/.verify/plan_snapshot.md"
-      if [[ -f "$WORKERS/IMPLEMENTATION_PLAN.md" ]]; then
-        cp "$WORKERS/IMPLEMENTATION_PLAN.md" "$PLAN_SNAPSHOT"
+      if [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
+        cp "$ROOT/workers/IMPLEMENTATION_PLAN.md" "$PLAN_SNAPSHOT"
       fi
 
       # Sync tasks from Cortex before PLAN mode
@@ -1882,10 +1882,10 @@ else
 
     # Plan drift detection: compare snapshot vs current plan
     PLAN_SNAPSHOT="$ROOT/.verify/plan_snapshot.md"
-    if [[ -f "$PLAN_SNAPSHOT" ]] && [[ -f "$WORKERS/IMPLEMENTATION_PLAN.md" ]]; then
+    if [[ -f "$PLAN_SNAPSHOT" ]] && [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
       # Check for unexpected changes (tasks added directly, not via cortex sync)
       snapshot_tasks=$(grep -c "^- \[ \]" "$PLAN_SNAPSHOT" 2>/dev/null || echo "0")
-      current_tasks=$(grep -c "^- \[ \]" "$WORKERS/IMPLEMENTATION_PLAN.md" 2>/dev/null || echo "0")
+      current_tasks=$(grep -c "^- \[ \]" "$ROOT/workers/IMPLEMENTATION_PLAN.md" 2>/dev/null || echo "0")
       if [[ "$current_tasks" -gt "$snapshot_tasks" ]]; then
         new_task_count=$((current_tasks - snapshot_tasks))
         echo ""
