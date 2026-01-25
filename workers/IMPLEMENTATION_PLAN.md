@@ -209,7 +209,7 @@
 
 ### Phase 11.2: Tooling
 
-- [ ] **11.1.3** Create SQLite schema for unified thread storage
+- [x] **11.1.3** Create SQLite schema for unified thread storage - Completed 2026-01-26 (THUNK #830)
   - **Goal:** Single database for threads, work_items, tool_executions
   - **Schema:** See `cortex/docs/research/thread-persistence-research.md` Section 3.2
   - **AC:** Schema created with FTS5 index on descriptions
