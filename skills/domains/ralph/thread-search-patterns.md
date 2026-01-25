@@ -270,7 +270,7 @@ grep "^|" workers/ralph/THUNK.md | awk -F'|' '{print $4}' | sort | uniq -c
 awk '/^## Era/{era=$0; next} /^|/{print era}' workers/ralph/THUNK.md | sort | uniq -c
 
 # Average tasks per day
-TOTAL=$(grep "^|" workers/ralph/THUNK.md | wc -l)
+TOTAL=$(grep -c "^|" workers/ralph/THUNK.md)
 DAYS=$(git log --format="%ad" --date=short | sort -u | wc -l)
 echo "scale=2; $TOTAL / $DAYS" | bc
 ```
