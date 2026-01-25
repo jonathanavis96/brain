@@ -380,6 +380,7 @@ Target: <20 tool calls per iteration.
 **Anti-patterns (NEVER do these):**
 
 - Trying to read `.verify/latest.txt` (it's already in the header!)
+- Reading `THUNK.md` to check if a task was done (use IMPLEMENTATION_PLAN.md - it's the source of truth for pending tasks)
 - Running `git status` before AND after `git add`
 - Running `shellcheck file.sh`, then `shellcheck -e SC1091 file.sh`, then `shellcheck -x file.sh`
 
