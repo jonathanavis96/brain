@@ -51,6 +51,11 @@
 4. Apply the minimum fix
 5. Re-run the failing command
 
+**For multi-step workflows or complex debugging:**
+
+- Consult the [Playbooks Directory](playbooks/README.md) for end-to-end guides
+- Examples: [Resolve Verifier Failures](playbooks/resolve-verifier-failures.md), [Debug Ralph Stuck](playbooks/debug-ralph-stuck.md), [Investigate Test Failures](playbooks/investigate-test-failures.md)
+
 **Rule: Only 1 "obvious" quick attempt before consulting skills.**
 
 ---
@@ -146,6 +151,25 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
 ### Skills Index
 
 - **[Skills Index](index.md)** - Complete catalog of all available skills
+
+### Playbooks (Multi-Step Workflows)
+
+- **[Playbooks Directory](playbooks/README.md)** - End-to-end workflows for complex tasks
+
+**When to use a playbook vs a skill:**
+
+- **Use a skill** when you need to understand a single concept (e.g., "How do I fix SC2155?") or need quick reference material
+- **Use a playbook** when tackling a multi-step process (e.g., "How do I resolve verifier failures?") or when the task requires decision points and orchestration across multiple skills/tools
+
+**Available playbooks:**
+
+- [Fix ShellCheck Failures](playbooks/fix-shellcheck-failures.md) - Systematic approach to resolving shellcheck warnings (SC2034, SC2155, SC2086)
+- [Fix Markdown Lint](playbooks/fix-markdown-lint.md) - Resolve markdown linting issues (MD040, MD032, MD024)
+- [Resolve Verifier Failures](playbooks/resolve-verifier-failures.md) - Handle verifier check failures with decision tree routing
+- [Safe Template Sync](playbooks/safe-template-sync.md) - Synchronize changes between workers/ and templates/
+- [Bootstrap New Project](playbooks/bootstrap-new-project.md) - Set up a new project from templates
+- [Debug Ralph Stuck](playbooks/debug-ralph-stuck.md) - Troubleshoot Ralph loop issues (stuck, repeated failures, infinite loops)
+- [Investigate Test Failures](playbooks/investigate-test-failures.md) - Systematic test failure resolution (pytest, bash, integration tests)
 
 ## Skills Authoring
 
