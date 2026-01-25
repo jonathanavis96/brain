@@ -248,7 +248,7 @@
 
 ### Phase 12.2: Tooling
 
-- [ ] **12.2.1** Add real-time event watcher `bin/brain-event --watch`
+- [x] **12.2.1** Add real-time event watcher `bin/brain-event --watch`
   - **Goal:** Live tail of events with filtering
   - **Usage:** `brain-event --watch --filter="phase_end"`
   - **AC:** Watcher shows new events in real-time from state/events.jsonl
