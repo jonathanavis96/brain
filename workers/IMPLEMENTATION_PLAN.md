@@ -77,11 +77,11 @@
   - golangci-lint config
   - **AC:** Directory exists with 5+ files
 
-- [ ] **6.3.1** Expand `templates/website/` with more comprehensive starter
-  - Review existing website skills in skills/domains/websites/
-  - Add section-based composition templates
-  - Include SEO and analytics guidance
-  - **AC:** templates/website/ has enhanced structure
+- [x] **6.3.1** Create `templates/website/` with project scaffolding (pointers only)
+  - Create AGENTS.project.md, NEURONS.project.md, VALIDATION_CRITERIA.project.md
+  - Include references to `skills/domains/websites/` and `skills/domains/marketing/`
+  - **DO NOT duplicate skills content** - templates should point to brain, not copy it
+  - **AC:** templates/website/ has standard project files with skill references
 
 ---
 

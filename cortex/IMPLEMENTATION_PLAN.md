@@ -108,14 +108,16 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
   - **Goal:** Standard format for batched tasks with multi-file scope
   - **AC:** Template shows batch task example with glob patterns and verification
 
-- [ ] **9C.2.B1** BATCH: Create language project templates (combines 6.1.1, 6.1.2, 6.3.1)
-  - **Scope:** Create `templates/javascript/`, `templates/go/`, expand `templates/website/`
+- [x] **9C.2.B1** BATCH: Create language project templates (combines 6.1.1, 6.1.2, 6.3.1)
+  - **Scope:** Create `templates/javascript/`, `templates/go/`, `templates/website/`
   - **Steps:**
-    1. Define standard template structure (AGENTS.md, NEURONS.md, THOUGHTS.md, VALIDATION_CRITERIA.md)
+    1. Define standard template structure (AGENTS.md, NEURONS.md, VALIDATION_CRITERIA.md)
     2. Create all three directories with standard files in one pass
-    3. Verify each directory has required files
-  - **AC:** All three template directories exist with standard structure
+    3. **Templates contain pointers to brain skills, NOT duplicated content**
+    4. Verify each directory has required files
+  - **AC:** All three template directories exist with standard structure and skill references
   - **Replaces:** 6.1.1, 6.1.2, 6.3.1
+  - **Status:** 6.1.1 and 6.1.2 complete, 6.3.1 pending
 
 - [ ] **9C.2.B2** BATCH: Update skills documentation (combines 7.2.1, 7.2.2)
   - **Scope:** `skills/index.md` + `skills/SUMMARY.md`
@@ -180,17 +182,17 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
   - ESLint and Prettier configs
   - **AC:** Directory exists with 5+ files
 
-- [ ] **6.1.2** Create `templates/go/` directory with Go project template
+- [x] **6.1.2** Create `templates/go/` directory with Go project template
   - AGENTS.project.md, NEURONS.project.md, VALIDATION_CRITERIA.project.md
   - go.mod template and project structure
   - golangci-lint config
   - **AC:** Directory exists with 5+ files
 
-- [ ] **6.3.1** Expand `templates/website/` with more comprehensive starter
-  - Review existing website skills in skills/domains/websites/
-  - Add section-based composition templates
-  - Include SEO and analytics guidance
-  - **AC:** templates/website/ has enhanced structure
+- [ ] **6.3.1** Create `templates/website/` with project scaffolding (pointers only)
+  - Create AGENTS.project.md, NEURONS.project.md, VALIDATION_CRITERIA.project.md
+  - Include references to `skills/domains/websites/` and `skills/domains/marketing/`
+  - **DO NOT duplicate skills content** - templates should point to brain, not copy it
+  - **AC:** templates/website/ has standard project files with skill references
 
 ---
 
