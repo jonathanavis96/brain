@@ -33,6 +33,107 @@
 | **Test failures** | Assert errors, mock issues, timeout | [Testing Patterns](domains/code-quality/testing-patterns.md) |
 | **Build/compile errors** | Missing dependencies, syntax errors | Check project-specific docs in [Projects](projects/) |
 
+### Error Code Index
+
+**ShellCheck (SC\*) Errors:**
+
+| Error Code | Description | Skill Reference |
+|------------|-------------|-----------------|
+| SC1091 | Sourcing file not found | [Validation Patterns](domains/languages/shell/validation-patterns.md) |
+| SC2002 | Useless cat | [Common Pitfalls](domains/languages/shell/common-pitfalls.md) |
+| SC2004 | $/${} arithmetic deprecation | [Variable Patterns](domains/languages/shell/variable-patterns.md) |
+| SC2006 | Backticks deprecated | [Common Pitfalls](domains/languages/shell/common-pitfalls.md) |
+| SC2009 | pgrep instead of ps \| grep | [Common Pitfalls](domains/languages/shell/common-pitfalls.md) |
+| SC2012 | Use find instead of ls | [Common Pitfalls](domains/languages/shell/common-pitfalls.md) |
+| SC2034 | Unused variable | [Variable Patterns](domains/languages/shell/variable-patterns.md) |
+| SC2039 | POSIX compliance issues | [Validation Patterns](domains/languages/shell/validation-patterns.md) |
+| SC2046 | Quote to prevent word splitting | [Common Pitfalls](domains/languages/shell/common-pitfalls.md) |
+| SC2064 | Quote trap commands | [Cleanup Patterns](domains/languages/shell/cleanup-patterns.md) |
+| SC2086 | Quote variables to prevent globbing | [Variable Patterns](domains/languages/shell/variable-patterns.md), [Common Pitfalls](domains/languages/shell/common-pitfalls.md) |
+| SC2126 | grep -c instead of grep \| wc -l | [Common Pitfalls](domains/languages/shell/common-pitfalls.md) |
+| SC2148 | Missing shebang | [Validation Patterns](domains/languages/shell/validation-patterns.md) |
+| SC2153 | Variable name typo | [Variable Patterns](domains/languages/shell/variable-patterns.md) |
+| SC2154 | Variable not assigned | [Variable Patterns](domains/languages/shell/variable-patterns.md) |
+| SC2155 | Declare and assign separately | [Variable Patterns](domains/languages/shell/variable-patterns.md), [Strict Mode](domains/languages/shell/strict-mode.md) |
+| SC2162 | read without -r | [Common Pitfalls](domains/languages/shell/common-pitfalls.md) |
+| SC2181 | Check exit code directly | [Strict Mode](domains/languages/shell/strict-mode.md) |
+| SC2317 | Unreachable command | [Cleanup Patterns](domains/languages/shell/cleanup-patterns.md) |
+| SC2320 | set -e and command substitution | [Strict Mode](domains/languages/shell/strict-mode.md) |
+
+**Markdown Lint (MD\*) Errors:**
+
+| Error Code | Description | Skill Reference |
+|------------|-------------|-----------------|
+| MD022 | Headings need blank lines | [Markdown Patterns](domains/code-quality/markdown-patterns.md) |
+| MD024 | Duplicate heading names | [Markdown Patterns](domains/code-quality/markdown-patterns.md) |
+| MD025 | Multiple top-level headings | [Markdown Patterns](domains/code-quality/markdown-patterns.md) |
+| MD032 | Blanks around lists | [Markdown Patterns](domains/code-quality/markdown-patterns.md) |
+| MD036 | Emphasis instead of heading | [Markdown Patterns](domains/code-quality/markdown-patterns.md) |
+| MD040 | Missing code fence language | [Markdown Patterns](domains/code-quality/markdown-patterns.md) |
+| MD050 | Strong style consistency | [Markdown Patterns](domains/code-quality/markdown-patterns.md) |
+| MD060 | Table spacing | [Markdown Patterns](domains/code-quality/markdown-patterns.md) |
+
+**Python Errors:**
+
+| Error Code | Description | Skill Reference |
+|------------|-------------|-----------------|
+| E0601 | Using variable before assignment | [Python Patterns](domains/languages/python/python-patterns.md) |
+| E0602 | Undefined variable | [Python Patterns](domains/languages/python/python-patterns.md) |
+| E1101 | No member (attribute) | [Python Patterns](domains/languages/python/python-patterns.md) |
+| F821 | Undefined name | [Python Patterns](domains/languages/python/python-patterns.md) |
+| UnboundLocalError | Local variable referenced before assignment | [Python Patterns](domains/languages/python/python-patterns.md) |
+
+**HTTP Status Codes:**
+
+| Status Code | Description | Skill Reference |
+|-------------|-------------|-----------------|
+| 400 | Bad Request | [API Design Patterns](domains/backend/api-design-patterns.md) |
+| 401 | Unauthorized | [API Design Patterns](domains/backend/api-design-patterns.md) |
+| 403 | Forbidden | [API Design Patterns](domains/backend/api-design-patterns.md) |
+| 404 | Not Found | [API Design Patterns](domains/backend/api-design-patterns.md) |
+| 429 | Too Many Requests | [API Design Patterns](domains/backend/api-design-patterns.md) |
+| 500 | Internal Server Error | [API Design Patterns](domains/backend/api-design-patterns.md) |
+| 503 | Service Unavailable | [API Design Patterns](domains/backend/api-design-patterns.md) |
+
+**Testing Errors:**
+
+| Error Type | Description | Skill Reference |
+|------------|-------------|-----------------|
+| AssertionError | Test assertion failed | [Testing Patterns](domains/code-quality/testing-patterns.md) |
+| pytest.fail | Explicit test failure | [Testing Patterns](domains/code-quality/testing-patterns.md) |
+| jest.fail | Explicit test failure (JS) | [Testing Patterns](domains/code-quality/testing-patterns.md) |
+| testing.T.Errorf | Go test failure | [Testing Patterns](domains/code-quality/testing-patterns.md) |
+
+**Cache/Performance Issues:**
+
+| Issue Type | Description | Skill Reference |
+|------------|-------------|-----------------|
+| cache-miss | Cache lookup failed | [Caching Patterns](domains/backend/caching-patterns.md) |
+| cache-invalidation | Stale cache data | [Caching Patterns](domains/backend/caching-patterns.md) |
+| stale-cache | Cache not updating | [Caching Patterns](domains/backend/caching-patterns.md) |
+| TTL | Time-to-live expiration | [Caching Patterns](domains/backend/caching-patterns.md) |
+
+**Code Quality Issues:**
+
+| Issue Type | Description | Skill Reference |
+|------------|-------------|-----------------|
+| dead-code | Unused code | [Code Hygiene](domains/code-quality/code-hygiene.md) |
+| unused-imports | Unused dependencies | [Code Hygiene](domains/code-quality/code-hygiene.md) |
+| linting | Code style violations | [Code Hygiene](domains/code-quality/code-hygiene.md) |
+| formatting | Code formatting issues | [Code Hygiene](domains/code-quality/code-hygiene.md) |
+| find-and-replace | Bulk editing needed | [Bulk Edit Patterns](domains/code-quality/bulk-edit-patterns.md) |
+| sed | Stream editing needed | [Bulk Edit Patterns](domains/code-quality/bulk-edit-patterns.md) |
+| batch-editing | Mass changes needed | [Bulk Edit Patterns](domains/code-quality/bulk-edit-patterns.md) |
+
+**Generic Error Handling:**
+
+| Issue Type | Description | Skill Reference |
+|------------|-------------|-----------------|
+| Error | Generic error | [Error Handling Patterns](domains/backend/error-handling-patterns.md) |
+| Exception | Exception thrown | [Error Handling Patterns](domains/backend/error-handling-patterns.md) |
+| try-catch | Exception handling | [Error Handling Patterns](domains/backend/error-handling-patterns.md) |
+| panic-recover | Go panic handling | [Error Handling Patterns](domains/backend/error-handling-patterns.md) |
+
 ### Quick Action Guide
 
 **If you see a verifier failure (LAST_VERIFIER_RESULT: FAIL):**
