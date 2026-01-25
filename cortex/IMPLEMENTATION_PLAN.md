@@ -230,7 +230,7 @@ Key milestones:
 
 ### Phase 4.4: Fix Agent Isolation
 
-- [ ] **4.4.1** Replace RUNNER dependency with AGENT_NAME in cache keys
+- [x] **4.4.1** Replace RUNNER dependency with AGENT_NAME in cache keys
   - Cache key "agent" field uses `AGENT_NAME` not `RUNNER`
   - Fall back sanely if `AGENT_NAME` missing (log warning)
   - **AC:** Ralph/Cortex/Cerebras with identical prompts don't share cache entries
