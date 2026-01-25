@@ -40,7 +40,7 @@
 
 ### Phase 10.3: Safety & Validation
 
-- [ ] **10.3.1** Create `tools/test_plan_cleanup.sh` test script
+- [x] **10.3.1** Create `tools/test_plan_cleanup.sh` test script
   - **Goal:** Verify cleanup preserves pending tasks and removes only completed
   - **AC:** Test creates sample plan, runs cleanup, verifies correct output
 
