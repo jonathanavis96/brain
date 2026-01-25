@@ -2,6 +2,7 @@
 
 import argparse
 import sys
+from datetime import datetime, timedelta
 from pathlib import Path
 
 
@@ -41,6 +42,16 @@ def create_parser() -> argparse.ArgumentParser:
         help="Path to patterns config file for heuristic parser",
     )
     parser.add_argument(
+        "--rovodev-logs",
+        type=Path,
+        help="Path to RovoDev logs directory (default: ~/.rovodev/logs). Use 'none' to disable.",
+    )
+    parser.add_argument(
+        "--since",
+        type=str,
+        help="Only analyze logs from the last N hours (e.g., '24h', '1h', '48h')",
+    )
+    parser.add_argument(
         "--markdown",
         action="store_true",
         help="Also output a markdown summary alongside JSON",
@@ -59,21 +70,46 @@ def create_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--version",
         action="version",
-        version="%(prog)s 0.1.0",
+        version="%(prog)s 0.2.0",
     )
     return parser
+
+
+def parse_since(since_str: str) -> datetime:
+    """Parse a 'since' string like '24h', '1h', '48h' into a datetime."""
+    if since_str.endswith("h"):
+        hours = int(since_str[:-1])
+        return datetime.now() - timedelta(hours=hours)
+    elif since_str.endswith("d"):
+        days = int(since_str[:-1])
+        return datetime.now() - timedelta(days=days)
+    else:
+        # Try to parse as ISO datetime
+        return datetime.fromisoformat(since_str)
 
 
 def main(argv: list[str] | None = None) -> int:
     """Main entry point for CLI."""
     from .parsers.marker_parser import MarkerParser
     from .parsers.heuristic_parser import HeuristicParser
+    from .parsers.rovodev_parser import RovoDevParser, get_rovodev_logs_dir
     from .report import build_report, write_json_report, write_markdown_summary
     from .review_pack import write_review_pack
-    from .models import ToolStatus
+    from .models import ToolStatus, ToolSource
 
     parser = create_parser()
     args = parser.parse_args(argv)
+
+    # Parse --since if provided
+    since_dt = None
+    if args.since:
+        try:
+            since_dt = parse_since(args.since)
+            if args.verbose:
+                print(f"Filtering logs since: {since_dt}")
+        except ValueError as e:
+            print(f"Error: Invalid --since format: {e}", file=sys.stderr)
+            return 1
 
     # Validate log directory exists
     if not args.log_dir.exists():
@@ -104,36 +140,46 @@ def main(argv: list[str] | None = None) -> int:
 
     # Step 2: Stream through log files and collect tool calls
     tool_calls = []
+    shell_marker_count = 0
     log_files = sorted(args.log_dir.rglob("*.log"))
 
     if not log_files:
         # No .log files, try all files
         log_files = [f for f in sorted(args.log_dir.rglob("*")) if f.is_file()]
 
+    # Filter by since_dt if provided
+    if since_dt and log_files:
+        log_files = [
+            f
+            for f in log_files
+            if datetime.fromtimestamp(f.stat().st_mtime) >= since_dt
+        ]
+
     if not log_files:
-        print(f"Error: No log files found in {args.log_dir}", file=sys.stderr)
-        return 1
-
-    if args.verbose:
-        print(f"Found {len(log_files)} log file(s) to process")
-
-    for log_file in log_files:
+        print(f"Warning: No log files found in {args.log_dir}", file=sys.stderr)
+    else:
         if args.verbose:
-            print(f"  Processing: {log_file.name}")
+            print(f"Found {len(log_files)} Ralph log file(s) to process")
 
-        try:
-            # Stream parse file (generator-based, memory efficient)
-            for tool_call in log_parser.parse_file(log_file):
-                tool_calls.append(tool_call)
-        except Exception as e:
-            print(f"Warning: Failed to parse {log_file}: {e}", file=sys.stderr)
-            continue
+        for log_file in log_files:
+            if args.verbose:
+                print(f"  Processing: {log_file.name}")
+
+            try:
+                # Stream parse file (generator-based, memory efficient)
+                for tool_call in log_parser.parse_file(log_file):
+                    tool_call.source = ToolSource.SHELL_MARKER
+                    tool_calls.append(tool_call)
+                    shell_marker_count += 1
+            except Exception as e:
+                print(f"Warning: Failed to parse {log_file}: {e}", file=sys.stderr)
+                continue
 
     if args.verbose:
-        print(f"Extracted {len(tool_calls)} tool call(s)")
+        print(f"Extracted {shell_marker_count} shell marker tool call(s)")
 
     # If auto mode and no tool calls found, try heuristic fallback
-    if args.parser == "auto" and len(tool_calls) == 0:
+    if args.parser == "auto" and shell_marker_count == 0 and log_files:
         if args.verbose:
             print("No markers found, falling back to heuristic parser")
 
@@ -145,10 +191,38 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"  Re-processing: {log_file.name}")
             try:
                 for tool_call in log_parser.parse_file(log_file):
+                    tool_call.source = ToolSource.HEURISTIC
                     tool_calls.append(tool_call)
             except Exception as e:
                 print(f"Warning: Failed to parse {log_file}: {e}", file=sys.stderr)
                 continue
+
+    # Step 2b: Parse RovoDev logs for full tool call visibility
+    rovodev_count = 0
+    rovodev_logs_dir = args.rovodev_logs
+
+    # Default to ~/.rovodev/logs unless explicitly disabled
+    if rovodev_logs_dir is None:
+        rovodev_logs_dir = get_rovodev_logs_dir()
+    elif str(rovodev_logs_dir).lower() == "none":
+        rovodev_logs_dir = None
+
+    if rovodev_logs_dir and rovodev_logs_dir.exists():
+        if args.verbose:
+            print(f"\nParsing RovoDev logs from: {rovodev_logs_dir}")
+
+        rovodev_parser = RovoDevParser(verbose=args.verbose)
+        for tool_call in rovodev_parser.parse_directory(
+            rovodev_logs_dir, since=since_dt
+        ):
+            tool_call.source = ToolSource.ROVODEV
+            tool_calls.append(tool_call)
+            rovodev_count += 1
+
+        if args.verbose:
+            print(f"Extracted {rovodev_count} RovoDev tool call(s)")
+    elif args.verbose and rovodev_logs_dir:
+        print(f"Note: RovoDev logs directory not found: {rovodev_logs_dir}")
 
     if len(tool_calls) == 0:
         print("Warning: No tool calls found in logs", file=sys.stderr)

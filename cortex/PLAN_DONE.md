@@ -57,3 +57,6 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-25 | CR-4.1 | - [x] **CR-4.1** Create code-review-patterns.md skill |
 | 2026-01-25 | CR-4.2 | - [x] **CR-4.2** Add pre-PR checklist to AGENTS.md |
 | 2026-01-25 | CR-4.3 | - [x] **CR-4.3** Add LLM-based semantic linting gap to GAP_BACKLOG.md |
+| 2026-01-25 | 9C.0.3 | - [x] **9C.0.3** Document RovoDev tool instrumentation limitation ✓ DONE |
+| 2026-01-25 | 9C.1.1 | - [x] **9C.1.1** Enhance `cortex/snapshot.sh` with batching hints ✓ DONE |
+| 2026-01-25 | 9C.1.2 | - [x] **9C.1.2** Add task complexity tags to PROMPT_REFERENCE.md ✓ DONE |
