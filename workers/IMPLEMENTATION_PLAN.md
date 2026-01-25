@@ -206,7 +206,7 @@
 
 ### Phase 7.2: Skills Coverage Matching
 
-- [ ] **7.2.1** Create `tools/gap_radar/match_skills.py`
+- [x] **7.2.1** Create `tools/gap_radar/match_skills.py`
   - Input: error JSON from 7.1.x
   - Load `skills/index.md` and parse skill → error code mappings
   - Output: `{"error_code": "SC2155", "covered": true, "skill": "shell/variable-patterns.md"}`
