@@ -176,6 +176,14 @@ repos:
         pass_filenames: false
         always_run: true
 
+      - id: validate-doc-sync
+        name: validate-doc-sync
+        description: Validate documentation matches actual config files
+        entry: bash tools/validate_doc_sync.sh
+        language: system
+        pass_filenames: false
+        files: \.(md|yaml|sh)$
+
 # ==========================================================================
 # Configuration
 # ==========================================================================
