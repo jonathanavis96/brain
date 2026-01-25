@@ -112,7 +112,7 @@
   - **AC:** All checkbox states match their corresponding status text
   - **Status:** OBSOLETE - Referenced phases (2.1.2, 12.4.2-12.4.3) were removed from plan in commit 3a8e25f (2026-01-25), all completed phases have been archived
 
-- [ ] **CR-5.2** Fix archive header handling in current_ralph_tasks.sh (Q1)
+- [x] **CR-5.2** Fix archive header handling in current_ralph_tasks.sh (Q1)
   - **File:** `workers/ralph/current_ralph_tasks.sh`
   - **Issue:** Archive headers not treated as section terminators
   - **Fix:** Update section parsing to recognize archive headers as terminators

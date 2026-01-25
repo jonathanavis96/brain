@@ -771,6 +771,7 @@ Started: 2026-01-18
 | 769 | CR-4.2 | HIGH | **CR-4.2** Add pre-PR checklist to AGENTS.md - Added "Pre-PR Checklist" section after "Making Changes" with 4 categories (Regex/String Patterns, Variable Scope, Code Examples in Documentation, Documentation Quality), includes 9 checklist items covering regex capture delimiters, variable definitions, complete imports, runnable examples, broken links, and consistent terminology, links to code-review-patterns.md for detailed guidance, markdownlint passes | 2026-01-25 |
 | 771 | CR-3.1 | auto-cleanup | **CR-3.1** Fix deployment-patterns.md Python examples | 2026-01-25 |
 | 772 | CR-3.2 | auto-cleanup | **CR-3.2** Fix observability-patterns.md Python examples | 2026-01-25 |
+| 773 | CR-5.2 | MEDIUM | **CR-5.2** Fix archive header handling in current_ralph_tasks.sh - Added "## Era" pattern recognition to all 4 section parsing locations (extract_tasks line 136, archive_completed_tasks lines 303 and 339, clear_completed_tasks line 401), script now correctly treats THUNK.md Era headers (e.g., "## Era 4: Template Sync") as section terminators alongside existing Archive detection, prevents parsing completed tasks from archived eras | 2026-01-25 |
 | 773 | CR-3.3 | auto-cleanup | **CR-3.3** Fix disaster-recovery-patterns.md PostgreSQL example | 2026-01-25 |
 | 774 | CR-3.4 | auto-cleanup | **CR-3.4** Fix JavaScript examples (Jest flag) | 2026-01-25 |
 | 775 | CR-3.5 | auto-cleanup | **CR-3.5** Fix grammar in deployment-patterns.md | 2026-01-25 |
