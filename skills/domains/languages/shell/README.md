@@ -69,8 +69,8 @@ unused_but_intentional="value"
 
 ## Related Skills
 
-- [code-hygiene.md](../code-hygiene.md) - General cleanup patterns
-- [ralph-patterns.md](../ralph-patterns.md) - Ralph-specific workflows
+- [code-hygiene.md](../../code-quality/code-hygiene.md) - General cleanup patterns
+- [ralph-patterns.md](../../ralph/ralph-patterns.md) - Ralph-specific workflows
 
 ---
 
