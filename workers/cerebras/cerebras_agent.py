@@ -1033,8 +1033,8 @@ class Agent:
                                 "Proceed from this state. Do not restart reconnaissance."
                             ),
                         }
-                        # Insert after system prompt (position 1)
-                        self.messages.insert(1, state_msg)
+                        # Insert after user message (position 2) to preserve system+user order
+                        self.messages.insert(2, state_msg)
                         pr("    [re-injected persistent state after prune]", S.GRN)
 
             elif not content:
