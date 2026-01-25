@@ -292,7 +292,7 @@
   - Links to: `shell/variable-patterns.md`, `shell/common-pitfalls.md`
   - **AC:** Playbook covers SC2155, SC2034, SC2086 scenarios
 
-- [ ] **8.2.2** Create `skills/playbooks/fix-markdown-lint.md`
+- [x] **8.2.2** Create `skills/playbooks/fix-markdown-lint.md`
   - Steps: Run markdownlint → Parse errors → Apply fixes → Verify
   - Include auto-fix option: `bash workers/ralph/fix-markdown.sh`
   - Links to: `code-quality/markdown-patterns.md`
