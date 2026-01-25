@@ -269,7 +269,7 @@
 
 ### Phase 8.1: Playbook Infrastructure
 
-- [ ] **8.1.1** Create `skills/playbooks/` directory structure
+- [x] **8.1.1** Create `skills/playbooks/` directory structure
   - Add `README.md` explaining playbook format and purpose
   - Define template: Goal, Prerequisites, Steps, Decision Points, Verification
   - **AC:** Directory exists with README
