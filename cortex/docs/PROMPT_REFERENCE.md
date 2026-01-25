@@ -38,11 +38,11 @@ Ralph's monitor only detects `## Phase X:` headers.
 
 Use complexity tags to estimate iteration time and identify candidates for decomposition:
 
-- **[S]** Small - ~90 seconds (simple fix, single file, clear path)
+- **[S]** Small - ~2-3 minutes (simple fix, single file, clear path)
   - Examples: Add missing language tag, fix typo, update version number
-- **[M]** Medium - ~300 seconds (multi-file, some investigation)
+- **[M]** Medium - ~5-10 minutes (multi-file, some investigation)
   - Examples: Fix shellcheck warnings across 3 files, update documentation structure
-- **[L]** Large - ~600 seconds (complex logic, testing required, cross-cutting)
+- **[L]** Large - ~10-20 minutes (complex logic, testing required, cross-cutting)
   - Examples: Implement new feature with tests, refactor module architecture
 
 **Guidelines:**
