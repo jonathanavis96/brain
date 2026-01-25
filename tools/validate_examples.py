@@ -160,6 +160,15 @@ def validate_python_imports(block: CodeBlock) -> List[str]:
                 defined_names.add(arg.arg)
         elif isinstance(node, ast.ClassDef):
             defined_names.add(node.name)
+        # Track for-loop variables
+        elif isinstance(node, ast.For):
+            if isinstance(node.target, ast.Name):
+                defined_names.add(node.target.id)
+        # Track with-statement variables
+        elif isinstance(node, ast.With):
+            for item in node.items:
+                if item.optional_vars and isinstance(item.optional_vars, ast.Name):
+                    defined_names.add(item.optional_vars.id)
 
         # Track name usage
         elif isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load):
