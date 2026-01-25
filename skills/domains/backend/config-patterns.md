@@ -296,8 +296,9 @@ fi
 | No validation | Silent failures | Validate config on load |
 | Placeholder committed | `YOUR_API_KEY` in repo | Use template pattern |
 
-## Related
+## See Also
 
-- [deployment-patterns.md](./deployment-patterns.md) - CI/CD and deployment
-- [security-patterns.md](./security-patterns.md) - Security best practices
-- [shell/strict-mode.md](./shell/strict-mode.md) - Error handling in scripts
+- **[Deployment Patterns](../infrastructure/deployment-patterns.md)** - CI/CD and environment management
+- **[Security Patterns](../infrastructure/security-patterns.md)** - Secrets management and secure defaults
+- **[Error Handling Patterns](error-handling-patterns.md)** - Configuration validation and error recovery
+- **[Shell Strict Mode](../languages/shell/strict-mode.md)** - Error handling in configuration scripts

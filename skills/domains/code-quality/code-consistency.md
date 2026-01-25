@@ -268,8 +268,9 @@ Before committing changes:
 | Cache key too simple | Collisions across sections | Include full context |
 | Mixed date formats | Hard to parse/sort | Use ISO 8601 everywhere |
 
-## Related
+## See Also
 
-- [code-hygiene.md](./code-hygiene.md) - Definition of Done checklists
-- [markdown-patterns.md](./markdown-patterns.md) - Documentation consistency
-- [shell/common-pitfalls.md](./shell/common-pitfalls.md) - Code duplication/DRY
+- **[Code Hygiene](code-hygiene.md)** - Definition of Done checklists and quality standards
+- **[Markdown Patterns](markdown-patterns.md)** - Documentation consistency and linting rules
+- **[Shell Common Pitfalls](../languages/shell/common-pitfalls.md)** - Code duplication and DRY principles
+- **[Change Propagation](../ralph/change-propagation.md)** - Template sync and knowledge persistence
