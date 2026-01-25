@@ -403,7 +403,7 @@ Key milestones:
   - Define template: Goal, Prerequisites, Steps, Decision Points, Verification
   - **AC:** Directory exists with README
 
-- [ ] **8.1.2** Create `skills/playbooks/PLAYBOOK_TEMPLATE.md`
+- [x] **8.1.2** Create `skills/playbooks/PLAYBOOK_TEMPLATE.md`
   - Sections: Goal, When to Use, Prerequisites, Steps (numbered), Checkpoints, Troubleshooting
   - Include placeholder examples
   - **AC:** Template is complete and usable

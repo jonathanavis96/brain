@@ -279,7 +279,7 @@
   - Include placeholder examples
   - **AC:** Template is complete and usable
 
-- [ ] **8.1.3** Update `skills/index.md` with playbooks section
+- [x] **8.1.3** Update `skills/index.md` with playbooks section
   - Add new "## Playbooks" section
   - Link to playbook directory
   - **AC:** Index includes playbooks
