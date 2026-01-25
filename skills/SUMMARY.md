@@ -91,6 +91,9 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
   - [Observability Patterns](domains/infrastructure/observability-patterns.md) - Logging, metrics, tracing, alerting
   - [Security Patterns](domains/infrastructure/security-patterns.md) - Input validation, secrets management, secure defaults
   - [State Management Patterns](domains/infrastructure/state-management-patterns.md) - React state, global stores, persistence
+  - **[Frontend Development](domains/frontend/README.md)** - Frontend development overview
+    - [Accessibility Patterns](domains/frontend/accessibility-patterns.md) - WCAG compliance, ARIA attributes, keyboard navigation, screen reader support
+    - [React Patterns](domains/frontend/react-patterns.md) - Component composition, hooks, state management, performance optimization
   - **[JavaScript Patterns](domains/languages/javascript/README.md)** - Modern JavaScript (ES6+), async patterns, module systems
   - **[TypeScript Patterns](domains/languages/typescript/README.md)** - Type system fundamentals, generics, advanced types, JavaScript integration
   - **[Shell Scripting](domains/languages/shell/README.md)** - Bash best practices, ShellCheck patterns, cleanup/traps

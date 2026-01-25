@@ -255,7 +255,7 @@ Key milestones:
 
 ### Phase 6.1: Fix Broken Links in Skills
 
-- [ ] **6.1.1** Fix `skills/domains/languages/shell/README.md` broken links
+- [x] **6.1.1** Fix `skills/domains/languages/shell/README.md` broken links
   - `[code-hygiene.md](../code-hygiene.md)` → should be `../../code-quality/code-hygiene.md`
   - `[ralph-patterns.md](../ralph-patterns.md)` → should be `../../ralph/ralph-patterns.md`
   - **AC:** Links resolve to existing files

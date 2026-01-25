@@ -128,7 +128,7 @@
 
 ### Phase 6.2: Update SUMMARY.md with Missing Skills
 
-- [ ] **6.2.1** Add missing skills to `skills/SUMMARY.md`
+- [x] **6.2.1** Add missing skills to `skills/SUMMARY.md`
   - Missing: `accessibility-patterns`, `cache-debugging`, `disaster-recovery-patterns`, `observability-patterns`, `react-patterns`, `test-coverage-patterns`
   - **AC:** All `.md` files in `skills/domains/` have SUMMARY.md entries
 
