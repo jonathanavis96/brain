@@ -1598,11 +1598,20 @@ if [[ -n "$PROMPT_ARG" ]]; then
     # Capture exit code without triggering set -e
     run_result=0
     emit_event --event phase_start --iter "$i" --phase "custom"
+    # Emit PHASE_START marker for rollflow_analyze (task X.1.2)
+    phase_start_ts="$(($(date +%s%N) / 1000000))"
+    echo ":::PHASE_START::: iter=$i phase=custom run_id=$ROLLFLOW_RUN_ID ts=$phase_start_ts" >&2
     run_once "$PROMPT_FILE" "custom" "$i" || run_result=$?
     if [[ $run_result -eq 0 ]]; then
       emit_event --event phase_end --iter "$i" --phase "custom" --status ok
+      # Emit PHASE_END marker for rollflow_analyze (task X.1.2)
+      phase_end_ts="$(($(date +%s%N) / 1000000))"
+      echo ":::PHASE_END::: iter=$i phase=custom status=ok run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts" >&2
     else
       emit_event --event phase_end --iter "$i" --phase "custom" --status fail --code "$run_result"
+      # Emit PHASE_END marker for rollflow_analyze (task X.1.2)
+      phase_end_ts="$(($(date +%s%N) / 1000000))"
+      echo ":::PHASE_END::: iter=$i phase=custom status=fail code=$run_result run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts" >&2
     fi
     # Check if Ralph signaled completion
     if [[ $run_result -eq 42 ]]; then
@@ -1727,11 +1736,20 @@ else
         echo ""
       fi
       emit_event --event phase_start --iter "$i" --phase "plan"
+      # Emit PHASE_START marker for rollflow_analyze (task X.1.2)
+      phase_start_ts="$(($(date +%s%N) / 1000000))"
+      echo ":::PHASE_START::: iter=$i phase=plan run_id=$ROLLFLOW_RUN_ID ts=$phase_start_ts" >&2
       run_once "$PLAN_PROMPT" "plan" "$i" || run_result=$?
       if [[ $run_result -eq 0 ]]; then
         emit_event --event phase_end --iter "$i" --phase "plan" --status ok
+        # Emit PHASE_END marker for rollflow_analyze (task X.1.2)
+        phase_end_ts="$(($(date +%s%N) / 1000000))"
+        echo ":::PHASE_END::: iter=$i phase=plan status=ok run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts" >&2
       else
         emit_event --event phase_end --iter "$i" --phase "plan" --status fail --code "$run_result"
+        # Emit PHASE_END marker for rollflow_analyze (task X.1.2)
+        phase_end_ts="$(($(date +%s%N) / 1000000))"
+        echo ":::PHASE_END::: iter=$i phase=plan status=fail code=$run_result run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts" >&2
       fi
     else
       # Auto-fix lint issues before BUILD iteration
@@ -1761,11 +1779,20 @@ else
       echo ""
 
       emit_event --event phase_start --iter "$i" --phase "build"
+      # Emit PHASE_START marker for rollflow_analyze (task X.1.2)
+      phase_start_ts="$(($(date +%s%N) / 1000000))"
+      echo ":::PHASE_START::: iter=$i phase=build run_id=$ROLLFLOW_RUN_ID ts=$phase_start_ts" >&2
       run_once "$BUILD_PROMPT" "build" "$i" || run_result=$?
       if [[ $run_result -eq 0 ]]; then
         emit_event --event phase_end --iter "$i" --phase "build" --status ok
+        # Emit PHASE_END marker for rollflow_analyze (task X.1.2)
+        phase_end_ts="$(($(date +%s%N) / 1000000))"
+        echo ":::PHASE_END::: iter=$i phase=build status=ok run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts" >&2
       else
         emit_event --event phase_end --iter "$i" --phase "build" --status fail --code "$run_result"
+        # Emit PHASE_END marker for rollflow_analyze (task X.1.2)
+        phase_end_ts="$(($(date +%s%N) / 1000000))"
+        echo ":::PHASE_END::: iter=$i phase=build status=fail code=$run_result run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts" >&2
       fi
 
       # Sync completions back to Cortex after BUILD iterations
