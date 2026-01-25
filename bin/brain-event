@@ -84,35 +84,35 @@ RUNNER=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --event)
-      EVENT="$2"
+      EVENT="${2-}"
       shift 2
       ;;
     --iter)
-      ITER="$2"
+      ITER="${2-}"
       shift 2
       ;;
     --phase)
-      PHASE="$2"
+      PHASE="${2-}"
       shift 2
       ;;
     --status)
-      STATUS="$2"
+      STATUS="${2-}"
       shift 2
       ;;
     --msg)
-      MSG="$2"
+      MSG="${2-}"
       shift 2
       ;;
     --code)
-      CODE="$2"
+      CODE="${2-}"
       shift 2
       ;;
     --workspace)
-      WORKSPACE="$2"
+      WORKSPACE="${2-}"
       shift 2
       ;;
     --runner)
-      RUNNER="$2"
+      RUNNER="${2-}"
       shift 2
       ;;
     *)
