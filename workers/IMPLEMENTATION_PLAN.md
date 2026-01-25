@@ -103,13 +103,14 @@
 
 **Goal:** Address remaining low-priority CodeRabbit issues.
 
-- [ ] **CR-5.1** Fix documentation status mismatches (D6, D7)
+- [x] **CR-5.1** Fix documentation status mismatches (D6, D7)
   - **File:** `workers/IMPLEMENTATION_PLAN.md`
   - **Issues:**
     - D6: Phase 2.1.2 status says "remains" but checkbox is complete
     - D7: Phase 12.4.2-12.4.3 status says "deferred" but checkboxes are checked
   - **Fix:** Reconcile checkbox state with status text descriptions
   - **AC:** All checkbox states match their corresponding status text
+  - **Status:** OBSOLETE - Referenced phases (2.1.2, 12.4.2-12.4.3) were removed from plan in commit 3a8e25f (2026-01-25), all completed phases have been archived
 
 - [ ] **CR-5.2** Fix archive header handling in current_ralph_tasks.sh (Q1)
   - **File:** `workers/ralph/current_ralph_tasks.sh`
