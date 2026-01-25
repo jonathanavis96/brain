@@ -160,14 +160,18 @@ pg_basebackup -h localhost -U postgres \
 # 3. Extract base backup
 tar -xzf /mnt/backups/base-20260124.tar.gz -C /var/lib/postgresql/data
 
-# 4. Create recovery.conf
-cat > /var/lib/postgresql/data/recovery.conf <<EOF
+# 4. Configure recovery settings (PostgreSQL 12+)
+# Add recovery settings to postgresql.conf
+cat >> /var/lib/postgresql/data/postgresql.conf <<EOF
 restore_command = 'cp /mnt/wal_archive/%f %p'
 recovery_target_time = '2026-01-24 14:30:00'
 recovery_target_action = 'promote'
 EOF
 
-# 5. Start PostgreSQL - it will replay WAL to target time
+# 5. Create recovery.signal file to enable recovery mode
+touch /var/lib/postgresql/data/recovery.signal
+
+# 6. Start PostgreSQL - it will replay WAL to target time
 systemctl start postgresql
 ```
 

@@ -111,7 +111,7 @@
   - Use parameterized query format in example
   - **AC:** Example shows secure pattern
 
-- [ ] **5.4.6** Fix `disaster-recovery-patterns.md` - PostgreSQL 12+ recovery
+- [x] **5.4.6** Fix `disaster-recovery-patterns.md` - PostgreSQL 12+ recovery
   - Replace recovery.conf with postgresql.conf + recovery.signal
   - **AC:** Example works with modern PostgreSQL
 
@@ -492,7 +492,7 @@
   - Use parameterized query format in example
   - **AC:** Example shows secure pattern
 
-- [ ] **5.4.6** Fix `disaster-recovery-patterns.md` - PostgreSQL 12+ recovery
+- [x] **5.4.6** Fix `disaster-recovery-patterns.md` - PostgreSQL 12+ recovery
   - Replace recovery.conf with postgresql.conf + recovery.signal
   - **AC:** Example works with modern PostgreSQL
 
