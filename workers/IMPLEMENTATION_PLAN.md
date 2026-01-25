@@ -26,7 +26,7 @@
   - **Fix:** Update to modern PostgreSQL recovery configuration
   - **AC:** PostgreSQL examples use current best practices (standby.signal + postgresql.conf)
 
-- [ ] **CR-3.4** Fix JavaScript examples
+- [x] **CR-3.4** Fix JavaScript examples
   - **Files:** `skills/domains/languages/javascript/README.md`, `skills/domains/code-quality/test-coverage-patterns.md`
   - **Issues:** Undefined `userId` in tagged template, incorrect Jest `--collectCoverageFrom` usage
   - **Fix:** Define variables, correct Jest command

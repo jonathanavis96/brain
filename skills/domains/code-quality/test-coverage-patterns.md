@@ -153,8 +153,8 @@ npm test -- --coverage
 # Watch mode with coverage
 npm test -- --coverage --watch
 
-# Coverage for specific files
-npm test -- --coverage --collectCoverageFrom='src/utils/**/*.js'
+# Coverage for specific files (use testPathPattern to target tests)
+npm test -- --coverage --testPathPattern='utils'
 
 # Run tests for changed files only
 npm test -- --findRelatedTests src/utils/helpers.js src/api/auth.js
