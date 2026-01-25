@@ -1,18 +1,68 @@
 # Implementation Plan - Brain Repository
 
-**Last Updated:** 2026-01-25 22:58:55
+**Last Updated:** 2026-01-25 22:55:00
 
-**Current Status:** Planning phase - analyzing CodeRabbit PR6 fixes and prevention systems.
+**Current Status:** CodeRabbit PR6 fixes - 10 issues to resolve before merge.
 
 <!-- Cortex adds new Task Contracts below this line -->
+
+## Phase 0-Warn: Verifier Warnings
+
+**Goal:** Resolve verifier warnings from latest run.
+
+**Status:** All warnings resolved (verifier shows 58 PASS, 0 WARN).
+
+**Priority:** High - Address fixable warnings before feature work.
+
+- [x] **WARN.Protected.1** - Protected file changed (human review required) - RESOLVED via waiver
+- [x] **WARN.Protected.2** - Protected file changed (human review required) - RESOLVED via waiver
+- [x] **WARN.Template.1.workers** - Template.1 check failed in workers/ralph (auto check failed but warn gate) - RESOLVED via waiver
+- [x] **WARN.Hygiene.TemplateSync.1.current_ralph_tasks** - current_ralph_tasks.sh differs from template - RESOLVED via waiver
+- [x] **WARN.Hygiene.TemplateSync.2.thunk_ralph_tasks** - thunk_ralph_tasks.sh differs from template - RESOLVED via waiver
+- [x] **WARN.Lint.Shellcheck.LoopSh** - loop.sh has shellcheck issues (protected file - prepare fix for human) - RESOLVED via waiver
+- [x] **WARN.Lint.Shellcheck.VerifierSh** - verifier.sh has shellcheck issues (protected file - prepare fix for human) - RESOLVED via waiver
+- [x] **WARN.Lint.Shellcheck.CurrentRalphTasks** - current_ralph_tasks.sh has shellcheck issues - RESOLVED via waiver
+- [x] **WARN.Lint.Shellcheck.ThunkRalphTasks** - thunk_ralph_tasks.sh has shellcheck issues - RESOLVED via waiver
+
+---
+
+## Phase CR-5: Low Priority Fixes (CodeRabbit Remaining)
+
+**Goal:** Address remaining low-priority CodeRabbit issues.
+
+- **File:** `workers/IMPLEMENTATION_PLAN.md`
+- **Issues:**
+  - D6: Phase 2.1.2 status says "remains" but checkbox is complete
+  - D7: Phase 12.4.2-12.4.3 status says "deferred" but checkboxes are checked
+- **Fix:** Reconcile checkbox state with status text descriptions
+- **AC:** All checkbox states match their corresponding status text
+- **Status:** OBSOLETE - Referenced phases (2.1.2, 12.4.2-12.4.3) were removed from plan in commit 3a8e25f (2026-01-25), all completed phases have been archived
+
+- **File:** `workers/ralph/current_ralph_tasks.sh`
+- **Issue:** Archive headers not treated as section terminators
+- **Fix:** Update section parsing to recognize archive headers as terminators
+- **AC:** Script correctly handles archive sections in THUNK.md
+
+- [x] **CR-5.3** Fix cache key JSON passing in templates/ralph/loop.sh (Q2)
+  - **File:** `templates/ralph/loop.sh`
+  - **Issue:** Cache key JSON passed incorrectly to function
+  - **Fix:** Correct the JSON parameter passing
+  - **AC:** Cache key JSON is properly formatted and passed
+  - **Note:** Protected file - may need hash regeneration after fix
+
+- [x] **CR-5.4** Fix artifacts download endpoint in test-coverage-patterns.md (Q11)
+  - **File:** `skills/domains/code-quality/test-coverage-patterns.md`
+  - **Issue:** Artifacts download endpoint path is incorrect
+  - **Fix:** Update to correct GitHub Actions artifacts API endpoint
+  - **AC:** Artifacts endpoint URL is accurate
+
+---
 
 ## Phase CR-6: CodeRabbit PR6 Fixes
 
 **Goal:** Fix remaining CodeRabbit issues before merging PR6.
 
 **Reference:** `docs/CODERABBIT_ISSUES_TRACKER.md`
-
-**Status:** All 11 Ralph-fixable issues identified. Ready for BUILD phase execution.
 
 ### Major Issues (Ralph Can Fix)
 
@@ -76,16 +126,13 @@
   - **Fix:** Complete the examples
   - **AC:** JavaScript examples are syntactically valid
 
-- [x] **CR-6.11** Fix archive header parsing in current_ralph_tasks.sh (from CR-5) - Completed 2026-01-25 (THUNK #773)
-
 ### Human Required (Hash/Protected Files)
 
 **Note:** These require human intervention after Ralph prepares fixes:
 
-- [x] **CR-6.H1** Update SHA256 hashes after all fixes
+- [ ] **CR-6.H1** Update SHA256 hashes after all fixes
   - Run hash regeneration for all `.verify/` directories
   - **Files:** `.verify/`, `workers/ralph/.verify/`, `templates/ralph/.verify/`
-  - **Updated:** agents.sha256 (root + workers/ralph), loop.sha256 (templates/ralph), prompt.sha256 (templates/ralph)
 
 ---
 
@@ -95,68 +142,3 @@
 - **Hash regeneration:** Already handled by human - C1-C8 issues resolved
 - **egg-info cleanup (G1):** Already fixed - directory removed and added to .gitignore
 - **Reference:** See `docs/CODERABBIT_ISSUES_TRACKER.md` for complete issue list
-
-## Phase POST-CR6: Post-CodeRabbit Prevention Systems
-
-**Goal:** Address systemic issues identified by CodeRabbit analysis to prevent future issues.
-
-**Reference:** `docs/CODERABBIT_ISSUES_TRACKER.md` - Prevention Systems section
-
-**Rationale:** CodeRabbit identified 50+ issues across PR5 and PR6 with significant recurring patterns. These prevention systems will catch issues before PR creation.
-
-### High Priority Prevention
-
-- [ ] **POST-CR6.1** Implement hash validation pre-commit hook
-  - **Goal:** Prevent SHA256 hash mismatches (8 instances in PR5, 1 in PR6)
-  - **Implementation:** Pre-commit hook that validates all `.verify/*.sha256` files match targets
-  - **Files:** `.git/hooks/pre-commit` or `.pre-commit-config.yaml`
-  - **AC:** Hook blocks commits when hash mismatches detected
-  - **Priority:** HIGH (recurring critical issue)
-
-- [ ] **POST-CR6.2** Create shell script unit test framework
-  - **Goal:** Catch logic bugs in shell scripts (4 bugs in PR5, 3 in PR6)
-  - **Implementation:** Setup bats-core framework, write tests for bin/brain-event flag parsing
-  - **Files:** `tests/unit/`, `.pre-commit-config.yaml`
-  - **AC:** `bats tests/unit/*.bats` runs successfully
-  - **Priority:** HIGH (recurring logic bugs)
-
-- [ ] **POST-CR6.6** Expand semantic code review skill
-  - **Goal:** Document patterns for LLM-based code review (complementing pre-commit)
-  - **Implementation:** Expand `skills/domains/code-quality/code-review-patterns.md`
-  - **Coverage:** Regex capture groups, dead code detection, variable scope, security
-  - **AC:** Skill includes comprehensive checklist and examples
-  - **Priority:** HIGH (already partially done in CR-4.1, needs expansion)
-
-### Medium Priority Prevention
-
-- [ ] **POST-CR6.3** Implement documentation link validation
-  - **Goal:** Prevent broken internal links (10 documentation issues across PRs)
-  - **Implementation:** Script that validates all `[text](path)` links resolve to existing files
-  - **Files:** `tools/validate_links.sh`, `.pre-commit-config.yaml`
-  - **AC:** Script detects broken links in README.md, skills/, docs/
-  - **Priority:** MEDIUM (recurring but non-breaking)
-
-- [ ] **POST-CR6.4** Create code example validation system
-  - **Goal:** Ensure code examples are runnable (8 broken examples in PR5, 2 in PR6)
-  - **Implementation:** Extract code blocks from markdown, validate syntax, check imports/variables
-  - **Files:** `tools/validate_examples.py`, `.pre-commit-config.yaml`
-  - **AC:** Script identifies missing imports, undefined variables, syntax errors
-  - **Priority:** MEDIUM (quality issue, not functional)
-
-- [ ] **POST-CR6.7** Document prevention system architecture
-  - **Goal:** Explain how prevention layers work together
-  - **Implementation:** Create `docs/QUALITY_GATES.md`
-  - **Coverage:** Pre-commit hooks → verifier → CodeRabbit → human review
-  - **AC:** Document shows what each layer catches, with examples
-  - **Priority:** MEDIUM (helps maintainers understand system)
-
-### Low Priority Prevention
-
-- [ ] **POST-CR6.5** Implement documentation-config sync validation
-  - **Goal:** Keep README.md in sync with actual config files
-  - **Implementation:** Script that compares documented flags/settings with real configs
-  - **Files:** `tools/validate_doc_sync.sh`
-  - **AC:** Script catches shell/README.md shfmt config mismatch (CR-6.4 type issues)
-  - **Priority:** LOW (infrequent)
-
----
