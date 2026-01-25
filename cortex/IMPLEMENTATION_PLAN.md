@@ -87,7 +87,7 @@ Key milestones:
   - **AC:** Cache keys consistent between record and use modes
   - **If Blocked:** The `ac_rules_hash` is computed inside an `if [[ "$CACHE_MODE" == "use" ]]` block. Move the hash computation BEFORE this conditional so both "record" and "use" modes have the same cache key components
 
-- [ ] **5.2.7** Fix `bin/brain-event` unbound variable (lines 84-117)
+- [x] **5.2.7** Fix `bin/brain-event` unbound variable (lines 84-117)
   - Guard `$2` access with `${2-}` or `$# -ge 2` checks
   - **AC:** `shellcheck bin/brain-event` passes, no unbound errors
 
