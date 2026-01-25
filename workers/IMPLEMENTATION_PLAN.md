@@ -319,7 +319,7 @@
 
 ### Phase 8.4: Debugging Playbooks
 
-- [ ] **8.4.1** Create `skills/playbooks/debug-ralph-stuck.md`
+- [x] **8.4.1** Create `skills/playbooks/debug-ralph-stuck.md`
   - Symptoms: Ralph not progressing, repeated failures, infinite loop
   - Steps: Check lock file → Review last log → Identify blocking issue → Resolution paths
   - Links to: `ralph/ralph-patterns.md`, `ralph/cache-debugging.md`

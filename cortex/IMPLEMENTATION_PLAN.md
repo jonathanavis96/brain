@@ -441,7 +441,7 @@ Key milestones:
   - Decision point: "Is this brain-specific?" → Document in README, don't sync
   - **AC:** Playbook explains sync policy and exceptions
 
-- [ ] **8.3.2** Create `skills/playbooks/bootstrap-new-project.md`
+- [x] **8.3.2** Create `skills/playbooks/bootstrap-new-project.md`
   - Steps: Run new-project.sh → Configure THOUGHTS.md → Set up validation criteria → First Ralph run
   - Links to: `docs/BOOTSTRAPPING.md`, templates
   - **AC:** Playbook covers full project setup flow
