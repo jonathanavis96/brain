@@ -4,7 +4,7 @@
 # Purpose: Automatically synchronize high-level tasks from Cortex's strategic
 #          plan to Ralph's execution plan.
 #
-# Usage:   bash sync_cortex_plan.sh [--dry-run] [--verbose] [--reset]
+# Usage:   bash sync_cortex_plan.sh [--dry-run] [--verbose] [--reset] [--no-cleanup]
 #
 # Called by: loop.sh (before each iteration)
 #
@@ -16,12 +16,14 @@ set -euo pipefail
 CORTEX_PLAN="../../cortex/IMPLEMENTATION_PLAN.md"
 RALPH_PLAN="../IMPLEMENTATION_PLAN.md"
 LAST_SYNC_FILE=".last_sync"
+CLEANUP_SCRIPT="./cleanup_plan.sh"
 LOG_PREFIX="[SYNC]"
 
 # Options
 DRY_RUN=false
 VERBOSE=false
 RESET=false
+NO_CLEANUP=false
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -36,6 +38,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --reset)
       RESET=true
+      shift
+      ;;
+    --no-cleanup)
+      NO_CLEANUP=true
       shift
       ;;
     *)
@@ -201,4 +207,15 @@ grep "^## Phase" "$CORTEX_PLAN" >"$LAST_SYNC_FILE"
 
 rm -f "$tmp_file"
 log_info "Sync complete - $new_sections_found sections added"
+
+# Run cleanup hook (unless --no-cleanup or --dry-run)
+if [[ "$NO_CLEANUP" == "false" ]] && [[ "$DRY_RUN" == "false" ]]; then
+  if [[ -x "$CLEANUP_SCRIPT" ]]; then
+    log_info "Running cleanup hook to remove completed tasks..."
+    bash "$CLEANUP_SCRIPT" --archive
+  else
+    log_verbose "Cleanup script not found or not executable: $CLEANUP_SCRIPT"
+  fi
+fi
+
 exit 0
