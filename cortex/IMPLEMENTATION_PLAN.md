@@ -60,11 +60,11 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
 
 ### Phase 10.2: Integration
 
-- [ ] **10.2.1** Add cleanup hook to `sync_cortex_plan.sh`
+- [x] **10.2.1** Add cleanup hook to `sync_cortex_plan.sh`
   - **Goal:** After syncing from cortex, run cleanup on workers plan
   - **AC:** `sync_cortex_plan.sh` calls `cleanup_plan.sh --archive` automatically
 
-- [ ] **10.2.2** Add `--no-cleanup` flag to sync script
+- [x] **10.2.2** Add `--no-cleanup` flag to sync script
   - **Goal:** Allow skipping auto-cleanup when needed for debugging
   - **AC:** `sync_cortex_plan.sh --no-cleanup` preserves completed tasks
 
