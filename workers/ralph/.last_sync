@@ -1,4 +1,5 @@
-## Phase 1: Scope-Based Cache Redesign
-## Phase 2: Verifier-Specific Caching (Optional Enhancement)
-## Phase 3: Per-Agent Cache Isolation (If Needed)
+## Phase 5: CodeRabbit PR #5 Fixes
 ## Phase 4: Shared Cache Library + Cortex Support (Safety Net)
+## Phase 6: Housekeeping & Skills Expansion
+## Phase 7: Capability Gap Radar (Automated Gap Discovery)
+## Phase 8: Agent Playbooks (End-to-End Workflows)

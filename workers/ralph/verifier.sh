@@ -371,21 +371,21 @@ main() {
       fi
     fi
 
+    # Include AC.rules hash in cache key (BEFORE CACHE_MODE check for consistency)
+    local ac_rules_hash=""
+    if [[ -n "$cache_key_value" && -f "$AC_FILE" ]] && declare -f file_content_hash &>/dev/null; then
+      ac_rules_hash=$(file_content_hash "$AC_FILE" 2>/dev/null || echo "")
+    fi
+
+    # Append AC.rules hash to cache key for rule-change invalidation
+    if [[ -n "$ac_rules_hash" ]]; then
+      cache_key_value="${cache_key_value}:${ac_rules_hash:0:8}"
+    fi
+
     # Check cache if we have a key and caching is enabled
     if [[ -n "$cache_key_value" && "${CACHE_MODE:-off}" == "use" ]]; then
       local current_git_sha
       current_git_sha=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
-
-      # Include AC.rules hash in context to invalidate cache when rules change
-      local ac_rules_hash=""
-      if [[ -f "$AC_FILE" ]] && declare -f file_content_hash &>/dev/null; then
-        ac_rules_hash=$(file_content_hash "$AC_FILE" 2>/dev/null || echo "")
-      fi
-
-      # Append AC.rules hash to cache key for rule-change invalidation
-      if [[ -n "$ac_rules_hash" ]]; then
-        cache_key_value="${cache_key_value}:${ac_rules_hash:0:8}"
-      fi
 
       if declare -f lookup_cache_pass &>/dev/null; then
         if lookup_cache_pass "$cache_key_value" "$current_git_sha" "verifier:$id"; then
