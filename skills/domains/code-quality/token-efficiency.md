@@ -76,4 +76,11 @@ diff file3 template3
 ```bash
 grep -c pattern file1 file2 file3
 diff file1 template1 && diff file2 template2 && diff file3 template3
-```text
+```
+
+## See Also
+
+- **[Ralph Patterns](../ralph/ralph-patterns.md)** - Ralph loop architecture and subagent execution flow
+- **[Bulk Edit Patterns](bulk-edit-patterns.md)** - Efficient bulk editing strategies to minimize tool calls
+- **[Cache Debugging](../ralph/cache-debugging.md)** - Cache troubleshooting and optimization
+- **[Code Hygiene](code-hygiene.md)** - Definition of Done checklist and quality gatestext

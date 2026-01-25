@@ -212,7 +212,9 @@ for i in {1..10}; do
 for line in "${lines[@]}"; do
 ```text
 
-## Related
+## See Also
 
-- [strict-mode.md](./strict-mode.md) - How `-u` affects undefined variables
-- [common-pitfalls.md](./common-pitfalls.md) - More ShellCheck patterns
+- **[Strict Mode](strict-mode.md)** - How `set -euo pipefail` affects undefined variables
+- **[Common Pitfalls](common-pitfalls.md)** - More ShellCheck patterns and best practices
+- **[Cleanup Patterns](cleanup-patterns.md)** - Trap handlers and temp file management
+- **[Shell README](README.md)** - Shell scripting overview and best practices

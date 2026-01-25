@@ -290,7 +290,9 @@ markdownlint -d MD013 "**/*.md"  # Ignore line length
 | Stale usage comment | Misleads users | Keep comments current |
 | Old terminology | Confuses readers | Update all references |
 
-## Related
+## See Also
 
-- [code-hygiene.md](./code-hygiene.md) - General code quality
-- [shell/README.md](./shell/README.md) - Shell scripting patterns
+- **[Code Hygiene](code-hygiene.md)** - Definition of Done checklist and quality gates
+- **[Code Consistency](code-consistency.md)** - Documentation accuracy and terminology sync
+- **[Bulk Edit Patterns](bulk-edit-patterns.md)** - Efficient markdown auto-fix strategies
+- **[Shell Common Pitfalls](../languages/shell/common-pitfalls.md)** - Shell script documentation patterns

@@ -1378,10 +1378,12 @@ CMD ["npm", "start"]
 
 ---
 
-## Related Patterns
+## See Also
 
-- **database-patterns.md** - Schema migrations, connection pooling
-- **security-patterns.md** - Secret management, HTTPS configuration
-- **caching-patterns.md** - Cache invalidation during deployments
-- **error-handling-patterns.md** - Production error logging and monitoring
-- **testing-patterns.md** - CI/CD integration, test automation
+- **[Database Patterns](../../backend/database-patterns.md)** - Schema migrations and connection pooling
+- **[Security Patterns](security-patterns.md)** - Secret management and HTTPS configuration
+- **[Caching Patterns](../../backend/caching-patterns.md)** - Cache invalidation during deployments
+- **[Error Handling Patterns](../../backend/error-handling-patterns.md)** - Production error logging and monitoring
+- **[Testing Patterns](../../code-quality/testing-patterns.md)** - CI/CD integration and test automation
+- **[Observability Patterns](observability-patterns.md)** - Monitoring deployments and rollout health
+- **[Disaster Recovery Patterns](disaster-recovery-patterns.md)** - Backup strategies and rollback procedures

@@ -449,8 +449,10 @@ die() { log_error "$@"; exit 1; }
 | Magic number `8` | Unclear intent | Use `readonly CONSTANT=8` |
 | Same function in 2 files | Bugs diverge | Extract to shared lib |
 
-## Related
+## See Also
 
-- [strict-mode.md](./strict-mode.md) - Strict mode settings
-- [variable-patterns.md](./variable-patterns.md) - Variable best practices
-- [cleanup-patterns.md](./cleanup-patterns.md) - Proper cleanup
+- **[Strict Mode](strict-mode.md)** - `set -euo pipefail` settings and error handling
+- **[Variable Patterns](variable-patterns.md)** - Variable best practices and ShellCheck fixes
+- **[Cleanup Patterns](cleanup-patterns.md)** - Trap handlers and proper cleanup
+- **[Shell README](README.md)** - Shell scripting overview and best practices
+- **[Validation Patterns](validation-patterns.md)** - Shell project validation and testing

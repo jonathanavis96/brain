@@ -217,8 +217,11 @@ If a gate fails, fix the issue before proceeding.
 
 ---
 
-## Related Skills
+## See Also
 
-- `skills/domains/ralph/ralph-patterns.md` - Ralph-specific workflows
-- `skills/conventions.md` - General skill authoring rules
-- `PROMPT.md` - Definition of Done checklist
+- **[Ralph Patterns](../ralph/ralph-patterns.md)** - Ralph-specific workflows and troubleshooting
+- **[Markdown Patterns](markdown-patterns.md)** - Markdown linting rules and fixes
+- **[Code Consistency](code-consistency.md)** - Documentation accuracy and terminology sync
+- **[Testing Patterns](testing-patterns.md)** - Test quality and coverage standards
+- **[Token Efficiency](token-efficiency.md)** - Optimize tool calls and iteration speed
+- **[Bulk Edit Patterns](bulk-edit-patterns.md)** - Efficient multi-file editing strategies
