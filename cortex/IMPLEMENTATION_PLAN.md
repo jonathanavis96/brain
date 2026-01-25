@@ -167,7 +167,7 @@ Key milestones:
 
 ### Phase 5.5: Shell Script Fixes (Ralph)
 
-- [ ] **5.5.1** Fix `current_ralph_tasks.sh` - Archive header handling
+- [x] **5.5.1** Fix `current_ralph_tasks.sh` - Archive header handling
   - Treat Archive headers as section terminators
   - **AC:** Archive sections properly delimit task sections
 
