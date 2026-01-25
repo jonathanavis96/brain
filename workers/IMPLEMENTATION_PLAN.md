@@ -18,8 +18,8 @@
 **Goal:** Add structured markers to loop.sh for better observability.  
 **Status:** X.3.4, X.4.1 complete (see THUNK.md)
 
-- [ ] **X.4.2** Update `:::VERIFIER_ENV:::` to include `iter=` and `ts=`
-- [ ] **X.2.1** Implement `run_tool()` wrapper with TOOL_START/TOOL_END markers
+- [x] **X.4.2** Update `:::VERIFIER_ENV:::` to include `iter=` and `ts=`
+- [x] **X.2.1** Implement `run_tool()` wrapper with TOOL_START/TOOL_END markers
 - [ ] **X.2.2** Route important tool calls through `run_tool()`
 - [ ] **X.2.3** Ensure TOOL_END emitted on failure
 - [ ] **X.1.1** Emit ITER_START/ITER_END markers

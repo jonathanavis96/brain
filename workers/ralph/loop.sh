@@ -834,7 +834,103 @@ check_protected_file_failures() {
   return 1 # no protected file failures
 }
 
+# Emit structured TOOL_START marker
+# Args: $1 = tool_id, $2 = tool_name, $3 = cache_key, $4 = git_sha
+log_tool_start() {
+  local tool_id="$1"
+  local tool_name="$2"
+  local cache_key="$3"
+  local git_sha="$4"
+  local ts
+  ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  echo ":::TOOL_START::: id=${tool_id} tool=${tool_name} cache_key=${cache_key} git_sha=${git_sha} ts=${ts}"
+}
+
+# Emit structured TOOL_END marker
+# Args: $1 = tool_id, $2 = result (PASS/FAIL), $3 = exit_code, $4 = duration_ms, $5 = reason (optional)
+log_tool_end() {
+  local tool_id="$1"
+  local result="$2"
+  local exit_code="$3"
+  local duration_ms="$4"
+  local reason="${5:-}"
+  local ts
+  ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  if [[ -n "$reason" ]]; then
+    echo ":::TOOL_END::: id=${tool_id} result=${result} exit=${exit_code} duration_ms=${duration_ms} reason=${reason} ts=${ts}"
+  else
+    echo ":::TOOL_END::: id=${tool_id} result=${result} exit=${exit_code} duration_ms=${duration_ms} ts=${ts}"
+  fi
+}
+
+# Emit cache hit marker
+# Args: $1 = cache_key, $2 = tool_name
+log_cache_hit() {
+  local cache_key="$1"
+  local tool_name="$2"
+  local ts
+  ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  echo ":::CACHE_HIT::: cache_key=${cache_key} tool=${tool_name} ts=${ts}"
+}
+
+# Emit cache miss marker
+# Args: $1 = cache_key, $2 = tool_name
+log_cache_miss() {
+  local cache_key="$1"
+  local tool_name="$2"
+  local ts
+  ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  echo ":::CACHE_MISS::: cache_key=${cache_key} tool=${tool_name} ts=${ts}"
+}
+
+# Wrapper for tool execution with structured logging
+# Ensures TOOL_END marker is emitted even on failure (via trap)
+# Args: $1 = tool_id, $2 = tool_name, $3 = tool_key, $4 = git_sha, $5 = command to execute
+# Returns: exit code from command
+run_tool() {
+  local tool_id="$1"
+  local tool_name="$2"
+  local tool_key="$3"
+  local git_sha="$4"
+  local tool_command="$5"
+
+  local start_ms
+  local end_ms
+  local duration_ms
+  local rc
+
+  # Start timing
+  start_ms="$(($(date +%s%N) / 1000000))"
+
+  # Log tool start
+  log_tool_start "$tool_id" "$tool_name" "$tool_key" "$git_sha"
+
+  # Set up trap to ensure TOOL_END on failure/interrupt
+  trap 'end_ms="$(($(date +%s%N) / 1000000))"; duration_ms="$((end_ms - start_ms))"; log_tool_end "$tool_id" "FAIL" "130" "$duration_ms" "interrupted"; exit 130' INT TERM
+
+  # Execute command
+  eval "$tool_command"
+  rc=$?
+
+  # Clear trap
+  trap - INT TERM
+
+  # Calculate duration
+  end_ms="$(($(date +%s%N) / 1000000))"
+  duration_ms="$((end_ms - start_ms))"
+
+  # Log tool end
+  if [[ $rc -ne 0 ]]; then
+    log_tool_end "$tool_id" "FAIL" "$rc" "$duration_ms" "exit $rc"
+  else
+    log_tool_end "$tool_id" "PASS" "$rc" "$duration_ms"
+  fi
+
+  return $rc
+}
+
 run_verifier() {
+  local iter="${1:-0}"
   if [[ ! -x "$VERIFY_SCRIPT" ]]; then
     # Check for .initialized marker to determine security vs bootstrap mode
     if [[ -f "$RALPH/.verify/.initialized" ]]; then
@@ -871,6 +967,11 @@ run_verifier() {
   # Generate unique run ID for freshness check
   RUN_ID="$(date +%s)-$$"
   export RUN_ID
+
+  # Emit structured verifier environment marker
+  local verifier_ts
+  verifier_ts="$(date +%s)"
+  echo ":::VERIFIER_ENV::: iter=${iter:-0} ts=${verifier_ts} run_id=${RUN_ID}" >&2
 
   # Capture stderr to summarize cache metrics (avoid spamming 40+ lines)
   local cache_stderr
@@ -1233,7 +1334,7 @@ except Exception:
 
   # Run verifier after both PLAN and BUILD iterations
   if [[ "$phase" == "plan" ]] || [[ "$phase" == "build" ]]; then
-    if run_verifier; then
+    if run_verifier "$iter"; then
       echo ""
       echo "========================================"
       echo "🎉 ${phase^^} iteration verified successfully!"
@@ -1277,7 +1378,7 @@ except Exception:
     unchecked_count=$(grep -cE '^\s*-\s*\[ \]' "$ROOT/workers/IMPLEMENTATION_PLAN.md" 2>/dev/null) || unchecked_count=0
     if [[ "$unchecked_count" -eq 0 ]]; then
       # All tasks done - run final verification
-      if run_verifier; then
+      if run_verifier "$iter"; then
         echo ""
         echo "========================================"
         echo "🎉 All tasks complete and verified!"
