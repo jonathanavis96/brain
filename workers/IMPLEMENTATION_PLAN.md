@@ -22,7 +22,7 @@
   - **Fix:** Replace `$LOGS_DIR` with `$LOGDIR`
   - **AC:** `grep -n 'LOGS_DIR' templates/ralph/loop.sh` returns empty
 
-- [ ] **CR-6.2** Fix bin/brain-event flag parsing (M1)
+- [x] **CR-6.2** Fix bin/brain-event flag parsing (M1)
   - **File:** `bin/brain-event` lines 84-125
   - **Issue:** Flag parsing consumes next option when value missing
   - **Fix:** Check if value looks like a flag before shifting
