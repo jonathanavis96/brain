@@ -99,7 +99,7 @@
   - Add userId parameter to function signature
   - **AC:** TypeScript compiles
 
-- [ ] **5.4.3** Fix `observability-patterns.md` - JsonFormatter.format
+- [x] **5.4.3** Fix `observability-patterns.md` - JsonFormatter.format
   - Use correct LogRecord attribute access
   - **AC:** Python example runs
 
@@ -480,7 +480,7 @@
   - Add userId parameter to function signature
   - **AC:** TypeScript compiles
 
-- [ ] **5.4.3** Fix `observability-patterns.md` - JsonFormatter.format
+- [x] **5.4.3** Fix `observability-patterns.md` - JsonFormatter.format
   - Use correct LogRecord attribute access
   - **AC:** Python example runs
 
