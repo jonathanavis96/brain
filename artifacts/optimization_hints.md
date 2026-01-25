@@ -157,6 +157,39 @@
 
 ### Cache & Context Reuse Notes
 
+#### Limitations
+
+**RovoDev Tool Instrumentation Gap:**
+
+RovoDev agents use native platform tools (`bash`, `grep`, `open_files`, `find_and_replace_code`, `expand_code_chunks`) that bypass shell-level instrumentation. This creates a fundamental visibility gap:
+
+- **What we can track:** Shell commands run through `log_tool_start()` wrapper in loop.sh
+- **What we cannot track:** RovoDev's native tool invocations (the majority of operations)
+- **Impact:** `iter_###.json` shows all tool calls as `tool_name: "unknown"` because markers never emit for RovoDev tools
+- **Consequence:** Cannot compute slowest tools, cache hit rates by tool type, or tool-specific batching opportunities
+
+**Why this matters for optimization:**
+
+1. **Batching detection:** Cannot identify "grep-heavy" vs "file-edit-heavy" tasks
+2. **Cache recommendations:** Cannot measure which tool types benefit most from caching
+3. **Duration analysis:** Can track iteration-level time but not tool-level granularity
+
+**Workarounds:**
+
+- **Heuristic analysis:** Use THUNK.md descriptions to infer tool usage patterns (e.g., "Fix SC2162 in 5 files" = likely 5× find_and_replace_code)
+- **Manual timing:** Add explicit `time` commands around critical shell operations
+- **Iteration-level metrics:** Focus on total iteration duration as primary optimization signal
+
+**Future improvement paths:**
+
+1. Request RovoDev team add optional instrumentation hooks for tool calls
+2. Develop log parser that infers tools from output patterns (e.g., "Successfully opened" = open_files)
+3. Instrument only shell-level operations that Ralph controls directly
+
+This limitation is **documented** (not fixable at Ralph level) and affects all optimization work relying on tool-level granularity.
+
+---
+
 #### Issue: Phase 0 Markers Not Reaching Log Files
 
 **Root Cause Analysis (2026-01-25):**

@@ -25,10 +25,11 @@
   - **AC:** After `bash loop.sh --iterations 1`, log contains `:::ITER_START::: iter=1`
   - **Completed:** 2026-01-25 - All 26 marker emissions converted to emit_marker()
 
-- [ ] **9C.0.3** Document RovoDev tool instrumentation limitation
+- [x] **9C.0.3** Document RovoDev tool instrumentation limitation
   - **Goal:** Clarify that RovoDev's native tools bypass shell wrapper
   - **AC:** `artifacts/optimization_hints.md` has "Limitations" section explaining tool visibility gap
   - **Note:** RovoDev bash/grep/find_and_replace_code don't go through `log_tool_start()`
+  - **Completed:** 2026-01-25 - Added "Limitations" section explaining RovoDev tool visibility gap
 
 ### Phase 9C.1: Batching Infrastructure
 
