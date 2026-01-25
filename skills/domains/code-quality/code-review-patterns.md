@@ -1,17 +1,36 @@
 # Code Review Patterns
 
-<!-- covers: code-review, semantic-linting, logic-bugs, pre-commit-checklist -->
+<!-- covers: code-review, semantic-linting, logic-bugs, pre-commit-checklist, semantic-analysis -->
 
-Patterns for catching logic bugs and semantic issues that automated linters miss. These are issues that CodeRabbit caught in PR#5 but pre-commit hooks did not detect.
+Patterns for catching logic bugs and semantic issues that automated linters miss. This guide complements pre-commit hooks by documenting human/LLM-reviewable patterns that require semantic understanding.
+
+## Quick Reference
+
+| Category | Common Issues | Detection Method |
+| -------- | ------------- | ---------------- |
+| Regex Capture Groups | Delimiters inside `()`, wrong match extraction | Manual inspection of `BASH_REMATCH`, captured text |
+| Dead Code | Unreachable cleanup, unused functions | Trace execution paths, check all branches |
+| Variable Scope | Undefined vars, wrong scope, shadowing built-ins | Check function params vs usage, verify initialization |
+| Code Examples | Missing imports, undefined variables | Copy-paste test in clean environment |
+| Security | SQL injection, XSS, credential leaks | Check input sanitization, parameterization |
+| Error Handling | Inconsistent patterns, hardcoded values | Verify error paths use actual runtime state |
+| API Deprecation | Outdated syntax, removed features | Check against current docs, version constraints |
+| String Escaping | Unescaped backslashes, unquoted variables | Check regex strings use raw mode, variables quoted |
+| Loop Bounds | Off-by-one errors, skipped iterations | Verify range matches intent (inclusive vs exclusive) |
+| Concurrency | Race conditions, check-then-act | Look for atomic operations, proper locking |
+| Type Coercion | Implicit conversions, truthiness bugs | Explicit parsing, `===` in JS, `is` in Python |
+| Resource Leaks | Unclosed files, unreleased locks | Check for context managers, `finally` blocks |
 
 ## Problem: Beyond Syntax Checking
 
 Automated linters excel at syntax and style but struggle with:
 
-- **Logic errors** - Code runs but doesn't do what it claims
-- **Semantic correctness** - Variables are used but never defined
-- **Context-dependent bugs** - Cleanup code references wrong variables
-- **Example completeness** - Documentation code is missing imports
+- **Logic errors** - Code runs but doesn't do what it claims (wrong regex capture)
+- **Semantic correctness** - Variables are used but never defined (missing imports)
+- **Context-dependent bugs** - Cleanup code references wrong variables (scope issues)
+- **Example completeness** - Documentation code is missing imports/definitions
+- **Security vulnerabilities** - Valid syntax but insecure patterns (SQL injection)
+- **Dead code paths** - Functions defined but never called (cleanup handlers)
 
 ## Pattern Categories
 
@@ -284,6 +303,198 @@ Before committing code, manually review:
 - **[security-patterns.md](../infrastructure/security-patterns.md)** - Security best practices
 - **[testing-patterns.md](testing-patterns.md)** - How to test code examples
 - **[docs/CODERABBIT_PR5_ALL_ISSUES.md](../../../docs/CODERABBIT_PR5_ALL_ISSUES.md)** - Full issue list from PR#5
+
+### 8. String Escape Sequences
+
+**Issue:** Escape sequences in strings not properly handled, causing unexpected behavior.
+
+**Example:**
+
+```python
+# ❌ BAD - backslash not escaped, breaks regex
+pattern = "\d+"  # Actually matches "d+" (literal d)
+
+# ✅ GOOD - raw string or escaped backslash
+pattern = r"\d+"  # Raw string (preferred)
+pattern = "\\d+"  # Escaped backslash (alternative)
+```
+
+```bash
+# ❌ BAD - unquoted variable with newlines breaks command
+echo $OUTPUT  # Word splitting on newlines
+
+# ✅ GOOD - quoted to preserve formatting
+echo "$OUTPUT"
+```
+
+**Detection checklist:**
+
+- [ ] Are regex patterns using raw strings (`r"..."` in Python)?
+- [ ] Are shell variables properly quoted when they may contain whitespace?
+- [ ] Are JSON strings escaped when embedded in other formats?
+
+**Fix:** Use raw strings for regex, quote shell variables, escape special characters appropriately.
+
+### 9. Off-by-One Errors in Loops
+
+**Issue:** Loop bounds incorrect, causing skipped or extra iterations.
+
+**Example:**
+
+```python
+# ❌ BAD - skips last item
+for i in range(len(items) - 1):
+    process(items[i])
+
+# ✅ GOOD - processes all items
+for i in range(len(items)):
+    process(items[i])
+
+# ✅ BETTER - pythonic iteration
+for item in items:
+    process(item)
+```
+
+**Detection checklist:**
+
+- [ ] Do loop ranges match intended coverage (inclusive vs exclusive)?
+- [ ] Are array indices within bounds (0 to length-1)?
+- [ ] Are string slices correct (`[start:end]` excludes `end`)?
+
+**Fix:** Verify loop bounds match intent, prefer idiomatic iteration over manual indexing.
+
+### 10. Race Conditions and Concurrency Issues
+
+**Issue:** Code assumes single-threaded execution but runs in concurrent environment.
+
+**Example:**
+
+```python
+# ❌ BAD - race condition (check-then-act)
+if not os.path.exists(path):
+    os.makedirs(path)  # Another thread might create it first
+
+# ✅ GOOD - atomic operation with error handling
+try:
+    os.makedirs(path, exist_ok=True)
+except FileExistsError:
+    pass  # Already created by another thread
+```
+
+**Detection checklist:**
+
+- [ ] Are file operations atomic (no check-then-act patterns)?
+- [ ] Are shared resources protected (locks, mutexes)?
+- [ ] Do error handlers account for concurrent modifications?
+
+**Fix:** Use atomic operations, proper locking, or idempotent patterns.
+
+### 11. Type Coercion Pitfalls
+
+**Issue:** Implicit type conversions cause unexpected behavior.
+
+**Example:**
+
+```javascript
+// ❌ BAD - string concatenation instead of addition
+const total = request.query.amount + 10;  // "5010" if amount is "50"
+
+// ✅ GOOD - explicit type conversion
+const total = parseInt(request.query.amount, 10) + 10;  // 60
+```
+
+```python
+# ❌ BAD - truthiness check doesn't distinguish 0 from None
+if result:
+    process(result)  # Skips valid result of 0
+
+# ✅ GOOD - explicit None check
+if result is not None:
+    process(result)
+```
+
+**Detection checklist:**
+
+- [ ] Are numeric operations on user input explicitly parsed?
+- [ ] Do truthiness checks distinguish between `0`, `""`, `None`, and `False`?
+- [ ] Are comparisons type-safe (`===` in JS, `is` vs `==` in Python)?
+
+**Fix:** Explicit type conversions, proper None/null checks, type-safe comparisons.
+
+### 12. Resource Leak Prevention
+
+**Issue:** Resources (files, connections, locks) not properly released.
+
+**Example:**
+
+```python
+# ❌ BAD - file not closed on exception
+f = open(path, 'w')
+process_data(f)  # Might throw exception
+f.close()
+
+# ✅ GOOD - context manager ensures cleanup
+with open(path, 'w') as f:
+    process_data(f)
+```
+
+**Detection checklist:**
+
+- [ ] Are files opened with context managers (`with` statement)?
+- [ ] Are database connections returned to pool/closed?
+- [ ] Are locks released in `finally` blocks or using RAII patterns?
+
+**Fix:** Use context managers, defer statements, or RAII patterns for automatic cleanup.
+
+## Advanced Review Techniques
+
+### Static Analysis for Logic Bugs
+
+Beyond manual review, use these tools for deeper analysis:
+
+```bash
+# Python: mypy for type checking
+mypy --strict src/
+
+# Python: bandit for security issues
+bandit -r src/
+
+# JavaScript: TypeScript for type safety
+tsc --noEmit --strict
+
+# Shell: shellcheck with all warnings
+shellcheck -x -a script.sh
+```
+
+### Code Example Validation
+
+Extract and test code examples automatically:
+
+```bash
+# Extract Python code blocks from markdown
+awk '/```python/,/```/ {if (!/```/) print}' README.md > test_example.py
+
+# Run with imports check
+python -c "import ast; ast.parse(open('test_example.py').read())"
+
+# Check for undefined names
+pylint --disable=all --enable=undefined-variable test_example.py
+```
+
+### Semantic Diff Review
+
+Focus review on semantic changes, not formatting:
+
+```bash
+# Ignore whitespace changes in git diff
+git diff -w HEAD~1
+
+# Show function-level context
+git diff --function-context
+
+# Semantic diff with difftastic
+difft --display side-by-side file1.py file2.py
+```
 
 ## Gap Identification
 
