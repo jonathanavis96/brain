@@ -222,7 +222,7 @@ Key milestones:
 
 ### Phase 4.3: Add Cortex Caching
 
-- [ ] **4.3.1** Update `cortex/one-shot.sh` to source shared cache library
+- [x] **4.3.1** Update `cortex/one-shot.sh` to source shared cache library
   - Add `source workers/shared/cache.sh`
   - Set `AGENT_NAME=cortex` explicitly
   - Wrap `acli rovodev run` call with cache check/store

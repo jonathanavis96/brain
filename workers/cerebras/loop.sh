@@ -274,6 +274,7 @@ EOF
 # Defaults
 ITERATIONS=1
 PLAN_EVERY=3
+AGENT_NAME="cerebras" # Agent identifier for cache isolation
 PROMPT_ARG=""
 MODEL_ARG=""
 BRANCH_ARG=""
@@ -288,6 +289,9 @@ CACHE_SKIP="${CACHE_SKIP:-false}"
 FORCE_NO_CACHE=false
 CONSECUTIVE_VERIFIER_FAILURES=0
 
+# Export AGENT_NAME for cache library
+export AGENT_NAME
+
 # Cache metrics tracking
 CACHE_HITS=0
 CACHE_MISSES=0
@@ -296,80 +300,80 @@ TIME_SAVED_MS=0
 # Parse args
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --prompt)
-      PROMPT_ARG="${2:-}"
+  --prompt)
+    PROMPT_ARG="${2:-}"
+    shift 2
+    ;;
+  --iterations)
+    ITERATIONS="${2:-}"
+    shift 2
+    ;;
+  --plan-every)
+    PLAN_EVERY="${2:-}"
+    shift 2
+    ;;
+  --yolo)
+    # Placeholder for future yolo mode implementation
+    shift
+    ;;
+  --no-yolo)
+    # Placeholder for future no-yolo mode implementation
+    shift
+    ;;
+  --model)
+    MODEL_ARG="${2:-}"
+    shift 2
+    ;;
+  --branch)
+    BRANCH_ARG="${2:-}"
+    shift 2
+    ;;
+  --dry-run)
+    DRY_RUN=true
+    shift
+    ;;
+  --task)
+    TASK_ARG="${2:-}"
+    shift 2
+    ;;
+  --no-monitors)
+    NO_MONITORS=true
+    shift
+    ;;
+  --force-build)
+    FORCE_BUILD=true
+    shift
+    ;;
+  --cache-skip)
+    CACHE_SKIP=true
+    shift
+    ;;
+  --force-no-cache)
+    FORCE_NO_CACHE=true
+    shift
+    ;;
+  --rollback)
+    ROLLBACK_MODE=true
+    if [[ -n ${2:-} && $2 =~ ^[0-9]+$ ]]; then
+      ROLLBACK_COUNT="$2"
       shift 2
-      ;;
-    --iterations)
-      ITERATIONS="${2:-}"
-      shift 2
-      ;;
-    --plan-every)
-      PLAN_EVERY="${2:-}"
-      shift 2
-      ;;
-    --yolo)
-      # Placeholder for future yolo mode implementation
+    else
       shift
-      ;;
-    --no-yolo)
-      # Placeholder for future no-yolo mode implementation
-      shift
-      ;;
-    --model)
-      MODEL_ARG="${2:-}"
-      shift 2
-      ;;
-    --branch)
-      BRANCH_ARG="${2:-}"
-      shift 2
-      ;;
-    --dry-run)
-      DRY_RUN=true
-      shift
-      ;;
-    --task)
-      TASK_ARG="${2:-}"
-      shift 2
-      ;;
-    --no-monitors)
-      NO_MONITORS=true
-      shift
-      ;;
-    --force-build)
-      FORCE_BUILD=true
-      shift
-      ;;
-    --cache-skip)
-      CACHE_SKIP=true
-      shift
-      ;;
-    --force-no-cache)
-      FORCE_NO_CACHE=true
-      shift
-      ;;
-    --rollback)
-      ROLLBACK_MODE=true
-      if [[ -n ${2:-} && $2 =~ ^[0-9]+$ ]]; then
-        ROLLBACK_COUNT="$2"
-        shift 2
-      else
-        shift
-      fi
-      ;;
-    --resume)
-      RESUME_MODE=true
-      shift
-      ;;
-    -h | --help)
-      usage
-      exit 0
-      ;;
-    *)
-      echo "Unknown arg: $1" >&2
-      usage
-      exit 2
-      ;;
+    fi
+    ;;
+  --resume)
+    RESUME_MODE=true
+    shift
+    ;;
+  -h | --help)
+    usage
+    exit 0
+    ;;
+  *)
+    echo "Unknown arg: $1" >&2
+    usage
+    exit 2
+    ;;
   esac
 done
 
@@ -378,33 +382,33 @@ done
 resolve_model_cerebras() {
   local model="$1"
   case "$model" in
-    llama4 | llama-4 | scout)
-      echo "llama-4-scout-17b"
-      ;;
-    llama4-large | maverick)
-      echo "llama-4-maverick-17b"
-      ;;
-    llama3 | llama-3 | llama3-8b)
-      echo "llama3.1-8b"
-      ;;
-    llama3-large | llama3-70b)
-      echo "llama3.1-70b"
-      ;;
-    qwen | qwen3)
-      echo "qwen-3-32b"
-      ;;
-    qwen-large | qwen-235b)
-      echo "qwen-3-235b-a22b-instruct-2507"
-      ;;
-    glm | glm4 | glm-4.7)
-      echo "zai-glm-4.7"
-      ;;
-    auto | latest | "")
-      echo "llama-4-scout-17b"
-      ;;
-    *)
-      echo "$model"
-      ;;
+  llama4 | llama-4 | scout)
+    echo "llama-4-scout-17b"
+    ;;
+  llama4-large | maverick)
+    echo "llama-4-maverick-17b"
+    ;;
+  llama3 | llama-3 | llama3-8b)
+    echo "llama3.1-8b"
+    ;;
+  llama3-large | llama3-70b)
+    echo "llama3.1-70b"
+    ;;
+  qwen | qwen3)
+    echo "qwen-3-32b"
+    ;;
+  qwen-large | qwen-235b)
+    echo "qwen-3-235b-a22b-instruct-2507"
+    ;;
+  glm | glm4 | glm-4.7)
+    echo "zai-glm-4.7"
+    ;;
+  auto | latest | "")
+    echo "llama-4-scout-17b"
+    ;;
+  *)
+    echo "$model"
+    ;;
   esac
 }
 
@@ -875,7 +879,12 @@ run_once() {
   # This implements task 1.5.2: remove iteration-level caching, use content-based keys
   local prompt_hash
   prompt_hash="$(sha256sum "$prompt_with_mode" 2>/dev/null | cut -d' ' -f1 || echo 'unknown')"
-  tool_key="cerebras|${phase}|${prompt_hash:0:16}|${git_sha}"
+  # Use AGENT_NAME for cache key (task 4.4.1: agent isolation)
+  local agent_key="${AGENT_NAME:-cerebras}"
+  if [[ -z "$AGENT_NAME" ]]; then
+    echo "⚠️  WARNING: AGENT_NAME not set, falling back to 'cerebras' for cache key" >&2
+  fi
+  tool_key="${agent_key,,}|${phase}|${prompt_hash:0:16}|${git_sha}"
   start_ms="$(($(date +%s%N) / 1000000))"
 
   # Check cache if CACHE_SKIP is enabled and FORCE_NO_CACHE is not set
@@ -898,7 +907,7 @@ except Exception:
 " 2>/dev/null) || saved_ms=0
       fi
 
-      log_cache_hit "$tool_key" "cerebras"
+      log_cache_hit "$tool_key" "${AGENT_NAME:-cerebras}"
       CACHE_HITS=$((CACHE_HITS + 1))
       TIME_SAVED_MS=$((TIME_SAVED_MS + saved_ms))
 
@@ -906,14 +915,14 @@ except Exception:
       echo "========================================"
       echo "✓ Cache hit - skipping tool execution"
       echo "Key: $tool_key"
-      echo "Tool: cerebras"
+      echo "Tool: ${AGENT_NAME:-cerebras}"
       echo "Saved: ${saved_ms}ms"
       echo "========================================"
       echo ""
       return 0
     else
       # Cache miss - proceed with execution
-      log_cache_miss "$tool_key" "cerebras"
+      log_cache_miss "$tool_key" "${AGENT_NAME:-cerebras}"
       CACHE_MISSES=$((CACHE_MISSES + 1))
     fi
   fi
