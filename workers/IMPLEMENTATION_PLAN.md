@@ -338,7 +338,7 @@
   - Update markdown patterns to link to fix-markdown-lint playbook
   - **AC:** At least 5 skills have playbook cross-references
 
-- [ ] **8.5.2** Update `skills/SUMMARY.md` with playbooks overview
+- [x] **8.5.2** Update `skills/SUMMARY.md` with playbooks overview
   - Add playbooks to quick reference table
   - Include "When to use a playbook vs a skill" guidance
   - **AC:** SUMMARY includes playbooks section

@@ -462,7 +462,7 @@ Key milestones:
 
 ### Phase 8.5: Playbook Cross-References
 
-- [ ] **8.5.1** Add "Related Playbooks" section to relevant skills
+- [x] **8.5.1** Add "Related Playbooks" section to relevant skills
   - Update shell patterns to link to fix-shellcheck playbook
   - Update markdown patterns to link to fix-markdown-lint playbook
   - **AC:** At least 5 skills have playbook cross-references
@@ -473,5 +473,60 @@ Key milestones:
   - **AC:** SUMMARY includes playbooks section
 
 **Phase AC:** Playbook infrastructure exists, 6+ playbooks created, cross-referenced from skills
+
+---
+
+## Phase 9C: Task Optimization (Batching + Decomposition)
+
+**Goal:** Use Phase 0 structured logs to identify batching and decomposition opportunities, reducing task overhead and improving iteration success rate.
+
+**Artifacts:** `artifacts/optimization_hints.md` (analysis output)
+
+### Phase 9C.0: Prerequisites
+
+- [ ] **9C.0.1** Fix rollflow_analyze tool name extraction from `:::TOOL_START:::` markers
+  - **Goal:** Get real tool names in iter_###.json instead of "unknown"
+  - **AC:** `jq '.tool_calls[0].tool_name' artifacts/analysis/iter_001.json` returns actual tool name
+  - **If Blocked:** Check marker_parser.py for TOOL_START regex
+
+### Phase 9C.1: Batching Infrastructure
+
+- [ ] **9C.1.1** Enhance `cortex/snapshot.sh` with batching hints
+  - **Goal:** Show "⚡ Batching opportunities: X" when ≥3 similar pending tasks detected
+  - **AC:** Snapshot output shows batching hints section when opportunities exist
+  - **Detection:** Same error code (MDxxx, SCxxxx), same directory prefix, same file type
+
+- [ ] **9C.1.2** Add task complexity tags to PROMPT_REFERENCE.md
+  - **Goal:** Document `[S/M/L]` complexity convention for task estimation
+  - **AC:** PROMPT_REFERENCE.md has "Task Complexity" section with S=~90s, M=~300s, L=~600s guidelines
+
+### Phase 9C.2: Apply Batching to Current Backlog
+
+- [ ] **9C.2.1** Create batch task template in `templates/ralph/PROMPT.md`
+  - **Goal:** Standard format for batched tasks with multi-file scope
+  - **AC:** Template shows batch task example with glob patterns and verification
+
+### Phase 9C.3: Decomposition Detection
+
+- [ ] **9C.3.1** Add duration tracking to `current_ralph_tasks.sh` footer
+  - **Goal:** Show when current task exceeds 2x median (⚠️ warning)
+  - **AC:** Footer shows "⚠️ Current task exceeding median" when appropriate
+
+- [ ] **9C.3.2** Create decomposition checklist in `skills/playbooks/`
+  - **Goal:** Playbook for breaking down oversized tasks
+  - **AC:** `skills/playbooks/decompose-large-tasks.md` exists with decision criteria
+
+### Phase 9C.4: Validation
+
+- [ ] **9C.4.1** Validate batching recommendations against next 5 iterations
+  - **Goal:** Measure if batched tasks reduce total time vs individual tasks
+  - **AC:** Update `artifacts/optimization_hints.md` with before/after comparison
+
+**Phase AC:**
+
+- `artifacts/optimization_hints.md` updates from iter artifacts
+- ≥3 batching opportunities identified with evidence
+- ≥2 decomposition opportunities documented
+- Recommendations actively used in planning
 
 <!-- Cortex adds new Task Contracts below this line -->
