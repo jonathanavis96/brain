@@ -312,7 +312,8 @@ def get_order(order_id):
 def fetch_from_db(order_id):
     with tracer.start_as_current_span("db.query") as span:
         # SECURITY: Always use parameterized queries, never interpolate values into SQL
-        span.set_attribute("db.statement", "SELECT * FROM orders WHERE id = ?")
+        # PostgreSQL uses %s placeholders (psycopg2) or $1 (asyncpg)
+        span.set_attribute("db.statement", "SELECT * FROM orders WHERE id = %s")
         span.set_attribute("db.system", "postgresql")
         span.set_attribute("db.operation", "SELECT")
         # Actual DB query here (using parameterized query to prevent SQL injection)
