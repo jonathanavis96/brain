@@ -145,13 +145,15 @@ When modifying template files in `templates/`:
 
 ### Running Verifier
 
-The verifier runs automatically after each BUILD iteration, but you can run it manually:
+The verifier runs automatically after each BUILD iteration and results are injected into the prompt header.
+
+For manual runs (human debugging):
 
 ```bash
 cd /path/to/brain/workers/ralph
 bash verifier.sh
-cat ../.verify/latest.txt  # See results
-```text
+# Results in ../.verify/latest.txt (agents: use injected header instead)
+```
 
 ## Troubleshooting
 
@@ -160,7 +162,7 @@ cat ../.verify/latest.txt  # See results
 - **Ralph doesn't stop:** Check for `:::COMPLETE:::` output (only loop.sh outputs this)
 - **Ralph batches tasks:** Emphasize "EXACTLY ONE task" in guidance
 - **Wrong mode:** Check iteration number (1 or 3rd = PLAN, others = BUILD)
-- **Verifier fails:** Check `.verify/latest.txt` for details
+- **Verifier fails:** Check injected `# VERIFIER STATUS` in prompt header
 
 ### Common Errors
 
@@ -171,7 +173,7 @@ See `skills/SUMMARY.md` → Error Quick Reference for common errors and fixes.
 - **ShellCheck errors (SC2034, SC2155, etc.):** → `skills/domains/languages/shell/variable-patterns.md`
 - **Markdown lint (MD040, MD024):** → `skills/domains/code-quality/markdown-patterns.md`
 - **Python errors:** → `skills/domains/languages/python/python-patterns.md`
-- **Verifier failures:** → Check `.verify/latest.txt` then consult `workers/ralph/PROMPT.md`
+- **Verifier failures:** → Check injected `# VERIFIER STATUS` header, then consult `workers/ralph/PROMPT.md`
 
 ### Getting Help
 

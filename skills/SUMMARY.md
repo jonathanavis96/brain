@@ -37,8 +37,8 @@
 
 **If you see a verifier failure (LAST_VERIFIER_RESULT: FAIL):**
 
-1. Read `.verify/latest.txt` to identify which rule(s) failed
-2. Look up the rule in the table above
+1. Check the injected `# VERIFIER STATUS` section in the prompt header (DO NOT read `.verify/latest.txt`)
+2. Look up the failed rule in the table above
 3. If it says "HUMAN INTERVENTION REQUIRED" - stop and report
 4. Otherwise, consult the linked skill document
 5. Apply the fix and commit with: `fix(ralph): resolve AC failure <RULE_ID>`
