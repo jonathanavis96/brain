@@ -61,7 +61,7 @@ Key milestones:
 
 ### Phase 5.2: Logic Bug Fixes (Ralph)
 
-- [ ] **5.2.1** Fix `cleanup()` not called in `cleanup_and_emit` (loop.sh:154-172)
+- [x] **5.2.1** Fix `cleanup()` not called in `cleanup_and_emit` (loop.sh:154-172)
   - Call `cleanup()` before releasing lock to remove TEMP_CONFIG
   - **AC:** TEMP_CONFIG removed on all exit paths
 
