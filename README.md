@@ -56,50 +56,128 @@ Cortex plans → Ralph builds → Brain improves → Your projects benefit.
 
 ---
 
-## Quick Start
+## Quick Start Guide
 
-### Installation
+### 🎯 Choose Your Path
+
+#### 🚀 I Want to Bootstrap a New Project
+
+**Time: ~2 minutes**
 
 ```bash
-# Clone the repository
+# 1. Clone brain
 git clone https://github.com/jonathanavis96/brain.git ~/code/brain
 cd ~/code/brain
 
-# Run setup
-bash setup.sh
-
-# Verify
-cortex --help
-ralph --help
-```
-
-### Bootstrap a New Project
-
-```bash
-# Create a project idea file
+# 2. Create project idea
 cat > MY_PROJECT.md << 'EOF'
 # Project: My Awesome App
 Location: ~/code/my-app
 Purpose: A web app that does amazing things
 Tech Stack: Next.js, TypeScript, PostgreSQL
+Goals: User auth, Dashboard, API integration
 EOF
 
-# Bootstrap it
-cd ~/code/brain
-bash workers/ralph/new-project.sh MY_PROJECT.md
+# 3. Bootstrap (creates GitHub repo + local clone with full AI infrastructure)
+bash new-project.sh MY_PROJECT.md
 
-# Your project is ready with full AI infrastructure!
+# 4. Start building!
 cd ~/code/my-app
-ralph loop --iterations 10
+bash ralph/loop.sh --iterations 5
 ```
 
 **What you get:**
 
-- Complete Ralph loop infrastructure
-- Custom `THOUGHTS.md` (project vision)
-- Custom `NEURONS.md` (codebase map)
-- Custom `IMPLEMENTATION_PLAN.md` (prioritized tasks)
-- Connection to brain's knowledge base
+- ✅ GitHub repo created automatically
+- ✅ Complete Ralph loop infrastructure (worker + verifier)
+- ✅ Project files: `THOUGHTS.md`, `NEURONS.md`, `IMPLEMENTATION_PLAN.md`
+- ✅ Connection to brain's skills library
+- ✅ Pre-configured validation rules
+
+**Next steps:** See [Bootstrapping Guide](docs/BOOTSTRAPPING.md) for advanced options.
+
+---
+
+#### 🧠 I Want to Use Brain as a Skills Library
+
+**Time: ~30 seconds**
+
+```bash
+# Clone brain to a known location
+git clone https://github.com/jonathanavis96/brain.git ~/code/brain
+
+# Browse skills
+cd ~/code/brain/skills
+ls domains/  # shell, python, frontend, backend, infrastructure, etc.
+
+# Reference in your AI prompts
+# "Check ~/code/brain/skills/domains/shell/strict-mode.md for best practices"
+```
+
+**Key skill areas:**
+
+- **Shell:** Variable patterns, validation, cleanup, strict mode
+- **Python:** Error handling, testing, async patterns
+- **Frontend:** React patterns, accessibility, performance
+- **Backend:** API design, auth, caching, error handling
+- **Infrastructure:** Deployment, security, observability
+- **Code Quality:** Token efficiency, testing, markdown lint
+
+**Skill index:** [skills/index.md](skills/index.md) | **Overview:** [skills/SUMMARY.md](skills/SUMMARY.md)
+
+---
+
+#### 🔧 I Want to Run Brain's Self-Improvement Loop
+
+**Time: ~5 minutes setup**
+
+**Prerequisites:**
+
+- WSL (Windows Subsystem for Linux) on Windows 11, or Linux/macOS
+- Atlassian CLI: [Installation guide](https://developer.atlassian.com/cloud/cli/)
+- RovoDev access: `acli rovodev auth && acli rovodev usage site`
+
+```bash
+# 1. Clone and setup
+git clone https://github.com/jonathanavis96/brain.git ~/code/brain
+cd ~/code/brain
+bash setup.sh
+
+# 2. Run Ralph (brain's worker)
+cd workers/ralph
+bash loop.sh --iterations 5
+
+# 3. Monitor progress (in another terminal)
+bash current_ralph_tasks.sh  # Live task monitor with ETA
+bash thunk_ralph_tasks.sh    # Completed tasks log
+
+# 4. Run Cortex (brain's manager)
+cd ../../cortex
+bash one-shot.sh  # Plan new work
+bash sync_gaps.sh # Sync tasks to Ralph
+```
+
+**What this does:**
+
+- Ralph executes tasks from `workers/IMPLEMENTATION_PLAN.md`
+- Adds new skills, fixes bugs, improves templates
+- Commits changes with verification
+- Cortex reviews progress and plans next work
+
+**Architecture details:** [workers/ralph/README.md](workers/ralph/README.md) | **Operations guide:** [AGENTS.md](AGENTS.md)
+
+---
+
+### 📚 Additional Resources
+
+| Resource | Purpose |
+|----------|---------|
+| [NEURONS.md](NEURONS.md) | Complete repository map |
+| [THOUGHTS.md](THOUGHTS.md) | Strategic vision & goals |
+| [AGENTS.md](AGENTS.md) | Operational guide for AI agents |
+| [skills/SUMMARY.md](skills/SUMMARY.md) | Skills overview + error reference |
+| [docs/BOOTSTRAPPING.md](docs/BOOTSTRAPPING.md) | Advanced bootstrapping |
+| [cortex/docs/RUNBOOK.md](cortex/docs/RUNBOOK.md) | Operations runbook |
 
 ---
 
@@ -275,13 +353,49 @@ Every commit runs through:
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make changes
-4. Run verification: `bash workers/ralph/verifier.sh`
-5. Submit PR
+Want to improve the brain? Here's how:
 
-See [AGENTS.md](AGENTS.md) for detailed contribution guidelines.
+### Quick Contribution
+
+```bash
+# 1. Fork and clone
+git clone https://github.com/YOUR_USERNAME/brain.git
+cd brain
+
+# 2. Create feature branch
+git checkout -b feature/my-improvement
+
+# 3. Make changes (add skills, fix bugs, improve templates)
+
+# 4. Run verification
+cd workers/ralph
+bash verifier.sh
+
+# 5. Commit and push
+git add -A
+git commit -m "feat(skills): add new pattern for X"
+git push origin feature/my-improvement
+
+# 6. Create PR on GitHub
+```
+
+### Contribution Types
+
+| Type | Example | Where to Add |
+|------|---------|--------------|
+| **New Skill** | Shell pattern, Python idiom | `skills/domains/<category>/` |
+| **Template Fix** | Better defaults, bug fix | `templates/<type>/` |
+| **Bug Fix** | Verifier issue, script error | Anywhere |
+| **Documentation** | Improve clarity, add examples | `*.md` files |
+
+### Guidelines
+
+- **Search first** - Check if pattern/fix already exists
+- **Follow structure** - Use `skills/self-improvement/SKILL_TEMPLATE.md` for new skills
+- **Test thoroughly** - Run verifier before submitting
+- **Write clear commits** - Use conventional commits (`feat:`, `fix:`, `docs:`)
+
+See [AGENTS.md](AGENTS.md) for detailed contribution guidelines and architecture.
 
 ---
 
