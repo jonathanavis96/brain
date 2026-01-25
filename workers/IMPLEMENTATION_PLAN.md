@@ -54,7 +54,7 @@
     - Documentation reasonableness checks
   - **AC:** Skill file exists with actionable patterns
 
-- [ ] **CR-4.2** Add pre-PR checklist to AGENTS.md
+- [x] **CR-4.2** Add pre-PR checklist to AGENTS.md
   - **File:** Root `AGENTS.md` or `workers/ralph/AGENTS.md`
   - **Goal:** Manual checklist for catching logic bugs before PR
   - **Content:**
