@@ -32,3 +32,6 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-25 | 7.2.1 | - [x] **7.2.1** Update `skills/index.md` with new skill files from Phase 5 |
 | 2026-01-25 | 7.2.2 | - [x] **7.2.2** Update `skills/SUMMARY.md` with enhanced error reference |
 | 2026-01-25 | 7.3.1 | - [x] **7.3.1** Request AC.rules update for shellcheck regex |
+| 2026-01-25 | 9C.0.3 | - [x] **9C.0.3** Document RovoDev tool instrumentation limitation ✓ DONE |
+| 2026-01-25 | 9C.1.1 | - [x] **9C.1.1** Enhance `cortex/snapshot.sh` with batching hints ✓ DONE |
+| 2026-01-25 | 9C.1.2 | - [x] **9C.1.2** Add task complexity tags to PROMPT_REFERENCE.md ✓ DONE |
