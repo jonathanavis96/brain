@@ -306,7 +306,7 @@
 
 ### Phase 8.3: Template & Sync Playbooks
 
-- [ ] **8.3.1** Create `skills/playbooks/safe-template-sync.md`
+- [x] **8.3.1** Create `skills/playbooks/safe-template-sync.md`
   - Steps: Identify drift → Determine if intentional → Sync or document exception
   - Covers: workers/ralph/ ↔ templates/ralph/ synchronization
   - Decision point: "Is this brain-specific?" → Document in README, don't sync
