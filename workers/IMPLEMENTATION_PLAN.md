@@ -215,7 +215,7 @@
   - **AC:** Schema created with FTS5 index on descriptions
   - **Priority:** MEDIUM
 
-- [ ] **11.2.1** Build `bin/brain-search` CLI tool
+- [x] **11.2.1** Build `bin/brain-search` CLI tool
   - **Goal:** Quick lookups across THUNK, git, cache
   - **Usage:** `brain-search "shellcheck"` → shows matching tasks, commits, tool calls
   - **AC:** CLI returns results from at least 2 sources (THUNK + git)
