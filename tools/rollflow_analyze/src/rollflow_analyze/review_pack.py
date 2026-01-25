@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from .models import Report, ToolStatus
+from .models import Report, ToolCall, ToolStatus
 
 
 def write_review_pack(report: Report, output_path: Path) -> None:
@@ -137,6 +137,31 @@ def _performance_section(report: Report) -> list[str]:
         for tool_name, duration_ms in agg.slowest_tools[:10]:
             duration_sec = duration_ms / 1000
             lines.append(f"| `{tool_name}` | {duration_sec:.2f}s |")
+
+        # Attach log excerpt for slowest tool call
+        slowest_calls = [tc for tc in report.tool_calls if tc.duration_ms is not None]
+        if slowest_calls:
+            slowest_call = max(slowest_calls, key=lambda tc: tc.duration_ms or 0)
+            lines.extend(
+                [
+                    "",
+                    "#### Slowest Tool Call Details",
+                    "",
+                    f"**Tool:** `{slowest_call.tool_name}` | **Duration:** {(slowest_call.duration_ms or 0) / 1000:.2f}s",
+                    "",
+                ]
+            )
+            log_excerpt = _extract_log_excerpt(slowest_call, context_lines=5)
+            if log_excerpt:
+                lines.append("<details>")
+                lines.append("<summary>📋 Log Excerpt</summary>")
+                lines.append("")
+                lines.append("```text")
+                lines.append(log_excerpt)
+                lines.append("```")
+                lines.append("")
+                lines.append("</details>")
+                lines.append("")
     else:
         lines.append("*No timing data available*")
 
@@ -233,10 +258,83 @@ def _failures_section(report: Report) -> list[str]:
                 lines.append(f"*Exit code: {tc.exit_code}*")
             lines.append("")
 
+            # Attach log excerpt if available
+            log_excerpt = _extract_log_excerpt(tc, context_lines=10)
+            if log_excerpt:
+                lines.append("<details>")
+                lines.append("<summary>📋 Log Excerpt</summary>")
+                lines.append("")
+                lines.append("```text")
+                lines.append(log_excerpt)
+                lines.append("```")
+                lines.append("")
+                lines.append("</details>")
+                lines.append("")
+
         if len(failed_calls) > 5:
             lines.append(f"*... and {len(failed_calls) - 5} more failures*")
 
     return lines
+
+
+def _extract_log_excerpt(tool_call: ToolCall, context_lines: int = 10) -> str | None:
+    """Extract log excerpt around a tool call.
+
+    Args:
+        tool_call: Tool call with log_file and line_range
+        context_lines: Number of lines before/after to include
+
+    Returns:
+        Filtered log excerpt or None if not available
+    """
+    if not tool_call.log_file or not tool_call.line_range:
+        return None
+
+    try:
+        log_path = Path(tool_call.log_file)
+        if not log_path.exists():
+            return None
+
+        start_line, end_line = tool_call.line_range
+
+        # Calculate context window
+        excerpt_start = max(1, start_line - context_lines)
+        excerpt_end = end_line + context_lines
+
+        # Read log file and extract lines
+        with open(log_path, "r", encoding="utf-8", errors="replace") as f:
+            lines = f.readlines()
+
+        # Convert to 0-indexed
+        excerpt_start_idx = excerpt_start - 1
+        excerpt_end_idx = min(len(lines), excerpt_end)
+
+        # Extract relevant lines
+        excerpt_lines = lines[excerpt_start_idx:excerpt_end_idx]
+
+        # Filter out ANSI escape codes for cleaner output
+        cleaned_lines = []
+        for line in excerpt_lines:
+            # Remove ANSI escape sequences
+            import re
+
+            clean_line = re.sub(r"\x1b\[[0-9;]*[a-zA-Z]", "", line)
+            clean_line = re.sub(r"\x1b\][^\x07]*\x07", "", clean_line)
+            cleaned_lines.append(clean_line.rstrip())
+
+        # Build excerpt with line numbers
+        result = []
+        for i, line in enumerate(cleaned_lines, start=excerpt_start):
+            # Highlight the actual tool call line
+            if start_line <= i <= end_line:
+                result.append(f"{i:6d} >>> {line}")
+            else:
+                result.append(f"{i:6d}     {line}")
+
+        return "\n".join(result)
+
+    except Exception:
+        return None
 
 
 def _tool_breakdown_section(report: Report) -> list[str]:
