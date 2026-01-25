@@ -17,7 +17,7 @@
 - [x] **5.1.1** Add `*.egg-info/` to `.gitignore`
   - **AC:** `grep -q 'egg-info' .gitignore` returns 0
 
-- [ ] **5.1.2** Remove committed egg-info directory
+- [x] **5.1.2** Remove committed egg-info directory
   - Run `git rm -r tools/rollflow_analyze/src/rollflow_analyze.egg-info/`
   - **AC:** Directory removed from repo
 
