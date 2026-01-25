@@ -126,6 +126,28 @@ repos:
         files: \.(sh|bash|bats)$
 
   # ==========================================================================
+  # ==========================================================================
+  # Documentation Link Validation
+  # ==========================================================================
+  - repo: local
+    hooks:
+      - id: validate-links
+        name: validate-links
+        description: Validate internal markdown links resolve to existing files
+        entry: bash tools/validate_links.sh
+        language: system
+        files: \.md$
+        exclude: |
+          (?x)^(
+            .*THUNK\.md$|
+            .*IMPLEMENTATION_PLAN\.md$|
+            .*/PLAYBOOK_TEMPLATE\.md$|
+            skills/playbooks/README\.md$|
+            skills/conventions\.md$|
+            workers/ralph/README\.md$
+          )$
+
+
   # Protected File Hash Validation
   # ==========================================================================
   - repo: local
