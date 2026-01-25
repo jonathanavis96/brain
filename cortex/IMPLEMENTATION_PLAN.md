@@ -203,7 +203,7 @@ Key milestones:
 
 ### Phase 4.1: Extract Cache Functions
 
-- [ ] **4.1.1** Create `workers/shared/cache.sh` with extracted functions
+- [x] **4.1.1** Create `workers/shared/cache.sh` with extracted functions
   - Move from loop.sh: cache key generation, lookup/store, log helpers
   - Export interface: `cache_should_use`, `cache_make_key`, `cache_try_load`, `cache_store`
   - Include env parsing for `CACHE_MODE`, `CACHE_SCOPE`, `--force-fresh`
@@ -211,7 +211,7 @@ Key milestones:
 
 ### Phase 4.2: Refactor loop.sh to Use Shared Library
 
-- [ ] **4.2.1** Update `workers/ralph/loop.sh` to source shared cache library
+- [x] **4.2.1** Update `workers/ralph/loop.sh` to source shared cache library
   - Replace inline cache logic with calls to `workers/shared/cache.sh`
   - Keep exact semantics: `CACHE_MODE`, `CACHE_SCOPE`, BUILD/PLAN blocking
   - **AC:** Before/after run shows identical cache hits/misses

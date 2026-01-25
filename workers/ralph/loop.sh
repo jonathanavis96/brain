@@ -31,6 +31,10 @@ mkdir -p "$LOGDIR"
 # shellcheck source=../shared/common.sh
 source "$(dirname "$RALPH")/shared/common.sh"
 
+# Source shared cache library
+# shellcheck source=../shared/cache.sh
+source "$(dirname "$RALPH")/shared/cache.sh"
+
 # Cleanup logs older than 7 days on startup
 cleanup_old_logs() {
   local days="${1:-7}"

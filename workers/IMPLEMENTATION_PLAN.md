@@ -50,12 +50,12 @@
 
 ### Phase 4.2: Refactor loop.sh to Use Shared Library
 
-- [ ] **4.2.1** Update `workers/ralph/loop.sh` to source shared cache library
+- [x] **4.2.1** Update `workers/ralph/loop.sh` to source shared cache library
   - Replace inline cache logic with calls to `workers/shared/cache.sh`
   - Keep exact semantics: `CACHE_MODE`, `CACHE_SCOPE`, BUILD/PLAN blocking
   - **AC:** Before/after run shows identical cache hits/misses
 
-- [ ] **4.2.2** Update `workers/cerebras/loop.sh` to source shared cache library
+- [x] **4.2.2** Update `workers/cerebras/loop.sh` to source shared cache library
   - Same refactor as Ralph
   - **AC:** Cerebras caching unchanged behaviorally
 
