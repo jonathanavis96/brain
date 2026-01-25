@@ -133,7 +133,8 @@ extract_tasks() {
     fi
 
     # Detect Archive sections - these terminate the current task section
-    if [[ "$line_upper" =~ ARCHIVE ]]; then
+    # Matches: "### Archive", "## Archive", or "## Era" (THUNK.md format)
+    if [[ "$line_upper" =~ ARCHIVE ]] || [[ "$line" =~ ^##[[:space:]]+Era[[:space:]]+ ]]; then
       in_task_section=false
       continue
     fi
@@ -298,8 +299,9 @@ archive_completed_tasks() {
   # Extract completed tasks
   while IFS= read -r line; do
     # Detect Archive sections - these terminate the current task section
+    # Matches: "### Archive", "## Archive", or "## Era" (THUNK.md format)
     local line_upper="${line^^}"
-    if [[ "$line_upper" =~ ARCHIVE ]]; then
+    if [[ "$line_upper" =~ ARCHIVE ]] || [[ "$line" =~ ^##[[:space:]]+Era[[:space:]]+ ]]; then
       in_task_section=false
       continue
     fi
@@ -334,8 +336,9 @@ archive_completed_tasks() {
   {
     while IFS= read -r line; do
       # Detect Archive sections - these terminate the current task section
+      # Matches: "### Archive", "## Archive", or "## Era" (THUNK.md format)
       local line_upper="${line^^}"
-      if [[ "$line_upper" =~ ARCHIVE ]]; then
+      if [[ "$line_upper" =~ ARCHIVE ]] || [[ "$line" =~ ^##[[:space:]]+Era[[:space:]]+ ]]; then
         in_task_section=false
       fi
 
@@ -395,8 +398,9 @@ clear_completed_tasks() {
   {
     while IFS= read -r line; do
       # Detect Archive sections - these terminate the current task section
+      # Matches: "### Archive", "## Archive", or "## Era" (THUNK.md format)
       local line_upper="${line^^}"
-      if [[ "$line_upper" =~ ARCHIVE ]]; then
+      if [[ "$line_upper" =~ ARCHIVE ]] || [[ "$line" =~ ^##[[:space:]]+Era[[:space:]]+ ]]; then
         in_task_section=false
       fi
 
