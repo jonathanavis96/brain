@@ -272,6 +272,94 @@ When fixing issues, search the ENTIRE repo: `rg "pattern" $ROOT` not just `ralph
 
 ---
 
+## Cache Configuration
+
+Ralph supports caching for idempotent operations (verifier checks, file reads, read-only LLM phases).
+
+### Environment Variables
+
+| Variable | Values | Default | Description |
+|----------|--------|---------|-------------|
+| `CACHE_MODE` | `off`, `record`, `use` | `off` | Cache behavior mode |
+| `CACHE_SCOPE` | Comma-separated list | `verify,read` | Which cache types are active |
+
+**Important:** Both variables must be **exported** for subprocesses to inherit them:
+
+```bash
+export CACHE_MODE=use
+export CACHE_SCOPE=verify,read
+bash loop.sh
+```
+
+**CACHE_MODE values:**
+
+- `off` - No caching (default, safest)
+- `record` - Run everything, store PASS results for future use
+- `use` - Check cache first, skip on hit, record misses
+
+**CACHE_SCOPE values:**
+
+- `verify` - Cache verifier results (shellcheck, lint)
+- `read` - Cache file reads (cat, ls)
+- `llm_ro` - Cache read-only LLM phases (REPORT, ANALYZE only - **never BUILD/PLAN**)
+
+### CLI Flags
+
+| Flag | Description |
+|------|-------------|
+| `--cache-mode MODE` | Set cache mode (off/record/use) |
+| `--cache-scope SCOPES` | Set cache scopes (comma-separated) |
+| `--force-fresh` | Bypass all caching for this run |
+
+### Usage Examples
+
+**Default (safe for BUILD/PLAN):**
+
+```bash
+export CACHE_MODE=use
+export CACHE_SCOPE="verify,read"
+bash loop.sh --iterations 5
+```
+
+**Record mode (populate cache):**
+
+```bash
+export CACHE_MODE=record
+bash loop.sh --iterations 1
+```
+
+**Force fresh run (ignore cache):**
+
+```bash
+export CACHE_MODE=use
+bash loop.sh --force-fresh
+```
+
+**CLI alternative:**
+
+```bash
+bash loop.sh --cache-mode use --cache-scope verify,read --iterations 5
+```
+
+### Safety Rules
+
+- **BUILD/PLAN phases:** LLM caching is **hard-blocked** regardless of `CACHE_SCOPE` setting
+- **REPORT/ANALYZE phases:** Can use `llm_ro` scope safely (read-only operations)
+- **Verification:** Run `bash tools/test_cache_inheritance.sh` to verify cache is working
+
+### Cache Statistics
+
+After runs with `CACHE_MODE=use`, loop.sh prints:
+
+```text
+Cache Statistics:
+  Hits: 42
+  Misses: 8
+  Time Saved: 18.3s (18342ms)
+```
+
+See [docs/CACHE_DESIGN.md](../../docs/CACHE_DESIGN.md) for complete cache design details.
+
 ## Token Efficiency
 
 Target: <20 tool calls per iteration.

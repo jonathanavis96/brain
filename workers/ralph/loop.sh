@@ -839,6 +839,30 @@ check_protected_file_failures() {
   return 1 # no protected file failures
 }
 
+# =============================================================================
+# Structured Marker Emission (Phase 0 Observability)
+# =============================================================================
+# Markers are emitted to BOTH:
+#   1. stderr (for terminal visibility)
+#   2. CURRENT_LOG_FILE (for rollflow_analyze parsing)
+#
+# CURRENT_LOG_FILE is set by run_once() before tool execution.
+# If not set, markers only go to stderr.
+
+CURRENT_LOG_FILE=""
+
+# Emit a structured marker to stderr AND log file (if set)
+# Args: $1 = marker line
+emit_marker() {
+  local marker="$1"
+  # Always emit to stderr for terminal visibility
+  echo "$marker" >&2
+  # Also append to log file if set (for rollflow_analyze)
+  if [[ -n "$CURRENT_LOG_FILE" && -f "$CURRENT_LOG_FILE" ]]; then
+    echo "$marker" >>"$CURRENT_LOG_FILE"
+  fi
+}
+
 # Emit structured TOOL_START marker
 # Args: $1 = tool_id, $2 = tool_name, $3 = cache_key, $4 = git_sha
 log_tool_start() {
@@ -848,7 +872,7 @@ log_tool_start() {
   local git_sha="$4"
   local ts
   ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  echo ":::TOOL_START::: id=${tool_id} tool=${tool_name} cache_key=${cache_key} git_sha=${git_sha} ts=${ts}"
+  emit_marker ":::TOOL_START::: id=${tool_id} tool=${tool_name} cache_key=${cache_key} git_sha=${git_sha} ts=${ts}"
 }
 
 # Emit structured TOOL_END marker
@@ -862,9 +886,9 @@ log_tool_end() {
   local ts
   ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   if [[ -n "$reason" ]]; then
-    echo ":::TOOL_END::: id=${tool_id} result=${result} exit=${exit_code} duration_ms=${duration_ms} reason=${reason} ts=${ts}"
+    emit_marker ":::TOOL_END::: id=${tool_id} result=${result} exit=${exit_code} duration_ms=${duration_ms} reason=${reason} ts=${ts}"
   else
-    echo ":::TOOL_END::: id=${tool_id} result=${result} exit=${exit_code} duration_ms=${duration_ms} ts=${ts}"
+    emit_marker ":::TOOL_END::: id=${tool_id} result=${result} exit=${exit_code} duration_ms=${duration_ms} ts=${ts}"
   fi
 }
 
@@ -875,7 +899,7 @@ log_cache_hit() {
   local tool_name="$2"
   local ts
   ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  echo ":::CACHE_HIT::: cache_key=${cache_key} tool=${tool_name} ts=${ts}"
+  emit_marker ":::CACHE_HIT::: cache_key=${cache_key} tool=${tool_name} ts=${ts}"
 }
 
 # Emit cache miss marker
@@ -885,7 +909,7 @@ log_cache_miss() {
   local tool_name="$2"
   local ts
   ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  echo ":::CACHE_MISS::: cache_key=${cache_key} tool=${tool_name} ts=${ts}"
+  emit_marker ":::CACHE_MISS::: cache_key=${cache_key} tool=${tool_name} ts=${ts}"
 }
 
 # Wrapper for tool execution with structured logging
@@ -979,7 +1003,7 @@ run_verifier() {
   # Emit structured verifier environment marker
   local verifier_ts
   verifier_ts="$(date +%s)"
-  echo ":::VERIFIER_ENV::: iter=${iter:-0} ts=${verifier_ts} run_id=${RUN_ID}" >&2
+  emit_marker ":::VERIFIER_ENV::: iter=${iter:-0} ts=${verifier_ts} run_id=${RUN_ID}"
 
   # Capture stderr to summarize cache metrics (avoid spamming 40+ lines)
   local cache_stderr
@@ -1052,6 +1076,11 @@ run_once() {
   local ts
   ts="$(date +%F_%H%M%S)"
   local log="$LOGDIR/${ts}_iter${iter}_${phase}.log"
+
+  # Set global log file for marker emission (Phase 0 observability)
+  # Touch the file first so emit_marker can append to it
+  touch "$log"
+  CURRENT_LOG_FILE="$log"
 
   # Hard-block llm_ro scope for PLAN/BUILD phases (task 1.3.3)
   # These phases must always call the LLM fresh to avoid skipping work
@@ -1187,7 +1216,7 @@ run_once() {
       local plan_file="${ROOT}/workers/IMPLEMENTATION_PLAN.md"
       if [[ -f "$plan_file" ]] && grep -q "^- \[ \]" "$plan_file"; then
         local guard_ts=$(($(date +%s%N) / 1000000))
-        echo ":::CACHE_GUARD::: iter=${iter} allowed=0 reason=pending_tasks phase=BUILD ts=${guard_ts}" >&2
+        emit_marker ":::CACHE_GUARD::: iter=${iter} allowed=0 reason=pending_tasks phase=BUILD ts=${guard_ts}"
         echo ""
         echo "========================================"
         echo "⚠️  Cache disabled: pending tasks detected"
@@ -1198,7 +1227,7 @@ run_once() {
       elif lookup_cache_pass "$tool_key" "$git_sha" "${AGENT_NAME:-$RUNNER}"; then
         # Cache hit - skip tool execution
         local guard_ts=$(($(date +%s%N) / 1000000))
-        echo ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=no_pending_tasks phase=BUILD ts=${guard_ts}" >&2
+        emit_marker ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=no_pending_tasks phase=BUILD ts=${guard_ts}"
         # Query saved duration from cache
         local saved_ms=0
         local cache_db="${CACHE_DB:-artifacts/rollflow_cache/cache.sqlite}"
@@ -1236,7 +1265,7 @@ except Exception:
       else
         # Cache miss - proceed with execution
         local guard_ts=$(($(date +%s%N) / 1000000))
-        echo ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=no_pending_tasks phase=BUILD ts=${guard_ts}" >&2
+        emit_marker ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=no_pending_tasks phase=BUILD ts=${guard_ts}"
         log_cache_miss "$tool_key" "${AGENT_NAME:-$RUNNER}"
         CACHE_MISSES=$((CACHE_MISSES + 1))
       fi
@@ -1245,7 +1274,7 @@ except Exception:
       if lookup_cache_pass "$tool_key" "$git_sha" "${AGENT_NAME:-$RUNNER}"; then
         # Cache hit - skip tool execution
         local guard_ts=$(($(date +%s%N) / 1000000))
-        echo ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=idempotent_check phase=PLAN ts=${guard_ts}" >&2
+        emit_marker ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=idempotent_check phase=PLAN ts=${guard_ts}"
         # Query saved duration from cache
         local saved_ms=0
         local cache_db="${CACHE_DB:-artifacts/rollflow_cache/cache.sqlite}"
@@ -1283,7 +1312,7 @@ except Exception:
       else
         # Cache miss - proceed with execution
         local guard_ts=$(($(date +%s%N) / 1000000))
-        echo ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=idempotent_check phase=PLAN ts=${guard_ts}" >&2
+        emit_marker ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=idempotent_check phase=PLAN ts=${guard_ts}"
         log_cache_miss "$tool_key" "${AGENT_NAME:-$RUNNER}"
         CACHE_MISSES=$((CACHE_MISSES + 1))
       fi
@@ -1547,19 +1576,24 @@ trap 'cleanup_and_emit' EXIT
 if [[ -n "$PROMPT_ARG" ]]; then
   PROMPT_FILE="$(resolve_prompt "$PROMPT_ARG")"
   for ((i = 1; i <= ITERATIONS; i++)); do
+    # Initialize log file early for marker emission (Phase 0 observability)
+    iter_ts="$(date +%F_%H%M%S)"
+    CURRENT_LOG_FILE="$LOGDIR/${iter_ts}_iter${i}_custom.log"
+    touch "$CURRENT_LOG_FILE"
+
     # Log iteration start marker for RollFlow tracking
     log_iter_start "iter-$i" "$ROLLFLOW_RUN_ID"
     CURRENT_ITER=$i
 
     # Emit ITER_START marker for rollflow_analyze (task X.1.1)
     iter_start_ts="$(($(date +%s%N) / 1000000))"
-    echo ":::ITER_START::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_start_ts" >&2
+    emit_marker ":::ITER_START::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_start_ts"
 
     emit_event --event iteration_start --iter "$i"
 
     # Log cache config for Cortex visibility (task X.4.1)
     cache_config_ts="$(($(date +%s%N) / 1000000))"
-    echo ":::CACHE_CONFIG::: mode=$CACHE_MODE scope=$CACHE_SCOPE exported=1 iter=$i ts=$cache_config_ts" >&2
+    emit_marker ":::CACHE_CONFIG::: mode=$CACHE_MODE scope=$CACHE_SCOPE exported=1 iter=$i ts=$cache_config_ts"
 
     # Check for interrupt before starting iteration
     if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
@@ -1610,18 +1644,18 @@ if [[ -n "$PROMPT_ARG" ]]; then
     emit_event --event phase_start --iter "$i" --phase "custom"
     # Emit PHASE_START marker for rollflow_analyze (task X.1.2)
     phase_start_ts="$(($(date +%s%N) / 1000000))"
-    echo ":::PHASE_START::: iter=$i phase=custom run_id=$ROLLFLOW_RUN_ID ts=$phase_start_ts" >&2
+    emit_marker ":::PHASE_START::: iter=$i phase=custom run_id=$ROLLFLOW_RUN_ID ts=$phase_start_ts"
     run_once "$PROMPT_FILE" "custom" "$i" || run_result=$?
     if [[ $run_result -eq 0 ]]; then
       emit_event --event phase_end --iter "$i" --phase "custom" --status ok
       # Emit PHASE_END marker for rollflow_analyze (task X.1.2)
       phase_end_ts="$(($(date +%s%N) / 1000000))"
-      echo ":::PHASE_END::: iter=$i phase=custom status=ok run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts" >&2
+      emit_marker ":::PHASE_END::: iter=$i phase=custom status=ok run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts"
     else
       emit_event --event phase_end --iter "$i" --phase "custom" --status fail --code "$run_result"
       # Emit PHASE_END marker for rollflow_analyze (task X.1.2)
       phase_end_ts="$(($(date +%s%N) / 1000000))"
-      echo ":::PHASE_END::: iter=$i phase=custom status=fail code=$run_result run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts" >&2
+      emit_marker ":::PHASE_END::: iter=$i phase=custom status=fail code=$run_result run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts"
     fi
     # Check if Ralph signaled completion
     if [[ $run_result -eq 42 ]]; then
@@ -1682,24 +1716,34 @@ if [[ -n "$PROMPT_ARG" ]]; then
 
     # Emit ITER_END marker for rollflow_analyze (task X.1.1)
     iter_end_ts="$(($(date +%s%N) / 1000000))"
-    echo ":::ITER_END::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_end_ts" >&2
+    emit_marker ":::ITER_END::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_end_ts"
   done
 else
   # Alternating plan/build
   for ((i = 1; i <= ITERATIONS; i++)); do
+    # Initialize log file early for marker emission (Phase 0 observability)
+    # Note: run_once() will update CURRENT_LOG_FILE with the actual phase-specific log
+    iter_ts="$(date +%F_%H%M%S)"
+    if [[ $i -eq 1 || $((i % PLAN_EVERY)) -eq 0 ]]; then
+      CURRENT_LOG_FILE="$LOGDIR/${iter_ts}_iter${i}_plan.log"
+    else
+      CURRENT_LOG_FILE="$LOGDIR/${iter_ts}_iter${i}_build.log"
+    fi
+    touch "$CURRENT_LOG_FILE"
+    
     # Log iteration start marker for RollFlow tracking
     log_iter_start "iter-$i" "$ROLLFLOW_RUN_ID"
     CURRENT_ITER=$i
 
     # Emit ITER_START marker for rollflow_analyze (task X.1.1)
     iter_start_ts="$(($(date +%s%N) / 1000000))"
-    echo ":::ITER_START::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_start_ts" >&2
+    emit_marker ":::ITER_START::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_start_ts"
 
     emit_event --event iteration_start --iter "$i"
 
     # Log cache config for Cortex visibility (task X.4.1)
     cache_config_ts="$(($(date +%s%N) / 1000000))"
-    echo ":::CACHE_CONFIG::: mode=$CACHE_MODE scope=$CACHE_SCOPE exported=1 iter=$i ts=$cache_config_ts" >&2
+    emit_marker ":::CACHE_CONFIG::: mode=$CACHE_MODE scope=$CACHE_SCOPE exported=1 iter=$i ts=$cache_config_ts"
 
     # Check for interrupt before starting iteration
     if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
@@ -1761,18 +1805,18 @@ else
       emit_event --event phase_start --iter "$i" --phase "plan"
       # Emit PHASE_START marker for rollflow_analyze (task X.1.2)
       phase_start_ts="$(($(date +%s%N) / 1000000))"
-      echo ":::PHASE_START::: iter=$i phase=plan run_id=$ROLLFLOW_RUN_ID ts=$phase_start_ts" >&2
+      emit_marker ":::PHASE_START::: iter=$i phase=plan run_id=$ROLLFLOW_RUN_ID ts=$phase_start_ts"
       run_once "$PLAN_PROMPT" "plan" "$i" || run_result=$?
       if [[ $run_result -eq 0 ]]; then
         emit_event --event phase_end --iter "$i" --phase "plan" --status ok
         # Emit PHASE_END marker for rollflow_analyze (task X.1.2)
         phase_end_ts="$(($(date +%s%N) / 1000000))"
-        echo ":::PHASE_END::: iter=$i phase=plan status=ok run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts" >&2
+        emit_marker ":::PHASE_END::: iter=$i phase=plan status=ok run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts"
       else
         emit_event --event phase_end --iter "$i" --phase "plan" --status fail --code "$run_result"
         # Emit PHASE_END marker for rollflow_analyze (task X.1.2)
         phase_end_ts="$(($(date +%s%N) / 1000000))"
-        echo ":::PHASE_END::: iter=$i phase=plan status=fail code=$run_result run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts" >&2
+        emit_marker ":::PHASE_END::: iter=$i phase=plan status=fail code=$run_result run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts"
       fi
     else
       # Auto-fix lint issues before BUILD iteration
@@ -1804,18 +1848,18 @@ else
       emit_event --event phase_start --iter "$i" --phase "build"
       # Emit PHASE_START marker for rollflow_analyze (task X.1.2)
       phase_start_ts="$(($(date +%s%N) / 1000000))"
-      echo ":::PHASE_START::: iter=$i phase=build run_id=$ROLLFLOW_RUN_ID ts=$phase_start_ts" >&2
+      emit_marker ":::PHASE_START::: iter=$i phase=build run_id=$ROLLFLOW_RUN_ID ts=$phase_start_ts"
       run_once "$BUILD_PROMPT" "build" "$i" || run_result=$?
       if [[ $run_result -eq 0 ]]; then
         emit_event --event phase_end --iter "$i" --phase "build" --status ok
         # Emit PHASE_END marker for rollflow_analyze (task X.1.2)
         phase_end_ts="$(($(date +%s%N) / 1000000))"
-        echo ":::PHASE_END::: iter=$i phase=build status=ok run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts" >&2
+        emit_marker ":::PHASE_END::: iter=$i phase=build status=ok run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts"
       else
         emit_event --event phase_end --iter "$i" --phase "build" --status fail --code "$run_result"
         # Emit PHASE_END marker for rollflow_analyze (task X.1.2)
         phase_end_ts="$(($(date +%s%N) / 1000000))"
-        echo ":::PHASE_END::: iter=$i phase=build status=fail code=$run_result run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts" >&2
+        emit_marker ":::PHASE_END::: iter=$i phase=build status=fail code=$run_result run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts"
       fi
 
       # Sync completions back to Cortex after BUILD iterations
@@ -1891,7 +1935,7 @@ else
 
     # Emit ITER_END marker for rollflow_analyze (task X.1.1)
     iter_end_ts="$(($(date +%s%N) / 1000000))"
-    echo ":::ITER_END::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_end_ts" >&2
+    emit_marker ":::ITER_END::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_end_ts"
   done
 fi
 

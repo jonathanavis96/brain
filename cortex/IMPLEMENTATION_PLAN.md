@@ -467,7 +467,7 @@ Key milestones:
   - Update markdown patterns to link to fix-markdown-lint playbook
   - **AC:** At least 5 skills have playbook cross-references
 
-- [ ] **8.5.2** Update `skills/SUMMARY.md` with playbooks overview
+- [x] **8.5.2** Update `skills/SUMMARY.md` with playbooks overview
   - Add playbooks to quick reference table
   - Include "When to use a playbook vs a skill" guidance
   - **AC:** SUMMARY includes playbooks section
@@ -482,12 +482,22 @@ Key milestones:
 
 **Artifacts:** `artifacts/optimization_hints.md` (analysis output)
 
-### Phase 9C.0: Prerequisites
+### Phase 9C.0: Prerequisites (Marker Pipeline Fix)
 
-- [ ] **9C.0.1** Fix rollflow_analyze tool name extraction from `:::TOOL_START:::` markers
-  - **Goal:** Get real tool names in iter_###.json instead of "unknown"
-  - **AC:** `jq '.tool_calls[0].tool_name' artifacts/analysis/iter_001.json` returns actual tool name
-  - **If Blocked:** Check marker_parser.py for TOOL_START regex
+- [ ] **9C.0.1** Ensure loop.sh captures stderr to log files
+  - **Goal:** Markers emitted to stderr (`>&2`) appear in log files
+  - **AC:** `grep "^:::ITER_START:::" workers/ralph/logs/latest.log` returns actual emissions
+  - **Method:** Verify log redirection includes stderr (`exec &> >(tee -a "$LOG_FILE")` or `2>&1`)
+
+- [ ] **9C.0.2** Verify markers emit during execution (not just code display)
+  - **Goal:** Run one iteration and confirm markers in log
+  - **AC:** After `bash loop.sh --iterations 1`, log contains `:::ITER_START::: iter=1`
+  - **Diagnosis:** Current logs show code snippets with markers, not actual emissions
+
+- [ ] **9C.0.3** Document RovoDev tool instrumentation limitation
+  - **Goal:** Clarify that RovoDev's native tools bypass shell wrapper
+  - **AC:** `artifacts/optimization_hints.md` has "Limitations" section explaining tool visibility gap
+  - **Note:** RovoDev bash/grep/find_and_replace_code don't go through `log_tool_start()`
 
 ### Phase 9C.1: Batching Infrastructure
 
