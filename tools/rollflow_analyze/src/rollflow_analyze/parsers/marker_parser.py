@@ -10,12 +10,41 @@ from typing import Iterator
 
 from ..models import ToolCall, ToolStatus
 
-MARKER_PREFIXES = ("::RUN::", "::ITER::", "::TOOL_CALL_START::", "::TOOL_CALL_END::")
+MARKER_PREFIXES = (
+    "::RUN::",
+    "::ITER::",
+    "::TOOL_CALL_START::",
+    "::TOOL_CALL_END::",
+    ":::TOOL_START:::",
+    ":::TOOL_END:::",
+    ":::ITER_START:::",
+    ":::ITER_END:::",
+    ":::PHASE_START:::",
+    ":::PHASE_END:::",
+    ":::CACHE_GUARD:::",
+    ":::VERIFIER_ENV:::",
+    ":::CACHE_HIT:::",
+    ":::CACHE_MISS:::",
+    ":::CACHE_CONFIG:::",
+)
 
 RE_RUN = re.compile(r"^::RUN::\s+(?P<kv>.+)$")
 RE_ITER = re.compile(r"^::ITER::\s+(?P<kv>.+)$")
 RE_START = re.compile(r"^::TOOL_CALL_START::\s+(?P<kv>.+)$")
 RE_END = re.compile(r"^::TOOL_CALL_END::\s+(?P<kv>.+)$")
+
+# New triple-colon markers from loop.sh
+RE_TOOL_START = re.compile(r"^:::TOOL_START:::\s+(?P<kv>.+)$")
+RE_TOOL_END = re.compile(r"^:::TOOL_END:::\s+(?P<kv>.+)$")
+RE_ITER_START = re.compile(r"^:::ITER_START:::\s+(?P<kv>.+)$")
+RE_ITER_END = re.compile(r"^:::ITER_END:::\s+(?P<kv>.+)$")
+RE_PHASE_START = re.compile(r"^:::PHASE_START:::\s+(?P<kv>.+)$")
+RE_PHASE_END = re.compile(r"^:::PHASE_END:::\s+(?P<kv>.+)$")
+RE_CACHE_GUARD = re.compile(r"^:::CACHE_GUARD:::\s+(?P<kv>.+)$")
+RE_VERIFIER_ENV = re.compile(r"^:::VERIFIER_ENV:::\s+(?P<kv>.+)$")
+RE_CACHE_HIT = re.compile(r"^:::CACHE_HIT:::\s+(?P<kv>.+)$")
+RE_CACHE_MISS = re.compile(r"^:::CACHE_MISS:::\s+(?P<kv>.+)$")
+RE_CACHE_CONFIG = re.compile(r"^:::CACHE_CONFIG:::\s+(?P<kv>.+)$")
 
 
 def _parse_kv_blob(kv_blob: str) -> dict[str, str]:
@@ -144,6 +173,85 @@ class MarkerParser:
                     self._current_run_id = kv.get("run_id", self._current_run_id)
                 continue
 
+            # Handle :::ITER_START::: (new triple-colon format)
+            if block.startswith(":::ITER_START:::"):
+                m = RE_ITER_START.match(block)
+                if m:
+                    kv = _parse_kv_blob(m.group("kv"))
+                    self._current_iter_id = kv.get("iter", self._current_iter_id)
+                    self._current_run_id = kv.get("run_id", self._current_run_id)
+                continue
+
+            # Handle :::ITER_END::: (informational, update context if needed)
+            if block.startswith(":::ITER_END:::"):
+                # Just parse for consistency, don't change state
+                continue
+
+            # Handle :::PHASE_START::: (informational, could track phase context)
+            if block.startswith(":::PHASE_START:::"):
+                # Just parse for consistency, could extend to track current phase
+                continue
+
+            # Handle :::PHASE_END::: (informational)
+            if block.startswith(":::PHASE_END:::"):
+                # Just parse for consistency
+                continue
+
+            # Handle :::CACHE_GUARD::: (informational)
+            if block.startswith(":::CACHE_GUARD:::"):
+                # Just parse for consistency, no action needed
+                continue
+
+            # Handle :::VERIFIER_ENV::: (informational)
+            if block.startswith(":::VERIFIER_ENV:::"):
+                # Just parse for consistency
+                continue
+
+            # Handle :::CACHE_HIT::: (informational)
+            if block.startswith(":::CACHE_HIT:::"):
+                # Just parse for consistency
+                continue
+
+            # Handle :::CACHE_MISS::: (informational)
+            if block.startswith(":::CACHE_MISS:::"):
+                # Just parse for consistency
+                continue
+
+            # Handle :::CACHE_CONFIG::: (informational)
+            if block.startswith(":::CACHE_CONFIG:::"):
+                # Just parse for consistency
+                continue
+
+            # Handle :::TOOL_START::: (new triple-colon format)
+            if block.startswith(":::TOOL_START:::"):
+                m = RE_TOOL_START.match(block)
+                if not m:
+                    continue
+                kv = _parse_kv_blob(m.group("kv"))
+
+                call_id = kv.get("id")
+                if not call_id:
+                    continue
+
+                tc = ToolCall(
+                    id=call_id,
+                    tool_name=kv.get("tool", "unknown"),
+                    status=ToolStatus.UNKNOWN,
+                    exit_code=None,
+                    start_ts=_parse_timestamp(kv.get("ts")),
+                    end_ts=None,
+                    duration_ms=None,
+                    cache_key=kv.get("cache_key"),
+                    args_excerpt=None,
+                    error_excerpt=None,
+                    log_file=str(path),
+                    line_range=(idx + 1, idx + 1),  # Will update end on END marker
+                    run_id=self._current_run_id,
+                    iter_id=self._current_iter_id,
+                )
+                active[call_id] = tc
+                continue
+
             if block.startswith("::TOOL_CALL_START::"):
                 m = RE_START.match(block)
                 if not m:
@@ -171,6 +279,77 @@ class MarkerParser:
                     iter_id=self._current_iter_id,
                 )
                 active[call_id] = tc
+                continue
+
+            # Handle :::TOOL_END::: (new triple-colon format)
+            if block.startswith(":::TOOL_END:::"):
+                m = RE_TOOL_END.match(block)
+                if not m:
+                    continue
+                kv = _parse_kv_blob(m.group("kv"))
+                call_id = kv.get("id")
+                if not call_id:
+                    continue
+
+                tc = active.pop(call_id, None)
+                if not tc:
+                    # End without start; emit a synthetic record for visibility
+                    # Map result=PASS/FAIL to status
+                    result = kv.get("result", "").upper()
+                    status = (
+                        ToolStatus.PASS
+                        if result == "PASS"
+                        else (
+                            ToolStatus.FAIL if result == "FAIL" else ToolStatus.UNKNOWN
+                        )
+                    )
+                    yield ToolCall(
+                        id=call_id,
+                        tool_name="unknown",
+                        status=status,
+                        exit_code=_safe_int(kv.get("exit")),
+                        start_ts=None,
+                        end_ts=_parse_timestamp(kv.get("ts")),
+                        duration_ms=_safe_int(kv.get("duration_ms")),
+                        cache_key=None,
+                        args_excerpt=None,
+                        error_excerpt=kv.get("reason"),
+                        log_file=str(path),
+                        line_range=(idx + 1, idx + 1),
+                        run_id=self._current_run_id,
+                        iter_id=self._current_iter_id,
+                    )
+                    continue
+
+                # Map result=PASS/FAIL to status
+                result = kv.get("result", "").upper()
+                status = (
+                    ToolStatus.PASS
+                    if result == "PASS"
+                    else (ToolStatus.FAIL if result == "FAIL" else ToolStatus.UNKNOWN)
+                )
+                exit_code = _safe_int(kv.get("exit"))
+                duration_ms = _safe_int(kv.get("duration_ms"))
+                reason = kv.get("reason")
+
+                # If FAIL and reason missing, pull a short tail excerpt
+                error_excerpt = reason
+                if status == ToolStatus.FAIL and not error_excerpt and rolling_tail:
+                    error_excerpt = "\n".join(rolling_tail[-10:])
+
+                # Update line_range end
+                start_line = tc.line_range[0] if tc.line_range else idx + 1
+
+                tc2 = replace(
+                    tc,
+                    status=status,
+                    exit_code=exit_code,
+                    duration_ms=duration_ms,
+                    end_ts=_parse_timestamp(kv.get("ts")),
+                    error_excerpt=error_excerpt,
+                    line_range=(start_line, idx + 1),
+                )
+                yield tc2
                 continue
 
             if block.startswith("::TOOL_CALL_END::"):
