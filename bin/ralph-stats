@@ -1,0 +1,232 @@
+#!/usr/bin/env bash
+#
+# ralph-stats - Quick Ralph performance statistics
+#
+# Usage:
+#   bin/ralph-stats              # Last 24 hours (default)
+#   bin/ralph-stats --since 4h   # Last 4 hours
+#   bin/ralph-stats --since 1d   # Last 1 day
+#   bin/ralph-stats --full       # Full analysis with markdown report
+#   bin/ralph-stats --help       # Show help
+#
+# Requirements:
+#   - Python 3.9+
+#   - RovoDev logs in ~/.rovodev/logs/
+#   - Ralph logs in workers/ralph/logs/
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BRAIN_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# Defaults
+SINCE="24h"
+FULL_REPORT=false
+VERBOSE=false
+
+# Colors
+CYAN='\033[0;36m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BOLD='\033[1m'
+NC='\033[0m'
+
+usage() {
+  cat <<EOF
+Usage: bin/ralph-stats [OPTIONS]
+
+Quick Ralph performance statistics from RovoDev and shell marker logs.
+
+OPTIONS:
+  --since <time>    Time window (e.g., 4h, 24h, 1d, 7d) [default: 24h]
+  --full            Generate full markdown report
+  --verbose, -v     Show detailed output
+  --help, -h        Show this help message
+
+EXAMPLES:
+  bin/ralph-stats                  # Quick stats for last 24h
+  bin/ralph-stats --since 4h       # Last 4 hours
+  bin/ralph-stats --full           # Full report with markdown output
+  bin/ralph-stats --since 1d -v    # Verbose, last 1 day
+
+OUTPUT:
+  Quick mode shows summary stats in terminal.
+  Full mode generates artifacts/analysis/latest.md
+
+EOF
+}
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --since)
+      SINCE="${2:-24h}"
+      shift 2
+      ;;
+    --full)
+      FULL_REPORT=true
+      shift
+      ;;
+    -v | --verbose)
+      VERBOSE=true
+      shift
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      usage
+      exit 1
+      ;;
+  esac
+done
+
+cd "$BRAIN_ROOT"
+
+# Check if rollflow_analyze is available
+if [[ ! -d "tools/rollflow_analyze/src/rollflow_analyze" ]]; then
+  echo "Error: rollflow_analyze not found" >&2
+  exit 1
+fi
+
+# Check for logs
+if [[ ! -d "workers/ralph/logs" ]]; then
+  echo "Error: workers/ralph/logs not found" >&2
+  exit 1
+fi
+
+echo -e "${CYAN}═══════════════════════════════════════════════════════════${NC}"
+echo -e "${CYAN}             Ralph Performance Statistics${NC}"
+echo -e "${CYAN}═══════════════════════════════════════════════════════════${NC}"
+echo ""
+echo -e "Time window: ${BOLD}${SINCE}${NC}"
+echo ""
+
+if [[ "$FULL_REPORT" == "true" ]]; then
+  # Full report mode
+  echo "Generating full analysis..."
+  VERBOSE_FLAG=""
+  [[ "$VERBOSE" == "true" ]] && VERBOSE_FLAG="--verbose"
+
+  PYTHONPATH=tools/rollflow_analyze/src python3 -m rollflow_analyze \
+    --log-dir workers/ralph/logs \
+    --since "$SINCE" \
+    --markdown \
+    --review-pack \
+    $VERBOSE_FLAG
+
+  echo ""
+  echo -e "${GREEN}✓ Full report generated${NC}"
+  echo "  → artifacts/analysis/latest.md"
+  echo "  → artifacts/analysis/latest.json"
+  echo "  → artifacts/review_packs/iter_latest.md"
+else
+  # Quick stats mode
+  PYTHONPATH=tools/rollflow_analyze/src python3 <<PYTHON_SCRIPT
+import json
+import sys
+from pathlib import Path
+from datetime import datetime, timedelta
+from collections import Counter
+
+# Parse since argument
+since_str = "$SINCE"
+if since_str.endswith('h'):
+    since_dt = datetime.now() - timedelta(hours=int(since_str[:-1]))
+elif since_str.endswith('d'):
+    since_dt = datetime.now() - timedelta(days=int(since_str[:-1]))
+else:
+    since_dt = datetime.now() - timedelta(hours=24)
+
+# Import parsers
+sys.path.insert(0, 'tools/rollflow_analyze/src')
+from rollflow_analyze.parsers import MarkerParser, RovoDevParser, get_rovodev_logs_dir
+
+# Parse Ralph logs
+log_dir = Path('workers/ralph/logs')
+log_files = [f for f in sorted(log_dir.glob('*.log'))
+             if datetime.fromtimestamp(f.stat().st_mtime) >= since_dt]
+
+shell_calls = []
+marker_parser = MarkerParser()
+for log_file in log_files:
+    try:
+        for tc in marker_parser.parse_file(log_file):
+            shell_calls.append(tc)
+    except:
+        pass
+
+# Parse RovoDev logs
+rovodev_calls = []
+rovodev_dir = get_rovodev_logs_dir()
+if rovodev_dir.exists():
+    rovodev_parser = RovoDevParser()
+    for tc in rovodev_parser.parse_directory(rovodev_dir, since=since_dt):
+        rovodev_calls.append(tc)
+
+all_calls = shell_calls + rovodev_calls
+total = len(all_calls)
+
+if total == 0:
+    print("No tool calls found in the specified time window.")
+    sys.exit(0)
+
+# Calculate stats
+tool_counts = Counter(c.tool_name for c in all_calls)
+tool_times = {}
+for c in all_calls:
+    if c.duration_ms:
+        tool_times[c.tool_name] = tool_times.get(c.tool_name, 0) + c.duration_ms
+
+total_time = sum(tool_times.values()) / 1000
+
+# Infrastructure time
+infra_tools = ['fix-markdown', 'pre-commit', 'verifier']
+infra_time = sum(tool_times.get(t, 0) for t in infra_tools) / 1000
+agent_time = sum(v for k, v in tool_times.items() if k not in infra_tools and k != 'unknown') / 1000
+
+# Print summary
+print(f"\033[1mSummary\033[0m")
+print(f"  Total tool calls:     {total:,}")
+print(f"  Shell marker calls:   {len(shell_calls):,}")
+print(f"  RovoDev calls:        {len(rovodev_calls):,}")
+print(f"  Total tracked time:   {total_time/60:.1f} minutes")
+print()
+
+print(f"\033[1mTop Tools by Call Count\033[0m")
+for tool, count in tool_counts.most_common(8):
+    pct = count / total * 100
+    time_s = tool_times.get(tool, 0) / 1000
+    print(f"  {tool:28} {count:5} ({pct:4.1f}%)  {time_s:6.1f}s")
+print()
+
+print(f"\033[1mTime Breakdown\033[0m")
+unknown_time = tool_times.get('unknown', 0) / 1000
+print(f"  LLM thinking (iterations):  {unknown_time:,.0f}s ({unknown_time/60:.1f}m)")
+print(f"  Infrastructure overhead:    {infra_time:,.0f}s ({infra_time/60:.1f}m)")
+print(f"  Agent tool work:            {agent_time:,.0f}s ({agent_time/60:.1f}m)")
+if agent_time + infra_time > 0:
+    print(f"  Infra % of tool time:       {infra_time/(agent_time+infra_time)*100:.1f}%")
+print()
+
+# Bash pattern analysis
+bash_calls = [c for c in all_calls if c.tool_name == 'bash' and c.args_excerpt]
+grep_in_bash = sum(1 for c in bash_calls if 'grep ' in (c.args_excerpt or '') or 'rg ' in (c.args_excerpt or ''))
+cat_in_bash = sum(1 for c in bash_calls if (c.args_excerpt or '').strip().startswith('cat '))
+
+if grep_in_bash > 0 or cat_in_bash > 0:
+    print(f"\033[1mOptimization Hints\033[0m")
+    if grep_in_bash > 0:
+        print(f"  → {grep_in_bash} grep/rg via bash (could use native grep tool)")
+    if cat_in_bash > 0:
+        print(f"  → {cat_in_bash} cat via bash (some could use open_files)")
+    print()
+
+print(f"\033[0;36mRun 'bin/ralph-stats --full' for detailed markdown report\033[0m")
+PYTHON_SCRIPT
+fi
+
+echo ""
+echo -e "${CYAN}═══════════════════════════════════════════════════════════${NC}"
