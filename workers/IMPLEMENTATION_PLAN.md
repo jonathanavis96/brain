@@ -23,61 +23,51 @@
 
 ### Major Issues (Ralph Can Fix)
 
-- [x] **CR-6.1** Fix `LOGS_DIR` → `LOGDIR` typo in templates/ralph/loop.sh (M9)
   - **File:** `templates/ralph/loop.sh` lines 1707, 1949
   - **Issue:** Script defines `LOGDIR` but references `LOGS_DIR` (undefined)
   - **Fix:** Replace `$LOGS_DIR` with `$LOGDIR`
   - **AC:** `grep -n 'LOGS_DIR' templates/ralph/loop.sh` returns empty
 
-- [x] **CR-6.2** Fix bin/brain-event flag parsing (M1)
   - **File:** `bin/brain-event` lines 84-125
   - **Issue:** Flag parsing consumes next option when value missing
   - **Fix:** Check if value looks like a flag before shifting
   - **AC:** `--event --iter 1` doesn't treat `--iter` as event value
 
-- [x] **CR-6.3** Fix THUNK.md table column mismatch (M10)
   - **File:** `workers/ralph/THUNK.md` lines 748, 770-782
   - **Issue:** Table rows have wrong column count, unescaped pipes
   - **Fix:** Ensure all rows have 5 columns, escape pipes in content
   - **AC:** `markdownlint workers/ralph/THUNK.md` passes MD056
 
-- [x] **CR-6.4** Fix shell README config mismatch (C2)
   - **File:** `skills/domains/languages/shell/README.md` line 64
   - **Issue:** README documents shfmt config that doesn't match `.pre-commit-config.yaml`
   - **Fix:** Update README to match actual config
   - **AC:** Documented shfmt flags match `.pre-commit-config.yaml`
 
-- [x] **CR-6.5** Fix code-review-patterns.md example bugs (M11)
   - **File:** `skills/domains/code-quality/code-review-patterns.md` line 286
   - **Issue:** Code example has bugs or incorrect patterns
   - **Fix:** Review and correct the code example
   - **AC:** Code examples are syntactically valid and demonstrate correct patterns
 
-- [x] **CR-6.6** Fix README.md documentation issue (M12)
   - **File:** `README.md` line 326
   - **Issue:** Incorrect or misleading documentation
   - **Fix:** Correct the documentation
   - **AC:** Documentation accurately describes the feature/process
 
-- [x] **CR-6.7** Fix observability-patterns.md issues (m1)
   - **File:** `skills/domains/infrastructure/observability-patterns.md`
   - **Issues:** PostgreSQL placeholder mismatch, stray fence, hardcoded status, SQL injection
   - **Fix:** Correct all code examples
   - **AC:** All code examples use consistent patterns and are secure
 
-- [x] **CR-6.8** Fix broken documentation links (m3)
   - **Files:** `skills/domains/frontend/README.md`, `skills/domains/languages/javascript/README.md`, `skills/index.md`
   - **Issue:** Links to non-existent typescript README
   - **Fix:** Create typescript README or update links
   - **AC:** All internal links resolve to existing files
 
-- [x] **CR-6.9** Fix deployment-patterns.md missing imports (m5)
   - **File:** `skills/domains/infrastructure/deployment-patterns.md`
   - **Issue:** Missing `import time`, undefined `userId`
   - **Fix:** Add missing imports, define or document variables
   - **AC:** Python code examples are complete and runnable
 
-- [x] **CR-6.10** Fix JavaScript example issues (m6)
   - **Files:** `skills/domains/languages/javascript/README.md`, `skills/domains/code-quality/test-coverage-patterns.md`
   - **Issue:** Undefined `userId`, incorrect Jest flag
   - **Fix:** Complete the examples
@@ -113,7 +103,7 @@
 
 ### High Priority Prevention
 
-- [ ] **POST-CR6.1** Implement hash validation pre-commit hook
+- [x] **POST-CR6.1** Implement hash validation pre-commit hook
   - **Goal:** Prevent SHA256 hash mismatches (8 instances in PR5, 1 in PR6)
   - **Implementation:** Pre-commit hook that validates all `.verify/*.sha256` files match targets
   - **Files:** `.git/hooks/pre-commit` or `.pre-commit-config.yaml`

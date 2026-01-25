@@ -41,6 +41,7 @@ repos:
           (?x)^(
             references/.*|
             .*THUNK\.md$|
+            .*IMPLEMENTATION_PLAN\.md$|
             .*latest\.txt$
           )$
 
@@ -106,6 +107,19 @@ repos:
             \.verify/.*|
             .*\.log$
           )$
+
+  # ==========================================================================
+  # Protected File Hash Validation
+  # ==========================================================================
+  - repo: local
+    hooks:
+      - id: validate-protected-hashes
+        name: validate-protected-hashes
+        description: Validate SHA256 hashes for protected files
+        entry: bash tools/validate_protected_hashes.sh
+        language: system
+        pass_filenames: false
+        always_run: true
 
 # ==========================================================================
 # Configuration
