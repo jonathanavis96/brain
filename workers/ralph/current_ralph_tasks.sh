@@ -607,13 +607,43 @@ calculate_eta() {
     return
   fi
 
-  # Calculate average task duration
+  # Calculate average and median task duration
   local total_duration=0
   for duration in "${TASK_DURATIONS[@]}"; do
     total_duration=$((total_duration + duration))
   done
 
   local avg_duration=$((total_duration / ${#TASK_DURATIONS[@]}))
+
+  # Calculate median duration (sort durations and pick middle value)
+  local sorted_durations=()
+  while IFS= read -r -d '' duration; do
+    sorted_durations+=("$duration")
+  done < <(printf '%s\0' "${TASK_DURATIONS[@]}" | sort -z -n)
+
+  local median_duration=0
+  local count=${#sorted_durations[@]}
+  if [[ $count -gt 0 ]]; then
+    if [[ $((count % 2)) -eq 0 ]]; then
+      # Even count: average of two middle values
+      local mid1=${sorted_durations[$((count / 2 - 1))]}
+      local mid2=${sorted_durations[$((count / 2))]}
+      median_duration=$(((mid1 + mid2) / 2))
+    else
+      # Odd count: middle value
+      median_duration=${sorted_durations[$((count / 2))]}
+    fi
+  fi
+
+  # Get current task duration if available
+  local current_duration=0
+  if [[ ${#TASK_TIMESTAMPS[@]} -gt 0 ]]; then
+    local current_time
+    current_time=$(date +%s)
+    local last_timestamp="${TASK_TIMESTAMPS[-1]}"
+    current_duration=$((current_time - last_timestamp))
+  fi
+
   local eta_seconds=$((avg_duration * remaining_tasks))
 
   # Convert seconds to HH:MM:SS
@@ -621,7 +651,12 @@ calculate_eta() {
   local minutes=$(((eta_seconds % 3600) / 60))
   local seconds=$((eta_seconds % 60))
 
-  printf "  ETA: %02d:%02d:%02d (%d task avg: %ds)\n" "$hours" "$minutes" "$seconds" "${#TASK_DURATIONS[@]}" "$avg_duration"
+  printf "  ETA: %02d:%02d:%02d (%d task avg: %ds, median: %ds)\n" "$hours" "$minutes" "$seconds" "${#TASK_DURATIONS[@]}" "$avg_duration" "$median_duration"
+
+  # Warning: if current task exceeds 2x median, show warning
+  if [[ $median_duration -gt 0 && $current_duration -gt $((median_duration * 2)) ]]; then
+    printf "  ⚠️  Current task duration (%ds) exceeds 2x median (%ds)\n" "$current_duration" "$median_duration"
+  fi
 }
 
 # Function to update THUNK timestamp tracking
