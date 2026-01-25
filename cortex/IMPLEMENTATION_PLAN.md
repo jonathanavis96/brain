@@ -69,7 +69,7 @@ Key milestones:
   - Add tool name as 3rd argument to lookup_cache_pass calls
   - **AC:** `non_cacheable_tools` check works correctly
 
-- [ ] **5.2.3** Fix cache-hit early return leaves temp file (loop.sh:1056-1068)
+- [x] **5.2.3** Fix cache-hit early return leaves temp file (loop.sh:1056-1068)
   - Add `rm -f "$prompt_with_mode"` before each cache-hit return
   - **AC:** No orphaned temp files after cache hits
 
@@ -98,7 +98,7 @@ Key milestones:
 
 ### Phase 5.3: Documentation Fixes (Ralph)
 
-- [ ] **5.3.1** Create `skills/domains/languages/typescript/README.md`
+- [x] **5.3.1** Create `skills/domains/languages/typescript/README.md`
   - Fixes broken links from frontend/README.md and javascript/README.md
   - **AC:** File exists, links resolve
 
