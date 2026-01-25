@@ -183,6 +183,9 @@ brain/                           # Root of brain repository
 | Understand brain mission | `THOUGHTS.md` |
 | Get started (human) | `README.md` |
 | Add new skill | `skills/self-improvement/GAP_BACKLOG.md` |
+| **Use CLI tools** | **`docs/TOOLS.md`** → bin/, tools/ |
+| Search THUNK/git quickly | `bin/brain-search "keyword"` |
+| Get THUNK stats | `bin/thunk-parse --stats` |
 
 ## Manager vs Worker Architecture
 
@@ -233,7 +236,7 @@ cat .verify/latest.txt
 rg -i "TODO|FIXME|XXX" --type md | head -20
 
 # Verify skills catalog up-to-date
-ls -1 skills/domains/*/*.md | wc -l
+find skills/domains -name "*.md" | wc -l
 grep -c "^- \[" skills/index.md
 ```
 

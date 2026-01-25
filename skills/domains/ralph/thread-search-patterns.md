@@ -1,6 +1,20 @@
 # Thread Search Patterns
 
-## Quick Reference
+> **See also:** [docs/TOOLS.md](../../../docs/TOOLS.md) for CLI tool reference with token-efficient alternatives.
+
+## Quick Reference - CLI Tools (Preferred)
+
+Use these CLI tools for **token-efficient** searches:
+
+| Task | CLI Command | Notes |
+|------|-------------|-------|
+| Search THUNK + git | `bin/brain-search "keyword"` | Multi-source, fast |
+| THUNK by keyword | `bin/brain-search --thunk-only "cache"` | THUNK only |
+| Git by keyword | `bin/brain-search --git-only "verifier"` | Git only |
+| THUNK statistics | `bin/thunk-parse --stats` | Entry counts, priorities |
+| Export to SQLite | `bin/thunk-parse --format sqlite -o thunk.db` | For complex queries |
+
+## Quick Reference - Raw Commands (When CLI Not Sufficient)
 
 | Search Type | Command | Use Case |
 |------------|---------|----------|
