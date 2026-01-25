@@ -161,7 +161,7 @@ Key milestones:
   - Add Authorization header
   - **AC:** API call format is correct
 
-- [ ] **5.4.10** Fix `deployment-patterns.md` - grammar
+- [x] **5.4.10** Fix `deployment-patterns.md` - grammar
   - "backward compatible" → "backward-compatible"
   - **AC:** Hyphenated compound adjective
 
