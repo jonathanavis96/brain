@@ -426,9 +426,22 @@ fi
 # .github/workflows/coverage-check.yml
 - name: Download base coverage
   run: |
-    curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-      -o base-coverage.json \
-      "https://api.github.com/repos/${{ github.repository }}/actions/artifacts?name=coverage-summary"
+    # Get the latest successful run ID from main branch
+    RUN_ID=$(curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+      "https://api.github.com/repos/${{ github.repository }}/actions/runs?branch=main&status=success&per_page=1" \
+      | jq -r '.workflow_runs[0].id')
+    
+    # Get artifact ID for coverage-summary
+    ARTIFACT_ID=$(curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+      "https://api.github.com/repos/${{ github.repository }}/actions/runs/${RUN_ID}/artifacts" \
+      | jq -r '.artifacts[] | select(.name=="coverage-summary") | .id')
+    
+    # Download artifact
+    curl -L -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+      -o base-coverage.zip \
+      "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${ARTIFACT_ID}/zip"
+    
+    unzip -p base-coverage.zip coverage-summary.json > base-coverage.json
 
 - name: Compare coverage
   run: |

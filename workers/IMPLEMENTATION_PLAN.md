@@ -50,7 +50,7 @@
   - **AC:** Cache key JSON is properly formatted and passed
   - **Note:** Protected file - may need hash regeneration after fix
 
-- [ ] **CR-5.4** Fix artifacts download endpoint in test-coverage-patterns.md (Q11)
+- [x] **CR-5.4** Fix artifacts download endpoint in test-coverage-patterns.md (Q11)
   - **File:** `skills/domains/code-quality/test-coverage-patterns.md`
   - **Issue:** Artifacts download endpoint path is incorrect
   - **Fix:** Update to correct GitHub Actions artifacts API endpoint
