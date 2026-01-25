@@ -620,10 +620,11 @@ calculate_eta() {
   local avg_duration=$((total_duration / ${#TASK_DURATIONS[@]}))
 
   # Calculate median duration (sort durations and pick middle value)
+  # Note: Using newline-delimited sort for portability (avoids GNU-only sort -z)
   local sorted_durations=()
-  while IFS= read -r -d '' duration; do
+  while IFS= read -r duration; do
     sorted_durations+=("$duration")
-  done < <(printf '%s\0' "${TASK_DURATIONS[@]}" | sort -z -n)
+  done < <(printf '%s\n' "${TASK_DURATIONS[@]}" | sort -n)
 
   local median_duration=0
   local count=${#sorted_durations[@]}
