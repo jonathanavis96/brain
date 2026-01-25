@@ -6,14 +6,22 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from .models import Aggregates, CacheAdvice, Report, ToolCall, ToolStatus
+from .models import (
+    Aggregates,
+    CacheAdvice,
+    Report,
+    ToolCall,
+    ToolStatus,
+    ToolSource,
+    ToolBreakdown,
+)
 
 
 def _serialize_value(obj: Any) -> Any:
     """Serialize special types for JSON output."""
     if isinstance(obj, datetime):
         return obj.isoformat()
-    if isinstance(obj, ToolStatus):
+    if isinstance(obj, (ToolStatus, ToolSource)):
         return obj.value
     if isinstance(obj, Path):
         return str(obj)
@@ -43,12 +51,22 @@ def build_report(tool_calls: list[ToolCall], run_id: str | None = None) -> Repor
     """
     aggregates = _calculate_aggregates(tool_calls)
     cache_advice = _calculate_cache_advice(tool_calls)
+    tool_breakdown = _calculate_tool_breakdown(tool_calls)
+
+    # Count by source
+    rovodev_count = sum(1 for tc in tool_calls if tc.source == ToolSource.ROVODEV)
+    shell_marker_count = sum(
+        1 for tc in tool_calls if tc.source == ToolSource.SHELL_MARKER
+    )
 
     return Report(
         run_id=run_id,
         tool_calls=tool_calls,
         aggregates=aggregates,
         cache_advice=cache_advice,
+        tool_breakdown=tool_breakdown,
+        rovodev_tool_calls=rovodev_count,
+        shell_marker_calls=shell_marker_count,
     )
 
 
@@ -112,6 +130,64 @@ def _calculate_aggregates(tool_calls: list[ToolCall]) -> Aggregates:
         slowest_tools=slowest_tools,
         flakiest_tools=flakiest_tools,
     )
+
+
+def _calculate_tool_breakdown(tool_calls: list[ToolCall]) -> list[ToolBreakdown]:
+    """Calculate detailed breakdown of tool usage.
+
+    Args:
+        tool_calls: List of tool calls to analyze
+
+    Returns:
+        List of ToolBreakdown sorted by total calls descending
+    """
+    # Group by tool name
+    tool_stats: dict[str, dict] = {}
+
+    for tc in tool_calls:
+        name = tc.tool_name
+        if name not in tool_stats:
+            tool_stats[name] = {
+                "total_calls": 0,
+                "durations": [],
+                "pass_count": 0,
+                "fail_count": 0,
+            }
+
+        stats = tool_stats[name]
+        stats["total_calls"] += 1
+
+        if tc.duration_ms is not None:
+            stats["durations"].append(tc.duration_ms)
+
+        if tc.status == ToolStatus.PASS:
+            stats["pass_count"] += 1
+        elif tc.status == ToolStatus.FAIL:
+            stats["fail_count"] += 1
+
+    # Build breakdown list
+    breakdowns = []
+    for name, stats in tool_stats.items():
+        durations = stats["durations"]
+        total_duration = sum(durations) if durations else 0
+        avg_duration = total_duration / len(durations) if durations else 0.0
+
+        breakdowns.append(
+            ToolBreakdown(
+                tool_name=name,
+                total_calls=stats["total_calls"],
+                total_duration_ms=total_duration,
+                avg_duration_ms=avg_duration,
+                min_duration_ms=min(durations) if durations else None,
+                max_duration_ms=max(durations) if durations else None,
+                pass_count=stats["pass_count"],
+                fail_count=stats["fail_count"],
+            )
+        )
+
+    # Sort by total calls descending
+    breakdowns.sort(key=lambda x: x.total_calls, reverse=True)
+    return breakdowns
 
 
 def _calculate_cache_advice(tool_calls: list[ToolCall]) -> CacheAdvice:
@@ -196,12 +272,49 @@ def write_markdown_summary(report: Report, output_path: Path) -> None:
         f"- **Pass rate:** {report.aggregates.pass_rate:.1%}",
         f"- **Fail rate:** {report.aggregates.fail_rate:.1%}",
         "",
-        "## Cache Advice",
+        "## Data Sources",
         "",
-        f"- **Potential skips:** {report.cache_advice.potential_skips}",
-        f"- **Estimated time saved:** {report.cache_advice.estimated_time_saved_ms}ms",
+        f"- **RovoDev tool calls:** {report.rovodev_tool_calls} (bash, grep, open_files, etc.)",
+        f"- **Shell marker calls:** {report.shell_marker_calls} (fix-markdown, pre-commit, verifier)",
         "",
+        "## Tool Breakdown",
+        "",
+        "| Tool | Calls | Avg Duration | Total Time | Pass | Fail |",
+        "|------|-------|--------------|------------|------|------|",
     ]
+
+    # Add top 15 tools by call count
+    for tb in report.tool_breakdown[:15]:
+        avg_ms = f"{tb.avg_duration_ms:.0f}ms" if tb.avg_duration_ms else "N/A"
+        total_s = f"{tb.total_duration_ms/1000:.1f}s" if tb.total_duration_ms else "N/A"
+        lines.append(
+            f"| `{tb.tool_name}` | {tb.total_calls} | {avg_ms} | {total_s} | {tb.pass_count} | {tb.fail_count} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Cache Advice",
+            "",
+            f"- **Potential skips:** {report.cache_advice.potential_skips}",
+            f"- **Estimated time saved:** {report.cache_advice.estimated_time_saved_ms/1000:.1f}s",
+            "",
+        ]
+    )
+
+    # Add slowest tools section if available
+    if report.aggregates.slowest_tools:
+        lines.extend(
+            [
+                "## Slowest Tool Calls",
+                "",
+                "| Tool | Duration |",
+                "|------|----------|",
+            ]
+        )
+        for tool_name, duration_ms in report.aggregates.slowest_tools[:10]:
+            lines.append(f"| `{tool_name}` | {duration_ms/1000:.1f}s |")
+        lines.append("")
 
     with open(output_path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))

@@ -44,21 +44,9 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
 
 ### Phase 9C.0: Prerequisites (Marker Pipeline Fix)
 
-- [ ] **9C.0.3** Document RovoDev tool instrumentation limitation
-  - **Goal:** Clarify that RovoDev's native tools bypass shell wrapper
-  - **AC:** `artifacts/optimization_hints.md` has "Limitations" section explaining tool visibility gap
-  - **Note:** RovoDev bash/grep/find_and_replace_code don't go through `log_tool_start()`
 
 ### Phase 9C.1: Batching Infrastructure
 
-- [ ] **9C.1.1** Enhance `cortex/snapshot.sh` with batching hints
-  - **Goal:** Show "⚡ Batching opportunities: X" when ≥3 similar pending tasks detected
-  - **AC:** Snapshot output shows batching hints section when opportunities exist
-  - **Detection:** Same error code (MDxxx, SCxxxx), same directory prefix, same file type
-
-- [x] **9C.1.2** Add task complexity tags to PROMPT_REFERENCE.md
-  - **Goal:** Document `[S/M/L]` complexity convention for task estimation
-  - **AC:** PROMPT_REFERENCE.md has "Task Complexity" section with realistic time estimates (S=2-3min, M=5-10min, L=10-20min)
 
 ### Phase 9C.2: Apply Batching to Current Backlog
 
