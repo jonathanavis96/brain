@@ -107,7 +107,7 @@
   - Capture actual status code instead of hardcoding "200"
   - **AC:** Go example compiles
 
-- [ ] **5.4.5** Fix `observability-patterns.md` - SQL injection in span
+- [x] **5.4.5** Fix `observability-patterns.md` - SQL injection in span
   - Use parameterized query format in example
   - **AC:** Example shows secure pattern
 
@@ -488,7 +488,7 @@
   - Capture actual status code instead of hardcoding "200"
   - **AC:** Go example compiles
 
-- [ ] **5.4.5** Fix `observability-patterns.md` - SQL injection in span
+- [x] **5.4.5** Fix `observability-patterns.md` - SQL injection in span
   - Use parameterized query format in example
   - **AC:** Example shows secure pattern
 

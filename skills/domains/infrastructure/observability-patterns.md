@@ -311,9 +311,10 @@ def get_order(order_id):
 
 def fetch_from_db(order_id):
     with tracer.start_as_current_span("db.query") as span:
-        span.set_attribute("db.statement", f"SELECT * FROM orders WHERE id = {order_id}")
+        span.set_attribute("db.statement", "SELECT * FROM orders WHERE id = ?")
         span.set_attribute("db.system", "postgresql")
-        # Actual DB query here
+        # Actual DB query here (using parameterized query)
+        # cursor.execute("SELECT * FROM orders WHERE id = ?", (order_id,))
         return {"id": order_id, "status": "shipped", "customer_id": "123", "total": 99.99}
 ```
 

@@ -137,7 +137,7 @@ Key milestones:
   - Use correct LogRecord attribute access
   - **AC:** Python example runs
 
-- [ ] **5.4.4** Fix `observability-patterns.md` - metricsMiddleware status
+- [x] **5.4.4** Fix `observability-patterns.md` - metricsMiddleware status
   - Capture actual status code instead of hardcoding "200"
   - **AC:** Go example compiles
 
