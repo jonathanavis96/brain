@@ -137,6 +137,15 @@ fi
 # Create request JSON
 REQUEST_FILE="${REQUESTS_DIR}/${WAIVER_ID}.json"
 
+# Get ISO 8601 timestamp with timezone
+if [[ "$(uname)" == "Darwin" ]]; then
+  # macOS
+  CREATED_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%S%z")
+else
+  # Linux
+  CREATED_TIMESTAMP=$(date --iso-8601=seconds)
+fi
+
 cat >"$REQUEST_FILE" <<EOF
 {
   "waiver_id": "${WAIVER_ID}",
@@ -146,6 +155,7 @@ cat >"$REQUEST_FILE" <<EOF
   },
   "reason": "${REASON}",
   "created_by": "ralph",
+  "created": "${CREATED_TIMESTAMP}",
   "created_at": "${TODAY}",
   "expires": "${EXPIRES}"
 }
