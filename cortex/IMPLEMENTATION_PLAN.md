@@ -36,48 +36,6 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
 
 <!-- Cortex adds new Task Contracts below this line -->
 
-## Phase 10: Plan Auto-Cleanup System
-
-**Goal:** Automate removal of completed tasks from IMPLEMENTATION_PLAN.md to reduce agent reading time.
-
-**Why:** Agents spend excessive tokens reading completed tasks. Auto-cleanup keeps plans lean.
-
-### Phase 10.1: Cleanup Script
-
-- [x] **10.1.1** Create `workers/ralph/cleanup_plan.sh`
-  - **Goal:** Script that removes `[x]` lines and empty phase sections from IMPLEMENTATION_PLAN.md
-  - **AC:** Running `bash cleanup_plan.sh --dry-run` shows what would be removed
-  - **Constraints:** Preserve phase headers if they have pending tasks, preserve marker line
-
-- [x] **10.1.2** Add `--archive` flag to append removed tasks to THUNK.md
-  - **Goal:** Before deletion, append task summaries to THUNK.md with timestamp
-  - **AC:** `bash cleanup_plan.sh --archive` moves tasks to THUNK.md then removes from plan
-  - **Format:** `| YYYY-MM-DD | Task ID | Description | auto-cleanup |`
-
-- [x] **10.1.3** Add phase collapse detection
-  - **Goal:** Remove entire phase section when all tasks are `[x]`
-  - **AC:** Empty phases (all complete) are removed, phases with pending tasks preserved
-
-### Phase 10.2: Integration
-
-- [x] **10.2.1** Add cleanup hook to `sync_cortex_plan.sh`
-  - **Goal:** After syncing from cortex, run cleanup on workers plan
-  - **AC:** `sync_cortex_plan.sh` calls `cleanup_plan.sh --archive` automatically
-
-- [x] **10.2.2** Add `--no-cleanup` flag to sync script
-  - **Goal:** Allow skipping auto-cleanup when needed for debugging
-  - **AC:** `sync_cortex_plan.sh --no-cleanup` preserves completed tasks
-
-### Phase 10.3: Safety & Validation
-
-- [x] **10.3.1** Create `tools/test_plan_cleanup.sh` test script
-  - **Goal:** Verify cleanup preserves pending tasks and removes only completed
-  - **AC:** Test creates sample plan, runs cleanup, verifies correct output
-
-**Phase AC:** Cleanup script exists, integrates with sync, tested
-
----
-
 ## Phase 9C: Task Optimization (Batching + Decomposition)
 
 **Goal:** Use Phase 0 structured logs to identify batching and decomposition opportunities, reducing task overhead and improving iteration success rate.
@@ -108,7 +66,6 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
   - **Goal:** Standard format for batched tasks with multi-file scope
   - **AC:** Template shows batch task example with glob patterns and verification
 
-- [x] **9C.2.B1** BATCH: Create language project templates (combines 6.1.1, 6.1.2, 6.3.1)
   - **Scope:** Create `templates/javascript/`, `templates/go/`, `templates/website/`
   - **Steps:**
     1. Define standard template structure (AGENTS.md, NEURONS.md, VALIDATION_CRITERIA.md)
@@ -171,38 +128,3 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
 - [ ] **WARN.Protected.2** - Protected file changed (human review required) - HUMAN INTERVENTION REQUIRED
 
 ---
-
-## Phase 6: Template Improvements (Pending)
-
-**Goal:** Enhance project templates with better defaults and more comprehensive coverage.
-
-- [x] **6.1.1** Create `templates/javascript/` directory with JS/TS project template
-  - AGENTS.project.md, NEURONS.project.md, VALIDATION_CRITERIA.project.md
-  - package.json template with common scripts
-  - ESLint and Prettier configs
-  - **AC:** Directory exists with 5+ files
-
-- [x] **6.1.2** Create `templates/go/` directory with Go project template
-  - AGENTS.project.md, NEURONS.project.md, VALIDATION_CRITERIA.project.md
-  - go.mod template and project structure
-  - golangci-lint config
-  - **AC:** Directory exists with 5+ files
-
-- [x] **6.3.1** Create `templates/website/` with project scaffolding (pointers only)
-  - Create AGENTS.project.md, NEURONS.project.md, VALIDATION_CRITERIA.project.md
-  - Include references to `skills/domains/websites/` and `skills/domains/marketing/`
-  - **DO NOT duplicate skills content** - templates should point to brain, not copy it
-  - **AC:** templates/website/ has standard project files with skill references
-  - **Fixed:** 2026-01-25 - Slimmed docs/ from 1425 to 229 lines (references only)
-
----
-
-## Phase 7: Documentation and Maintenance (Pending)
-
-**Goal:** Improve documentation quality and maintain existing files.
-
-- [x] **7.1.1** Enhance root `README.md` with better onboarding flow
-- [x] **7.1.2** Create `CONTRIBUTING.md` with contribution guidelines
-- [x] **7.2.1** Update `skills/index.md` with new skill files from Phase 5
-- [x] **7.2.2** Update `skills/SUMMARY.md` with enhanced error reference
-- [x] **7.3.1** Request AC.rules update for shellcheck regex
