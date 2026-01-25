@@ -1704,7 +1704,7 @@ if [[ -n "$PROMPT_ARG" ]]; then
     if [[ -x "$ROOT/bin/gap-radar" ]]; then
       echo ""
       echo "Running gap radar analysis..."
-      if "$ROOT/bin/gap-radar" --dry-run 2>&1 | tee -a "$LOGS_DIR/iter${i}_custom.log"; then
+      if "$ROOT/bin/gap-radar" --dry-run 2>&1 | tee -a "$LOGDIR/iter${i}_custom.log"; then
         echo "✓ Gap radar analysis complete"
       else
         echo "⚠ Gap radar analysis failed (non-blocking)"
@@ -1946,7 +1946,7 @@ else
       if [[ -x "$ROOT/bin/gap-radar" ]]; then
         echo ""
         echo "Running gap radar analysis..."
-        if "$ROOT/bin/gap-radar" --dry-run 2>&1 | tee -a "$LOGS_DIR/iter${i}_build.log"; then
+        if "$ROOT/bin/gap-radar" --dry-run 2>&1 | tee -a "$LOGDIR/iter${i}_build.log"; then
           echo "✓ Gap radar analysis complete"
         else
           echo "⚠ Gap radar analysis failed (non-blocking)"

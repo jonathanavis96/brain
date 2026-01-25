@@ -16,7 +16,7 @@
 
 ### Major Issues (Ralph Can Fix)
 
-- [ ] **CR-6.1** Fix `LOGS_DIR` → `LOGDIR` typo in templates/ralph/loop.sh (M9)
+- [x] **CR-6.1** Fix `LOGS_DIR` → `LOGDIR` typo in templates/ralph/loop.sh (M9)
   - **File:** `templates/ralph/loop.sh` lines 1707, 1949
   - **Issue:** Script defines `LOGDIR` but references `LOGS_DIR` (undefined)
   - **Fix:** Replace `$LOGS_DIR` with `$LOGDIR`
