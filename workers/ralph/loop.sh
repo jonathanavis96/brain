@@ -1572,6 +1572,17 @@ fi
 # Set up trap for error event on unexpected exit
 trap 'cleanup_and_emit' EXIT
 
+# Sync workers plan to cortex (one-time at start)
+if [[ -f "$RALPH/sync_cortex_plan.sh" ]]; then
+  echo "Syncing plan to cortex..."
+  if (cd "$RALPH" && bash sync_cortex_plan.sh) 2>&1; then
+    echo "✓ Plan sync complete"
+  else
+    echo "⚠ Plan sync failed (non-blocking)"
+  fi
+  echo ""
+fi
+
 # Determine prompt strategy
 if [[ -n "$PROMPT_ARG" ]]; then
   PROMPT_FILE="$(resolve_prompt "$PROMPT_ARG")"
@@ -1704,7 +1715,7 @@ if [[ -n "$PROMPT_ARG" ]]; then
     if [[ -x "$ROOT/bin/gap-radar" ]]; then
       echo ""
       echo "Running gap radar analysis..."
-      if "$ROOT/bin/gap-radar" --dry-run 2>&1 | tee -a "$LOGS_DIR/iter${i}_custom.log"; then
+      if "$ROOT/bin/gap-radar" --dry-run 2>&1 | tee -a "$LOGDIR/iter${i}_custom.log"; then
         echo "✓ Gap radar analysis complete"
       else
         echo "⚠ Gap radar analysis failed (non-blocking)"
@@ -1798,16 +1809,6 @@ else
         cp "$ROOT/workers/IMPLEMENTATION_PLAN.md" "$PLAN_SNAPSHOT"
       fi
 
-      # Sync tasks from Cortex before PLAN mode
-      if [[ -f "$RALPH/sync_cortex_plan.sh" ]]; then
-        echo "Syncing tasks from Cortex..."
-        if (cd "$RALPH" && bash sync_cortex_plan.sh) 2>&1; then
-          echo "✓ Cortex sync complete"
-        else
-          echo "⚠ Cortex sync failed (non-blocking)"
-        fi
-        echo ""
-      fi
       emit_event --event phase_start --iter "$i" --phase "plan"
       # Emit PHASE_START marker for rollflow_analyze (task X.1.2)
       phase_start_ts="$(($(date +%s%N) / 1000000))"
@@ -1946,7 +1947,7 @@ else
       if [[ -x "$ROOT/bin/gap-radar" ]]; then
         echo ""
         echo "Running gap radar analysis..."
-        if "$ROOT/bin/gap-radar" --dry-run 2>&1 | tee -a "$LOGS_DIR/iter${i}_build.log"; then
+        if "$ROOT/bin/gap-radar" --dry-run 2>&1 | tee -a "$LOGDIR/iter${i}_build.log"; then
           echo "✓ Gap radar analysis complete"
         else
           echo "⚠ Gap radar analysis failed (non-blocking)"
