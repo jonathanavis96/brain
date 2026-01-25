@@ -31,7 +31,7 @@
 
 ### Phase 9C.2: Apply Batching to Current Backlog
 
-- [ ] **9C.2.1** Create batch task template in `templates/ralph/PROMPT.md`
+- [x] **9C.2.1** Create batch task template in `templates/ralph/PROMPT.md`
   - **Goal:** Standard format for batched tasks with multi-file scope
   - **AC:** Template shows batch task example with glob patterns and verification
 
