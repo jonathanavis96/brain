@@ -82,7 +82,7 @@ Key milestones:
   - **AC:** `check_waiver.sh` can still compute REQUEST_SHA256
   - **If Blocked:** Look at lines 83-90 where `os.remove()` is called. Either: (a) comment out the remove, (b) copy to `.verify/waiver_requests/archived/` before removing, or (c) rename to `.processed` suffix
 
-- [ ] **5.2.6** Fix verifier.sh cache key inconsistency (lines 344-385)
+- [x] **5.2.6** Fix verifier.sh cache key inconsistency (lines 344-385)
   - Compute ac_rules_hash before CACHE_MODE check, not just in "use" mode
   - **AC:** Cache keys consistent between record and use modes
   - **If Blocked:** The `ac_rules_hash` is computed inside an `if [[ "$CACHE_MODE" == "use" ]]` block. Move the hash computation BEFORE this conditional so both "record" and "use" modes have the same cache key components
