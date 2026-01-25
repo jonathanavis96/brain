@@ -62,9 +62,15 @@ Catalog of all skill files in the brain system.
 
 ### Languages
 
+#### Go
+
+- [README.md](domains/languages/go/README.md) - Go language overview and quick reference
+- [go-patterns.md](domains/languages/go/go-patterns.md) - Error handling, goroutines, channels, context, interfaces
+
 #### JavaScript
 
 - [README.md](domains/languages/javascript/README.md) - Modern JavaScript (ES6+) patterns, async patterns, module systems
+- [javascript-patterns.md](domains/languages/javascript/javascript-patterns.md) - Async/await, promises, modules, common gotchas
 
 #### Python
 

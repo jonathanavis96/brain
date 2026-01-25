@@ -293,7 +293,7 @@ Key milestones:
   - Update `.verify/request_waiver.sh` to include `"created": "$(date -Iseconds)"`
   - **AC:** New waiver requests have `created` field
 
-- [ ] **6.5.2** Backfill `created` field in existing waiver requests
+- [x] **6.5.2** Backfill `created` field in existing waiver requests
   - Use file mtime as fallback: `WVR-2026-01-24-*.json`
   - **AC:** All waiver requests have `created` field
 
