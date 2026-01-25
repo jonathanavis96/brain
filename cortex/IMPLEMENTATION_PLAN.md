@@ -124,7 +124,7 @@
 
 ### Phase 12.1: Documentation & Skills
 
-- [ ] **12.1.1** Create `skills/domains/infrastructure/agent-observability-patterns.md`
+- [x] **12.1.1** Create `skills/domains/infrastructure/agent-observability-patterns.md`
   - **Goal:** Document how to add observability to new tools/scripts
   - **AC:** Skill covers marker emission, JSONL events, log correlation
   - **Priority:** HIGH
