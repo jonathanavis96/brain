@@ -18,7 +18,7 @@
   - **Fix:** Keep or archive request file after approval
   - **AC:** Request file preserved after approval; `check_waiver.sh` works correctly
 
-- [ ] **CR-1.7** Fix `bin/brain-event` unbound variable
+- [x] **CR-1.7** Fix `bin/brain-event` unbound variable
   - **File:** `bin/brain-event` lines 84-117
   - **Issue:** Unbound variable error if flag is last argument
   - **Fix:** Guard `$2` access with `${2:-}` check

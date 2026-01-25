@@ -85,35 +85,43 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --event)
       EVENT="${2-}"
-      shift 2
+      shift
+      [[ -n "${1-}" ]] && shift
       ;;
     --iter)
       ITER="${2-}"
-      shift 2
+      shift
+      [[ -n "${1-}" ]] && shift
       ;;
     --phase)
       PHASE="${2-}"
-      shift 2
+      shift
+      [[ -n "${1-}" ]] && shift
       ;;
     --status)
       STATUS="${2-}"
-      shift 2
+      shift
+      [[ -n "${1-}" ]] && shift
       ;;
     --msg)
       MSG="${2-}"
-      shift 2
+      shift
+      [[ -n "${1-}" ]] && shift
       ;;
     --code)
       CODE="${2-}"
-      shift 2
+      shift
+      [[ -n "${1-}" ]] && shift
       ;;
     --workspace)
       WORKSPACE="${2-}"
-      shift 2
+      shift
+      [[ -n "${1-}" ]] && shift
       ;;
     --runner)
       RUNNER="${2-}"
-      shift 2
+      shift
+      [[ -n "${1-}" ]] && shift
       ;;
     *)
       # Skip unknown args (best-effort)
