@@ -78,42 +78,6 @@
 
 ---
 
-## Phase 11: Thread Persistence & Search
-
-**Goal:** Enable searchable, queryable thread storage for agent work history.
-
-**Context:** THUNK.md is append-only markdown; rollflow_cache is SQLite. Need unified search across both.
-
-**Research:** `cortex/docs/research/thread-persistence-research.md`
-
-### Phase 11.1: Documentation & Skills
-
-- **Goal:** Document search patterns for THUNK, git, and cache
-- **AC:** Skill includes grep patterns for THUNK.md, git log examples, sqlite queries
-- **Priority:** HIGH
-
-- [x] **11.1.2** Build THUNK.md parser (Python script)
-  - **Goal:** Extract structured data from THUNK.md markdown table
-  - **Output:** JSON or SQLite with thunk_num, task_id, priority, description, date
-  - **AC:** Parser handles current THUNK format (800+ entries), outputs valid JSON
-  - **Priority:** MEDIUM
-
-### Phase 11.2: Tooling
-
-- [x] **11.1.3** Create SQLite schema for unified thread storage
-  - **Goal:** Single database for threads, work_items, tool_executions
-  - **Schema:** See `cortex/docs/research/thread-persistence-research.md` Section 3.2
-  - **AC:** Schema created with FTS5 index on descriptions
-  - **Priority:** MEDIUM
-
-- [x] **11.2.1** Build `bin/brain-search` CLI tool
-  - **Goal:** Quick lookups across THUNK, git, cache
-  - **Usage:** `brain-search "shellcheck"` → shows matching tasks, commits, tool calls
-  - **AC:** CLI returns results from at least 2 sources (THUNK + git)
-  - **Priority:** LOW
-
----
-
 ## Phase 12: Observability Improvements
 
 **Goal:** Formalize event schemas and improve observability tooling.
@@ -124,12 +88,10 @@
 
 ### Phase 12.1: Documentation & Skills
 
-- [x] **12.1.1** Create `skills/domains/infrastructure/agent-observability-patterns.md`
   - **Goal:** Document how to add observability to new tools/scripts
   - **AC:** Skill covers marker emission, JSONL events, log correlation
   - **Priority:** HIGH
 
-- [x] **12.1.2** Create `docs/MARKER_SCHEMA.md` - formal spec for all markers
   - **Goal:** Single source of truth for :::MARKER::: format
   - **Content:** All marker types, fields, examples, versioning policy
   - **AC:** Schema doc covers all markers in loop.sh, includes validation rules

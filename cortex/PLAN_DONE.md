@@ -78,7 +78,7 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-26 | CR-6.11 | - [x] **CR-6.11** Fix archive header parsing in current_ralph_tasks.sh (from CR-5) - Completed 2026-01-25 (THUNK #773) |
 | 2026-01-26 | CR-6.H1 | - [x] **CR-6.H1** Update SHA256 hashes after all fixes |
 
-### Archived on 2026-01-26
+### Archived on 2026-01-26 (Batch 1)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
@@ -86,3 +86,13 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-26 | 10.1.2 | - [x] **10.1.2** Integrate RovoDev parser into rollflow_analyze pipeline |
 | 2026-01-26 | 10.2.1 | - [x] **10.2.1** Update docs/events.md with RovoDev format section |
 | 2026-01-26 | 11.1.1 | - [x] **11.1.1** Create `skills/domains/ralph/thread-search-patterns.md` |
+
+### Archived on 2026-01-26 (Batch 2)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-26 | 11.1.2 | - [x] **11.1.2** Build THUNK.md parser (Python script) |
+| 2026-01-26 | 11.1.3 | - [x] **11.1.3** Create SQLite schema for unified thread storage |
+| 2026-01-26 | 11.2.1 | - [x] **11.2.1** Build `bin/brain-search` CLI tool |
+| 2026-01-26 | 12.1.1 | - [x] **12.1.1** Create `skills/domains/infrastructure/agent-observability-patterns.md` |
+| 2026-01-26 | 12.1.2 | - [x] **12.1.2** Create `docs/MARKER_SCHEMA.md` - formal spec for all markers |

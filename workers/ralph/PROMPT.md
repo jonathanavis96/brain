@@ -67,6 +67,54 @@ Then output `:::BUILD_READY:::` to end the iteration.
 
 ---
 
+## MANDATORY: Startup Procedure (Cheap First)
+
+**Do NOT open large files at startup.** Use targeted commands instead.
+
+### Forbidden at Startup
+
+Never `open_files` for these (too expensive):
+
+- `NEURONS.md`
+- `THOUGHTS.md`
+- `workers/IMPLEMENTATION_PLAN.md` (full file)
+- `workers/ralph/THUNK.md` (full file)
+
+### Required Startup Sequence
+
+```bash
+# 1. Find next unchecked task (DO THIS FIRST)
+grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -20
+
+# 2. If you need context for a specific task, slice by line number
+# Example: task found around line 236
+sed -n '220,280p' workers/IMPLEMENTATION_PLAN.md
+
+# 3. Check for existing tools before creating new ones
+find bin/ -maxdepth 1 -type f | head -20
+find tools/ -maxdepth 1 -name "*.py" -o -name "*.sh" 2>/dev/null | head -10
+```
+
+### THUNK.md Access Rules
+
+- **NEVER** open THUNK.md to "check what's done" - use `grep` or `bin/brain-search`
+- **ONLY** open THUNK.md when appending a new completion entry
+- For last THUNK number: `tail -20 workers/ralph/THUNK.md | grep "^|" | tail -1`
+
+### Search Before Creating
+
+Before proposing to create a tool/script, search first:
+
+```bash
+# Check if tool exists
+ls bin/ | grep -i "search\|thunk\|event"
+rg -l "def main\|usage:" tools/*.py bin/* 2>/dev/null | head -10
+```
+
+**Rule:** Only propose creating something if you searched and it truly doesn't exist.
+
+---
+
 ## MANDATORY: Checkpoint After Every Task
 
 **Every completed task MUST include ALL THREE in ONE commit:**
@@ -177,13 +225,36 @@ See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
 
 ## PLANNING Mode (Iteration 1 or every 3rd)
 
-### Context Gathering (up to 100 parallel subagents)
+### Context Gathering (Cheap First - NO Large File Opens)
 
-- Study `skills/SUMMARY.md` for overview and `skills/index.md` for available skills
-- Study THOUGHTS.md for project goals
-- Study workers/IMPLEMENTATION_PLAN.md (if exists)
-- Compare specs vs current codebase
-- Search for gaps between intent and implementation
+**Step 1: Use grep/head to understand state (DO NOT open full files)**
+
+```bash
+# What tasks exist?
+grep -n "^## Phase\|^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -40
+
+# What skills exist? (don't open index.md)
+ls skills/domains/*/
+```
+
+**Step 2: Only slice specific sections if needed**
+
+```bash
+# Example: need Phase 21 details (found at line 518)
+sed -n '515,580p' workers/IMPLEMENTATION_PLAN.md
+```
+
+**Step 3: Search for existing tools before proposing new ones**
+
+```bash
+ls bin/ tools/*.py tools/*.sh 2>/dev/null | head -20
+```
+
+**Legacy guidance (use sparingly, slice don't open):**
+
+- `skills/SUMMARY.md` - OK to open (small file)
+- `THOUGHTS.md` - slice with `head -50` if needed
+- `workers/IMPLEMENTATION_PLAN.md` - NEVER open full, always grep then slice
 
 ### Pre-Planning State Check
 
@@ -246,13 +317,35 @@ Awaiting approval before adding to IMPLEMENTATION_PLAN.md.
 
 ## BUILDING Mode (All other iterations)
 
-### Context Gathering (up to 100 parallel subagents)
+### Context Gathering (Cheap First - Follow Startup Procedure)
 
-- Study `skills/SUMMARY.md` for overview and `skills/index.md` for available skills
-- Study THOUGHTS.md and workers/IMPLEMENTATION_PLAN.md
-- Search codebase - **don't assume things are missing**
-- Check NEURONS.md for codebase map
-- Use Brain Skills: `skills/SUMMARY.md` → `references/HOTLIST.md` → specific rules only if needed
+**Step 1: Find your ONE task (mandatory first step)**
+
+```bash
+grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -10
+```
+
+**Step 2: Slice only the task block you need**
+
+```bash
+# Example: task at line 236
+sed -n '230,260p' workers/IMPLEMENTATION_PLAN.md
+```
+
+**Step 3: Search before assuming things are missing**
+
+```bash
+# Check for existing tools/scripts
+ls bin/ | head -20
+rg -l "keyword" tools/ skills/domains/ | head -10
+```
+
+**DO NOT open these files:**
+
+- `NEURONS.md` - use `ls` and `find` instead
+- `THOUGHTS.md` - not needed for BUILD mode
+- `workers/IMPLEMENTATION_PLAN.md` (full) - always grep then slice
+- `workers/ralph/THUNK.md` - only `tail` when appending
 
 ### Actions
 
@@ -371,6 +464,10 @@ When fixing issues, search the ENTIRE repo: `rg "pattern" $ROOT` not just `worke
 
 Target: <20 tool calls per iteration.
 
+### Non-Negotiable Principle
+
+**Prefer commands that return tiny outputs** (grep/head/sed/tail) over opening large files. If you need to read a file, **slice it**.
+
 ### No Duplicate Commands (CRITICAL)
 
 - **NEVER run the same bash command twice** in one iteration
@@ -380,15 +477,40 @@ Target: <20 tool calls per iteration.
 **Anti-patterns (NEVER do these):**
 
 - Trying to read `.verify/latest.txt` (it's already in the header!)
-- Reading `THUNK.md` to check if a task was done (use IMPLEMENTATION_PLAN.md - it's the source of truth for pending tasks)
+- Reading `THUNK.md` to check if a task was done (use `grep` or `bin/brain-search`)
+- Opening `NEURONS.md`, `THOUGHTS.md`, or full `IMPLEMENTATION_PLAN.md` at startup
 - Running `git status` before AND after `git add`
 - Running `shellcheck file.sh`, then `shellcheck -e SC1091 file.sh`, then `shellcheck -x file.sh`
+
+### Constrain Searches (Avoid Grep Explosion)
+
+If a grep returns too many matches (>50), immediately narrow:
+
+```bash
+# BAD: returns 168 matches, wastes tokens
+grep "observability|marker|event" skills/domains/**/*.md
+
+# GOOD: one keyword, one folder, limited output
+rg -n "agent observability" skills/domains/infrastructure -S | head -20
+rg -n "MARKER_SCHEMA" docs -S | head -20
+```
 
 ### Atomic Git Operations
 
 - **Use single combined command:** `git add -A && git commit -m "msg"`
 - **Do NOT:** `git add file` → `git status` → `git add file` → `git commit`
 - One add+commit per logical change
+
+### Stage-Check Before Commit
+
+Before committing task completion, verify both files are staged:
+
+```bash
+git status --short
+# Should show both IMPLEMENTATION_PLAN.md and THUNK.md if logging completion
+git add workers/IMPLEMENTATION_PLAN.md workers/ralph/THUNK.md
+git commit -m "chore(ralph): complete <task>"
+```
 
 ### Fail Fast on Formatting
 
@@ -403,6 +525,15 @@ Target: <20 tool calls per iteration.
 - **NEVER** include "applied shfmt formatting" as the main work - it's incidental to the real fix
 - If a file needs shfmt, note it in PLAN mode for a single "format all shell scripts" task
 
+### Validator-First Debugging
+
+When a validation tool fails on code examples:
+
+1. Reproduce once: `python3 tools/validate_examples.py <file>`
+2. Inspect validator logic: `rg -n "Undefined variables" tools/validate_examples.py`
+3. If code is obviously valid (kwargs, for-loop, comprehension), assume **validator bug** and fix validator
+4. **DO NOT** rewrite valid examples into awkward forms to satisfy broken validators
+
 ### Context You Already Have
 
 **NEVER repeat these (you already know):**
@@ -413,6 +544,13 @@ Target: <20 tool calls per iteration.
 - Same file content - read ONCE, remember it
 
 **ALWAYS batch:** `grep pattern file1 file2 file3` not 3 separate calls.
+
+### Read Deduplication
+
+Track files read this iteration. Before re-reading:
+
+- If already read → use `sed -n 'start,endp'` for a different slice
+- If same content needed → reference your earlier output, don't re-read
 
 ---
 

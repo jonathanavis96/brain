@@ -13,17 +13,17 @@ Look for the `# VERIFIER STATUS` section at the top of this prompt. It contains:
 
 If the header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
-1. **STOP** - Do not pick a new task from IMPLEMENTATION_PLAN.md
-2. **CHECK** the injected verifier status above to understand what failed
+1. **STOP** - Do not pick a new task from workers/IMPLEMENTATION_PLAN.md
+2. **CHECK** the `# VERIFIER STATUS` section above for failure details
 3. **FIX** the failing acceptance criteria listed in `# FAILED_RULES:`
 4. **COMMIT** your fix with message: `fix(ralph): resolve AC failure <RULE_ID>`
 5. **THEN** output `:::BUILD_READY:::` so the verifier can re-run
 
-If the injected verifier status contains `[WARN]` lines:
+If the `# VERIFIER STATUS` section shows `[WARN]` lines:
 
-1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of IMPLEMENTATION_PLAN.md (after header, before other phases)
+1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of workers/IMPLEMENTATION_PLAN.md (after header, before other phases)
 2. **⚠️ DO NOT create "## Verifier Warnings" without the "Phase 0-Warn:" prefix** - This breaks the task monitor!
-3. **LIST** each as: `- [ ] WARN.<ID> <RULE_ID> - <description>`
+3. **LIST** each as: `- [ ] WARN.<RULE_ID>.<filename> - <description>` (include filename to prevent duplicate IDs)
 4. **NEVER use numbered lists (1. 2. 3.)** - ALWAYS use checkbox format `- [ ]`
 5. **IGNORE** warnings marked `(manual review)` - these require human testing, not code fixes
 6. **IGNORE** warnings prefixed with `Cortex.*` - these are Cortex's responsibility, not Ralph's
@@ -33,14 +33,26 @@ If the injected verifier status contains `[WARN]` lines:
 10. **Waivers are one-time-use** - After verifier uses a waiver, it's moved to `.used` and deleted. Only request waivers for issues you genuinely cannot fix.
 11. In BUILD mode: Fix ONE warning, mark `[?]`, commit. Verifier determines `[x]`.
 12. **BATCHING:** When multiple warnings are in the SAME FILE, fix them ALL in one iteration (e.g., 3 shellcheck warnings in loop.sh = 1 task).
+13. **CROSS-FILE BATCHING:** When the SAME fix type applies to multiple files (e.g., SC2162 "add -r to read" in 5 files), fix ALL files in ONE iteration. Group by fix type, not by file.
 
 Common failure types:
-
 
 - **Hash mismatch** (e.g., `Protected.1`): A protected file was modified. You cannot fix this - report to human.
 - **Hygiene issues** (e.g., `Hygiene.Shellcheck.2`): Fix the code issue (unused var, missing fence tag, etc.)
 - **AntiCheat** (e.g., `AntiCheat.1`): Remove the problematic marker/phrase from your code.
 - **Infrastructure** (e.g., `freshness_check`): Report to human - this is a loop.sh issue.
+
+### Protected File Warnings (INFO)
+
+If verifier shows `Protected.1`, `Protected.2`, `Protected.3`, or `Protected.4` warnings:
+
+1. **ACKNOWLEDGE** - Note the warning but do NOT attempt to fix hash mismatches
+2. You CANNOT modify `.verify/*.sha256` files - they are human-only
+3. **CONTINUE** with normal tasks - protected file warnings do not block work
+4. Human will review and regenerate hashes if the changes are intentional
+5. Do NOT waste tool calls debugging protected file issues
+
+**Anti-pattern:** Reading verifier output multiple times hoping for different results.
 
 If you cannot fix a failure (protected file, infrastructure issue), output:
 
@@ -52,6 +64,54 @@ Reason: <why you can't fix it>
 ```text
 
 Then output `:::BUILD_READY:::` to end the iteration.
+
+---
+
+## MANDATORY: Startup Procedure (Cheap First)
+
+**Do NOT open large files at startup.** Use targeted commands instead.
+
+### Forbidden at Startup
+
+Never `open_files` for these (too expensive):
+
+- `NEURONS.md`
+- `THOUGHTS.md`
+- `workers/IMPLEMENTATION_PLAN.md` (full file)
+- `workers/ralph/THUNK.md` (full file)
+
+### Required Startup Sequence
+
+```bash
+# 1. Find next unchecked task (DO THIS FIRST)
+grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -20
+
+# 2. If you need context for a specific task, slice by line number
+# Example: task found around line 236
+sed -n '220,280p' workers/IMPLEMENTATION_PLAN.md
+
+# 3. Check for existing tools before creating new ones
+find bin/ -maxdepth 1 -type f | head -20
+find tools/ -maxdepth 1 -name "*.py" -o -name "*.sh" 2>/dev/null | head -10
+```
+
+### THUNK.md Access Rules
+
+- **NEVER** open THUNK.md to "check what's done" - use `grep` or `bin/brain-search`
+- **ONLY** open THUNK.md when appending a new completion entry
+- For last THUNK number: `tail -20 workers/ralph/THUNK.md | grep "^|" | tail -1`
+
+### Search Before Creating
+
+Before proposing to create a tool/script, search first:
+
+```bash
+# Check if tool exists
+ls bin/ | grep -i "search\|thunk\|event"
+rg -l "def main\|usage:" tools/*.py bin/* 2>/dev/null | head -10
+```
+
+**Rule:** Only propose creating something if you searched and it truly doesn't exist.
 
 ---
 
@@ -87,6 +147,70 @@ Rule: only 1 "obvious" quick attempt before doing the lookup.
 
 ---
 
+## Creating New Markdown Files
+
+**ALWAYS follow these rules when creating `.md` files:**
+
+1. **Code blocks MUST have language tags** - Never use bare ` ``` `
+   - Shell commands: ` ```bash `
+   - Python: ` ```python `
+   - Directory trees/output: ` ```text `
+   - JSON/YAML: ` ```json ` / ` ```yaml `
+
+2. **Blank lines are REQUIRED around:**
+   - Code blocks (before and after)
+   - Lists (before and after)
+   - Headings (after)
+
+3. **Run `markdownlint <file>`** before committing new files
+
+**Example - WRONG vs RIGHT:**
+
+```markdown
+## Heading
+- list item
+```text
+code without language
+```text
+
+## Heading
+
+- list item
+
+```bash
+code with language
+```text
+```text
+
+---
+
+## Verifier-First Workflow
+
+**Auto-fix runs automatically before every BUILD iteration.** The loop runs:
+
+1. `fix-markdown.sh` - fixes ~40-60% of markdown issues
+2. `pre-commit run --all-files` - fixes shell/python/yaml issues
+3. `verifier.sh` - checks current state
+
+**You receive the verifier output in your context.** Focus ONLY on remaining `[WARN]` and `[FAIL]` items.
+
+**If verifier shows all passing:** Skip lint tasks and work on feature tasks instead.
+
+**Only these need manual fixes (not auto-fixable):**
+
+| Rule | Fix |
+| ---- | --- |
+| MD040 | Add language after ``` (e.g., ```bash) |
+| MD060 | Add spaces around table pipes |
+| MD024 | Make duplicate headings unique |
+| MD036 | Convert **bold** to #### heading |
+
+**Anti-pattern:** Don't make 30+ individual `find_and_replace_code` calls - this wastes tokens and iterations. Batch remaining fixes efficiently.
+
+See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
+
+---
+
 ## Output Format
 
 **Start:** `STATUS | branch=<branch> | runner=<rovodev|opencode> | model=<model>`
@@ -101,31 +225,50 @@ Rule: only 1 "obvious" quick attempt before doing the lookup.
 
 ## PLANNING Mode (Iteration 1 or every 3rd)
 
-### Context Gathering (up to 100 parallel subagents)
+### Context Gathering (Cheap First - NO Large File Opens)
 
-- Study `skills/SUMMARY.md` for overview and `skills/index.md` for available skills
-- Study THOUGHTS.md for project goals
-- Study IMPLEMENTATION_PLAN.md (if exists)
-- Compare specs vs current codebase
-- Search for gaps between intent and implementation
-
-### Pre-Planning Lint Check (MANDATORY)
-
-Before planning tasks, run linting tools to discover issues:
+**Step 1: Use grep/head to understand state (DO NOT open full files)**
 
 ```bash
-# Run pre-commit if available (catches shell, markdown, python issues)
-pre-commit run --all-files 2>&1 | head -50 || true
+# What tasks exist?
+grep -n "^## Phase\|^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -40
 
-# Or run individual checks if pre-commit not installed:
-shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
-```text
+# What skills exist? (don't open index.md)
+ls skills/domains/*/
+```
 
-**If any issues found:** Add them to the TOP of IMPLEMENTATION_PLAN.md as high-priority tasks in "## Phase 0-Warn: Verifier Warnings" section.
+**Step 2: Only slice specific sections if needed**
+
+```bash
+# Example: need Phase 21 details (found at line 518)
+sed -n '515,580p' workers/IMPLEMENTATION_PLAN.md
+```
+
+**Step 3: Search for existing tools before proposing new ones**
+
+```bash
+ls bin/ tools/*.py tools/*.sh 2>/dev/null | head -20
+```
+
+**Legacy guidance (use sparingly, slice don't open):**
+
+- `skills/SUMMARY.md` - OK to open (small file)
+- `THOUGHTS.md` - slice with `head -50` if needed
+- `workers/IMPLEMENTATION_PLAN.md` - NEVER open full, always grep then slice
+
+### Pre-Planning State Check
+
+**Note:** Auto-fix and verifier run automatically before BUILD iterations. For PLAN mode, check verifier output:
+
+```bash
+# Verifier status is already in header - no need to read file
+```
+
+**If WARN/FAIL items exist:** Prioritize fixing them before feature work. Add to "## Phase 0-Warn: Verifier Warnings" section if not already tracked.
 
 ### Actions
 
-1. Create/update IMPLEMENTATION_PLAN.md:
+1. Create/update workers/IMPLEMENTATION_PLAN.md:
    - **⚠️ CRITICAL:** ALL task sections MUST be "## Phase X:" format (e.g., "## Phase 0-Quick: Quick Wins", "## Phase 1: Maintenance")
    - **⚠️ NEVER create these non-phase sections:** "## Overview", "## Quick Wins" (without Phase prefix), "## Verifier Warnings" (without Phase prefix), "## Maintenance Check", "## TODO Items"
    - **⚠️ CORRECT format:** "## Phase 0-Warn: Verifier Warnings", "## Phase 0-Quick: Quick Wins", "## Phase 1: Core Features"
@@ -150,20 +293,64 @@ shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
 
 4. **STOP** - Do not output `:::COMPLETE:::`
 
+### Creating New Phases (Governance Rule)
+
+If you identify knowledge gaps or improvements that need **new Phase sections** (not just new tasks within existing phases):
+
+1. **PROPOSE, don't commit** - Describe the new phases in your response but DO NOT write them to IMPLEMENTATION_PLAN.md yet
+2. **Explain the rationale** - Why is this needed? What gaps does it fill?
+3. **Wait for approval** - Human or Cortex must approve before you add new phases
+4. **Exception:** `## Phase 0-Warn: Verifier Warnings` can be added immediately (urgent fixes)
+
+**Example proposal format:**
+
+```text
+PROPOSED NEW PHASES:
+- Phase 8: Frontend Skills Expansion
+  - Rationale: Brain is referenced by web projects, needs React/Vue patterns
+  - Tasks: 8.1.1 Create frontend README, 8.1.2 Add component patterns...
+
+Awaiting approval before adding to IMPLEMENTATION_PLAN.md.
+```
+
+**Why this rule exists:** New phases represent significant scope expansion. Cortex owns strategic planning; Ralph executes. Proposing allows review before commitment.
+
 ## BUILDING Mode (All other iterations)
 
-### Context Gathering (up to 100 parallel subagents)
+### Context Gathering (Cheap First - Follow Startup Procedure)
 
-- Study `skills/SUMMARY.md` for overview and `skills/index.md` for available skills
-- Study THOUGHTS.md and IMPLEMENTATION_PLAN.md
-- Search codebase - **don't assume things are missing**
-- Check NEURONS.md for codebase map
-- Use Brain Skills: `skills/SUMMARY.md` → `references/HOTLIST.md` → specific rules only if needed
+**Step 1: Find your ONE task (mandatory first step)**
+
+```bash
+grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -10
+```
+
+**Step 2: Slice only the task block you need**
+
+```bash
+# Example: task at line 236
+sed -n '230,260p' workers/IMPLEMENTATION_PLAN.md
+```
+
+**Step 3: Search before assuming things are missing**
+
+```bash
+# Check for existing tools/scripts
+ls bin/ | head -20
+rg -l "keyword" tools/ skills/domains/ | head -10
+```
+
+**DO NOT open these files:**
+
+- `NEURONS.md` - use `ls` and `find` instead
+- `THOUGHTS.md` - not needed for BUILD mode
+- `workers/IMPLEMENTATION_PLAN.md` (full) - always grep then slice
+- `workers/ralph/THUNK.md` - only `tail` when appending
 
 ### Actions
 
 1. **CHECK FOR VERIFIER WARNINGS FIRST:**
-   - If `IMPLEMENTATION_PLAN.md` has a "## Verifier Warnings" section with unchecked `- [ ]` tasks:
+   - If `workers/IMPLEMENTATION_PLAN.md` has a "## Verifier Warnings" section with unchecked `- [ ]` tasks:
      - Pick ONE warning task (prioritize High > Medium > Low)
      - Fix that warning
      - Mark it complete `- [x]` in the Verifier Warnings section
@@ -178,17 +365,13 @@ shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
 
 4. Validate per AGENTS.md commands
 
-5. Log completion to workers/ralph/THUNK.md: When marking task `[x]`, append to current era table:
-
-   ```markdown
-   | <next_thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |
-   ```
-
-6. Commit ALL changes (local only, no push):
+5. **SINGLE COMMIT RULE:** Commit ALL changes together (code fix + workers/ralph/THUNK.md + workers/IMPLEMENTATION_PLAN.md):
+   - Log completion to workers/ralph/THUNK.md (append to current era table)
+   - Mark task `[x]` in workers/IMPLEMENTATION_PLAN.md
+   - **NEVER make separate commits** for "mark task complete" or "log to THUNK" - these waste iterations
 
    ```bash
-   git add -A
-   git commit -m "<type>(<scope>): <summary>
+   git add -A && git commit -m "<type>(<scope>): <summary>
 
    - Detail 1
    - Detail 2
@@ -197,59 +380,21 @@ shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
    Brain-Repo: ${BRAIN_REPO:-jonathanavis96/brain}"
    ```
 
-7. Update IMPLEMENTATION_PLAN.md: mark `[x]` complete, add any discovered subtasks
+6. **DISCOVERY DEFER RULE:** If you discover new issues while fixing:
+   - **DO NOT** update workers/IMPLEMENTATION_PLAN.md with new tasks during BUILD mode
+   - **DO** note them in your commit message body (e.g., "Note: also found SC2034 in foo.sh")
+   - **WAIT** until PLAN mode to add new tasks to workers/IMPLEMENTATION_PLAN.md
+   - This prevents "docs(plan): add new task" spam commits
 
-8. **Self-Improvement Check:** If you used undocumented knowledge/procedure/tooling:
+7. **Self-Improvement Check:** If you used undocumented knowledge/procedure/tooling:
    - Search `skills/` for existing matching skill
    - Search `skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
    - If not found: append new entry to `GAP_BACKLOG.md`
    - If gap is clear, specific, and recurring: promote to `SKILL_BACKLOG.md`
 
-9. **STOP** - Do not push, do not continue to next task
+8. **STOP** - Do not push, do not continue to next task
 
 **Important:** Warnings-first policy - Always check and fix verifier warnings before numbered tasks.
-
----
-
-## Batch Task Template
-
-When combining 3+ similar tasks, use this format:
-
-```markdown
-- [ ] **X.B1** BATCH: [Description] (combines A.1, A.2, A.3)
-  - **Scope:** `path/to/files/**/*.ext` OR `file1.ext + file2.ext + file3.ext`
-  - **Steps:**
-    1. [First action with glob pattern or file list]
-    2. [Second action]
-    3. [Verification command]
-  - **AC:** [How to verify completion - specific command output]
-  - **Replaces:** A.1, A.2, A.3
-```
-
-**Example - Batch shellcheck fixes:**
-
-```markdown
-- [ ] **5.B1** BATCH: Fix SC2162 in all shell scripts (combines 5.1, 5.2, 5.3, 5.4, 5.5)
-  - **Scope:** `workers/ralph/*.sh` (5 files: loop.sh, verifier.sh, sync.sh, cleanup.sh, monitor.sh)
-  - **Steps:**
-    1. Add `-r` flag to all `read` commands in scope files
-    2. Run `shellcheck -e SC1091 workers/ralph/*.sh` to verify
-    3. Run `shfmt -w -i 2 workers/ralph/*.sh` if needed
-  - **AC:** `shellcheck workers/ralph/*.sh` shows 0 SC2162 errors
-  - **Replaces:** 5.1, 5.2, 5.3, 5.4, 5.5
-```
-
-**When to batch:**
-
-- ≥3 tasks with same error code (MD040, SC2162, etc.)
-- ≥3 tasks in same directory
-- ≥3 tasks with same fix pattern (add flag, add blank line, quote variable)
-
-**When NOT to batch:**
-
-- Tasks require different logic/reasoning
-- Files are in different functional areas (don't batch `workers/ralph/*.sh` with `cortex/*.sh`)
-- Changes affect protected files (batch those separately or skip)
 
 ---
 
@@ -288,16 +433,16 @@ You may mark tasks `[?]` when you've implemented changes. The verifier determine
 
 ## Workspace Boundaries
 
-**You have access to the ENTIRE project repository** (from `$ROOT`), not just `ralph/`.
+**You have access to the ENTIRE brain repository** (from `$ROOT`), not just `workers/ralph/`.
 
 | Access Level | Paths | Notes |
-|--------------|-------|-------|
+| ------------ | ----- | ----- |
 | **Full access** | `skills/`, `templates/`, `cortex/`, `docs/`, `workers/` | Read, write, create, delete |
-| **Protected** | `rules/AC.rules`, `verifier.sh`, `loop.sh`, `PROMPT.md` | Read only - hash-guarded |
+| **Protected** | `rules/AC.rules`, `verifier.sh`, `loop.sh`, `PROMPT.md`, `AGENTS.md` | Read only - hash-guarded |
 | **Protected** | `.verify/*.sha256` | Baseline hashes - human updates |
 | **Forbidden** | `.verify/waivers/*.approved` | OTP-protected - cannot read/write |
 
-When fixing issues, search the ENTIRE repo: `rg "pattern" $ROOT` not just `ralph/`.
+When fixing issues, search the ENTIRE repo: `rg "pattern" $ROOT` not just `workers/ralph/`.
 
 ---
 
@@ -307,105 +452,89 @@ When fixing issues, search the ENTIRE repo: `rg "pattern" $ROOT` not just `ralph
 - **No destructive commands** (`rm -rf`, deleting directories) unless plan task explicitly says so
 - **Search before creating** - Verify something doesn't exist before adding it
 - **One task per BUILD** - No batching, no "while I'm here" extras (EXCEPT: same-file warnings - batch those)
-- **Never remove uncompleted items** - NEVER delete `[ ]` tasks from IMPLEMENTATION_PLAN.md
+- **Never remove uncompleted items** - NEVER delete `[ ]` tasks from workers/IMPLEMENTATION_PLAN.md
 - **Never delete completed tasks** - Mark tasks `[x]` complete but NEVER delete them (they stay forever as history)
 - **Never delete sections** - NEVER remove entire sections (## Phase X:, ## Verifier Warnings, etc.) even if all tasks are complete
 - **Never use numbered lists** - ALL tasks must use checkbox format `- [ ]` or `- [x]`, NEVER `1. 2. 3.`
-- **Protected files** - Do NOT modify: `rules/AC.rules`, `.verify/ac.sha256`, `verifier.sh`, `.verify/verifier.sha256`, `loop.sh`, `.verify/loop.sha256`, `PROMPT.md`, `.verify/prompt.sha256`
+- **Protected files** - Do NOT modify: `rules/AC.rules`, `../.verify/ac.sha256`, `verifier.sh`, `../.verify/verifier.sha256`, `loop.sh`, `../.verify/loop.sha256`, `PROMPT.md`, `../.verify/prompt.sha256`
 
 ---
-
-## Cache Configuration
-
-Ralph supports caching for idempotent operations (verifier checks, file reads, read-only LLM phases).
-
-### Environment Variables
-
-| Variable | Values | Default | Description |
-|----------|--------|---------|-------------|
-| `CACHE_MODE` | `off`, `record`, `use` | `off` | Cache behavior mode |
-| `CACHE_SCOPE` | Comma-separated list | `verify,read` | Which cache types are active |
-
-**Important:** Both variables must be **exported** for subprocesses to inherit them:
-
-```bash
-export CACHE_MODE=use
-export CACHE_SCOPE=verify,read
-bash loop.sh
-```
-
-**CACHE_MODE values:**
-
-- `off` - No caching (default, safest)
-- `record` - Run everything, store PASS results for future use
-- `use` - Check cache first, skip on hit, record misses
-
-**CACHE_SCOPE values:**
-
-- `verify` - Cache verifier results (shellcheck, lint)
-- `read` - Cache file reads (cat, ls)
-- `llm_ro` - Cache read-only LLM phases (REPORT, ANALYZE only - **never BUILD/PLAN**)
-
-### CLI Flags
-
-| Flag | Description |
-|------|-------------|
-| `--cache-mode MODE` | Set cache mode (off/record/use) |
-| `--cache-scope SCOPES` | Set cache scopes (comma-separated) |
-| `--force-fresh` | Bypass all caching for this run |
-
-### Usage Examples
-
-**Default (safe for BUILD/PLAN):**
-
-```bash
-export CACHE_MODE=use
-export CACHE_SCOPE="verify,read"
-bash loop.sh --iterations 5
-```
-
-**Record mode (populate cache):**
-
-```bash
-export CACHE_MODE=record
-bash loop.sh --iterations 1
-```
-
-**Force fresh run (ignore cache):**
-
-```bash
-export CACHE_MODE=use
-bash loop.sh --force-fresh
-```
-
-**CLI alternative:**
-
-```bash
-bash loop.sh --cache-mode use --cache-scope verify,read --iterations 5
-```
-
-### Safety Rules
-
-- **BUILD/PLAN phases:** LLM caching is **hard-blocked** regardless of `CACHE_SCOPE` setting
-- **REPORT/ANALYZE phases:** Can use `llm_ro` scope safely (read-only operations)
-- **Verification:** Run `bash tools/test_cache_inheritance.sh` to verify cache is working
-
-### Cache Statistics
-
-After runs with `CACHE_MODE=use`, loop.sh prints:
-
-```text
-Cache Statistics:
-  Hits: 42
-  Misses: 8
-  Time Saved: 18.3s (18342ms)
-```
-
-See [docs/CACHE_DESIGN.md](../../docs/CACHE_DESIGN.md) for complete cache design details.
 
 ## Token Efficiency
 
 Target: <20 tool calls per iteration.
+
+### Non-Negotiable Principle
+
+**Prefer commands that return tiny outputs** (grep/head/sed/tail) over opening large files. If you need to read a file, **slice it**.
+
+### No Duplicate Commands (CRITICAL)
+
+- **NEVER run the same bash command twice** in one iteration
+- Use the injected verifier status in the header - never read `.verify/latest.txt`
+- If a command fails, fix the issue, don't re-run the same failing command hoping for different results
+
+**Anti-patterns (NEVER do these):**
+
+- Trying to read `.verify/latest.txt` (it's already in the header!)
+- Reading `THUNK.md` to check if a task was done (use `grep` or `bin/brain-search`)
+- Opening `NEURONS.md`, `THOUGHTS.md`, or full `IMPLEMENTATION_PLAN.md` at startup
+- Running `git status` before AND after `git add`
+- Running `shellcheck file.sh`, then `shellcheck -e SC1091 file.sh`, then `shellcheck -x file.sh`
+
+### Constrain Searches (Avoid Grep Explosion)
+
+If a grep returns too many matches (>50), immediately narrow:
+
+```bash
+# BAD: returns 168 matches, wastes tokens
+grep "observability|marker|event" skills/domains/**/*.md
+
+# GOOD: one keyword, one folder, limited output
+rg -n "agent observability" skills/domains/infrastructure -S | head -20
+rg -n "MARKER_SCHEMA" docs -S | head -20
+```
+
+### Atomic Git Operations
+
+- **Use single combined command:** `git add -A && git commit -m "msg"`
+- **Do NOT:** `git add file` → `git status` → `git add file` → `git commit`
+- One add+commit per logical change
+
+### Stage-Check Before Commit
+
+Before committing task completion, verify both files are staged:
+
+```bash
+git status --short
+# Should show both IMPLEMENTATION_PLAN.md and THUNK.md if logging completion
+git add workers/IMPLEMENTATION_PLAN.md workers/ralph/THUNK.md
+git commit -m "chore(ralph): complete <task>"
+```
+
+### Fail Fast on Formatting
+
+- Run `shellcheck` ONCE, fix ALL reported issues, run ONCE more to verify
+- Do NOT try multiple formatter variants (`shfmt -i 2`, `shfmt -w`, `shfmt -ci`)
+- If formatting fails twice with same error, note in output and move on
+
+### shfmt: Run ONCE Per Session
+
+- **DO NOT** run shfmt on individual files repeatedly
+- If shellcheck fixes require reformatting, run `shfmt -w -i 2 <file>` ONCE after all fixes
+- **NEVER** include "applied shfmt formatting" as the main work - it's incidental to the real fix
+- If a file needs shfmt, note it in PLAN mode for a single "format all shell scripts" task
+
+### Validator-First Debugging
+
+When a validation tool fails on code examples:
+
+1. Reproduce once: `python3 tools/validate_examples.py <file>`
+2. Inspect validator logic: `rg -n "Undefined variables" tools/validate_examples.py`
+3. If code is obviously valid (kwargs, for-loop, comprehension), assume **validator bug** and fix validator
+4. **DO NOT** rewrite valid examples into awkward forms to satisfy broken validators
+
+### Context You Already Have
 
 **NEVER repeat these (you already know):**
 
@@ -416,170 +545,18 @@ Target: <20 tool calls per iteration.
 
 **ALWAYS batch:** `grep pattern file1 file2 file3` not 3 separate calls.
 
+### Read Deduplication
+
+Track files read this iteration. Before re-reading:
+
+- If already read → use `sed -n 'start,endp'` for a different slice
+- If same content needed → reference your earlier output, don't re-read
+
 ---
 
 ## Waiver Protocol
 
 If a gate fails with a false positive, see `docs/WAIVER_PROTOCOL.md` for the full process.
-
----
-
-## MAINTENANCE
-
-### Periodic Checks
-
-Run these checks periodically to maintain repository health:
-
-**Hash Guard Verification:**
-
-```bash
-# Verify protected files haven't been tampered with
-cd ralph
-for file in rules/AC.rules verifier.sh loop.sh PROMPT.md; do
-  expected=$(cat ".verify/$(basename "$file" .sh).sha256" 2>/dev/null || cat ".verify/$(basename "$file" .md).sha256" 2>/dev/null || cat ".verify/$(basename "$file" .rules).sha256" 2>/dev/null)
-  actual=$(sha256sum "$file" | awk '{print $1}')
-  if [ "$expected" != "$actual" ]; then
-    echo "⚠️ HASH MISMATCH: $file"
-  else
-    echo "✅ $file"
-  fi
-done
-```text
-
-**Repository Health:**
-
-```bash
-# Check for stale branches
-git branch -vv | grep ': gone]'
-
-# Check for uncommitted changes
-git status --short
-
-# Count pending tasks
-grep -c '^\- \[ \]' ralph/IMPLEMENTATION_PLAN.md || echo "0"
-
-# Check verifier status
-# Verifier status is injected in header - no need to read file
-```text
-
-**Skills Coverage:**
-
-```bash
-# Check for gaps in skills documentation
-find skills/ -name "*.md" -type f | wc -l
-grep -c "^\- " skills/index.md
-```text
-
-### Common Maintenance Tasks
-
-**Update baseline hashes** (after human-approved changes to protected files):
-
-```bash
-cd ralph
-sha256sum rules/AC.rules > .verify/ac.sha256
-sha256sum verifier.sh > .verify/verifier.sha256
-sha256sum loop.sh > .verify/loop.sha256
-sha256sum PROMPT.md > ../.verify/prompt.sha256
-```text
-
-**Clean up waiver files:**
-
-```bash
-# Remove expired or used waivers
-ls -la .verify/waivers/*.used 2>/dev/null
-```text
-
-**Sync with brain templates:**
-
-```bash
-# After updating brain templates, sync to project ralph/
-diff -rq ../brain/templates/ralph/ ralph/ | grep "differ$"
-```text
-
----
-
-## Cache Configuration
-
-Ralph loop supports intelligent caching to skip redundant tool calls and speed up iterations. Caching is controlled via environment variables and CLI flags.
-
-### Cache Modes
-
-Set via `CACHE_MODE` environment variable:
-
-- **`off`** (default) - No caching, always run fresh
-- **`record`** - Execute all tools and store results for future use
-- **`use`** - Check cache first, skip execution if valid entry exists
-
-### Cache Scopes
-
-Set via `CACHE_SCOPE` environment variable (comma-separated list):
-
-- **`verify`** - Cache verifier checks (AC rules)
-- **`read`** - Cache file reads and searches
-- **`llm_ro`** - Cache LLM responses (read-only operations)
-
-**Default:** `CACHE_SCOPE=verify,read`
-
-**Important:** `llm_ro` scope is automatically blocked during BUILD and PLAN phases to ensure fresh thinking.
-
-### CLI Flags
-
-- **`--force-fresh`** - Bypass all caching regardless of CACHE_MODE/SCOPE (useful for debugging stale cache)
-- **`--cache-skip`** - Legacy flag (deprecated, use CACHE_MODE=use instead)
-
-### Examples
-
-**Enable caching for verifier and file reads:**
-
-```bash
-CACHE_MODE=use CACHE_SCOPE=verify,read bash loop.sh --iterations 5
-```
-
-**Record cache entries for future runs:**
-
-```bash
-CACHE_MODE=record CACHE_SCOPE=verify,read bash loop.sh
-```
-
-**Force fresh execution (ignore all cache):**
-
-```bash
-bash loop.sh --force-fresh --iterations 3
-```
-
-**BUILD/PLAN behavior:**
-
-During BUILD and PLAN phases, `llm_ro` scope is automatically filtered out even if specified. This ensures the agent always generates fresh responses for implementation work.
-
-```bash
-# Even with llm_ro, it will be removed during BUILD/PLAN
-CACHE_MODE=use CACHE_SCOPE=verify,read,llm_ro bash loop.sh
-# Effective scope during BUILD: verify,read
-```
-
-### Cache Invalidation
-
-Cache entries are automatically invalidated when:
-
-- Input content changes (different file hash, prompt, or git state)
-- Tool parameters change
-- 24-hour TTL expires (for llm_ro scope)
-
-### Troubleshooting
-
-**Cache not hitting:**
-
-- Check `:::CACHE_CONFIG:::` output in logs shows correct mode/scope
-- Verify git state hasn't changed (cache keys include git SHA)
-- Check cache database exists: `artifacts/rollflow_cache/cache.sqlite`
-
-**Stale cache entries:**
-
-- Use `--force-fresh` to bypass cache
-- Or set `CACHE_MODE=off` to disable caching
-- For persistent issues, delete cache DB and start fresh
-
----
 
 ## Commit Format
 
