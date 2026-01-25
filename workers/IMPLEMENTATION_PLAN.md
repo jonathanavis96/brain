@@ -82,6 +82,7 @@
   - Include references to `skills/domains/websites/` and `skills/domains/marketing/`
   - **DO NOT duplicate skills content** - templates should point to brain, not copy it
   - **AC:** templates/website/ has standard project files with skill references
+  - **Fixed:** 2026-01-25 - Slimmed docs/ from 1425 to 229 lines (references only)
 
 ---
 
