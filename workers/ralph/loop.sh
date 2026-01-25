@@ -906,11 +906,14 @@ run_tool() {
   log_tool_start "$tool_id" "$tool_name" "$tool_key" "$git_sha"
 
   # Set up trap to ensure TOOL_END on failure/interrupt
+  # This trap handles signals (INT/TERM) and ensures cleanup before exit
   trap 'end_ms="$(($(date +%s%N) / 1000000))"; duration_ms="$((end_ms - start_ms))"; log_tool_end "$tool_id" "FAIL" "130" "$duration_ms" "interrupted"; exit 130' INT TERM
 
-  # Execute command
+  # Execute command (with set +e to capture exit code without triggering set -e)
+  set +e
   eval "$tool_command"
   rc=$?
+  set -e
 
   # Clear trap
   trap - INT TERM
@@ -919,9 +922,9 @@ run_tool() {
   end_ms="$(($(date +%s%N) / 1000000))"
   duration_ms="$((end_ms - start_ms))"
 
-  # Log tool end
+  # Log tool end - ALWAYS emit this marker (pass or fail)
   if [[ $rc -ne 0 ]]; then
-    log_tool_end "$tool_id" "FAIL" "$rc" "$duration_ms" "exit $rc"
+    log_tool_end "$tool_id" "FAIL" "$rc" "$duration_ms" "exit_code_$rc"
   else
     log_tool_end "$tool_id" "PASS" "$rc" "$duration_ms"
   fi
