@@ -1576,6 +1576,10 @@ def test_is_valid_age():
 - Use mutation testing to find gaps, not as daily workflow
 - Target 80-90% mutation score for critical code
 
+## Related Playbooks
+
+- **[Investigate Test Failures](../../playbooks/investigate-test-failures.md)** - Systematic workflow for debugging and fixing test failures across pytest, bash, Go, and JavaScript
+
 ## See Also
 
 - **[API Design Patterns](../backend/api-design-patterns.md)** - Testing API endpoints and error responses

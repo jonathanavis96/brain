@@ -375,6 +375,10 @@ done
 ```text
 
 
+## Related Playbooks
+
+- **[Resolve Verifier Failures](../../../playbooks/resolve-verifier-failures.md)** - Handle verifier check failures including shellcheck, markdown, and template sync issues
+
 ## Related Skills
 
 - [Shell Strict Mode](strict-mode.md) - `set -euo pipefail` patterns

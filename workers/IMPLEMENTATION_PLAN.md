@@ -333,7 +333,7 @@
 
 ### Phase 8.5: Playbook Cross-References
 
-- [ ] **8.5.1** Add "Related Playbooks" section to relevant skills
+- [x] **8.5.1** Add "Related Playbooks" section to relevant skills
   - Update shell patterns to link to fix-shellcheck playbook
   - Update markdown patterns to link to fix-markdown-lint playbook
   - **AC:** At least 5 skills have playbook cross-references

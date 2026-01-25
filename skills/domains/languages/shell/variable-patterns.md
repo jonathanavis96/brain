@@ -214,6 +214,10 @@ for i in {1..10}; do
 for line in "${lines[@]}"; do
 ```text
 
+## Related Playbooks
+
+- **[Fix ShellCheck Failures](../../../playbooks/fix-shellcheck-failures.md)** - Systematic approach to resolving SC2034, SC2155, SC2086, and other shellcheck warnings
+
 ## See Also
 
 - **[Strict Mode](strict-mode.md)** - How `set -euo pipefail` affects undefined variables
