@@ -410,105 +410,105 @@ TIME_SAVED_MS=0
 # Parse args
 while [[ $# -gt 0 ]]; do
   case "$1" in
-  --prompt)
-    PROMPT_ARG="${2:-}"
-    shift 2
-    ;;
-  --iterations)
-    ITERATIONS="${2:-}"
-    shift 2
-    ;;
-  --plan-every)
-    PLAN_EVERY="${2:-}"
-    shift 2
-    ;;
-  --yolo)
-    YOLO_FLAG="--yolo"
-    shift
-    ;;
-  --no-yolo)
-    YOLO_FLAG=""
-    shift
-    ;;
-  --runner)
-    RUNNER="${2:-}"
-    shift 2
-    ;;
-  --opencode-serve)
-    OPENCODE_SERVE=true
-    shift
-    ;;
-  --opencode-port)
-    OPENCODE_PORT="${2:-4096}"
-    shift 2
-    ;;
-  --opencode-attach)
-    OPENCODE_ATTACH="${2:-}"
-    shift 2
-    ;;
-  --opencode-format)
-    OPENCODE_FORMAT="${2:-default}"
-    shift 2
-    ;;
-  --model)
-    MODEL_ARG="${2:-}"
-    shift 2
-    ;;
-  --branch)
-    BRANCH_ARG="${2:-}"
-    shift 2
-    ;;
-  --dry-run)
-    DRY_RUN=true
-    shift
-    ;;
-  --no-monitors)
-    NO_MONITORS=true
-    shift
-    ;;
-  --cache-skip)
-    # shellcheck disable=SC2034  # Used in future cache lookup logic (12.4.2.4)
-    CACHE_SKIP=true
-    shift
-    ;;
-  --cache-mode)
-    CACHE_MODE="${2:-}"
-    shift 2
-    ;;
-  --cache-scope)
-    CACHE_SCOPE="${2:-}"
-    shift 2
-    ;;
-  --force-no-cache)
-    FORCE_NO_CACHE=true
-    shift
-    ;;
-  --force-fresh)
-    FORCE_FRESH=true
-    shift
-    ;;
-  --rollback)
-    ROLLBACK_MODE=true
-    if [[ -n "${2:-}" && "$2" =~ ^[0-9]+$ ]]; then
-      ROLLBACK_COUNT="$2"
+    --prompt)
+      PROMPT_ARG="${2:-}"
       shift 2
-    else
+      ;;
+    --iterations)
+      ITERATIONS="${2:-}"
+      shift 2
+      ;;
+    --plan-every)
+      PLAN_EVERY="${2:-}"
+      shift 2
+      ;;
+    --yolo)
+      YOLO_FLAG="--yolo"
       shift
-    fi
-    ;;
-  --resume)
-    RESUME_MODE=true
-    shift
-    ;;
-  -h | --help)
-    usage
-    exit 0
-    ;;
-  *)
-    echo "Unknown arg: $1" >&2
-    usage
-    exit 2
-    ;;
+      ;;
+    --no-yolo)
+      YOLO_FLAG=""
+      shift
+      ;;
+    --runner)
+      RUNNER="${2:-}"
+      shift 2
+      ;;
+    --opencode-serve)
+      OPENCODE_SERVE=true
+      shift
+      ;;
+    --opencode-port)
+      OPENCODE_PORT="${2:-4096}"
+      shift 2
+      ;;
+    --opencode-attach)
+      OPENCODE_ATTACH="${2:-}"
+      shift 2
+      ;;
+    --opencode-format)
+      OPENCODE_FORMAT="${2:-default}"
+      shift 2
+      ;;
+    --model)
+      MODEL_ARG="${2:-}"
+      shift 2
+      ;;
+    --branch)
+      BRANCH_ARG="${2:-}"
+      shift 2
+      ;;
+    --dry-run)
+      DRY_RUN=true
+      shift
+      ;;
+    --no-monitors)
+      NO_MONITORS=true
+      shift
+      ;;
+    --cache-skip)
+      # shellcheck disable=SC2034  # Used in future cache lookup logic (12.4.2.4)
+      CACHE_SKIP=true
+      shift
+      ;;
+    --cache-mode)
+      CACHE_MODE="${2:-}"
+      shift 2
+      ;;
+    --cache-scope)
+      CACHE_SCOPE="${2:-}"
+      shift 2
+      ;;
+    --force-no-cache)
+      FORCE_NO_CACHE=true
+      shift
+      ;;
+    --force-fresh)
+      FORCE_FRESH=true
+      shift
+      ;;
+    --rollback)
+      ROLLBACK_MODE=true
+      if [[ -n "${2:-}" && "$2" =~ ^[0-9]+$ ]]; then
+        ROLLBACK_COUNT="$2"
+        shift 2
+      else
+        shift
+      fi
+      ;;
+    --resume)
+      RESUME_MODE=true
+      shift
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown arg: $1" >&2
+      usage
+      exit 2
+      ;;
   esac
 done
 
@@ -529,22 +529,22 @@ MODEL_SONNET_4="anthropic.claude-sonnet-4-20250514-v1:0"
 resolve_model() {
   local model="$1"
   case "$model" in
-  opus | opus4.5 | opus45)
-    echo "$MODEL_OPUS_45"
-    ;;
-  sonnet | sonnet4.5 | sonnet45)
-    echo "$MODEL_SONNET_45"
-    ;;
-  sonnet4)
-    echo "$MODEL_SONNET_4"
-    ;;
-  latest | auto)
-    # Use system default - don't override config
-    echo ""
-    ;;
-  *)
-    echo "$model"
-    ;;
+    opus | opus4.5 | opus45)
+      echo "$MODEL_OPUS_45"
+      ;;
+    sonnet | sonnet4.5 | sonnet45)
+      echo "$MODEL_SONNET_45"
+      ;;
+    sonnet4)
+      echo "$MODEL_SONNET_4"
+      ;;
+    latest | auto)
+      # Use system default - don't override config
+      echo ""
+      ;;
+    *)
+      echo "$model"
+      ;;
   esac
 }
 
@@ -553,26 +553,26 @@ resolve_model() {
 resolve_model_opencode() {
   local model="$1"
   case "$model" in
-  grok | grokfast | grok-code-fast-1)
-    # Confirmed via opencode models
-    echo "opencode/grok-code"
-    ;;
-  opus | opus4.5 | opus45)
-    # Placeholder - anthropic not available in current setup
-    echo "opencode/gpt-5-nano"
-    ;; # Fallback to available model
-  sonnet | sonnet4.5 | sonnet45)
-    # Placeholder - anthropic not available
-    echo "opencode/gpt-5-nano"
-    ;; # Fallback
-  latest | auto)
-    # Let OpenCode decide its own default if user explicitly asked for auto/latest
-    echo ""
-    ;;
-  *)
-    # Pass through (user provided provider/model already, or an OpenCode alias)
-    echo "$model"
-    ;;
+    grok | grokfast | grok-code-fast-1)
+      # Confirmed via opencode models
+      echo "opencode/grok-code"
+      ;;
+    opus | opus4.5 | opus45)
+      # Placeholder - anthropic not available in current setup
+      echo "opencode/gpt-5-nano"
+      ;; # Fallback to available model
+    sonnet | sonnet4.5 | sonnet45)
+      # Placeholder - anthropic not available
+      echo "opencode/gpt-5-nano"
+      ;; # Fallback
+    latest | auto)
+      # Let OpenCode decide its own default if user explicitly asked for auto/latest
+      echo ""
+      ;;
+    *)
+      # Pass through (user provided provider/model already, or an OpenCode alias)
+      echo "$model"
+      ;;
   esac
 }
 
@@ -1540,6 +1540,11 @@ if [[ -n "$PROMPT_ARG" ]]; then
     # Log iteration start marker for RollFlow tracking
     log_iter_start "iter-$i" "$ROLLFLOW_RUN_ID"
     CURRENT_ITER=$i
+
+    # Emit ITER_START marker for rollflow_analyze (task X.1.1)
+    iter_start_ts="$(($(date +%s%N) / 1000000))"
+    echo ":::ITER_START::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_start_ts" >&2
+
     emit_event --event iteration_start --iter "$i"
 
     # Log cache config for Cortex visibility (task X.4.1)
@@ -1642,6 +1647,10 @@ if [[ -n "$PROMPT_ARG" ]]; then
       CONSECUTIVE_VERIFIER_FAILURES=0
     fi
     emit_event --event iteration_end --iter "$i" --status ok
+
+    # Emit ITER_END marker for rollflow_analyze (task X.1.1)
+    iter_end_ts="$(($(date +%s%N) / 1000000))"
+    echo ":::ITER_END::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_end_ts" >&2
   done
 else
   # Alternating plan/build
@@ -1649,6 +1658,11 @@ else
     # Log iteration start marker for RollFlow tracking
     log_iter_start "iter-$i" "$ROLLFLOW_RUN_ID"
     CURRENT_ITER=$i
+
+    # Emit ITER_START marker for rollflow_analyze (task X.1.1)
+    iter_start_ts="$(($(date +%s%N) / 1000000))"
+    echo ":::ITER_START::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_start_ts" >&2
+
     emit_event --event iteration_start --iter "$i"
 
     # Log cache config for Cortex visibility (task X.4.1)
@@ -1808,6 +1822,10 @@ else
       CONSECUTIVE_VERIFIER_FAILURES=0
     fi
     emit_event --event iteration_end --iter "$i" --status ok
+
+    # Emit ITER_END marker for rollflow_analyze (task X.1.1)
+    iter_end_ts="$(($(date +%s%N) / 1000000))"
+    echo ":::ITER_END::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_end_ts" >&2
   done
 fi
 
