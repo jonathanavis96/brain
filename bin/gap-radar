@@ -1,0 +1,161 @@
+#!/usr/bin/env bash
+#
+# gap-radar - Convenience wrapper for gap_radar tooling
+#
+# Usage:
+#   bin/gap-radar [options]
+#
+# Options:
+#   --since <date>       Analyze logs since date (YYYY-MM-DD)
+#   --from-log <file>    Analyze specific log file
+#   --from-verifier      Analyze current verifier output (default)
+#   --append             Auto-append suggestions to GAP_BACKLOG.md
+#   --dry-run            Show suggestions without modifying files (default)
+#   -h, --help           Show this help message
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BRAIN_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+GAP_RADAR_DIR="$BRAIN_ROOT/tools/gap_radar"
+
+# Default options
+MODE="from-verifier"
+DRY_RUN=true
+LOG_FILE=""
+SINCE_DATE=""
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  case $1 in
+  --since)
+    MODE="from-logs"
+    SINCE_DATE="$2"
+    shift 2
+    ;;
+  --from-log)
+    MODE="from-log"
+    LOG_FILE="$2"
+    shift 2
+    ;;
+  --from-verifier)
+    MODE="from-verifier"
+    shift
+    ;;
+  --append)
+    DRY_RUN=false
+    shift
+    ;;
+  --dry-run)
+    DRY_RUN=true
+    shift
+    ;;
+  -h | --help)
+    grep '^#' "$0" | sed 's/^# \?//'
+    exit 0
+    ;;
+  *)
+    echo "Unknown option: $1" >&2
+    echo "Run 'bin/gap-radar --help' for usage" >&2
+    exit 1
+    ;;
+  esac
+done
+
+# Validate dependencies
+for tool in "$GAP_RADAR_DIR/extract_errors.sh" "$GAP_RADAR_DIR/extract_from_logs.sh" "$GAP_RADAR_DIR/suggest_gaps.sh"; do
+  if [[ ! -x "$tool" ]]; then
+    echo "Error: Missing or non-executable: $tool" >&2
+    exit 1
+  fi
+done
+
+echo "=== Gap Radar - Automated Gap Discovery ===" >&2
+echo >&2
+
+# Run appropriate pipeline based on mode
+case $MODE in
+from-verifier)
+  echo "Mode: Analyzing current verifier output" >&2
+  VERIFIER_OUTPUT="$BRAIN_ROOT/.verify/latest.txt"
+
+  if [[ ! -f "$VERIFIER_OUTPUT" ]]; then
+    echo "Error: Verifier output not found at $VERIFIER_OUTPUT" >&2
+    echo "Run 'bash workers/ralph/verifier.sh' first" >&2
+    exit 1
+  fi
+
+  echo "Extracting errors from: $VERIFIER_OUTPUT" >&2
+  SUGGEST_ARGS=("--source" "verifier" "$VERIFIER_OUTPUT")
+  ;;
+
+from-log)
+  echo "Mode: Analyzing specific log file" >&2
+
+  if [[ ! -f "$LOG_FILE" ]]; then
+    echo "Error: Log file not found: $LOG_FILE" >&2
+    exit 1
+  fi
+
+  echo "Extracting errors from: $LOG_FILE" >&2
+  SUGGEST_ARGS=("--source" "log" "$LOG_FILE")
+  ;;
+
+from-logs)
+  echo "Mode: Analyzing logs since $SINCE_DATE" >&2
+
+  # Find logs in workers/ralph/logs/ matching date pattern
+  LOG_DIR="$BRAIN_ROOT/workers/ralph/logs"
+
+  if [[ ! -d "$LOG_DIR" ]]; then
+    echo "Error: Log directory not found: $LOG_DIR" >&2
+    exit 1
+  fi
+
+  # Convert YYYY-MM-DD to timestamp for comparison
+  SINCE_TS=$(date -d "$SINCE_DATE" +%s 2>/dev/null || date -j -f "%Y-%m-%d" "$SINCE_DATE" +%s 2>/dev/null)
+
+  if [[ -z "$SINCE_TS" ]]; then
+    echo "Error: Invalid date format: $SINCE_DATE (use YYYY-MM-DD)" >&2
+    exit 1
+  fi
+
+  # Find matching log files and process them one by one
+  TEMP_OUTPUT=$(mktemp)
+  find "$LOG_DIR" -type f -name "*.log" 2>/dev/null | while read -r logfile; do
+    file_ts=$(stat -c %Y "$logfile" 2>/dev/null || stat -f %m "$logfile" 2>/dev/null)
+    if [[ $file_ts -ge $SINCE_TS ]]; then
+      echo "$logfile"
+    fi
+  done | head -1 >"$TEMP_OUTPUT"
+
+  FIRST_LOG=$(cat "$TEMP_OUTPUT")
+  rm -f "$TEMP_OUTPUT"
+
+  if [[ -z "$FIRST_LOG" ]]; then
+    echo "Warning: No log files found since $SINCE_DATE" >&2
+    exit 0
+  fi
+
+  echo "Analyzing first matching log: $FIRST_LOG" >&2
+  SUGGEST_ARGS=("--source" "log" "$FIRST_LOG")
+  ;;
+esac
+
+# Run suggest_gaps.sh with appropriate flags
+echo >&2
+if $DRY_RUN; then
+  echo "Running in DRY RUN mode (no files modified)" >&2
+  "$GAP_RADAR_DIR/suggest_gaps.sh" --dry-run "${SUGGEST_ARGS[@]}"
+else
+  echo "Running in AUTO-APPEND mode (will modify GAP_BACKLOG.md)" >&2
+  "$GAP_RADAR_DIR/suggest_gaps.sh" --auto-append "${SUGGEST_ARGS[@]}"
+fi
+
+# Cleanup temp files
+if [[ -n "${TEMP_ERRORS:-}" ]] && [[ -f "$TEMP_ERRORS" ]]; then
+  rm -f "$TEMP_ERRORS"
+fi
+
+echo >&2
+echo "=== Gap Radar Complete ===" >&2

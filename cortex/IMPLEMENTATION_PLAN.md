@@ -368,7 +368,7 @@ Key milestones:
   - `--auto-append`: Append to GAP_BACKLOG.md with timestamp
   - **AC:** Both modes work, auto-append preserves file structure
 
-- [ ] **7.3.3** Create `tools/gap_radar/README.md`
+- [x] **7.3.3** Create `tools/gap_radar/README.md`
   - Document usage, configuration, output formats
   - Include examples of running after Ralph iteration
   - **AC:** README covers all scripts and options
