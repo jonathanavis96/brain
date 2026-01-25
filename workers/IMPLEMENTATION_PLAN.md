@@ -64,7 +64,7 @@
 
 ### Phase 5.3: Documentation Fixes (Ralph)
 
-- [ ] **5.3.1** Create `skills/domains/languages/typescript/README.md`
+- [x] **5.3.1** Create `skills/domains/languages/typescript/README.md`
   - Fixes broken links from frontend/README.md and javascript/README.md
   - **AC:** File exists, links resolve
 
