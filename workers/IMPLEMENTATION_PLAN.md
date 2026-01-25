@@ -26,7 +26,7 @@
 - [x] **X.1.2** Emit PHASE_START/PHASE_END markers
 - [x] **X.5.1** Update `rollflow_analyze` to parse `:::` markers
 - [x] **X.5.2** Output `artifacts/analysis/iter_###.json`
-- [ ] **X.6.1** Generate `artifacts/review_packs/iter_###.md` from JSON
+- [x] **X.6.1** Generate `artifacts/review_packs/iter_###.md` from JSON
 - [ ] **X.6.2** Attach filtered log excerpts
 
 ## Phase 4: Shared Cache Library + Cortex Support (Safety Net)
