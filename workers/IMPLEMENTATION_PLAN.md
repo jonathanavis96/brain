@@ -353,7 +353,7 @@
 
 **Recommended Next:** Start with 6.2.x tasks (Ralph template enhancements) as they build on recent cache work, then proceed to language templates (6.1.x).
 
-- [ ] **6.2.1** Add cache configuration guidance to `templates/ralph/PROMPT.md`
+- [x] **6.2.1** Add cache configuration guidance to `templates/ralph/PROMPT.md`
   - Document CACHE_MODE and CACHE_SCOPE usage
   - Explain --force-fresh and --cache-skip flags
   - Add examples for BUILD/PLAN cache behavior
