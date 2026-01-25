@@ -44,7 +44,7 @@
 
 **Goal:** Add skills and checklists to prevent similar issues in future.
 
-- [ ] **CR-4.1** Create code-review-patterns.md skill
+- [x] **CR-4.1** Create code-review-patterns.md skill
   - **File:** `skills/domains/code-quality/code-review-patterns.md`
   - **Goal:** Document patterns that CodeRabbit caught but pre-commit missed
   - **Content:**
