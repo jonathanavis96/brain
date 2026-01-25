@@ -347,8 +347,8 @@ CACHE_SCOPE="${CACHE_SCOPE:-verify,read}" # verify,read,llm_ro - comma-separated
 # Export cache variables so subprocesses (verifier.sh) inherit them
 export CACHE_MODE CACHE_SCOPE
 
-# Log cache config for Cortex visibility
-echo ":::CACHE_CONFIG::: mode=$CACHE_MODE scope=$CACHE_SCOPE exported=1" >&2
+# Note: :::CACHE_CONFIG::: marker moved inside iteration loop (see line ~1452)
+# to include iter= and ts= fields per task X.4.1
 FORCE_NO_CACHE=false
 FORCE_FRESH=false # Bypass all caching regardless of CACHE_MODE/SCOPE
 CONSECUTIVE_VERIFIER_FAILURES=0
@@ -1452,6 +1452,10 @@ if [[ -n "$PROMPT_ARG" ]]; then
     CURRENT_ITER=$i
     emit_event --event iteration_start --iter "$i"
 
+    # Log cache config for Cortex visibility (task X.4.1)
+    cache_config_ts="$(($(date +%s%N) / 1000000))"
+    echo ":::CACHE_CONFIG::: mode=$CACHE_MODE scope=$CACHE_SCOPE exported=1 iter=$i ts=$cache_config_ts" >&2
+
     # Check for interrupt before starting iteration
     if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
       echo ""
@@ -1556,6 +1560,10 @@ else
     log_iter_start "iter-$i" "$ROLLFLOW_RUN_ID"
     CURRENT_ITER=$i
     emit_event --event iteration_start --iter "$i"
+
+    # Log cache config for Cortex visibility (task X.4.1)
+    cache_config_ts="$(($(date +%s%N) / 1000000))"
+    echo ":::CACHE_CONFIG::: mode=$CACHE_MODE scope=$CACHE_SCOPE exported=1 iter=$i ts=$cache_config_ts" >&2
 
     # Check for interrupt before starting iteration
     if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
