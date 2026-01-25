@@ -1224,7 +1224,7 @@ run_once() {
         echo "========================================"
         echo ""
         # Skip cache lookup, proceed with normal execution
-      elif lookup_cache_pass "$tool_key" "$git_sha" "${AGENT_NAME:-$RUNNER}"; then
+      elif lookup_cache_pass "$tool_key" "$git_sha" "$RUNNER"; then
         # Cache hit - skip tool execution
         local guard_ts=$(($(date +%s%N) / 1000000))
         emit_marker ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=no_pending_tasks phase=BUILD ts=${guard_ts}"
@@ -1271,7 +1271,7 @@ except Exception:
       fi
     else
       # PLAN phase - check cache normally
-      if lookup_cache_pass "$tool_key" "$git_sha" "${AGENT_NAME:-$RUNNER}"; then
+      if lookup_cache_pass "$tool_key" "$git_sha" "$RUNNER"; then
         # Cache hit - skip tool execution
         local guard_ts=$(($(date +%s%N) / 1000000))
         emit_marker ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=idempotent_check phase=PLAN ts=${guard_ts}"

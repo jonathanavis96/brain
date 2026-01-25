@@ -796,4 +796,5 @@ Started: 2026-01-18
 | 796 | 9C.4.1 | auto-cleanup | **9C.4.1** Validate batching recommendations against next 5 iterations | 2026-01-25 |
 | 797 | CR-5.1 | auto-cleanup | **CR-5.1** Fix documentation status mismatches (D6, D7) | 2026-01-25 |
 | 798 | CR-5.2 | auto-cleanup | **CR-5.2** Fix archive header handling in current_ralph_tasks.sh (Q1) | 2026-01-25 |
+| 799 | CR-5.3 | LOW | **CR-5.3** Fix cache key JSON passing in templates/ralph/loop.sh (Q2) - Changed third argument in lookup_cache_pass() calls from ${AGENT_NAME:-$RUNNER} to $RUNNER at lines 1227 and 1274, function signature expects tool_name for non-cacheable checking not agent identifier, shellcheck passes with 0 errors | 2026-01-25 |
 | 788 | CR-5.1 | LOW | **CR-5.1** Fix documentation status mismatches (D6, D7) - Verified referenced phases (2.1.2, 12.4.2-12.4.3) no longer exist in workers/IMPLEMENTATION_PLAN.md, phases were completed and removed in commit 3a8e25f during plan cleanup (2026-01-25), marked task as obsolete since there are no mismatches to fix (phases already archived), AC satisfied (no checkbox/status conflicts remain) | 2026-01-25 |
