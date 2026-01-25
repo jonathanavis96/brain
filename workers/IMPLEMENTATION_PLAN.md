@@ -107,7 +107,7 @@
   - Treat Archive headers as section terminators
   - **AC:** Archive sections properly delimit task sections
 
-- [ ] **5.5.2** Fix `templates/ralph/loop.sh` - cache key JSON
+- [x] **5.5.2** Fix `templates/ralph/loop.sh` - cache key JSON
   - Use content_hash helper instead of raw JSON string
   - **AC:** Cache key generation doesn't fail under set -euo
 

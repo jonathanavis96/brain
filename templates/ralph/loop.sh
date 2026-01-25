@@ -948,7 +948,13 @@ run_once() {
   local git_sha
   git_sha="$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')"
   tool_id="$(tool_call_id)"
-  tool_key="$(cache_key "$RUNNER" "{\"model\":\"$RESOLVED_MODEL\",\"phase\":\"$phase\",\"iter\":$iter}" "$git_sha")"
+
+  # Create a temp file with model/phase/iter metadata for cache key generation
+  local cache_meta_file="/tmp/cache_meta_$$_${iter}.json"
+  echo "{\"model\":\"$RESOLVED_MODEL\",\"phase\":\"$phase\",\"iter\":$iter}" >"$cache_meta_file"
+  tool_key="$(cache_key "$RUNNER" "$cache_meta_file")"
+  rm -f "$cache_meta_file"
+
   start_ms="$(($(date +%s%N) / 1000000))"
 
   # Log tool call start
