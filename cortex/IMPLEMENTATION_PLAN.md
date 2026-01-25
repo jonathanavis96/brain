@@ -111,7 +111,7 @@ Key milestones:
   - Files: `workers/IMPLEMENTATION_PLAN.md`, `skills/domains/languages/typescript/README.md`
   - **AC:** No future dates in Last Updated fields
 
-- [ ] **5.3.4** Fix `workers/IMPLEMENTATION_PLAN.md` status mismatches
+- [x] **5.3.4** Fix `workers/IMPLEMENTATION_PLAN.md` status mismatches
   - Phase 2.1.2: Change "remains" to "COMPLETE"
   - Phase 12.4.2-12.4.3: Reconcile "deferred" text with checked boxes
   - **AC:** Status text matches checkbox state

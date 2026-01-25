@@ -82,7 +82,7 @@
   - No "remains" or "deferred" text found (verified via grep)
   - **AC:** Status text matches checkbox state ✅ (N/A - content already removed)
 
-- [ ] **5.3.5** Fix markdown formatting in `workers/ralph/THUNK.md`
+- [x] **5.3.5** Fix markdown formatting in `workers/ralph/THUNK.md`
   - Escape pipe characters in table rows: `|` → `\|` or wrap in backticks
   - **AC:** Markdown renders correctly
 
@@ -463,7 +463,7 @@
   - No "remains" or "deferred" text found (verified via grep)
   - **AC:** Status text matches checkbox state ✅ (N/A - content already removed)
 
-- [ ] **5.3.5** Fix markdown formatting in `workers/ralph/THUNK.md`
+- [x] **5.3.5** Fix markdown formatting in `workers/ralph/THUNK.md`
   - Escape pipe characters in table rows: `|` → `\|` or wrap in backticks
   - **AC:** Markdown renders correctly
 
