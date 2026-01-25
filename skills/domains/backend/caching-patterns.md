@@ -638,3 +638,10 @@ function calculateTTL(accessCount, baseSeconds = 300) {
 - [SWR Documentation](https://swr.vercel.app/)
 - [React Cache API](https://react.dev/reference/react/cache)
 - [LRU Cache npm](https://github.com/isaacs/node-lru-cache)
+
+## See Also
+
+- **[Cache Debugging](../ralph/cache-debugging.md)** - Debug cache issues in Ralph loop system
+- **[State Management Patterns](../infrastructure/state-management-patterns.md)** - Managing state across distributed systems
+- **[Observability Patterns](../infrastructure/observability-patterns.md)** - Monitoring and observability for cache metrics
+- **[Database Patterns](database-patterns.md)** - Database query optimization and caching strategies

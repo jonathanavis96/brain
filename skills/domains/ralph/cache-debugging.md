@@ -88,3 +88,10 @@ grep -rn "CACHE_HIT\|CACHE_MISS" workers/
 
 - `docs/CACHE_DESIGN.md` - Full cache architecture
 - `skills/domains/ralph/ralph-patterns.md` - General Ralph patterns
+
+## See Also
+
+- **[Caching Patterns](../backend/caching-patterns.md)** - General caching strategies (TTL, LRU, write-through/write-behind)
+- **[Ralph Patterns](ralph-patterns.md)** - Ralph loop architecture and troubleshooting
+- **[Token Efficiency](../code-quality/token-efficiency.md)** - Performance optimization including cache usage
+- **[docs/CACHE_DESIGN.md](../../../docs/CACHE_DESIGN.md)** - Full cache design document for Ralph system

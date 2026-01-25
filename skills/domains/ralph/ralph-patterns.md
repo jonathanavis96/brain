@@ -514,3 +514,11 @@ stty -echo -icanon time 0 min 0
 - **current_ralph_tasks.sh**: Reference implementation for task parsing
 - **thunk_ralph_tasks.sh**: Reference implementation for tail-only parsing
 - **docs/HISTORY.md**: Monitor bug fixes and architecture evolution
+
+## See Also
+
+- **[Bootstrap Patterns](bootstrap-patterns.md)** - New project setup and template usage
+- **[Cache Debugging](cache-debugging.md)** - Debug cache issues in Ralph loop
+- **[Change Propagation](change-propagation.md)** - Ensure changes propagate to templates
+- **[Code Hygiene](../code-quality/code-hygiene.md)** - Definition of Done checklist
+- **[Shell Patterns](../languages/shell/README.md)** - Shell scripting best practices
