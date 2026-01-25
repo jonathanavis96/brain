@@ -130,6 +130,10 @@ grep -r "## [Required Section]" [docs-directory]/
 # Performance validation
 [benchmark-command]
 [load-test-command]
+
+# Cache validation (if cache is enabled)
+bash tools/test_cache_smoke.sh
+bash tools/test_cache_inheritance.sh
 ```text
 
 ## Example Project-Specific Checks
@@ -186,7 +190,43 @@ ls -la dist/*.d.ts
 
 # No breaking changes vs previous version
 [api-compatibility-check]
-```text
+```
+
+**For Ralph Loop (Cache Testing):**
+
+```bash
+# Verify cache smoke tests pass
+bash tools/test_cache_smoke.sh
+# Expected: Cache DB created, basic read/write works, TTL respected
+
+# Verify cache inheritance works
+bash tools/test_cache_inheritance.sh
+# Expected: Child processes inherit CACHE_MODE/CACHE_SCOPE
+
+# Test cache hit/miss patterns (requires CACHE_MODE=use)
+export CACHE_MODE=use CACHE_SCOPE=verify,read
+bash loop.sh --iterations 1
+# Check logs for :::CACHE_HIT::: and :::CACHE_MISS::: markers
+grep ":::CACHE_HIT:::" logs/iter_*.log | wc -l
+grep ":::CACHE_MISS:::" logs/iter_*.log | wc -l
+
+# Verify cache statistics appear in output
+bash loop.sh --iterations 1 2>&1 | grep "Cache Statistics"
+# Expected: Shows hits/misses/time saved
+
+# Test force-fresh bypasses cache
+bash loop.sh --force-fresh --iterations 1 2>&1 | grep "CACHE_CONFIG"
+# Expected: Shows mode=off
+
+# Verify BUILD/PLAN blocks llm_ro scope
+export CACHE_MODE=use CACHE_SCOPE=verify,read,llm_ro
+bash loop.sh --iterations 1 2>&1 | grep "Filtering llm_ro"
+# Expected: Warning shows llm_ro removed for BUILD/PLAN phases
+
+# Check cache DB exists and has entries
+ls -lh artifacts/rollflow_cache/cache.sqlite
+sqlite3 artifacts/rollflow_cache/cache.sqlite "SELECT COUNT(*) FROM cache_entries;"
+```
 
 ---
 
