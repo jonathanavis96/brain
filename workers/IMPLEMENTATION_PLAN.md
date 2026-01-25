@@ -43,7 +43,7 @@
   - Accept truthy values: 1, true, yes, y, on (case-insensitive)
   - **AC:** `CACHE_SKIP=1` and `CACHE_SKIP=yes` both work
 
-- [ ] **5.2.5** Fix `approve_waiver_totp.py` deletes request file (lines 83-90)
+- [x] **5.2.5** Fix `approve_waiver_totp.py` deletes request file (lines 83-90)
   - Keep request file or move to archive instead of deleting
   - **AC:** `check_waiver.sh` can still compute REQUEST_SHA256
   - **If Blocked:** Look at lines 83-90 where `os.remove()` is called. Either: (a) comment out the remove, (b) copy to `.verify/waiver_requests/archived/` before removing, or (c) rename to `.processed` suffix
