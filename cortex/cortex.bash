@@ -102,6 +102,17 @@ fi
 
 echo ""
 
+# Run cleanup before generating context (reduces token usage)
+if [[ -x "${SCRIPT_DIR}/cleanup_cortex_plan.sh" ]]; then
+  echo -e "${YELLOW}Running plan cleanup...${NC}"
+  if bash "${SCRIPT_DIR}/cleanup_cortex_plan.sh" 2>/dev/null; then
+    echo -e "${GREEN}✓ Plan cleanup complete${NC}"
+  else
+    echo -e "${YELLOW}⚠ Plan cleanup skipped (no completed tasks)${NC}"
+  fi
+  echo ""
+fi
+
 # Generate lightweight context snapshot
 echo -e "${YELLOW}Generating context snapshot...${NC}"
 echo ""

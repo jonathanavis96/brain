@@ -200,6 +200,18 @@ echo "========================================"
 echo "🧠 Cortex Manager"
 echo "========================================"
 echo ""
+
+# Run cleanup before generating context (reduces token usage)
+if [[ -x "cortex/cleanup_cortex_plan.sh" ]]; then
+  echo "Running plan cleanup..."
+  if bash cortex/cleanup_cortex_plan.sh 2>/dev/null; then
+    echo "✓ Plan cleanup complete"
+  else
+    echo "⚠ Plan cleanup skipped (no completed tasks or error)"
+  fi
+  echo ""
+fi
+
 echo "Generating context snapshot..."
 echo ""
 

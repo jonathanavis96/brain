@@ -125,6 +125,8 @@ You CAN research online (Ralph CANNOT - he captures gaps in GAP_BACKLOG.md).
 
 ## ⚠️ Critical Rules
 
+0. **Run cleanup before plan changes** - Before modifying `IMPLEMENTATION_PLAN.md`, run `bash cortex/cleanup_cortex_plan.sh` to archive completed tasks. This is automated in `one-shot.sh` but should also be run manually if editing the plan directly.
+
 1. **NEVER mix projects** - This is Brain repository ONLY
    - ❌ Don't add rovo tasks to brain plan
    - ❌ Don't discuss other projects in brain THOUGHTS.md

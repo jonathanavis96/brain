@@ -56,9 +56,9 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
   - **AC:** Snapshot output shows batching hints section when opportunities exist
   - **Detection:** Same error code (MDxxx, SCxxxx), same directory prefix, same file type
 
-- [ ] **9C.1.2** Add task complexity tags to PROMPT_REFERENCE.md
+- [x] **9C.1.2** Add task complexity tags to PROMPT_REFERENCE.md
   - **Goal:** Document `[S/M/L]` complexity convention for task estimation
-  - **AC:** PROMPT_REFERENCE.md has "Task Complexity" section with S=~90s, M=~300s, L=~600s guidelines
+  - **AC:** PROMPT_REFERENCE.md has "Task Complexity" section with realistic time estimates (S=2-3min, M=5-10min, L=10-20min)
 
 ### Phase 9C.2: Apply Batching to Current Backlog
 

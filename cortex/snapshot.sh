@@ -53,8 +53,8 @@ if [[ -f "workers/IMPLEMENTATION_PLAN.md" ]]; then
       error_codes[$code]=$((${error_codes[$code]:-0} + 1))
     fi
 
-    # Extract file paths and analyze
-    if [[ $line =~ '`'([^'`']+'`') ]]; then
+    # Extract file paths and analyze (backtick-wrapped paths like `path/to/file.md`)
+    if [[ $line =~ \`([^\`]+)\` ]]; then
       path="${BASH_REMATCH[1]}"
       # Get directory prefix (e.g., skills/, templates/)
       dir_prefix=$(echo "$path" | cut -d'/' -f1)
