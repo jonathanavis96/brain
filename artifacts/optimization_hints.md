@@ -159,14 +159,23 @@
 
 #### Limitations
 
-**RovoDev Tool Instrumentation Gap:**
+##### RovoDev Tool Instrumentation Gap
 
 RovoDev agents use native platform tools (`bash`, `grep`, `open_files`, `find_and_replace_code`, `expand_code_chunks`) that bypass shell-level instrumentation. This creates a fundamental visibility gap:
 
-- **What we can track:** Shell commands run through `log_tool_start()` wrapper in loop.sh
-- **What we cannot track:** RovoDev's native tool invocations (the majority of operations)
-- **Impact:** `iter_###.json` shows all tool calls as `tool_name: "unknown"` because markers never emit for RovoDev tools
-- **Consequence:** Cannot compute slowest tools, cache hit rates by tool type, or tool-specific batching opportunities
+**What we can track:**
+
+- Shell commands run through `log_tool_start()` wrapper in loop.sh
+
+**What we cannot track:**
+
+- RovoDev's native tool invocations (the majority of operations)
+- Tools invoked via RovoDev's `bash`, `grep`, `open_files`, `find_and_replace_code`, `expand_code_chunks` functions
+
+**Impact:**
+
+- `iter_###.json` shows all tool calls as `tool_name: "unknown"` because markers never emit for RovoDev tools
+- Cannot compute slowest tools, cache hit rates by tool type, or tool-specific batching opportunities
 
 **Why this matters for optimization:**
 
@@ -174,19 +183,25 @@ RovoDev agents use native platform tools (`bash`, `grep`, `open_files`, `find_an
 2. **Cache recommendations:** Cannot measure which tool types benefit most from caching
 3. **Duration analysis:** Can track iteration-level time but not tool-level granularity
 
+**Root Cause:**
+
+RovoDev's native tools are implemented at the platform level and do not execute through the shell wrapper functions that emit `:::TOOL_START:::` and `:::TOOL_END:::` markers. The `log_tool_start()` and `log_tool_end()` functions in `loop.sh` only instrument shell commands that Ralph explicitly wraps, not the underlying RovoDev function calls.
+
 **Workarounds:**
 
 - **Heuristic analysis:** Use THUNK.md descriptions to infer tool usage patterns (e.g., "Fix SC2162 in 5 files" = likely 5× find_and_replace_code)
 - **Manual timing:** Add explicit `time` commands around critical shell operations
 - **Iteration-level metrics:** Focus on total iteration duration as primary optimization signal
+- **Log pattern inference:** Parse log output for tool signatures (e.g., "Successfully opened" → open_files, "Successfully replaced" → find_and_replace_code)
 
 **Future improvement paths:**
 
 1. Request RovoDev team add optional instrumentation hooks for tool calls
 2. Develop log parser that infers tools from output patterns (e.g., "Successfully opened" = open_files)
 3. Instrument only shell-level operations that Ralph controls directly
+4. Use iteration-level aggregates as proxy for tool-level performance
 
-This limitation is **documented** (not fixable at Ralph level) and affects all optimization work relying on tool-level granularity.
+**Status:** This limitation is **documented** (not fixable at Ralph level) and affects all optimization work relying on tool-level granularity. Task 9C.0.3 addresses this documentation requirement.
 
 ---
 

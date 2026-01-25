@@ -1,10 +1,52 @@
 # Implementation Plan - Brain Repository
 
-**Last Updated:** 2026-01-25 15:55:17
+**Last Updated:** 2026-01-25 16:05:00
 
-**Current Status:** PLAN mode in progress. Reviewing current state: 20 pending tasks across Phases 9C, 0-Warn, 4-8. Phase 9C (Task Optimization) partially complete with structured logging markers implemented. Phase 0-Warn has 2 protected file warnings requiring human intervention. Phases 4-8 advancing with skills expansion, gap radar, and playbooks complete. Plan structure stable and comprehensive.
+**Current Status:** Cleaned plan with only pending tasks. Completed tasks archived to THUNK.md.
 
 <!-- Cortex adds new Task Contracts below this line -->
+
+## Phase 10: Plan Auto-Cleanup System
+
+**Goal:** Automate removal of completed tasks from IMPLEMENTATION_PLAN.md to reduce agent reading time.
+
+**Why:** Agents spend excessive tokens reading completed tasks. Auto-cleanup keeps plans lean.
+
+### Phase 10.1: Cleanup Script
+
+- [ ] **10.1.1** Create `workers/ralph/cleanup_plan.sh`
+  - **Goal:** Script that removes `[x]` lines and empty phase sections from IMPLEMENTATION_PLAN.md
+  - **AC:** Running `bash cleanup_plan.sh --dry-run` shows what would be removed
+  - **Constraints:** Preserve phase headers if they have pending tasks, preserve marker line
+
+- [ ] **10.1.2** Add `--archive` flag to append removed tasks to THUNK.md
+  - **Goal:** Before deletion, append task summaries to THUNK.md with timestamp
+  - **AC:** `bash cleanup_plan.sh --archive` moves tasks to THUNK.md then removes from plan
+  - **Format:** `| YYYY-MM-DD | Task ID | Description | auto-cleanup |`
+
+- [ ] **10.1.3** Add phase collapse detection
+  - **Goal:** Remove entire phase section when all tasks are `[x]`
+  - **AC:** Empty phases (all complete) are removed, phases with pending tasks preserved
+
+### Phase 10.2: Integration
+
+- [ ] **10.2.1** Add cleanup hook to `sync_cortex_plan.sh`
+  - **Goal:** After syncing from cortex, run cleanup on workers plan
+  - **AC:** `sync_cortex_plan.sh` calls `cleanup_plan.sh --archive` automatically
+
+- [ ] **10.2.2** Add `--no-cleanup` flag to sync script
+  - **Goal:** Allow skipping auto-cleanup when needed for debugging
+  - **AC:** `sync_cortex_plan.sh --no-cleanup` preserves completed tasks
+
+### Phase 10.3: Safety & Validation
+
+- [ ] **10.3.1** Create `tools/test_plan_cleanup.sh` test script
+  - **Goal:** Verify cleanup preserves pending tasks and removes only completed
+  - **AC:** Test creates sample plan, runs cleanup, verifies correct output
+
+**Phase AC:** Cleanup script exists, integrates with sync, tested
+
+---
 
 ## Phase 9C: Task Optimization (Batching + Decomposition)
 
@@ -14,32 +56,19 @@
 
 ### Phase 9C.0: Prerequisites (Marker Pipeline Fix)
 
-- [x] **9C.0.1** Ensure loop.sh captures stderr to log files
-  - **Goal:** Markers emitted to stderr (`>&2`) appear in log files
-  - **AC:** `grep "^:::ITER_START:::" workers/ralph/logs/latest.log` returns actual emissions
-  - **Method:** Created `emit_marker()` function that writes to both stderr AND log file
-  - **Completed:** 2026-01-25 - Added CURRENT_LOG_FILE global, emit_marker() helper
-
-- [x] **9C.0.2** Verify markers emit during execution (not just code display)
-  - **Goal:** Run one iteration and confirm markers in log
-  - **AC:** After `bash loop.sh --iterations 1`, log contains `:::ITER_START::: iter=1`
-  - **Completed:** 2026-01-25 - All 26 marker emissions converted to emit_marker()
-
-- [x] **9C.0.3** Document RovoDev tool instrumentation limitation
+- [ ] **9C.0.3** Document RovoDev tool instrumentation limitation
   - **Goal:** Clarify that RovoDev's native tools bypass shell wrapper
   - **AC:** `artifacts/optimization_hints.md` has "Limitations" section explaining tool visibility gap
   - **Note:** RovoDev bash/grep/find_and_replace_code don't go through `log_tool_start()`
-  - **Completed:** 2026-01-25 - Added "Limitations" section explaining RovoDev tool visibility gap
 
 ### Phase 9C.1: Batching Infrastructure
 
-- [x] **9C.1.1** Enhance `cortex/snapshot.sh` with batching hints
+- [ ] **9C.1.1** Enhance `cortex/snapshot.sh` with batching hints
   - **Goal:** Show "⚡ Batching opportunities: X" when ≥3 similar pending tasks detected
   - **AC:** Snapshot output shows batching hints section when opportunities exist
   - **Detection:** Same error code (MDxxx, SCxxxx), same directory prefix, same file type
-  - **Completed:** 2026-01-25 - Added batching opportunity detection with error codes, directories, file types
 
-- [x] **9C.1.2** Add task complexity tags to PROMPT_REFERENCE.md
+- [ ] **9C.1.2** Add task complexity tags to PROMPT_REFERENCE.md
   - **Goal:** Document `[S/M/L]` complexity convention for task estimation
   - **AC:** PROMPT_REFERENCE.md has "Task Complexity" section with S=~90s, M=~300s, L=~600s guidelines
 
@@ -98,6 +127,8 @@
 - ≥3 batching opportunities identified with evidence
 - ≥2 decomposition opportunities documented
 
+---
+
 ## Phase 0-Warn: Verifier Warnings
 
 **Goal:** Resolve verifier warnings from latest run.
@@ -107,355 +138,11 @@
 - [ ] **WARN.Protected.1** - Protected file changed (human review required) - HUMAN INTERVENTION REQUIRED
 - [ ] **WARN.Protected.2** - Protected file changed (human review required) - HUMAN INTERVENTION REQUIRED
 
-
-## Phase 0: Structured Logging (Cortex-readable)
-
-**Goal:** Add structured markers to loop.sh for better observability.  
-**Status:** X.3.4, X.4.1 complete (see THUNK.md)
-
-- [x] **X.4.2** Update `:::VERIFIER_ENV:::` to include `iter=` and `ts=`
-- [x] **X.2.1** Implement `run_tool()` wrapper with TOOL_START/TOOL_END markers
-- [x] **X.2.2** Route important tool calls through `run_tool()`
-- [x] **X.2.3** Ensure TOOL_END emitted on failure
-- [x] **X.1.1** Emit ITER_START/ITER_END markers
-- [x] **X.1.2** Emit PHASE_START/PHASE_END markers
-- [x] **X.5.1** Update `rollflow_analyze` to parse `:::` markers
-- [x] **X.5.2** Output `artifacts/analysis/iter_###.json`
-- [x] **X.6.1** Generate `artifacts/review_packs/iter_###.md` from JSON
-- [x] **X.6.2** Attach filtered log excerpts
-
-## Phase 4: Shared Cache Library + Cortex Support (Safety Net)
-
-**Goal:** Extract caching into shared infrastructure for waste-prevention + reliability across all runners.
-
-**Rationale:** Caching won't save huge tokens for "new thinking" work, but prevents waste from:
-
-- Reruns after crashes / network / rate-limit issues
-- Accidental double-runs
-- Retries where input didn't change
-- Repeated setup/analysis steps
-
-### Phase 4.1: Extract Cache Functions
-
-- [x] **4.1.1** Create `workers/shared/cache.sh` with extracted functions
-  - Move from loop.sh: cache key generation, lookup/store, log helpers
-  - Export interface: `cache_should_use`, `cache_make_key`, `cache_try_load`, `cache_store`
-  - Include env parsing for `CACHE_MODE`, `CACHE_SCOPE`, `--force-fresh`
-  - **AC:** File exists, functions are callable, shellcheck passes
-
-### Phase 4.2: Refactor loop.sh to Use Shared Library
-
-- [x] **4.2.1** Update `workers/ralph/loop.sh` to source shared cache library
-  - Replace inline cache logic with calls to `workers/shared/cache.sh`
-  - Keep exact semantics: `CACHE_MODE`, `CACHE_SCOPE`, BUILD/PLAN blocking
-  - **AC:** Before/after run shows identical cache hits/misses
-
-- [x] **4.2.2** Update `workers/cerebras/loop.sh` to source shared cache library
-  - Same refactor as Ralph
-  - **AC:** Cerebras caching unchanged behaviorally
-
-### Phase 4.3: Add Cortex Caching
-
-- [x] **4.3.1** Update `cortex/one-shot.sh` to source shared cache library
-  - Add `source workers/shared/cache.sh`
-  - Set `AGENT_NAME=cortex` explicitly
-  - Wrap `acli rovodev run` call with cache check/store
-  - **AC:** Same one-shot twice with no repo changes → Run 1: miss+store, Run 2: hit+skip
-
-### Phase 4.4: Fix Agent Isolation
-
-- [x] **4.4.1** Replace RUNNER dependency with AGENT_NAME in cache keys
-  - Cache key "agent" field uses `AGENT_NAME` not `RUNNER`
-  - Fall back sanely if `AGENT_NAME` missing (log warning)
-  - **AC:** Ralph/Cortex/Cerebras with identical prompts don't share cache entries
-
-### Phase 4.5: Smoke Test
-
-- [x] **4.5.1** Create `scripts/test_cache_smoke.sh` for cache correctness
-  - Test: same prompt + git state → cache hit on 2nd run
-  - Test: change git_sha → cache miss
-  - Test: `--force-fresh` → bypass even if entry exists
-  - Test: `CACHE_SCOPE=llm_ro` blocked during BUILD/PLAN
-  - **AC:** One command verifies caching works for loop.sh and one-shot.sh
-
-## Phase 5: Skills Knowledge Base Expansion
-
-**Goal:** Expand brain skills to cover more domains and improve existing documentation.
-
-**Priority:** Medium - Enhances agent capabilities and reduces knowledge gaps.
-
-## Phase 5: CodeRabbit PR #5 Fixes (Remaining)
-
-**Goal:** Fix remaining issues from CodeRabbit PR #5.  
-**Reference:** `docs/CODERABBIT_PR5_ALL_ISSUES.md`  
-**Status:** 5.0-5.4.9 complete (see THUNK.md), 3 tasks remaining
-
-### Phase 5.4: Code Example Fixes (Ralph)
-
-- [x] **5.4.10** Fix `deployment-patterns.md` - grammar
-  - "backward compatible" → "backward-compatible"
-  - **AC:** Hyphenated compound adjective
-
-### Phase 5.5: Shell Script Fixes (Ralph)
-
-- [x] **5.5.1** Fix `current_ralph_tasks.sh` - Archive header handling
-  - Treat Archive headers as section terminators
-  - **AC:** Archive sections properly delimit task sections
-
-- [x] **5.5.2** Fix `templates/ralph/loop.sh` - cache key JSON
-  - Use content_hash helper instead of raw JSON string
-  - **AC:** Cache key generation doesn't fail under set -euo
-
 ---
 
-
-## Phase 6: Housekeeping & Skills Expansion
-
-**Goal:** Clean up broken links, expand skills coverage, sync SUMMARY.md with actual skills.  
-**Priority:** LOW - Good overnight work after Phase 5
-
-### Phase 6.1: Fix Broken Links in Skills
-
-- [x] **6.1.1** Fix `skills/domains/languages/shell/README.md` broken links
-  - `[code-hygiene.md](../code-hygiene.md)` → should be `../../code-quality/code-hygiene.md`
-  - `[ralph-patterns.md](../ralph-patterns.md)` → should be `../../ralph/ralph-patterns.md`
-  - **AC:** Links resolve to existing files
-
-### Phase 6.2: Update SUMMARY.md with Missing Skills
-
-- [x] **6.2.1** Add missing skills to `skills/SUMMARY.md`
-  - Missing: `accessibility-patterns`, `cache-debugging`, `disaster-recovery-patterns`, `observability-patterns`, `react-patterns`, `test-coverage-patterns`
-  - **AC:** All `.md` files in `skills/domains/` have SUMMARY.md entries
-
-### Phase 6.3: Stub Out Empty Language Directories
-
-- [x] **6.3.1** Create `skills/domains/languages/go/go-patterns.md` stub
-  - Include: error handling, goroutines basics, common idioms
-  - **AC:** File exists with at least Quick Reference table
-
-- [x] **6.3.2** Create `skills/domains/languages/javascript/javascript-patterns.md` stub  
-  - Include: async/await, modules, common gotchas
-  - **AC:** File exists with at least Quick Reference table
-
-- [x] **6.3.3** Expand `skills/domains/languages/typescript/README.md` to full patterns file
-  - Include: type narrowing, generics basics, strict mode tips
-  - **AC:** File has practical examples, not just links
-
-### Phase 6.4: Template Sync Documentation
-
-- [x] **6.4.1** Document intentional template drift in `templates/ralph/README.md`
-  - Explain why `loop.sh`, `verifier.sh`, `current_ralph_tasks.sh` differ from workers/ralph/
-  - List which files SHOULD sync vs which are brain-specific
-  - **AC:** README explains sync policy
-
-### Phase 6.5: Waiver Request Cleanup
-
-- [x] **6.5.1** Add `created` timestamp to waiver request JSON schema
-  - Update `.verify/request_waiver.sh` to include `"created": "$(date -Iseconds)"`
-  - **AC:** New waiver requests have `created` field
-
-- [x] **6.5.2** Backfill `created` field in existing waiver requests
-  - Use file mtime as fallback: `WVR-2026-01-24-*.json`
-  - **AC:** All waiver requests have `created` field
-
-### Phase 6.6: Index and Cross-Reference Improvements
-
-- [x] **6.6.1** Update `skills/index.md` with new Phase 6.3 skills
-  - Add go-patterns, javascript-patterns entries
-  - **AC:** Index lists all skill files
-
-- [x] **6.6.2** Add "See Also" sections to isolated skill files
-  - Files like `cache-debugging.md` should link to related `caching-patterns.md`
-  - **AC:** Skills have bidirectional links where relevant
-
-**Phase AC:** No broken links in skills/, SUMMARY.md complete, language stubs exist
-
----
-
-
-## Phase 7: Capability Gap Radar (Automated Gap Discovery)
-
-**Goal:** Automatically detect missing skills by analyzing errors and failures across Ralph runs.  
-**Why:** Gap capture exists but is underused. This turns every failure into a learning opportunity.  
-**Priority:** MEDIUM - Infrastructure that compounds over time
-
-### Phase 7.1: Error Pattern Extraction
-
-- [x] **7.1.1** Create `tools/gap_radar/extract_errors.sh`
-  - Parse verifier output (`.verify/latest.txt`) for `[FAIL]` and `[WARN]` lines
-  - Extract error codes (SC2155, MD040, etc.) and file paths
-  - Output JSON: `{"error_code": "SC2155", "file": "loop.sh", "line": 42, "message": "..."}`
-  - **AC:** Script parses sample verifier output correctly
-
-- [x] **7.1.2** Create `tools/gap_radar/extract_from_logs.sh`
-  - Parse Ralph iteration logs for common failure patterns
-  - Look for: Python tracebacks, shell errors, "command not found", lint failures
-  - Output same JSON format as 7.1.1
-  - **AC:** Script extracts errors from sample log file
-
-- [x] **7.1.3** Create `tools/gap_radar/patterns.yaml`
-  - Define regex patterns for common error types
-  - Categories: shell, python, markdown, git, permissions, network
-  - Include example matches for each pattern
-  - **AC:** YAML is valid, patterns documented
-
-### Phase 7.2: Skills Coverage Matching
-
-- [x] **7.2.1** Create `tools/gap_radar/match_skills.py`
-  - Input: error JSON from 7.1.x
-  - Load `skills/index.md` and parse skill → error code mappings
-  - Output: `{"error_code": "SC2155", "covered": true, "skill": "shell/variable-patterns.md"}`
-  - **AC:** Correctly identifies covered vs uncovered errors
-
-- [x] **7.2.2** Add error code tags to existing skills
-  - Update shell patterns to include `<!-- covers: SC2155, SC2034, SC2086 -->`
-  - Update markdown patterns for MD040, MD032, etc.
-  - **AC:** At least 10 skills have coverage tags
-
-- [x] **7.2.3** Create `tools/gap_radar/coverage_report.py`
-  - Generate summary: total errors seen, % covered by skills, top uncovered
-  - Output markdown table suitable for `GAP_BACKLOG.md` or standalone report
-  - **AC:** Report runs and produces readable output
-
-### Phase 7.3: Auto-Append to GAP_BACKLOG
-
-- [x] **7.3.1** Create `tools/gap_radar/suggest_gaps.sh`
-  - Chain: extract_errors → match_skills → filter uncovered → format as gap entry
-  - De-duplicate against existing `GAP_BACKLOG.md` entries
-  - Output gap entries in correct markdown format
-  - **AC:** Suggested gaps match GAP_BACKLOG format
-
-- [x] **7.3.2** Add `--dry-run` and `--auto-append` modes
-  - `--dry-run`: Print suggestions without modifying files
-  - `--auto-append`: Append to GAP_BACKLOG.md with timestamp
-  - **AC:** Both modes work, auto-append preserves file structure
-
-- [x] **7.3.3** Create `tools/gap_radar/README.md`
-  - Document usage, configuration, output formats
-  - Include examples of running after Ralph iteration
-  - **AC:** README covers all scripts and options
-
-### Phase 7.4: Integration Hook
-
-- [x] **7.4.1** Add gap radar hook to `workers/ralph/loop.sh` (post-iteration)
-  - After BUILD iteration completes, run `gap_radar/suggest_gaps.sh --dry-run`
-  - Log suggestions to iteration log (don't auto-modify GAP_BACKLOG)
-  - **AC:** Gap suggestions appear in Ralph logs
-  - **NOTE:** Modified protected file (loop.sh) - requires hash regeneration by human
-
-- [x] **7.4.2** Create `bin/gap-radar` convenience wrapper
-  - Runs full pipeline with sensible defaults
-  - Options: `--since <date>`, `--from-log <file>`, `--append`
-  - **AC:** `bin/gap-radar --help` shows usage
-
-**Phase AC:** Gap radar detects uncovered errors, suggests gaps, integrates with Ralph workflow
-
----
-
-
-## Phase 8: Agent Playbooks (End-to-End Workflows)
-
-**Goal:** Create curated multi-skill workflows for common complex tasks.  
-**Why:** Skills are atomic; playbooks chain them into actionable guides.  
-**Priority:** MEDIUM - Improves agent effectiveness on complex tasks
-
-### Phase 8.1: Playbook Infrastructure
-
-- [x] **8.1.1** Create `skills/playbooks/` directory structure
-  - Add `README.md` explaining playbook format and purpose
-  - Define template: Goal, Prerequisites, Steps, Decision Points, Verification
-  - **AC:** Directory exists with README
-
-- [x] **8.1.2** Create `skills/playbooks/PLAYBOOK_TEMPLATE.md`
-  - Sections: Goal, When to Use, Prerequisites, Steps (numbered), Checkpoints, Troubleshooting
-  - Include placeholder examples
-  - **AC:** Template is complete and usable
-
-- [x] **8.1.3** Update `skills/index.md` with playbooks section
-  - Add new "## Playbooks" section
-  - Link to playbook directory
-  - **AC:** Index includes playbooks
-
-### Phase 8.2: Core Playbooks (Shell/Linting)
-
-- [x] **8.2.1** Create `skills/playbooks/fix-shellcheck-failures.md`
-  - Steps: Run shellcheck → Identify error code → Lookup in shell patterns → Apply fix → Re-run
-  - Decision points: "Is this a false positive?" → waiver path
-  - Links to: `shell/variable-patterns.md`, `shell/common-pitfalls.md`
-  - **AC:** Playbook covers SC2155, SC2034, SC2086 scenarios
-
-- [x] **8.2.2** Create `skills/playbooks/fix-markdown-lint.md`
-  - Steps: Run markdownlint → Parse errors → Apply fixes → Verify
-  - Include auto-fix option: `bash workers/ralph/fix-markdown.sh`
-  - Links to: `code-quality/markdown-patterns.md`
-  - **AC:** Playbook covers MD040, MD032, MD024 scenarios
-
-- [x] **8.2.3** Create `skills/playbooks/resolve-verifier-failures.md`
-  - Steps: Read verifier output → Categorize failure type → Route to appropriate fix
-  - Decision tree: Protected file? → Human required. Lint fail? → Fix playbook. Hash mismatch? → Regen or waiver
-  - Links to: multiple skills based on failure type
-  - **AC:** Playbook covers all verifier check categories
-
-### Phase 8.3: Template & Sync Playbooks
-
-- [x] **8.3.1** Create `skills/playbooks/safe-template-sync.md`
-  - Steps: Identify drift → Determine if intentional → Sync or document exception
-  - Covers: workers/ralph/ ↔ templates/ralph/ synchronization
-  - Decision point: "Is this brain-specific?" → Document in README, don't sync
-  - **AC:** Playbook explains sync policy and exceptions
-
-- [x] **8.3.2** Create `skills/playbooks/bootstrap-new-project.md`
-  - Steps: Run new-project.sh → Configure THOUGHTS.md → Set up validation criteria → First Ralph run
-  - Links to: `docs/BOOTSTRAPPING.md`, templates
-  - **AC:** Playbook covers full project setup flow
-
-### Phase 8.4: Debugging Playbooks
-
-- [x] **8.4.1** Create `skills/playbooks/debug-ralph-stuck.md`
-  - Symptoms: Ralph not progressing, repeated failures, infinite loop
-  - Steps: Check lock file → Review last log → Identify blocking issue → Resolution paths
-  - Links to: `ralph/ralph-patterns.md`, `ralph/cache-debugging.md`
-  - **AC:** Playbook covers common stuck scenarios
-
-- [x] **8.4.2** Create `skills/playbooks/investigate-test-failures.md`
-  - Steps: Run tests → Parse output → Identify failure type → Fix or escalate
-  - Covers: Python pytest, shell script tests, integration tests
-  - Links to: `code-quality/testing-patterns.md`
-  - **AC:** Playbook covers pytest and bash test scenarios
-
-### Phase 8.5: Playbook Cross-References
-
-- [x] **8.5.1** Add "Related Playbooks" section to relevant skills
-  - Update shell patterns to link to fix-shellcheck playbook
-  - Update markdown patterns to link to fix-markdown-lint playbook
-  - **AC:** At least 5 skills have playbook cross-references
-
-- [x] **8.5.2** Update `skills/SUMMARY.md` with playbooks overview
-  - Add playbooks to quick reference table
-  - Include "When to use a playbook vs a skill" guidance
-  - **AC:** SUMMARY includes playbooks section
-
-**Phase AC:** Playbook infrastructure exists, 6+ playbooks created, cross-referenced from skills
-
-## Phase 6: Template Improvements
+## Phase 6: Template Improvements (Pending)
 
 **Goal:** Enhance project templates with better defaults and more comprehensive coverage.
-
-**Priority:** Medium - Improves new project bootstrapping experience.
-
-**Recommended Next:** Start with 6.2.x tasks (Ralph template enhancements) as they build on recent cache work, then proceed to language templates (6.1.x).
-
-- [x] **6.2.1** Add cache configuration guidance to `templates/ralph/PROMPT.md`
-  - Document CACHE_MODE and CACHE_SCOPE usage
-  - Explain --force-fresh and --cache-skip flags
-  - Add examples for BUILD/PLAN cache behavior
-  - **AC:** PROMPT.md has cache configuration section with examples
-
-- [x] **6.2.2** Update `templates/ralph/VALIDATION_CRITERIA.project.md` with cache validation
-  - Add cache smoke test commands
-  - Document expected cache hit/miss patterns
-  - Include troubleshooting guidance
-  - **AC:** VALIDATION_CRITERIA.md has cache testing section
 
 - [ ] **6.1.1** Create `templates/javascript/` directory with JS/TS project template
   - AGENTS.project.md, NEURONS.project.md, VALIDATION_CRITERIA.project.md
@@ -475,13 +162,11 @@
   - Include SEO and analytics guidance
   - **AC:** templates/website/ has enhanced structure
 
-**Phase 6 AC:** templates/ directory has 2 new language templates and enhanced Ralph/website templates
+---
 
-## Phase 7: Documentation and Maintenance
+## Phase 7: Documentation and Maintenance (Pending)
 
 **Goal:** Improve documentation quality and maintain existing files.
-
-**Priority:** Low - Nice-to-have improvements for clarity and completeness.
 
 - [ ] **7.1.1** Enhance root `README.md` with better onboarding flow
 - [ ] **7.1.2** Create `CONTRIBUTING.md` with contribution guidelines
@@ -489,12 +174,10 @@
 - [ ] **7.2.2** Update `skills/SUMMARY.md` with enhanced error reference
 - [ ] **7.3.1** Request AC.rules update for shellcheck regex
 
-**Phase AC:** Documentation improved with better onboarding, all new skills indexed
-
 ---
 
 ## Completed Phases
 
 See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
 
-**Completed:** Phases 0-3, 5 (partial), 8-13, X.3.1-X.3.3, RollFlow Analyzer (12.x)
+**Completed:** Phases 0-5 (most tasks), 6 (Housekeeping), 7 (Gap Radar), 8 (Playbooks), X (Structured Logging)
