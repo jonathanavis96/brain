@@ -211,6 +211,48 @@ shellcheck -e SC1091 *.sh 2>&1 | head -30 || true
 
 ---
 
+## Batch Task Template
+
+When combining 3+ similar tasks, use this format:
+
+```markdown
+- [ ] **X.B1** BATCH: [Description] (combines A.1, A.2, A.3)
+  - **Scope:** `path/to/files/**/*.ext` OR `file1.ext + file2.ext + file3.ext`
+  - **Steps:**
+    1. [First action with glob pattern or file list]
+    2. [Second action]
+    3. [Verification command]
+  - **AC:** [How to verify completion - specific command output]
+  - **Replaces:** A.1, A.2, A.3
+```
+
+**Example - Batch shellcheck fixes:**
+
+```markdown
+- [ ] **5.B1** BATCH: Fix SC2162 in all shell scripts (combines 5.1, 5.2, 5.3, 5.4, 5.5)
+  - **Scope:** `workers/ralph/*.sh` (5 files: loop.sh, verifier.sh, sync.sh, cleanup.sh, monitor.sh)
+  - **Steps:**
+    1. Add `-r` flag to all `read` commands in scope files
+    2. Run `shellcheck -e SC1091 workers/ralph/*.sh` to verify
+    3. Run `shfmt -w -i 2 workers/ralph/*.sh` if needed
+  - **AC:** `shellcheck workers/ralph/*.sh` shows 0 SC2162 errors
+  - **Replaces:** 5.1, 5.2, 5.3, 5.4, 5.5
+```
+
+**When to batch:**
+
+- ≥3 tasks with same error code (MD040, SC2162, etc.)
+- ≥3 tasks in same directory
+- ≥3 tasks with same fix pattern (add flag, add blank line, quote variable)
+
+**When NOT to batch:**
+
+- Tasks require different logic/reasoning
+- Files are in different functional areas (don't batch `workers/ralph/*.sh` with `cortex/*.sh`)
+- Changes affect protected files (batch those separately or skip)
+
+---
+
 ## Definition of Done
 
 Before `:::BUILD_READY:::`, complete checklist in `skills/domains/code-quality/code-hygiene.md`.
