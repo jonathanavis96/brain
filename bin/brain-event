@@ -167,7 +167,33 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# Validate required arg
+# Determine workspace/repo root
+if [[ -z "$WORKSPACE" ]]; then
+  WORKSPACE="$(find_repo_root)"
+fi
+
+# Watch mode: tail events.jsonl with optional filtering
+if [[ "$WATCH_MODE" == true ]]; then
+  EVENTS_FILE="$WORKSPACE/state/events.jsonl"
+
+  if [[ ! -f "$EVENTS_FILE" ]]; then
+    echo "brain-event: events file not found: $EVENTS_FILE" >&2
+    echo "brain-event: waiting for events..." >&2
+    # Create file if it doesn't exist
+    mkdir -p "$WORKSPACE/state" 2>/dev/null || true
+    touch "$EVENTS_FILE" 2>/dev/null || true
+  fi
+
+  # Use tail -f with optional grep filter
+  if [[ -n "$FILTER_PATTERN" ]]; then
+    exec tail -f "$EVENTS_FILE" | grep --line-buffered -E "$FILTER_PATTERN"
+  else
+    exec tail -f "$EVENTS_FILE"
+  fi
+  # Never reached (exec replaces process)
+fi
+
+# Emit mode: validate required arg
 if [[ -z "$EVENT" ]]; then
   # Silent exit - best effort means don't complain
   [[ "${DEBUG:-}" == "1" ]] && echo "brain-event: missing --event" >&2
@@ -182,11 +208,6 @@ case "$EVENT" in
     exit 0
     ;;
 esac
-
-# Determine workspace/repo root
-if [[ -z "$WORKSPACE" ]]; then
-  WORKSPACE="$(find_repo_root)"
-fi
 
 # Ensure state directory exists
 STATE_DIR="$WORKSPACE/state"

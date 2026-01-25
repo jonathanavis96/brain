@@ -1,13 +1,13 @@
 # Implementation Plan - Brain Repository
 
-**Last Updated:** 2026-01-25 23:30:00
+**Last Updated:** 2026-01-26 01:45:00
 
-**Current Status:** All phases consolidated. CR-6 in progress, Phases 10-20 queued.
+**Current Status:** Phase 21 (Token Efficiency) is NEXT priority. CR-6 complete, POST-CR6 in progress.
 
 **Active Phases:**
 
-- Phase CR-6: CodeRabbit PR6 Fixes (in progress)
-- Phase POST-CR6: Prevention Systems
+- **Phase 21: Token Efficiency & Tool Consolidation (NEXT)**
+- Phase POST-CR6: Prevention Systems (in progress)
 - Phase 10-13: Observability & Tooling
 - Phase 14-20: Meta-tooling & Self-improvement
 
@@ -515,13 +515,15 @@
 
 ---
 
-## Phase 21: Token Efficiency & Tool Consolidation
+## Phase 21: Token Efficiency & Tool Consolidation ⚡ NEXT
 
 **Goal:** Reduce Ralph's token usage by providing structured query tools and enforcing lean context loading.
 
 **Problem:** Ralph often opens large files (THUNK.md, IMPLEMENTATION_PLAN.md) when targeted queries would suffice. This wastes tokens and slows iterations.
 
 **Priority:** HIGH (directly improves iteration speed and cost)
+
+**Status:** ACTIVE - Start here
 
 ### Phase 21.1: Enhance thunk-parse with Query Capabilities
 
