@@ -11,6 +11,13 @@ BRAIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 # Navigate to brain root
 cd "${BRAIN_ROOT}"
 
+# Set agent name for cache isolation
+export AGENT_NAME="cortex"
+
+# Source shared cache library
+# shellcheck source=../workers/shared/cache.sh
+source "${BRAIN_ROOT}/workers/shared/cache.sh"
+
 # Usage help
 usage() {
   cat <<EOF
@@ -264,12 +271,52 @@ if [[ "$RUNNER" == "rovodev" ]]; then
     echo "📋 Cortex has full context of the Brain repository."
     echo "💬 You can now ask questions and have a conversation."
     echo ""
-    acli rovodev run "$CONFIG_FLAG" --yolo "$(cat "$COMPOSITE_PROMPT")"
-    EXIT_CODE=$?
+
+    # Generate cache key for this invocation
+    PROMPT_HASH=$(file_content_hash "$COMPOSITE_PROMPT")
+    GIT_SHA=$(git rev-parse HEAD 2>/dev/null || echo "unknown")
+    CACHE_KEY=$(cache_make_key "rovodev" "cortex" "$PROMPT_HASH" "$GIT_SHA")
+
+    # Check cache if enabled
+    if cache_should_use && lookup_cache_pass "$CACHE_KEY" "$GIT_SHA" "rovodev"; then
+      SAVED_MS=$(cache_try_load "$CACHE_KEY")
+      echo "✓ Cache hit - skipping LLM call (saved ${SAVED_MS}ms)"
+      log_cache_hit "$CACHE_KEY" "rovodev"
+      EXIT_CODE=0
+    else
+      log_cache_miss "$CACHE_KEY" "rovodev"
+      acli rovodev run "$CONFIG_FLAG" --yolo "$(cat "$COMPOSITE_PROMPT")"
+      EXIT_CODE=$?
+
+      # Store successful result in cache
+      if [[ $EXIT_CODE -eq 0 ]]; then
+        cache_store "$CACHE_KEY" "rovodev" 0
+      fi
+    fi
   else
     # One-shot mode - auto-approve with --yolo
-    acli rovodev run "$CONFIG_FLAG" --yolo "$(cat "$COMPOSITE_PROMPT")"
-    EXIT_CODE=$?
+
+    # Generate cache key for this invocation
+    PROMPT_HASH=$(file_content_hash "$COMPOSITE_PROMPT")
+    GIT_SHA=$(git rev-parse HEAD 2>/dev/null || echo "unknown")
+    CACHE_KEY=$(cache_make_key "rovodev" "cortex" "$PROMPT_HASH" "$GIT_SHA")
+
+    # Check cache if enabled
+    if cache_should_use && lookup_cache_pass "$CACHE_KEY" "$GIT_SHA" "rovodev"; then
+      SAVED_MS=$(cache_try_load "$CACHE_KEY")
+      echo "✓ Cache hit - skipping LLM call (saved ${SAVED_MS}ms)"
+      log_cache_hit "$CACHE_KEY" "rovodev"
+      EXIT_CODE=0
+    else
+      log_cache_miss "$CACHE_KEY" "rovodev"
+      acli rovodev run "$CONFIG_FLAG" --yolo "$(cat "$COMPOSITE_PROMPT")"
+      EXIT_CODE=$?
+
+      # Store successful result in cache
+      if [[ $EXIT_CODE -eq 0 ]]; then
+        cache_store "$CACHE_KEY" "rovodev" 0
+      fi
+    fi
   fi
 else
   # OpenCode runner
