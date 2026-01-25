@@ -45,7 +45,7 @@ find_repo_root() {
   done
 
   # Fallback: parent of bin/
-  echo "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+  cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd
 }
 
 # JSON-escape a string (handle quotes, backslashes, newlines)
