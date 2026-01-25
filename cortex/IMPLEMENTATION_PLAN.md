@@ -120,7 +120,7 @@ Key milestones:
   - Escape pipe characters in table rows: `|` → `\|` or wrap in backticks
   - **AC:** Markdown renders correctly
 
-- [ ] **5.3.6** Fix stray fence in `observability-patterns.md` (lines 584-585)
+- [x] **5.3.6** Fix stray fence in `observability-patterns.md` (lines 584-585)
   - Remove duplicate closing backticks
   - **AC:** No orphan code fences
 
