@@ -96,3 +96,10 @@ When given a task, define AC that includes propagation:
 - **Knowledge is lost** - "I know X" means nothing if not written
 - **Maintenance burden** - Manual sync is error-prone
 - **Trust erodes** - Claiming completion without verification
+
+## See Also
+
+- **[Ralph Patterns](ralph-patterns.md)** - Ralph loop architecture and workflow
+- **[Bootstrap Patterns](bootstrap-patterns.md)** - Template usage and new project setup
+- **[Code Hygiene](../code-quality/code-hygiene.md)** - Verification checklist and quality gates
+- **[Code Consistency](../code-quality/code-consistency.md)** - Maintaining consistency across codebase

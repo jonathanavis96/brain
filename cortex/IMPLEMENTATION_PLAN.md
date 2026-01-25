@@ -299,7 +299,7 @@ Key milestones:
 
 ### Phase 6.6: Index and Cross-Reference Improvements
 
-- [ ] **6.6.1** Update `skills/index.md` with new Phase 6.3 skills
+- [x] **6.6.1** Update `skills/index.md` with new Phase 6.3 skills
   - Add go-patterns, javascript-patterns entries
   - **AC:** Index lists all skill files
 
