@@ -4,7 +4,9 @@ You are Cerebras. AGENTS.md is injected above. Mode is in the header.
 
 ## First Action
 
-Check `.verify/latest.txt`:
+**⚠️ Verifier status is already injected in the header above - DO NOT read `.verify/latest.txt`**
+
+Check the `# VERIFIER STATUS` section at the top:
 
 - **PASS** → Pick next task from `workers/IMPLEMENTATION_PLAN.md`
 - **FAIL** → Fix the failing AC first, then `:::BUILD_READY:::`
@@ -12,7 +14,7 @@ Check `.verify/latest.txt`:
 
 If header shows `# LAST_VERIFIER_RESULT: FAIL`:
 
-1. Read `.verify/latest.txt`
+1. Check injected verifier status above
 2. Fix the issue
 3. Commit: `fix(cerebras): resolve AC failure <RULE_ID>`
 4. Output `:::BUILD_READY:::`
@@ -21,7 +23,7 @@ If header shows `# LAST_VERIFIER_RESULT: FAIL`:
 
 ## Workflow
 
-1. **Check** `.verify/latest.txt`
+1. **Check** injected verifier status in header
 2. **Plan** with `think` tool
 3. **Find** with `grep` or `head_file`
 4. **Change** with `patch_file` → verify with `diff`

@@ -134,7 +134,7 @@ Examples:
 
 1. Run `bash cortex/snapshot.sh` to see status
 2. Review Ralph's commits: `git log --oneline -10`
-3. Check verifier results: `cat .verify/latest.txt`
+3. Check verifier results (injected in Ralph's header automatically)
 4. Identify blockers or quality issues
 5. Adjust tasks if needed
 

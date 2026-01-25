@@ -978,7 +978,7 @@ run_once() {
       if [[ "$LAST_VERIFIER_STATUS" == "FAIL" ]]; then
         echo "# FAILED_RULES: $LAST_VERIFIER_FAILED_RULES"
         echo "# FAILURE_COUNT: $LAST_VERIFIER_FAIL_COUNT"
-        echo "# ACTION_REQUIRED: Read .verify/latest.txt and fix AC failures BEFORE picking new tasks."
+        echo "# ACTION_REQUIRED: Fix AC failures shown below BEFORE picking new tasks."
       fi
       echo ""
     fi

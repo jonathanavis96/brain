@@ -10,20 +10,8 @@
 
 **Goal:** Resolve verifier warnings from latest run.
 
-**Status:** All 7 warnings are false positives. Waiver requests created and pending human approval:
+**Status:**
 
-- Template.1: thunk_ralph_tasks.sh (files identical, diff bug)
-- Hygiene.TemplateSync.1: current_ralph_tasks.sh (files identical, diff bug)
-- Hygiene.TemplateSync.2: loop.sh (intentional divergence for brain-specific features)
-- Lint.Shellcheck.LoopSh: loop.sh (passes shellcheck with only SC1091 info-level)
-- Lint.Shellcheck.VerifierSh: verifier.sh (passes clean)
-- Lint.Shellcheck.CurrentRalphTasks: current_ralph_tasks.sh (passes clean)
-- Lint.Shellcheck.ThunkRalphTasks: thunk_ralph_tasks.sh (passes clean)
-
-- [x] **WARN.Cortex.FileSizeLimit.SYSTEM_PROMPT** Reduce cortex/CORTEX_SYSTEM_PROMPT.md to 150 lines (currently 161 lines) - ✅ Reduced to 121 lines
-- [x] **WARN.Hygiene.TemplateSync.1.current_ralph_tasks** Request waiver for current_ralph_tasks.sh (WVR-2026-01-24-003)
-- [x] **WARN.Hygiene.TemplateSync.2.loop** Request waiver for loop.sh (WVR-2026-01-24-002 + others)
-- [x] **WARN.Cortex.FileSizeLimit.AGENTS** Reduce cortex/AGENTS.md from 189 to ≤180 lines - ✅ Reduced to 168 lines
 
 ## Phase 0: Structured Logging (Cortex-readable)
 
@@ -103,23 +91,6 @@
 
 **Priority:** Medium - Enhances agent capabilities and reduces knowledge gaps.
 
-### Phase 5.4: Language-Specific Skills (remaining)
-
-- [x] **5.4.2** Create `skills/domains/languages/typescript/README.md`
-  - Type system fundamentals
-  - Generic patterns and advanced types
-  - Integration with JavaScript projects
-  - **AC:** README exists with type system section
-
-- [x] **5.4.3** Create `skills/domains/languages/go/README.md`
-  - Go idioms and conventions
-  - Concurrency patterns (goroutines, channels)
-  - Error handling best practices
-  - **AC:** README exists with concurrency section
-
-**Phase 5 AC:** skills/ directory has 10+ new skill files covering frontend, testing, DevOps, and language domains
-
-**Phase 5 Status:** ✅ COMPLETE - All tasks done. Phase AC achieved (14+ new skills added including TypeScript and Go READMEs).
 
 ## Phase 6: Template Improvements
 

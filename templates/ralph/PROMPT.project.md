@@ -56,7 +56,7 @@ When you encounter multiple instances of the same issue type (e.g., SC2155, SC20
 **NEVER repeat these (you already know):**
 
 - `pwd`, `git branch` - known from header
-- `.verify/latest.txt` - read ONCE at start
+- Verifier status - already injected in header (NEVER read the file)
 - `tail THUNK.md` - get next number ONCE
 - Same file content - read ONCE, remember it
 
