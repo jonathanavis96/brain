@@ -193,6 +193,7 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
   - Include references to `skills/domains/websites/` and `skills/domains/marketing/`
   - **DO NOT duplicate skills content** - templates should point to brain, not copy it
   - **AC:** templates/website/ has standard project files with skill references
+  - **Fixed:** 2026-01-25 - Slimmed docs/ from 1425 to 229 lines (references only)
 
 ---
 
@@ -200,7 +201,7 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
 
 **Goal:** Improve documentation quality and maintain existing files.
 
-- [ ] **7.1.1** Enhance root `README.md` with better onboarding flow
+- [x] **7.1.1** Enhance root `README.md` with better onboarding flow
 - [ ] **7.1.2** Create `CONTRIBUTING.md` with contribution guidelines
 - [ ] **7.2.1** Update `skills/index.md` with new skill files from Phase 5
 - [ ] **7.2.2** Update `skills/SUMMARY.md` with enhanced error reference
