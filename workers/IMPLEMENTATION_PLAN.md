@@ -148,7 +148,7 @@
 
 ### Phase 6.4: Template Sync Documentation
 
-- [ ] **6.4.1** Document intentional template drift in `templates/ralph/README.md`
+- [x] **6.4.1** Document intentional template drift in `templates/ralph/README.md`
   - Explain why `loop.sh`, `verifier.sh`, `current_ralph_tasks.sh` differ from workers/ralph/
   - List which files SHOULD sync vs which are brain-specific
   - **AC:** README explains sync policy
