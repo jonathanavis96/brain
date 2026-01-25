@@ -79,8 +79,13 @@ class JsonFormatter(logging.Formatter):
             'module': record.module,
             'function': record.funcName,
         }
-        if hasattr(record, 'extra'):
-            log_data.update(record.extra)
+        # Extract custom fields from record (passed via extra parameter)
+        for key, value in record.__dict__.items():
+            if key not in ['name', 'msg', 'args', 'created', 'filename', 'funcName',
+                          'levelname', 'levelno', 'lineno', 'module', 'msecs',
+                          'message', 'pathname', 'process', 'processName', 'relativeCreated',
+                          'thread', 'threadName', 'exc_info', 'exc_text', 'stack_info']:
+                log_data[key] = value
         return json.dumps(log_data)
 
 logger = logging.getLogger(__name__)
