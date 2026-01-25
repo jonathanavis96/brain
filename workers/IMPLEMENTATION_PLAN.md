@@ -65,7 +65,7 @@
 
 ### Phase 9C.3: Decomposition Detection
 
-- [ ] **9C.3.1** Add duration tracking to `current_ralph_tasks.sh` footer
+- [x] **9C.3.1** Add duration tracking to `current_ralph_tasks.sh` footer
   - **Goal:** Show when current task exceeds 2x median (⚠️ warning)
   - **AC:** Footer shows "⚠️ Current task exceeding median" when appropriate
 
