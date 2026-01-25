@@ -196,12 +196,12 @@
 
 ### Phase 11.1: Documentation & Skills
 
-- [ ] **11.1.1** Create `skills/domains/ralph/thread-search-patterns.md`
+- [x] **11.1.1** Create `skills/domains/ralph/thread-search-patterns.md`
   - **Goal:** Document search patterns for THUNK, git, and cache
   - **AC:** Skill includes grep patterns for THUNK.md, git log examples, sqlite queries
   - **Priority:** HIGH
 
-- [ ] **11.1.2** Build THUNK.md parser (Python script)
+- [x] **11.1.2** Build THUNK.md parser (Python script)
   - **Goal:** Extract structured data from THUNK.md markdown table
   - **Output:** JSON or SQLite with thunk_num, task_id, priority, description, date
   - **AC:** Parser handles current THUNK format (800+ entries), outputs valid JSON

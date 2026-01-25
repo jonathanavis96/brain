@@ -78,34 +78,6 @@
 
 ---
 
-## Phase 10: RovoDev Parser & Observability
-
-**Goal:** Build parser for RovoDev's ANSI tool output to enable complete tool visibility.
-
-**Context:** RovoDev emits tool calls in logs (`⬡ Calling <tool>:` / `⬢ Called <tool>:`), but rollflow_analyze doesn't parse this format yet.
-
-### Phase 10.1: RovoDev Parser
-
-- [x] **10.1.1** Create RovoDev ANSI parser in `tools/rollflow_analyze/src/rollflow_analyze/parsers/`
-  - **Goal:** Parse RovoDev tool output format from logs
-  - **Input format:** `⬡ Calling <tool>:` (start), `⬢ Called <tool>:` (end), optional `N seconds` duration
-  - **Output:** ToolCall objects matching existing model
-  - **AC:** Parser extracts tool_name, start/end markers, duration from sample log
-  - **Test:** Add test file with sample RovoDev output
-
-- [x] **10.1.2** Integrate RovoDev parser into rollflow_analyze pipeline
-  - **Goal:** Unified parsing across :::MARKER::: and RovoDev formats
-  - **AC:** `rollflow_analyze` reports include RovoDev tool calls
-  - **Depends on:** 10.1.1
-
-### Phase 10.2: Documentation
-
-- [x] **10.2.1** Update docs/events.md with RovoDev format section
-  - **Goal:** Document RovoDev's tool output format alongside :::MARKER::: format
-  - **AC:** events.md has "RovoDev Format" section with examples
-
----
-
 ## Phase 11: Thread Persistence & Search
 
 **Goal:** Enable searchable, queryable thread storage for agent work history.
@@ -116,7 +88,6 @@
 
 ### Phase 11.1: Documentation & Skills
 
-- [ ] **11.1.1** Create `skills/domains/ralph/thread-search-patterns.md`
   - **Goal:** Document search patterns for THUNK, git, and cache
   - **AC:** Skill includes grep patterns for THUNK.md, git log examples, sqlite queries
   - **Priority:** HIGH
