@@ -95,6 +95,21 @@ Catalog of all skill files in the brain system.
 - [bootstrap-patterns.md](domains/ralph/bootstrap-patterns.md) - Project bootstrapping patterns
 - [change-propagation.md](domains/ralph/change-propagation.md) - Change propagation and template sync
 
+### Playbooks (End-to-End Workflows)
+
+- [README.md](playbooks/README.md) - Playbook system overview and design philosophy
+- [PLAYBOOK_TEMPLATE.md](playbooks/PLAYBOOK_TEMPLATE.md) - Template for creating new playbooks
+
+**Available Playbooks:** (To be created in Phase 8)
+
+- fix-shellcheck-failures.md - Systematic resolution of ShellCheck warnings
+- fix-markdown-lint.md - Resolve markdown linting issues
+- resolve-verifier-failures.md - Debug and fix verifier gate failures
+- safe-template-sync.md - Synchronize changes between workers/ and templates/
+- bootstrap-new-project.md - Set up a new project from templates
+- debug-ralph-stuck.md - Troubleshoot Ralph loop issues
+- investigate-test-failures.md - Systematic test failure resolution
+
 ### Websites
 
 - [README.md](domains/websites/README.md) - Website development overview
