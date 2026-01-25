@@ -76,7 +76,7 @@
 
 ### Phase 4.5: Smoke Test
 
-- [ ] **4.5.1** Create `scripts/test_cache_smoke.sh` for cache correctness
+- [x] **4.5.1** Create `scripts/test_cache_smoke.sh` for cache correctness
   - Test: same prompt + git state → cache hit on 2nd run
   - Test: change git_sha → cache miss
   - Test: `--force-fresh` → bypass even if entry exists
