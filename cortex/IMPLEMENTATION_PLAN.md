@@ -149,7 +149,7 @@ Key milestones:
   - Replace recovery.conf with postgresql.conf + recovery.signal
   - **AC:** Example works with modern PostgreSQL
 
-- [ ] **5.4.7** Fix `javascript/README.md` - undefined userId
+- [x] **5.4.7** Fix `javascript/README.md` - undefined userId
   - Add `const userId = 42` before sql usage
   - **AC:** Example is self-contained
 
