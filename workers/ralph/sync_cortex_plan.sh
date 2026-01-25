@@ -111,6 +111,11 @@ if [[ "$CORTEX_PLAN" -nt "$RALPH_PLAN" ]]; then
   log_info "Cortex plan has updates - checking for new sections"
 else
   log_verbose "No updates needed - Ralph's plan is current"
+  # Still run cleanup even if no sync needed (PLAN mode should always clean up)
+  if [[ "$NO_CLEANUP" == "false" ]] && [[ -x "$CLEANUP_SCRIPT" ]]; then
+    log_info "Running cleanup hook (no sync needed)..."
+    bash "$CLEANUP_SCRIPT" --archive
+  fi
   exit 0
 fi
 
@@ -172,6 +177,11 @@ done <"$CORTEX_PLAN"
 if [[ "$new_sections_found" -eq 0 ]]; then
   log_info "No new sections to sync"
   rm -f "$tmp_file"
+  # Still run cleanup even if no new sections (PLAN mode should always clean up)
+  if [[ "$NO_CLEANUP" == "false" ]] && [[ -x "$CLEANUP_SCRIPT" ]]; then
+    log_info "Running cleanup hook (no new sections)..."
+    bash "$CLEANUP_SCRIPT" --archive
+  fi
   exit 0
 fi
 
