@@ -1,2 +1,0 @@
-[console_scripts]
-rollflow_analyze = rollflow_analyze.cli:main
