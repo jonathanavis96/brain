@@ -426,8 +426,9 @@ fi
 # .github/workflows/coverage-check.yml
 - name: Download base coverage
   run: |
-    curl -o base-coverage.json \
-      "https://api.github.com/repos/$REPO/actions/artifacts/coverage-summary.json"
+    curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+      -o base-coverage.json \
+      "https://api.github.com/repos/${{ github.repository }}/actions/artifacts?name=coverage-summary"
 
 - name: Compare coverage
   run: |

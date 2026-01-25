@@ -38,8 +38,6 @@ Key milestones:
 
 ---
 
-<!-- Cortex adds new Task Contracts below this line -->
-
 ## Phase 5: CodeRabbit PR #5 Fixes
 
 **Goal:** Fix all issues identified by CodeRabbit in PR #5.  
@@ -153,7 +151,7 @@ Key milestones:
   - Add `const userId = 42` before sql usage
   - **AC:** Example is self-contained
 
-- [ ] **5.4.8** Fix `test-coverage-patterns.md` - Jest flags
+- [x] **5.4.8** Fix `test-coverage-patterns.md` - Jest flags
   - Replace `--collectCoverageFrom` with `--findRelatedTests`
   - Handle empty changed_files.txt
   - **AC:** Script works correctly
@@ -475,3 +473,5 @@ Key milestones:
   - **AC:** SUMMARY includes playbooks section
 
 **Phase AC:** Playbook infrastructure exists, 6+ playbooks created, cross-referenced from skills
+
+<!-- Cortex adds new Task Contracts below this line -->

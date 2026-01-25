@@ -124,7 +124,7 @@
   - Handle empty changed_files.txt
   - **AC:** Script works correctly
 
-- [ ] **5.4.9** Fix `test-coverage-patterns.md` - artifacts endpoint
+- [x] **5.4.9** Fix `test-coverage-patterns.md` - artifacts endpoint
   - Use correct GitHub Actions artifacts API
   - Add Authorization header
   - **AC:** API call format is correct
@@ -505,7 +505,7 @@
   - Handle empty changed_files.txt
   - **AC:** Script works correctly
 
-- [ ] **5.4.9** Fix `test-coverage-patterns.md` - artifacts endpoint
+- [x] **5.4.9** Fix `test-coverage-patterns.md` - artifacts endpoint
   - Use correct GitHub Actions artifacts API
   - Add Authorization header
   - **AC:** API call format is correct
