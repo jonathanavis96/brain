@@ -42,7 +42,7 @@
   - **Fix:** Verify links work or update paths
   - **AC:** All cross-references resolve correctly
 
-- [ ] **CR-2.2** Update skills/index.md with missing entries
+- [x] **CR-2.2** Update skills/index.md with missing entries
   - **File:** `skills/index.md`
   - **Issue:** Missing entries for research-patterns, token-efficiency, frontend
   - **Fix:** Add all missing skill entries
