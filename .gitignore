@@ -38,6 +38,7 @@ ralph/test-rovodev-integration.sh
 rovodev-config.local.yml
 __pycache__/
 *.pyc
+*.egg-info/
 
 # Runtime state (not committed)
 state/

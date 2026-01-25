@@ -14,7 +14,7 @@
 
 ### Phase 5.1: Git Hygiene (Ralph)
 
-- [ ] **5.1.1** Add `*.egg-info/` to `.gitignore`
+- [x] **5.1.1** Add `*.egg-info/` to `.gitignore`
   - **AC:** `grep -q 'egg-info' .gitignore` returns 0
 
 - [ ] **5.1.2** Remove committed egg-info directory
