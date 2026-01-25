@@ -1277,9 +1277,7 @@ except Exception:
     fi
   fi
 
-  # Log tool call start
-  log_tool_start "$tool_id" "$RUNNER" "$tool_key" "$git_sha" | tee -a "$log"
-
+  # Execute LLM call through run_tool() wrapper for structured logging
   if [[ "$RUNNER" == "opencode" ]]; then
     # NOTE: Passing full prompt as CLI arg can hit shell/argv limits if prompt is huge.
     # If that happens, pivot to a file-based approach after validating basic integration.
@@ -1287,32 +1285,20 @@ except Exception:
     if [[ -n "${OPENCODE_ATTACH:-}" ]]; then
       attach_flag="--attach ${OPENCODE_ATTACH}"
     fi
-    opencode run "${attach_flag}" --model "${RESOLVED_MODEL}" --format "${OPENCODE_FORMAT}" "$(cat "$prompt_with_mode")" 2>&1 | tee -a "$log"
+    run_tool "$tool_id" "$RUNNER" "$tool_key" "$git_sha" \
+      "opencode run \"${attach_flag}\" --model \"${RESOLVED_MODEL}\" --format \"${OPENCODE_FORMAT}\" \"\$(cat \"$prompt_with_mode\")\" 2>&1 | tee -a \"$log\""
     rc=$?
 
-    # Log tool call end
-    end_ms="$(($(date +%s%N) / 1000000))"
-    duration_ms="$((end_ms - start_ms))"
     if [[ $rc -ne 0 ]]; then
-      log_tool_end "$tool_id" "FAIL" "$rc" "$duration_ms" "OpenCode exit $rc" | tee -a "$log"
       echo "❌ OpenCode failed (exit $rc). See: $log"
       tail -n 80 "$log" || true
       return 1
     fi
-    log_tool_end "$tool_id" "PASS" "$rc" "$duration_ms" | tee -a "$log"
   else
     # Default: RovoDev
-    script -q -c "cat \"$prompt_with_mode\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG}" "$log"
+    run_tool "$tool_id" "$RUNNER" "$tool_key" "$git_sha" \
+      "script -q -c \"cat \\\"$prompt_with_mode\\\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG}\" \"$log\""
     rc=$?
-
-    # Log tool call end
-    end_ms="$(($(date +%s%N) / 1000000))"
-    duration_ms="$((end_ms - start_ms))"
-    if [[ $rc -ne 0 ]]; then
-      log_tool_end "$tool_id" "FAIL" "$rc" "$duration_ms" "RovoDev exit $rc" | tee -a "$log"
-    else
-      log_tool_end "$tool_id" "PASS" "$rc" "$duration_ms" | tee -a "$log"
-    fi
   fi
 
   # Clean up temporary prompt
@@ -1733,16 +1719,28 @@ else
     else
       # Auto-fix lint issues before BUILD iteration
       echo "Running auto-fix for lint issues..."
+      autofix_git_sha="$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')"
+
       if [[ -f "$RALPH/fix-markdown.sh" ]]; then
-        (cd "$ROOT" && bash "$RALPH/fix-markdown.sh" . 2>/dev/null) || true
+        fix_md_id="$(tool_call_id)"
+        fix_md_key="fix-markdown|${autofix_git_sha}"
+        run_tool "$fix_md_id" "fix-markdown" "$fix_md_key" "$autofix_git_sha" \
+          "(cd \"$ROOT\" && bash \"$RALPH/fix-markdown.sh\" . 2>/dev/null) || true" || true
       fi
+
       if command -v pre-commit &>/dev/null; then
-        (cd "$ROOT" && pre-commit run --all-files 2>/dev/null) || true
+        precommit_id="$(tool_call_id)"
+        precommit_key="pre-commit|${autofix_git_sha}"
+        run_tool "$precommit_id" "pre-commit" "$precommit_key" "$autofix_git_sha" \
+          "(cd \"$ROOT\" && pre-commit run --all-files 2>/dev/null) || true" || true
       fi
 
       # Run verifier to get current state (Ralph will see WARN/FAIL in context)
       echo "Running verifier to check current state..."
-      (cd "$RALPH" && bash verifier.sh 2>/dev/null) || true
+      verifier_pre_id="$(tool_call_id)"
+      verifier_pre_key="verifier-pre-build|${autofix_git_sha}"
+      run_tool "$verifier_pre_id" "verifier" "$verifier_pre_key" "$autofix_git_sha" \
+        "(cd \"$RALPH\" && bash verifier.sh 2>/dev/null) || true" || true
       echo ""
 
       emit_event --event phase_start --iter "$i" --phase "build"
