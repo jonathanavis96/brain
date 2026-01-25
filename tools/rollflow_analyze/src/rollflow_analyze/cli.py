@@ -20,8 +20,8 @@ def create_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--out",
         type=Path,
-        default=Path("artifacts/rollflow_reports/latest.json"),
-        help="Output path for JSON report (default: artifacts/rollflow_reports/latest.json)",
+        default=Path("artifacts/analysis/latest.json"),
+        help="Output path for JSON report (default: artifacts/analysis/latest.json)",
     )
     parser.add_argument(
         "--cache-db",
