@@ -21,7 +21,7 @@
 
 ### Phase 9C.1: Batching Infrastructure
 
-- [ ] **9C.1.1** Enhance `cortex/snapshot.sh` with batching hints
+- [x] **9C.1.1** Enhance `cortex/snapshot.sh` with batching hints
   - **Goal:** Show "⚡ Batching opportunities: X" when ≥3 similar pending tasks detected
   - **AC:** Snapshot output shows batching hints section when opportunities exist
   - **Detection:** Same error code (MDxxx, SCxxxx), same directory prefix, same file type
