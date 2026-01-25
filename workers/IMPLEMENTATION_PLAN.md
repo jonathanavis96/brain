@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository
 
-**Last Updated:** 2026-01-25 03:03:10
+**Last Updated:** 2026-01-24 03:03:10
 
 **Current Status:** PLAN mode (Iteration 1) complete. Verifier ran successfully: 53 PASS, 7 WARN (shellcheck/template sync - non-blocking). Phase 0 task X.4.1 was already completed (iter= removed from CACHE_CONFIG in previous session). Plan structure reviewed: Phases 5-8 well-organized, Phase 5.1 ready for BUILD execution starting with task 5.1.1. No new phases or tasks needed at this time.
 
@@ -57,7 +57,7 @@
   - Guard `$2` access with `${2-}` or `$# -ge 2` checks
   - **AC:** `shellcheck bin/brain-event` passes, no unbound errors
 
-- [ ] **5.2.8** Fix `cerebras_agent.py` state reinjection (lines 1021-1038)
+- [x] **5.2.8** Fix `cerebras_agent.py` state reinjection (lines 1021-1038)
   - Insert state_msg after user message (index 2) not at index 1
   - **AC:** `_prune_messages` preserves system+user correctly
   - **If Blocked:** Message order must be: [0]=system, [1]=user, [2]=state_injection. The `_prune_messages` function expects system at 0 and user at 1. Find `messages.insert(1, state_msg)` and change to `messages.insert(2, state_msg)`
@@ -73,7 +73,7 @@
   - Add frontend section entries
   - **AC:** All index.md entries have SUMMARY.md counterparts
 
-- [ ] **5.3.3** Fix incorrect dates (2026-01-25 → 2026-01-24)
+- [x] **5.3.3** Fix incorrect dates (2026-01-24 (already corrected))
   - Files: `workers/IMPLEMENTATION_PLAN.md`, `skills/domains/languages/typescript/README.md`
   - **AC:** No future dates in Last Updated fields
 
@@ -145,7 +145,7 @@
 
 ### Phase 5.0: Hash Regeneration (HUMAN ONLY - Do First) ✅ COMPLETE
 
-> ✅ **Completed 2026-01-25 by Cortex**
+> ✅ **Completed 2026-01-24 by Cortex**
 
 - [x] **5.0.1** Regenerate `.verify/loop.sha256`
 - [x] **5.0.2** Regenerate `.verify/ac.sha256` - was already correct
@@ -438,7 +438,7 @@
   - Guard `$2` access with `${2-}` or `$# -ge 2` checks
   - **AC:** `shellcheck bin/brain-event` passes, no unbound errors
 
-- [ ] **5.2.8** Fix `cerebras_agent.py` state reinjection (lines 1021-1038)
+- [x] **5.2.8** Fix `cerebras_agent.py` state reinjection (lines 1021-1038)
   - Insert state_msg after user message (index 2) not at index 1
   - **AC:** `_prune_messages` preserves system+user correctly
   - **If Blocked:** Message order must be: [0]=system, [1]=user, [2]=state_injection. The `_prune_messages` function expects system at 0 and user at 1. Find `messages.insert(1, state_msg)` and change to `messages.insert(2, state_msg)`
@@ -454,7 +454,7 @@
   - Add frontend section entries
   - **AC:** All index.md entries have SUMMARY.md counterparts
 
-- [ ] **5.3.3** Fix incorrect dates (2026-01-25 → 2026-01-24)
+- [x] **5.3.3** Fix incorrect dates (2026-01-24 (already corrected))
   - Files: `workers/IMPLEMENTATION_PLAN.md`, `skills/domains/languages/typescript/README.md`
   - **AC:** No future dates in Last Updated fields
 
@@ -526,7 +526,7 @@
 
 ### Phase 5.0: Hash Regeneration (HUMAN ONLY - Do First) ✅ COMPLETE
 
-> ✅ **Completed 2026-01-25 by Cortex**
+> ✅ **Completed 2026-01-24 by Cortex**
 
 - [x] **5.0.1** Regenerate `.verify/loop.sha256`
 - [x] **5.0.2** Regenerate `.verify/ac.sha256` - was already correct
