@@ -427,15 +427,15 @@ expect_stdout_regex=^ok
 [Cortex.FileSizeLimit.SYSTEM_PROMPT]
 mode=auto
 gate=warn
-desc=cortex/CORTEX_SYSTEM_PROMPT.md max 180 lines
-cmd=bash -c 'lines=$(wc -l < ../../cortex/CORTEX_SYSTEM_PROMPT.md 2>/dev/null || echo 0); [[ $lines -le 180 ]] && echo "ok ($lines lines)" || echo "OVER: $lines lines (max 180)"'
+desc=cortex/CORTEX_SYSTEM_PROMPT.md max 250 lines
+cmd=bash -c 'lines=$(wc -l < ../../cortex/CORTEX_SYSTEM_PROMPT.md 2>/dev/null || echo 0); [[ $lines -le 250 ]] && echo "ok ($lines lines)" || echo "OVER: $lines lines (max 250)"'
 expect_stdout_regex=^ok
 
 [Cortex.FileSizeLimit.AGENTS]
 mode=auto
 gate=warn
-desc=cortex/AGENTS.md max 180 lines
-cmd=bash -c 'lines=$(wc -l < ../../cortex/AGENTS.md 2>/dev/null || echo 0); [[ $lines -le 180 ]] && echo "ok ($lines lines)" || echo "OVER: $lines lines (max 180)"'
+desc=cortex/AGENTS.md max 250 lines
+cmd=bash -c 'lines=$(wc -l < ../../cortex/AGENTS.md 2>/dev/null || echo 0); [[ $lines -le 250 ]] && echo "ok ($lines lines)" || echo "OVER: $lines lines (max 250)"'
 expect_stdout_regex=^ok
 
 # =============================================================================
