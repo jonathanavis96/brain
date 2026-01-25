@@ -71,7 +71,7 @@
   - ESLint and Prettier configs
   - **AC:** Directory exists with 5+ files
 
-- [ ] **6.1.2** Create `templates/go/` directory with Go project template
+- [x] **6.1.2** Create `templates/go/` directory with Go project template
   - AGENTS.project.md, NEURONS.project.md, VALIDATION_CRITERIA.project.md
   - go.mod template and project structure
   - golangci-lint config
