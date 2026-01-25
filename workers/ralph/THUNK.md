@@ -714,4 +714,36 @@ Started: 2026-01-18
 | 713 | 7.2.2 | HIGH | **7.2.2** Update `skills/SUMMARY.md` with enhanced error reference - Added comprehensive "Error Code Index" section with 6 categories: ShellCheck (20 SC*codes with descriptions), Markdown Lint (8 MD* codes), Python Errors (5 error types), HTTP Status Codes (7 codes), Testing Errors (4 types), Cache/Performance Issues (4 types), Code Quality Issues (7 types), Generic Error Handling (4 types), all with direct links to relevant skill documents, total 101 new error code mappings for instant lookup | 2026-01-25 |
 | 714 | 7.3.1 | HIGH | **7.3.1** Request AC.rules update for shellcheck regex - Created SPEC_CHANGE_REQUEST.md documenting task ambiguity (no specificity on which regex, what update, what problem), investigated current AC.rules shellcheck rules (lines 240-270 use simple grep patterns not regex), found all shellcheck checks passing (no actionable failures), proposed 3 options (close as not actionable, request Cortex clarification, or make rules more generic), marked as HUMAN INTERVENTION REQUIRED (protected file cannot be modified without clear spec + hash regeneration), removed duplicate task line from workers/IMPLEMENTATION_PLAN.md | 2026-01-25 |
 | 715 | SYNC | LOW | **SYNC** Sync task 7.3.1 completion to cortex plan - Synced completion status from workers/IMPLEMENTATION_PLAN.md to cortex/IMPLEMENTATION_PLAN.md for task 7.3.1, cortex plan now shows task marked [x] complete | 2026-01-25 |
+| 717 | 10.1.1 | auto-cleanup | **10.1.1** Create `workers/ralph/cleanup_plan.sh` | 2026-01-25 |
+| 718 | 10.1.2 | auto-cleanup | **10.1.2** Add `--archive` flag to append removed tasks to THUNK.md | 2026-01-25 |
+| 719 | 10.1.3 | auto-cleanup | **10.1.3** Add phase collapse detection | 2026-01-25 |
+| 720 | 10.2.1 | auto-cleanup | **10.2.1** Add cleanup hook to `sync_cortex_plan.sh` | 2026-01-25 |
+| 721 | 10.2.2 | auto-cleanup | **10.2.2** Add `--no-cleanup` flag to sync script | 2026-01-25 |
+| 722 | 10.3.1 | auto-cleanup | **10.3.1** Create `tools/test_plan_cleanup.sh` test script | 2026-01-25 |
+| 723 | WARN.Protected.1 | auto-cleanup | **WARN.Protected.1** - Protected file changed (human review required) - ACKNOWLEDGED - Human will regenerate hashes | 2026-01-25 |
+| 724 | WARN.Protected.2 | auto-cleanup | **WARN.Protected.2** - Protected file changed (human review required) - ACKNOWLEDGED - Human will regenerate hashes | 2026-01-25 |
+| 725 | 6.1.1 | auto-cleanup | **6.1.1** Create `templates/javascript/` directory with JS/TS project template | 2026-01-25 |
+| 726 | 6.1.2 | auto-cleanup | **6.1.2** Create `templates/go/` directory with Go project template | 2026-01-25 |
+| 727 | 6.3.1 | auto-cleanup | **6.3.1** Create `templates/website/` with project scaffolding (pointers only) | 2026-01-25 |
+| 728 | 7.1.1 | auto-cleanup | **7.1.1** Enhance root `README.md` with better onboarding flow | 2026-01-25 |
+| 729 | 7.1.2 | auto-cleanup | **7.1.2** Create `CONTRIBUTING.md` with contribution guidelines | 2026-01-25 |
+| 730 | 7.2.1 | auto-cleanup | **7.2.1** Update `skills/index.md` with new skill files from Phase 5 | 2026-01-25 |
+| 731 | 7.2.2 | auto-cleanup | **7.2.2** Update `skills/SUMMARY.md` with enhanced error reference | 2026-01-25 |
+| 732 | 7.3.1 | auto-cleanup | **7.3.1** Request AC.rules update for shellcheck regex | 2026-01-25 |
+| 717 | 10.1.1 | auto-cleanup | **10.1.1** Create `workers/ralph/cleanup_plan.sh` | 2026-01-25 |
+| 718 | 10.1.2 | auto-cleanup | **10.1.2** Add `--archive` flag to append removed tasks to THUNK.md | 2026-01-25 |
+| 719 | 10.1.3 | auto-cleanup | **10.1.3** Add phase collapse detection | 2026-01-25 |
+| 720 | 10.2.1 | auto-cleanup | **10.2.1** Add cleanup hook to `sync_cortex_plan.sh` | 2026-01-25 |
+| 721 | 10.2.2 | auto-cleanup | **10.2.2** Add `--no-cleanup` flag to sync script | 2026-01-25 |
+| 722 | 10.3.1 | auto-cleanup | **10.3.1** Create `tools/test_plan_cleanup.sh` test script | 2026-01-25 |
+| 723 | WARN.Protected.1 | auto-cleanup | **WARN.Protected.1** - Protected file changed (human review required) - ACKNOWLEDGED - Human will regenerate hashes | 2026-01-25 |
+| 724 | WARN.Protected.2 | auto-cleanup | **WARN.Protected.2** - Protected file changed (human review required) - ACKNOWLEDGED - Human will regenerate hashes | 2026-01-25 |
+| 725 | 6.1.1 | auto-cleanup | **6.1.1** Create `templates/javascript/` directory with JS/TS project template | 2026-01-25 |
+| 726 | 6.1.2 | auto-cleanup | **6.1.2** Create `templates/go/` directory with Go project template | 2026-01-25 |
+| 727 | 6.3.1 | auto-cleanup | **6.3.1** Create `templates/website/` with project scaffolding (pointers only) | 2026-01-25 |
+| 728 | 7.1.1 | auto-cleanup | **7.1.1** Enhance root `README.md` with better onboarding flow | 2026-01-25 |
+| 729 | 7.1.2 | auto-cleanup | **7.1.2** Create `CONTRIBUTING.md` with contribution guidelines | 2026-01-25 |
+| 730 | 7.2.1 | auto-cleanup | **7.2.1** Update `skills/index.md` with new skill files from Phase 5 | 2026-01-25 |
+| 731 | 7.2.2 | auto-cleanup | **7.2.2** Update `skills/SUMMARY.md` with enhanced error reference | 2026-01-25 |
+| 732 | 7.3.1 | auto-cleanup | **7.3.1** Request AC.rules update for shellcheck regex | 2026-01-25 |
 | 716 | WARN.Protected.1-2 | LOW | **WARN.Protected.1-2** Acknowledge protected file warnings - Acknowledged 2 protected file hash mismatch warnings (Protected.1, Protected.2) that require human review to regenerate .verify/*.sha256 baselines, no action possible from Ralph per AGENTS.md guidance | 2026-01-25 |
