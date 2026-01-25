@@ -34,6 +34,31 @@ Ralph's monitor only detects `## Phase X:` headers.
 - Top-level: `1.1`, `1.2`
 - Subtasks: `1.1.1`, `1.1.2`
 
+### Task Complexity Tags
+
+Use complexity tags to estimate iteration time and identify candidates for decomposition:
+
+- **[S]** Small - ~90 seconds (simple fix, single file, clear path)
+  - Examples: Add missing language tag, fix typo, update version number
+- **[M]** Medium - ~300 seconds (multi-file, some investigation)
+  - Examples: Fix shellcheck warnings across 3 files, update documentation structure
+- **[L]** Large - ~600 seconds (complex logic, testing required, cross-cutting)
+  - Examples: Implement new feature with tests, refactor module architecture
+
+**Guidelines:**
+
+- Tasks consistently exceeding their tag should be decomposed
+- Use `current_ralph_tasks.sh` ETA to track actual vs estimated time
+- Batching multiple [S] tasks can be more efficient than individual iterations
+
+**Example:**
+
+```markdown
+- [ ] **1.2.3** [M] Add caching layer to API client
+- [ ] **1.2.4** [S] Fix MD040 in README.md
+- [ ] **1.2.5** [L] Implement authentication system with OAuth2
+```
+
 ---
 
 ## Example Task Contract
