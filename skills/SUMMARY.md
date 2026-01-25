@@ -77,14 +77,18 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
   - [Markdown Patterns](domains/code-quality/markdown-patterns.md) - Lint rules (MD040, MD024, MD050), documentation accuracy
   - [Python Patterns](domains/languages/python/python-patterns.md) - datetime, f-strings, JSON handling, type hints, import scope
   - [Testing Patterns](domains/code-quality/testing-patterns.md) - Unit, integration, e2e testing across Jest, pytest, Go testing
+  - [Test Coverage Patterns](domains/code-quality/test-coverage-patterns.md) - Coverage tracking, differential coverage, CI integration
   - [Research Patterns](domains/code-quality/research-patterns.md) - Systematic research methodology (CRAAP test, triangulation, source evaluation)
     - [Research Cheatsheet](domains/code-quality/research-cheatsheet.md) - One-page quick reference
   - [Token Efficiency](domains/code-quality/token-efficiency.md) - Token optimization strategies for AI agents
   - [Ralph Loop Architecture](domains/ralph/ralph-patterns.md) - How Ralph works internally (subagents, tool visibility, execution flow)
   - [Bootstrap Patterns](domains/ralph/bootstrap-patterns.md) - Project bootstrapping, scaffold templates, initialization flows
+  - [Cache Debugging](domains/ralph/cache-debugging.md) - Cache troubleshooting, invalidation, performance analysis
   - [Code Hygiene](domains/code-quality/code-hygiene.md) - Dead code removal, linting, formatting consistency
   - [Deployment Patterns](domains/infrastructure/deployment-patterns.md) - CI/CD, rollout strategies, environment management
+  - [Disaster Recovery Patterns](domains/infrastructure/disaster-recovery-patterns.md) - Backup strategies, failover procedures, recovery testing
   - [Error Handling Patterns](domains/backend/error-handling-patterns.md) - Exception handling, error boundaries, retry strategies
+  - [Observability Patterns](domains/infrastructure/observability-patterns.md) - Logging, metrics, tracing, alerting
   - [Security Patterns](domains/infrastructure/security-patterns.md) - Input validation, secrets management, secure defaults
   - [State Management Patterns](domains/infrastructure/state-management-patterns.md) - React state, global stores, persistence
   - **[JavaScript Patterns](domains/languages/javascript/README.md)** - Modern JavaScript (ES6+), async patterns, module systems

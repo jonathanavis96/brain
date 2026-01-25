@@ -68,7 +68,7 @@
   - Fixes broken links from frontend/README.md and javascript/README.md
   - **AC:** File exists, links resolve
 
-- [ ] **5.3.2** Update `skills/index.md` entries in SUMMARY.md
+- [x] **5.3.2** Update `skills/index.md` entries in SUMMARY.md
   - Add research-patterns, research-cheatsheet, token-efficiency
   - Add frontend section entries
   - **AC:** All index.md entries have SUMMARY.md counterparts
@@ -449,7 +449,7 @@
   - Fixes broken links from frontend/README.md and javascript/README.md
   - **AC:** File exists, links resolve
 
-- [ ] **5.3.2** Update `skills/index.md` entries in SUMMARY.md
+- [x] **5.3.2** Update `skills/index.md` entries in SUMMARY.md
   - Add research-patterns, research-cheatsheet, token-efficiency
   - Add frontend section entries
   - **AC:** All index.md entries have SUMMARY.md counterparts
