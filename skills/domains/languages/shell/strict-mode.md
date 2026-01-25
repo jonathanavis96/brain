@@ -165,7 +165,11 @@ main() {
 main "$@"
 ```text
 
-## Related
+## Related Playbooks
+
+- [Fix ShellCheck Failures](../../../playbooks/fix-shellcheck-failures.md) - Systematic approach to resolving SC2155, SC2181, SC2320, and other shellcheck warnings
+
+## Related Skills
 
 - [variable-patterns.md](./variable-patterns.md) - Variable declaration patterns
 - [cleanup-patterns.md](./cleanup-patterns.md) - Proper cleanup with traps

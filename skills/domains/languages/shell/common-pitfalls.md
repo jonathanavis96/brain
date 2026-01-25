@@ -451,6 +451,10 @@ die() { log_error "$@"; exit 1; }
 | Magic number `8` | Unclear intent | Use `readonly CONSTANT=8` |
 | Same function in 2 files | Bugs diverge | Extract to shared lib |
 
+## Related Playbooks
+
+- **[Fix ShellCheck Failures](../../../playbooks/fix-shellcheck-failures.md)** - Systematic approach to resolving SC2002, SC2009, SC2012, SC2126, SC2162, SC2046, SC2006, SC2086, and other shellcheck warnings
+
 ## See Also
 
 - **[Strict Mode](strict-mode.md)** - `set -euo pipefail` settings and error handling

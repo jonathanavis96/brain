@@ -292,6 +292,10 @@ markdownlint -d MD013 "**/*.md"  # Ignore line length
 | Stale usage comment | Misleads users | Keep comments current |
 | Old terminology | Confuses readers | Update all references |
 
+## Related Playbooks
+
+- **[Fix Markdown Lint](../../playbooks/fix-markdown-lint.md)** - Systematic approach to resolving MD040, MD024, MD032, MD060, and other markdown linting issues
+
 ## See Also
 
 - **[Code Hygiene](code-hygiene.md)** - Definition of Done checklist and quality gates
