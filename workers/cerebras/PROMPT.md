@@ -2,21 +2,24 @@
 
 You are Cerebras. AGENTS.md was injected above. Mode is in the header.
 
-**First action:** Check `.verify/latest.txt` for PASS/FAIL/WARN status.
+## Verifier Feedback (CRITICAL - Already Injected!)
 
-## Verifier Feedback (CRITICAL - Check First!)
+**⚠️ DO NOT read `.verify/latest.txt` - verifier status is already injected in the header above.**
 
-**ALWAYS check `.verify/latest.txt` at the start of every iteration** to review PASS/FAIL/WARN status.
+Look for the `# VERIFIER STATUS` section at the top of this prompt. It contains:
 
-If your prompt header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
+- SUMMARY (PASS/FAIL/WARN counts)
+- Any failing or warning checks with details
+
+If the header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
 1. **STOP** - Do not pick a new task from workers/IMPLEMENTATION_PLAN.md
-2. **READ** `.verify/latest.txt` to understand what failed
+2. **CHECK** the injected verifier status above to understand what failed
 3. **FIX** the failing acceptance criteria listed in `# FAILED_RULES:`
 4. **COMMIT** your fix with message: `fix(cerebras): resolve AC failure <RULE_ID>`
 5. **THEN** output `:::BUILD_READY:::` so the verifier can re-run
 
-If `.verify/latest.txt` contains `[WARN]` lines:
+If the injected verifier status contains `[WARN]` lines:
 
 1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of workers/IMPLEMENTATION_PLAN.md (after header, before other phases)
 2. **⚠️ DO NOT create "## Verifier Warnings" without the "Phase 0-Warn:" prefix** - This breaks the task monitor!
@@ -48,7 +51,7 @@ If verifier shows `Protected.1`, `Protected.2`, `Protected.3`, or `Protected.4` 
 4. **Move to next unrelated task** OR complete the iteration
 5. Do NOT waste tool calls debugging protected file issues
 
-**Anti-pattern:** Running `cat .verify/latest.txt` 5 times hoping for different results.
+**Anti-pattern:** Trying to read `.verify/latest.txt` (it's already injected in the header!).
 
 If you cannot fix a failure (protected file, infrastructure issue), output:
 
@@ -181,11 +184,7 @@ See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
 
 ### Pre-Planning State Check
 
-**Note:** Auto-fix and verifier run automatically before BUILD iterations. For PLAN mode, check verifier output:
-
-```bash
-cat .verify/latest.txt | grep -E "SUMMARY|\[WARN\]|\[FAIL\]"
-```
+**Note:** Auto-fix and verifier run automatically before BUILD iterations. Verifier status is injected in the header above - no need to read the file.
 
 **If WARN/FAIL items exist:** Prioritize fixing them before feature work. Add to "## Phase 0-Warn: Verifier Warnings" section if not already tracked.
 
@@ -250,7 +249,7 @@ cat .verify/latest.txt | grep -E "SUMMARY|\[WARN\]|\[FAIL\]"
 4. **By Turn 8 you MUST have made at least ONE code edit (a file diff).**
    If you have not edited a file by turn 8, stop reconnaissance and immediately open the relevant source file and implement.
 
-5. **Do not read `.verify/latest.txt` more than once per iteration** unless the task explicitly requires verifier debugging.
+5. **Do not read `.verify/latest.txt`** - verifier status is already injected in the header above.
 
 6. **Do not re-read the same file twice** unless you need to verify your edits worked.
 
@@ -374,12 +373,12 @@ Target: <20 tool calls per iteration.
 ### No Duplicate Commands (CRITICAL)
 
 - **NEVER run the same bash command twice** in one iteration
-- Cache command output mentally - if you ran `cat .verify/latest.txt`, you have the result
+- Use the injected verifier status in the header - never read `.verify/latest.txt`
 - If a command fails, fix the issue, don't re-run the same failing command hoping for different results
 
 **Anti-patterns (NEVER do these):**
 
-- Running `cat .verify/latest.txt` 3-5 times
+- Trying to read `.verify/latest.txt` (it's already in the header!)
 - Running `git status` before AND after `git add`
 - Running `shellcheck file.sh`, then `shellcheck -e SC1091 file.sh`, then `shellcheck -x file.sh`
 
@@ -407,7 +406,7 @@ Target: <20 tool calls per iteration.
 **NEVER repeat these (you already know):**
 
 - `pwd`, `git branch` - known from header
-- `.verify/latest.txt` - read ONCE at start
+- Verifier status - already injected in header (NEVER read the file)
 - `tail workers/ralph/THUNK.md` - get next number ONCE
 - Same file content - read ONCE, remember it
 

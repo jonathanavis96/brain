@@ -46,7 +46,9 @@ You have **MAX 10-15 turns**. Be efficient:
 
 ## Verifier Check (First Action)
 
-**Check `.verify/latest.txt`** at the start:
+**⚠️ Verifier status is already injected in the header above - DO NOT read `.verify/latest.txt`**
+
+Check the `# VERIFIER STATUS` section at the top:
 
 - **PASS** → Proceed with your task
 - **FAIL** → Stop! Fix the failing AC first, then `:::BUILD_READY:::`
@@ -54,7 +56,7 @@ You have **MAX 10-15 turns**. Be efficient:
 
 If header shows `# LAST_VERIFIER_RESULT: FAIL`:
 
-1. Read `.verify/latest.txt` to understand failures
+1. Check injected verifier status above to understand failures
 2. Fix the failing acceptance criteria
 3. Commit: `fix(ralph): resolve AC failure <RULE_ID>`
 4. Output `:::BUILD_READY:::`
@@ -63,7 +65,7 @@ If header shows `# LAST_VERIFIER_RESULT: FAIL`:
 
 ## Workflow
 
-1. Check verifier status (`.verify/latest.txt`)
+1. Check injected verifier status in header
 2. Plan with `think` tool
 3. Execute: `grep` + `read_lines` or `symbols` + `read_lines`
 4. Make changes: `patch_file` → `diff` → `git_commit` (ALL IN ONE TURN)

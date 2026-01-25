@@ -2,21 +2,24 @@
 
 You are Ralph. AGENTS.md was injected above. Mode is in the header.
 
-**First action:** Check `.verify/latest.txt` for PASS/FAIL/WARN status.
+## Verifier Feedback (CRITICAL - Already Injected!)
 
-## Verifier Feedback (CRITICAL - Check First!)
+**⚠️ DO NOT read `.verify/latest.txt` - verifier status is already injected in the header above.**
 
-**ALWAYS check `.verify/latest.txt` at the start of every iteration** to review PASS/FAIL/WARN status.
+Look for the `# VERIFIER STATUS` section at the top of this prompt. It contains:
 
-If your prompt header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
+- SUMMARY (PASS/FAIL/WARN counts)
+- Any failing or warning checks with details
+
+If the header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
 1. **STOP** - Do not pick a new task from IMPLEMENTATION_PLAN.md
-2. **READ** `.verify/latest.txt` to understand what failed
+2. **CHECK** the injected verifier status above to understand what failed
 3. **FIX** the failing acceptance criteria listed in `# FAILED_RULES:`
 4. **COMMIT** your fix with message: `fix(ralph): resolve AC failure <RULE_ID>`
 5. **THEN** output `:::BUILD_READY:::` so the verifier can re-run
 
-If `.verify/latest.txt` contains `[WARN]` lines:
+If the injected verifier status contains `[WARN]` lines:
 
 1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of IMPLEMENTATION_PLAN.md (after header, before other phases)
 2. **⚠️ DO NOT create "## Verifier Warnings" without the "Phase 0-Warn:" prefix** - This breaks the task monitor!
@@ -276,7 +279,7 @@ Target: <20 tool calls per iteration.
 **NEVER repeat these (you already know):**
 
 - `pwd`, `git branch` - known from header
-- `.verify/latest.txt` - read ONCE at start
+- Verifier status - already injected in header (NEVER read the file)
 - `tail workers/ralph/THUNK.md` - get next number ONCE
 - Same file content - read ONCE, remember it
 
@@ -325,7 +328,7 @@ git status --short
 grep -c '^\- \[ \]' ralph/IMPLEMENTATION_PLAN.md || echo "0"
 
 # Check verifier status
-cat .verify/latest.txt | grep -E '\[PASS\]|\[FAIL\]|\[WARN\]' | tail -5
+# Verifier status is injected in header - no need to read file
 ```text
 
 **Skills Coverage:**
