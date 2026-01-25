@@ -55,7 +55,7 @@ Key milestones:
   - Run `git rm -r tools/rollflow_analyze/src/rollflow_analyze.egg-info/`
   - **AC:** Directory removed from repo
 
-- [ ] **5.1.3** Fix waiver request reason in `WVR-2026-01-24-003.json`
+- [x] **5.1.3** Fix waiver request reason in `WVR-2026-01-24-003.json`
   - Update reason field to match actual evidence (files are identical)
   - **AC:** Reason field accurately reflects diff -q output
 
