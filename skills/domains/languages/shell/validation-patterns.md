@@ -382,6 +382,13 @@ done
 - [Shell Common Pitfalls](common-pitfalls.md) - ShellCheck errors and gotchas
 - [Testing Patterns](../../code-quality/testing-patterns.md) - General testing strategies
 
+## See Also
+
+- **[Strict Mode](strict-mode.md)** - `set -euo pipefail` error handling
+- **[Variable Patterns](variable-patterns.md)** - Safe variable usage and ShellCheck fixes
+- **[Cleanup Patterns](cleanup-patterns.md)** - Trap handlers for cleanup
+- **[Testing Patterns](../../code-quality/testing-patterns.md)** - General testing strategies
+
 ## References
 
 - ShellCheck wiki: <https://www.shellcheck.net/wiki/>

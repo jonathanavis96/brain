@@ -998,8 +998,11 @@ func set(key string, val int) {
 - [Uber Go Style Guide](https://github.com/uber-go/guide/blob/master/style.md) - Production patterns
 - [Standard Library](https://pkg.go.dev/std) - Go standard packages
 
-## Related Brain Skills
+## See Also
 
-- **Backend:** [api-design-patterns.md](../../backend/api-design-patterns.md), [auth-patterns.md](../../backend/auth-patterns.md)
-- **Infrastructure:** [deployment-patterns.md](../../infrastructure/deployment-patterns.md), [observability-patterns.md](../../infrastructure/observability-patterns.md)
-- **Testing:** [testing-patterns.md](../../code-quality/testing-patterns.md)
+- **[Go Patterns](go-patterns.md)** - Detailed Go patterns (error handling, goroutines, interfaces)
+- **[API Design Patterns](../../backend/api-design-patterns.md)** - REST/GraphQL API design
+- **[Error Handling Patterns](../../backend/error-handling-patterns.md)** - General error handling strategies
+- **[Testing Patterns](../../code-quality/testing-patterns.md)** - Testing best practices across languages
+- **[Deployment Patterns](../../infrastructure/deployment-patterns.md)** - CI/CD and deployment strategies
+- **[Observability Patterns](../../infrastructure/observability-patterns.md)** - Logging, metrics, and tracing

@@ -83,3 +83,12 @@ These patterns are derived from:
 3. **[Bash Strict Mode](http://redsymbol.net/articles/unofficial-bash-strict-mode/)** - Defensive patterns
 4. **[Greg's Wiki](https://mywiki.wooledge.org/BashFAQ)** - Bash FAQ and pitfalls
 5. **[Pure Bash Bible](https://github.com/dylanaraps/pure-bash-bible)** - Trap patterns
+
+## See Also
+
+- **[Strict Mode](strict-mode.md)** - `set -euo pipefail` patterns and error handling
+- **[Variable Patterns](variable-patterns.md)** - ShellCheck fixes (SC2034, SC2155, SC2086)
+- **[Cleanup Patterns](cleanup-patterns.md)** - Trap handlers and temp file management
+- **[Common Pitfalls](common-pitfalls.md)** - Frequent ShellCheck errors and fixes
+- **[Validation Patterns](validation-patterns.md)** - Shell project validation and testing
+- **[Code Hygiene](../../code-quality/code-hygiene.md)** - General code quality practices

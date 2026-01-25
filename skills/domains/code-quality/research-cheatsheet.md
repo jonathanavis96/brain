@@ -134,4 +134,12 @@ grep -r "pattern" --include="*.py" --include="*.md" .
 
 ---
 
+## See Also
+
+- **[Research Patterns](research-patterns.md)** - Full research methodology and detailed examples
+- **[Token Efficiency](token-efficiency.md)** - Optimize research iterations and tool usage
+- **[Code Hygiene](code-hygiene.md)** - Code quality practices including research documentation
+
+---
+
 *Full methodology: [research-patterns.md](research-patterns.md)*
