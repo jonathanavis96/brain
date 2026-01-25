@@ -65,7 +65,7 @@
 
 **Goal:** Enhance project templates with better defaults and more comprehensive coverage.
 
-- [ ] **6.1.1** Create `templates/javascript/` directory with JS/TS project template
+- [x] **6.1.1** Create `templates/javascript/` directory with JS/TS project template
   - AGENTS.project.md, NEURONS.project.md, VALIDATION_CRITERIA.project.md
   - package.json template with common scripts
   - ESLint and Prettier configs
