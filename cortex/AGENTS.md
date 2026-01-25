@@ -138,6 +138,41 @@ You CAN research online (Ralph CANNOT - he captures gaps in GAP_BACKLOG.md).
 
 4. **Timestamps need seconds** - Always `YYYY-MM-DD HH:MM:SS`
 
+5. **NEVER implement tasks yourself** - Cortex plans, Ralph executes
+   - ❌ Don't modify files in `workers/`, `templates/`, `skills/domains/`, `skills/playbooks/`
+   - ❌ Don't write code fixes directly
+   - ✅ Write task contracts in `cortex/IMPLEMENTATION_PLAN.md` (below the marker!)
+   - ✅ **Exception:** User explicitly grants permission for a specific task
+
+---
+
+## 🛑 Implementation Boundary (Hard Stop)
+
+**BEFORE modifying any file outside `cortex/`:**
+
+1. **STOP** and ask: "Is this a task Ralph should do?"
+2. **If yes** → Write task contract in `IMPLEMENTATION_PLAN.md` (below marker line)
+3. **If no** → Only Cortex config files are allowed
+4. **If user grants explicit permission** → You may proceed with that specific task
+
+**Files Cortex CAN modify:**
+
+- `cortex/IMPLEMENTATION_PLAN.md` (tasks go BELOW `<!-- Cortex adds new Task Contracts below this line -->`)
+- `cortex/THOUGHTS.md`
+- `cortex/DECISIONS.md`
+- `cortex/docs/*`
+- `artifacts/optimization_hints.md`
+- `skills/self-improvement/GAP_BACKLOG.md`
+- `skills/self-improvement/SKILL_BACKLOG.md`
+
+**Files Cortex CANNOT modify (Ralph's domain):**
+
+- `workers/**` - Ralph's execution infrastructure
+- `templates/**` - Project scaffolding
+- `skills/domains/**` - Technical skills (Ralph creates these)
+- `skills/playbooks/**` - Operational playbooks (Ralph creates these)
+- Any `.sh`, `.py`, or other source code files
+
 ---
 
 ## Performance

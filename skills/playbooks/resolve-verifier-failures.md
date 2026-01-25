@@ -68,29 +68,19 @@ Hygiene.Markdown.1: skills/README.md:15 MD040/fenced-code-language...
 
 **Checkpoint:** ✓ Each failure is categorized with a clear resolution path
 
-### Step 3a: Protected File Failures (Human Required)
+### Step 3a: Protected File Warnings (Human Review)
 
-**Action:** If you see `Protected.X` failures, STOP IMMEDIATELY.
+**Action:** If you see `Protected.X` warnings, acknowledge and continue.
 
 - **YOU CANNOT FIX THESE** - Protected files are hash-guarded
 - `.verify/*.sha256` files are human-only
-- Attempting to "fix" will waste iterations
+- These are warnings, not blockers - continue with normal tasks
 
-**Output required:**
+**What to do:**
 
-```text
-⚠️ HUMAN INTERVENTION REQUIRED
-
-Cannot fix AC failure: Protected.1
-Reason: Protected file loop.sh has been modified. Cannot regenerate hash baseline - requires human approval.
-File: workers/ralph/loop.sh
-```
-
-**Then:**
-
-```bash
-echo ":::BUILD_READY:::"
-```
+1. Note the warning in your output
+2. Continue with other planned tasks
+3. Human will review the changes and regenerate hashes if intentional
 
 **Anti-pattern:** ❌ Don't try to read/modify `.verify/*.sha256` files or "fix" the protected file to match baseline.
 

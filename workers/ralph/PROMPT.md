@@ -41,14 +41,14 @@ Common failure types:
 - **AntiCheat** (e.g., `AntiCheat.1`): Remove the problematic marker/phrase from your code.
 - **Infrastructure** (e.g., `freshness_check`): Report to human - this is a loop.sh issue.
 
-### Protected File Bail-Out (CRITICAL)
+### Protected File Warnings (INFO)
 
-If verifier shows `Protected.1`, `Protected.2`, `Protected.3`, or `Protected.4` failures:
+If verifier shows `Protected.1`, `Protected.2`, `Protected.3`, or `Protected.4` warnings:
 
-1. **STOP IMMEDIATELY** - Do NOT attempt to fix hash mismatches
+1. **ACKNOWLEDGE** - Note the warning but do NOT attempt to fix hash mismatches
 2. You CANNOT modify `.verify/*.sha256` files - they are human-only
-3. Output `:::HUMAN_REQUIRED:::` with the failure details
-4. **Move to next unrelated task** OR complete the iteration
+3. **CONTINUE** with normal tasks - protected file warnings do not block work
+4. Human will review and regenerate hashes if the changes are intentional
 5. Do NOT waste tool calls debugging protected file issues
 
 **Anti-pattern:** Reading verifier output multiple times hoping for different results.
