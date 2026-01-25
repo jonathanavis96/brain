@@ -186,10 +186,6 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
 
 ### Phase 9C.0: Prerequisites (Marker Pipeline Fix)
 
-- [ ] **9C.0.3** Document RovoDev tool instrumentation limitation
-  - **Goal:** Clarify that RovoDev's native tools bypass shell wrapper
-  - **AC:** `artifacts/optimization_hints.md` has "Limitations" section explaining tool visibility gap
-  - **Note:** RovoDev bash/grep/find_and_replace_code don't go through `log_tool_start()`
 
 ### Phase 9C.1: Batching Infrastructure
 

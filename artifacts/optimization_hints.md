@@ -423,3 +423,124 @@ Re-run this analysis when:
 - New phase starts
 - Major batching opportunity identified
 - Tool parser is fixed (high priority)
+
+---
+
+## RovoDev Tool Call Analysis: 2026-01-25
+
+**Data Source:** RovoDev logs (`~/.rovodev/logs/`) + Ralph shell markers  
+**Time Period:** ~4 hours of Ralph activity  
+**Total Tool Calls:** 1,731
+
+### Tool Usage Breakdown
+
+| Tool | Calls | % | Avg Duration | Total Time |
+|------|-------|---|--------------|------------|
+| `bash` | 965 | 55.7% | 753ms | 724s |
+| `find_and_replace_code` | 199 | 11.5% | 586ms | 110s |
+| `update_todo` | 138 | 8.0% | 670ms | 92s |
+| `expand_code_chunks` | 122 | 7.0% | 211ms | 25s |
+| `open_files` | 84 | 4.9% | 366ms | 30s |
+| `grep` | 40 | 2.3% | 414ms | 17s |
+| `create_file` | 37 | 2.1% | 485ms | 18s |
+| `fix-markdown` | 32 | 1.8% | 6,487ms | 208s |
+| `pre-commit` | 32 | 1.8% | 11,849ms | 379s |
+| `verifier` | 32 | 1.8% | 2,025ms | 65s |
+
+### Time Distribution
+
+| Category | Time | % of Total |
+|----------|------|------------|
+| LLM thinking ("unknown" iterations) | 7,470s | 81.7% |
+| Bash commands | 724s | 7.9% |
+| Infrastructure (pre-commit, fix-markdown, verifier) | 652s | 7.1% |
+| File operations | 293s | 3.2% |
+
+### Bash Command Patterns
+
+| Pattern | Count | Notes |
+|---------|-------|-------|
+| `grep`/`rg` | 227 | Could use native `grep` tool |
+| `git` commands | 184 | Status, log, diff, etc. |
+| `cd && command` | 141 | Directory navigation |
+| `cat` | 90 | Could use `open_files` in some cases |
+| `echo` | 85 | Output/debugging |
+| `ls` | 52 | Directory listing |
+| `head`/`tail` | 45 | File preview |
+
+### Optimization Opportunities
+
+#### 1. Infrastructure Overhead: 39% of tool time
+
+**Problem:** `pre-commit` (11.8s avg) + `fix-markdown` (6.5s avg) + `verifier` (2.0s avg) run every iteration.
+
+**Current:** 32 iterations × 20.3s = 650s overhead
+
+**Options:**
+
+- Batch infrastructure checks (run once at end of multi-task batch)
+- Skip pre-commit on lint-only changes
+- Cache verifier results more aggressively
+
+#### 2. Bash → Native Tool Migration
+
+**Problem:** 231 `grep`/`rg` calls via bash, 43 `cat` calls via bash
+
+**Why bash is used:**
+
+- `cat` via bash works on absolute paths; `open_files` is workspace-relative
+- Agent may not realize native tools exist for these operations
+
+**Potential fix:**
+
+- Document native tool capabilities in PROMPT.md
+- Note: Some uses are legitimate (piping, complex commands)
+
+#### 3. File Caching Within Iteration
+
+**Problem:** Same file opened 78 times (`bin/tui-dashboard.sh`)
+
+**Cause:** Agent re-reads file each time it needs to reference content
+
+**Potential fix:**
+
+- RovoDev-level file content caching
+- Or: Agent guidance to use `expand_code_chunks` with specific line ranges
+
+#### 4. LLM Time is 81.7% of Total
+
+**This is the biggest lever.** Token optimization helps here:
+
+- Leaner system prompts
+- Better context injection (only relevant files)
+- Task decomposition (smaller context per task)
+
+### Limitations Observed
+
+**RovoDev Tool Instrumentation Gap:**
+
+- Native tools (bash, grep, etc.) are tracked in RovoDev logs
+- Shell wrapper tools (fix-markdown, pre-commit, verifier) use our markers
+- "Unknown" entries are iteration-level time (includes LLM thinking)
+
+**Directory Context:**
+
+- `open_files` works on workspace-relative paths
+- `bash cat` can access absolute paths
+- This explains why agent uses `cat` for files outside workspace
+
+---
+
+## Running Analysis
+
+```bash
+# Generate fresh analysis
+PYTHONPATH=tools/rollflow_analyze/src python3 -m rollflow_analyze \
+  --log-dir workers/ralph/logs \
+  --since 24h \
+  --markdown \
+  --verbose
+
+# View latest report
+cat artifacts/analysis/latest.md
+```
