@@ -309,22 +309,6 @@ EOF
 
 ---
 
-## Contributing to Brain
-
-Want to help improve the Brain? We welcome contributions!
-
-**→ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on:**
-
-- Adding new skills and patterns
-- Improving documentation
-- Fixing bugs and issues
-- Code quality standards
-- The pull request process
-
-All contributors should read [AGENTS.md](AGENTS.md) to understand how agents work with this repository.
-
----
-
 ## Key Features
 
 ### Self-Improvement

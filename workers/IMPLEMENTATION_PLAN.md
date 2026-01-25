@@ -46,7 +46,7 @@
   - **Fix:** Review and correct the code example
   - **AC:** Code examples are syntactically valid and demonstrate correct patterns
 
-- [ ] **CR-6.6** Fix README.md documentation issue (M12)
+- [x] **CR-6.6** Fix README.md documentation issue (M12)
   - **File:** `README.md` line 326
   - **Issue:** Incorrect or misleading documentation
   - **Fix:** Correct the documentation
