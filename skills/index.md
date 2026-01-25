@@ -101,6 +101,7 @@ Catalog of all skill files in the brain system.
 - [cache-debugging.md](domains/ralph/cache-debugging.md) - Cache debugging and troubleshooting patterns
 - [change-propagation.md](domains/ralph/change-propagation.md) - Change propagation and template sync
 - [ralph-patterns.md](domains/ralph/ralph-patterns.md) - Ralph loop operational patterns
+- [thread-search-patterns.md](domains/ralph/thread-search-patterns.md) - Search patterns for THUNK, git, and cache
 
 ### Playbooks (End-to-End Workflows)
 
