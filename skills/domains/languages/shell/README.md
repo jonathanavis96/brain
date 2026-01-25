@@ -50,17 +50,20 @@ shellcheck script.sh
 **Formatting with shfmt:**
 
 ```bash
-# IMPORTANT: Always use these flags to match pre-commit config
+# Manual formatting (write changes):
 shfmt -i 2 -ci -w script.sh
+
+# Pre-commit check (diff only, no auto-fix):
+shfmt -d -i 2 -ci script.sh
 
 # Flags explained:
 #   -i 2  = 2-space indentation
 #   -ci   = indent case statement bodies
-#   -w    = write in place
-#   -d    = diff mode (check only, used by pre-commit)
-
-# Check without modifying:
-shfmt -i 2 -ci -d script.sh
+#   -w    = write in place (manual use)
+#   -d    = diff mode (pre-commit config - check only)
+#
+# Note: Pre-commit uses `-d -i 2 -ci` (check only, no auto-fix)
+#       Manual fixes use `-i 2 -ci -w` (write changes)
 ```
 
 ---
