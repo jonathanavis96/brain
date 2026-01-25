@@ -17,8 +17,8 @@ Brain interacts with multiple tool types:
 
 | Category | Examples | Instrumented? | Cacheable? |
 |----------|----------|---------------|------------|
-| **Shell wrappers** | `run_tool()` in loop.sh | ✅ Yes | ✅ Configurable |
-| **RovoDev native** | `bash`, `grep`, `open_files`, `find_and_replace_code` | ❌ No | N/A |
+| **Shell wrappers** | `run_tool()` in loop.sh | ✅ Yes (:::MARKER:::) | ✅ Configurable |
+| **RovoDev native** | `bash`, `grep`, `open_files`, `find_and_replace_code` | ⚠️ Yes (ANSI format, needs parser) | N/A |
 | **Verifier checks** | AC checks in `verifier.sh` | ✅ Partial | ❌ No |
 | **MCP tools** | Atlassian, etc. | ❌ No | N/A |
 
@@ -108,7 +108,7 @@ check_ac_syntax() {
 | Gap | Severity | Description |
 |-----|----------|-------------|
 | **G1: No tool registry** | HIGH | Tools defined implicitly, not declared |
-| **G2: RovoDev tools unmanaged** | HIGH | Native tools bypass all governance |
+| **G2: RovoDev parser missing** | MEDIUM | Native tools emit data but need parser |
 | **G3: Hardcoded cacheability** | MEDIUM | `case` statement, not config |
 | **G4: No permission model** | MEDIUM | All tools have same access |
 | **G5: No tool discovery** | LOW | Can't list available tools |

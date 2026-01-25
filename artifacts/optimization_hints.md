@@ -159,29 +159,35 @@
 
 #### Limitations
 
-##### RovoDev Tool Instrumentation Gap
+##### RovoDev Tool Visibility (Parser Needed)
 
-RovoDev agents use native platform tools (`bash`, `grep`, `open_files`, `find_and_replace_code`, `expand_code_chunks`) that bypass shell-level instrumentation. This creates a fundamental visibility gap:
+RovoDev agents DO emit tool call information in logs, but in a different format than our `:::MARKER:::` system:
 
-**What we can track:**
+**What RovoDev outputs:**
 
-- Shell commands run through `log_tool_start()` wrapper in loop.sh
+```text
+⬡ Calling open_files:
+⬢ Called open_files:
+⬢ Calling bash: 0 seconds
+⬢ Called bash:
+```
 
-**What we cannot track:**
+**What we CAN track (with parser):**
 
-- RovoDev's native tool invocations (the majority of operations)
-- Tools invoked via RovoDev's `bash`, `grep`, `open_files`, `find_and_replace_code`, `expand_code_chunks` functions
+- Tool name (`bash`, `grep`, `open_files`, `find_and_replace_code`, `expand_code_chunks`)
+- Start/end of tool invocations
+- Duration (sometimes shown inline)
 
-**Impact:**
+**Current gap:**
 
-- `iter_###.json` shows all tool calls as `tool_name: "unknown"` because markers never emit for RovoDev tools
-- Cannot compute slowest tools, cache hit rates by tool type, or tool-specific batching opportunities
+- rollflow_analyze only parses `:::MARKER:::` format
+- Need to add RovoDev ANSI output parser to `heuristic_parser.py`
 
-**Why this matters for optimization:**
+**What this would enable:**
 
-1. **Batching detection:** Cannot identify "grep-heavy" vs "file-edit-heavy" tasks
-2. **Cache recommendations:** Cannot measure which tool types benefit most from caching
-3. **Duration analysis:** Can track iteration-level time but not tool-level granularity
+1. **Batching detection:** Identify "grep-heavy" vs "file-edit-heavy" tasks
+2. **Duration analysis:** Tool-level timing for all operations
+3. **Complete visibility:** Track 100% of tool calls, not just shell-wrapped ones
 
 **Root Cause:**
 

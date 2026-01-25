@@ -54,13 +54,26 @@ Python tool that parses markers and generates reports:
 - **Cache DB:** SQLite with `pass_cache` and `fail_log` tables
 - **Output:** Markdown reports in `artifacts/rollflow_reports/`
 
-### 1.4 Known Limitation: RovoDev Tool Blindness
+### 1.4 RovoDev Tool Output (Parseable)
 
-**Problem:** RovoDev's native tools (`bash`, `grep`, `find_and_replace_code`, `open_files`, `expand_code_chunks`) execute in the agent runtime, NOT through the shell wrapper. They don't emit `:::TOOL_START:::` markers.
+**Discovery:** RovoDev DOES emit tool call information in logs, just in a different format:
 
-**Impact:** rollflow_analyze only sees ~20-30% of actual tool calls (shell-wrapped ones).
+```text
+⬡ Calling open_files:
+⬢ Called open_files:
+⬢ Calling bash: 0 seconds
+⬢ Called bash:
+```
 
-**Documented in:** `artifacts/optimization_hints.md` (Section: Limitations)
+**Format:**
+
+- `⬡/⬢ Calling <tool_name>:` - Tool invocation start
+- `⬢ Called <tool_name>:` - Tool invocation end
+- Duration sometimes shown inline (e.g., `0 seconds`)
+
+**Current Gap:** rollflow_analyze doesn't parse this format yet - it only parses `:::MARKER:::` markers.
+
+**Opportunity:** Build a parser for RovoDev's ANSI-formatted output to get complete tool visibility.
 
 ---
 
@@ -80,7 +93,7 @@ Python tool that parses markers and generates reports:
 
 | Gap | Severity | Description |
 |-----|----------|-------------|
-| **G1: RovoDev tool blindness** | HIGH | Native tools not instrumented |
+| **G1: RovoDev parser missing** | MEDIUM | Tool data exists but not parsed |
 | **G2: No centralized event store** | MEDIUM | Markers in logs, not queryable |
 | **G3: No real-time streaming** | MEDIUM | Must parse logs post-hoc |
 | **G4: No cross-run correlation** | MEDIUM | `run_id` exists but no aggregation |
