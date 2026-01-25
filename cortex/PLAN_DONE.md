@@ -60,3 +60,20 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-25 | 9C.0.3 | - [x] **9C.0.3** Document RovoDev tool instrumentation limitation ✓ DONE |
 | 2026-01-25 | 9C.1.1 | - [x] **9C.1.1** Enhance `cortex/snapshot.sh` with batching hints ✓ DONE |
 | 2026-01-25 | 9C.1.2 | - [x] **9C.1.2** Add task complexity tags to PROMPT_REFERENCE.md ✓ DONE |
+
+### Archived on 2026-01-26
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-26 | CR-6.1 | - [x] **CR-6.1** Fix `LOGS_DIR` → `LOGDIR` typo in templates/ralph/loop.sh (M9) |
+| 2026-01-26 | CR-6.2 | - [x] **CR-6.2** Fix bin/brain-event flag parsing (M1) |
+| 2026-01-26 | CR-6.3 | - [x] **CR-6.3** Fix THUNK.md table column mismatch (M10) |
+| 2026-01-26 | CR-6.4 | - [x] **CR-6.4** Fix shell README config mismatch (C2) |
+| 2026-01-26 | CR-6.5 | - [x] **CR-6.5** Fix code-review-patterns.md example bugs (M11) |
+| 2026-01-26 | CR-6.6 | - [x] **CR-6.6** Fix README.md documentation issue (M12) |
+| 2026-01-26 | CR-6.7 | - [x] **CR-6.7** Fix observability-patterns.md issues (m1) |
+| 2026-01-26 | CR-6.8 | - [x] **CR-6.8** Fix broken documentation links (m3) |
+| 2026-01-26 | CR-6.9 | - [x] **CR-6.9** Fix deployment-patterns.md missing imports (m5) |
+| 2026-01-26 | CR-6.10 | - [x] **CR-6.10** Fix JavaScript example issues (m6) |
+| 2026-01-26 | CR-6.11 | - [x] **CR-6.11** Fix archive header parsing in current_ralph_tasks.sh (from CR-5) - Completed 2026-01-25 (THUNK #773) |
+| 2026-01-26 | CR-6.H1 | - [x] **CR-6.H1** Update SHA256 hashes after all fixes |

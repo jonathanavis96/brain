@@ -117,7 +117,7 @@
   - **AC:** `bats tests/unit/*.bats` runs successfully
   - **Priority:** HIGH (recurring logic bugs)
 
-- [ ] **POST-CR6.6** Expand semantic code review skill
+- [x] **POST-CR6.6** Expand semantic code review skill - Completed 2026-01-26 (THUNK #820)
   - **Goal:** Document patterns for LLM-based code review (complementing pre-commit)
   - **Implementation:** Expand `skills/domains/code-quality/code-review-patterns.md`
   - **Coverage:** Regex capture groups, dead code detection, variable scope, security
