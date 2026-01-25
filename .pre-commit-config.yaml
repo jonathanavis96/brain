@@ -147,6 +147,22 @@ repos:
             workers/ralph/README\.md$
           )$
 
+      - id: validate-code-examples
+        name: validate-code-examples
+        description: Validate code examples in markdown documentation
+        entry: python3 tools/validate_examples.py
+        language: system
+        files: \.md$
+        exclude: |
+          (?x)^(
+            .*THUNK\.md$|
+            .*IMPLEMENTATION_PLAN\.md$|
+            .*/PLAYBOOK_TEMPLATE\.md$|
+            templates/.*|
+            README\.md$|
+            CONTRIBUTING\.md$
+          )$
+
 
   # Protected File Hash Validation
   # ==========================================================================
