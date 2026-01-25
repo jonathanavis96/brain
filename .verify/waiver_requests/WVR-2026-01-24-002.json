@@ -2,10 +2,13 @@
   "waiver_id": "WVR-2026-01-24-002",
   "rule_id": "Template.1",
   "scope": {
-    "paths": ["workers/ralph/thunk_ralph_tasks.sh"]
+    "paths": [
+      "workers/ralph/thunk_ralph_tasks.sh"
+    ]
   },
   "reason": "Files workers/ralph/thunk_ralph_tasks.sh and templates/ralph/thunk_ralph_tasks.sh are identical (verified with diff which returns no output). Verifier output parsing error shows 'differ' when files are actually the same.",
   "created_by": "ralph",
   "created_at": "2026-01-24",
-  "expires": "2026-02-23"
+  "expires": "2026-02-23",
+  "created": "2026-01-24T19:03:52+02:00"
 }

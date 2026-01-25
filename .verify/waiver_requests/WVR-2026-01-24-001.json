@@ -2,10 +2,13 @@
   "waiver_id": "WVR-2026-01-24-001",
   "rule_id": "Lint.Markdown.NeuronsBalancedFences",
   "scope": {
-    "paths": ["NEURONS.md"]
+    "paths": [
+      "NEURONS.md"
+    ]
   },
   "reason": "NEURONS.md has balanced code fences (2 opens with language tags at lines 23, 214 and 2 closes at lines 92, 238). Verifier output is corrupted showing '20 opens, 0\n0 closes' - the newline splits the output causing regex mismatch. The file is correctly formatted with matching pairs.",
   "created_by": "ralph",
   "created_at": "2026-01-24",
-  "expires": "2026-02-23"
+  "expires": "2026-02-23",
+  "created": "2026-01-24T15:20:10+02:00"
 }

@@ -282,14 +282,14 @@ Key milestones:
 
 ### Phase 6.4: Template Sync Documentation
 
-- [ ] **6.4.1** Document intentional template drift in `templates/ralph/README.md`
+- [x] **6.4.1** Document intentional template drift in `templates/ralph/README.md`
   - Explain why `loop.sh`, `verifier.sh`, `current_ralph_tasks.sh` differ from workers/ralph/
   - List which files SHOULD sync vs which are brain-specific
   - **AC:** README explains sync policy
 
 ### Phase 6.5: Waiver Request Cleanup
 
-- [ ] **6.5.1** Add `created` timestamp to waiver request JSON schema
+- [x] **6.5.1** Add `created` timestamp to waiver request JSON schema
   - Update `.verify/request_waiver.sh` to include `"created": "$(date -Iseconds)"`
   - **AC:** New waiver requests have `created` field
 
