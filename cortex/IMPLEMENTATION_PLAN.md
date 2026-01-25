@@ -268,7 +268,7 @@ Key milestones:
 
 ### Phase 6.3: Stub Out Empty Language Directories
 
-- [ ] **6.3.1** Create `skills/domains/languages/go/go-patterns.md` stub
+- [x] **6.3.1** Create `skills/domains/languages/go/go-patterns.md` stub
   - Include: error handling, goroutines basics, common idioms
   - **AC:** File exists with at least Quick Reference table
 

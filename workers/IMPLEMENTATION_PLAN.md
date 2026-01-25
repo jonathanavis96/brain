@@ -138,7 +138,7 @@
   - Include: error handling, goroutines basics, common idioms
   - **AC:** File exists with at least Quick Reference table
 
-- [ ] **6.3.2** Create `skills/domains/languages/javascript/javascript-patterns.md` stub  
+- [x] **6.3.2** Create `skills/domains/languages/javascript/javascript-patterns.md` stub  
   - Include: async/await, modules, common gotchas
   - **AC:** File exists with at least Quick Reference table
 
