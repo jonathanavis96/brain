@@ -31,7 +31,7 @@
   - Call `cleanup()` before releasing lock to remove TEMP_CONFIG
   - **AC:** TEMP_CONFIG removed on all exit paths
 
-- [ ] **5.2.2** Fix `lookup_cache_pass` missing tool argument (loop.sh:1037-1038)
+- [x] **5.2.2** Fix `lookup_cache_pass` missing tool argument (loop.sh:1037-1038)
   - Add tool name as 3rd argument to lookup_cache_pass calls
   - **AC:** `non_cacheable_tools` check works correctly
 
