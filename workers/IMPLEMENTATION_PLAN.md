@@ -60,7 +60,7 @@
 
 **Goal:** Fix incorrect code examples in skills documentation.
 
-- [ ] **CR-3.1** Fix Python examples in deployment-patterns.md
+- [x] **CR-3.1** Fix Python examples in deployment-patterns.md
   - **File:** `skills/domains/infrastructure/deployment-patterns.md`
   - **Issues:** Missing `import time`, undefined `userId` in `isEnabledForPercentage`
   - **Fix:** Add missing imports and define variables
