@@ -6,67 +6,62 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
-## Phase CR-3: Code Example Fixes (CodeRabbit LOW Priority)
+## Phase CR-3: Code Example Fixes (CodeRabbit LOW Priority) ✅
 
 **Goal:** Fix incorrect code examples in skills documentation.
 
-- **File:** `skills/domains/infrastructure/deployment-patterns.md`
-- **Issues:** Missing `import time`, undefined `userId` in `isEnabledForPercentage`
-- **Fix:** Add missing imports and define variables
-- **AC:** Python examples are syntactically correct and complete
+**Status:** All tasks completed - see THUNK.md for details.
 
-- **File:** `skills/domains/infrastructure/observability-patterns.md`
-- **Issues:** `JsonFormatter.format` refs non-existent `record.extra`, hardcoded "200" status, SQL injection in span logging
-- **Fix:** Correct all example issues
-- **AC:** Python examples follow security best practices
-
+- [x] **CR-3.1** Fix deployment-patterns.md Python examples
+- [x] **CR-3.2** Fix observability-patterns.md Python examples
 - [x] **CR-3.3** Fix disaster-recovery-patterns.md PostgreSQL example
-  - **File:** `skills/domains/infrastructure/disaster-recovery-patterns.md`
-  - **Issue:** Uses removed PostgreSQL 12+ `recovery.conf`
-  - **Fix:** Update to modern PostgreSQL recovery configuration
-  - **AC:** PostgreSQL examples use current best practices (standby.signal + postgresql.conf)
-
-- [x] **CR-3.4** Fix JavaScript examples
-  - **Files:** `skills/domains/languages/javascript/README.md`, `skills/domains/code-quality/test-coverage-patterns.md`
-  - **Issues:** Undefined `userId` in tagged template, incorrect Jest `--collectCoverageFrom` usage
-  - **Fix:** Define variables, correct Jest command
-  - **AC:** JavaScript examples are correct and runnable
-
+- [x] **CR-3.4** Fix JavaScript examples (Jest flag)
 - [x] **CR-3.5** Fix grammar in deployment-patterns.md
-  - **File:** `skills/domains/infrastructure/deployment-patterns.md`
-  - **Issue:** "backward compatible" should be "backward-compatible"
-  - **Fix:** Hyphenate compound adjective
-  - **AC:** Grammar is correct
 
 ---
 
-## Phase CR-4: Prevention Strategy
+## Phase CR-4: Prevention Strategy ✅
 
 **Goal:** Add skills and checklists to prevent similar issues in future.
 
+**Status:** All tasks completed.
+
 - [x] **CR-4.1** Create code-review-patterns.md skill
-  - **File:** `skills/domains/code-quality/code-review-patterns.md`
-  - **Goal:** Document patterns that CodeRabbit caught but pre-commit missed
-  - **Content:**
-    - Bash regex patterns that capture delimiters
-    - Dead code patterns (cleanup blocks with undefined vars)
-    - Code example completeness (imports, variable definitions)
-    - Documentation reasonableness checks
-  - **AC:** Skill file exists with actionable patterns
-
 - [x] **CR-4.2** Add pre-PR checklist to AGENTS.md
-  - **File:** Root `AGENTS.md` or `workers/ralph/AGENTS.md`
-  - **Goal:** Manual checklist for catching logic bugs before PR
-  - **Content:**
-    - Regex capture verification
-    - Variable definition checks
-    - Code example completeness
-  - **AC:** Checklist section exists in AGENTS.md
+- [x] **CR-4.3** Add LLM-based semantic linting gap to GAP_BACKLOG.md
 
-- [x] **CR-4.3** Update GAP_BACKLOG with "custom CodeRabbit" need
-  - **File:** `skills/self-improvement/GAP_BACKLOG.md`
-  - **Goal:** Track need for custom semantic linting tool
-  - **AC:** Gap entry exists describing the need for LLM-based code review
+---
+
+## Phase CR-5: Low Priority Fixes (CodeRabbit Remaining)
+
+**Goal:** Address remaining low-priority CodeRabbit issues.
+
+- [ ] **CR-5.1** Fix documentation status mismatches (D6, D7)
+  - **File:** `workers/IMPLEMENTATION_PLAN.md`
+  - **Issues:**
+    - D6: Phase 2.1.2 status says "remains" but checkbox is complete
+    - D7: Phase 12.4.2-12.4.3 status says "deferred" but checkboxes are checked
+  - **Fix:** Reconcile checkbox state with status text descriptions
+  - **AC:** All checkbox states match their corresponding status text
+
+- [ ] **CR-5.2** Fix archive header handling in current_ralph_tasks.sh (Q1)
+  - **File:** `workers/ralph/current_ralph_tasks.sh`
+  - **Issue:** Archive headers not treated as section terminators
+  - **Fix:** Update section parsing to recognize archive headers as terminators
+  - **AC:** Script correctly handles archive sections in THUNK.md
+
+- [ ] **CR-5.3** Fix cache key JSON passing in templates/ralph/loop.sh (Q2)
+  - **File:** `templates/ralph/loop.sh`
+  - **Issue:** Cache key JSON passed incorrectly to function
+  - **Fix:** Correct the JSON parameter passing
+  - **AC:** Cache key JSON is properly formatted and passed
+  - **Note:** Protected file - may need hash regeneration after fix
+
+- [ ] **CR-5.4** Fix artifacts download endpoint in test-coverage-patterns.md (Q11)
+  - **File:** `skills/domains/code-quality/test-coverage-patterns.md`
+  - **Issue:** Artifacts download endpoint path is incorrect
+  - **Fix:** Update to correct GitHub Actions artifacts API endpoint
+  - **AC:** Artifacts endpoint URL is accurate
 
 ---
 
