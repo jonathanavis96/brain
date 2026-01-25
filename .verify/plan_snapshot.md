@@ -1,38 +1,8 @@
-# Cortex Implementation Plan
+# Implementation Plan - Brain Repository
 
-**Purpose:** Task Contracts for Ralph workers. Each contract defines an atomic task with clear goals and acceptance criteria.
+**Last Updated:** 2026-01-25 18:45:00
 
-**Workflow:**
-
-1. Cortex creates/updates Task Contracts here
-2. Ralph's `loop.sh` syncs this file via `sync_cortex_plan.sh`
-3. Ralph works through tasks, marking them complete
-4. Cortex reviews progress and creates new contracts
-
----
-
-## Current Status
-
-**Last Updated:** 2026-01-25 21:05:00  
-**Progress:** Added CR-5 phase for low-priority CodeRabbit fixes. ~30 pending tasks across Phases CR-5, 9C, 0-Warn, 6, 7.
-
-**Active Phases:**
-
-- Phase CR-5: CodeRabbit Low Priority (4 tasks) - remaining PR#5 fixes
-- Phase 9C: Task Optimization (11 tasks) - batching & decomposition
-- Phase 0-Warn: Verifier Warnings (2 tasks) - human intervention required
-- Phase 6: Template Improvements (3 tasks) - language templates
-- Phase 7: Documentation (5 tasks) - onboarding improvements
-
----
-
-## Completed Phases
-
-See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
-
-**Completed:** Phases 0-5, 6 (Housekeeping), 7 (Gap Radar), 8 (Playbooks), X (Structured Logging)
-
----
+**Current Status:** CodeRabbit PR#5 fixes and prevention strategy tasks.
 
 <!-- Cortex adds new Task Contracts below this line -->
 
@@ -117,6 +87,7 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
 
 ---
 
+
 ## Phase 0-Warn: Verifier Warnings
 
 **Goal:** Resolve verifier warnings from latest run.
@@ -128,30 +99,42 @@ See `workers/ralph/THUNK.md` for complete task history (550+ completed tasks).
 
 ---
 
-## Recurring: Performance Monitoring
+## Phase CR-5: Low Priority Fixes (CodeRabbit Remaining)
 
-**Goal:** Continuously scan logs and identify performance optimization opportunities.
+**Goal:** Address remaining low-priority CodeRabbit issues.
 
-**Frequency:** Every 5 Ralph iterations (or when Cortex reviews progress)
+- [ ] **CR-5.1** Fix documentation status mismatches (D6, D7)
+  - **File:** `workers/IMPLEMENTATION_PLAN.md`
+  - **Issues:**
+    - D6: Phase 2.1.2 status says "remains" but checkbox is complete
+    - D7: Phase 12.4.2-12.4.3 status says "deferred" but checkboxes are checked
+  - **Fix:** Reconcile checkbox state with status text descriptions
+  - **AC:** All checkbox states match their corresponding status text
 
-**Process:**
+- [ ] **CR-5.2** Fix archive header handling in current_ralph_tasks.sh (Q1)
+  - **File:** `workers/ralph/current_ralph_tasks.sh`
+  - **Issue:** Archive headers not treated as section terminators
+  - **Fix:** Update section parsing to recognize archive headers as terminators
+  - **AC:** Script correctly handles archive sections in THUNK.md
 
-1. **Scan iteration logs** in `artifacts/rollflow_cache/` for:
-   - Tasks exceeding 10 minutes (decomposition candidates)
-   - Repeated similar errors (skill gap candidates)
-   - Multiple file edits in same directory (batching candidates)
+- [ ] **CR-5.3** Fix cache key JSON passing in templates/ralph/loop.sh (Q2)
+  - **File:** `templates/ralph/loop.sh`
+  - **Issue:** Cache key JSON passed incorrectly to function
+  - **Fix:** Correct the JSON parameter passing
+  - **AC:** Cache key JSON is properly formatted and passed
+  - **Note:** Protected file - may need hash regeneration after fix
 
-2. **Update `artifacts/optimization_hints.md`** with:
-   - New batching opportunities discovered
-   - Decomposition recommendations
-   - Skill gaps to fill
-
-3. **Check gap radar output** from `bin/gap-radar --dry-run`:
-   - New error patterns not covered by skills
-   - Promote significant gaps to SKILL_BACKLOG.md
-
-**Trigger:** Cortex should run `bash cortex/snapshot.sh` which shows batching hints when ≥3 similar tasks detected.
-
-**AC:** `artifacts/optimization_hints.md` updated at least every 5 iterations with actionable insights.
+- [ ] **CR-5.4** Fix artifacts download endpoint in test-coverage-patterns.md (Q11)
+  - **File:** `skills/domains/code-quality/test-coverage-patterns.md`
+  - **Issue:** Artifacts download endpoint path is incorrect
+  - **Fix:** Update to correct GitHub Actions artifacts API endpoint
+  - **AC:** Artifacts endpoint URL is accurate
 
 ---
+
+## Notes
+
+- **Protected files (loop.sh, verifier.sh, PROMPT.md):** Ralph can prepare fixes but human must update hashes
+- **Hash regeneration:** Already handled by human - C1-C8 issues resolved
+- **egg-info cleanup (G1):** Already fixed - directory removed and added to .gitignore
+- **Reference:** See `docs/CODERABBIT_PR5_ALL_ISSUES.md` for complete issue list

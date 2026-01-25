@@ -45,7 +45,23 @@ shellcheck script.sh
 # SC2034 - unused variables  
 # SC2086 - unquoted variables
 # SC2162 - read without -r
-```text
+```
+
+**Formatting with shfmt:**
+
+```bash
+# IMPORTANT: Always use these flags to match pre-commit config
+shfmt -i 2 -ci -w script.sh
+
+# Flags explained:
+#   -i 2  = 2-space indentation
+#   -ci   = indent case statement bodies
+#   -w    = write in place
+#   -d    = diff mode (check only, used by pre-commit)
+
+# Check without modifying:
+shfmt -i 2 -ci -d script.sh
+```
 
 ---
 

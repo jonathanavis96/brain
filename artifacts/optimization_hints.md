@@ -344,6 +344,43 @@ For future comparison:
 
 ---
 
+## Limitations
+
+### Tool Instrumentation Gap
+
+**Issue:** RovoDev's native tools bypass Ralph's shell wrapper logging infrastructure.
+
+**Affected Tools:**
+
+- `bash` - Shell command execution
+- `grep` - Content search
+- `find_and_replace_code` - Code modifications
+- `open_files` - File viewing
+- `expand_code_chunks` - Code expansion
+
+**Impact:**
+
+- These tool calls are NOT logged via `log_tool_start()` in `workers/shared/common.sh`
+- Phase 0 structured logs (:::TOOL_START:::, :::TOOL_END::: markers) do NOT capture these operations
+- `rollflow_analyze` cannot track these tool calls for optimization analysis
+- Batching/decomposition hints based on logs are incomplete
+
+**Why This Happens:**
+
+RovoDev provides these as native API functions that execute directly in the agent runtime, not as shell commands wrapped by Ralph's instrumentation layer.
+
+**Workaround:**
+
+- Manual inspection of agent transcripts required for complete tool usage patterns
+- Focus optimization analysis on shell-wrapped tools (verifier, shellcheck, markdownlint, git)
+- Use iteration duration as proxy metric for overall efficiency
+
+**Future Consideration:**
+
+If RovoDev exposes tool call hooks/events, Ralph could integrate with those for complete visibility.
+
+---
+
 ## Next Analysis Trigger
 
 Re-run this analysis when:
