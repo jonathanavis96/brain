@@ -155,7 +155,7 @@
 
 ### Phase 6.5: Waiver Request Cleanup
 
-- [ ] **6.5.1** Add `created` timestamp to waiver request JSON schema
+- [x] **6.5.1** Add `created` timestamp to waiver request JSON schema
   - Update `.verify/request_waiver.sh` to include `"created": "$(date -Iseconds)"`
   - **AC:** New waiver requests have `created` field
 
