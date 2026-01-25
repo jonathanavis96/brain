@@ -75,7 +75,7 @@
 
 ### Phase 9C.4: Validation
 
-- [ ] **9C.4.1** Validate batching recommendations against next 5 iterations
+- [x] **9C.4.1** Validate batching recommendations against next 5 iterations
   - **Goal:** Measure if batched tasks reduce total time vs individual tasks
   - **AC:** Update `artifacts/optimization_hints.md` with before/after comparison
 
