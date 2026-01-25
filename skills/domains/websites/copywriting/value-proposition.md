@@ -172,3 +172,5 @@ Ask these questions:
 - `objection-handler.md` - Addressing doubts
 - `cta-optimizer.md` - Button copy and placement
 - `architecture/section-composer.md` - Where hero fits in page
+- `../../marketing/content/copywriting.md` - Full page copywriting (beyond hero)
+- `../../marketing/content/copy-editing.md` - Polish and edit existing copy

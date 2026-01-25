@@ -327,3 +327,5 @@ Usage in components:
 - `copywriting/cta-optimizer.md` - What to track
 - `launch/deployment.md` - Environment variables for tracking IDs
 - `qa/acceptance-criteria.md` - Verify tracking works
+- `../../marketing/growth/analytics-tracking.md` - Advanced analytics setup and measurement
+- `../../marketing/cro/ab-test-setup.md` - A/B testing with analytics

@@ -225,3 +225,5 @@ Section end: [Book Your First Session]
 - `objection-handler.md` - Reducing CTA friction
 - `design/color-system.md` - CTA button colors
 - `build/forms-integration.md` - What happens after CTA click
+- `../../marketing/cro/page-cro.md` - Full page conversion optimization
+- `../../marketing/cro/ab-test-setup.md` - Test CTA variations
