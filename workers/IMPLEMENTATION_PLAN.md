@@ -52,25 +52,25 @@
   - **Fix:** Correct the documentation
   - **AC:** Documentation accurately describes the feature/process
 
-- [ ] **CR-6.7** Fix observability-patterns.md issues (m1)
+- [x] **CR-6.7** Fix observability-patterns.md issues (m1)
   - **File:** `skills/domains/infrastructure/observability-patterns.md`
   - **Issues:** PostgreSQL placeholder mismatch, stray fence, hardcoded status, SQL injection
   - **Fix:** Correct all code examples
   - **AC:** All code examples use consistent patterns and are secure
 
-- [ ] **CR-6.8** Fix broken documentation links (m3)
+- [x] **CR-6.8** Fix broken documentation links (m3)
   - **Files:** `skills/domains/frontend/README.md`, `skills/domains/languages/javascript/README.md`, `skills/index.md`
   - **Issue:** Links to non-existent typescript README
   - **Fix:** Create typescript README or update links
   - **AC:** All internal links resolve to existing files
 
-- [ ] **CR-6.9** Fix deployment-patterns.md missing imports (m5)
+- [x] **CR-6.9** Fix deployment-patterns.md missing imports (m5)
   - **File:** `skills/domains/infrastructure/deployment-patterns.md`
   - **Issue:** Missing `import time`, undefined `userId`
   - **Fix:** Add missing imports, define or document variables
   - **AC:** Python code examples are complete and runnable
 
-- [ ] **CR-6.10** Fix JavaScript example issues (m6)
+- [x] **CR-6.10** Fix JavaScript example issues (m6)
   - **Files:** `skills/domains/languages/javascript/README.md`, `skills/domains/code-quality/test-coverage-patterns.md`
   - **Issue:** Undefined `userId`, incorrect Jest flag
   - **Fix:** Complete the examples

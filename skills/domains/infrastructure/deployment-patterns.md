@@ -160,7 +160,7 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: '--prod'
-```text
+```
 
 **Key principles:**
 
@@ -220,7 +220,7 @@ USER nextjs
 EXPOSE 3000
 
 CMD ["npm", "start"]
-```text
+```
 
 **Docker Compose for local development:**
 
@@ -266,7 +266,7 @@ services:
 volumes:
   postgres_data:
   redis_data:
-```text
+```
 
 **Key principles:**
 
@@ -305,7 +305,7 @@ export const env = envSchema.parse(process.env);
 // Usage:
 // import { env } from '@/lib/env';
 // const dbUrl = env.DATABASE_URL;
-```text
+```
 
 **`.env.example` template:**
 
@@ -317,7 +317,7 @@ REDIS_URL=redis://localhost:6379
 JWT_SECRET=your-secret-key-min-32-chars-long
 NEXT_PUBLIC_API_URL=http://localhost:3000
 PORT=3000
-```text
+```
 
 **Environment-specific files:**
 
@@ -326,7 +326,7 @@ PORT=3000
 .env.development    # Development defaults
 .env.staging        # Staging configuration
 .env.production     # Production configuration (use secrets manager)
-```text
+```
 
 **Key principles:**
 
@@ -352,7 +352,7 @@ PORT=3000
 ```sql
 -- Migration 001: Add new column with default
 ALTER TABLE users ADD COLUMN full_name VARCHAR(255) DEFAULT '';
-```text
+```
 
 Deploy code that populates `full_name` but still reads from old columns:
 
@@ -360,7 +360,7 @@ Deploy code that populates `full_name` but still reads from old columns:
 // Code reads old columns, writes to both
 const user = await db.user.findUnique({ where: { id } });
 const fullName = user.full_name || `${user.first_name} ${user.last_name}`;
-```text
+```
 
 #### Phase 2: Backfill data
 
@@ -369,7 +369,7 @@ const fullName = user.full_name || `${user.first_name} ${user.last_name}`;
 UPDATE users 
 SET full_name = CONCAT(first_name, ' ', last_name) 
 WHERE full_name = '';
-```text
+```
 
 #### Phase 3: Remove old columns (after all code updated)
 
@@ -377,7 +377,7 @@ WHERE full_name = '';
 -- Migration 003: Remove old columns
 ALTER TABLE users DROP COLUMN first_name;
 ALTER TABLE users DROP COLUMN last_name;
-```text
+```
 
 **Prisma migration workflow:**
 
@@ -394,7 +394,7 @@ npx prisma migrate deploy
 # Rollback (if needed)
 # Revert schema.prisma, then create rollback migration
 npx prisma migrate dev --name revert_full_name
-```text
+```
 
 **Key principles:**
 
@@ -459,7 +459,7 @@ export async function GET() {
   const statusCode = checks.status === 'ok' ? 200 : 503;
   return NextResponse.json(checks, { status: statusCode });
 }
-```text
+```
 
 **Graceful shutdown (Node.js server):**
 
@@ -500,7 +500,7 @@ process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
 startServer();
-```text
+```
 
 **Rolling deployment strategy:**
 
@@ -534,7 +534,7 @@ spec:
             port: 3000
           initialDelaySeconds: 30
           periodSeconds: 10
-```text
+```
 
 **Key principles:**
 
@@ -567,7 +567,7 @@ git checkout v1.2.2
 # Or revert specific commit
 git revert <bad-commit-hash>
 git push origin main
-```text
+```
 
 **Docker image rollback:**
 
@@ -580,7 +580,7 @@ docker push myapp:1.2.3
 docker pull myapp:1.2.2
 docker stop myapp-container
 docker run -d --name myapp-container myapp:1.2.2
-```text
+```
 
 **Database migration rollback:**
 
@@ -596,7 +596,7 @@ npx prisma migrate dev --name rollback_add_column
 
 # Rollback with custom tool
 ./migrate.sh down 001
-```text
+```
 
 **Automated rollback triggers:**
 
@@ -611,7 +611,7 @@ npx prisma migrate dev --name rollback_add_column
       ./rollback.sh
       exit 1
     fi
-```text
+```
 
 **Key principles:**
 
@@ -647,7 +647,7 @@ export const logger = pino({
 // Usage:
 logger.info({ userId: 123, action: 'login' }, 'User logged in');
 logger.error({ error: err, userId: 123 }, 'Failed to process payment');
-```text
+```
 
 **Application metrics:**
 
@@ -686,7 +686,7 @@ export function metricsMiddleware(req, res, next) {
   
   next();
 }
-```text
+```
 
 **Alerting rules (example):**
 
@@ -706,7 +706,7 @@ groups:
         for: 5m
         annotations:
           summary: "95th percentile latency > 1s"
-```text
+```
 
 **Key principles:**
 
