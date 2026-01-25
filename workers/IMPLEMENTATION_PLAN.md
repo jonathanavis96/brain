@@ -95,7 +95,7 @@
 - [x] **5.4.1** Fix `deployment-patterns.md` - add `import time`
   - **AC:** Python example runs without NameError
 
-- [ ] **5.4.2** Fix `deployment-patterns.md` - `isEnabledForPercentage` userId
+- [x] **5.4.2** Fix `deployment-patterns.md` - `isEnabledForPercentage` userId
   - Add userId parameter to function signature
   - **AC:** TypeScript compiles
 
@@ -387,7 +387,7 @@
 
 **Phase AC:** Playbook infrastructure exists, 6+ playbooks created, cross-referenced from skills
 
-## Phase 5: CodeRabbit PR #5 Fixes
+## Phase 5 (Duplicate): CodeRabbit PR #5 Fixes
 
 **Goal:** Fix all issues identified by CodeRabbit in PR #5.  
 **Reference:** `docs/CODERABBIT_PR5_ALL_ISSUES.md`  
@@ -540,7 +540,7 @@
 ---
 
 
-## Phase 6: Housekeeping & Skills Expansion
+## Phase 6 (Duplicate): Housekeeping ## Phase 6: Housekeeping & Skills Expansion Skills Expansion
 
 **Goal:** Clean up broken links, expand skills coverage, sync SUMMARY.md with actual skills.  
 **Priority:** LOW - Good overnight work after Phase 5
@@ -604,7 +604,7 @@
 ---
 
 
-## Phase 7: Capability Gap Radar (Automated Gap Discovery)
+## Phase 7 (Duplicate): Capability Gap Radar (Automated Gap Discovery)
 
 **Goal:** Automatically detect missing skills by analyzing errors and failures across Ralph runs.  
 **Why:** Gap capture exists but is underused. This turns every failure into a learning opportunity.  
@@ -684,7 +684,7 @@
 ---
 
 
-## Phase 8: Agent Playbooks (End-to-End Workflows)
+## Phase 8 (Duplicate): Agent Playbooks (End-to-End Workflows)
 
 **Goal:** Create curated multi-skill workflows for common complex tasks.  
 **Why:** Skills are atomic; playbooks chain them into actionable guides.  
