@@ -1,5 +1,7 @@
 # Testing Patterns
 
+<!-- covers: AssertionError, pytest.fail, jest.fail, testing.T.Errorf -->
+
 ## Why This Exists
 
 Testing is fundamental to software quality, but teams often struggle with test organization, choosing the right test types, managing mocks and fixtures, and integrating tests into CI/CD pipelines. Poor testing strategies lead to brittle tests that break with minor changes, slow test suites that block development, insufficient coverage that allows bugs to slip through, and difficulty reproducing issues. This knowledge base documents proven testing patterns across unit, integration, and end-to-end testing for multiple frameworks (Jest, pytest, Go testing, JUnit), helping teams write effective tests that catch bugs early while remaining maintainable.

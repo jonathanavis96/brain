@@ -1,5 +1,7 @@
 # API Design Patterns
 
+<!-- covers: 400, 401, 403, 404, 429, 500, 503 -->
+
 ## Why This Exists
 
 Well-designed APIs are the backbone of modern software systems, enabling frontend-backend communication, microservice integration, and third-party integrations. However, inconsistent API design leads to poor developer experience, brittle integrations, versioning nightmares, and security vulnerabilities. This knowledge base documents proven API design patterns covering REST conventions, GraphQL schemas, error handling, versioning strategies, pagination, rate limiting, and status code usage. These patterns help teams build predictable, maintainable, and scalable APIs.

@@ -1,5 +1,7 @@
 # Strict Mode Patterns
 
+<!-- covers: SC2155, SC2181, SC2320 -->
+
 > Essential safety settings for bash scripts that catch errors early.
 
 ## 🚨 Quick Reference

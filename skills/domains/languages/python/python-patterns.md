@@ -1,5 +1,7 @@
 # Python Patterns
 
+<!-- covers: E0601, E0602, F821, E1101, UnboundLocalError -->
+
 > Best practices for writing robust, modern Python code.
 
 ## Quick Reference
