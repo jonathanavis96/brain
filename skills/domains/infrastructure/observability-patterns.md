@@ -160,13 +160,26 @@ func metricsMiddleware(next http.HandlerFunc) http.HandlerFunc {
         activeConnections.Inc()
         defer activeConnections.Dec()
         
+        // Wrap ResponseWriter to capture status code
+        wrappedWriter := &responseWriter{ResponseWriter: w, statusCode: http.StatusOK}
+        
         // Call the actual handler
-        next(w, r)
+        next(wrappedWriter, r)
         
         duration := time.Since(start).Seconds()
         httpRequestDuration.WithLabelValues(r.Method, r.URL.Path).Observe(duration)
-        httpRequestsTotal.WithLabelValues(r.Method, r.URL.Path, "200").Inc()
+        httpRequestsTotal.WithLabelValues(r.Method, r.URL.Path, fmt.Sprintf("%d", wrappedWriter.statusCode)).Inc()
     }
+}
+
+type responseWriter struct {
+    http.ResponseWriter
+    statusCode int
+}
+
+func (rw *responseWriter) WriteHeader(code int) {
+    rw.statusCode = code
+    rw.ResponseWriter.WriteHeader(code)
 }
 
 func main() {
