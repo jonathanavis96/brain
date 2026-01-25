@@ -100,13 +100,13 @@
 
 ### Phase 11.2: Tooling
 
-- [ ] **11.1.3** Create SQLite schema for unified thread storage
+- [x] **11.1.3** Create SQLite schema for unified thread storage
   - **Goal:** Single database for threads, work_items, tool_executions
   - **Schema:** See `cortex/docs/research/thread-persistence-research.md` Section 3.2
   - **AC:** Schema created with FTS5 index on descriptions
   - **Priority:** MEDIUM
 
-- [ ] **11.2.1** Build `bin/brain-search` CLI tool
+- [x] **11.2.1** Build `bin/brain-search` CLI tool
   - **Goal:** Quick lookups across THUNK, git, cache
   - **Usage:** `brain-search "shellcheck"` → shows matching tasks, commits, tool calls
   - **AC:** CLI returns results from at least 2 sources (THUNK + git)

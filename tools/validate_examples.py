@@ -158,12 +158,32 @@ def validate_python_imports(block: CodeBlock) -> List[str]:
             # Add function parameters
             for arg in node.args.args:
                 defined_names.add(arg.arg)
+            # Add **kwargs parameter
+            if node.args.kwarg:
+                defined_names.add(node.args.kwarg.arg)
+            # Add *args parameter
+            if node.args.vararg:
+                defined_names.add(node.args.vararg.arg)
         elif isinstance(node, ast.ClassDef):
             defined_names.add(node.name)
         # Track for-loop variables
         elif isinstance(node, ast.For):
             if isinstance(node.target, ast.Name):
                 defined_names.add(node.target.id)
+            # Handle tuple unpacking in for loops (e.g., for i, line in enumerate(...))
+            elif isinstance(node.target, ast.Tuple):
+                for elt in node.target.elts:
+                    if isinstance(elt, ast.Name):
+                        defined_names.add(elt.id)
+        # Track comprehension variables (list/dict/set comprehensions, generators)
+        elif isinstance(node, ast.comprehension):
+            if isinstance(node.target, ast.Name):
+                defined_names.add(node.target.id)
+            # Handle tuple unpacking in comprehensions (e.g., for k, v in items())
+            elif isinstance(node.target, ast.Tuple):
+                for elt in node.target.elts:
+                    if isinstance(elt, ast.Name):
+                        defined_names.add(elt.id)
         # Track with-statement variables
         elif isinstance(node, ast.With):
             for item in node.items:

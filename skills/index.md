@@ -60,6 +60,7 @@ Catalog of all skill files in the brain system.
 
 ### Infrastructure
 
+- [agent-observability-patterns.md](domains/infrastructure/agent-observability-patterns.md) - Agent instrumentation, event markers, cache observability
 - [deployment-patterns.md](domains/infrastructure/deployment-patterns.md) - Deployment and CI/CD patterns
 - [disaster-recovery-patterns.md](domains/infrastructure/disaster-recovery-patterns.md) - Backup, recovery, and business continuity patterns
 - [observability-patterns.md](domains/infrastructure/observability-patterns.md) - Logging, monitoring, tracing, and alerting patterns
