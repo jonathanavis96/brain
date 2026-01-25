@@ -1,5 +1,7 @@
 # Common Pitfalls
 
+<!-- covers: SC2002, SC2009, SC2012, SC2126, SC2162, SC2046, SC2006, SC2086 -->
+
 > ShellCheck errors and bash gotchas to avoid.
 
 ## 🚨 Quick Reference (Common Shell Pitfalls to Avoid!)

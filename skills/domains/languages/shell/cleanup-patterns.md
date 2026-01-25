@@ -1,5 +1,7 @@
 # Cleanup Patterns
 
+<!-- covers: SC2064, SC2317 -->
+
 > Proper resource cleanup, temp files, and state restoration in bash.
 
 ## Trap Basics

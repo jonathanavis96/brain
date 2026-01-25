@@ -1,5 +1,7 @@
 # Shell/Bash Project Validation Patterns
 
+<!-- covers: SC1091, SC2148, SC2039 -->
+
 ## Overview
 
 Validation patterns for bash/shell script projects. Most Ralph templates assume npm/TypeScript projects, but shell scripts require different validation approaches.

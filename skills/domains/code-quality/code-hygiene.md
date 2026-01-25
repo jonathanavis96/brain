@@ -1,5 +1,7 @@
 # Code Hygiene Skill
 
+<!-- covers: dead-code, unused-imports, linting, formatting -->
+
 ## 🚨 Quick Reference (Check Before Completing Any Task!)
 
 **Use this checklist before writing `:::BUILD_READY:::`**

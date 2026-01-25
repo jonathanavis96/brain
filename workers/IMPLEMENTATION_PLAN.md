@@ -212,7 +212,7 @@
   - Output: `{"error_code": "SC2155", "covered": true, "skill": "shell/variable-patterns.md"}`
   - **AC:** Correctly identifies covered vs uncovered errors
 
-- [ ] **7.2.2** Add error code tags to existing skills
+- [x] **7.2.2** Add error code tags to existing skills
   - Update shell patterns to include `<!-- covers: SC2155, SC2034, SC2086 -->`
   - Update markdown patterns for MD040, MD032, etc.
   - **AC:** At least 10 skills have coverage tags

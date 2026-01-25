@@ -1,5 +1,7 @@
 # Markdown Patterns
 
+<!-- covers: MD040, MD032, MD024, MD050, MD022, MD036, MD025, MD060 -->
+
 > Best practices for writing consistent, lint-free markdown documentation.
 
 ## Quick Reference - Common Lint Rules

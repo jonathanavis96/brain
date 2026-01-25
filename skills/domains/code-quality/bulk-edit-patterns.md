@@ -1,5 +1,7 @@
 # Bulk Edit Patterns
 
+<!-- covers: find-and-replace, sed, batch-editing -->
+
 Efficient patterns for making multiple changes to files.
 
 ## Problem: Excessive API Calls

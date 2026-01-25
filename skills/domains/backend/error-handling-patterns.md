@@ -1,5 +1,7 @@
 # Error Handling Patterns
 
+<!-- covers: Error, Exception, try-catch, panic-recover -->
+
 ## Why This Exists
 
 Robust error handling is critical for production applications, yet it's often implemented inconsistently or as an afterthought. Poor error handling leads to cryptic error messages, difficult debugging, security vulnerabilities (leaking stack traces), and poor user experiences. This knowledge base documents proven error handling patterns across frontend (React error boundaries), backend (try/catch strategies), logging/monitoring integration, and error recovery techniques.

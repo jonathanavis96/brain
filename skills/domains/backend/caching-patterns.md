@@ -1,5 +1,7 @@
 # Caching Patterns
 
+<!-- covers: cache-miss, cache-invalidation, stale-cache, TTL -->
+
 ## Why This Exists
 
 Caching is one of the most powerful performance optimizations in software development, reducing latency, database load, and API costs. However, incorrect caching strategies lead to stale data, cache stampedes, memory leaks, and difficult-to-debug issues. This knowledge base documents proven caching patterns across different layers (CDN, application, database) and technologies (Redis, in-memory, browser storage), helping teams choose the right caching strategy and avoid common pitfalls.

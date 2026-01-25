@@ -1,5 +1,7 @@
 # Variable Patterns
 
+<!-- covers: SC2034, SC2155, SC2086, SC2004, SC2153, SC2154 -->
+
 > Safe variable declaration, assignment, and scoping in bash.
 
 ## Quick Reference
