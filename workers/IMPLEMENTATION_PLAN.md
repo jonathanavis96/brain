@@ -92,7 +92,7 @@
 **Goal:** Improve documentation quality and maintain existing files.
 
 - [x] **7.1.1** Enhance root `README.md` with better onboarding flow
-- [ ] **7.1.2** Create `CONTRIBUTING.md` with contribution guidelines
+- [x] **7.1.2** Create `CONTRIBUTING.md` with contribution guidelines
 - [ ] **7.2.1** Update `skills/index.md` with new skill files from Phase 5
 - [ ] **7.2.2** Update `skills/SUMMARY.md` with enhanced error reference
 - [ ] **7.3.1** Request AC.rules update for shellcheck regex
