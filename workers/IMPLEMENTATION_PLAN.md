@@ -298,7 +298,7 @@
   - Links to: `code-quality/markdown-patterns.md`
   - **AC:** Playbook covers MD040, MD032, MD024 scenarios
 
-- [ ] **8.2.3** Create `skills/playbooks/resolve-verifier-failures.md`
+- [x] **8.2.3** Create `skills/playbooks/resolve-verifier-failures.md`
   - Steps: Read verifier output → Categorize failure type → Route to appropriate fix
   - Decision tree: Protected file? → Human required. Lint fail? → Fix playbook. Hash mismatch? → Regen or waiver
   - Links to: multiple skills based on failure type
