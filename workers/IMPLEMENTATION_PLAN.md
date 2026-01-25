@@ -119,7 +119,7 @@
   - Add `const userId = 42` before sql usage
   - **AC:** Example is self-contained
 
-- [ ] **5.4.8** Fix `test-coverage-patterns.md` - Jest flags
+- [x] **5.4.8** Fix `test-coverage-patterns.md` - Jest flags
   - Replace `--collectCoverageFrom` with `--findRelatedTests`
   - Handle empty changed_files.txt
   - **AC:** Script works correctly
@@ -500,7 +500,7 @@
   - Add `const userId = 42` before sql usage
   - **AC:** Example is self-contained
 
-- [ ] **5.4.8** Fix `test-coverage-patterns.md` - Jest flags
+- [x] **5.4.8** Fix `test-coverage-patterns.md` - Jest flags
   - Replace `--collectCoverageFrom` with `--findRelatedTests`
   - Handle empty changed_files.txt
   - **AC:** Script works correctly

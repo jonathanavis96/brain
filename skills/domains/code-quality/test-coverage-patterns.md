@@ -155,6 +155,9 @@ npm test -- --coverage --watch
 
 # Coverage for specific files
 npm test -- --coverage --collectCoverageFrom='src/utils/**/*.js'
+
+# Run tests for changed files only
+npm test -- --findRelatedTests src/utils/helpers.js src/api/auth.js
 ```
 
 **Configure coverage thresholds (package.json):**
@@ -407,8 +410,12 @@ test:
 
 git diff origin/main...HEAD --name-only | grep '\.js$' > changed_files.txt
 
-npm test -- --coverage \
-  --collectCoverageFrom=$(cat changed_files.txt | tr '\n' ',' | sed 's/,$//')
+# Handle empty changed_files.txt
+if [ -s changed_files.txt ]; then
+  npm test -- --coverage --findRelatedTests $(cat changed_files.txt | tr '\n' ' ')
+else
+  echo "No JavaScript files changed, skipping coverage check"
+fi
 
 # Check coverage-summary.json for thresholds
 ```
