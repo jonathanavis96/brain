@@ -78,7 +78,7 @@ find /path/to/brain -name "filename"
 
 # Check if something already exists
 ls -la /path/to/brain/path/to/file
-```text
+```
 
 **Validate changes:**
 
@@ -91,7 +91,35 @@ shellcheck -e SC1091 workers/ralph/*.sh
 
 # Check markdown
 markdownlint **/*.md
-```text
+```
+
+### Pre-PR Checklist
+
+Before committing changes, manually verify these items that automated tools may miss:
+
+**Regex and String Patterns:**
+
+- [ ] **Capture delimiters:** Regex patterns that capture delimiters (e.g., `"([^"]+)"`) actually include the delimiters in the captured group
+- [ ] **Escape sequences:** Special characters in strings are properly escaped (e.g., `\n`, `\t`, `\"`)
+
+**Variable Scope:**
+
+- [ ] **All variables defined:** Every variable used in a function is either a parameter, a local variable, or a documented global
+- [ ] **No undefined references:** Variables are defined before use (especially in error/cleanup blocks)
+
+**Code Examples in Documentation:**
+
+- [ ] **Complete imports:** All necessary imports are shown (e.g., `import time`, `import os`)
+- [ ] **Variables defined:** All variables used in examples are defined or clearly marked as "user-provided"
+- [ ] **Runnable:** Code examples can be copied and run without modification (or missing parts are explicitly noted)
+
+**Documentation Quality:**
+
+- [ ] **No broken links:** Internal links point to existing files/sections
+- [ ] **Consistent terminology:** Same concepts use the same terms throughout
+- [ ] **Examples match text:** Code examples accurately demonstrate the described pattern
+
+**See Also:** [skills/domains/code-quality/code-review-patterns.md](skills/domains/code-quality/code-review-patterns.md) for detailed guidance on each pattern.
 
 ### Protected Files
 

@@ -249,7 +249,7 @@ All templates use **bash-style forward slash paths**:
    echo "- [My Pattern](domains/my-pattern.md)" >> skills/SUMMARY.md
    ```
 
-2. **Project-specific knowledge**:
+1. **Project-specific knowledge**:
 
    ```bash
    # Create project KB file
@@ -270,7 +270,7 @@ All templates use **bash-style forward slash paths**:
    echo "- [My Project](projects/my-project.md)" >> skills/SUMMARY.md
    ```
 
-3. **React rules**: Don't modify `references/react-best-practices/rules/*` (read-only)
+2. **React rules**: Don't modify `references/react-best-practices/rules/*` (read-only)
 
 ### Modifying Templates
 

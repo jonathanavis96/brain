@@ -79,7 +79,7 @@ class JsonFormatter(logging.Formatter):
             'module': record.module,
             'function': record.funcName,
         }
-        # Extract custom fields from record (passed via extra parameter)
+        # Extract custom fields from record.__dict__ (passed via logger's extra parameter)
         for key, value in record.__dict__.items():
             if key not in ['name', 'msg', 'args', 'created', 'filename', 'funcName',
                           'levelname', 'levelno', 'lineno', 'module', 'msecs',
@@ -311,10 +311,13 @@ def get_order(order_id):
 
 def fetch_from_db(order_id):
     with tracer.start_as_current_span("db.query") as span:
-        span.set_attribute("db.statement", "SELECT * FROM orders WHERE id = ?")
+        # SECURITY: Always use parameterized queries, never interpolate values into SQL
+        # PostgreSQL uses %s placeholders (psycopg2) or $1 (asyncpg)
+        span.set_attribute("db.statement", "SELECT * FROM orders WHERE id = %s")
         span.set_attribute("db.system", "postgresql")
-        # Actual DB query here (using parameterized query)
-        # cursor.execute("SELECT * FROM orders WHERE id = ?", (order_id,))
+        span.set_attribute("db.operation", "SELECT")
+        # Actual DB query here (using parameterized query to prevent SQL injection)
+        # cursor.execute("SELECT * FROM orders WHERE id = %s", (order_id,))
         return {"id": order_id, "status": "shipped", "customer_id": "123", "total": 99.99}
 ```
 
@@ -515,7 +518,7 @@ def check_metric(metric_name, current_value):
 
 ### Runbook Template
 
-```markdown
+```text
 # Runbook: High API Latency
 
 ## Alert Details
@@ -532,13 +535,12 @@ def check_metric(metric_name, current_value):
 ## Investigation Steps
 
 1. **Check service health**
-   ```bash
+   
    kubectl get pods -n production
    curl https://api.company.com/health
-   ```
 
 2. **Check current latency**
-   - Open Grafana: <https://grafana.company.com/d/api-latency>
+   - Open Grafana: https://grafana.company.com/d/api-latency
    - Check p50, p95, p99 latencies
    - Identify which endpoints are slow
 
@@ -549,15 +551,13 @@ def check_metric(metric_name, current_value):
 
 4. **Check recent deployments**
 
-   ```bash
    kubectl rollout history deployment/api-server -n production
-   ```
 
 ## Common Causes
 
 | Cause | How to Check | Fix |
 | ----- | ------------ | --- |
-| Database slow queries | Check `pg_stat_statements` | Add indexes, optimize queries |
+| Database slow queries | Check pg_stat_statements | Add indexes, optimize queries |
 | High traffic | Check request rate in Grafana | Scale horizontally |
 | Memory leak | Check pod memory usage | Restart pods, investigate code |
 | External API timeout | Check external service status | Increase timeout, add circuit breaker |
@@ -567,14 +567,12 @@ def check_metric(metric_name, current_value):
 
 ### If latency > 5 seconds (Critical)
 
-```bash
 # Scale up immediately
 kubectl scale deployment/api-server --replicas=10 -n production
 
 # Check if helps within 2 minutes
 # If not, consider rollback
 kubectl rollout undo deployment/api-server -n production
-```
 
 ### If latency 2-5 seconds (Warning)
 
@@ -597,9 +595,10 @@ kubectl rollout undo deployment/api-server -n production
 
 ## Related Links
 
-- [API Performance Dashboard](https://grafana.company.com/d/api-perf)
-- [Database Monitoring](https://grafana.company.com/d/db-monitor)
-- [Post-Mortem Template](https://wiki.company.com/templates/post-mortem)
+- API Performance Dashboard: https://grafana.company.com/d/api-perf
+- Database Monitoring: https://grafana.company.com/d/db-monitor
+- Post-Mortem Template: https://wiki.company.com/templates/post-mortem
+```
 
 ---
 
