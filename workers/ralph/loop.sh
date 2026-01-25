@@ -156,6 +156,7 @@ cleanup_and_emit() {
 
   # Avoid double-emission
   if [[ "$_loop_emitted_end" == "true" ]]; then
+    cleanup
     release_lock
     exit $exit_code
   fi
@@ -167,6 +168,7 @@ cleanup_and_emit() {
     emit_event --event error --iter "${CURRENT_ITER:-0}" --status fail --code "$exit_code" --msg "loop exited unexpectedly"
   fi
 
+  cleanup
   release_lock
   exit $exit_code
 }
