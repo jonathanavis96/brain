@@ -35,11 +35,11 @@
   - Add tool name as 3rd argument to lookup_cache_pass calls
   - **AC:** `non_cacheable_tools` check works correctly
 
-- [ ] **5.2.3** Fix cache-hit early return leaves temp file (loop.sh:1056-1068)
+- [x] **5.2.3** Fix cache-hit early return leaves temp file (loop.sh:1056-1068)
   - Add `rm -f "$prompt_with_mode"` before each cache-hit return
   - **AC:** No orphaned temp files after cache hits
 
-- [ ] **5.2.4** Fix CACHE_SKIP only accepts literal "true" (loop.sh:341-360)
+- [x] **5.2.4** Fix CACHE_SKIP only accepts literal "true" (loop.sh:341-360)
   - Accept truthy values: 1, true, yes, y, on (case-insensitive)
   - **AC:** `CACHE_SKIP=1` and `CACHE_SKIP=yes` both work
 
