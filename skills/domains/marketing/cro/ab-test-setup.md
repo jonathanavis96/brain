@@ -31,21 +31,25 @@ Before designing a test, understand:
 ## Core Principles
 
 ### 1. Start with a Hypothesis
+
 - Not just "let's see what happens"
 - Specific prediction of outcome
 - Based on reasoning or data
 
 ### 2. Test One Thing
+
 - Single variable per test
 - Otherwise you don't know what worked
 - Save MVT for later
 
 ### 3. Statistical Rigor
+
 - Pre-determine sample size
 - Don't peek and stop early
 - Commit to the methodology
 
 ### 4. Measure What Matters
+
 - Primary metric tied to business value
 - Secondary metrics for context
 - Guardrail metrics to prevent harm
@@ -56,13 +60,13 @@ Before designing a test, understand:
 
 ### Structure
 
-```
+```text
 Because [observation/data],
 we believe [change]
 will cause [expected outcome]
 for [audience].
 We'll know this is true when [metrics].
-```
+```text
 
 ### Examples
 
@@ -85,22 +89,26 @@ We'll know this is true when [metrics].
 ## Test Types
 
 ### A/B Test (Split Test)
+
 - Two versions: Control (A) vs. Variant (B)
 - Single change between versions
 - Most common, easiest to analyze
 
 ### A/B/n Test
+
 - Multiple variants (A vs. B vs. C...)
 - Requires more traffic
 - Good for testing several options
 
 ### Multivariate Test (MVT)
+
 - Multiple changes in combinations
 - Tests interactions between changes
 - Requires significantly more traffic
 - Complex analysis
 
 ### Split URL Test
+
 - Different URLs for variants
 - Good for major page changes
 - Easier implementation sometimes
@@ -126,16 +134,17 @@ We'll know this is true when [metrics].
 | 10% | 12k/variant | 3k/variant | 550/variant |
 
 ### Formula Resources
-- Evan Miller's calculator: https://www.evanmiller.org/ab-testing/sample-size.html
-- Optimizely's calculator: https://www.optimizely.com/sample-size-calculator/
+
+- Evan Miller's calculator: <https://www.evanmiller.org/ab-testing/sample-size.html>
+- Optimizely's calculator: <https://www.optimizely.com/sample-size-calculator/>
 
 ### Test Duration
 
-```
+```text
 Duration = Sample size needed per variant × Number of variants
            ───────────────────────────────────────────────────
            Daily traffic to test page × Conversion rate
-```
+```text
 
 Minimum: 1-2 business cycles (usually 1-2 weeks)
 Maximum: Avoid running too long (novelty effects, external factors)
@@ -145,16 +154,19 @@ Maximum: Avoid running too long (novelty effects, external factors)
 ## Metrics Selection
 
 ### Primary Metric
+
 - Single metric that matters most
 - Directly tied to hypothesis
 - What you'll use to call the test
 
 ### Secondary Metrics
+
 - Support primary metric interpretation
 - Explain why/how the change worked
 - Help understand user behavior
 
 ### Guardrail Metrics
+
 - Things that shouldn't get worse
 - Revenue, retention, satisfaction
 - Stop test if significantly negative
@@ -162,16 +174,19 @@ Maximum: Avoid running too long (novelty effects, external factors)
 ### Metric Examples by Test Type
 
 **Homepage CTA test:**
+
 - Primary: CTA click-through rate
 - Secondary: Time to click, scroll depth
 - Guardrail: Bounce rate, downstream conversion
 
 **Pricing page test:**
+
 - Primary: Plan selection rate
 - Secondary: Time on page, plan distribution
 - Guardrail: Support tickets, refund rate
 
 **Signup flow test:**
+
 - Primary: Signup completion rate
 - Secondary: Field-level completion, time to complete
 - Guardrail: User activation rate (post-signup quality)
@@ -181,12 +196,14 @@ Maximum: Avoid running too long (novelty effects, external factors)
 ## Designing Variants
 
 ### Control (A)
+
 - Current experience, unchanged
 - Don't modify during test
 
 ### Variant (B+)
 
 **Best practices:**
+
 - Single, meaningful change
 - Bold enough to make a difference
 - True to the hypothesis
@@ -194,24 +211,28 @@ Maximum: Avoid running too long (novelty effects, external factors)
 **What to vary:**
 
 Headlines/Copy:
+
 - Message angle
 - Value proposition
 - Specificity level
 - Tone/voice
 
 Visual Design:
+
 - Layout structure
 - Color and contrast
 - Image selection
 - Visual hierarchy
 
 CTA:
+
 - Button copy
 - Size/prominence
 - Placement
 - Number of CTAs
 
 Content:
+
 - Information included
 - Order of information
 - Amount of content
@@ -219,7 +240,7 @@ Content:
 
 ### Documenting Variants
 
-```
+```text
 Control (A):
 - Screenshot
 - Description of current state
@@ -228,27 +249,31 @@ Variant (B):
 - Screenshot or mockup
 - Specific changes made
 - Hypothesis for why this will win
-```
+```text
 
 ---
 
 ## Traffic Allocation
 
 ### Standard Split
+
 - 50/50 for A/B test
 - Equal split for multiple variants
 
 ### Conservative Rollout
+
 - 90/10 or 80/20 initially
 - Limits risk of bad variant
 - Longer to reach significance
 
 ### Ramping
+
 - Start small, increase over time
 - Good for technical risk mitigation
 - Most tools support this
 
 ### Considerations
+
 - Consistency: Users see same variant on return
 - Segment sizes: Ensure segments are large enough
 - Time of day/week: Balanced exposure
@@ -262,11 +287,13 @@ Variant (B):
 **Tools**: PostHog, Optimizely, VWO, custom
 
 **How it works**:
+
 - JavaScript modifies page after load
 - Quick to implement
 - Can cause flicker
 
 **Best for**:
+
 - Marketing pages
 - Copy/visual changes
 - Quick iteration
@@ -276,11 +303,13 @@ Variant (B):
 **Tools**: PostHog, LaunchDarkly, Split, custom
 
 **How it works**:
+
 - Variant determined before page renders
 - No flicker
 - Requires development work
 
 **Best for**:
+
 - Product features
 - Complex changes
 - Performance-sensitive pages
@@ -309,11 +338,13 @@ Variant (B):
 ### During the Test
 
 **DO:**
+
 - Monitor for technical issues
 - Check segment quality
 - Document any external factors
 
 **DON'T:**
+
 - Peek at results and stop early
 - Make changes to variants
 - Add traffic from new sources
@@ -322,11 +353,13 @@ Variant (B):
 ### Peeking Problem
 
 Looking at results before reaching sample size and stopping when you see significance leads to:
+
 - False positives
 - Inflated effect sizes
 - Wrong decisions
 
 **Solutions:**
+
 - Pre-commit to sample size and stick to it
 - Use sequential testing if you must peek
 - Trust the process
@@ -390,7 +423,7 @@ Statistical ≠ Practical
 
 ### Test Documentation
 
-```
+```text
 Test Name: [Name]
 Test ID: [ID in testing tool]
 Dates: [Start] - [End]
@@ -414,7 +447,7 @@ Action: [What we're doing]
 
 Learnings:
 [What we learned, what to test next]
-```
+```text
 
 ### Building a Learning Repository
 
@@ -429,7 +462,7 @@ Learnings:
 
 ### Test Plan Document
 
-```
+```text
 # A/B Test: [Name]
 
 ## Hypothesis
@@ -457,12 +490,14 @@ Learnings:
 ## Analysis Plan
 - Success criteria: [What constitutes a win]
 - Segment analysis: [Planned segments]
-```
+```text
 
 ### Results Summary
+
 When test is complete
 
 ### Recommendations
+
 Next steps based on results
 
 ---
@@ -470,18 +505,21 @@ Next steps based on results
 ## Common Mistakes
 
 ### Test Design
+
 - Testing too small a change (undetectable)
 - Testing too many things (can't isolate)
 - No clear hypothesis
 - Wrong audience
 
 ### Execution
+
 - Stopping early
 - Changing things mid-test
 - Not checking implementation
 - Uneven traffic allocation
 
 ### Analysis
+
 - Ignoring confidence intervals
 - Cherry-picking segments
 - Over-interpreting inconclusive results
@@ -492,6 +530,7 @@ Next steps based on results
 ## Questions to Ask
 
 If you need more context:
+
 1. What's your current conversion rate?
 2. How much traffic does this page get?
 3. What change are you considering and why?

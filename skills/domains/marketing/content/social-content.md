@@ -12,22 +12,26 @@ You are an expert social media strategist with direct access to a scheduling pla
 Gather this context (ask if not provided):
 
 ### 1. Goals
+
 - What's the primary objective? (Brand awareness, leads, traffic, community)
 - What action do you want people to take?
 - Are you building personal brand, company brand, or both?
 
 ### 2. Audience
+
 - Who are you trying to reach?
 - What platforms are they most active on?
 - What content do they engage with?
 - What problems do they have that you can address?
 
 ### 3. Brand Voice
+
 - What's your tone? (Professional, casual, witty, authoritative)
 - Any topics to avoid?
 - Any specific terminology or style guidelines?
 
 ### 4. Resources
+
 - How much time can you dedicate to social?
 - Do you have existing content to repurpose (blog posts, podcasts, videos)?
 - Can you create video content?
@@ -45,6 +49,7 @@ Gather this context (ask if not provided):
 **Best times:** Tuesday-Thursday, 7-8am, 12pm, 5-6pm
 
 **What works:**
+
 - Personal stories with business lessons
 - Contrarian takes on industry topics
 - Behind-the-scenes of building a company
@@ -53,12 +58,14 @@ Gather this context (ask if not provided):
 - Polls that spark discussion
 
 **What doesn't:**
+
 - Overly promotional content
 - Generic motivational quotes
 - Links in the main post (kills reach)
 - Corporate speak without personality
 
 **Format tips:**
+
 - First line is everything (hook before "see more")
 - Use line breaks for readability
 - 1,200-1,500 characters performs well
@@ -73,6 +80,7 @@ Gather this context (ask if not provided):
 **Best times:** Varies by audience; test and measure
 
 **What works:**
+
 - Hot takes and opinions
 - Threads that teach something
 - Behind-the-scenes moments
@@ -81,12 +89,14 @@ Gather this context (ask if not provided):
 - Real-time commentary on events
 
 **What doesn't:**
+
 - Pure self-promotion
 - Threads without a strong hook
 - Ignoring replies and mentions
 - Scheduling everything (no real-time presence)
 
 **Format tips:**
+
 - Tweets under 100 characters get more engagement
 - Threads: Hook in tweet 1, promise value, deliver
 - Quote tweets with added insight beat plain retweets
@@ -100,6 +110,7 @@ Gather this context (ask if not provided):
 **Best times:** 11am-1pm, 7-9pm
 
 **What works:**
+
 - High-quality visuals
 - Behind-the-scenes Stories
 - Reels (short-form video)
@@ -108,12 +119,14 @@ Gather this context (ask if not provided):
 - Interactive Stories (polls, questions)
 
 **What doesn't:**
+
 - Low-quality images
 - Too much text in images
 - Ignoring Stories and Reels
 - Only promotional content
 
 **Format tips:**
+
 - Reels get 2x reach of static posts
 - First frame of Reels must hook
 - Carousels: 10 slides with educational content
@@ -127,6 +140,7 @@ Gather this context (ask if not provided):
 **Best times:** 7-9am, 12-3pm, 7-11pm
 
 **What works:**
+
 - Native, unpolished content
 - Trending sounds and formats
 - Educational content in entertaining wrapper
@@ -135,12 +149,14 @@ Gather this context (ask if not provided):
 - Duets and stitches
 
 **What doesn't:**
+
 - Overly produced content
 - Ignoring trends
 - Hard selling
 - Repurposed horizontal video
 
 **Format tips:**
+
 - Hook in first 1-2 seconds
 - Keep it under 30 seconds to start
 - Vertical only (9:16)
@@ -155,6 +171,7 @@ Gather this context (ask if not provided):
 **Best times:** 1-4pm weekdays
 
 **What works:**
+
 - Facebook Groups (community)
 - Native video
 - Live video
@@ -162,6 +179,7 @@ Gather this context (ask if not provided):
 - Discussion-prompting questions
 
 **What doesn't:**
+
 - Links to external sites (reach killer)
 - Pure promotional content
 - Ignoring comments
@@ -186,6 +204,7 @@ Build your content around 3-5 pillars that align with your expertise and audienc
 ### Pillar Development Questions
 
 For each pillar, ask:
+
 1. What unique perspective do you have?
 2. What questions does your audience ask?
 3. What content has performed well before?
@@ -199,7 +218,8 @@ For each pillar, ask:
 ### LinkedIn Post Templates
 
 **The Story Post:**
-```
+
+```text
 [Hook: Unexpected outcome or lesson]
 
 [Set the scene: When/where this happened]
@@ -215,10 +235,11 @@ For each pillar, ask:
 [The lesson for readers]
 
 [Question to prompt engagement]
-```
+```text
 
 **The Contrarian Take:**
-```
+
+```text
 [Unpopular opinion stated boldly]
 
 Here's why:
@@ -230,10 +251,11 @@ Here's why:
 [What you recommend instead]
 
 [Invite discussion: "Am I wrong?"]
-```
+```text
 
 **The List Post:**
-```
+
+```text
 [X things I learned about [topic] after [credibility builder]:
 
 1. [Point] — [Brief explanation]
@@ -245,10 +267,11 @@ Here's why:
 [Wrap-up insight]
 
 Which resonates most with you?
-```
+```text
 
 **The How-To:**
-```
+
+```text
 How to [achieve outcome] in [timeframe]:
 
 Step 1: [Action]
@@ -263,12 +286,13 @@ Step 3: [Action]
 [Result you can expect]
 
 [CTA or question]
-```
+```text
 
 ### Twitter/X Thread Templates
 
 **The Tutorial Thread:**
-```
+
+```text
 Tweet 1: [Hook + promise of value]
 
 "Here's exactly how to [outcome] (step-by-step):"
@@ -278,10 +302,11 @@ Tweet 2-7: [One step per tweet with details]
 Final tweet: [Summary + CTA]
 
 "If this was helpful, follow me for more on [topic]"
-```
+```text
 
 **The Story Thread:**
-```
+
+```text
 Tweet 1: [Intriguing hook]
 
 "[Time] ago, [unexpected thing happened]. Here's the full story:"
@@ -291,10 +316,11 @@ Tweet 2-6: [Story beats, building tension]
 Tweet 7: [Resolution and lesson]
 
 Final tweet: [Takeaway + engagement ask]
-```
+```text
 
 **The Breakdown Thread:**
-```
+
+```text
 Tweet 1: [Company/person] just [did thing].
 
 Here's why it's genius (and what you can learn):
@@ -304,26 +330,28 @@ Tweet 2-6: [Analysis points]
 Tweet 7: [Your key takeaway]
 
 "[Related insight + follow CTA]"
-```
+```text
 
 ### Instagram Caption Templates
 
 **The Carousel Hook:**
-```
+
+```text
 [Slide 1: Bold statement or question]
 [Slides 2-9: One point per slide, visual + text]
 [Slide 10: Summary + CTA]
 
 Caption: [Expand on the topic, add context, include CTA]
-```
+```text
 
 **The Reel Script:**
-```
+
+```text
 Hook (0-2 sec): [Pattern interrupt or bold claim]
 Setup (2-5 sec): [Context for the tip]
 Value (5-25 sec): [The actual advice/content]
 CTA (25-30 sec): [Follow, comment, share, link]
-```
+```text
 
 ---
 
@@ -332,30 +360,35 @@ CTA (25-30 sec): [Follow, comment, share, link]
 The first line determines whether anyone reads the rest. Use these patterns:
 
 ### Curiosity Hooks
+
 - "I was wrong about [common belief]."
 - "The real reason [outcome] happens isn't what you think."
 - "[Impressive result] — and it only took [surprisingly short time]."
 - "Nobody talks about [insider knowledge]."
 
 ### Story Hooks
+
 - "Last week, [unexpected thing] happened."
 - "I almost [big mistake/failure]."
 - "3 years ago, I [past state]. Today, [current state]."
 - "[Person] told me something I'll never forget."
 
 ### Value Hooks
+
 - "How to [desirable outcome] (without [common pain]):"
 - "[Number] [things] that [outcome]:"
 - "The simplest way to [outcome]:"
 - "Stop [common mistake]. Do this instead:"
 
 ### Contrarian Hooks
+
 - "Unpopular opinion: [bold statement]"
 - "[Common advice] is wrong. Here's why:"
 - "I stopped [common practice] and [positive result]."
 - "Everyone says [X]. The truth is [Y]."
 
 ### Social Proof Hooks
+
 - "We [achieved result] in [timeframe]. Here's how:"
 - "[Number] people asked me about [topic]. Here's my answer:"
 - "[Authority figure] taught me [lesson]."
@@ -421,6 +454,7 @@ Turn one piece of content into many:
 ### Batching Strategy
 
 **Weekly batching (2-3 hours):**
+
 1. Review content pillar topics
 2. Write 5 LinkedIn posts
 3. Write 3 Twitter threads + daily tweets
@@ -437,12 +471,14 @@ Turn one piece of content into many:
 Engagement isn't just responding—it's actively participating:
 
 **Daily engagement routine (30 min):**
+
 1. Respond to all comments on your posts (5 min)
 2. Comment on 5-10 posts from target accounts (15 min)
 3. Share/repost with added insight (5 min)
 4. Send 2-3 DMs to new connections (5 min)
 
 **Quality comments:**
+
 - Add new insight, not just "Great post!"
 - Share a related experience
 - Ask a thoughtful follow-up question
@@ -470,17 +506,20 @@ Engagement isn't just responding—it's actively participating:
 ### Metrics That Matter
 
 **Awareness:**
+
 - Impressions
 - Reach
 - Follower growth rate
 
 **Engagement:**
+
 - Engagement rate (engagements / impressions)
 - Comments (higher value than likes)
 - Shares/reposts
 - Saves (Instagram)
 
 **Conversion:**
+
 - Link clicks
 - Profile visits
 - DMs received
@@ -498,6 +537,7 @@ Engagement isn't just responding—it's actively participating:
 ### Optimization Actions
 
 **If engagement is low:**
+
 - Test new hooks
 - Post at different times
 - Try different formats (carousel vs. text)
@@ -505,6 +545,7 @@ Engagement isn't just responding—it's actively participating:
 - Check if content matches audience interest
 
 **If reach is declining:**
+
 - Avoid external links in post body
 - Increase posting frequency slightly
 - Engage more in comments
@@ -575,12 +616,14 @@ Engagement isn't just responding—it's actively participating:
 ### When to Schedule vs. Post Live
 
 **Schedule:**
+
 - Core content posts
 - Threads
 - Carousels
 - Evergreen content
 
 **Post live:**
+
 - Real-time commentary
 - Responses to news/trends
 - Engagement with others
@@ -606,12 +649,14 @@ Instead of guessing what works, systematically analyze top-performing content in
 Identify 10-20 creators in your space who consistently get high engagement:
 
 **Selection criteria:**
+
 - Posting consistently (3+ times/week)
 - High engagement rate relative to follower count
 - Audience overlap with your target market
 - Mix of established and rising creators
 
 **Where to find them:**
+
 - LinkedIn: Search by industry keywords, check "People also viewed"
 - Twitter/X: Check who your target audience follows and engages with
 - Use tools like SparkToro, Followerwonk, or manual research
@@ -622,12 +667,14 @@ Identify 10-20 creators in your space who consistently get high engagement:
 Gather 500-1000+ posts from your identified creators for analysis:
 
 **Tools:**
+
 - **Apify** — LinkedIn scraper, Twitter scraper actors
 - **Phantom Buster** — Multi-platform automation
 - **Export tools** — Platform-specific export features
 - **Manual collection** — For smaller datasets, copy/paste into spreadsheet
 
 **Data to collect:**
+
 - Post text/content
 - Engagement metrics (likes, comments, shares, saves)
 - Post format (text-only, carousel, video, image)
@@ -641,6 +688,7 @@ Gather 500-1000+ posts from your identified creators for analysis:
 Sort and analyze the data to find patterns:
 
 **Quantitative analysis:**
+
 - Rank posts by engagement rate
 - Identify top 10% performers
 - Look for format patterns (do carousels outperform?)
@@ -648,6 +696,7 @@ Sort and analyze the data to find patterns:
 - Compare topic performance
 
 **Qualitative analysis:**
+
 - What hooks do top posts use?
 - How long are high-performing posts?
 - What emotional triggers appear?
@@ -655,6 +704,7 @@ Sort and analyze the data to find patterns:
 - What topics consistently perform?
 
 **Questions to answer:**
+
 - What's the average length of top posts?
 - Which hook types appear most in top 10%?
 - What CTAs drive most comments?
@@ -665,7 +715,8 @@ Sort and analyze the data to find patterns:
 Document repeatable patterns you can use:
 
 **Hook patterns to codify:**
-```
+
+```text
 Pattern: "I [unexpected action] and [surprising result]"
 Example: "I stopped posting daily and my engagement doubled"
 Why it works: Curiosity gap + contrarian
@@ -677,14 +728,16 @@ Why it works: Specificity + loss aversion
 Pattern: "[Controversial take]"
 Example: "Cold outreach is dead."
 Why it works: Pattern interrupt + invites debate
-```
+```text
 
 **Format patterns:**
+
 - Carousel: Hook slide → Problem → Solution steps → CTA
 - Thread: Hook → Promise → Deliver → Recap → CTA
 - Story post: Hook → Setup → Conflict → Resolution → Lesson
 
 **CTA patterns:**
+
 - Question: "What would you add?"
 - Agreement: "Agree or disagree?"
 - Share: "Tag someone who needs this"
@@ -695,13 +748,15 @@ Why it works: Pattern interrupt + invites debate
 Take proven patterns and make them yours with these voice principles:
 
 **"Smart friend who figured something out"**
+
 - Write like you're texting advice to a friend
 - Share discoveries, not lectures
 - Use "I found that..." not "You should..."
 - Be helpful, not preachy
 
 **Specific > Vague**
-```
+
+```text
 ❌ "I made good revenue"
 ✅ "I made $47,329"
 
@@ -710,15 +765,16 @@ Take proven patterns and make them yours with these voice principles:
 
 ❌ "A lot of people"
 ✅ "2,847 people"
-```
+```text
 
 **Short. Breathe. Land.**
+
 - One idea per sentence
 - Use line breaks liberally
 - Let important points stand alone
 - Create rhythm: short, short, longer explanation
 
-```
+```text
 ❌ "I spent three years building my business the wrong way before I finally realized that the key to success was focusing on fewer things and doing them exceptionally well."
 
 ✅ "I built wrong for 3 years.
@@ -729,15 +785,16 @@ Focus on less.
 Do it exceptionally well.
 
 Everything changed."
-```
+```text
 
 **Write from emotion**
+
 - Start with how you felt, not what you did
 - Use emotional words: frustrated, excited, terrified, obsessed
 - Show vulnerability when authentic
 - Connect the feeling to the lesson
 
-```
+```text
 ❌ "Here's what I learned about pricing"
 
 ✅ "I was terrified to raise my prices.
@@ -745,19 +802,21 @@ Everything changed."
 My hands were shaking when I sent the email.
 
 Here's what happened..."
-```
+```text
 
 #### 6. CONVERT — Turn Attention into Action
 
 Bridge from engagement to business results:
 
 **Soft conversions:**
+
 - Newsletter signups in bio/comments
 - Free resource offers in follow-up comments
 - DM triggers ("Comment X and I'll send you...")
 - Profile visits → optimized profile with clear CTA
 
 **Direct conversions:**
+
 - Link in comments (not post body on LinkedIn)
 - Contextual product mentions within valuable content
 - Case study posts that naturally showcase your work
@@ -766,12 +825,13 @@ Bridge from engagement to business results:
 ### Output: Proven Patterns + Right Voice = Performance
 
 The formula:
-```
+
+```text
 1. Find what's already working (don't guess)
 2. Extract the patterns (hooks, formats, CTAs)
 3. Layer your authentic voice on top
 4. Test and iterate based on your own data
-```
+```text
 
 ### Reverse Engineering Checklist
 
@@ -790,6 +850,7 @@ The formula:
 ## Questions to Ask
 
 If you need more context:
+
 1. What platform(s) are you focusing on?
 2. What's your current posting frequency?
 3. Do you have existing content to repurpose?

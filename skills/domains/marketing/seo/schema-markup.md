@@ -30,21 +30,25 @@ Before implementing schema, understand:
 ## Core Principles
 
 ### 1. Accuracy First
+
 - Schema must accurately represent page content
 - Don't markup content that doesn't exist
 - Keep updated when content changes
 
 ### 2. Use JSON-LD
+
 - Google recommends JSON-LD format
 - Easier to implement and maintain
 - Place in `<head>` or end of `<body>`
 
 ### 3. Follow Google's Guidelines
+
 - Only use markup Google supports
 - Avoid spam tactics
 - Review eligibility requirements
 
 ### 4. Validate Everything
+
 - Test before deploying
 - Monitor Search Console
 - Fix errors promptly
@@ -54,13 +58,16 @@ Before implementing schema, understand:
 ## Common Schema Types
 
 ### Organization
+
 **Use for**: Company/brand homepage or about page
 
 **Required properties**:
+
 - name
 - url
 
 **Recommended properties**:
+
 - logo
 - sameAs (social profiles)
 - contactPoint
@@ -83,16 +90,19 @@ Before implementing schema, understand:
     "contactType": "customer service"
   }
 }
-```
+```text
 
 ### WebSite (with SearchAction)
+
 **Use for**: Homepage, enables sitelinks search box
 
 **Required properties**:
+
 - name
 - url
 
 **For search box**:
+
 - potentialAction with SearchAction
 
 ```json
@@ -110,18 +120,21 @@ Before implementing schema, understand:
     "query-input": "required name=search_term_string"
   }
 }
-```
+```text
 
 ### Article / BlogPosting
+
 **Use for**: Blog posts, news articles
 
 **Required properties**:
+
 - headline
 - image
 - datePublished
 - author
 
 **Recommended properties**:
+
 - dateModified
 - publisher
 - description
@@ -154,17 +167,20 @@ Before implementing schema, understand:
     "@id": "https://example.com/schema-guide"
   }
 }
-```
+```text
 
 ### Product
+
 **Use for**: Product pages (e-commerce or SaaS)
 
 **Required properties**:
+
 - name
 - image
 - offers (with price and availability)
 
 **Recommended properties**:
+
 - description
 - sku
 - brand
@@ -197,16 +213,19 @@ Before implementing schema, understand:
     "reviewCount": "127"
   }
 }
-```
+```text
 
 ### SoftwareApplication
+
 **Use for**: SaaS product pages, app landing pages
 
 **Required properties**:
+
 - name
 - offers (or free indicator)
 
 **Recommended properties**:
+
 - applicationCategory
 - operatingSystem
 - aggregateRating
@@ -229,12 +248,14 @@ Before implementing schema, understand:
     "ratingCount": "1250"
   }
 }
-```
+```text
 
 ### FAQPage
+
 **Use for**: Pages with frequently asked questions
 
 **Required properties**:
+
 - mainEntity (array of Question/Answer)
 
 ```json
@@ -260,16 +281,19 @@ Before implementing schema, understand:
     }
   ]
 }
-```
+```text
 
 ### HowTo
+
 **Use for**: Instructional content, tutorials
 
 **Required properties**:
+
 - name
 - step (array of HowToStep)
 
 **Recommended properties**:
+
 - image
 - totalTime
 - estimatedCost
@@ -303,9 +327,10 @@ Before implementing schema, understand:
     }
   ]
 }
-```
+```text
 
 ### BreadcrumbList
+
 **Use for**: Any page with breadcrumb navigation
 
 ```json
@@ -333,12 +358,14 @@ Before implementing schema, understand:
     }
   ]
 }
-```
+```text
 
 ### LocalBusiness
+
 **Use for**: Local business location pages
 
 **Required properties**:
+
 - name
 - address
 - (Various by business type)
@@ -373,9 +400,10 @@ Before implementing schema, understand:
   ],
   "priceRange": "$$"
 }
-```
+```text
 
 ### Review / AggregateRating
+
 **Use for**: Review pages or products with reviews
 
 Note: Self-serving reviews (reviewing your own product) are against guidelines. Reviews must be from real customers.
@@ -408,12 +436,14 @@ Note: Self-serving reviews (reviewing your own product) are against guidelines. 
     }
   ]
 }
-```
+```text
 
 ### Event
+
 **Use for**: Event pages, webinars, conferences
 
 **Required properties**:
+
 - name
 - startDate
 - location (or eventAttendanceMode for online)
@@ -451,7 +481,7 @@ Note: Self-serving reviews (reviewing your own product) are against guidelines. 
     "url": "https://example.com"
   }
 }
-```
+```text
 
 ---
 
@@ -484,29 +514,33 @@ You can (and often should) have multiple schema types:
     }
   ]
 }
-```
+```text
 
 ---
 
 ## Validation and Testing
 
 ### Tools
-- **Google Rich Results Test**: https://search.google.com/test/rich-results
-- **Schema.org Validator**: https://validator.schema.org/
+
+- **Google Rich Results Test**: <https://search.google.com/test/rich-results>
+- **Schema.org Validator**: <https://validator.schema.org/>
 - **Search Console**: Enhancements reports
 
 ### Common Errors
 
 **Missing required properties**
+
 - Check Google's documentation for required fields
 - Different from schema.org minimum requirements
 
 **Invalid values**
+
 - Dates must be ISO 8601 format
 - URLs must be fully qualified
 - Enumerations must use exact values
 
 **Mismatch with page content**
+
 - Schema doesn't match visible content
 - Ratings for products without reviews shown
 - Prices that don't match displayed prices
@@ -516,10 +550,12 @@ You can (and often should) have multiple schema types:
 ## Implementation Patterns
 
 ### Static Sites
+
 - Add JSON-LD directly in HTML template
 - Use includes/partials for reusable schema
 
 ### Dynamic Sites (React, Next.js, etc.)
+
 - Component that renders schema
 - Server-side rendered for SEO
 - Serialize data to JSON-LD
@@ -546,9 +582,10 @@ export default function ProductPage({ product }) {
     </>
   );
 }
-```
+```text
 
 ### CMS / WordPress
+
 - Plugins (Yoast, Rank Math, Schema Pro)
 - Theme modifications
 - Custom fields to structured data
@@ -558,6 +595,7 @@ export default function ProductPage({ product }) {
 ## Output Format
 
 ### Schema Implementation
+
 ```json
 // Full JSON-LD code block
 {
@@ -565,12 +603,14 @@ export default function ProductPage({ product }) {
   "@type": "...",
   // Complete markup
 }
-```
+```text
 
 ### Placement Instructions
+
 Where to add the code and how
 
 ### Testing Checklist
+
 - [ ] Validates in Rich Results Test
 - [ ] No errors or warnings
 - [ ] Matches page content
@@ -581,6 +621,7 @@ Where to add the code and how
 ## Questions to Ask
 
 If you need more context:
+
 1. What type of page is this?
 2. What rich results are you hoping to achieve?
 3. What data is available to populate the schema?
