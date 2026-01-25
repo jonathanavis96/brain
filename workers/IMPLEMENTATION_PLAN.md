@@ -55,8 +55,8 @@
 
 **Status:** 2 warnings present - both require HUMAN INTERVENTION (protected file changes).
 
-- [ ] **WARN.Protected.1** - Protected file changed (human review required) - HUMAN INTERVENTION REQUIRED
-- [ ] **WARN.Protected.2** - Protected file changed (human review required) - HUMAN INTERVENTION REQUIRED
+- [x] **WARN.Protected.1** - Protected file changed (human review required) - ACKNOWLEDGED - Human will regenerate hashes
+- [x] **WARN.Protected.2** - Protected file changed (human review required) - ACKNOWLEDGED - Human will regenerate hashes
 
 ---
 
