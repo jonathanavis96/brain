@@ -116,7 +116,7 @@ Key milestones:
   - Phase 12.4.2-12.4.3: Reconcile "deferred" text with checked boxes
   - **AC:** Status text matches checkbox state
 
-- [ ] **5.3.5** Fix markdown formatting in `workers/ralph/THUNK.md`
+- [x] **5.3.5** Fix markdown formatting in `workers/ralph/THUNK.md`
   - Escape pipe characters in table rows: `|` → `\|` or wrap in backticks
   - **AC:** Markdown renders correctly
 

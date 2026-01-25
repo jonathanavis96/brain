@@ -581,8 +581,6 @@ kubectl rollout undo deployment/api-server -n production
 - [Database Monitoring](https://grafana.company.com/d/db-monitor)
 - [Post-Mortem Template](https://wiki.company.com/templates/post-mortem)
 
-```markdown
-
 ---
 
 ## Debugging Production Issues
