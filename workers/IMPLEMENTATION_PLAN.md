@@ -484,7 +484,7 @@
 
 ### Phase 16.4: Index Updates
 
-- [ ] **16.4.1** Update `skills/index.md` and `skills/SUMMARY.md` with anti-patterns [LOW]
+- [x] **16.4.1** Update `skills/index.md` and `skills/SUMMARY.md` with anti-patterns [LOW]
   - **Goal:** Index the new anti-patterns directory
   - **AC:** Both files list anti-patterns section with all new files
   - **Depends:** 16.1.1-16.3.3
