@@ -444,13 +444,13 @@
 
 ### Phase 16.1: Create Anti-Patterns Directory
 
-- [ ] **16.1.1** Create `skills/domains/anti-patterns/README.md` [HIGH]
+- [x] **16.1.1** Create `skills/domains/anti-patterns/README.md` [HIGH]
   - **Goal:** Establish anti-patterns directory with format guidelines
   - **AC:** README defines anti-pattern format: name, bad code, why wrong, fix, frequency rating
 
 ### Phase 16.2: Shell Anti-Patterns
 
-- [ ] **16.2.1** Create `skills/domains/anti-patterns/shell-anti-patterns.md` [HIGH]
+- [x] **16.2.1** Create `skills/domains/anti-patterns/shell-anti-patterns.md` [HIGH]
   - **Goal:** Document 5+ common bash mistakes from ShellCheck history
   - **AC:** File has 5+ anti-patterns with SC codes, bad/good examples
   - **Sources:** SC2034 (unused var), SC2155 (declare+assign), SC2086 (unquoted), SC2181 ($? check), SC1091 (source)
