@@ -27,7 +27,7 @@
 
 ### Phase 24.1: Investigation - Find the Emitter (HIGH)
 
-- [ ] **24.1.1** Find exact emitter of "Session termination failed: 404" **[HIGH]**
+- [x] **24.1.1** Find exact emitter of "Session termination failed: 404" **[HIGH]**
   - **Goal:** Locate the file, function, and line that emits this exact string
   - **Steps:**
     1. `rg -n "Session termination failed" .` (literal string search)
@@ -37,7 +37,7 @@
   - **AC:** Exact file:line documented in THUNK, or confirmation that it's external with tool name
   - **Files likely touched:** None (read-only investigation)
 
-- [ ] **24.1.2** Trace session lifecycle and termination call path **[HIGH]**
+- [x] **24.1.2** Trace session lifecycle and termination call path **[HIGH]**
   - **Goal:** Document the full flow: session creation → storage → termination call
   - **Depends:** 24.1.1
   - **Steps:**
@@ -48,7 +48,7 @@
   - **AC:** Documented in THUNK: (1) session creation point, (2) session ID storage location, (3) termination trigger, (4) HTTP endpoint being hit
   - **Files likely touched:** None (read-only investigation)
 
-- [ ] **24.1.3** Capture minimal reproduction log snippet **[HIGH]**
+- [x] **24.1.3** Capture minimal reproduction log snippet **[HIGH]**
   - **Goal:** Get a concrete example showing the error in context
   - **Depends:** 24.1.1
   - **Steps:**
@@ -58,7 +58,7 @@
   - **AC:** Log snippet in THUNK showing error + surrounding context
   - **Files likely touched:** None (read-only investigation)
 
-- [ ] **24.1.4** Classify 404 as harmless-noise vs actionable-bug **[HIGH]**
+- [x] **24.1.4** Classify 404 as harmless-noise vs actionable-bug **[HIGH]**
   - **Goal:** Determine if this causes real problems or is purely cosmetic
   - **Depends:** 24.1.2, 24.1.3
   - **Steps:**
@@ -73,7 +73,7 @@
 
 ### Phase 24.2: Mitigation - Reduce Spam Without Hiding Real Errors (MEDIUM)
 
-- [ ] **24.2.1** Instrument emitter with contextual info **[MEDIUM]**
+- [x] **24.2.1** Instrument emitter with contextual info **[MEDIUM]**
   - **Goal:** When error occurs, include enough context to diagnose
   - **Depends:** 24.1.1, 24.1.4 (only if HARMLESS-NOISE)
   - **Steps:**
@@ -83,7 +83,7 @@
   - **AC:** Error message includes: `[component] Session termination failed: 404 for [action] (id: xxx...)`
   - **Files likely touched:** File identified in 24.1.1
 
-- [ ] **24.2.2** Add dedupe/throttle for repeated identical errors **[MEDIUM]**
+- [x] **24.2.2** Add dedupe/throttle for repeated identical errors **[MEDIUM]**
   - **Goal:** Same error within N seconds prints once + suppressed count
   - **Depends:** 24.2.1
   - **Steps:**
@@ -94,7 +94,7 @@
   - **AC:** Repeated 404s show: first occurrence, then `(xN suppressed)` summary
   - **Files likely touched:** File identified in 24.1.1, possibly `workers/shared/common.sh`
 
-- [ ] **24.2.3** Add DEBUG/VERBOSE toggle for full error output **[LOW]**
+- [x] **24.2.3** Add DEBUG/VERBOSE toggle for full error output **[LOW]**
   - **Goal:** Allow full repeated output when debugging
   - **Depends:** 24.2.2
   - **Steps:**
@@ -110,7 +110,7 @@
 
 **Note:** Execute the appropriate task based on 24.1.4 classification. Only one branch should be needed.
 
-- [ ] **24.3.1** FIX IF: Double-termination / already-cleaned session **[MEDIUM]**
+- [x] **24.3.1** FIX IF: Double-termination / already-cleaned session **[MEDIUM]**
   - **Goal:** Make cleanup idempotent - safe to call multiple times
   - **Depends:** 24.1.4 (if root cause is double-termination)
   - **Steps:**
@@ -120,7 +120,7 @@
   - **AC:** Calling terminate twice doesn't error; second call logs DEBUG and returns 0
   - **Files likely touched:** File with termination logic
 
-- [ ] **24.3.2** FIX IF: Stale/invalid session ID **[MEDIUM]**
+- [x] **24.3.2** FIX IF: Stale/invalid session ID **[MEDIUM]**
   - **Goal:** Fix lifecycle ordering so session ID is valid at termination time
   - **Depends:** 24.1.4 (if root cause is stale ID)
   - **Steps:**
@@ -130,7 +130,7 @@
   - **AC:** Termination always uses valid ID; no 404 from stale references
   - **Files likely touched:** Session management code
 
-- [ ] **24.3.3** FIX IF: Wrong endpoint/path **[MEDIUM]**
+- [x] **24.3.3** FIX IF: Wrong endpoint/path **[MEDIUM]**
   - **Goal:** Correct the termination endpoint URL
   - **Depends:** 24.1.4 (if root cause is wrong endpoint)
   - **Steps:**
@@ -140,7 +140,7 @@
   - **AC:** Termination calls correct endpoint; 404 no longer occurs
   - **Files likely touched:** HTTP client/endpoint configuration
 
-- [ ] **24.3.4** FIX IF: External best-effort cleanup (expected 404) **[MEDIUM]**
+- [x] **24.3.4** FIX IF: External best-effort cleanup (expected 404) **[MEDIUM]**
   - **Goal:** Downgrade to DEBUG level since 404 is expected/harmless
   - **Depends:** 24.1.4 (if classification is HARMLESS-NOISE from external service)
   - **Steps:**
@@ -156,13 +156,14 @@
 ### Phase 24.4: PLAN-ONLY Mode Guardrails (HIGH)
 
 **Guard Interface Specification:**
+
 - **Env var:** `RALPH_MODE=PLAN` (triggers guard; unset or `BUILD` = normal execution)
 - **Guard function:** `guard_plan_only_mode <action>` in `workers/shared/common.sh`
 - **Behavior:** Returns 0 (allowed) or 1 (blocked) based on action category
 - **Blocked categories:** `git-write` (add/commit/push), `file-modify` (shfmt -w, markdownlint --fix), `verification` (verifier.sh, pre-commit)
 - **Allowed categories:** `read` (cat, grep, git status, git diff), `plan-write` (edits to IMPLEMENTATION_PLAN.md only)
 
-- [ ] **24.4.1** Document PLAN-ONLY boundary rules in AGENTS.md **[HIGH]**
+- [x] **24.4.1** Document PLAN-ONLY boundary rules in AGENTS.md **[HIGH]**
   - **Goal:** Clear reference for what PLAN-ONLY mode can and cannot do
   - **Interface:** Document the guard spec above in human-readable form
   - **Steps:**
@@ -179,7 +180,7 @@
   - **AC:** AGENTS.md has PLAN-ONLY section documenting env var, blocked/allowed categories with examples
   - **Files likely touched:** `cortex/AGENTS.md`
 
-- [ ] **24.4.2** Add PLAN-ONLY guard function to shared lib **[MEDIUM]**
+- [x] **24.4.2** Add PLAN-ONLY guard function to shared lib **[MEDIUM]**
   - **Goal:** Reusable guard that blocks implementation actions in PLAN mode
   - **Depends:** 24.4.1
   - **Interface:**
@@ -212,7 +213,7 @@
   - **Files likely touched:** `workers/ralph/loop.sh` (protected - requires human approval + hash update)
   - **Note:** Protected file - requires human approval
 
-- [ ] **24.4.4** Add acceptance test proving PLAN-ONLY mode is respected **[HIGH]**
+- [x] **24.4.4** Add acceptance test proving PLAN-ONLY mode is respected **[HIGH]**
   - **Goal:** Verify that PLAN-ONLY mode blocks all forbidden actions
   - **Depends:** 24.4.2, 24.4.3
   - **Interface:** Test script exercises `guard_plan_only_mode` with both modes
@@ -238,6 +239,7 @@
 ---
 
 **Phase 24 Overall AC:**
+
 - [ ] Emitter identified and documented in THUNK
 - [ ] Root cause classified as HARMLESS-NOISE or ACTIONABLE-BUG with evidence
 - [ ] Appropriate fix branch completed (one of 24.3.1-24.3.4)
@@ -257,43 +259,11 @@
 
 ### Phase 23.1: Correctness Fixes (HIGH)
 
-- [x] **23.1.1** Fix `sync_completions_to_cortex.sh` unbound variable **[HIGH]**
-  - **Goal:** Sync never fails when no completions exist
-  - **Root Cause:** `${#completed_tasks[@]}` on empty associative array triggers "unbound variable" with `set -u`
-  - **Fix:** Initialize properly and add guard for empty case
-  - **AC:** No "unbound variable" errors; prints "0 completions" and exits 0 when none found; sync works when completions exist
-
-- [x] **23.1.2** Untrack rollflow cache sqlite files and ensure ignored **[HIGH]**
-  - **Goal:** Cache DBs don't show up in git status and don't get staged
-  - **Root Cause:** Files are tracked (in git index) even though `.gitignore` has patterns
-  - **Fix:** `git rm --cached` for any tracked cache files; verify `.gitignore` patterns
-  - **AC:** `git status` clean after runs; caches regenerate locally; `git ls-files` shows no cache.sqlite under rollflow_cache
 
 ### Phase 23.2: Staging Efficiency (HIGH - protected file)
 
-- [x] **23.2.1** Replace `git add -A` with scoped staging allowlist/denylist **[HIGH]**
-  - **Goal:** Only stage intended task files; avoid artifacts/cortex copies/caches by default
-  - **Root Cause:** Broad staging pulls in unrelated files, triggering fix-markdown/pre-commit/verifier unnecessarily
-  - **Fix:** Change staging logic in loop.sh to use explicit paths
-  - **Always stage:** `workers/IMPLEMENTATION_PLAN.md`, `workers/ralph/THUNK.md`, task-specific files
-  - **Never auto-stage:** `artifacts/**`, `cortex/IMPLEMENTATION_PLAN.md`, `cortex/PLAN_DONE.md`, `**/rollflow_cache/**`
-  - **AC:** After typical task, staged diff contains only: workers plan, THUNK, and files touched by task; artifacts/cortex/cache excluded unless explicitly requested
-  - **Note:** Protected file - requires human approval
-  - **Implementation Guide:**
-    1. In loop.sh, find the `git add -A` call(s) in the BUILD commit section
-    2. Replace with: `git add workers/IMPLEMENTATION_PLAN.md workers/ralph/THUNK.md`
-    3. Add logic to stage task-specific files (from git diff --name-only, excluding deny patterns)
-    4. Deny patterns: `artifacts/*`, `cortex/IMPLEMENTATION_PLAN.md`, `cortex/PLAN_DONE.md`, `**/rollflow_cache/*`
-    5. Update hash in `.verify/loop.sha256` after changes
-  - **Verification checklist:**
-    - [x] `git add -A` no longer used
-    - [x] Core files always staged (IMPLEMENTATION_PLAN.md, THUNK.md)
-    - [x] Artifacts excluded by default
-    - [x] Cortex copies excluded by default
-    - [x] Cache files excluded by default
-    - [x] Hash regenerated in all `.verify/` directories
 
-- [ ] **23.2.3** Fix cleanup_plan.sh to reliably locate workers/IMPLEMENTATION_PLAN.md **[HIGH]**
+- [x] **23.2.3** Fix cleanup_plan.sh to reliably locate workers/IMPLEMENTATION_PLAN.md **[HIGH]**
   - **Goal:** Cleanup script works regardless of current working directory and never looks in the wrong folder.
   - **AC:**
     - Running from repo root, `workers/`, and `workers/ralph/` succeeds.
@@ -317,27 +287,12 @@
 
 ### Phase 23.3: Tool Efficiency (MEDIUM)
 
-- [x] **23.3.1** Make `cortex/snapshot.sh` avoid regenerating dashboard/metrics by default **[MEDIUM]**
-  - **Goal:** Running snapshot for inspection shouldn't dirty artifacts unless requested
-  - **Root Cause:** Dashboard regeneration happens unconditionally, creating unrelated diffs
-  - **Fix:** Search for existing flags/env toggles; if none exist, add `--no-dashboard` option
-  - **AC:** Snapshot can run without modifying `artifacts/dashboard.html` / `artifacts/brain_metrics.json`
-
-- [x] **23.3.2** Pass changed `.md` files to fix-markdown instead of scanning repo root **[MEDIUM]**
-  - **Goal:** Reduce fix-markdown time when there are few changed markdown files
-  - **Root Cause:** Loop passes `.` (whole repo) even when only specific files changed
-  - **Fix:** Update fix-markdown to accept file arguments; update loop.sh to pass only changed `.md` paths
-  - **AC:** fix-markdown processes only changed `.md` paths; no "Issues before: 0" full-repo runs
 
 ### Phase 23.4: Workflow Efficiency (LOW)
 
-- [x] **23.4.1** Add PROMPT instruction: check THUNK before re-validating tasks **[LOW]**
-  - **Goal:** Avoid redoing already-completed work
-  - **Root Cause:** Ralph sometimes investigates tasks that THUNK already shows as done
-  - **Fix:** Add instruction to BUILD task-selection step: check THUNK via existing search tool first
-  - **AC:** When task already present in THUNK, Ralph marks it complete without deep investigation
 
 **Phase AC:**
+
 - sync_completions_to_cortex.sh runs without errors (0 completions case and real completions)
 - No cache.sqlite files tracked in git
 - Staging excludes artifacts/cortex/cache by default
@@ -354,66 +309,15 @@
 
 ### Phase 9C.0: Prerequisites (Marker Pipeline Fix)
 
-- [x] **9C.0.3** Document RovoDev tool instrumentation limitation
-  - **Goal:** Clarify that RovoDev's native tools bypass shell wrapper
-  - **AC:** `artifacts/optimization_hints.md` has "Limitations" section explaining tool visibility gap
-  - **Note:** RovoDev bash/grep/find_and_replace_code don't go through `log_tool_start()`
 
 ### Phase 9C.1: Batching Infrastructure
 
-- [x] **9C.1.1** Enhance `cortex/snapshot.sh` with batching hints
-  - **Goal:** Show "⚡ Batching opportunities: X" when ≥3 similar pending tasks detected
-  - **AC:** Snapshot output shows batching hints section when opportunities exist
-  - **Detection:** Same error code (MDxxx, SCxxxx), same directory prefix, same file type
-
-- [x] **9C.1.2** Document `[S/M/L]` complexity convention for task estimation
-  - **Goal:** Standard complexity labels for task estimation
-  - **AC:** PROMPT_REFERENCE.md has "Task Complexity" section with realistic time estimates (S=2-3min, M=5-10min, L=10-20min)
 
 ### Phase 9C.2: Apply Batching to Current Backlog
 
-- [x] **9C.2.1** Create batch task template in `templates/ralph/PROMPT.md`
-  - **Goal:** Standard format for batched tasks with multi-file scope
-  - **AC:** Template shows batch task example with glob patterns and verification
-
-- [x] **9C.2.2** BATCH: Create missing language templates (javascript, go, website)
-  - **Scope:** Create `templates/javascript/`, `templates/go/`, `templates/website/`
-  - **Steps:**
-    1. Define standard template structure (AGENTS.md, NEURONS.md, VALIDATION_CRITERIA.md)
-    2. Create all three directories with standard files in one pass
-    3. **Templates contain pointers to brain skills, NOT duplicated content**
-    4. Verify each directory has required files
-  - **AC:** All three template directories exist with standard structure and skill references
-  - **Replaces:** 6.1.1, 6.1.2, 6.3.1
-  - **Status:** 6.1.1 and 6.1.2 complete, 6.3.1 pending
-
-- [x] **9C.2.B2** BATCH: Update skills documentation (combines 7.2.1, 7.2.2)
-  - **Scope:** `skills/index.md` + `skills/SUMMARY.md`
-  - **Steps:**
-    1. Scan `skills/domains/` and `skills/playbooks/` for all files
-    2. Update `skills/index.md` with any missing entries
-    3. Update `skills/SUMMARY.md` error reference and playbooks section
-  - **AC:** Both index files list all current skills, SUMMARY includes playbooks
-  - **Replaces:** 7.2.1, 7.2.2
-
-- [x] **9C.2.B3** BATCH: Improve onboarding docs (combines 7.1.1, 7.1.2)
-  - **Scope:** Root `README.md` + new `CONTRIBUTING.md`
-  - **Steps:**
-    1. Enhance README.md onboarding flow (quick start, navigation)
-    2. Create CONTRIBUTING.md with guidelines
-    3. Cross-link between files
-  - **AC:** README has clear onboarding, CONTRIBUTING.md exists
-  - **Replaces:** 7.1.1, 7.1.2
 
 ### Phase 9C.3: Decomposition Detection
 
-- [x] **9C.3.1** Add duration tracking to `current_ralph_tasks.sh` footer
-  - **Goal:** Show when current task exceeds 2x median (⚠️ warning)
-  - **AC:** Footer shows "⚠️ Current task exceeding median" when appropriate
-
-- [x] **9C.3.2** Create decomposition checklist in `skills/playbooks/`
-  - **Goal:** Playbook for breaking down oversized tasks
-  - **AC:** `skills/playbooks/decompose-large-tasks.md` exists with decision criteria
 
 ### Phase 9C.4: Validation
 
@@ -437,7 +341,7 @@
 
 **Status:** Phase 21.1, 21.2, and 21.3.1-21.3.2 COMPLETE. One task remaining.
 
-- [ ] **21.3.3** Add tools reference to `skills/index.md` [LOW]
+- [x] **21.3.3** Add tools reference to `skills/index.md` [LOW]
   - **Goal:** Include tools in searchable skills index
   - **AC:** Index has entry pointing to `docs/TOOLS.md`
 
@@ -453,42 +357,37 @@
 
 ### Phase 22.2: THUNK.md Table Fixes
 
-- [x] **22.2.3** Fix MD056 in workers/ralph/THUNK.md line 801 (escape pipes)
-  - **Goal:** Escape unescaped pipe characters in table row description
-  - **Error:** Line 801:401 - Table has 10 columns instead of 5
-  - **Root Cause:** Description contains `"collect_metrics.sh | generate"` and `"| 2026-01-26 |"` with unescaped pipes
-  - **AC:** `markdownlint workers/ralph/THUNK.md` passes (no MD056 errors)
 
 ### Phase 22.3: MD032 Fixes - Lists Need Blank Lines (cortex/)
 
-- [ ] **22.3.1** Fix MD032 in cortex/IMPLEMENTATION_PLAN.md line 159
+- [x] **22.3.1** Fix MD032 in cortex/IMPLEMENTATION_PLAN.md line 159
   - **Goal:** Add blank line before list at line 159
   - **Context:** List starting with "- **Env var:** `RALPH_MODE=PLA...`"
   - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD032 errors at line 159)
 
-- [ ] **22.3.2** Fix MD032 in cortex/IMPLEMENTATION_PLAN.md line 241
+- [x] **22.3.2** Fix MD032 in cortex/IMPLEMENTATION_PLAN.md line 241
   - **Goal:** Add blank line before list at line 241
   - **Context:** List starting with "- [ ] Emitter identified and d..."
   - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD032 errors at line 241)
 
-- [ ] **22.3.3** Fix MD032 in cortex/IMPLEMENTATION_PLAN.md line 341
-  - **Goal:** Add blank line before list at line 341
+- [x] **22.3.3** Fix MD032 in cortex/IMPLEMENTATION_PLAN.md line 295
+  - **Goal:** Add blank line before list at line 295
   - **Context:** List starting with "- sync_completions_to_cortex.s..."
-  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD032 errors at line 341)
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD032 errors at line 295)
 
 ### Phase 22.4: MD032 Fixes - Lists Need Blank Lines (workers/)
 
-- [ ] **22.4.1** Fix MD032 in workers/IMPLEMENTATION_PLAN.md line 159
+- [x] **22.4.1** Fix MD032 in workers/IMPLEMENTATION_PLAN.md line 159
   - **Goal:** Add blank line before list at line 159
   - **Context:** Same error as cortex/ - list starting with "- **Env var:** `RALPH_MODE=PLA...`"
   - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD032 errors at line 159)
 
-- [ ] **22.4.2** Fix MD032 in workers/IMPLEMENTATION_PLAN.md line 241
+- [x] **22.4.2** Fix MD032 in workers/IMPLEMENTATION_PLAN.md line 241
   - **Goal:** Add blank line before list at line 241
   - **Context:** Same error as cortex/ - list starting with "- [ ] Emitter identified and d..."
   - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD032 errors at line 241)
 
-- [ ] **22.4.3** Fix MD032 in workers/IMPLEMENTATION_PLAN.md line 295
+- [x] **22.4.3** Fix MD032 in workers/IMPLEMENTATION_PLAN.md line 295
   - **Goal:** Add blank line before list at line 295
   - **Context:** List starting with "- sync_completions_to_cortex.s..."
   - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD032 errors at line 295)
@@ -523,22 +422,35 @@
   - **Goal:** Remove extra blank lines (Expected: 2; Actual: 3)
   - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 325)
 
-### Phase 22.5: MD024 Fixes - Duplicate Headings (cortex/)
+### Phase 22.4C: MD012 Fixes - Multiple Consecutive Blank Lines (cortex/)
 
-- [ ] **22.4.1** Fix MD032 in workers/IMPLEMENTATION_PLAN.md line 159
-  - **Goal:** Add blank line before list at line 159
-  - **Context:** Same error as cortex/ - list starting with "- **Env var:** `RALPH_MODE=PLA...`"
-  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD032 errors at line 159)
+- [ ] **22.4C.1** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 261
+  - **Goal:** Remove extra blank lines (Expected: 2; Actual: 3)
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 261)
 
-- [ ] **22.4.2** Fix MD032 in workers/IMPLEMENTATION_PLAN.md line 241
-  - **Goal:** Add blank line before list at line 241
-  - **Context:** Same error as cortex/ - list starting with "- [ ] Emitter identified and d..."
-  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD032 errors at line 241)
+- [ ] **22.4C.2** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 290
+  - **Goal:** Remove extra blank lines (Expected: 2; Actual: 3)
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 290)
 
-- [ ] **22.4.3** Fix MD032 in workers/IMPLEMENTATION_PLAN.md line 341
-  - **Goal:** Add blank line before list at line 341
-  - **Context:** Same error as cortex/ - list starting with "- sync_completions_to_cortex.s..."
-  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD032 errors at line 341)
+- [ ] **22.4C.3** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 315
+  - **Goal:** Remove extra blank lines (Expected: 2; Actual: 3)
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 315)
+
+- [ ] **22.4C.4** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 319
+  - **Goal:** Remove extra blank lines (Expected: 2; Actual: 3)
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 319)
+
+- [ ] **22.4C.5** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 320
+  - **Goal:** Remove extra blank lines (Expected: 2; Actual: 4)
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 320)
+
+- [ ] **22.4C.6** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 321
+  - **Goal:** Remove extra blank lines (Expected: 2; Actual: 5)
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 321)
+
+- [ ] **22.4C.7** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 325
+  - **Goal:** Remove extra blank lines (Expected: 2; Actual: 3)
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 325)
 
 ### Phase 22.5: MD024 Fixes - Duplicate Headings (cortex/)
 

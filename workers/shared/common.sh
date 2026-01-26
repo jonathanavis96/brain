@@ -657,3 +657,37 @@ tree_hash() {
     return 1
   fi
 }
+
+# Guard function for PLAN-ONLY mode enforcement
+# Usage: guard_plan_only_mode <action>
+# Returns: 0 = allowed, 1 = blocked
+# Example: guard_plan_only_mode "git commit" || { echo "Blocked"; exit 1; }
+guard_plan_only_mode() {
+  local action="${1:-}"
+
+  # Guard disabled if not in PLAN mode
+  [[ "${RALPH_MODE:-}" != "PLAN" ]] && return 0
+
+  # Pattern-match action against blocked categories
+  case "$action" in
+    git\ add | git\ commit | git\ push)
+      # git-write operations blocked
+      echo "PLAN-ONLY: Refusing '$action'. Add task to plan instead." >&2
+      return 1
+      ;;
+    *-w* | *--fix* | shfmt* | markdownlint*)
+      # file-modify operations blocked (includes --fix variants)
+      echo "PLAN-ONLY: Refusing '$action'. Add task to plan instead." >&2
+      return 1
+      ;;
+    verifier.sh | pre-commit*)
+      # verification operations blocked
+      echo "PLAN-ONLY: Refusing '$action'. Add task to plan instead." >&2
+      return 1
+      ;;
+    *)
+      # Allow all other operations (reads, planning)
+      return 0
+      ;;
+  esac
+}

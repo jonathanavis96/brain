@@ -1491,9 +1491,9 @@ except Exception:
       return 1
     fi
   else
-    # Default: RovoDev
+    # Default: RovoDev (with error filtering)
     run_tool "$tool_id" "$RUNNER" "$tool_key" "$git_sha" \
-      "script -q -c \"cat \\\"$prompt_with_mode\\\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG}\" \"$log\""
+      "script -q -c \"cat \\\"$prompt_with_mode\\\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG} 2>&1 | bash ../shared/filter_acli_errors.sh\" \"$log\""
     rc=$?
   fi
 

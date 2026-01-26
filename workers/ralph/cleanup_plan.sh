@@ -12,11 +12,21 @@
 
 set -euo pipefail
 
+# Resolve repository root reliably
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# Plan files are in workers/, one level up from workers/ralph/
-WORKERS_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
-PLAN_FILE="${WORKERS_DIR}/IMPLEMENTATION_PLAN.md"
-ARCHIVE_FILE="${WORKERS_DIR}/PLAN_DONE.md"
+
+# Try git rev-parse first (most reliable in git repos)
+if REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"; then
+  : # Success - REPO_ROOT is set
+else
+  # Fallback: deterministic path traversal from script location
+  # Script is in workers/ralph/, so repo root is two levels up
+  REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+fi
+
+# Use explicit paths from repo root
+PLAN_FILE="${REPO_ROOT}/workers/IMPLEMENTATION_PLAN.md"
+ARCHIVE_FILE="${REPO_ROOT}/workers/PLAN_DONE.md"
 
 # Default flags
 DRY_RUN=false
