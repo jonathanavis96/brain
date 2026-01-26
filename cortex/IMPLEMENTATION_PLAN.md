@@ -98,33 +98,7 @@
 
 ---
 
----
-
-## Recurring: Performance Monitoring
-
-**Goal:** Continuously scan logs and identify performance optimization opportunities.
-
-**Frequency:** Every 5 Ralph iterations (or when Cortex reviews progress)
-
-**Process:**
-
-1. **Scan iteration logs** in `artifacts/rollflow_cache/` for:
-   - Tasks exceeding 10 minutes (decomposition candidates)
-   - Repeated similar errors (skill gap candidates)
-   - Multiple file edits in same directory (batching candidates)
-
-2. **Update `artifacts/optimization_hints.md`** with:
-   - New batching opportunities discovered
-   - Decomposition recommendations
-   - Skill gaps to fill
-
-3. **Check gap radar output** from `bin/gap-radar --dry-run`:
-   - New error patterns not covered by skills
-   - Promote significant gaps to SKILL_BACKLOG.md
-
-**Trigger:** Cortex should run `bash cortex/snapshot.sh` which shows batching hints when ≥3 similar tasks detected.
-
-**AC:** `artifacts/optimization_hints.md` updated at least every 5 iterations with actionable insights.
+<!-- NOTE: Recurring processes moved to cortex/docs/RUNBOOK.md - not tasks -->
 
 ---
 
@@ -140,52 +114,54 @@
 
 ### Phase 21.1: Enhance thunk-parse with Query Capabilities
 
+- [x] **21.1.1** Rename `bin/thunk-parse` → `tools/thunk_parser.py`
   - **Goal:** Consolidate with other Python tools, follow naming convention
   - **AC:** `python3 tools/thunk_parser.py --help` works, old `bin/thunk-parse` removed
-  - **Update:** Symlink `bin/thunk-parse` → `tools/thunk_parser.py` for backward compat
+  - **Completed:** 2026-01-26
 
+- [x] **21.1.2** Add `--query-id` option to thunk_parser.py
   - **Goal:** Query THUNK by original task ID (e.g., "11.1.3")
-  - **Usage:** `python3 tools/thunk_parser.py --query-id "11.1.3" --json`
   - **AC:** Returns JSON entry if found, empty if not
-  - **Token savings:** Replaces `grep "11.1.3" THUNK.md` with structured query
+  - **Completed:** 2026-01-26
 
+- [x] **21.1.3** Add `--last-id` option to thunk_parser.py
   - **Goal:** Get last THUNK entry number for appends
-  - **Usage:** `python3 tools/thunk_parser.py --last-id`
   - **AC:** Prints integer (e.g., "830")
-  - **Token savings:** Replaces `tail THUNK.md | grep | awk`
+  - **Completed:** 2026-01-26
 
+- [x] **21.1.4** Add `--search` option with keyword matching
   - **Goal:** Search THUNK entries by keyword
-  - **Usage:** `python3 tools/thunk_parser.py --search "shellcheck" --limit 5`
   - **AC:** Returns matching entries as JSON
-  - **Token savings:** Structured alternative to grep
+  - **Completed:** 2026-01-26
 
 ### Phase 21.2: Token Efficiency Policy for PROMPT.md
 
-- **Goal:** Explicit rules preventing broad file loading
-- **Content:** Hard rules (no THUNK.md opens, no IMPL_PLAN opens without line slice)
-- **AC:** PROMPT.md has "Read Budget" section with allowed/forbidden patterns
-- **Reference:** Use `docs/TOOLS.md` for CLI alternatives
-- **Completed:** 2026-01-26 (commit 9b087a7)
+- [x] **21.2.1** Add "Read Budget" section to PROMPT.md
+  - **Goal:** Explicit rules preventing broad file loading
+  - **AC:** PROMPT.md has "Read Budget" section with allowed/forbidden patterns
+  - **Completed:** 2026-01-26 (commit 9b087a7)
 
-- **Goal:** Ralph uses cheap commands first before any file reads
-- **Content:** Step A (grep for task), Step B (ensure thunk DB exists)
-- **AC:** PROMPT.md has startup procedure that minimizes reads
-- **Completed:** 2026-01-26 (commit 9b087a7)
+- [x] **21.2.2** Add startup procedure to PROMPT.md
+  - **Goal:** Ralph uses cheap commands first before any file reads
+  - **AC:** PROMPT.md has startup procedure that minimizes reads
+  - **Completed:** 2026-01-26 (commit 9b087a7)
 
-- **Goal:** Keep templates in sync
-- **AC:** Template matches workers/ralph/PROMPT.md token efficiency sections
-- **Depends:** 21.2.1, 21.2.2
-- **Completed:** 2026-01-26 (commit 9b087a7)
+- [x] **21.2.3** Sync token efficiency sections to templates
+  - **Goal:** Keep templates in sync
+  - **AC:** Template matches workers/ralph/PROMPT.md token efficiency sections
+  - **Completed:** 2026-01-26 (commit 9b087a7)
 
 ### Phase 21.3: Documentation Updates
 
-- **Goal:** Reference CLI tools instead of raw grep/sed
-- **AC:** Skill doc links to `docs/TOOLS.md`, shows CLI examples first
-- **Completed:** 2026-01-26 (commit c546cd5)
+- [x] **21.3.1** Update thread-search-patterns.md to reference CLI tools
+  - **Goal:** Reference CLI tools instead of raw grep/sed
+  - **AC:** Skill doc links to `docs/TOOLS.md`, shows CLI examples first
+  - **Completed:** 2026-01-26 (commit c546cd5)
 
-- **Goal:** Easy discovery of tools reference
-- **AC:** NEURONS.md has link in appropriate section
-- **Completed:** 2026-01-26 (commit c546cd5)
+- [x] **21.3.2** Add tools reference to NEURONS.md
+  - **Goal:** Easy discovery of tools reference
+  - **AC:** NEURONS.md has link in appropriate section
+  - **Completed:** 2026-01-26 (commit c546cd5)
 
 - [ ] **21.3.3** Add tools reference to `skills/index.md` [LOW]
   - **Goal:** Include tools in searchable skills index
