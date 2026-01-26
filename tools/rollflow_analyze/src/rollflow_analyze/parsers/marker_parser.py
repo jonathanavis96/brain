@@ -303,11 +303,14 @@ class MarkerParser:
                             ToolStatus.FAIL if result == "FAIL" else ToolStatus.UNKNOWN
                         )
                     )
-                    # Infer tool name from duration - calls >10s are likely RovoDev sessions
+                    # Infer tool name from duration - orphaned END markers are likely RovoDev sessions
+                    # These occur when the START marker wasn't captured (e.g., script truncation)
+                    # Even short sessions (auth failures, etc.) should be classified as rovodev-session
                     duration_ms = _safe_int(kv.get("duration_ms"))
                     inferred_tool = (
                         "rovodev-session"
-                        if duration_ms and duration_ms > 10000
+                        if duration_ms
+                        and duration_ms > 500  # 0.5s threshold catches auth failures
                         else "unknown"
                     )
 
@@ -348,8 +351,8 @@ class MarkerParser:
                     if cache_key:
                         # Extract tool name from cache_key (e.g., "verifier|abc123" -> "verifier")
                         inferred_tool = cache_key.split("|")[0].split("-")[0]
-                    elif duration_ms and duration_ms > 10000:
-                        # Calls >10s are likely RovoDev agent sessions
+                    elif duration_ms and duration_ms > 500:
+                        # Orphaned END markers >0.5s are likely RovoDev sessions
                         inferred_tool = "rovodev-session"
 
                 # Update tool_name if we inferred one
@@ -387,11 +390,12 @@ class MarkerParser:
 
                 tc = active.pop(call_id, None)
                 if not tc:
-                    # End without start; infer tool name from duration (>10s = RovoDev session)
+                    # End without start; orphaned END markers are likely RovoDev sessions
                     duration_ms = _safe_int(kv.get("duration_ms"))
                     inferred_tool = (
                         "rovodev-session"
-                        if duration_ms and duration_ms > 10000
+                        if duration_ms
+                        and duration_ms > 500  # 0.5s catches auth failures
                         else "unknown"
                     )
 
