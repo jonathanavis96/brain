@@ -534,6 +534,43 @@ When a validation tool fails on code examples:
 3. If code is obviously valid (kwargs, for-loop, comprehension), assume **validator bug** and fix validator
 4. **DO NOT** rewrite valid examples into awkward forms to satisfy broken validators
 
+### Validator Errors: Smallest Reproduction First
+
+When any pre-commit hook fails:
+
+1. Re-run the failing hook **only on the file**: `pre-commit run <hook-id> --files <file>`
+2. Inspect validator logic **before** editing docs: `rg -n "<error message>" tools/`
+3. Fix validator if the example is valid code (don't rewrite examples 3 times)
+
+### Commit Atomicity
+
+Before any commit, verify staged files:
+
+```bash
+git status --short
+git diff --cached --stat
+```
+
+**Rule:** If task completion requires both IMPL_PLAN + THUNK updates, they must be staged **together** before committing.
+
+### Search Explosion Guard
+
+If grep/rg output exceeds 100 lines:
+
+1. **STOP** - do not process the output
+2. **Narrow scope** - add path filter, file extension, or more specific pattern
+3. **Rerun** with constrained query
+
+**Never do:** `rg "pattern" skills/domains/**/*.md` with broad patterns
+
+### THUNK Lookup Path
+
+If you need THUNK info (task history, completions):
+
+1. **First discover tools:** `bin/thunk-parse --help || true`
+2. **Use structured queries** via thunk-parse or brain-search
+3. **Only tail THUNK.md** when appending new entries (not for lookups)
+
 ### Context You Already Have
 
 **NEVER repeat these (you already know):**
