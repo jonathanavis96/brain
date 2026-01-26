@@ -266,40 +266,35 @@
 > Ralph should not guess on these; resolve explicitly or use the suggested default to proceed safely.
 
 - **DN-24.1 (`RALPH.md`)**
-  - **Decision needed:** Should `templates/ralph/RALPH.md` exist (and what is its purpose relative to `templates/ralph/README.md`)?
+  - **Resolved:** ✅ Keep `RALPH.md` in templates, but rewrite it to be a short "Ralph identity + layout" doc that points to `README.md` for operational details (ADR-0001).
   - **Why it matters:** Avoid duplicative or misleading documentation in new projects.
   - **Where to inspect:** `templates/ralph/RALPH.md`, `templates/ralph/README.md`
-  - **Suggested default:** Keep `RALPH.md` in templates but rewrite it to be a short "Ralph identity + layout" doc that points to README for operational details (ADR-0001 notes).
 
 - **DN-24.2 (`PROMPT_cerebras.md`)**
-  - **Decision needed:** Template `workers/ralph/PROMPT_cerebras.md` as an optional variant, or keep Brain-only?
-  - **Why it matters:** Impacts usability for projects running Cerebras; avoids clutter for projects that don’t.
-  - **Where to inspect:** `workers/ralph/PROMPT_cerebras.md` (source), `templates/ralph/` (destination)
-  - **Suggested default:** Template it as optional; ensure scripts fall back to `PROMPT.md` if missing (ADR-0001 resolved follow-up).
+  - **Resolved:** ✅ Do **not** template this under `templates/ralph/`. This is intended to be **Cerebras-only** (i.e., under `workers/cerebras/`).
+  - **Why it matters:** Avoid clutter/misleading artifacts in standard Ralph scaffolds while still supporting Cerebras-specific workflows.
+  - **Where to inspect:** `workers/cerebras/` (intended home), plus any existing `PROMPT_cerebras.md` references in scripts/docs.
+  - **Follow-up:** Update/move/rename as needed so the repo doesnt imply `PROMPT_cerebras.md` is a standard Ralph artifact.
 
 - **DN-24.3 (`ralph.sh` wrapper)**
-  - **Decision needed:** Is `workers/ralph/ralph.sh` a generally useful wrapper that should be templated?
-  - **Why it matters:** Wrapper scripts can become "blessed" entrypoints; templating a Brain-specific wrapper would cause confusion.
-  - **Where to inspect:** `workers/ralph/ralph.sh`, `templates/ralph/` for any existing wrapper conventions
-  - **Suggested default:** Template it only if it is layout-agnostic and does not embed Brain branch names/paths.
+  - **Resolved:** ✅ Do **not** template `ralph.sh` as a global wrapper/entrypoint.
+  - **Why it matters:** Wrapper scripts can become "blessed" commands; templating Brain-specific wrappers creates confusion and coupling.
+  - **Where to inspect:** `workers/ralph/ralph.sh`
 
 - **DN-24.4 (`render_ac_status.sh`)**
-  - **Decision needed:** Is `render_ac_status.sh` generally useful enough to template?
-  - **Why it matters:** Low impact, but risks divergence if it depends on Brain-specific verifier output details.
+  - **Resolved (tentative):** ✅ Treat as a potentially general utility; template **only if** it is layout-agnostic and depends only on canonical A1 paths + `.verify/latest.txt` (no Brain-specific assumptions).
+  - **Why it matters:** If other projects rely on it, we want it available; but we must avoid templating something brittle.
   - **Where to inspect:** `workers/ralph/render_ac_status.sh`, `.verify/latest.txt` format assumptions
-  - **Suggested default:** Do not template until verified it only depends on `.verify/latest.txt` and A1 paths.
 
 - **DN-24.5 (`pr-batch.sh`)**
-  - **Decision needed:** Should `pr-batch.sh` drift (D12) be backported to templates?
+  - **Resolved:** ✅ Defer for now (do not backport as part of Phase 24 unless we later identify a strict bug-fix + A1 normalization change).
   - **Why it matters:** Incorrect assumptions about branch naming or paths can break PR automation.
   - **Where to inspect:** `workers/ralph/pr-batch.sh`, `templates/ralph/pr-batch.sh`
-  - **Suggested default:** Defer unless drift is strictly bug-fix and layout normalization.
 
 - **DN-24.6 (`HUMAN_REQUIRED.md` wording changes)**
-  - **Decision needed:** Are wording changes in `HUMAN_REQUIRED.md` improvements that should be templated?
+  - **Resolved:** ✅ Yes: template changes that are A1 path normalization + clarity improvements.
   - **Why it matters:** This doc controls when humans intervene; wording drift can alter workflow expectations.
   - **Where to inspect:** `workers/ralph/HUMAN_REQUIRED.md`, `templates/ralph/HUMAN_REQUIRED.md`
-  - **Suggested default:** Only template changes that are A1 path normalization + clarity improvements.
 
 ---
 
