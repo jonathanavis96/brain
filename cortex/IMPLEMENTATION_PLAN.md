@@ -37,7 +37,8 @@
   - **AC:** Snapshot output shows batching hints section when opportunities exist
   - **Detection:** Same error code (MDxxx, SCxxxx), same directory prefix, same file type
 
-  - **Goal:** Document `[S/M/L]` complexity convention for task estimation
+- [ ] **9C.1.2** Document `[S/M/L]` complexity convention for task estimation
+  - **Goal:** Standard complexity labels for task estimation
   - **AC:** PROMPT_REFERENCE.md has "Task Complexity" section with realistic time estimates (S=2-3min, M=5-10min, L=10-20min)
 
 ### Phase 9C.2: Apply Batching to Current Backlog
@@ -46,6 +47,7 @@
   - **Goal:** Standard format for batched tasks with multi-file scope
   - **AC:** Template shows batch task example with glob patterns and verification
 
+- [ ] **9C.2.2** BATCH: Create missing language templates (javascript, go, website)
   - **Scope:** Create `templates/javascript/`, `templates/go/`, `templates/website/`
   - **Steps:**
     1. Define standard template structure (AGENTS.md, NEURONS.md, VALIDATION_CRITERIA.md)
@@ -102,57 +104,9 @@
 
 ---
 
-## Phase 21: Token Efficiency & Tool Consolidation ⚡ NEXT
+## Phase 21: Token Efficiency & Tool Consolidation
 
-**Goal:** Reduce Ralph's token usage by providing structured query tools and enforcing lean context loading.
-
-**Problem:** Ralph often opens large files (THUNK.md, IMPLEMENTATION_PLAN.md) when targeted queries would suffice. This wastes tokens and slows iterations.
-
-**Priority:** HIGH (directly improves iteration speed and cost)
-
-**Status:** ACTIVE - Start here
-
-### Phase 21.1: Enhance thunk-parse with Query Capabilities
-
-  - **Goal:** Consolidate with other Python tools, follow naming convention
-  - **AC:** `python3 tools/thunk_parser.py --help` works, old `bin/thunk-parse` removed
-  - **Completed:** 2026-01-26
-
-  - **Goal:** Query THUNK by original task ID (e.g., "11.1.3")
-  - **AC:** Returns JSON entry if found, empty if not
-  - **Completed:** 2026-01-26
-
-  - **Goal:** Get last THUNK entry number for appends
-  - **AC:** Prints integer (e.g., "830")
-  - **Completed:** 2026-01-26
-
-  - **Goal:** Search THUNK entries by keyword
-  - **AC:** Returns matching entries as JSON
-  - **Completed:** 2026-01-26
-
-### Phase 21.2: Token Efficiency Policy for PROMPT.md
-
-  - **Goal:** Explicit rules preventing broad file loading
-  - **AC:** PROMPT.md has "Read Budget" section with allowed/forbidden patterns
-  - **Completed:** 2026-01-26 (commit 9b087a7)
-
-  - **Goal:** Ralph uses cheap commands first before any file reads
-  - **AC:** PROMPT.md has startup procedure that minimizes reads
-  - **Completed:** 2026-01-26 (commit 9b087a7)
-
-  - **Goal:** Keep templates in sync
-  - **AC:** Template matches workers/ralph/PROMPT.md token efficiency sections
-  - **Completed:** 2026-01-26 (commit 9b087a7)
-
-### Phase 21.3: Documentation Updates
-
-  - **Goal:** Reference CLI tools instead of raw grep/sed
-  - **AC:** Skill doc links to `docs/TOOLS.md`, shows CLI examples first
-  - **Completed:** 2026-01-26 (commit c546cd5)
-
-  - **Goal:** Easy discovery of tools reference
-  - **AC:** NEURONS.md has link in appropriate section
-  - **Completed:** 2026-01-26 (commit c546cd5)
+**Status:** Phase 21.1, 21.2, and 21.3.1-21.3.2 COMPLETE. One task remaining.
 
 - [ ] **21.3.3** Add tools reference to `skills/index.md` [LOW]
   - **Goal:** Include tools in searchable skills index
