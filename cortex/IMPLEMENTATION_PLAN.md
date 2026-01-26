@@ -434,7 +434,7 @@
   - **AC:** Returns JSON entry if found, empty if not
   - **Token savings:** Replaces `grep "11.1.3" THUNK.md` with structured query
 
-- [ ] **21.1.3** Add `--last-id` option to thunk_parser.py [HIGH]
+- [x] **21.1.3** Add `--last-id` option to thunk_parser.py [HIGH]
   - **Goal:** Get last THUNK entry number for appends
   - **Usage:** `python3 tools/thunk_parser.py --last-id`
   - **AC:** Prints integer (e.g., "830")
