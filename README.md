@@ -191,6 +191,7 @@ bash sync_gaps.sh # Sync tasks to Ralph
 | [NEURONS.md](NEURONS.md) | Complete repository map |
 | [THOUGHTS.md](THOUGHTS.md) | Strategic vision & goals |
 | [AGENTS.md](AGENTS.md) | Operational guide for AI agents |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Guidelines for contributors |
 | [skills/SUMMARY.md](skills/SUMMARY.md) | Skills overview + error reference |
 | [docs/BOOTSTRAPPING.md](docs/BOOTSTRAPPING.md) | Advanced bootstrapping |
 | [cortex/docs/RUNBOOK.md](cortex/docs/RUNBOOK.md) | Operations runbook |
@@ -367,9 +368,18 @@ Every commit runs through:
 
 ---
 
-## Contributing
+## How to Contribute
 
-Want to improve the brain? Here's how:
+**See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.**
+
+Key areas for contribution:
+
+1. **Add Skills** - Document patterns you've discovered (use [skills/self-improvement/SKILL_TEMPLATE.md](skills/self-improvement/SKILL_TEMPLATE.md))
+2. **Improve Templates** - Enhance project scaffolding (follow template sync rules in CONTRIBUTING.md)
+3. **Report Gaps** - Add entries to `skills/self-improvement/GAP_BACKLOG.md`
+4. **Fix Bugs** - Create issues or submit PRs (run `pre-commit run --all-files` before committing)
+
+### Quick Contribution Guide
 
 ### Quick Contribution
 

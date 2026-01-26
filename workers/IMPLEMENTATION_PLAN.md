@@ -306,7 +306,7 @@
   - **AC:** Both index files list all current skills, SUMMARY includes playbooks
   - **Replaces:** 7.2.1, 7.2.2
 
-- [ ] **9C.2.B3** BATCH: Improve onboarding docs (combines 7.1.1, 7.1.2)
+- [x] **9C.2.B3** BATCH: Improve onboarding docs (combines 7.1.1, 7.1.2)
   - **Scope:** Root `README.md` + new `CONTRIBUTING.md`
   - **Steps:**
     1. Enhance README.md onboarding flow (quick start, navigation)
