@@ -1927,11 +1927,16 @@ else
       fi
 
       # Run verifier to get current state (Ralph will see WARN/FAIL in context)
-      echo "Running verifier to check current state..."
-      verifier_pre_id="$(tool_call_id)"
-      verifier_pre_key="verifier-pre-build|${autofix_git_sha}"
-      run_tool "$verifier_pre_id" "verifier" "$verifier_pre_key" "$autofix_git_sha" \
-        "(cd \"$RALPH\" && bash verifier.sh 2>/dev/null) || true" || true
+      # Skip if no changes - post-iteration verifier will still run after Ralph works
+      if [[ -n "$changed_files" ]]; then
+        echo "Running verifier to check current state..."
+        verifier_pre_id="$(tool_call_id)"
+        verifier_pre_key="verifier-pre-build|${autofix_git_sha}"
+        run_tool "$verifier_pre_id" "verifier" "$verifier_pre_key" "$autofix_git_sha" \
+          "(cd \"$RALPH\" && bash verifier.sh 2>/dev/null) || true" || true
+      else
+        echo "Skipping pre-build verifier (no changes since last run)"
+      fi
       echo ""
 
       emit_event --event phase_start --iter "$i" --phase "build"
