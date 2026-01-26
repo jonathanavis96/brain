@@ -25,29 +25,29 @@
 
 ### Phase 9C.0: Prerequisites (Marker Pipeline Fix)
 
-- [ ] **9C.0.3** Document RovoDev tool instrumentation limitation
+- [x] **9C.0.3** Document RovoDev tool instrumentation limitation
   - **Goal:** Clarify that RovoDev's native tools bypass shell wrapper
   - **AC:** `artifacts/optimization_hints.md` has "Limitations" section explaining tool visibility gap
   - **Note:** RovoDev bash/grep/find_and_replace_code don't go through `log_tool_start()`
 
 ### Phase 9C.1: Batching Infrastructure
 
-- [ ] **9C.1.1** Enhance `cortex/snapshot.sh` with batching hints
+- [x] **9C.1.1** Enhance `cortex/snapshot.sh` with batching hints
   - **Goal:** Show "⚡ Batching opportunities: X" when ≥3 similar pending tasks detected
   - **AC:** Snapshot output shows batching hints section when opportunities exist
   - **Detection:** Same error code (MDxxx, SCxxxx), same directory prefix, same file type
 
-- [ ] **9C.1.2** Document `[S/M/L]` complexity convention for task estimation
+- [x] **9C.1.2** Document `[S/M/L]` complexity convention for task estimation
   - **Goal:** Standard complexity labels for task estimation
   - **AC:** PROMPT_REFERENCE.md has "Task Complexity" section with realistic time estimates (S=2-3min, M=5-10min, L=10-20min)
 
 ### Phase 9C.2: Apply Batching to Current Backlog
 
-- [ ] **9C.2.1** Create batch task template in `templates/ralph/PROMPT.md`
+- [x] **9C.2.1** Create batch task template in `templates/ralph/PROMPT.md`
   - **Goal:** Standard format for batched tasks with multi-file scope
   - **AC:** Template shows batch task example with glob patterns and verification
 
-- [ ] **9C.2.2** BATCH: Create missing language templates (javascript, go, website)
+- [x] **9C.2.2** BATCH: Create missing language templates (javascript, go, website)
   - **Scope:** Create `templates/javascript/`, `templates/go/`, `templates/website/`
   - **Steps:**
     1. Define standard template structure (AGENTS.md, NEURONS.md, VALIDATION_CRITERIA.md)
@@ -58,7 +58,7 @@
   - **Replaces:** 6.1.1, 6.1.2, 6.3.1
   - **Status:** 6.1.1 and 6.1.2 complete, 6.3.1 pending
 
-- [ ] **9C.2.B2** BATCH: Update skills documentation (combines 7.2.1, 7.2.2)
+- [x] **9C.2.B2** BATCH: Update skills documentation (combines 7.2.1, 7.2.2)
   - **Scope:** `skills/index.md` + `skills/SUMMARY.md`
   - **Steps:**
     1. Scan `skills/domains/` and `skills/playbooks/` for all files
@@ -67,7 +67,7 @@
   - **AC:** Both index files list all current skills, SUMMARY includes playbooks
   - **Replaces:** 7.2.1, 7.2.2
 
-- [ ] **9C.2.B3** BATCH: Improve onboarding docs (combines 7.1.1, 7.1.2)
+- [x] **9C.2.B3** BATCH: Improve onboarding docs (combines 7.1.1, 7.1.2)
   - **Scope:** Root `README.md` + new `CONTRIBUTING.md`
   - **Steps:**
     1. Enhance README.md onboarding flow (quick start, navigation)
@@ -78,11 +78,11 @@
 
 ### Phase 9C.3: Decomposition Detection
 
-- [ ] **9C.3.1** Add duration tracking to `current_ralph_tasks.sh` footer
+- [x] **9C.3.1** Add duration tracking to `current_ralph_tasks.sh` footer
   - **Goal:** Show when current task exceeds 2x median (⚠️ warning)
   - **AC:** Footer shows "⚠️ Current task exceeding median" when appropriate
 
-- [ ] **9C.3.2** Create decomposition checklist in `skills/playbooks/`
+- [x] **9C.3.2** Create decomposition checklist in `skills/playbooks/`
   - **Goal:** Playbook for breaking down oversized tasks
   - **AC:** `skills/playbooks/decompose-large-tasks.md` exists with decision criteria
 
@@ -122,31 +122,12 @@
 
 **Priority:** HIGH (blocks clean pre-commit runs)
 
-### Phase 22.1: RALPH LOOP FULL EXAMPLE.md Fixes
+### Phase 22.2: THUNK.md Table Fixes
 
-- [ ] **22.1.1** Fix MD012 (multiple blank lines) in `cortex/docs/RALPH LOOP FULL EXAMPLE.md` [HIGH]
-  - **Goal:** Remove excessive blank lines (max 2 consecutive)
-  - **Errors:** Lines 24, 133, 134, 315, 316, 382, 383, 434
-  - **AC:** `markdownlint "cortex/docs/RALPH LOOP FULL EXAMPLE.md"` shows no MD012 errors
-
-- [ ] **22.1.2** Fix MD046 (code block style) in `cortex/docs/RALPH LOOP FULL EXAMPLE.md` [HIGH]
-  - **Goal:** Convert indented code blocks to fenced blocks with language tags
-  - **Errors:** Lines 28, 42, 56, 86, 248, 268, 286, 292, 309, 367, 376, 416
-  - **AC:** `markdownlint "cortex/docs/RALPH LOOP FULL EXAMPLE.md"` shows no MD046 errors
-
-- [ ] **22.1.3** Fix MD038 (spaces in code spans) in `cortex/docs/RALPH LOOP FULL EXAMPLE.md` [HIGH]
-  - **Goal:** Remove leading/trailing spaces in inline code spans
-  - **Errors:** Lines 140, 145, 152, 166, 181, 188, 191
-  - **AC:** `markdownlint "cortex/docs/RALPH LOOP FULL EXAMPLE.md"` shows no MD038 errors
-
-- [ ] **22.1.4** Fix MD023/MD007/MD032 (heading/list formatting) in `cortex/docs/RALPH LOOP FULL EXAMPLE.md` [MEDIUM]
-  - **Goal:** Fix heading indentation and list formatting issues
-  - **Errors:** MD023 lines 439, 445; MD007 lines 441, 443, 444; MD032 lines 441, 443, 444
-  - **AC:** `markdownlint "cortex/docs/RALPH LOOP FULL EXAMPLE.md"` shows no MD023/MD007/MD032 errors
-
-- [ ] **22.1.5** Fix MD003/MD022 (heading style) in `cortex/docs/RALPH LOOP FULL EXAMPLE.md` [MEDIUM]
-  - **Goal:** Convert setext headings to ATX style and fix blank lines around headings
-  - **Errors:** MD003 lines 445, 449; MD022 lines 445, 449
-  - **AC:** `markdownlint "cortex/docs/RALPH LOOP FULL EXAMPLE.md"` shows no MD003/MD022 errors
+- [ ] **22.2.3** Fix MD056 in workers/ralph/THUNK.md line 801 (escape pipes)
+  - **Goal:** Escape unescaped pipe characters in table row description
+  - **Error:** Line 801:401 - Table has 10 columns instead of 5
+  - **Root Cause:** Description contains `"collect_metrics.sh | generate"` and `"| 2026-01-26 |"` with unescaped pipes
+  - **AC:** `markdownlint workers/ralph/THUNK.md` passes (no MD056 errors)
 
 ---

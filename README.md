@@ -74,9 +74,13 @@ Cortex plans → Ralph builds → Brain improves → Your projects benefit.
 
 ## Quick Start Guide
 
+**First time here?** Pick your goal below. Each path takes 2-5 minutes.
+
 ### 🎯 Choose Your Path
 
 #### 🚀 I Want to Bootstrap a New Project
+
+**Best for:** Starting a new project with Brain's templates and full AI development infrastructure.
 
 **Time: ~2 minutes**
 
@@ -110,11 +114,17 @@ bash ralph/loop.sh --iterations 5
 - ✅ Connection to brain's skills library
 - ✅ Pre-configured validation rules
 
-**Next steps:** See [Bootstrapping Guide](docs/BOOTSTRAPPING.md) for advanced options.
+**📖 Next steps:**
+
+- Read `docs/BOOTSTRAPPING.md` for advanced bootstrapping options
+- Review `templates/` directory to see available project types
+- Check `CONTRIBUTING.md` to understand the development workflow
 
 ---
 
 #### 🧠 I Want to Use Brain as a Skills Library
+
+**Best for:** Enhancing your AI coding assistant with proven patterns and best practices.
 
 **Time: ~30 seconds**
 
@@ -139,11 +149,17 @@ ls domains/  # shell, python, frontend, backend, infrastructure, etc.
 - **Infrastructure:** Deployment, security, observability
 - **Code Quality:** Token efficiency, testing, markdown lint
 
-**Skill index:** [skills/index.md](skills/index.md) | **Overview:** [skills/SUMMARY.md](skills/SUMMARY.md)
+**📖 Explore the library:**
+
+- **[skills/SUMMARY.md](skills/SUMMARY.md)** - Quick overview and error reference
+- **[skills/index.md](skills/index.md)** - Complete catalog of all 119 skills
+- **[skills/playbooks/](skills/playbooks/)** - Step-by-step procedures for common tasks
 
 ---
 
 #### 🔧 I Want to Run Brain's Self-Improvement Loop
+
+**Best for:** Contributing to Brain's development or understanding how it maintains itself.
 
 **Time: ~5 minutes setup**
 
@@ -164,19 +180,30 @@ cd workers/ralph
 bash loop.sh --iterations 5
 
 # 3. Monitor progress (in another terminal)
-bash current_ralph_tasks.sh  # Live task monitor with ETA
-bash thunk_ralph_tasks.sh    # Completed tasks log
-
-# 4. Run Cortex (brain's manager)
-cd ../../cortex
-bash one-shot.sh  # Plan new work
-bash sync_gaps.sh # Sync tasks to Ralph
+bash workers/ralph/current_ralph_tasks.sh
 ```
 
-**What this does:**
+**📖 Learn more:**
 
-- Ralph executes tasks from `workers/IMPLEMENTATION_PLAN.md`
-- Adds new skills, fixes bugs, improves templates
+- **[workers/ralph/README.md](workers/ralph/README.md)** - Ralph loop design philosophy
+- **[workers/ralph/AGENTS.md](workers/ralph/AGENTS.md)** - Operational guide for AI agents
+- **[NEURONS.md](NEURONS.md)** - Complete repository structure map
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Development workflow and guidelines
+
+---
+
+### 🧭 New to Brain? Recommended Learning Path
+
+**Start here if you're exploring Brain for the first time:**
+
+1. **Read this README** (you're here!) to understand what Brain does
+2. **Browse [skills/SUMMARY.md](skills/SUMMARY.md)** to see what knowledge is available
+3. **Read [NEURONS.md](NEURONS.md)** to understand the repository structure
+4. **Read [CONTRIBUTING.md](CONTRIBUTING.md)** to learn the development workflow
+5. **Pick a quick start path above** based on your goal
+
+**What the loop does:**
+
 - Commits changes with verification
 - Cortex reviews progress and plans next work
 
@@ -421,7 +448,9 @@ git push origin feature/my-improvement
 - **Test thoroughly** - Run verifier before submitting
 - **Write clear commits** - Use conventional commits (`feat:`, `fix:`, `docs:`)
 
-See [AGENTS.md](AGENTS.md) for detailed contribution guidelines and architecture.
+**📖 Full contribution guide:** [CONTRIBUTING.md](CONTRIBUTING.md)
+
+**For AI agents:** [AGENTS.md](AGENTS.md) contains operational guidance and architecture details.
 
 ---
 
