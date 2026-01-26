@@ -68,17 +68,19 @@ fi
 
 # Extract completed task IDs from Ralph's plan
 # Matches: - [x] **1.2** or - [x] **2.1.3**
-declare -A completed_tasks
+declare -A completed_tasks=()
+completed_count=0
 while IFS= read -r line; do
   if [[ "$line" =~ ^[[:space:]]*-[[:space:]]\[x\][[:space:]]\*\*([0-9]+\.[0-9A-Z.]+)\*\* ]]; then
     task_id="${BASH_REMATCH[1]}"
     completed_tasks["$task_id"]=1
+    completed_count=$((completed_count + 1))
     log_verbose "Ralph completed: $task_id"
   fi
 done <"$RALPH_PLAN"
 
-if [[ ${#completed_tasks[@]} -eq 0 ]]; then
-  log_verbose "No completed tasks in Ralph's plan"
+if [[ $completed_count -eq 0 ]]; then
+  log_info "0 completions found in Ralph's plan"
   exit 0
 fi
 
