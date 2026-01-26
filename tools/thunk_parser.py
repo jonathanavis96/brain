@@ -198,6 +198,11 @@ def main():
         type=str,
         help="Query THUNK by original task ID (e.g., '11.1.3')",
     )
+    parser.add_argument(
+        "--last-id",
+        action="store_true",
+        help="Print the last THUNK entry number (for appends)",
+    )
 
     args = parser.parse_args()
 
@@ -212,6 +217,12 @@ def main():
 
     if not entries:
         print(f"Warning: No entries found in {thunk_file}", file=sys.stderr)
+        return 0
+
+    # Print last ID if requested
+    if args.last_id:
+        last_entry = max(entries, key=lambda e: e.thunk_num)
+        print(last_entry.thunk_num)
         return 0
 
     # Query by ID if requested
