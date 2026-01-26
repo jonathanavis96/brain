@@ -3,10 +3,18 @@ set -euo pipefail
 
 # Get script directory for relative paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-AC_FILE="${1:-${ROOT}/rules/AC.rules}"
-APPROVALS_FILE="${2:-${ROOT}/rules/MANUAL_APPROVALS.rules}"
+# ROOT can be overridden via RALPH_PROJECT_ROOT env var
+# Default: one level up from ralph/ directory
+if [[ -n "${RALPH_PROJECT_ROOT:-}" ]]; then
+  ROOT="$RALPH_PROJECT_ROOT"
+else
+  ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+fi
+
+# AC rules are in ralph/rules/ (relative to script dir)
+AC_FILE="${1:-${SCRIPT_DIR}/rules/AC.rules}"
+APPROVALS_FILE="${2:-${SCRIPT_DIR}/rules/MANUAL_APPROVALS.rules}"
 
 VERIFY_DIR="${SCRIPT_DIR}/.verify"
 REPORT_FILE="${VERIFY_DIR}/latest.txt"

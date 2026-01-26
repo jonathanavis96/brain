@@ -39,6 +39,11 @@ if [[ -f "PROMPT.md" ]]; then
   echo "  ✓ PROMPT.md → .verify/prompt.sha256"
 fi
 
+if [[ -f "AGENTS.md" ]]; then
+  sha256sum AGENTS.md | cut -d' ' -f1 >.verify/agents.sha256
+  echo "  ✓ AGENTS.md → .verify/agents.sha256"
+fi
+
 # Ensure .gitignore has the right entries
 if [[ -f ".gitignore" ]]; then
   entries_to_add=()
