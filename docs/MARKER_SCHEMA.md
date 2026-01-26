@@ -148,16 +148,16 @@ The brain repository uses structured markers (format: `:::MARKER_NAME::: key=val
 **:::CACHE_GUARD:::**
 
 - **Purpose:** Documents cache eligibility decision
-- **Emitted by:** `loop.sh` (BUILD and PLAN phases)
+- **Emitted by:** `loop.sh` (build and plan phases)
 - **Required fields:**
   - `iter`: Iteration number
   - `allowed`: Cache allowed (`0` = no, `1` = yes)
   - `reason`: Reason for decision (`pending_tasks`, `no_pending_tasks`, `idempotent_check`)
-  - `phase`: Current phase (`BUILD` or `PLAN`)
+  - `phase`: Current phase (`build` or `plan`)
   - `ts`: Unix timestamp
 - **Examples:**
-  - Disallowed: `:::CACHE_GUARD::: iter=5 allowed=0 reason=pending_tasks phase=BUILD ts=1737891050`
-  - Allowed: `:::CACHE_GUARD::: iter=5 allowed=1 reason=no_pending_tasks phase=BUILD ts=1737891050`
+  - Disallowed: `:::CACHE_GUARD::: iter=5 allowed=0 reason=pending_tasks phase=build ts=1737891050`
+  - Allowed: `:::CACHE_GUARD::: iter=5 allowed=1 reason=no_pending_tasks phase=build ts=1737891050`
 
 ### Environment & Configuration
 
