@@ -1247,6 +1247,13 @@ run_once() {
     echo "# MODE: ${phase^^}"
     echo "# REPOSITORY: $REPO_NAME"
     echo "# ROOT: $ROOT"
+    echo "# RUNNER: $RUNNER"
+
+    # Single source of truth: this is the model value loop.sh will actually use/pass to the runner.
+    # If RESOLVED_MODEL is empty (e.g. user asked for auto/latest), fall back to the requested MODEL_ARG.
+    local effective_model
+    effective_model="${RESOLVED_MODEL:-${MODEL_ARG:-auto}}"
+    echo "# MODEL: ${effective_model}"
     echo ""
 
     # Inject verifier status from previous iteration (if any)
