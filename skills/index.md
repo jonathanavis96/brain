@@ -103,6 +103,7 @@ Catalog of all skill files in the brain system.
 - [change-propagation.md](domains/ralph/change-propagation.md) - Change propagation and template sync
 - [ralph-patterns.md](domains/ralph/ralph-patterns.md) - Ralph loop operational patterns
 - [thread-search-patterns.md](domains/ralph/thread-search-patterns.md) - Search patterns for THUNK, git, and cache
+- [tool-wrapper-patterns.md](domains/ralph/tool-wrapper-patterns.md) - Tool wrapper patterns and CLI integration
 
 ### Playbooks (End-to-End Workflows)
 
@@ -113,6 +114,7 @@ Catalog of all skill files in the brain system.
 
 - [bootstrap-new-project.md](playbooks/bootstrap-new-project.md) - Set up a new project from templates
 - [debug-ralph-stuck.md](playbooks/debug-ralph-stuck.md) - Troubleshoot Ralph loop issues
+- [decompose-large-tasks.md](playbooks/decompose-large-tasks.md) - Break down complex tasks into atomic units
 - [fix-markdown-lint.md](playbooks/fix-markdown-lint.md) - Resolve markdown linting issues
 - [fix-shellcheck-failures.md](playbooks/fix-shellcheck-failures.md) - Systematic resolution of ShellCheck warnings
 - [investigate-test-failures.md](playbooks/investigate-test-failures.md) - Systematic test failure resolution

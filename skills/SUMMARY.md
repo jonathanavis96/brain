@@ -296,6 +296,7 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
 
 - [Bootstrap New Project](playbooks/bootstrap-new-project.md) - Set up a new project from templates
 - [Debug Ralph Stuck](playbooks/debug-ralph-stuck.md) - Troubleshoot Ralph loop issues (stuck, repeated failures, infinite loops)
+- [Decompose Large Tasks](playbooks/decompose-large-tasks.md) - Break down complex tasks into atomic units
 - [Fix Markdown Lint](playbooks/fix-markdown-lint.md) - Resolve markdown linting issues (MD040, MD032, MD024)
 - [Fix ShellCheck Failures](playbooks/fix-shellcheck-failures.md) - Systematic approach to resolving shellcheck warnings (SC2034, SC2155, SC2086)
 - [Investigate Test Failures](playbooks/investigate-test-failures.md) - Systematic test failure resolution (pytest, bash, integration tests)
