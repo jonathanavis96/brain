@@ -91,7 +91,10 @@ if [[ "$DRY_RUN" == "true" ]]; then
   exit 0
 fi
 
-# Archive tasks to PLAN_DONE.md
+# Archive tasks to PLAN_DONE.md (with deduplication)
+# Read existing task IDs into memory before writing
+existing_task_ids=$(grep -o '|[[:space:]]*[^|]*[[:space:]]*|[[:space:]]*[^|]*[[:space:]]*|' "$ARCHIVE_FILE" | awk -F'|' '{print $3}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' || true)
+
 {
   echo ""
   echo "### Archived on $current_date"
@@ -99,7 +102,13 @@ fi
   echo "| Date | Task ID | Description |"
   echo "|------|---------|-------------|"
   for task in "${archived_tasks[@]}"; do
-    echo "$task"
+    # Extract task ID from the task string (format: | date | task_id | description |)
+    task_id=$(echo "$task" | awk -F'|' '{print $3}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+    # Check if task_id already exists in the pre-read list
+    if ! echo "$existing_task_ids" | grep -qFx "$task_id"; then
+      echo "$task"
+    fi
   done
 } >>"$ARCHIVE_FILE"
 

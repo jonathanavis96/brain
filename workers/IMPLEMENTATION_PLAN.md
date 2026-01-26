@@ -379,7 +379,7 @@
 
 ### Phase 14.1: Fix Archive Script
 
-- [ ] **14.1.1** Add idempotency check to `cortex/cleanup_cortex_plan.sh` [HIGH]
+- [x] **14.1.1** Add idempotency check to `cortex/cleanup_cortex_plan.sh` [HIGH]
   - **Goal:** Prevent duplicate task entries when archiving
   - **AC:** Running `cleanup_cortex_plan.sh` twice on same completed tasks produces no duplicates
   - **Implementation:** Before appending, check `grep -q "| $task_id |" "$THUNK_FILE"`
