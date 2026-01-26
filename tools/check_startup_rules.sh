@@ -9,6 +9,12 @@
 # Exit codes:
 #   0 = PASS (no forbidden patterns found)
 #   1 = FAIL (forbidden patterns detected)
+#
+# Checks:
+#   1. No forbidden file opens (NEURONS.md, THOUGHTS.md, full IMPL_PLAN, THUNK)
+#   2. No THUNK.md lookups via cat/grep/awk/sed (tail for append is OK)
+#   3. No grep explosions (broad globs or "too many matches")
+#   4. First tool calls are cheap (bash grep/ls/find, not open_files)
 
 set -uo pipefail
 
@@ -44,9 +50,19 @@ trap 'rm -f "$CLEAN_LOG"' EXIT
 
 FAILURES=0
 
-# Check 1: Forbidden startup file opens
+# Forbidden files regex (used in multiple checks)
+# Note: Use [.] instead of \. in awk regex to avoid escape warnings
+FORBIDDEN_FILES_REGEX='NEURONS[.]md|THOUGHTS[.]md'
+
+# Check 1: Forbidden startup file opens (scan open_files blocks for forbidden names)
 echo -n "Check 1: No forbidden startup file opens... "
-FORBIDDEN_OPENS=$(grep -n "Calling open_files" "$CLEAN_LOG" | grep -E "NEURONS\.md|THOUGHTS\.md" | head -5 || true)
+# Match both "Calling open_files" and "Called open_files", scan next 5 lines for forbidden files
+FORBIDDEN_OPENS=$(
+  awk -v re="$FORBIDDEN_FILES_REGEX" '
+    /[Cc]all(ed|ing) open_files/ {inblock=5}
+    inblock>0 { if ($0 ~ re) { print NR ":" $0 } ; inblock-- }
+  ' "$CLEAN_LOG" | head -5
+)
 if [[ -n "$FORBIDDEN_OPENS" ]]; then
   echo -e "${RED}FAIL${NC}"
   echo "  Found forbidden open_files calls:"
@@ -56,13 +72,38 @@ else
   echo -e "${GREEN}PASS${NC}"
 fi
 
-# Check 2: THUNK.md opened for lookup (not just tail for append)
-echo -n "Check 2: THUNK.md not opened for lookup... "
-THUNK_OPENS=$(grep -n "Calling open_files" "$CLEAN_LOG" | grep -i "THUNK\.md" | head -5 || true)
+# Check 2a: THUNK.md opened via open_files
+echo -n "Check 2a: THUNK.md not opened via open_files... "
+THUNK_OPENS=$(
+  awk '
+    /[Cc]all(ed|ing) open_files/ {inblock=5}
+    inblock>0 { if ($0 ~ /THUNK\.md/) { print NR ":" $0 } ; inblock-- }
+  ' "$CLEAN_LOG" | head -5
+)
 if [[ -n "$THUNK_OPENS" ]]; then
   echo -e "${RED}FAIL${NC}"
-  echo "  Found THUNK.md open_files (should use grep/brain-search):"
+  echo "  Found THUNK.md open_files (should use thunk-parse/brain-search):"
   printf "    %s\n" "$THUNK_OPENS"
+  FAILURES=$((FAILURES + 1))
+else
+  echo -e "${GREEN}PASS${NC}"
+fi
+
+# Check 2b: THUNK.md read via cat/grep/awk/sed/head (not tail for append)
+echo -n "Check 2b: THUNK.md not read via cat/grep/awk/sed... "
+THUNK_BAD_READS=$(
+  grep -E "command:" "$CLEAN_LOG" |
+    grep -E "THUNK\.md" |
+    grep -E "cat |grep |awk |sed |head " |
+    grep -vE "tail -[0-9]+ .*THUNK\.md" |
+    grep -vE "cat >>.*THUNK\.md" |
+    grep -vE "echo.*>>.*THUNK\.md" |
+    head -5 || true
+)
+if [[ -n "$THUNK_BAD_READS" ]]; then
+  echo -e "${RED}FAIL${NC}"
+  echo "  Suspicious THUNK.md reads (should use thunk-parse/brain-search):"
+  printf "    %s\n" "$THUNK_BAD_READS"
   FAILURES=$((FAILURES + 1))
 else
   echo -e "${GREEN}PASS${NC}"
@@ -70,8 +111,12 @@ fi
 
 # Check 3: Full IMPLEMENTATION_PLAN.md opened (vs grep+slice)
 echo -n "Check 3: IMPLEMENTATION_PLAN.md not opened in full... "
-# This is harder to detect - we look for open_files on the file without a preceding grep
-IMPL_OPENS=$(grep -n "Calling open_files" "$CLEAN_LOG" | grep -i "IMPLEMENTATION_PLAN\.md" | head -5 || true)
+IMPL_OPENS=$(
+  awk '
+    /[Cc]all(ed|ing) open_files/ {inblock=5}
+    inblock>0 { if ($0 ~ /IMPLEMENTATION_PLAN\.md/) { print NR ":" $0 } ; inblock-- }
+  ' "$CLEAN_LOG" | head -5
+)
 if [[ -n "$IMPL_OPENS" ]]; then
   echo -e "${YELLOW}WARN${NC}"
   echo "  Found IMPLEMENTATION_PLAN.md open_files (should grep+slice):"
@@ -81,15 +126,45 @@ else
   echo -e "${GREEN}PASS${NC}"
 fi
 
-# Check 4: Grep explosion (informational)
-echo -n "Check 4: No grep explosions (>100 lines output)... "
-# This check is informational only - manual review needed
-echo -e "${GREEN}INFO${NC} (manual review needed for grep output sizes)"
+# Check 4: Grep explosion detection
+echo -n "Check 4: No grep explosions... "
+# Look for explicit explosion indicators
+GREP_EXPLOSION=$(
+  grep -nE "Too many matches found|Showing matched files only|Output truncated" "$CLEAN_LOG" | head -3 || true
+)
+if [[ -n "$GREP_EXPLOSION" ]]; then
+  echo -e "${RED}FAIL${NC}"
+  echo "  Grep explosion indicator found:"
+  printf "    %s\n" "$GREP_EXPLOSION"
+  FAILURES=$((FAILURES + 1))
+else
+  # Secondary heuristic: broad-scope searches
+  BROAD_SEARCH=$(
+    grep -E "command:" "$CLEAN_LOG" |
+      grep -E "rg |grep " |
+      grep -E "\*\*\/|skills/domains/\*\*|skills/\*\*|\*\*\/\*\.md" |
+      head -3 || true
+  )
+  if [[ -n "$BROAD_SEARCH" ]]; then
+    echo -e "${YELLOW}WARN${NC}"
+    echo "  Broad search detected (ensure query is narrowed):"
+    printf "    %s\n" "$BROAD_SEARCH"
+  else
+    echo -e "${GREEN}PASS${NC}"
+  fi
+fi
 
 # Check 5: First actions are cheap (grep/ls, not open_files)
 echo -n "Check 5: First tool call is cheap (grep/ls/find)... "
-FIRST_CALLS=$(grep -E "Calling (bash|open_files)" "$CLEAN_LOG" | head -3)
-if echo "$FIRST_CALLS" | head -1 | grep -q "Calling bash"; then
+FIRST_CALLS=$(grep -E "[Cc]all(ed|ing) (bash|open_files)" "$CLEAN_LOG" | head -5)
+FIRST_OPEN_FILES=$(echo "$FIRST_CALLS" | grep -n "open_files" | head -1 | cut -d: -f1)
+FIRST_BASH=$(echo "$FIRST_CALLS" | grep -n "bash" | head -1 | cut -d: -f1)
+
+if [[ -z "$FIRST_OPEN_FILES" ]]; then
+  # No open_files in first 5 calls - good
+  echo -e "${GREEN}PASS${NC}"
+elif [[ -n "$FIRST_BASH" && "$FIRST_BASH" -lt "$FIRST_OPEN_FILES" ]]; then
+  # Bash came before open_files - good
   echo -e "${GREEN}PASS${NC}"
 else
   echo -e "${YELLOW}WARN${NC}"
