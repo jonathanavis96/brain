@@ -305,7 +305,7 @@
   - **Goal:** Document usage and metrics explained
   - **AC:** README shows command to generate and how to interpret metrics
 
-- [ ] **17.3.2** Add dashboard generation to `cortex/snapshot.sh` (optional) [LOW]
+- [x] **17.3.2** Add dashboard generation to `cortex/snapshot.sh` (optional) [LOW]
   - **Goal:** Auto-regenerate dashboard on snapshot
   - **AC:** `artifacts/dashboard.html` updated when snapshot runs
   - **Depends:** 17.2.2
@@ -322,7 +322,7 @@
 
 ### Phase 18.1: Freshness Scanner
 
-- [ ] **18.1.1** Create `tools/skill_freshness.sh` [HIGH]
+- [x] **18.1.1** Create `tools/skill_freshness.sh` [HIGH]
   - **Goal:** List all skills with age and flag stale ones
   - **AC:** Output shows all 90 skills with days since modified, flags those > threshold
   - **Implementation:** `find skills/ -name "*.md" -printf '%T@ %p\n'`, calculate age
