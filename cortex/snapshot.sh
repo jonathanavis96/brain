@@ -5,6 +5,30 @@
 
 set -euo pipefail
 
+# Options
+SKIP_DASHBOARD=false
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --no-dashboard | --skip-dashboard)
+      SKIP_DASHBOARD=true
+      shift
+      ;;
+    -h | --help)
+      echo "Usage: bash snapshot.sh [--no-dashboard]"
+      echo ""
+      echo "Options:"
+      echo "  --no-dashboard  Skip dashboard/metrics regeneration (avoids dirtying artifacts/)"
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1"
+      exit 1
+      ;;
+  esac
+done
+
 # Resolve script directory (cortex/)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BRAIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
@@ -127,7 +151,9 @@ echo ""
 
 # 4. Brain Analytics Dashboard
 echo "## Analytics Dashboard"
-if [[ -x "tools/brain_dashboard/collect_metrics.sh" ]] && [[ -x "tools/brain_dashboard/generate_dashboard.py" ]]; then
+if [[ "$SKIP_DASHBOARD" == "true" ]]; then
+  echo "Skipped (--no-dashboard)"
+elif [[ -x "tools/brain_dashboard/collect_metrics.sh" ]] && [[ -x "tools/brain_dashboard/generate_dashboard.py" ]]; then
   echo "Regenerating dashboard..."
   (
     cd tools/brain_dashboard
