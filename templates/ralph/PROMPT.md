@@ -266,6 +266,52 @@ ls bin/ tools/*.py tools/*.sh 2>/dev/null | head -20
 
 **If WARN/FAIL items exist:** Prioritize fixing them before feature work. Add to "## Phase 0-Warn: Verifier Warnings" section if not already tracked.
 
+### Batch Task Template
+
+Use this format for tasks that fix the SAME issue type across multiple files:
+
+```markdown
+- [ ] **X.Y.Z** BATCH: Fix SC2162 across shell scripts
+  - **Scope:** `tools/*.sh`, `workers/**/*.sh`, `bin/*`
+  - **Fix:** Add `-r` flag to all `read` commands (prevents backslash interpretation)
+  - **Steps:**
+    1. Find all affected files: `rg -l "read [^-]" tools/*.sh workers/**/*.sh bin/* 2>/dev/null`
+    2. Fix each occurrence: Replace `read var` with `read -r var`
+    3. Verify: `shellcheck -e SC1091 <file>` shows no SC2162 errors
+    4. Test: Run affected scripts to ensure no regressions
+  - **AC:** All shell scripts pass `shellcheck` with no SC2162 warnings
+  - **Estimated Time:** [M] 5-10 minutes (8 files to fix)
+```
+
+**When to batch:**
+
+- ✅ **SAME fix type** across multiple files (e.g., SC2162 in 5+ shell scripts)
+- ✅ **SAME directory** warnings (e.g., 4 MD040 errors in `skills/domains/backend/`)
+- ❌ **NOT** different fix types even if same file (e.g., SC2034 + SC2162 in one file = separate tasks)
+
+**Verification pattern for batched tasks:**
+
+```bash
+# 1. List all affected files
+rg -l "pattern" <glob>
+
+# 2. Apply fix with find_and_replace_code (one call per file)
+# ... do the fixes ...
+
+# 3. Verify ALL files pass
+for file in <glob>; do
+  <validation-command> "$file" || echo "FAIL: $file"
+done
+
+# 4. Commit with batch context
+git add -A && git commit -m "fix(scope): resolve SC2162 across 8 shell scripts
+
+- Added -r flag to read commands in tools/*.sh
+- Added -r flag to read commands in workers/**/*.sh
+- Added -r flag to read commands in bin/*
+- All files now pass shellcheck validation"
+```
+
 ### Actions
 
 1. Create/update workers/IMPLEMENTATION_PLAN.md:
@@ -274,6 +320,7 @@ ls bin/ tools/*.py tools/*.sh 2>/dev/null | head -20
    - **⚠️ CORRECT format:** "## Phase 0-Warn: Verifier Warnings", "## Phase 0-Quick: Quick Wins", "## Phase 1: Core Features"
    - ALL tasks MUST use checkbox format: `- [ ]` or `- [x]`
    - NEVER use numbered lists (1. 2. 3.) for tasks
+   - Use **Batch Task Template** (above) when ≥3 files need the same fix
    - Prioritize: High → Medium → Low
    - Break down complex tasks hierarchically (1.1, 1.2, 1.3)
    - A task is "atomic" when completable in ONE BUILD iteration
