@@ -356,19 +356,19 @@
 
 ### Phase 19.1: Commit Analysis
 
-- [ ] **19.1.1** Create `tools/pattern_miner/mine_patterns.sh` [HIGH]
+- [x] **19.1.1** Create `tools/pattern_miner/mine_patterns.sh` [HIGH]
   - **Goal:** Scan sibling project git logs for repeated commit patterns
   - **AC:** Discovers repos in `~/code/*/`, extracts commit messages from last 90 days
   - **Implementation:** `for repo in ~/code/*/; do git -C "$repo" log --oneline --since="90 days ago"; done`
 
-- [ ] **19.1.2** Create `tools/pattern_miner/analyze_commits.py` [HIGH]
+- [x] **19.1.2** Create `tools/pattern_miner/analyze_commits.py` [HIGH]
   - **Goal:** Group commits by keyword similarity, suggest potential skills
   - **AC:** Outputs suggestions with frequency: "CORS configuration (5 mentions) → suggest: api-cors-patterns.md"
   - **Depends:** 19.1.1
 
 ### Phase 19.2: Documentation
 
-- [ ] **19.2.1** Create `tools/pattern_miner/README.md` [LOW]
+- [x] **19.2.1** Create `tools/pattern_miner/README.md` [LOW]
   - **Goal:** Document usage and how to act on suggestions
   - **AC:** README explains output format and workflow for creating new skills from suggestions
   - **Depends:** 19.1.2
@@ -385,7 +385,7 @@
 
 ### Phase 20.1: Scenario Extraction
 
-- [ ] **20.1.1** Create `tools/skill_quiz/extract_scenarios.py` [MEDIUM]
+- [x] **20.1.1** Create `tools/skill_quiz/extract_scenarios.py` [MEDIUM]
   - **Goal:** Parse skill files for "When to Use" or "Problem" sections
   - **AC:** Outputs JSON with `{skill: "file.md", scenario: "text", solution: "text"}`
   - **Implementation:** Regex for section headers, extract content between headers

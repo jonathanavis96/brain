@@ -71,7 +71,7 @@ def parse_skill_file(file_path: Path) -> Optional[Dict[str, str]]:
 
     # Try to find scenario content (problem statement)
     scenario = None
-    for pattern in [r"^## When to Use( It)?$", r"^## Problem$", r"^## Overview$"]:
+    for pattern in [r"^## When to Use", r"^## Problem", r"^## Overview"]:
         scenario = extract_section(content, pattern)
         if scenario:
             break
@@ -132,15 +132,21 @@ def extract_scenarios(skill_dir: Path = Path("skills")) -> List[Dict[str, str]]:
 def main():
     """Main entry point."""
     if len(sys.argv) > 1:
-        skill_dir = Path(sys.argv[1])
+        target_path = Path(sys.argv[1])
     else:
-        skill_dir = Path("skills")
+        target_path = Path("skills")
 
-    if not skill_dir.exists():
-        print(f"Error: Directory '{skill_dir}' does not exist", file=sys.stderr)
+    if not target_path.exists():
+        print(f"Error: Path '{target_path}' does not exist", file=sys.stderr)
         sys.exit(1)
 
-    scenarios = extract_scenarios(skill_dir)
+    # If single file, parse just that file
+    if target_path.is_file():
+        result = parse_skill_file(target_path)
+        scenarios = [result] if result else []
+    else:
+        # If directory, extract from all files in directory
+        scenarios = extract_scenarios(target_path)
 
     # Output JSON
     print(json.dumps(scenarios, indent=2, ensure_ascii=False))
