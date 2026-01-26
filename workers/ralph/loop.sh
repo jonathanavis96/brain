@@ -1904,17 +1904,26 @@ else
         echo "Skipping fix-markdown (no .md files changed)"
       fi
 
-      # Run pre-commit only if there are staged/unstaged changes
-      # Note: With commit batching, pre-commit now runs at PLAN start, not every BUILD
-      # This is a fallback for edge cases where BUILD has uncommitted changes
-      if command -v pre-commit &>/dev/null && [[ -n "$changed_files" ]]; then
-        echo "Running pre-commit on changed files..."
-        precommit_id="$(tool_call_id)"
-        precommit_key="pre-commit|${autofix_git_sha}"
-        run_tool "$precommit_id" "pre-commit" "$precommit_key" "$autofix_git_sha" \
-          "(cd \"$ROOT\" && pre-commit run --all-files 2>/dev/null) || true" || true
-      elif [[ -z "$changed_files" ]]; then
-        echo "Skipping pre-commit (no changes to check)"
+      # Run pre-commit only on staged files (saves ~10s vs --all-files)
+      # Note: PLAN-start commit runs full pre-commit via git hooks
+      # This is incremental check for BUILD phase changes only
+      if command -v pre-commit &>/dev/null; then
+        # Stage any changes so pre-commit can check them
+        if [[ -n "$changed_files" ]]; then
+          git add -A
+          # Only run if something is actually staged
+          if ! git diff --cached --quiet; then
+            echo "Running pre-commit on staged files..."
+            precommit_id="$(tool_call_id)"
+            precommit_key="pre-commit|${autofix_git_sha}"
+            run_tool "$precommit_id" "pre-commit" "$precommit_key" "$autofix_git_sha" \
+              "(cd \"$ROOT\" && pre-commit run 2>/dev/null) || true" || true
+          else
+            echo "Skipping pre-commit (nothing staged)"
+          fi
+        else
+          echo "Skipping pre-commit (no changes to check)"
+        fi
       fi
 
       # Run verifier to get current state (Ralph will see WARN/FAIL in context)
