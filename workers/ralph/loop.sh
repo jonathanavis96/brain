@@ -1983,7 +1983,7 @@ else
       # Commit any accumulated changes from BUILD iterations (scoped staging)
       if ! git diff --quiet || ! git diff --cached --quiet; then
         echo "Committing accumulated BUILD changes..."
-        stage_scoped_changes
+        stage_scoped_changes || true # May return 1 if nothing staged (denylist)
         if ! git diff --cached --quiet; then
           git commit -m "build: accumulated changes from BUILD iterations" || true
           echo "✓ BUILD changes committed"
@@ -2058,7 +2058,7 @@ else
       if command -v pre-commit &>/dev/null; then
         # Stage changes using scoped staging (excludes artifacts/cortex/caches)
         if [[ -n "$changed_files" ]]; then
-          stage_scoped_changes
+          stage_scoped_changes || true # May return 1 if nothing staged (denylist)
           # Only run if something is actually staged
           if ! git diff --cached --quiet; then
             echo "Running pre-commit on staged files..."
