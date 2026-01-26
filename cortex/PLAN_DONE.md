@@ -61,7 +61,7 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-25 | 9C.1.1 | - [x] **9C.1.1** Enhance `cortex/snapshot.sh` with batching hints ✓ DONE |
 | 2026-01-25 | 9C.1.2 | - [x] **9C.1.2** Add task complexity tags to PROMPT_REFERENCE.md ✓ DONE |
 
-### Archived on 2026-01-26
+### Archived on 2026-01-26 (Batch 0)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
@@ -136,3 +136,44 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-26 | 21.2.3 | - [x] **21.2.3** Update `templates/ralph/PROMPT.md` with same changes [MEDIUM] |
 | 2026-01-26 | 21.3.1 | - [x] **21.3.1** Update `skills/domains/ralph/thread-search-patterns.md` [MEDIUM] |
 | 2026-01-26 | 21.3.2 | - [x] **21.3.2** Update `NEURONS.md` to reference `docs/TOOLS.md` [LOW] |
+
+### Archived on 2026-01-26 (Batch 6)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-26 | 13.1.1 | - [x] **13.1.1** Create `skills/domains/ralph/tool-wrapper-patterns.md` |
+| 2026-01-26 | 13.1.2 | - [x] **13.1.2** Extract non-cacheable tools to config file |
+| 2026-01-26 | 13.2.1 | - [x] **13.2.1** Prototype YAML tool registry schema |
+| 2026-01-26 | 14.1.1 | - [x] **14.1.1** Add idempotency check to `cortex/cleanup_cortex_plan.sh` [HIGH] |
+| 2026-01-26 | 14.2.1 | - [x] **14.2.1** Create `tools/thunk_dedup.sh` one-time cleanup script [HIGH] |
+| 2026-01-26 | 14.2.2 | - [x] **14.2.2** Run dedup on `workers/ralph/THUNK.md` [MEDIUM] |
+| 2026-01-26 | 15.1.1 | - [x] **15.1.1** Create `tools/skill_graph/extract_links.py` [HIGH] |
+| 2026-01-26 | 15.2.1 | - [x] **15.2.1** Create `tools/skill_graph/generate_graph.py` [MEDIUM] |
+| 2026-01-26 | 15.2.2 | - [x] **15.2.2** Create `tools/skill_graph/skill_graph.sh` wrapper [LOW] |
+| 2026-01-26 | 15.3.1 | - [x] **15.3.1** Create `tools/skill_graph/README.md` [LOW] |
+| 2026-01-26 | 16.1.1 | - [x] **16.1.1** Create `skills/domains/anti-patterns/README.md` [HIGH] |
+| 2026-01-26 | 16.2.1 | - [x] **16.2.1** Create `skills/domains/anti-patterns/shell-anti-patterns.md` [HIGH] |
+| 2026-01-26 | 16.3.1 | - [x] **16.3.1** Create `skills/domains/anti-patterns/markdown-anti-patterns.md` [MEDIUM] |
+| 2026-01-26 | 16.3.2 | - [x] **16.3.2** Create `skills/domains/anti-patterns/ralph-anti-patterns.md` [MEDIUM] |
+| 2026-01-26 | 16.3.3 | - [x] **16.3.3** Create `skills/domains/anti-patterns/documentation-anti-patterns.md` [LOW] |
+| 2026-01-26 | 16.4.1 | - [x] **16.4.1** Update `skills/index.md` and `skills/SUMMARY.md` with anti-patterns [LOW] |
+| 2026-01-26 | 17.1.1 | - [x] **17.1.1** Create `tools/brain_dashboard/collect_metrics.sh` [HIGH] |
+| 2026-01-26 | 17.2.1 | - [x] **17.2.1** Create `tools/brain_dashboard/generate_dashboard.py` [HIGH] |
+| 2026-01-26 | 17.2.2 | - [x] **17.2.2** Create dashboard HTML template with charts [MEDIUM] |
+| 2026-01-26 | 17.3.1 | - [x] **17.3.1** Create `tools/brain_dashboard/README.md` [LOW] |
+| 2026-01-26 | 17.3.2 | - [x] **17.3.2** Add dashboard generation to `cortex/snapshot.sh` (optional) [LOW] |
+| 2026-01-26 | 18.1.1 | - [x] **18.1.1** Create `tools/skill_freshness.sh` [HIGH] |
+| 2026-01-26 | 18.1.2 | - [x] **18.1.2** Add `--days N` threshold flag [MEDIUM] |
+| 2026-01-26 | 18.1.3 | - [x] **18.1.3** Add CI-friendly exit code [LOW] |
+| 2026-01-26 | 18.2.1 | - [x] **18.2.1** Add freshness summary to `skills/SUMMARY.md` [LOW] |
+| 2026-01-26 | 19.1.1 | - [x] **19.1.1** Create `tools/pattern_miner/mine_patterns.sh` [HIGH] |
+| 2026-01-26 | 19.1.2 | - [x] **19.1.2** Create `tools/pattern_miner/analyze_commits.py` [HIGH] |
+| 2026-01-26 | 19.2.1 | - [x] **19.2.1** Create `tools/pattern_miner/README.md` [LOW] |
+| 2026-01-26 | 20.1.1 | - [x] **20.1.1** Create `tools/skill_quiz/extract_scenarios.py` [MEDIUM] |
+| 2026-01-26 | 20.2.1 | - [x] **20.2.1** Create `tools/skill_quiz/quiz.sh` interactive wrapper [MEDIUM] |
+| 2026-01-26 | 20.2.2 | - [x] **20.2.2** Add score tracking across rounds [LOW] |
+| 2026-01-26 | 20.3.1 | - [x] **20.3.1** Create `tools/skill_quiz/README.md` [LOW] |
+| 2026-01-26 | 21.1.1 | - [x] **21.1.1** Rename `bin/thunk-parse` → `tools/thunk_parser.py` [MEDIUM] |
+| 2026-01-26 | 21.1.2 | - [x] **21.1.2** Add `--query-id` option to thunk_parser.py [HIGH] |
+| 2026-01-26 | 21.1.3 | - [x] **21.1.3** Add `--last-id` option to thunk_parser.py [HIGH] |
+| 2026-01-26 | 21.1.4 | - [x] **21.1.4** Add `--search` option with keyword matching [MEDIUM] |
