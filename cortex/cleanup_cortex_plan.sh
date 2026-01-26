@@ -55,6 +55,21 @@ fi
 
 echo "Cleaning up cortex/IMPLEMENTATION_PLAN.md..."
 
+# Warn about malformed task entries (top-level task-like lines without checkboxes)
+# Pattern: lines starting with "- **Goal:**" or "- **Completed:**" at column 0 (not indented sub-items)
+# Indented sub-items like "  - **Goal:**" under a task are legitimate
+orphaned_tasks=$(grep -nE '^-[[:space:]]+\*\*(Goal|Completed):\*\*' "$PLAN_FILE" || true)
+
+if [[ -n "$orphaned_tasks" ]]; then
+  echo ""
+  echo "⚠️  WARNING: Found top-level task entries without checkboxes (will never be cleaned up):"
+  echo "$orphaned_tasks" | head -10
+  echo ""
+  echo "Fix: Convert to '- [x] **X.Y.Z** Description' format or '- [ ] **X.Y.Z** Description'"
+  echo "See: commit 5d1a8c2 for example fix"
+  echo ""
+fi
+
 # Collect completed tasks for archiving
 archived_tasks=()
 current_date=$(date '+%Y-%m-%d')
