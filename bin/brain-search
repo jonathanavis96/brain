@@ -50,46 +50,46 @@ EOF
 QUERY=""
 while [[ $# -gt 0 ]]; do
   case $1 in
-  -t | --thunk-only)
-    SEARCH_GIT=false
-    SEARCH_CACHE=false
-    shift
-    ;;
-  -g | --git-only)
-    SEARCH_THUNK=false
-    SEARCH_CACHE=false
-    shift
-    ;;
-  -c | --cache-only)
-    SEARCH_THUNK=false
-    SEARCH_GIT=false
-    SEARCH_CACHE=true
-    shift
-    ;;
-  -a | --all)
-    SEARCH_CACHE=true
-    shift
-    ;;
-  -l | --limit)
-    LIMIT="$2"
-    shift 2
-    ;;
-  -v | --verbose)
-    VERBOSE=true
-    shift
-    ;;
-  -h | --help)
-    usage
-    ;;
-  *)
-    if [[ -z "$QUERY" ]]; then
-      QUERY="$1"
-    else
-      echo -e "${RED}Error: Multiple queries not supported${NC}" >&2
-      exit 1
-    fi
-    shift
-    ;;
+    -t | --thunk-only)
+      SEARCH_GIT=false
+      SEARCH_CACHE=false
+      shift
+      ;;
+    -g | --git-only)
+      SEARCH_THUNK=false
+      SEARCH_CACHE=false
+      shift
+      ;;
+    -c | --cache-only)
+      SEARCH_THUNK=false
+      SEARCH_GIT=false
+      SEARCH_CACHE=true
+      shift
+      ;;
+    -a | --all)
+      SEARCH_CACHE=true
+      shift
+      ;;
+    -l | --limit)
+      LIMIT="$2"
+      shift 2
+      ;;
+    -v | --verbose)
+      VERBOSE=true
+      shift
+      ;;
+    -h | --help)
+      usage
+      ;;
+    *)
+      if [[ -z "$QUERY" ]]; then
+        QUERY="$1"
+      else
+        echo -e "${RED}Error: Multiple queries not supported${NC}" >&2
+        exit 1
+      fi
+      shift
+      ;;
   esac
 done
 
@@ -108,6 +108,16 @@ if [[ "$VERBOSE" == "true" ]]; then
   echo -e "${CYAN}Limit: $LIMIT${NC}"
   echo
 fi
+
+# Validate LIMIT early (used by head/git/sql)
+if [[ ! "$LIMIT" =~ ^[0-9]+$ ]] || [[ "$LIMIT" -lt 1 ]]; then
+  echo -e "${RED}Error: --limit must be a positive integer (got: $LIMIT)${NC}" >&2
+  exit 1
+fi
+
+# Pre-escape query for safe interpolation into SQLite string literals
+# SQLite escapes single quotes by doubling them: ' -> ''
+QUERY_SQL_ESCAPED=${QUERY//\'/\'\'}
 
 # Track if we found anything
 FOUND_RESULTS=false
@@ -192,8 +202,8 @@ search_cache() {
   # Search in tool_name and arguments
   local query_sql="SELECT tool_name, timestamp, status, duration_ms
                      FROM tool_calls
-                     WHERE tool_name LIKE '%$QUERY%'
-                        OR arguments LIKE '%$QUERY%'
+                     WHERE tool_name LIKE '%$QUERY_SQL_ESCAPED%'
+                        OR arguments LIKE '%$QUERY_SQL_ESCAPED%'
                      ORDER BY timestamp DESC
                      LIMIT $LIMIT;"
 
