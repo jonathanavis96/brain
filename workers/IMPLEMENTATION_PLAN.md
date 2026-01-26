@@ -24,7 +24,7 @@
 
 **Goal:** Fix markdown lint errors that could not be auto-fixed.
 
-- [ ] **WARN.MD056.THUNK** Fix MD056 (table column count) in workers/ralph/THUNK.md line 780
+- [x] **WARN.MD056.THUNK** Fix MD056 (table column count) in workers/ralph/THUNK.md line 780
   - **Issue:** Line 780 has 9 columns (expected 5) due to unescaped pipes in description text: `tail THUNK.md | grep | awk`
   - **AC:** `markdownlint workers/ralph/THUNK.md` passes (no MD056 errors)
 

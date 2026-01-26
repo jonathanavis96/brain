@@ -253,12 +253,12 @@
   - **AC:** File has 5+ anti-patterns with MD codes, bad/good examples
   - **Sources:** MD040 (code fence lang), MD024 (duplicate headings), MD031 (blank lines)
 
-- [ ] **16.3.2** Create `skills/domains/anti-patterns/ralph-anti-patterns.md` [MEDIUM]
+- [x] **16.3.2** Create `skills/domains/anti-patterns/ralph-anti-patterns.md` [MEDIUM]
   - **Goal:** Document patterns that break the Ralph loop
   - **AC:** File has 5+ anti-patterns specific to Ralph execution
   - **Sources:** Protected file edits, infinite loops, missing AC, batching too many tasks
 
-- [ ] **16.3.3** Create `skills/domains/anti-patterns/documentation-anti-patterns.md` [LOW]
+- [x] **16.3.3** Create `skills/domains/anti-patterns/documentation-anti-patterns.md` [LOW]
   - **Goal:** Document common documentation mistakes
   - **AC:** File has 5+ anti-patterns: stale links, missing examples, wall of text, etc.
 
