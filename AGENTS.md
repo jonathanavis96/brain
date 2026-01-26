@@ -25,7 +25,7 @@ The Ralph loop runs from `workers/ralph/` and has **full access to the entire br
 ### Running Ralph
 
 ```bash
-cd /path/to/brain/workers/ralph/
+cd /path/to/brain/workers/ralph/ || exit 1
 bash loop.sh                    # Single iteration
 bash loop.sh --iterations 10    # Multiple iterations
 bash loop.sh --dry-run          # Preview changes
@@ -170,6 +170,20 @@ When modifying template files in `templates/`:
 2. Consider if change should propagate to workers/ralph/
 3. Document change in commit message
 4. Verify template still works for new projects
+
+### Template Sync Rule
+
+**When modifying `workers/ralph/` files, ask:** Is this feature useful ONLY in Brain, or useful in ANY project?
+
+| Answer | Action |
+| ------ | ------ |
+| **Only Brain** | Keep change in `workers/ralph/` only |
+| **Any project** | Add to `templates/ralph/` as well |
+
+**Examples:**
+
+- Brain-specific paths, Brain-specific tasks → workers only
+- Lint injection, error handling, general features → both workers AND templates
 
 ### Running Verifier
 

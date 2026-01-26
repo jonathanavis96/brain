@@ -43,6 +43,20 @@
 - [ ] **CR-6.10** Fix JavaScript examples (userId, Jest flag)
   - **Files:** `skills/domains/languages/javascript/README.md`, `skills/domains/code-quality/test-coverage-patterns.md`
   - **AC:** JavaScript examples are syntactically valid
+- [ ] **CR-6.11** Fix MD012 in cortex/docs/RALPH LOOP FULL EXAMPLE.md (multiple blank lines)
+  - **AC:** `markdownlint "cortex/docs/RALPH LOOP FULL EXAMPLE.md"` passes (no MD012 errors)
+- [ ] **CR-6.12** Fix MD046 in cortex/docs/RALPH LOOP FULL EXAMPLE.md (code block style)
+  - **AC:** `markdownlint "cortex/docs/RALPH LOOP FULL EXAMPLE.md"` passes (no MD046 errors)
+- [ ] **CR-6.13** Fix MD038 in cortex/docs/RALPH LOOP FULL EXAMPLE.md (spaces in code spans)
+  - **AC:** `markdownlint "cortex/docs/RALPH LOOP FULL EXAMPLE.md"` passes (no MD038 errors)
+- [ ] **CR-6.14** Fix MD023 in cortex/docs/RALPH LOOP FULL EXAMPLE.md (heading indentation)
+  - **AC:** `markdownlint "cortex/docs/RALPH LOOP FULL EXAMPLE.md"` passes (no MD023 errors)
+- [ ] **CR-6.15** Fix MD007/MD032 in cortex/docs/RALPH LOOP FULL EXAMPLE.md (list formatting)
+  - **AC:** `markdownlint "cortex/docs/RALPH LOOP FULL EXAMPLE.md"` passes (no MD007/MD032 errors)
+- [ ] **CR-6.16** Fix MD003/MD022 in cortex/docs/RALPH LOOP FULL EXAMPLE.md (heading style/spacing)
+  - **AC:** `markdownlint "cortex/docs/RALPH LOOP FULL EXAMPLE.md"` passes (no MD003/MD022 errors)
+- [ ] **CR-6.17** Fix MD026 in cortex/docs/RALPH LOOP FULL EXAMPLE.md (trailing punctuation)
+  - **AC:** `markdownlint "cortex/docs/RALPH LOOP FULL EXAMPLE.md"` passes (no MD026 errors)
 - [x] **CR-6.11** Fix archive header parsing in current_ralph_tasks.sh - Completed 2026-01-25 (THUNK #773)
 
 ### Human Required (Hash/Protected Files)
