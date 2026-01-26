@@ -17,8 +17,6 @@
 <!-- Cortex adds new Task Contracts below this line -->
 
 
-
-
 ---
 
 ## Phase CR-6: CodeRabbit PR6 Fixes
@@ -220,7 +218,7 @@
   - **AC:** Watcher shows new events in real-time from state/events.jsonl
   - **Priority:** LOW
 
-- [ ] **12.2.2** Create cross-run aggregation queries for cache.sqlite
+- [x] **12.2.2** Create cross-run aggregation queries for cache.sqlite
   - **Goal:** Query patterns for analyzing tool performance across runs
   - **Output:** Add to `skills/domains/ralph/cache-debugging.md`
   - **AC:** At least 5 useful queries documented (slowest tools, fail rates, etc.)
@@ -238,7 +236,7 @@
 
 ### Phase 13.1: Documentation & Skills
 
-- [ ] **13.1.1** Create `skills/domains/ralph/tool-wrapper-patterns.md`
+- [x] **13.1.1** Create `skills/domains/ralph/tool-wrapper-patterns.md`
   - **Goal:** Document run_tool() usage, cache key generation, error handling
   - **AC:** Skill covers wrapper API, cacheability rules, trap-based cleanup
   - **Priority:** HIGH

@@ -216,7 +216,7 @@
   - **AC:** Watcher shows new events in real-time from state/events.jsonl
   - **Priority:** LOW
 
-- [ ] **12.2.2** Create cross-run aggregation queries for cache.sqlite
+- [x] **12.2.2** Create cross-run aggregation queries for cache.sqlite
   - **Goal:** Query patterns for analyzing tool performance across runs
   - **Output:** Add to `skills/domains/ralph/cache-debugging.md`
   - **AC:** At least 5 useful queries documented (slowest tools, fail rates, etc.)

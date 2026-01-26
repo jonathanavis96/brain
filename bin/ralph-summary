@@ -1,0 +1,144 @@
+#!/usr/bin/env bash
+# ralph-summary - Extract task completion summaries from Ralph logs
+#
+# Usage:
+#   ralph-summary              # Latest log
+#   ralph-summary <log_file>   # Specific log
+#   ralph-summary --all        # All logs from today
+#   ralph-summary --recent N   # Last N logs
+#
+# Output: Clean task summaries without terminal noise
+
+set -uo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BRAIN_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+LOG_DIR="$BRAIN_ROOT/workers/ralph/logs"
+
+# Colors
+CYAN='\033[0;36m'
+DIM='\033[2m'
+NC='\033[0m'
+
+usage() {
+  echo "Usage: ralph-summary [OPTIONS] [LOG_FILE]"
+  echo ""
+  echo "Options:"
+  echo "  --all        Show summaries from all logs today"
+  echo "  --recent N   Show summaries from last N logs"
+  echo "  --list       List available logs"
+  echo "  -h, --help   Show this help"
+  echo ""
+  echo "Examples:"
+  echo "  ralph-summary                    # Latest log"
+  echo "  ralph-summary --recent 3         # Last 3 logs"
+  echo "  ralph-summary path/to/log.log    # Specific log"
+}
+
+# Clean log and extract summary
+extract_summary() {
+  local log_file="$1"
+  local log_name
+  log_name=$(basename "$log_file")
+
+  # Determine marker based on log type (plan vs build)
+  local marker="BUILD_READY"
+  if [[ "$log_name" == *"_plan.log" ]]; then
+    marker="PLAN_READY"
+  fi
+
+  # Strip ANSI codes and terminal control sequences
+  local clean
+  clean=$(
+    sed 's/\x1b\[[0-9;]*m//g' "$log_file" |
+      sed 's/\[2K//g; s/\[1A//g; s/\[?25[hl]//g; s/\[6n//g' |
+      tr -s '\n'
+  )
+
+  # Find the LAST occurrence of the marker and extract backwards to "Summary"
+  # Using awk to get only the final complete block
+  local summary
+  summary=$(
+    echo "$clean" |
+      tac |
+      awk -v marker=":::${marker}:::" '
+				!found && $0 ~ marker { found=1; next }
+				found && /^[[:space:]]*Summary/ { print; exit }
+				found { print }
+			' |
+      tac |
+      grep -v "Rovo Dev is" |
+      grep -v "ctrl+c" |
+      grep -v "^─*$" |
+      grep -v "^$" |
+      grep -v "Loading Rovo Dev" |
+      grep -v "^Script " |
+      grep -v ":::.*:::" |
+      grep -v "Session context:" |
+      head -60
+  )
+
+  if [[ -n "$summary" ]]; then
+    echo -e "${CYAN}━━━ $log_name ━━━${NC}"
+    echo "$summary"
+    echo ""
+  else
+    echo -e "${DIM}━━━ $log_name (no summary found) ━━━${NC}"
+  fi
+}
+
+# Get log files
+get_logs() {
+  find "$LOG_DIR" -maxdepth 1 -name "*.log" -type f -printf '%T@ %p\n' 2>/dev/null |
+    sort -rn |
+    cut -d' ' -f2-
+}
+
+# Main
+case "${1:-}" in
+  -h | --help)
+    usage
+    exit 0
+    ;;
+  --list)
+    echo "Available logs:"
+    get_logs | head -20 | while read -r log; do
+      echo "  $(basename "$log")"
+    done
+    exit 0
+    ;;
+  --all)
+    today=$(date +%Y-%m-%d)
+    get_logs | while read -r log; do
+      if [[ "$log" == *"$today"* ]]; then
+        extract_summary "$log"
+      fi
+    done
+    ;;
+  --recent)
+    n="${2:-5}"
+    get_logs | head -"$n" | while read -r log; do
+      extract_summary "$log"
+    done
+    ;;
+  "")
+    # Latest log
+    log=$(get_logs | head -1)
+    if [[ -z "$log" ]]; then
+      echo "No logs found in $LOG_DIR"
+      exit 1
+    fi
+    extract_summary "$log"
+    ;;
+  *)
+    # Specific log file
+    if [[ -f "$1" ]]; then
+      extract_summary "$1"
+    elif [[ -f "$LOG_DIR/$1" ]]; then
+      extract_summary "$LOG_DIR/$1"
+    else
+      echo "Log file not found: $1"
+      exit 1
+    fi
+    ;;
+esac
