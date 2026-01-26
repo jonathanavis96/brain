@@ -1,26 +1,23 @@
 #!/usr/bin/env bash
-# cleanup_plan.sh - Remove completed tasks from IMPLEMENTATION_PLAN.md
+# cleanup_cortex_plan.sh - Archive completed tasks from cortex/IMPLEMENTATION_PLAN.md
 #
 # Usage:
-#   bash cleanup_plan.sh --dry-run    # Preview what would be removed
-#   bash cleanup_plan.sh              # Remove completed tasks (no archive)
-#   bash cleanup_plan.sh --archive    # Archive to THUNK.md then remove
+#   bash cleanup_cortex_plan.sh --dry-run    # Preview what would be archived
+#   bash cleanup_cortex_plan.sh              # Archive completed tasks to PLAN_DONE.md
 #
 # Features:
-#   - Removes lines with [x] checkbox (completed tasks)
-#   - Removes entire phase sections when all tasks are [x]
-#   - Preserves phase headers if they have pending [ ] tasks
-#   - Preserves marker line: <!-- Cortex adds new Task Contracts below this line -->
+#   - Moves completed [x] tasks to PLAN_DONE.md with date stamp
+#   - Removes empty phase sections from IMPLEMENTATION_PLAN.md
+#   - Preserves pending [ ] tasks and phase headers with pending work
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PLAN_FILE="${SCRIPT_DIR}/../IMPLEMENTATION_PLAN.md"
-THUNK_FILE="${SCRIPT_DIR}/THUNK.md"
+PLAN_FILE="${SCRIPT_DIR}/IMPLEMENTATION_PLAN.md"
+ARCHIVE_FILE="${SCRIPT_DIR}/PLAN_DONE.md"
 
 # Default flags
 DRY_RUN=false
-ARCHIVE=false
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -29,16 +26,11 @@ while [[ $# -gt 0 ]]; do
       DRY_RUN=true
       shift
       ;;
-    --archive)
-      ARCHIVE=true
-      shift
-      ;;
     -h | --help)
-      echo "Usage: bash cleanup_plan.sh [--dry-run] [--archive]"
+      echo "Usage: bash cleanup_cortex_plan.sh [--dry-run]"
       echo ""
       echo "Options:"
-      echo "  --dry-run    Preview what would be removed (no modifications)"
-      echo "  --archive    Append removed tasks to THUNK.md before deletion"
+      echo "  --dry-run    Preview what would be archived (no modifications)"
       echo "  -h, --help   Show this help message"
       exit 0
       ;;
@@ -55,155 +47,147 @@ if [[ ! -f "$PLAN_FILE" ]]; then
   exit 1
 fi
 
-if [[ "$ARCHIVE" == "true" ]] && [[ ! -f "$THUNK_FILE" ]]; then
-  echo "Error: THUNK.md not found at $THUNK_FILE (required for --archive)"
+if [[ ! -f "$ARCHIVE_FILE" ]]; then
+  echo "Error: PLAN_DONE.md not found at $ARCHIVE_FILE"
+  echo "Create it first with a header section."
   exit 1
 fi
 
-# Archive completed tasks to THUNK.md
-archive_tasks() {
-  local -a archived_tasks=()
-  local current_date
-  current_date=$(date '+%Y-%m-%d')
+echo "Cleaning up cortex/IMPLEMENTATION_PLAN.md..."
 
-  echo "Collecting completed tasks for archiving..."
+# Warn about malformed task entries (top-level task-like lines without checkboxes)
+# Pattern: lines starting with "- **Goal:**" or "- **Completed:**" at column 0 (not indented sub-items)
+# Indented sub-items like "  - **Goal:**" under a task are legitimate
+orphaned_tasks=$(grep -nE '^-[[:space:]]+\*\*(Goal|Completed):\*\*' "$PLAN_FILE" || true)
 
-  # Collect all completed tasks
-  while IFS= read -r line; do
-    if echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\[[xX]\]'; then
-      # Extract task info: - [x] **10.1.1** Description text
-      local task_id
-      local description
-      task_id=$(echo "$line" | sed -E 's/^[[:space:]]*-[[:space:]]*\[[xX]\][[:space:]]*\*\*([^*]+)\*\*.*/\1/')
-      description=$(echo "$line" | sed -E 's/^[[:space:]]*-[[:space:]]*\[[xX]\][[:space:]]*//')
-
-      archived_tasks+=("| TBD | $task_id | auto-cleanup | $description | $current_date |")
-    fi
-  done <"$PLAN_FILE"
-
-  if [[ ${#archived_tasks[@]} -eq 0 ]]; then
-    echo "No completed tasks to archive."
-    return
-  fi
-
-  if [[ "$DRY_RUN" == "true" ]]; then
-    echo ""
-    echo "Would archive ${#archived_tasks[@]} tasks to THUNK.md:"
-    for task in "${archived_tasks[@]}"; do
-      echo "  $task"
-    done
-    echo ""
-  else
-    # Find the last THUNK number in THUNK.md
-    local last_thunk_num
-    last_thunk_num=$(grep -oE '^\| [0-9]+ \|' "$THUNK_FILE" | tail -n1 | grep -oE '[0-9]+')
-    if [[ -z "$last_thunk_num" ]]; then
-      last_thunk_num=0
-    fi
-
-    # Append tasks to THUNK.md (before the final blank line)
-    local next_thunk=$((last_thunk_num + 1))
-    for task in "${archived_tasks[@]}"; do
-      # Replace TBD with actual THUNK number
-      task="${task/TBD/$next_thunk}"
-      # Insert before the last line (which should be blank)
-      sed -i "$ i\\$task" "$THUNK_FILE"
-      next_thunk=$((next_thunk + 1))
-    done
-
-    echo "Archived ${#archived_tasks[@]} tasks to THUNK.md (THUNK #$((last_thunk_num + 1))-$((next_thunk - 1)))"
-  fi
-}
-
-# Main cleanup logic - simplified single-pass approach
-cleanup_plan() {
-  local temp_file
-  temp_file=$(mktemp)
-  local removed_count=0
-  local removed_phases=0
-
-  # First pass: identify phases to keep
-  local current_phase=""
-  local -A phase_has_pending
-
-  while IFS= read -r line; do
-    # Track current phase
-    if echo "$line" | grep -qE '^##[[:space:]]+Phase'; then
-      current_phase=$(echo "$line" | sed -E 's/^##[[:space:]]+//')
-      phase_has_pending["$current_phase"]=false
-    fi
-
-    # Check for pending tasks in current phase
-    if [[ -n "$current_phase" ]] && echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\[[[:space:]]\]'; then
-      phase_has_pending["$current_phase"]=true
-    fi
-  done <"$PLAN_FILE"
-
-  # Second pass: write output
-  current_phase=""
-  local skip_phase=false
-
-  while IFS= read -r line; do
-    # Detect phase headers
-    if echo "$line" | grep -qE '^##[[:space:]]+Phase'; then
-      current_phase=$(echo "$line" | sed -E 's/^##[[:space:]]+//')
-
-      # Decide if we should keep this phase
-      if [[ "${phase_has_pending[$current_phase]:-false}" == "true" ]]; then
-        skip_phase=false
-        echo "$line" >>"$temp_file"
-      else
-        skip_phase=true
-        removed_phases=$((removed_phases + 1))
-        if [[ "$DRY_RUN" == "true" ]]; then
-          echo "Would remove phase: $current_phase" >&2
-        fi
-      fi
-      continue
-    fi
-
-    # If we're skipping this phase, skip all content
-    if [[ "$skip_phase" == "true" ]]; then
-      continue
-    fi
-
-    # Remove completed tasks, keep everything else
-    if echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\[[xX]\]'; then
-      removed_count=$((removed_count + 1))
-      if [[ "$DRY_RUN" == "true" ]]; then
-        echo "Would remove: $(echo "$line" | sed -E 's/^[[:space:]]*//')" >&2
-      fi
-    else
-      echo "$line" >>"$temp_file"
-    fi
-  done <"$PLAN_FILE"
-
-  # Show summary
-  echo "Summary:"
-  echo "  Completed tasks removed: $removed_count"
-  echo "  Empty phases removed: $removed_phases"
-
-  if [[ "$DRY_RUN" == "true" ]]; then
-    echo ""
-    echo "Run without --dry-run to apply changes"
-  else
-    # Apply changes
-    mv "$temp_file" "$PLAN_FILE"
-    echo "Changes applied to $PLAN_FILE"
-  fi
-
-  # Cleanup temp file if still exists
-  [[ -f "$temp_file" ]] && rm "$temp_file"
-}
-
-# Main execution
-echo "Cleaning up IMPLEMENTATION_PLAN.md..."
-
-if [[ "$ARCHIVE" == "true" ]]; then
-  archive_tasks
+if [[ -n "$orphaned_tasks" ]]; then
+  echo ""
+  echo "⚠️  WARNING: Found top-level task entries without checkboxes (will never be cleaned up):"
+  echo "$orphaned_tasks" | head -10
+  echo ""
+  echo "Fix: Convert to '- [x] **X.Y.Z** Description' format or '- [ ] **X.Y.Z** Description'"
+  echo "See: commit 5d1a8c2 for example fix"
   echo ""
 fi
 
-cleanup_plan
+# Collect completed tasks for archiving
+archived_tasks=()
+current_date=$(date '+%Y-%m-%d')
+current_phase=""
 
+while IFS= read -r line; do
+  # Track current phase
+  if echo "$line" | grep -qE '^##[[:space:]]+Phase'; then
+    current_phase=$(echo "$line" | sed -E 's/^##[[:space:]]+//')
+  fi
+
+  # Collect completed tasks
+  if echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\[[xX]\]'; then
+    task_id=$(echo "$line" | sed -E 's/^[[:space:]]*-[[:space:]]*\[[xX]\][[:space:]]*\*\*([^*]+)\*\*.*/\1/' || echo "unknown")
+    archived_tasks+=("| $current_date | $task_id | $line |")
+  fi
+done <"$PLAN_FILE"
+
+if [[ ${#archived_tasks[@]} -eq 0 ]]; then
+  echo "No completed tasks to archive."
+  exit 0
+fi
+
+echo "Found ${#archived_tasks[@]} completed tasks to archive."
+
+if [[ "$DRY_RUN" == "true" ]]; then
+  echo ""
+  echo "Would archive:"
+  for task in "${archived_tasks[@]}"; do
+    echo "  $task"
+  done
+  echo ""
+  echo "Run without --dry-run to apply changes."
+  exit 0
+fi
+
+# Archive tasks to PLAN_DONE.md (with deduplication)
+# Read existing task IDs into memory before writing
+existing_task_ids=$(grep -o '|[[:space:]]*[^|]*[[:space:]]*|[[:space:]]*[^|]*[[:space:]]*|' "$ARCHIVE_FILE" | awk -F'|' '{print $3}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' || true)
+
+{
+  echo ""
+  echo "### Archived on $current_date"
+  echo ""
+  echo "| Date | Task ID | Description |"
+  echo "|------|---------|-------------|"
+  for task in "${archived_tasks[@]}"; do
+    # Extract task ID from the task string (format: | date | task_id | description |)
+    task_id=$(echo "$task" | awk -F'|' '{print $3}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+    # Check if task_id already exists in the pre-read list
+    if ! echo "$existing_task_ids" | grep -qFx "$task_id"; then
+      echo "$task"
+    fi
+  done
+} >>"$ARCHIVE_FILE"
+
+echo "Archived ${#archived_tasks[@]} tasks to PLAN_DONE.md"
+
+# Now remove completed tasks and empty phases from IMPLEMENTATION_PLAN.md
+temp_file=$(mktemp)
+removed_count=0
+removed_phases=0
+
+# First pass: identify phases with pending tasks
+declare -A phase_has_pending
+current_phase=""
+
+while IFS= read -r line; do
+  if echo "$line" | grep -qE '^##[[:space:]]+Phase'; then
+    current_phase=$(echo "$line" | sed -E 's/^##[[:space:]]+//')
+    phase_has_pending["$current_phase"]=false
+  fi
+
+  if [[ -n "$current_phase" ]] && echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\[[[:space:]]\]'; then
+    phase_has_pending["$current_phase"]=true
+  fi
+done <"$PLAN_FILE"
+
+# Second pass: write output
+current_phase=""
+skip_phase=false
+
+while IFS= read -r line; do
+  # Detect phase headers
+  if echo "$line" | grep -qE '^##[[:space:]]+Phase'; then
+    current_phase=$(echo "$line" | sed -E 's/^##[[:space:]]+//')
+
+    if [[ "${phase_has_pending[$current_phase]:-false}" == "true" ]]; then
+      skip_phase=false
+      echo "$line" >>"$temp_file"
+    else
+      skip_phase=true
+      removed_phases=$((removed_phases + 1))
+    fi
+    continue
+  fi
+
+  # Skip content in empty phases
+  if [[ "$skip_phase" == "true" ]]; then
+    continue
+  fi
+
+  # Remove completed tasks, keep everything else
+  if echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\[[xX]\]'; then
+    removed_count=$((removed_count + 1))
+  else
+    echo "$line" >>"$temp_file"
+  fi
+done <"$PLAN_FILE"
+
+# Apply changes
+mv "$temp_file" "$PLAN_FILE"
+
+echo ""
+echo "Summary:"
+echo "  Completed tasks removed: $removed_count"
+echo "  Empty phases removed: $removed_phases"
+echo "Changes applied to $PLAN_FILE"
+echo ""
 echo "Done"

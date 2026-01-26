@@ -114,51 +114,42 @@
 
 ### Phase 21.1: Enhance thunk-parse with Query Capabilities
 
-- [x] **21.1.1** Rename `bin/thunk-parse` → `tools/thunk_parser.py`
   - **Goal:** Consolidate with other Python tools, follow naming convention
   - **AC:** `python3 tools/thunk_parser.py --help` works, old `bin/thunk-parse` removed
   - **Completed:** 2026-01-26
 
-- [x] **21.1.2** Add `--query-id` option to thunk_parser.py
   - **Goal:** Query THUNK by original task ID (e.g., "11.1.3")
   - **AC:** Returns JSON entry if found, empty if not
   - **Completed:** 2026-01-26
 
-- [x] **21.1.3** Add `--last-id` option to thunk_parser.py
   - **Goal:** Get last THUNK entry number for appends
   - **AC:** Prints integer (e.g., "830")
   - **Completed:** 2026-01-26
 
-- [x] **21.1.4** Add `--search` option with keyword matching
   - **Goal:** Search THUNK entries by keyword
   - **AC:** Returns matching entries as JSON
   - **Completed:** 2026-01-26
 
 ### Phase 21.2: Token Efficiency Policy for PROMPT.md
 
-- [x] **21.2.1** Add "Read Budget" section to PROMPT.md
   - **Goal:** Explicit rules preventing broad file loading
   - **AC:** PROMPT.md has "Read Budget" section with allowed/forbidden patterns
   - **Completed:** 2026-01-26 (commit 9b087a7)
 
-- [x] **21.2.2** Add startup procedure to PROMPT.md
   - **Goal:** Ralph uses cheap commands first before any file reads
   - **AC:** PROMPT.md has startup procedure that minimizes reads
   - **Completed:** 2026-01-26 (commit 9b087a7)
 
-- [x] **21.2.3** Sync token efficiency sections to templates
   - **Goal:** Keep templates in sync
   - **AC:** Template matches workers/ralph/PROMPT.md token efficiency sections
   - **Completed:** 2026-01-26 (commit 9b087a7)
 
 ### Phase 21.3: Documentation Updates
 
-- [x] **21.3.1** Update thread-search-patterns.md to reference CLI tools
   - **Goal:** Reference CLI tools instead of raw grep/sed
   - **AC:** Skill doc links to `docs/TOOLS.md`, shows CLI examples first
   - **Completed:** 2026-01-26 (commit c546cd5)
 
-- [x] **21.3.2** Add tools reference to NEURONS.md
   - **Goal:** Easy discovery of tools reference
   - **AC:** NEURONS.md has link in appropriate section
   - **Completed:** 2026-01-26 (commit c546cd5)
