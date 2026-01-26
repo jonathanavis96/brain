@@ -317,7 +317,7 @@
 
 ### Phase 9C.3: Decomposition Detection
 
-- [ ] **9C.3.1** Add duration tracking to `current_ralph_tasks.sh` footer
+- [x] **9C.3.1** Add duration tracking to `current_ralph_tasks.sh` footer
   - **Goal:** Show when current task exceeds 2x median (⚠️ warning)
   - **AC:** Footer shows "⚠️ Current task exceeding median" when appropriate
 
@@ -733,7 +733,7 @@
 
 - [ ] **22.2.1** Fix MD056 (table column count) in `workers/ralph/THUNK.md` [HIGH]
   - **Goal:** Fix table rows with incorrect column counts
-  - **Errors:** 
+  - **Errors:**
     - Line 836:419 - Expected 5 columns, got 8 (too many cells, extra data will be missing)
     - Line 839:937 - Expected 5 columns, got 6 (too many cells, extra data will be missing)
     - Line 840:689 - Expected 5 columns, got 4 (too few cells, row will be missing data)
