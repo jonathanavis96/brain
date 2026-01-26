@@ -52,6 +52,14 @@ Catalog of all skill files in the brain system.
 - [testing-patterns.md](domains/code-quality/testing-patterns.md) - Testing strategies and patterns
 - [token-efficiency.md](domains/code-quality/token-efficiency.md) - Token optimization strategies for AI agents
 
+### Anti-Patterns
+
+- [README.md](domains/anti-patterns/README.md) - Anti-patterns overview and common mistakes to avoid
+- [documentation-anti-patterns.md](domains/anti-patterns/documentation-anti-patterns.md) - Common documentation mistakes (stale links, missing examples, wall of text)
+- [markdown-anti-patterns.md](domains/anti-patterns/markdown-anti-patterns.md) - Markdown formatting mistakes and lint violations
+- [ralph-anti-patterns.md](domains/anti-patterns/ralph-anti-patterns.md) - Ralph loop anti-patterns (batching tasks, skipping validation, token waste)
+- [shell-anti-patterns.md](domains/anti-patterns/shell-anti-patterns.md) - Shell scripting anti-patterns (unquoted variables, missing error handling, glob injection)
+
 ### Frontend
 
 - [README.md](domains/frontend/README.md) - Frontend development overview

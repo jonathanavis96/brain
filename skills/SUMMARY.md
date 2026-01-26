@@ -209,6 +209,11 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
     - [Cleanup Patterns](domains/languages/shell/cleanup-patterns.md) - Traps, temp files, state restoration
     - [Common Pitfalls](domains/languages/shell/common-pitfalls.md) - TTY guards, magic numbers, DRY
     - [Validation Patterns](domains/languages/shell/validation-patterns.md) - Shell project validation (syntax, shellcheck, permissions, security)
+  - **[Anti-Patterns](domains/anti-patterns/README.md)** - Common mistakes to avoid across documentation, code, and workflows
+    - [Documentation Anti-Patterns](domains/anti-patterns/documentation-anti-patterns.md) - Stale links, missing examples, wall of text, unclear structure
+    - [Markdown Anti-Patterns](domains/anti-patterns/markdown-anti-patterns.md) - Formatting mistakes, lint violations (MD040, MD024, MD012)
+    - [Ralph Anti-Patterns](domains/anti-patterns/ralph-anti-patterns.md) - Task batching, skipping validation, token waste, duplicate commands
+    - [Shell Anti-Patterns](domains/anti-patterns/shell-anti-patterns.md) - Unquoted variables, missing error handling, glob injection, silent failures
   - **[Marketing](domains/marketing/README.md)** - Marketing skills for CRO, SEO, content, strategy, and growth
     - **CRO (Conversion Rate Optimization)**
       - [Page CRO](domains/marketing/cro/page-cro.md) - Optimize marketing pages for conversions
