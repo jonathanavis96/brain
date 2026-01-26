@@ -513,7 +513,7 @@
   - **AC:** Self-contained HTML with inline CSS, no external dependencies
   - **Depends:** 17.1.1
 
-- [ ] **17.2.2** Create dashboard HTML template with charts [MEDIUM]
+- [x] **17.2.2** Create dashboard HTML template with charts [MEDIUM]
   - **Goal:** Visual charts for each metric type
   - **AC:** Dashboard shows: line chart (velocity), bar chart (skills growth), list (stale files)
   - **Implementation:** Use simple inline SVG or ASCII-based charts for zero dependencies
@@ -521,11 +521,11 @@
 
 ### Phase 17.3: Integration
 
-- [ ] **17.3.1** Create `tools/brain_dashboard/README.md` [LOW]
+- [x] **17.3.1** Create `tools/brain_dashboard/README.md` [LOW]
   - **Goal:** Document usage and metrics explained
   - **AC:** README shows command to generate and how to interpret metrics
 
-- [ ] **17.3.2** Add dashboard generation to `cortex/snapshot.sh` (optional) [LOW]
+- [x] **17.3.2** Add dashboard generation to `cortex/snapshot.sh` (optional) [LOW]
   - **Goal:** Auto-regenerate dashboard on snapshot
   - **AC:** `artifacts/dashboard.html` updated when snapshot runs
   - **Depends:** 17.2.2
