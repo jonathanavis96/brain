@@ -170,19 +170,19 @@
 
 ### Phase 14.1: Fix Archive Script
 
-- [ ] **14.1.1** Add idempotency check to `cortex/cleanup_cortex_plan.sh` [HIGH]
+- [x] **14.1.1** Add idempotency check to `cortex/cleanup_cortex_plan.sh` [HIGH]
   - **Goal:** Prevent duplicate task entries when archiving
   - **AC:** Running `cleanup_cortex_plan.sh` twice on same completed tasks produces no duplicates
   - **Implementation:** Before appending, check `grep -q "| $task_id |" "$THUNK_FILE"`
 
 ### Phase 14.2: Cleanup Existing Data
 
-- [ ] **14.2.1** Create `tools/thunk_dedup.sh` one-time cleanup script [HIGH]
+- [x] **14.2.1** Create `tools/thunk_dedup.sh` one-time cleanup script [HIGH]
   - **Goal:** Remove duplicate entries from existing THUNK.md
   - **AC:** Script is idempotent, preserves first occurrence of each task ID, outputs count of removed duplicates
   - **Implementation:** `awk '!seen[$2]++'` on task ID column
 
-- [ ] **14.2.2** Run dedup on `workers/ralph/THUNK.md` [MEDIUM]
+- [x] **14.2.2** Run dedup on `workers/ralph/THUNK.md` [MEDIUM]
   - **Goal:** Clean existing data
   - **AC:** THUNK.md row count equals unique task ID count
   - **Depends:** 14.2.1
