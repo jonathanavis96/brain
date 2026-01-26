@@ -177,3 +177,8 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-26 | 21.1.2 | - [x] **21.1.2** Add `--query-id` option to thunk_parser.py [HIGH] |
 | 2026-01-26 | 21.1.3 | - [x] **21.1.3** Add `--last-id` option to thunk_parser.py [HIGH] |
 | 2026-01-26 | 21.1.4 | - [x] **21.1.4** Add `--search` option with keyword matching [MEDIUM] |
+
+### Archived on 2026-01-26
+
+| Date | Task ID | Description |
+|------|---------|-------------|
