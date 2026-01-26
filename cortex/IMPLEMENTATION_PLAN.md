@@ -428,7 +428,7 @@
   - **AC:** `python3 tools/thunk_parser.py --help` works, old `bin/thunk-parse` removed
   - **Update:** Symlink `bin/thunk-parse` → `tools/thunk_parser.py` for backward compat
 
-- [ ] **21.1.2** Add `--query-id` option to thunk_parser.py [HIGH]
+- [x] **21.1.2** Add `--query-id` option to thunk_parser.py [HIGH]
   - **Goal:** Query THUNK by original task ID (e.g., "11.1.3")
   - **Usage:** `python3 tools/thunk_parser.py --query-id "11.1.3" --json`
   - **AC:** Returns JSON entry if found, empty if not

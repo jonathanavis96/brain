@@ -645,11 +645,12 @@
   - **Token savings:** Replaces `grep "11.1.3" THUNK.md` with structured query
   - **Completed:** 2026-01-26
 
-- [ ] **21.1.3** Add `--last-id` option to thunk_parser.py [HIGH]
+- [x] **21.1.3** Add `--last-id` option to thunk_parser.py [HIGH]
   - **Goal:** Get last THUNK entry number for appends
   - **Usage:** `python3 tools/thunk_parser.py --last-id`
   - **AC:** Prints integer (e.g., "830")
   - **Token savings:** Replaces `tail THUNK.md | grep | awk`
+  - **Completed:** 2026-01-26
 
 - [ ] **21.1.4** Add `--search` option with keyword matching [MEDIUM]
   - **Goal:** Search THUNK entries by keyword
