@@ -751,14 +751,16 @@
   - **AC:** `markdownlint workers/ralph/THUNK.md` passes (no MD056 errors)
   - **Completed:** 2026-01-26
 
-- [ ] **22.2.2.1** Fix MD056 in `workers/ralph/THUNK.md` lines 788-789 (escape pipes) [HIGH]
+- [x] **22.2.2.1** Fix MD056 in `workers/ralph/THUNK.md` lines 788-789 (escape pipes) [HIGH]
   - **Issue:** Lines 788-789 have unescaped pipe characters in description text causing too many columns (7 actual vs 5 expected)
   - **Fix:** Escape pipes with backslash (e.g., `collect_metrics.sh \| generate`)
   - **AC:** `markdownlint workers/ralph/THUNK.md` passes (no MD056 errors on lines 788-789)
+  - **Completed:** 2026-01-26 (commit pending)
 
-- [ ] **22.2.2.2** Fix MD056 in `workers/ralph/THUNK.md` lines 791-799 (add missing column) [HIGH]
+- [x] **22.2.2.2** Fix MD056 in `workers/ralph/THUNK.md` lines 791-799 (add missing column) [HIGH]
   - **Issue:** Lines 791-799 are missing the 5th column (Completed date), causing too few columns (4 actual vs 5 expected)
   - **Fix:** Add missing `| 2026-01-26 |` column to end of each row
   - **AC:** `markdownlint workers/ralph/THUNK.md` passes (no MD056 errors on lines 791-799)
+  - **Completed:** 2026-01-26 (commit pending)
 
 ---
