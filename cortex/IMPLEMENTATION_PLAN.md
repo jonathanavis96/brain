@@ -259,7 +259,6 @@
 
 ### Phase 23.1: Correctness Fixes (HIGH)
 
-
 ### Phase 23.2: Staging Efficiency (HIGH - protected file)
 
 
@@ -273,7 +272,7 @@
     - Use explicit path: `$REPO_ROOT/workers/IMPLEMENTATION_PLAN.md`.
     - Add a clear error message if plan file genuinely missing.
 
-- [ ] **23.2.2** End-of-loop cleanup when no unchecked tasks remain **[MEDIUM]**
+- [x] **23.2.2** End-of-loop cleanup when no unchecked tasks remain **[MEDIUM]**
   - **Goal:** When the loop is about to exit and there are 0 `- [ ]` tasks left, automatically leave the repo in a clean, consistent state.
   - **Behavior (must):**
     1. If there are no unchecked tasks, run the same cleanup routine used at PLAN start to remove `[x]` items from `workers/IMPLEMENTATION_PLAN.md` (so the plan ends clean).
@@ -286,7 +285,6 @@
   - **Notes:** Must respect protected-file policy; if implementation touches protected files, human must approve + update hashes.
 
 ### Phase 23.3: Tool Efficiency (MEDIUM)
-
 
 ### Phase 23.4: Workflow Efficiency (LOW)
 
@@ -309,15 +307,11 @@
 
 ### Phase 9C.0: Prerequisites (Marker Pipeline Fix)
 
-
 ### Phase 9C.1: Batching Infrastructure
-
 
 ### Phase 9C.2: Apply Batching to Current Backlog
 
-
 ### Phase 9C.3: Decomposition Detection
-
 
 ### Phase 9C.4: Validation
 
@@ -394,79 +388,79 @@
 
 ### Phase 22.4B: MD012 Fixes - Multiple Consecutive Blank Lines (workers/)
 
-- [ ] **22.4B.1** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 261
+- [x] **22.4B.1** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 261
   - **Goal:** Remove extra blank lines (Expected: 2; Actual: 3)
   - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 261)
 
-- [ ] **22.4B.2** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 290
+- [x] **22.4B.2** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 290
   - **Goal:** Remove extra blank lines (Expected: 2; Actual: 3)
   - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 290)
 
-- [ ] **22.4B.3** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 315
+- [x] **22.4B.3** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 315
   - **Goal:** Remove extra blank lines (Expected: 2; Actual: 3)
   - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 315)
 
-- [ ] **22.4B.4** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 319
+- [x] **22.4B.4** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 319
   - **Goal:** Remove extra blank lines (Expected: 2; Actual: 3)
   - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 319)
 
-- [ ] **22.4B.5** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 320
+- [x] **22.4B.5** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 320
   - **Goal:** Remove extra blank lines (Expected: 2; Actual: 4)
   - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 320)
 
-- [ ] **22.4B.6** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 321
+- [x] **22.4B.6** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 321
   - **Goal:** Remove extra blank lines (Expected: 2; Actual: 5)
   - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 321)
 
-- [ ] **22.4B.7** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 325
+- [x] **22.4B.7** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 325
   - **Goal:** Remove extra blank lines (Expected: 2; Actual: 3)
   - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 325)
 
 ### Phase 22.4C: MD012 Fixes - Multiple Consecutive Blank Lines (cortex/)
 
-- [ ] **22.4C.1** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 261
+- [x] **22.4C.1** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 261
   - **Goal:** Remove extra blank lines (Expected: 2; Actual: 3)
   - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 261)
 
-- [ ] **22.4C.2** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 290
+- [x] **22.4C.2** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 290
   - **Goal:** Remove extra blank lines (Expected: 2; Actual: 3)
   - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 290)
 
-- [ ] **22.4C.3** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 315
+- [x] **22.4C.3** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 315
   - **Goal:** Remove extra blank lines (Expected: 2; Actual: 3)
   - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 315)
 
-- [ ] **22.4C.4** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 319
+- [x] **22.4C.4** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 319
   - **Goal:** Remove extra blank lines (Expected: 2; Actual: 3)
   - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 319)
 
-- [ ] **22.4C.5** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 320
+- [x] **22.4C.5** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 320
   - **Goal:** Remove extra blank lines (Expected: 2; Actual: 4)
   - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 320)
 
-- [ ] **22.4C.6** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 321
+- [x] **22.4C.6** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 321
   - **Goal:** Remove extra blank lines (Expected: 2; Actual: 5)
   - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 321)
 
-- [ ] **22.4C.7** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 325
+- [x] **22.4C.7** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 325
   - **Goal:** Remove extra blank lines (Expected: 2; Actual: 3)
   - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 325)
 
 ### Phase 22.5: MD024 Fixes - Duplicate Headings (cortex/)
 
-- [ ] **22.5.1** Fix MD024 in cortex/PLAN_DONE.md line 186
+- [x] **22.5.1** Fix MD024 in cortex/PLAN_DONE.md line 186
   - **Goal:** Make duplicate "Archived on 2026-01-26" heading unique
   - **Context:** Multiple "### Archived on 2026-01-26" headings
   - **Fix:** Add distinguishing suffix or merge sections
   - **AC:** `markdownlint cortex/PLAN_DONE.md` passes (no MD024 errors at line 186)
 
-- [ ] **22.5.2** Fix MD024 in cortex/PLAN_DONE.md line 210
+- [x] **22.5.2** Fix MD024 in cortex/PLAN_DONE.md line 210
   - **Goal:** Make duplicate "Archived on 2026-01-26" heading unique
   - **Context:** Multiple "### Archived on 2026-01-26" headings
   - **Fix:** Add distinguishing suffix or merge sections
   - **AC:** `markdownlint cortex/PLAN_DONE.md` passes (no MD024 errors at line 210)
 
-- [ ] **22.5.3** Fix MD024 in cortex/PLAN_DONE.md line 221
+- [x] **22.5.3** Fix MD024 in cortex/PLAN_DONE.md line 221
   - **Goal:** Make duplicate "Archived on 2026-01-26" heading unique
   - **Context:** Multiple "### Archived on 2026-01-26" headings
   - **Fix:** Add distinguishing suffix or merge sections
@@ -474,7 +468,7 @@
 
 ### Phase 22.6: MD001 Fix - Heading Increment (workers/)
 
-- [ ] **22.6.1** Fix MD001 in workers/PLAN_DONE.md line 7
+- [x] **22.6.1** Fix MD001 in workers/PLAN_DONE.md line 7
   - **Goal:** Fix heading level increment (Expected: h2; Actual: h3)
   - **Context:** File jumps from h1 to h3 without h2
   - **Fix:** Change line 7 from h3 to h2, or add h2 before it
