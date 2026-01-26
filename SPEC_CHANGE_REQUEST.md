@@ -1,105 +1,132 @@
-# SPEC CHANGE REQUEST - AC.rules Shellcheck Regex
+# Specification Change Request
 
-**Date:** 2026-01-25  
-**Requested By:** Ralph (brain-work iteration)  
-**Task:** 7.3.1 - Request AC.rules update for shellcheck regex
+**Date:** 2026-01-26
+**Task:** 24.4.3 - Integrate guard into loop.sh commit/staging section
+**Requestor:** Ralph (BUILD mode)
+**Status:** Pending Human Approval
 
-## Problem Statement
+## Change Required
 
-Task 7.3.1 in workers/IMPLEMENTATION_PLAN.md requests an "AC.rules update for shellcheck regex" but provides no specificity about:
+Modify protected file `workers/ralph/loop.sh` to integrate `guard_plan_only_mode()` function calls before git operations.
 
-1. Which shellcheck rule needs regex updates
-2. What the current regex pattern is
-3. What the desired regex pattern should be
-4. What problem this solves
+## Rationale
 
-## Current State
+Task 24.4.3 requires adding PLAN-ONLY mode guards to prevent git operations (staging, committing, pushing) when `RALPH_MODE=PLAN`. This is part of Phase 24: PLAN-ONLY Mode Safety feature.
 
-AC.rules lines 240-270 contain shellcheck hygiene checks:
+**Dependency:** Task 24.4.2 (guard function in common.sh) is complete ✓
 
-```ini
-[Hygiene.Shellcheck.1]
-mode=auto
-gate=warn
-desc=No unused variables in current_ralph_tasks.sh (SC2034)
-cmd=shellcheck -f gcc current_ralph_tasks.sh 2>/dev/null | grep -c 'SC2034' || true
-expect_stdout=0
+## Proposed Changes
 
-[Hygiene.Shellcheck.2]
-mode=auto
-gate=warn
-desc=No SC2155 issues in current_ralph_tasks.sh (local var masking)
-cmd=shellcheck -f gcc current_ralph_tasks.sh 2>/dev/null | grep -c 'SC2155' || true
-expect_stdout=0
+**File:** `workers/ralph/loop.sh` (protected by `.verify/loop.sha256`)
 
-[Hygiene.Shellcheck.3]
-mode=auto
-gate=warn
-desc=No unused variables in thunk_ralph_tasks.sh (SC2034)
-cmd=shellcheck -f gcc thunk_ralph_tasks.sh 2>/dev/null | grep -c 'SC2034' || true
-expect_stdout=0
+**Modifications needed:**
 
-[Hygiene.Shellcheck.4]
-mode=auto
-gate=warn
-desc=No SC2155 issues in thunk_ralph_tasks.sh (local var masking)
-cmd=shellcheck -f gcc thunk_ralph_tasks.sh 2>/dev/null | grep -c 'SC2155' || true
-expect_stdout=0
-```
+1. **Before staging operations** (where `git add` is called):
 
-These rules use simple string matching (`grep -c 'SC2034'`), not regex patterns.
+   ```bash
+   # Guard against staging in PLAN mode
+   if ! guard_plan_only_mode "git add"; then
+     log "Skipping staging (PLAN mode)"
+     skip_staging=1
+   fi
+   ```
 
-## Investigation
+2. **Before commit operations** (where `git commit` is called):
 
-- No failing shellcheck-related verifier checks currently exist
-- All shellcheck hygiene checks are passing (see header: PASS: 58, FAIL: 0)
-- No recent THUNK entries mention shellcheck regex issues
-- Task appears to be a placeholder or poorly defined requirement
+   ```bash
+   # Guard against commits in PLAN mode
+   if ! guard_plan_only_mode "git commit"; then
+     log "Skipping commit (PLAN mode)"
+     skip_commit=1
+   fi
+   ```
 
-## Recommendation
+3. **Before push operations** (where `git push` is called):
 
-**Option 1:** Close task as "not actionable" - insufficient context to implement
+   ```bash
+   # Guard against push in PLAN mode
+   if ! guard_plan_only_mode "git push"; then
+     log "Skipping push (PLAN mode)"
+     return 0  # Continue loop without error
+   fi
+   ```
 
-**Option 2:** Request clarification from Cortex:
+4. **Ensure common.sh is sourced** (add near top if not present):
 
-- What specific shellcheck pattern is problematic?
-- What files are affected?
-- What is the desired behavior change?
+   ```bash
+   source "$(dirname "$0")/../shared/common.sh"
+   ```
 
-**Option 3:** If task refers to making shellcheck rules more flexible (e.g., checking all .sh files instead of specific files), propose:
+## Acceptance Criteria
 
-```ini
-[Hygiene.Shellcheck.Generic]
-mode=auto
-gate=warn
-desc=No critical shellcheck issues in shell scripts (SC2034, SC2155)
-cmd=find . -name "*.sh" -not -path "./.git/*" -exec shellcheck -f gcc {} + 2>/dev/null | grep -E 'SC2034|SC2155' | wc -l
-expect_stdout=0
-```
+Per task 24.4.3:
 
-## Required Action
+- With `RALPH_MODE=PLAN`, loop skips staging/commit operations
+- Logs refusal once per action type (via guard function)
+- Exits cleanly (no error state)
+- Loop continues execution normally
 
-**HUMAN INTERVENTION REQUIRED:** Cannot modify protected file `rules/AC.rules` without:
+## Testing Plan
 
-1. Clear specification of required change
-2. Human approval of change
-3. Regeneration of `.verify/ac.sha256` hash
+After human applies changes and updates hash:
 
-## Task Status
+1. Test with `RALPH_MODE=PLAN`:
 
-~~Marking task 7.3.1 as blocked pending human clarification.~~
+   ```bash
+   export RALPH_MODE=PLAN
+   bash workers/ralph/loop.sh --dry-run
+   ```
 
-### Resolution (2026-01-25 18:00)
+   Expected: No git operations, clean exit with guard messages
 
-**Decision:** Closed as not actionable.
+2. Test without RALPH_MODE (normal operation):
 
-**Rationale:**
+   ```bash
+   unset RALPH_MODE
+   bash workers/ralph/loop.sh --dry-run
+   ```
 
-1. All shellcheck hygiene checks are currently passing (24/24 PASS)
-2. Task provided no specificity about what problem needed solving
-3. No recent failures or issues related to shellcheck regex patterns
-4. The existing AC.rules shellcheck checks use simple string matching which works correctly
+   Expected: Normal git operations proceed
 
-**Action:** No changes to AC.rules required. Task 7.3.1 considered complete as "investigated and closed."
+## Impact Assessment
 
-If future shellcheck issues arise, a new task with specific requirements should be created.
+**Risk:** LOW
+
+- Changes are defensive (guard-only, no behavior change in BUILD mode)
+- Guard function already tested in common.sh
+- Only affects behavior when `RALPH_MODE=PLAN` is explicitly set
+
+**Benefits:**
+
+- Prevents accidental file modifications during planning iterations
+- Completes Phase 24 safety feature
+- Aligns with plan-only mode design goals
+
+## Next Steps
+
+1. **Human reviews** this change request
+2. **Human applies** modifications to `workers/ralph/loop.sh`
+3. **Human regenerates** hash: `sha256sum workers/ralph/loop.sh > .verify/loop.sha256`
+4. **Human marks** task 24.4.3 as `[x]` complete in `workers/IMPLEMENTATION_PLAN.md`
+5. **Ralph continues** with next task in BUILD mode
+
+## Alternative Approaches Considered
+
+**Alternative 1:** Keep loop.sh unmodified, rely on external enforcement
+
+- **Rejected:** Less robust, requires discipline rather than technical guardrails
+
+**Alternative 2:** Implement as separate wrapper script
+
+- **Rejected:** Adds complexity, loop.sh is the natural integration point
+
+**Alternative 3:** Make loop.sh non-protected
+
+- **Rejected:** loop.sh is core infrastructure, should remain hash-guarded
+
+## References
+
+- Task definition: `workers/IMPLEMENTATION_PLAN.md` line 104
+- Guard function: `workers/shared/common.sh::guard_plan_only_mode()`
+- Protected files list: `AGENTS.md` → Safety Rules
+- Hash guard: `.verify/loop.sha256`
