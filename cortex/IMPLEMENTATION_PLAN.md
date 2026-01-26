@@ -264,7 +264,7 @@
 
 ### Phase 16.4: Index Updates
 
-- [ ] **16.4.1** Update `skills/index.md` and `skills/SUMMARY.md` with anti-patterns [LOW]
+- [x] **16.4.1** Update `skills/index.md` and `skills/SUMMARY.md` with anti-patterns [LOW]
   - **Goal:** Index the new anti-patterns directory
   - **AC:** Both files list anti-patterns section with all new files
   - **Depends:** 16.1.1-16.3.3
@@ -281,7 +281,7 @@
 
 ### Phase 17.1: Metrics Collection
 
-- [ ] **17.1.1** Create `tools/brain_dashboard/collect_metrics.sh` [HIGH]
+- [x] **17.1.1** Create `tools/brain_dashboard/collect_metrics.sh` [HIGH]
   - **Goal:** Gather metrics from git, THUNK, skills/ into JSON
   - **AC:** Outputs JSON with: task_velocity (by week), skills_growth (by week), commit_frequency (by day), stale_skills (mtime > 30d)
   - **Sources:** `git log --format`, THUNK.md parsing, `find -mtime`
