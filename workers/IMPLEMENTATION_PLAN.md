@@ -467,7 +467,7 @@
   - **AC:** File has 5+ anti-patterns specific to Ralph execution
   - **Sources:** Protected file edits, infinite loops, missing AC, batching too many tasks
 
-- [ ] **16.3.3** Create `skills/domains/anti-patterns/documentation-anti-patterns.md` [LOW]
+- [x] **16.3.3** Create `skills/domains/anti-patterns/documentation-anti-patterns.md` [LOW]
   - **Goal:** Document common documentation mistakes
   - **AC:** File has 5+ anti-patterns: stale links, missing examples, wall of text, etc.
 
