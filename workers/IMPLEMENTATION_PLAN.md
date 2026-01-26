@@ -1,11 +1,12 @@
 # Implementation Plan - Brain Repository
 
-**Last Updated:** 2026-01-26 02:30:00
+**Last Updated:** 2026-01-26 03:58:00
 
 **Current Status:** Phase 21 (Token Efficiency) is NEXT priority. Phase 21.2 complete (PROMPT.md rules), Phase 21.1 (thunk-parse enhancements) ready to start.
 
 **Active Phases:**
 
+- **Phase 0-Warn: Verifier Warnings (🔴 URGENT - 1 task)**
 - **Phase 21: Token Efficiency & Tool Consolidation (⚡ NEXT - 6/10 tasks complete)**
 - Phase CR-6: CodeRabbit PR6 Fixes (✅ COMPLETED)
 - Phase POST-CR6: Prevention Systems (✅ COMPLETED - all 7 tasks)
@@ -16,6 +17,16 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
+
+---
+
+## Phase 0-Warn: Verifier Warnings
+
+**Goal:** Fix markdown lint errors that could not be auto-fixed.
+
+- [ ] **WARN.MD056.THUNK** Fix MD056 (table column count) in workers/ralph/THUNK.md line 780
+  - **Issue:** Line 780 has 9 columns (expected 5) due to unescaped pipes in description text: `tail THUNK.md | grep | awk`
+  - **AC:** `markdownlint workers/ralph/THUNK.md` passes (no MD056 errors)
 
 ---
 
