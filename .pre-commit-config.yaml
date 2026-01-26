@@ -160,6 +160,7 @@ repos:
             .*/PLAYBOOK_TEMPLATE\.md$|
             templates/.*|
             README\.md$|
+            .*/anti-patterns/.*\.md$|
             CONTRIBUTING\.md$
           )$
 
