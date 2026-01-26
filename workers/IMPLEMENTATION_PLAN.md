@@ -690,3 +690,40 @@
   - **AC:** Index has entry pointing to `docs/TOOLS.md`
 
 ---
+
+## Phase 22: Markdown Lint Fixes
+
+**Goal:** Fix manual markdown lint errors that auto-fix cannot resolve.
+
+**Reference:** Markdown lint errors from pre-commit hook output.
+
+**Priority:** HIGH (blocks clean pre-commit runs)
+
+### Phase 22.1: RALPH LOOP FULL EXAMPLE.md Fixes
+
+- [ ] **22.1.1** Fix MD012 (multiple blank lines) in `cortex/docs/RALPH LOOP FULL EXAMPLE.md` [HIGH]
+  - **Goal:** Remove excessive blank lines (max 2 consecutive)
+  - **Errors:** Lines 24, 133, 134, 315, 316, 382, 383, 434
+  - **AC:** `markdownlint "cortex/docs/RALPH LOOP FULL EXAMPLE.md"` shows no MD012 errors
+
+- [ ] **22.1.2** Fix MD046 (code block style) in `cortex/docs/RALPH LOOP FULL EXAMPLE.md` [HIGH]
+  - **Goal:** Convert indented code blocks to fenced blocks with language tags
+  - **Errors:** Lines 28, 42, 56, 86, 248, 268, 286, 292, 309, 367, 376, 416
+  - **AC:** `markdownlint "cortex/docs/RALPH LOOP FULL EXAMPLE.md"` shows no MD046 errors
+
+- [ ] **22.1.3** Fix MD038 (spaces in code spans) in `cortex/docs/RALPH LOOP FULL EXAMPLE.md` [HIGH]
+  - **Goal:** Remove leading/trailing spaces in inline code spans
+  - **Errors:** Lines 140, 145, 152, 166, 181, 188, 191
+  - **AC:** `markdownlint "cortex/docs/RALPH LOOP FULL EXAMPLE.md"` shows no MD038 errors
+
+- [ ] **22.1.4** Fix MD023/MD007/MD032 (heading/list formatting) in `cortex/docs/RALPH LOOP FULL EXAMPLE.md` [MEDIUM]
+  - **Goal:** Fix heading indentation and list formatting issues
+  - **Errors:** MD023 lines 439, 445; MD007 lines 441, 443, 444; MD032 lines 441, 443, 444
+  - **AC:** `markdownlint "cortex/docs/RALPH LOOP FULL EXAMPLE.md"` shows no MD023/MD007/MD032 errors
+
+- [ ] **22.1.5** Fix MD003/MD022 (heading style) in `cortex/docs/RALPH LOOP FULL EXAMPLE.md` [MEDIUM]
+  - **Goal:** Convert setext headings to ATX style and fix blank lines around headings
+  - **Errors:** MD003 lines 445, 449; MD022 lines 445, 449
+  - **AC:** `markdownlint "cortex/docs/RALPH LOOP FULL EXAMPLE.md"` shows no MD003/MD022 errors
+
+---
