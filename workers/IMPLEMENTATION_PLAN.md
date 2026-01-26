@@ -702,9 +702,10 @@
   - **AC:** NEURONS.md has link in appropriate section
   - **Completed:** 2026-01-26 (commit c546cd5)
 
-- [ ] **21.3.3** Add tools reference to `skills/index.md` [LOW]
+- [x] **21.3.3** Add tools reference to `skills/index.md` [LOW]
   - **Goal:** Include tools in searchable skills index
   - **AC:** Index has entry pointing to `docs/TOOLS.md`
+  - **Completed:** 2026-01-26
 
 ---
 
