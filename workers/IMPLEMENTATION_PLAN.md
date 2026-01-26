@@ -542,7 +542,7 @@
 
 ### Phase 18.1: Freshness Scanner
 
-- [ ] **18.1.1** Create `tools/skill_freshness.sh` [HIGH]
+- [x] **18.1.1** Create `tools/skill_freshness.sh` [HIGH]
   - **Goal:** List all skills with age and flag stale ones
   - **AC:** Output shows all 90 skills with days since modified, flags those > threshold
   - **Implementation:** `find skills/ -name "*.md" -printf '%T@ %p\n'`, calculate age
