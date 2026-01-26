@@ -404,7 +404,7 @@
 
 ### Phase 20.3: Documentation
 
-- [ ] **20.3.1** Create `tools/skill_quiz/README.md` [LOW]
+- [x] **20.3.1** Create `tools/skill_quiz/README.md` [LOW]
   - **Goal:** Document usage and skill file requirements
   - **AC:** README explains how to run quiz and what makes skills quiz-compatible
   - **Depends:** 20.2.1
