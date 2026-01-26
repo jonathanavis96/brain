@@ -31,7 +31,7 @@ If the `# VERIFIER STATUS` section shows `[WARN]` lines:
 8. **NEVER** mark `[x]` until verifier confirms fix (re-run shows `[PASS]`)
 9. **NEVER** add "FALSE POSITIVE" notes - request waiver instead via `../.verify/request_waiver.sh`
 10. **Waivers are one-time-use** - After verifier uses a waiver, it's moved to `.used` and deleted. Only request waivers for issues you genuinely cannot fix.
-11. In BUILD mode: Fix ONE warning, mark `[?]`, commit. Verifier determines `[x]`.
+11. In BUILD mode: Fix ONE warning, mark `[?]`, stage changes (NO commit). Loop commits at PLAN phase.
 12. **BATCHING:** When multiple warnings are in the SAME FILE, fix them ALL in one iteration (e.g., 3 shellcheck warnings in loop.sh = 1 task).
 13. **CROSS-FILE BATCHING:** When the SAME fix type applies to multiple files (e.g., SC2162 "add -r to read" in 5 files), fix ALL files in ONE iteration. Group by fix type, not by file.
 
@@ -117,20 +117,20 @@ rg -l "def main\|usage:" tools/*.py bin/* 2>/dev/null | head -10
 
 ## MANDATORY: Checkpoint After Every Task
 
-**Every completed task MUST include ALL THREE in ONE commit:**
+**Every completed task MUST include ALL THREE staged together:**
 
 1. ✅ The code/doc fix itself
 2. ✅ workers/ralph/THUNK.md entry (append to current era table)
 3. ✅ workers/IMPLEMENTATION_PLAN.md update (mark task `[x]`)
 
 ```bash
-# CORRECT: Single commit with everything
-git add -A && git commit -m "fix(scope): description"
-```text
+# CORRECT: Stage all changes together (loop.sh commits at PLAN phase)
+git add -A
+```
 
-**NEVER make separate commits** for "mark task complete" or "log to THUNK" - these waste iterations and break traceability.
+**DO NOT commit during BUILD mode** - loop.sh batches commits at the start of each PLAN phase for efficiency (~13 sec saved per iteration).
 
-**If you commit code without updating workers/ralph/THUNK.md and workers/IMPLEMENTATION_PLAN.md, you have NOT completed the task.**
+**If you don't stage workers/ralph/THUNK.md and workers/IMPLEMENTATION_PLAN.md with your fix, you have NOT completed the task.**
 
 ---
 
@@ -278,14 +278,15 @@ ls bin/ tools/*.py tools/*.sh 2>/dev/null | head -20
    - Break down complex tasks hierarchically (1.1, 1.2, 1.3)
    - A task is "atomic" when completable in ONE BUILD iteration
 
-2. Commit planning updates (local):
+2. Stage planning updates:
 
    ```bash
    git add -A
-   git commit -m "docs(plan): [summary]"
+   # Note: loop.sh already committed BUILD changes before PLAN started
+   # Your plan updates will be committed by loop.sh after PLAN ends
    ```
 
-3. Push ALL accumulated commits (from BUILD iterations + this commit):
+3. Push accumulated commits (loop.sh committed BUILD changes at PLAN start):
 
    ```bash
    git push
@@ -365,19 +366,14 @@ rg -l "keyword" tools/ skills/domains/ | head -10
 
 4. Validate per AGENTS.md commands
 
-5. **SINGLE COMMIT RULE:** Commit ALL changes together (code fix + workers/ralph/THUNK.md + workers/IMPLEMENTATION_PLAN.md):
+5. **STAGE ALL CHANGES:** Stage all changes together (loop.sh commits at PLAN phase):
    - Log completion to workers/ralph/THUNK.md (append to current era table)
    - Mark task `[x]` in workers/IMPLEMENTATION_PLAN.md
-   - **NEVER make separate commits** for "mark task complete" or "log to THUNK" - these waste iterations
+   - **DO NOT commit** - loop.sh batches commits at PLAN phase for efficiency
 
    ```bash
-   git add -A && git commit -m "<type>(<scope>): <summary>
-
-   - Detail 1
-   - Detail 2
-
-   Co-authored-by: ralph-brain <ralph-brain@users.noreply.github.com>
-   Brain-Repo: ${BRAIN_REPO:-jonathanavis96/brain}"
+   git add -A
+   # NO commit - loop.sh handles this at PLAN phase
    ```
 
 6. **DISCOVERY DEFER RULE:** If you discover new issues while fixing:
@@ -497,19 +493,19 @@ rg -n "MARKER_SCHEMA" docs -S | head -20
 
 ### Atomic Git Operations
 
-- **Use single combined command:** `git add -A && git commit -m "msg"`
-- **Do NOT:** `git add file` → `git status` → `git add file` → `git commit`
-- One add+commit per logical change
+- **Stage only during BUILD:** `git add -A` (no commit)
+- **Do NOT commit during BUILD** - loop.sh batches commits at PLAN phase
+- **Do NOT:** `git add file` → `git status` → `git add file` (one `git add -A` is enough)
 
-### Stage-Check Before Commit
+### Stage-Check Before Ending BUILD
 
-Before committing task completion, verify both files are staged:
+Before ending BUILD iteration, verify all files are staged:
 
 ```bash
 git status --short
-# Should show both IMPLEMENTATION_PLAN.md and THUNK.md if logging completion
-git add workers/IMPLEMENTATION_PLAN.md workers/ralph/THUNK.md
-git commit -m "chore(ralph): complete <task>"
+# Should show IMPLEMENTATION_PLAN.md and THUNK.md staged (along with your fix)
+git add -A
+# NO commit - loop.sh handles this at PLAN phase
 ```
 
 ### Fail Fast on Formatting
@@ -542,16 +538,16 @@ When any pre-commit hook fails:
 2. Inspect validator logic **before** editing docs: `rg -n "<error message>" tools/`
 3. Fix validator if the example is valid code (don't rewrite examples 3 times)
 
-### Commit Atomicity
+### Stage Atomicity
 
-Before any commit, verify staged files:
+Before ending BUILD, verify all files are staged:
 
 ```bash
 git status --short
 git diff --cached --stat
 ```
 
-**Rule:** If task completion requires both IMPL_PLAN + THUNK updates, they must be staged **together** before committing.
+**Rule:** If task completion requires both IMPL_PLAN + THUNK updates, they must be staged **together** (loop.sh commits at PLAN phase).
 
 ### Search Explosion Guard
 
