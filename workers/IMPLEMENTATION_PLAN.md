@@ -56,12 +56,24 @@
     4. Deny patterns: `artifacts/*`, `cortex/IMPLEMENTATION_PLAN.md`, `cortex/PLAN_DONE.md`, `**/rollflow_cache/*`
     5. Update hash in `.verify/loop.sha256` after changes
   - **Verification checklist:**
-    - [ ] `git add -A` no longer used
-    - [ ] Core files always staged (IMPLEMENTATION_PLAN.md, THUNK.md)
-    - [ ] Artifacts excluded by default
-    - [ ] Cortex copies excluded by default
-    - [ ] Cache files excluded by default
-    - [ ] Hash regenerated in all `.verify/` directories
+    - [x] `git add -A` no longer used
+    - [x] Core files always staged (IMPLEMENTATION_PLAN.md, THUNK.md)
+    - [x] Artifacts excluded by default
+    - [x] Cortex copies excluded by default
+    - [x] Cache files excluded by default
+    - [x] Hash regenerated in all `.verify/` directories
+
+- [ ] **23.2.2** End-of-loop cleanup when no unchecked tasks remain **[MEDIUM]**
+  - **Goal:** When the loop is about to exit and there are 0 `- [ ]` tasks left, automatically leave the repo in a clean, consistent state.
+  - **Behavior (must):**
+    1. If there are no unchecked tasks, run the same cleanup routine used at PLAN start to remove `[x]` items from `workers/IMPLEMENTATION_PLAN.md` (so the plan ends clean).
+    2. Do a final read-only review step (summary only): list remaining unchecked tasks (should be 0), show `git status --short`, show last commit, and stop. **No new tasks created.**
+    3. If there are staged changes at this point, batch them into one final commit using the scoped staging rules (plan + THUNK + task files only; never artifacts/cortex copies/caches by default).
+  - **AC:**
+    - On a run that finishes all tasks, the plan contains no leftover `[x]` clutter (or only what cleanup policy allows).
+    - Repo ends clean (`git status --short` empty) unless artifacts are intentionally left modified and are not staged.
+    - No new tasks are appended during the final review step.
+  - **Notes:** Must respect protected-file policy; if implementation touches protected files, human must approve + update hashes.
 
 ### Phase 23.3: Tool Efficiency (MEDIUM)
 
