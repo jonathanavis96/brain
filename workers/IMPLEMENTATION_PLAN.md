@@ -552,7 +552,7 @@
   - **AC:** `--days 30` flags skills older than 30 days
   - **Depends:** 18.1.1
 
-- [ ] **18.1.3** Add CI-friendly exit code [LOW]
+- [x] **18.1.3** Add CI-friendly exit code [LOW]
   - **Goal:** Exit 1 if any skills exceed threshold (for CI integration)
   - **AC:** Exit code reflects staleness status
   - **Depends:** 18.1.1
