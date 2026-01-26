@@ -501,14 +501,14 @@
 
 ### Phase 17.1: Metrics Collection
 
-- [ ] **17.1.1** Create `tools/brain_dashboard/collect_metrics.sh` [HIGH]
+- [x] **17.1.1** Create `tools/brain_dashboard/collect_metrics.sh` [HIGH]
   - **Goal:** Gather metrics from git, THUNK, skills/ into JSON
   - **AC:** Outputs JSON with: task_velocity (by week), skills_growth (by week), commit_frequency (by day), stale_skills (mtime > 30d)
   - **Sources:** `git log --format`, THUNK.md parsing, `find -mtime`
 
 ### Phase 17.2: Dashboard Generation
 
-- [ ] **17.2.1** Create `tools/brain_dashboard/generate_dashboard.py` [HIGH]
+- [x] **17.2.1** Create `tools/brain_dashboard/generate_dashboard.py` [HIGH]
   - **Goal:** Generate static HTML dashboard from metrics JSON
   - **AC:** Self-contained HTML with inline CSS, no external dependencies
   - **Depends:** 17.1.1
