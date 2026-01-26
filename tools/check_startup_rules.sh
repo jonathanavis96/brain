@@ -139,6 +139,7 @@ if [[ -n "$GREP_EXPLOSION" ]]; then
   FAILURES=$((FAILURES + 1))
 else
   # Secondary heuristic: broad-scope searches
+  # Check if broad search is in first 5 tool calls (FAIL) or later (WARN)
   BROAD_SEARCH=$(
     grep -E "command:" "$CLEAN_LOG" |
       grep -E "rg |grep " |
@@ -146,9 +147,19 @@ else
       head -3 || true
   )
   if [[ -n "$BROAD_SEARCH" ]]; then
-    echo -e "${YELLOW}WARN${NC}"
-    echo "  Broad search detected (ensure query is narrowed):"
-    printf "    %s\n" "$BROAD_SEARCH"
+    # Check if broad search is in first 5 calls (almost always waste at startup)
+    FIRST_5_CALLS=$(grep -nE "command:" "$CLEAN_LOG" | head -5)
+    EARLY_BROAD=$(echo "$FIRST_5_CALLS" | grep -E "\*\*\/|skills/domains/\*\*|skills/\*\*|\*\*\/\*\.md" || true)
+    if [[ -n "$EARLY_BROAD" ]]; then
+      echo -e "${RED}FAIL${NC}"
+      echo "  Broad search in first 5 calls (inefficient startup):"
+      printf "    %s\n" "$BROAD_SEARCH"
+      FAILURES=$((FAILURES + 1))
+    else
+      echo -e "${YELLOW}WARN${NC}"
+      echo "  Broad search detected later (ensure query is narrowed):"
+      printf "    %s\n" "$BROAD_SEARCH"
+    fi
   else
     echo -e "${GREEN}PASS${NC}"
   fi
