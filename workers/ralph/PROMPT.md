@@ -361,6 +361,13 @@ rg -l "keyword" tools/ skills/domains/ | head -10
 
 2. Pick FIRST unchecked `[ ]` numbered task (e.g., `0.A.1.1`, including subtasks like 1.1)
    - **This is your ONLY task this iteration**
+   - **THUNK pre-check:** Before investigating, verify task isn't already done:
+
+     ```bash
+     grep "task_id" workers/ralph/THUNK.md | head -3
+     ```
+
+     If THUNK shows the task completed, mark `[x]` in plan and pick next task.
 
 3. Implement using exactly 1 subagent for modifications
 
