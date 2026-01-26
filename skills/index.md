@@ -236,6 +236,12 @@ Catalog of all skill files in the brain system.
 
 ---
 
+## Tools & Utilities
+
+- [TOOLS.md](../docs/TOOLS.md) - CLI tools reference (brain-search, thunk-parse, ralph-stats, gap-radar, brain-event)
+
+---
+
 ## Self-Improvement (Meta)
 
 - [README.md](self-improvement/README.md) - Self-improvement system overview
