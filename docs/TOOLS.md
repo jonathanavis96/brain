@@ -10,6 +10,7 @@ Quick reference for all CLI tools in the Brain repository. **Use these instead o
 | Export THUNK to SQLite | `bin/thunk-parse --format sqlite -o thunk.db` | For complex queries |
 | Get THUNK stats | `bin/thunk-parse --stats` | Entry counts, priority breakdown |
 | Ralph performance | `bin/ralph-stats --since 4h` | Tool calls, durations |
+| Ralph log summary | `bin/ralph-summary` | Clean summary from logs |
 | Suggest knowledge gaps | `bin/gap-radar --dry-run` | From verifier errors |
 | Emit event marker | `bin/brain-event --event iteration_start --iter 5` | For observability |
 | Analyze logs | `python3 -m tools.rollflow_analyze --log-dir DIR` | Detailed metrics |
@@ -128,6 +129,32 @@ bin/brain-event --event error --msg "Verifier failed" --code 1
 ```
 
 **Use for:** Observability pipelines, log correlation.
+
+---
+
+### `bin/ralph-summary` - Log Summary Extractor
+
+Extract clean task completion summaries from Ralph logs, stripping terminal noise (ANSI codes, streaming artifacts, spinner lines).
+
+```bash
+# Latest log summary
+bin/ralph-summary
+
+# Last N logs
+bin/ralph-summary --recent 3
+
+# All logs from today
+bin/ralph-summary --all
+
+# List available logs
+bin/ralph-summary --list
+```
+
+**Output:** The final summary block before `:::BUILD_READY:::` or `:::PLAN_READY:::` markers.
+
+**Use for:** Quick review of what Ralph accomplished, sharing summaries without terminal garbage.
+
+**Token savings:** Use this instead of opening raw log files and manually filtering noise.
 
 ---
 
@@ -267,16 +294,20 @@ tools/check_startup_rules.sh path/to/log.log   # Check specific log
 
 Checks: no forbidden file opens at startup, no THUNK lookups via open_files, no full IMPL_PLAN reads, no grep explosions, first tool call is cheap.
 
-### ralph-summary
+---
 
-Extract clean task completion summaries from Ralph logs (filters terminal noise).
+## Adding New Tools
 
-```bash
-bin/ralph-summary              # Latest log
-bin/ralph-summary --recent 3   # Last 3 logs
-bin/ralph-summary --all        # All logs today
-bin/ralph-summary --list       # List available logs
-```
+**Rule:** All new CLI tools in `bin/` or utility scripts in `tools/` MUST be documented in this file.
+
+**Checklist for new tools:**
+
+1. Add entry to **Quick Lookup** table (if commonly used)
+2. Add full section under appropriate category (`bin/` CLI Tools or `tools/` Python Tools)
+3. Include: usage examples, purpose, and token savings (if applicable)
+4. Update **Last Updated** date at bottom of file
+
+**Why:** This file is the single source of truth for available tooling. Undocumented tools are invisible to agents and humans alike.
 
 ---
 
