@@ -1,16 +1,23 @@
 # Specification Change Request
 
 **Date:** 2026-01-26
-**Task:** 24.4.3 + 24.4.4 - Guard git writes + end-of-run flush commit
+**Task:** 24.4.x - Protected loop.sh changes (observability headers) + (separate) guard/flush proposal
 **Requestor:** Ralph (BUILD mode)
 **Status:** Pending Human Approval
 
 ## Change Required
 
-Modify protected files to:
+This repo currently contains an **already-applied** protected change to `workers/ralph/loop.sh` that adds observability headers:
 
-1) Integrate `guard_plan_only_mode()` calls before git operations (task 24.4.3)
-2) Add an end-of-run scoped "flush" commit so runs ending on BUILD do not leave uncommitted changes (task 24.4.4)
+- `# RUNNER: $RUNNER`
+- `# MODEL: <effective_model>` where `effective_model="${RESOLVED_MODEL:-${MODEL_ARG:-auto}}"`
+
+The protected baseline hash (`workers/ralph/.verify/loop.sha256`) was updated to match this change.
+
+Separately (not yet applied unless explicitly confirmed), Phase 24 also proposes:
+
+1) Integrating `guard_plan_only_mode()` calls before git operations (task 24.4.3)
+2) Adding an end-of-run scoped "flush" commit (task 24.4.4)
 
 **Files impacted:**
 
@@ -20,15 +27,44 @@ Modify protected files to:
 
 ## Rationale
 
+### A) Observability header change (already applied)
+
+- Makes loop output self-describing for debugging and PR review by emitting:
+  - `# RUNNER: ...`
+  - `# MODEL: ...` (effective model actually used)
+
+### B) PLAN-only and end-of-run safety (proposed)
+
 - **Task 24.4.3** requires adding PLAN-ONLY mode guards to prevent git operations (staging, committing, pushing) when `RALPH_MODE=PLAN`.
 - **Task 24.4.4** requires a final end-of-run commit "flush" because commits of accumulated BUILD work currently only occur when the next PLAN iteration begins; ending the run on BUILD can leave uncommitted changes.
 
 Both are part of Phase 24 safety/correctness guardrails.
 **Dependency:** Task 24.4.2 (guard function in common.sh) is complete ✓
 
-## Proposed Changes
+## Applied Changes (already in repo)
 
-**File:** `workers/ralph/loop.sh` (protected by `.verify/loop.sha256`)
+**File:** `workers/ralph/loop.sh` (protected)
+
+**Change:** In the prompt header emitted during `run_once()`, add:
+
+```bash
+echo "# RUNNER: $RUNNER"
+
+# Single source of truth: this is the model value loop.sh will actually use/pass to the runner.
+# If RESOLVED_MODEL is empty (e.g. user asked for auto/latest), fall back to the requested MODEL_ARG.
+local effective_model
+effective_model="${RESOLVED_MODEL:-${MODEL_ARG:-auto}}"
+echo "# MODEL: ${effective_model}"
+```
+
+**Baselines updated to match:**
+
+- `workers/ralph/.verify/loop.sha256`
+- `.verify/loop.sha256`
+
+## Proposed Changes (not yet applied unless explicitly confirmed)
+
+**File:** `workers/ralph/loop.sh` (protected)
 
 **Modifications needed:**
 
@@ -117,7 +153,9 @@ After human applies changes and updates hash:
 
 1. **Human reviews** this change request
 2. **Human applies** modifications to `workers/ralph/loop.sh`
-3. **Human regenerates** hash: `sha256sum workers/ralph/loop.sh > .verify/loop.sha256`
+3. **Human regenerates** hash baselines (hash-only):
+   - `sha256sum workers/ralph/loop.sh | cut -d' ' -f1 > workers/ralph/.verify/loop.sha256`
+   - `sha256sum workers/ralph/loop.sh | cut -d' ' -f1 > .verify/loop.sha256`
 4. **Human marks** task 24.4.3 as `[x]` complete in `workers/IMPLEMENTATION_PLAN.md`
 5. **Ralph continues** with next task in BUILD mode
 
