@@ -54,7 +54,27 @@ find_random_skill() {
 
 extract_scenarios() {
   local skill_path="$1"
-  python3 "${EXTRACTOR}" "${skill_path}" 2>/dev/null
+
+  local output
+  local rc
+
+  # Capture stdout; keep stderr for debugging
+  output=$(python3 "${EXTRACTOR}" "${skill_path}" 2> >(sed 's/^/[extractor] /' >&2))
+  rc=$?
+
+  if [[ $rc -ne 0 ]]; then
+    echo "Error: scenario extractor failed (rc=$rc). Check that EXTRACTOR exists and the skill file is readable." >&2
+    echo "  EXTRACTOR=${EXTRACTOR}" >&2
+    echo "  SKILL_PATH=${skill_path}" >&2
+    return $rc
+  fi
+
+  if [[ -z "${output}" ]]; then
+    echo "Error: scenario extractor produced empty output." >&2
+    return 1
+  fi
+
+  echo "${output}"
 }
 
 present_quiz() {
@@ -63,7 +83,18 @@ present_quiz() {
 
   # Extract scenarios
   local scenarios_json
-  scenarios_json=$(extract_scenarios "${skill_path}")
+  if ! scenarios_json=$(extract_scenarios "${skill_path}"); then
+    echo "Error: failed to extract scenarios for quiz." >&2
+    return 1
+  fi
+
+  # Validate JSON before invoking jq
+  if ! echo "${scenarios_json}" | jq -e . >/dev/null 2>&1; then
+    echo "Error: extractor output is not valid JSON. This usually indicates an extractor failure." >&2
+    echo "  EXTRACTOR=${EXTRACTOR}" >&2
+    echo "  SKILL_PATH=${skill_path}" >&2
+    return 1
+  fi
 
   # Check if any scenarios found
   local scenario_count
@@ -71,7 +102,8 @@ present_quiz() {
 
   if [[ "${scenario_count}" -eq 0 ]]; then
     echo -e "${YELLOW}Warning: No quiz scenarios found in ${skill_path}${NC}" >&2
-    echo "Skill files need 'When to Use', 'Problem', or 'Overview' sections for scenarios." >&2
+    echo "Skill files need a scenario section like 'When to Use', 'Problem', 'Overview', 'Scenario', 'Example', or 'Use Case'." >&2
+    echo "And a solution section like 'Quick Reference', 'Details', 'Purpose', 'Solution', 'Implementation', or 'How to Apply'." >&2
     return 1
   fi
 
