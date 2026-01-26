@@ -403,3 +403,25 @@ brain/
 **Rationale:** Consistent formatting between local development and CI prevents hash churn and failed commits.
 
 **Impact:** Stable verification hashes, no more reformat/re-hash loops.
+
+---
+
+### DEC-2026-01-26-002: Loop End-of-Run Flush Commit Guarantee
+
+**Date:** 2026-01-26 23:50:42
+
+**Decision:** The Ralph loop must perform a final scoped "flush" commit at end-of-run (and on graceful interrupt after the current iteration) so that runs ending on BUILD do not leave uncommitted work.
+
+**Rationale:**
+
+- Current behavior only commits accumulated BUILD changes at the start of the next PLAN iteration.
+- If a run ends on a BUILD iteration (common with `--iterations N`, early termination, or Ctrl+C after iteration completes), changes can remain unstaged/unstable and may be lost or cause confusion.
+- A dedicated end-of-run flush preserves the semantics of PLAN vs BUILD while guaranteeing repository state consistency.
+
+**Implementation Notes:**
+
+- Use the existing `stage_scoped_changes` denylist (avoids committing `artifacts/**`, `cortex/PLAN_DONE.md`, caches).
+- Do not run in `--dry-run` mode.
+- Because `loop.sh` is hash-guarded, humans must regenerate `.verify/*.sha256` after changes.
+
+**Impact:** More reliable loop behavior; fewer "dirty worktree" surprises; safer interruption/termination.

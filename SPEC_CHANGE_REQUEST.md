@@ -1,18 +1,29 @@
 # Specification Change Request
 
 **Date:** 2026-01-26
-**Task:** 24.4.3 - Integrate guard into loop.sh commit/staging section
+**Task:** 24.4.3 + 24.4.4 - Guard git writes + end-of-run flush commit
 **Requestor:** Ralph (BUILD mode)
 **Status:** Pending Human Approval
 
 ## Change Required
 
-Modify protected file `workers/ralph/loop.sh` to integrate `guard_plan_only_mode()` function calls before git operations.
+Modify protected files to:
+
+1) Integrate `guard_plan_only_mode()` calls before git operations (task 24.4.3)
+2) Add an end-of-run scoped "flush" commit so runs ending on BUILD do not leave uncommitted changes (task 24.4.4)
+
+**Files impacted:**
+
+- `workers/ralph/loop.sh` (protected)
+- `templates/ralph/loop.sh` (protected)
+- corresponding `.verify/loop.sha256` baselines (human-updated)
 
 ## Rationale
 
-Task 24.4.3 requires adding PLAN-ONLY mode guards to prevent git operations (staging, committing, pushing) when `RALPH_MODE=PLAN`. This is part of Phase 24: PLAN-ONLY Mode Safety feature.
+- **Task 24.4.3** requires adding PLAN-ONLY mode guards to prevent git operations (staging, committing, pushing) when `RALPH_MODE=PLAN`.
+- **Task 24.4.4** requires a final end-of-run commit "flush" because commits of accumulated BUILD work currently only occur when the next PLAN iteration begins; ending the run on BUILD can leave uncommitted changes.
 
+Both are part of Phase 24 safety/correctness guardrails.
 **Dependency:** Task 24.4.2 (guard function in common.sh) is complete ✓
 
 ## Proposed Changes

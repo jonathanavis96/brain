@@ -920,6 +920,38 @@ stage_scoped_changes() {
 }
 
 # =============================================================================
+# End-of-Run Flush Commit - Ensure no changes are left uncommitted
+# =============================================================================
+# Commits any pending changes using scoped staging so that runs ending on BUILD
+# do not leave a dirty worktree.
+#
+# Usage: flush_scoped_commit_if_needed <reason>
+flush_scoped_commit_if_needed() {
+  local reason="${1:-end_of_run}"
+
+  # Respect dry-run mode: never commit
+  if [[ "${DRY_RUN:-false}" == "true" ]]; then
+    return 0
+  fi
+
+  # Nothing to do if clean
+  if git diff --quiet && git diff --cached --quiet; then
+    return 0
+  fi
+
+  echo "Flushing pending changes (${reason})..."
+  stage_scoped_changes || true
+
+  if ! git diff --cached --quiet; then
+    git commit -m "build: flush pending changes (${reason})" || true
+    echo "✓ Changes flushed"
+  else
+    echo "No files to commit after scoped staging"
+  fi
+  echo ""
+}
+
+# =============================================================================
 # Cache Status Banner - Show effective cache state with reason
 # =============================================================================
 # Prints human-readable banner showing:
@@ -1773,6 +1805,7 @@ if [[ -n "$PROMPT_ARG" ]]; then
     # Check for interrupt before starting iteration
     if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
       echo ""
+      flush_scoped_commit_if_needed "graceful_interrupt"
       echo "Exiting gracefully after iteration $((i - 1))."
       exit 130
     fi
@@ -1931,6 +1964,7 @@ else
     # Check for interrupt before starting iteration
     if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
       echo ""
+      flush_scoped_commit_if_needed "graceful_interrupt"
       echo "Exiting gracefully after iteration $((i - 1))."
       exit 130
     fi
@@ -2205,6 +2239,9 @@ else
     emit_marker ":::ITER_END::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_end_ts"
   done
 fi
+
+# Ensure no pending changes are left uncommitted when the loop ends
+flush_scoped_commit_if_needed "end_of_run"
 
 # Print cache statistics summary at end of run
 if [[ "$CACHE_SKIP" == "true" ]]; then
