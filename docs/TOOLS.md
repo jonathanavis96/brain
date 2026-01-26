@@ -254,6 +254,21 @@ bin/thunk-parse --format sqlite -o threads.db
 
 ---
 
+## Validation Tools
+
+### check_startup_rules.sh
+
+Tripwire script to verify Ralph follows token efficiency rules after each run.
+
+```bash
+tools/check_startup_rules.sh                    # Check latest log
+tools/check_startup_rules.sh path/to/log.log   # Check specific log
+```
+
+Checks: no forbidden file opens at startup, no THUNK lookups via open_files, no full IMPL_PLAN reads, no grep explosions, first tool call is cheap.
+
+---
+
 ## See Also
 
 - [skills/domains/ralph/thread-search-patterns.md](../skills/domains/ralph/thread-search-patterns.md) - Detailed search patterns
