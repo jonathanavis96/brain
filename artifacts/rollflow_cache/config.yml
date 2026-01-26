@@ -6,10 +6,13 @@
 # Tools that should never be cached (always run fresh)
 # Add tool names that have side effects or are non-deterministic
 non_cacheable_tools:
-  # Example: Tools that modify state or depend on external factors
-  # - git_push
-  # - deploy_script
-  # - random_generator
+  # Git operations that modify state
+  - git push
+  - git commit
+  - git fetch
+  # Tools that always need fresh execution
+  - acli rovodev run
+  - opencode run
 
 # Maximum age for cached entries (in hours)
 # Entries older than this are treated as cache misses

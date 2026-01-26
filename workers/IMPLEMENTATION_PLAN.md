@@ -241,7 +241,7 @@
   - **AC:** Skill covers wrapper API, cacheability rules, trap-based cleanup
   - **Priority:** HIGH
 
-- [ ] **13.1.2** Extract non-cacheable tools to config file
+- [x] **13.1.2** Extract non-cacheable tools to config file
   - **Goal:** Move from hardcoded `case` to `config/non_cacheable_tools.txt`
   - **Change:** Update `is_non_cacheable()` in loop.sh to read from file
   - **AC:** Config file exists, loop.sh reads it, behavior unchanged
