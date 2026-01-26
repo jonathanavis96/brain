@@ -729,14 +729,4 @@
   - **Errors:** MD003 lines 445, 449; MD022 lines 445, 449
   - **AC:** `markdownlint "cortex/docs/RALPH LOOP FULL EXAMPLE.md"` shows no MD003/MD022 errors
 
-### Phase 22.2: THUNK.md Table Column Count Fixes
-
-- [ ] **22.2.1** Fix MD056 (table column count) in `workers/ralph/THUNK.md` [HIGH]
-  - **Goal:** Fix table rows with incorrect column counts
-  - **Errors:** 
-    - Line 836:419 - Expected 5 columns, got 8 (too many cells, extra data will be missing)
-    - Line 839:937 - Expected 5 columns, got 6 (too many cells, extra data will be missing)
-    - Line 840:689 - Expected 5 columns, got 4 (too few cells, row will be missing data)
-  - **AC:** `markdownlint workers/ralph/THUNK.md` shows no MD056 errors
-
 ---
