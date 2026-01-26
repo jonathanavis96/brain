@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brain Repository Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #f3f4f6;
+      color: #1f2937;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      padding: 2rem;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #111827;
+    }
+    .subtitle {
+      color: #6b7280;
+      margin-bottom: 2rem;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 1.5rem;
+    }
+    .stat-label {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 0.5rem;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #111827;
+    }
+    .chart-section {
+      margin-bottom: 3rem;
+    }
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #111827;
+    }
+    .chart-container {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 1rem;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    th {
+      background: #f9fafb;
+      font-weight: 600;
+      color: #374151;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    li:last-child {
+      border-bottom: none;
+    }
+    code {
+      background: #f3f4f6;
+      padding: 0.125rem 0.25rem;
+      border-radius: 3px;
+      font-size: 0.875rem;
+    }
+    .footer {
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e5e7eb;
+      text-align: center;
+      color: #6b7280;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧠 Brain Repository Dashboard</h1>
+    <p class="subtitle">Generated on 2026-01-26 04:17:17</p>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Tasks Completed</div>
+        <div class="stat-value">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Skills Added</div>
+        <div class="stat-value">42</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Commits (30d)</div>
+        <div class="stat-value">1176</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Stale Skills</div>
+        <div class="stat-value">0</div>
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <h2>📈 Task Velocity (Weekly)</h2>
+      <div class="chart-container">
+        <svg width="800" height="300"><text x="50%" y="50%" text-anchor="middle">No data available</text></svg>
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <h2>🌱 Skills Growth (Weekly)</h2>
+      <div class="chart-container">
+        <svg width="800" height="300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Grid lines -->
+  <line x1="60" y1="60" x2="60" y2="240" stroke="#ccc" stroke-width="1"/>
+  <line x1="60" y1="240" x2="740" y2="240" stroke="#ccc" stroke-width="1"/>
+
+  <!-- Bars -->
+  <rect x="94.0" y="159.3" width="272.0" height="80.7" fill="#10b981"/>
+  <text x="230.0" y="154.3" text-anchor="middle" font-size="12">13</text>
+  <rect x="434.0" y="60.0" width="272.0" height="180.0" fill="#10b981"/>
+  <text x="570.0" y="55.0" text-anchor="middle" font-size="12">29</text>
+  <text x="230.0" y="260" text-anchor="middle" font-size="12">2026-W03</text>
+  <text x="570.0" y="260" text-anchor="middle" font-size="12">2026-W04</text>
+</svg>
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <h2>💻 Commit Frequency (Last 30 Days)</h2>
+      <div class="chart-container">
+        <table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Commits</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>2026-01-17</td><td>17</td></tr>
+    <tr><td>2026-01-18</td><td>227</td></tr>
+    <tr><td>2026-01-19</td><td>163</td></tr>
+    <tr><td>2026-01-20</td><td>7</td></tr>
+    <tr><td>2026-01-21</td><td>81</td></tr>
+    <tr><td>2026-01-22</td><td>132</td></tr>
+    <tr><td>2026-01-23</td><td>156</td></tr>
+    <tr><td>2026-01-24</td><td>116</td></tr>
+    <tr><td>2026-01-25</td><td>212</td></tr>
+    <tr><td>2026-01-26</td><td>65</td></tr>
+  </tbody>
+</table>
+
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <h2>⚠️ Stale Skills (Not Modified in 30+ Days)</h2>
+      <div class="chart-container">
+        <p>No stale files found (all files modified within 30 days).</p>
+      </div>
+    </div>
+
+    <div class="footer">
+      Generated by tools/brain_dashboard/generate_dashboard.py
+    </div>
+  </div>
+</body>
+</html>
