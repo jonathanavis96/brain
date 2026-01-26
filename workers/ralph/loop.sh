@@ -851,6 +851,55 @@ check_protected_file_failures() {
 
 CURRENT_LOG_FILE=""
 
+# =============================================================================
+# Scoped Staging - Stage only intended files, exclude noise
+# =============================================================================
+# Always stages: workers/IMPLEMENTATION_PLAN.md, workers/ralph/THUNK.md
+# Never stages: artifacts/**, cortex/IMPLEMENTATION_PLAN.md, cortex/PLAN_DONE.md, **/rollflow_cache/**
+# Conditionally stages: Other changed files not in denylist
+#
+# Usage: stage_scoped_changes
+# Returns: 0 if files were staged, 1 if nothing to stage
+stage_scoped_changes() {
+  local staged_count=0
+
+  # Always stage core Ralph files if they have changes
+  for core_file in "workers/IMPLEMENTATION_PLAN.md" "workers/ralph/THUNK.md"; do
+    if [[ -f "$ROOT/$core_file" ]] && ! git diff --quiet -- "$ROOT/$core_file" 2>/dev/null; then
+      git add "$ROOT/$core_file"
+      staged_count=$((staged_count + 1))
+    fi
+  done
+
+  # Get all changed files (unstaged only, since we handle core files above)
+  local changed_files
+  changed_files=$(git diff --name-only 2>/dev/null) || true
+
+  # Stage each file unless it matches denylist patterns
+  while IFS= read -r file; do
+    [[ -z "$file" ]] && continue
+
+    # Denylist patterns - skip these files
+    case "$file" in
+      artifacts/*) continue ;;                   # Dashboard, metrics, reports
+      cortex/IMPLEMENTATION_PLAN.md) continue ;; # Read-only copy
+      cortex/PLAN_DONE.md) continue ;;           # Read-only archive
+      */rollflow_cache/*) continue ;;            # Cache databases
+      *.sqlite) continue ;;                      # Any SQLite files
+    esac
+
+    # Stage the file
+    git add "$ROOT/$file" 2>/dev/null && staged_count=$((staged_count + 1))
+  done <<<"$changed_files"
+
+  if [[ $staged_count -gt 0 ]]; then
+    echo "Staged $staged_count file(s) (scoped staging)"
+    return 0
+  else
+    return 1
+  fi
+}
+
 # Emit a structured marker to stderr AND log file (if set)
 # Args: $1 = marker line
 emit_marker() {
@@ -1836,12 +1885,16 @@ else
         echo ""
       fi
 
-      # Commit any accumulated changes from BUILD iterations
+      # Commit any accumulated changes from BUILD iterations (scoped staging)
       if ! git diff --quiet || ! git diff --cached --quiet; then
         echo "Committing accumulated BUILD changes..."
-        git add -A
-        git commit -m "build: accumulated changes from BUILD iterations" || true
-        echo "✓ BUILD changes committed"
+        stage_scoped_changes
+        if ! git diff --cached --quiet; then
+          git commit -m "build: accumulated changes from BUILD iterations" || true
+          echo "✓ BUILD changes committed"
+        else
+          echo "No files to commit after scoped staging"
+        fi
         echo ""
       fi
 
@@ -1908,9 +1961,9 @@ else
       # Note: PLAN-start commit runs full pre-commit via git hooks
       # This is incremental check for BUILD phase changes only
       if command -v pre-commit &>/dev/null; then
-        # Stage any changes so pre-commit can check them
+        # Stage changes using scoped staging (excludes artifacts/cortex/caches)
         if [[ -n "$changed_files" ]]; then
-          git add -A
+          stage_scoped_changes
           # Only run if something is actually staged
           if ! git diff --cached --quiet; then
             echo "Running pre-commit on staged files..."
@@ -1919,7 +1972,7 @@ else
             run_tool "$precommit_id" "pre-commit" "$precommit_key" "$autofix_git_sha" \
               "(cd \"$ROOT\" && pre-commit run 2>/dev/null) || true" || true
           else
-            echo "Skipping pre-commit (nothing staged)"
+            echo "Skipping pre-commit (nothing staged after scoped filtering)"
           fi
         else
           echo "Skipping pre-commit (no changes to check)"
