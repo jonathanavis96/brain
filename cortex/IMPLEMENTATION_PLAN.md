@@ -75,6 +75,14 @@
   - **Files likely touched:** `workers/ralph/loop.sh` (protected - requires human approval + hash update)
   - **Note:** Protected file - requires human approval
 
+- [ ] **24.4.4** Ensure end-of-run scoped flush commit even if last iteration is BUILD **[HIGH]**
+  - **Goal:** No uncommitted changes remain just because the run ended on a BUILD iteration.
+  - **Context:** Current loop commits "accumulated BUILD changes" only when the next PLAN iteration begins; if the session ends on BUILD, work may remain uncommitted.
+  - **Approach:** Add a final "flush" step when the loop finishes normally (and on graceful interrupt after current iteration), using existing `stage_scoped_changes` logic.
+  - **AC:** Run `bash workers/ralph/loop.sh --iterations 2 --plan-every 3` (non-dry-run) and verify `git diff` and `git diff --cached` are clean at end.
+  - **Files likely touched:** `workers/ralph/loop.sh` and `templates/ralph/loop.sh` (protected - requires human approval + hash update)
+  - **Note:** Protected file - requires human approval
+
 
 ---
 
