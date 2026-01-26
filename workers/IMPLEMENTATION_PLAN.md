@@ -576,7 +576,7 @@
 
 ### Phase 19.1: Commit Analysis
 
-- [ ] **19.1.1** Create `tools/pattern_miner/mine_patterns.sh` [HIGH]
+- [x] **19.1.1** Create `tools/pattern_miner/mine_patterns.sh` [HIGH]
   - **Goal:** Scan sibling project git logs for repeated commit patterns
   - **AC:** Discovers repos in `~/code/*/`, extracts commit messages from last 90 days
   - **Implementation:** `for repo in ~/code/*/; do git -C "$repo" log --oneline --since="90 days ago"; done`

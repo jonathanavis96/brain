@@ -339,7 +339,7 @@
 
 ### Phase 18.2: Integration
 
-- [ ] **18.2.1** Add freshness summary to `skills/SUMMARY.md` [LOW]
+- [x] **18.2.1** Add freshness summary to `skills/SUMMARY.md` [LOW]
   - **Goal:** Show freshness status in skills overview
   - **AC:** SUMMARY.md has "Freshness Status" section (can be manually updated or scripted)
   - **Depends:** 18.1.1
