@@ -71,14 +71,17 @@ Then output `:::BUILD_READY:::` to end the iteration.
 
 **Do NOT open large files at startup.** Use targeted commands instead.
 
-### Forbidden at Startup
+### Forbidden at Startup (NEVER open_files for these)
 
-Never `open_files` for these (too expensive):
+**NEVER call `open_files` on ANY of these files - use grep/sed/head instead:**
 
-- `NEURONS.md`
-- `THOUGHTS.md`
-- `workers/IMPLEMENTATION_PLAN.md` (full file)
-- `workers/ralph/THUNK.md` (full file)
+- `NEURONS.md` - use `ls` to explore structure
+- `THOUGHTS.md` - slice with `head -30` if needed
+- `cortex/*.md` - Cortex files are NOT needed for BUILD tasks
+- `workers/IMPLEMENTATION_PLAN.md` (full file) - use grep to find tasks
+- `workers/ralph/THUNK.md` (full file) - use tail to append only
+
+**⚠️ Ralph's tasks are in `workers/IMPLEMENTATION_PLAN.md`, NOT `cortex/IMPLEMENTATION_PLAN.md`**
 
 ### Required Startup Sequence
 
