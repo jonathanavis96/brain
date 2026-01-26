@@ -2,27 +2,80 @@
 
 Thank you for your interest in contributing to the Brain repository! This guide will help you understand how to contribute effectively.
 
+---
+
+## Table of Contents
+
+- [Quick Start](#quick-start)
+- [Types of Contributions](#types-of-contributions)
+- [Development Workflow](#development-workflow)
+- [Quality Standards](#quality-standards)
+- [Common Tasks](#common-tasks)
+- [Getting Help](#getting-help)
+
+---
+
 ## Quick Start
 
-**New to Brain?** Start with the [README Quick Start Guide](README.md#quick-start-guide) to understand what Brain does and how to use it.
+**New to Brain?** Start with the **[README Quick Start Guide](README.md#quick-start-guide)** to understand what Brain does and how to use it.
 
-**Want to contribute?** Continue reading below for detailed guidelines on adding skills, improving templates, and working with the Brain repository.
+**Already familiar with Brain?** Jump to [Types of Contributions](#types-of-contributions) to see how you can help.
 
-1. **Read the documentation first:**
-   - [README.md](README.md) - Repository overview and onboarding
-   - [NEURONS.md](NEURONS.md) - Repository structure map
-   - [THOUGHTS.md](THOUGHTS.md) - Strategic vision and goals
-   - [AGENTS.md](AGENTS.md) - Operational guide for agents
+**Ready to contribute?** Follow these steps:
 
-2. **Understand the Brain's purpose:**
-   - Self-improving skills knowledge base for RovoDev agents
-   - Maintained through automated Ralph loop system
-   - Templates for bootstrapping new projects
+### 1. Read the Documentation First
 
-3. **Set up your environment:**
-   - WSL (Windows Subsystem for Linux) on Windows 11 with Ubuntu
-   - Git with `core.autocrlf=input` for line endings
-   - Pre-commit hooks: `bash setup-linters.sh`
+Before making any changes, understand the repository:
+
+- **[README.md](README.md)** - Repository overview and onboarding
+- **[NEURONS.md](NEURONS.md)** - Repository structure map (read this before navigating!)
+- **[THOUGHTS.md](THOUGHTS.md)** - Strategic vision and goals
+- **[AGENTS.md](AGENTS.md)** - Operational guide for agents
+- **[skills/SUMMARY.md](skills/SUMMARY.md)** - Skills overview and error reference
+
+### 2. Understand Brain's Purpose
+
+Brain is a **self-improving skills knowledge base** for AI coding assistants:
+
+- Maintains proven patterns and best practices in `skills/`
+- Provides project templates in `templates/`
+- Uses automated Ralph loop system for maintenance
+- Bootstraps new projects with full AI infrastructure
+
+### 3. Set Up Your Environment
+
+```bash
+# Clone the repository
+git clone https://github.com/jonathanavis96/brain.git ~/code/brain
+cd ~/code/brain
+
+# Run setup script (installs pre-commit hooks)
+bash setup.sh
+
+# Configure git for WSL/Windows (if applicable)
+git config core.autocrlf input
+```
+
+**Prerequisites:**
+
+- **WSL** (Windows Subsystem for Linux) on Windows 11 with Ubuntu, or Linux/macOS
+- **Git** with proper line ending configuration
+- **Pre-commit hooks** for automatic validation
+
+### 4. Search Before Creating
+
+**Always search first** to avoid duplicate work:
+
+```bash
+# Search for existing skills
+rg "pattern" skills/
+
+# Check for existing tools
+ls bin/ tools/*.py tools/*.sh
+
+# Search for existing documentation
+rg "topic" docs/ README.md NEURONS.md
+```
 
 ## Types of Contributions
 
