@@ -738,3 +738,29 @@
   - **Completed:** 2026-01-26 (commit pending)
 
 ---
+
+---
+
+## Phase 23: Observability Improvements
+
+**Goal:** Improve Ralph log analysis and tripwire metrics accuracy.
+
+**Priority:** MEDIUM
+
+### Phase 23.1: Tripwire Era-Aware Metrics
+
+- [ ] **23.1.1** Add "post-rule era" compliance metric to tripwire check [MEDIUM]
+  - **Goal:** Stop misleading 81% compliance number by separating pre/post prompt change
+  - **Context:** Tripwire failures before commit 9b087a7 (2026-01-26 01:48) are irrelevant - rules didn't exist
+  - **AC:** `check_startup_rules.sh` reports compliance for "since prompt change" separately; report shows ≥85% post-change compliance
+  - **If Blocked:** Use commit timestamp filter (--since "2026-01-26 01:48")
+
+### Phase 23.2: THUNK.md Access Pattern Reinforcement
+
+- [ ] **23.2.1** Add explicit THUNK access guidance to PROMPT.md [LOW]
+  - **Goal:** Reduce remaining tripwire Check 2a failures (THUNK.md direct opens)
+  - **Context:** Post-prompt failures are mostly THUNK.md opens - Ralph occasionally forgets to use `thunk-parse`
+  - **AC:** PROMPT.md has explicit "Never open_files THUNK.md" rule; tripwire Check 2a pass rate ≥95%
+  - **Note:** Protected file - requires human approval or Cortex change request
+
+---
