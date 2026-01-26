@@ -28,22 +28,15 @@
 
 - [x] **CR-6.1** Fix LOGS_DIR reference in templates/ralph/loop.sh - ✅ FIXED
 - [x] **CR-6.2** Fix brain-event flag parsing - ✅ FIXED
-- [ ] **CR-6.3** Fix THUNK.md table column count (MD056)
-  - **AC:** `markdownlint workers/ralph/THUNK.md` passes (no MD056 errors)
-- [ ] **CR-6.4** Verify shfmt config in shell/README.md matches .pre-commit-config.yaml
-  - **AC:** Documented shfmt flags match actual pre-commit config
-- [ ] **CR-6.5** Review code-review-patterns.md line 286 code example
-  - **AC:** Code examples are syntactically valid and demonstrate correct patterns
-- [ ] **CR-6.6** Review README.md line 326 documentation
-  - **AC:** Documentation accurately describes the feature/process
-- [ ] **CR-6.7** Fix observability-patterns.md code examples
-  - **AC:** All code examples use consistent patterns and are secure
+- [x] **CR-6.3** Fix THUNK.md table column count (MD056) - ✅ FIXED (2026-01-26)
+- [x] **CR-6.4** Verify shfmt config in shell/README.md matches .pre-commit-config.yaml - ✅ VERIFIED (docs match config)
+- [x] **CR-6.5** Review code-review-patterns.md line 286 code example - ✅ VERIFIED (no issues)
+- [x] **CR-6.6** Review README.md line 326 documentation - ✅ VERIFIED (only 1 Contributing section)
+- [x] **CR-6.7** Fix observability-patterns.md code examples - ✅ VERIFIED (no hardcoded secrets)
 - [x] **CR-6.8** Fix TypeScript README links - ✅ FIXED (file created)
 - [x] **CR-6.9** Fix deployment-patterns.md import time - ✅ FIXED
-- [ ] **CR-6.10** Fix JavaScript examples (userId, Jest flag)
-  - **Files:** `skills/domains/languages/javascript/README.md`, `skills/domains/code-quality/test-coverage-patterns.md`
-  - **AC:** JavaScript examples are syntactically valid
-- [x] **CR-6.11** Fix archive header parsing in current_ralph_tasks.sh - Completed 2026-01-25 (THUNK #773)
+- [x] **CR-6.10** Fix JavaScript examples (userId, Jest flag) - ✅ VERIFIED (userId defined, Jest flags correct)
+- [x] **CR-6.11** Fix archive header parsing in current_ralph_tasks.sh - ✅ FIXED (THUNK #773)
 
 ### Human Required (Hash/Protected Files)
 
