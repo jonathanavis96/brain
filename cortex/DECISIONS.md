@@ -378,3 +378,28 @@ brain/
 **Rationale:** Clear separation of concerns - Cortex plans, Ralph executes.
 
 **Impact:** Prevents Cortex from overstepping boundaries and maintains clean delegation model.
+
+---
+
+### DEC-2026-01-26-001: shfmt Formatting Source of Truth
+
+**Date:** 2026-01-26 17:01:35
+
+**Decision:** The pre-commit hook's shfmt configuration is the source of truth for shell script formatting. Local shfmt runs must use the same flags as pre-commit to avoid formatting drift.
+
+**Context:** Pre-commit uses `shfmt -ci` (case-indent), while local shfmt runs without flags produce different formatting. This caused repeated formatting diffs and hash churn for protected files like `loop.sh`.
+
+**Resolution:**
+
+- Always run `shfmt -ci -w <file>` when formatting shell scripts locally
+- Pre-commit config location: `.pre-commit-config.yaml` (check `args` for shfmt hook)
+- After formatting, update `.verify/*.sha256` hashes in ALL verify directories
+
+**Affected Files:**
+
+- `workers/ralph/loop.sh` (protected, hash-guarded)
+- Any other shell scripts under pre-commit shfmt hook
+
+**Rationale:** Consistent formatting between local development and CI prevents hash churn and failed commits.
+
+**Impact:** Stable verification hashes, no more reformat/re-hash loops.
