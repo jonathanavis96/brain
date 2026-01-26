@@ -218,7 +218,7 @@ See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
 
 **Start:** `STATUS | branch=<branch> | runner=<rovodev|opencode> | model=<model>`
 
-**Model detection:** Report the model from your system info (e.g., `anthropic.claude-sonnet-4-5-20250929-v1:0`). If unknown, use `auto`. Do NOT guess or use outdated model names.
+**Model detection:** Report the model from the injected prompt header (`# MODEL: ...`). If missing, report `auto`. Do NOT guess or use outdated model names.
 
 **Progress:** `PROGRESS | phase=<plan|build> | step=<short> | tasks=<done>/<total> | file=<path>`
 
@@ -498,6 +498,14 @@ When fixing issues, search the ENTIRE repo: `rg "pattern" $ROOT` not just `worke
 - **No destructive commands** (`rm -rf`, deleting directories) unless plan task explicitly says so
 - **Search before creating** - Verify something doesn't exist before adding it
 - **One task per BUILD** - No batching, no "while I'm here" extras (EXCEPT: same-file warnings - batch those)
+
+### Batching rule (docs/markdown)
+
+If the work is **small, homogeneous markdown/doc fixes** (e.g., markdownlint warnings, link fixes, formatting fixes), batch them:
+
+- Combine up to **5–10** related markdown issues per iteration (or until changes stop being “small”).
+- Prefer one cohesive patch over many tiny patches.
+- Split into separate iterations only if changes become risky, cross-cutting, or require separate verification.
 - **Never remove uncompleted items** - NEVER delete `[ ]` tasks from workers/IMPLEMENTATION_PLAN.md
 - **Never delete completed tasks** - Mark tasks `[x]` complete but NEVER delete them (they stay forever as history)
 - **Never delete sections** - NEVER remove entire sections (## Phase X:, ## Verifier Warnings, etc.) even if all tasks are complete
