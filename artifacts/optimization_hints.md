@@ -415,6 +415,34 @@ If RovoDev exposes tool call hooks/events, Ralph could integrate with those for 
 
 ---
 
+## Instrumentation Limitations
+
+### RovoDev Tool Instrumentation Gap
+
+**Context:** Ralph's `loop.sh` implements tool instrumentation via `log_tool_start()` and `log_tool_end()` wrappers (lines 868-965). These emit structured markers (:::TOOL_START:::, :::TOOL_END:::, :::CACHE_HIT:::, :::CACHE_MISS:::) for downstream analysis by `rollflow_analyze` and `brain-event`.
+
+**Limitation:** RovoDev's native tools bypass shell wrapper instrumentation:
+
+- `bash` commands executed through RovoDev API
+- `grep`, `find_and_replace_code`, `open_files`, `expand_code_chunks`
+- Any other MCP/tool calls from the agent runtime
+
+**Impact:**
+
+1. **Incomplete observability** - Token efficiency analysis only captures shell-wrapped tools (verifier, shellcheck, markdownlint, git, LLM calls routed through `run_tool()`)
+2. **Blind spots** - Cannot measure:
+   - File operation overhead (open_files on large files)
+   - Redundant grep/bash calls within single iteration
+   - RovoDev tool call frequency vs shell command frequency
+
+**Workaround:** Use iteration duration and task completion rate as proxy metrics for overall efficiency. Focus optimization analysis on instrumented tools (verifier, pre-commit, git operations, LLM invocations).
+
+**Why this exists:** RovoDev agent runtime executes tools directly, not through Ralph's bash environment where `log_tool_start()` lives.
+
+**Future mitigation:** If RovoDev exposes tool call hooks/events (e.g., via callback API or event stream), Ralph could subscribe to those for complete visibility across both shell and native tool invocations.
+
+---
+
 ## Next Analysis Trigger
 
 Re-run this analysis when:

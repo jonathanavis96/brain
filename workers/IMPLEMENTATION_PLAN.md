@@ -249,7 +249,7 @@
 
 ### Phase 13.2: Registry Foundation
 
-- [ ] **13.2.1** Prototype YAML tool registry schema
+- [x] **13.2.1** Prototype YAML tool registry schema
   - **Goal:** Define registry format with 10 common tools as examples
   - **Location:** `config/tool-registry.yaml`
   - **Content:** Tool definitions with type, command, cacheable, tags
@@ -266,7 +266,7 @@
 
 ### Phase 9C.0: Prerequisites (Marker Pipeline Fix)
 
-- [ ] **9C.0.3** Document RovoDev tool instrumentation limitation
+- [x] **9C.0.3** Document RovoDev tool instrumentation limitation
   - **Goal:** Clarify that RovoDev's native tools bypass shell wrapper
   - **AC:** `artifacts/optimization_hints.md` has "Limitations" section explaining tool visibility gap
   - **Note:** RovoDev bash/grep/find_and_replace_code don't go through `log_tool_start()`
