@@ -1824,6 +1824,27 @@ else
     # Capture exit code without triggering set -e
     run_result=0
     if [[ "$i" -eq 1 ]] || ((PLAN_EVERY > 0 && ((i - 1) % PLAN_EVERY == 0))); then
+      # Clean up completed tasks before PLAN phase
+      # Ralph already logs to THUNK.md during BUILD, so no --archive needed
+      if [[ -f "$RALPH/cleanup_plan.sh" ]]; then
+        echo "Cleaning up completed tasks from plan..."
+        if (cd "$RALPH" && bash cleanup_plan.sh) 2>&1; then
+          echo "✓ Plan cleanup complete"
+        else
+          echo "⚠ Plan cleanup failed (non-blocking)"
+        fi
+        echo ""
+      fi
+
+      # Commit any accumulated changes from BUILD iterations
+      if ! git diff --quiet || ! git diff --cached --quiet; then
+        echo "Committing accumulated BUILD changes..."
+        git add -A
+        git commit -m "build: accumulated changes from BUILD iterations" || true
+        echo "✓ BUILD changes committed"
+        echo ""
+      fi
+
       # Snapshot plan BEFORE sync for drift detection (prevents direct-edit bypass)
       PLAN_SNAPSHOT="$ROOT/.verify/plan_snapshot.md"
       if [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
