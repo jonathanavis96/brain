@@ -199,14 +199,14 @@
 
 ### Phase 15.1: Link Extraction
 
-- [ ] **15.1.1** Create `tools/skill_graph/extract_links.py` [HIGH]
+- [x] **15.1.1** Create `tools/skill_graph/extract_links.py` [HIGH]
   - **Goal:** Parse all `skills/**/*.md` for internal markdown links
   - **AC:** Outputs JSON with `{source: "file.md", targets: ["other.md", ...]}` for each skill
   - **Implementation:** Regex for `\[.*\]\((.*\.md)\)`, resolve relative paths
 
 ### Phase 15.2: Graph Generation
 
-- [ ] **15.2.1** Create `tools/skill_graph/generate_graph.py` [MEDIUM]
+- [x] **15.2.1** Create `tools/skill_graph/generate_graph.py` [MEDIUM]
   - **Goal:** Convert link JSON to DOT format graph
   - **AC:** Valid DOT output that renders in Graphviz/online tools
   - **Depends:** 15.1.1

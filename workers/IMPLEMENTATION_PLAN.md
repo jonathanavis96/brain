@@ -415,12 +415,12 @@
 
 ### Phase 15.2: Graph Generation
 
-- [ ] **15.2.1** Create `tools/skill_graph/generate_graph.py` [MEDIUM]
+- [x] **15.2.1** Create `tools/skill_graph/generate_graph.py` [MEDIUM]
   - **Goal:** Convert link JSON to DOT format graph
   - **AC:** Valid DOT output that renders in Graphviz/online tools
   - **Depends:** 15.1.1
 
-- [ ] **15.2.2** Create `tools/skill_graph/skill_graph.sh` wrapper [LOW]
+- [x] **15.2.2** Create `tools/skill_graph/skill_graph.sh` wrapper [LOW]
   - **Goal:** One-command pipeline: extract → generate → output
   - **AC:** `bash tools/skill_graph/skill_graph.sh` outputs valid DOT to stdout
   - **Depends:** 15.1.1, 15.2.1
