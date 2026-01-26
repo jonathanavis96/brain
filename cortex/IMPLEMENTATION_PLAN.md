@@ -32,7 +32,7 @@
   - **AC:** Skill covers wrapper API, cacheability rules, trap-based cleanup
   - **Priority:** HIGH
 
-- [ ] **13.1.2** Extract non-cacheable tools to config file
+- [x] **13.1.2** Extract non-cacheable tools to config file
   - **Goal:** Move from hardcoded `case` to `config/non_cacheable_tools.txt`
   - **Change:** Update `is_non_cacheable()` in loop.sh to read from file
   - **AC:** Config file exists, loop.sh reads it, behavior unchanged
@@ -40,7 +40,7 @@
 
 ### Phase 13.2: Registry Foundation
 
-- [ ] **13.2.1** Prototype YAML tool registry schema
+- [x] **13.2.1** Prototype YAML tool registry schema
   - **Goal:** Define registry format with 10 common tools as examples
   - **Location:** `config/tool-registry.yaml`
   - **Content:** Tool definitions with type, command, cacheable, tags
