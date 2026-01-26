@@ -267,6 +267,17 @@ tools/check_startup_rules.sh path/to/log.log   # Check specific log
 
 Checks: no forbidden file opens at startup, no THUNK lookups via open_files, no full IMPL_PLAN reads, no grep explosions, first tool call is cheap.
 
+### ralph-summary
+
+Extract clean task completion summaries from Ralph logs (filters terminal noise).
+
+```bash
+bin/ralph-summary              # Latest log
+bin/ralph-summary --recent 3   # Last 3 logs
+bin/ralph-summary --all        # All logs today
+bin/ralph-summary --list       # List available logs
+```
+
 ---
 
 ## See Also
