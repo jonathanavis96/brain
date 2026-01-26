@@ -392,12 +392,12 @@
 
 ### Phase 20.2: Quiz Interface
 
-- [ ] **20.2.1** Create `tools/skill_quiz/quiz.sh` interactive wrapper [MEDIUM]
+- [x] **20.2.1** Create `tools/skill_quiz/quiz.sh` interactive wrapper [MEDIUM]
   - **Goal:** Terminal-based quiz that presents scenarios and checks answers
   - **AC:** Randomly selects skill, shows scenario, accepts user input, reveals answer
   - **Depends:** 20.1.1
 
-- [ ] **20.2.2** Add score tracking across rounds [LOW]
+- [x] **20.2.2** Add score tracking across rounds [LOW]
   - **Goal:** Track score during quiz session
   - **AC:** Shows "Score: X/Y" after each round
   - **Depends:** 20.2.1
