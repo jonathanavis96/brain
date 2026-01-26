@@ -427,7 +427,7 @@
 
 ### Phase 15.3: Documentation
 
-- [ ] **15.3.1** Create `tools/skill_graph/README.md` [LOW]
+- [x] **15.3.1** Create `tools/skill_graph/README.md` [LOW]
   - **Goal:** Document usage, output format, rendering options
   - **AC:** README explains how to render DOT (graphviz, online tools like viz-js.com)
   - **Depends:** 15.2.2
