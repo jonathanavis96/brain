@@ -348,6 +348,27 @@ brain/ (repository root)
 └── .verify/                     # Validation infrastructure (shared)
 ```text
 
+## Freshness Status
+
+**Last checked:** 2026-01-26
+
+Run `bash tools/skill_freshness.sh` to see current freshness report.
+
+**Quick summary:**
+
+```bash
+# Check freshness with 90-day threshold (default)
+bash tools/skill_freshness.sh
+
+# Check with custom threshold
+bash tools/skill_freshness.sh --days 60
+
+# Exit with error if any stale skills found (for CI)
+bash tools/skill_freshness.sh --exit-on-stale
+```
+
+**Current status:** All skills are fresh (0-90 days old). See full report with command above.
+
 ## Design Philosophy
 
 - **Low token overhead** - Start broad, drill down only when needed
