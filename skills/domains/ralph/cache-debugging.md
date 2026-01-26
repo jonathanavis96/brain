@@ -129,21 +129,39 @@ ORDER BY avg_duration_ms DESC;
 
 ### Query 2: Tool Failure Rates
 
-Calculate failure rates by comparing pass_cache and fail_log:
+Calculate failure rates by aggregating pass and fail counts separately (avoids join multiplication):
 
 ```sql
-SELECT 
-  pc.tool_name,
-  COUNT(DISTINCT pc.cache_key) as passes,
-  COUNT(DISTINCT fl.cache_key) as failures,
+WITH
+  tool_passes AS (
+    SELECT tool_name, COUNT(*) AS passes
+    FROM pass_cache
+    GROUP BY tool_name
+  ),
+  tool_failures AS (
+    SELECT tool_name, COUNT(*) AS failures
+    FROM fail_log
+    GROUP BY tool_name
+  ),
+  tool_stats AS (
+    -- Emulate a FULL OUTER JOIN across SQLite by UNION'ing the tool_name set
+    SELECT tool_name FROM tool_passes
+    UNION
+    SELECT tool_name FROM tool_failures
+  )
+SELECT
+  ts.tool_name,
+  COALESCE(tp.passes, 0) AS passes,
+  COALESCE(tf.failures, 0) AS failures,
   ROUND(
-    100.0 * COUNT(DISTINCT fl.cache_key) / 
-    (COUNT(DISTINCT pc.cache_key) + COUNT(DISTINCT fl.cache_key)),
+    100.0 * COALESCE(tf.failures, 0) /
+    (COALESCE(tp.passes, 0) + COALESCE(tf.failures, 0)),
     2
-  ) as failure_rate_pct
-FROM pass_cache pc
-LEFT JOIN fail_log fl ON pc.tool_name = fl.tool_name
-GROUP BY pc.tool_name
+  ) AS failure_rate_pct
+FROM tool_stats ts
+LEFT JOIN tool_passes tp ON ts.tool_name = tp.tool_name
+LEFT JOIN tool_failures tf ON ts.tool_name = tf.tool_name
+WHERE (COALESCE(tp.passes, 0) + COALESCE(tf.failures, 0)) > 0
 ORDER BY failure_rate_pct DESC;
 ```
 

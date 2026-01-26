@@ -29,45 +29,35 @@ bash tools/pattern_miner/mine_patterns.sh | python3 tools/pattern_miner/analyze_
 
 ## Output Format
 
-The analyzer produces a report with three sections:
-
-### 1. Keyword Frequency
+The analyzer produces a single report section that mirrors `format_suggestions()`:
 
 ```text
-=== Keyword Frequency (min 2 occurrences) ===
-docker: 12
-cors: 5
-rate-limit: 4
-```
+================================================================================
+PATTERN ANALYSIS - Skill Suggestions
+================================================================================
 
-Shows how often each normalized keyword appears across all commits.
+Keyword: DOCKER
+Frequency: 12 mentions
+Category: technology
+Suggested skill: skills/domains/languages/docker-patterns.md
 
-### 2. Suggested Skills
+Example commits:
+  1. fix(docker): optimize layer caching
+  2. feat(docker): add multi-stage build
+  3. docs(docker): clarify local dev setup
+  ... and 9 more
 
-```text
-=== Suggested Skills ===
+--------------------------------------------------------------------------------
 
-docker (12 mentions)
-  Suggested: skills/domains/infrastructure/docker-patterns.md
-  Example commits:
-    - fix(docker): optimize layer caching
-    - feat(docker): add multi-stage build
-```
-
-Each suggestion includes:
-
-- **Frequency count** - how many commits mention this pattern
-- **Suggested file path** - where the skill should be created
-- **Example commits** - representative commit messages showing the pattern
-
-### 3. Summary Statistics
-
-```text
-=== Summary ===
+SUMMARY: Found 15 recurring patterns
 Total commits analyzed: 342
-Unique keywords found: 28
-Suggestions generated: 15
 ```
+
+Notes:
+
+- Keywords are printed in uppercase.
+- Each keyword includes: frequency, category, suggested skill path, and example commits.
+- The report ends with a single summary line: `SUMMARY: Found X recurring patterns`.
 
 ## Workflow: Acting on Suggestions
 
