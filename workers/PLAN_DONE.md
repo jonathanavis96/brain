@@ -98,3 +98,16 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | 2026-01-26 | 22.7.3 | - [x] **22.7.3** Fix MD024 in cortex/PLAN_DONE.md line 221 |
 | 2026-01-26 | 22.8.1 | - [x] **22.8.1** Fix MD012 in workers/IMPLEMENTATION_PLAN.md lines 31-33 |
 | 2026-01-26 | 22.8.2 | - [x] **22.8.2** Fix MD012 in workers/IMPLEMENTATION_PLAN.md lines 39-40 |
+
+### Archived on 2026-01-27
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 22.8.3 | - [x] **22.8.3** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 48 |
+| 2026-01-27 | 22.9.1 | - [x] **22.9.1** Fix MD055/MD056 in workers/ralph/THUNK.md lines 815-828 |
+| 2026-01-27 | 22.10.1 | - [x] **22.10.1** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 32 |
+| 2026-01-27 | 22.10.2 | - [x] **22.10.2** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 111 |
+| 2026-01-27 | 22.10.3 | - [x] **22.10.3** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 112 |
+| 2026-01-27 | 22.10.4 | - [x] **22.10.4** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 116 |
+| 2026-01-27 | 22.10.5 | - [x] **22.10.5** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 117 |
+| 2026-01-27 | 22.11.1 | - [x] **22.11.1** Fix MD024 in workers/PLAN_DONE.md line 49 |
