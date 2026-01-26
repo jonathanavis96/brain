@@ -17,213 +17,6 @@
 <!-- Cortex adds new Task Contracts below this line -->
 
 
-## Phase CR-6: CodeRabbit PR6 Fixes
-
-**Goal:** Fix remaining CodeRabbit issues before merging PR6.
-
-**Reference:** `docs/CODERABBIT_ISSUES_TRACKER.md`
-
-**Status:** All 11 Ralph-fixable issues identified. Ready for BUILD phase execution.
-
-### Major Issues (Ralph Can Fix)
-
-- [x] **CR-6.1** Fix LOGS_DIR reference in templates/ralph/loop.sh - ✅ FIXED
-- [x] **CR-6.2** Fix brain-event flag parsing - ✅ FIXED
-- [x] **CR-6.3** Fix THUNK.md table column count (MD056) - ✅ FIXED (2026-01-26)
-- [x] **CR-6.4** Verify shfmt config in shell/README.md matches .pre-commit-config.yaml - ✅ VERIFIED (docs match config)
-- [x] **CR-6.5** Review code-review-patterns.md line 286 code example - ✅ VERIFIED (no issues)
-- [x] **CR-6.6** Review README.md line 326 documentation - ✅ VERIFIED (only 1 Contributing section)
-- [x] **CR-6.7** Fix observability-patterns.md code examples - ✅ VERIFIED (no hardcoded secrets)
-- [x] **CR-6.8** Fix TypeScript README links - ✅ FIXED (file created)
-- [x] **CR-6.9** Fix deployment-patterns.md import time - ✅ FIXED
-- [x] **CR-6.10** Fix JavaScript examples (userId, Jest flag) - ✅ VERIFIED (userId defined, Jest flags correct)
-- [x] **CR-6.11** Fix archive header parsing in current_ralph_tasks.sh - ✅ FIXED (THUNK #773)
-
-### Human Required (Hash/Protected Files)
-
-**Note:** These require human intervention after Ralph prepares fixes:
-
-- [x] **CR-6.H1** Update SHA256 hashes after all fixes
-  - Run hash regeneration for all `.verify/` directories
-  - **Files:** `.verify/`, `workers/ralph/.verify/`, `templates/ralph/.verify/`
-  - **Updated:** agents.sha256 (root + workers/ralph), loop.sha256 (templates/ralph), prompt.sha256 (templates/ralph)
-
----
-
-## Notes
-
-- **Protected files (loop.sh, verifier.sh, PROMPT.md):** Ralph can prepare fixes but human must update hashes
-- **Hash regeneration:** Already handled by human - C1-C8 issues resolved
-- **egg-info cleanup (G1):** Already fixed - directory removed and added to .gitignore
-- **Reference:** See `docs/CODERABBIT_ISSUES_TRACKER.md` for complete issue list
-
-## Phase POST-CR6: Post-CodeRabbit Prevention Systems
-
-**Goal:** Address systemic issues identified by CodeRabbit analysis to prevent future issues.
-
-**Reference:** `docs/CODERABBIT_ISSUES_TRACKER.md` - Prevention Systems section
-
-**Rationale:** CodeRabbit identified 50+ issues across PR5 and PR6 with significant recurring patterns. These prevention systems will catch issues before PR creation.
-
-### High Priority Prevention
-
-- [x] **POST-CR6.1** Implement hash validation pre-commit hook - Completed 2026-01-26 (THUNK #818)
-  - **Goal:** Prevent SHA256 hash mismatches (8 instances in PR5, 1 in PR6)
-  - **Implementation:** Pre-commit hook that validates all `.verify/*.sha256` files match targets
-  - **Files:** `.git/hooks/pre-commit` or `.pre-commit-config.yaml`
-  - **AC:** Hook blocks commits when hash mismatches detected
-  - **Priority:** HIGH (recurring critical issue)
-
-- [x] **POST-CR6.2** Create shell script unit test framework
-  - **Goal:** Catch logic bugs in shell scripts (4 bugs in PR5, 3 in PR6)
-  - **Implementation:** Setup bats-core framework, write tests for bin/brain-event flag parsing
-  - **Files:** `tests/unit/`, `.pre-commit-config.yaml`
-  - **AC:** `bats tests/unit/*.bats` runs successfully
-  - **Priority:** HIGH (recurring logic bugs)
-
-- [x] **POST-CR6.6** Expand semantic code review skill - Completed 2026-01-26 (THUNK #820)
-  - **Goal:** Document patterns for LLM-based code review (complementing pre-commit)
-  - **Implementation:** Expand `skills/domains/code-quality/code-review-patterns.md`
-  - **Coverage:** Regex capture groups, dead code detection, variable scope, security
-  - **AC:** Skill includes comprehensive checklist and examples
-  - **Priority:** HIGH (already partially done in CR-4.1, needs expansion)
-
-### Medium Priority Prevention
-
-- [x] **POST-CR6.3** Implement documentation link validation - Completed 2026-01-26 (THUNK #821)
-  - **Goal:** Prevent broken internal links (10 documentation issues across PRs)
-  - **Implementation:** Script that validates all `[text](path)` links resolve to existing files
-  - **Files:** `tools/validate_links.sh`, `.pre-commit-config.yaml`
-  - **AC:** Script detects broken links in README.md, skills/, docs/
-  - **Priority:** MEDIUM (recurring but non-breaking)
-
-- [x] **POST-CR6.4** Create code example validation system - Completed 2026-01-26 (THUNK #822)
-  - **Goal:** Ensure code examples are runnable (8 broken examples in PR5, 2 in PR6)
-  - **Implementation:** Extract code blocks from markdown, validate syntax, check imports/variables
-  - **Files:** `tools/validate_examples.py`, `.pre-commit-config.yaml`
-  - **AC:** Script identifies missing imports, undefined variables, syntax errors
-  - **Priority:** MEDIUM (quality issue, not functional)
-
-- [x] **POST-CR6.7** Document prevention system architecture - Completed 2026-01-26 (THUNK #824)
-  - **Goal:** Explain how prevention layers work together
-  - **Implementation:** Create `docs/QUALITY_GATES.md`
-  - **Coverage:** Pre-commit hooks → verifier → CodeRabbit → human review
-  - **AC:** Document shows what each layer catches, with examples
-  - **Priority:** MEDIUM (helps maintainers understand system)
-
-### Low Priority Prevention
-
-- [x] **POST-CR6.5** Implement documentation-config sync validation
-  - **Goal:** Keep README.md in sync with actual config files
-  - **Implementation:** Script that compares documented flags/settings with real configs
-  - **Files:** `tools/validate_doc_sync.sh`
-  - **AC:** Script catches shell/README.md shfmt config mismatch (CR-6.4 type issues)
-  - **Priority:** LOW (infrequent)
-
----
-
-## Phase 10: RovoDev Parser & Observability
-
-**Goal:** Build parser for RovoDev's ANSI tool output to enable complete tool visibility.
-
-**Context:** RovoDev emits tool calls in logs (`⬡ Calling <tool>:` / `⬢ Called <tool>:`), but rollflow_analyze doesn't parse this format yet.
-
-### Phase 10.1: RovoDev Parser
-
-- [x] **10.1.1** Create RovoDev ANSI parser in `tools/rollflow_analyze/src/rollflow_analyze/parsers/` - Completed 2026-01-26 (THUNK #827)
-  - **Goal:** Parse RovoDev tool output format from logs
-  - **Input format:** `⬡ Calling <tool>:` (start), `⬢ Called <tool>:` (end), optional `N seconds` duration
-  - **Output:** ToolCall objects matching existing model
-  - **AC:** Parser extracts tool_name, start/end markers, duration from sample log
-  - **Test:** Add test file with sample RovoDev output
-
-- [x] **10.1.2** Integrate RovoDev parser into rollflow_analyze pipeline - Completed 2026-01-26 (THUNK #827)
-  - **Goal:** Unified parsing across :::MARKER::: and RovoDev formats
-  - **AC:** `rollflow_analyze` reports include RovoDev tool calls
-  - **Depends on:** 10.1.1
-
-### Phase 10.2: Documentation
-
-- [x] **10.2.1** Update docs/events.md with RovoDev format section - Completed 2026-01-26 (THUNK #827)
-  - **Goal:** Document RovoDev's tool output format alongside :::MARKER::: format
-  - **AC:** events.md has "RovoDev Format" section with examples
-
----
-
-## Phase 11: Thread Persistence & Search
-
-**Goal:** Enable searchable, queryable thread storage for agent work history.
-
-**Context:** THUNK.md is append-only markdown; rollflow_cache is SQLite. Need unified search across both.
-
-**Research:** `cortex/docs/research/thread-persistence-research.md`
-
-### Phase 11.1: Documentation & Skills
-
-- [x] **11.1.1** Create `skills/domains/ralph/thread-search-patterns.md`
-  - **Goal:** Document search patterns for THUNK, git, and cache
-  - **AC:** Skill includes grep patterns for THUNK.md, git log examples, sqlite queries
-  - **Priority:** HIGH
-
-- [x] **11.1.2** Build THUNK.md parser (Python script)
-  - **Goal:** Extract structured data from THUNK.md markdown table
-  - **Output:** JSON or SQLite with thunk_num, task_id, priority, description, date
-  - **AC:** Parser handles current THUNK format (800+ entries), outputs valid JSON
-  - **Priority:** MEDIUM
-
-### Phase 11.2: Tooling
-
-- [x] **11.1.3** Create SQLite schema for unified thread storage - Completed 2026-01-26 (THUNK #830)
-  - **Goal:** Single database for threads, work_items, tool_executions
-  - **Schema:** See `cortex/docs/research/thread-persistence-research.md` Section 3.2
-  - **AC:** Schema created with FTS5 index on descriptions
-  - **Priority:** MEDIUM
-
-- [x] **11.2.1** Build `bin/brain-search` CLI tool
-  - **Goal:** Quick lookups across THUNK, git, cache
-  - **Usage:** `brain-search "shellcheck"` → shows matching tasks, commits, tool calls
-  - **AC:** CLI returns results from at least 2 sources (THUNK + git)
-  - **Priority:** LOW
-
----
-
-## Phase 12: Observability Improvements
-
-**Goal:** Formalize event schemas and improve observability tooling.
-
-**Context:** Brain has multiple event formats (:::MARKER:::, JSONL, RovoDev ANSI). Need unified documentation and tooling.
-
-**Research:** `cortex/docs/research/agent-observability-research.md`
-
-### Phase 12.1: Documentation & Skills
-
-- [x] **12.1.1** Create `skills/domains/infrastructure/agent-observability-patterns.md`
-  - **Goal:** Document how to add observability to new tools/scripts
-  - **AC:** Skill covers marker emission, JSONL events, log correlation
-  - **Priority:** HIGH
-
-- [x] **12.1.2** Create `docs/MARKER_SCHEMA.md` - formal spec for all markers
-  - **Goal:** Single source of truth for :::MARKER::: format
-  - **Content:** All marker types, fields, examples, versioning policy
-  - **AC:** Schema doc covers all markers in loop.sh, includes validation rules
-  - **Priority:** HIGH
-
-### Phase 12.2: Tooling
-
-- [x] **12.2.1** Add real-time event watcher `bin/brain-event --watch`
-  - **Goal:** Live tail of events with filtering
-  - **Usage:** `brain-event --watch --filter="phase_end"`
-  - **AC:** Watcher shows new events in real-time from state/events.jsonl
-  - **Priority:** LOW
-
-- [x] **12.2.2** Create cross-run aggregation queries for cache.sqlite
-  - **Goal:** Query patterns for analyzing tool performance across runs
-  - **Output:** Add to `skills/domains/ralph/cache-debugging.md`
-  - **AC:** At least 5 useful queries documented (slowest tools, fail rates, etc.)
-  - **Priority:** LOW
-
----
-
 ## Phase 13: Tool Registry
 
 **Goal:** Move from implicit tool definitions to declarative registry.
@@ -234,7 +27,7 @@
 
 ### Phase 13.1: Documentation & Skills
 
-- [ ] **13.1.1** Create `skills/domains/ralph/tool-wrapper-patterns.md`
+- [x] **13.1.1** Create `skills/domains/ralph/tool-wrapper-patterns.md`
   - **Goal:** Document run_tool() usage, cache key generation, error handling
   - **AC:** Skill covers wrapper API, cacheability rules, trap-based cleanup
   - **Priority:** HIGH
@@ -655,36 +448,31 @@
 
 ### Phase 21.2: Token Efficiency Policy for PROMPT.md
 
-- [x] **21.2.1** Add "Read Budget" section to `workers/ralph/PROMPT.md` [HIGH]
-  - **Goal:** Explicit rules preventing broad file loading
-  - **Content:** Hard rules (no THUNK.md opens, no IMPL_PLAN opens without line slice)
-  - **AC:** PROMPT.md has "Read Budget" section with allowed/forbidden patterns
-  - **Reference:** Use `docs/TOOLS.md` for CLI alternatives
-  - **Completed:** 2026-01-26 (commit 9b087a7)
+- **Goal:** Explicit rules preventing broad file loading
+- **Content:** Hard rules (no THUNK.md opens, no IMPL_PLAN opens without line slice)
+- **AC:** PROMPT.md has "Read Budget" section with allowed/forbidden patterns
+- **Reference:** Use `docs/TOOLS.md` for CLI alternatives
+- **Completed:** 2026-01-26 (commit 9b087a7)
 
-- [x] **21.2.2** Add "Required Startup Procedure" to PROMPT.md [MEDIUM]
-  - **Goal:** Ralph uses cheap commands first before any file reads
-  - **Content:** Step A (grep for task), Step B (ensure thunk DB exists)
-  - **AC:** PROMPT.md has startup procedure that minimizes reads
-  - **Completed:** 2026-01-26 (commit 9b087a7)
+- **Goal:** Ralph uses cheap commands first before any file reads
+- **Content:** Step A (grep for task), Step B (ensure thunk DB exists)
+- **AC:** PROMPT.md has startup procedure that minimizes reads
+- **Completed:** 2026-01-26 (commit 9b087a7)
 
-- [x] **21.2.3** Update `templates/ralph/PROMPT.md` with same changes [MEDIUM]
-  - **Goal:** Keep templates in sync
-  - **AC:** Template matches workers/ralph/PROMPT.md token efficiency sections
-  - **Depends:** 21.2.1, 21.2.2
-  - **Completed:** 2026-01-26 (commit 9b087a7)
+- **Goal:** Keep templates in sync
+- **AC:** Template matches workers/ralph/PROMPT.md token efficiency sections
+- **Depends:** 21.2.1, 21.2.2
+- **Completed:** 2026-01-26 (commit 9b087a7)
 
 ### Phase 21.3: Documentation Updates
 
-- [x] **21.3.1** Update `skills/domains/ralph/thread-search-patterns.md` [MEDIUM]
-  - **Goal:** Reference CLI tools instead of raw grep/sed
-  - **AC:** Skill doc links to `docs/TOOLS.md`, shows CLI examples first
-  - **Completed:** 2026-01-26 (commit c546cd5)
+- **Goal:** Reference CLI tools instead of raw grep/sed
+- **AC:** Skill doc links to `docs/TOOLS.md`, shows CLI examples first
+- **Completed:** 2026-01-26 (commit c546cd5)
 
-- [x] **21.3.2** Update `NEURONS.md` to reference `docs/TOOLS.md` [LOW]
-  - **Goal:** Easy discovery of tools reference
-  - **AC:** NEURONS.md has link in appropriate section
-  - **Completed:** 2026-01-26 (commit c546cd5)
+- **Goal:** Easy discovery of tools reference
+- **AC:** NEURONS.md has link in appropriate section
+- **Completed:** 2026-01-26 (commit c546cd5)
 
 - [ ] **21.3.3** Add tools reference to `skills/index.md` [LOW]
   - **Goal:** Include tools in searchable skills index

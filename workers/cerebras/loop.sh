@@ -300,80 +300,80 @@ TIME_SAVED_MS=0
 # Parse args
 while [[ $# -gt 0 ]]; do
   case "$1" in
-  --prompt)
-    PROMPT_ARG="${2:-}"
-    shift 2
-    ;;
-  --iterations)
-    ITERATIONS="${2:-}"
-    shift 2
-    ;;
-  --plan-every)
-    PLAN_EVERY="${2:-}"
-    shift 2
-    ;;
-  --yolo)
-    # Placeholder for future yolo mode implementation
-    shift
-    ;;
-  --no-yolo)
-    # Placeholder for future no-yolo mode implementation
-    shift
-    ;;
-  --model)
-    MODEL_ARG="${2:-}"
-    shift 2
-    ;;
-  --branch)
-    BRANCH_ARG="${2:-}"
-    shift 2
-    ;;
-  --dry-run)
-    DRY_RUN=true
-    shift
-    ;;
-  --task)
-    TASK_ARG="${2:-}"
-    shift 2
-    ;;
-  --no-monitors)
-    NO_MONITORS=true
-    shift
-    ;;
-  --force-build)
-    FORCE_BUILD=true
-    shift
-    ;;
-  --cache-skip)
-    CACHE_SKIP=true
-    shift
-    ;;
-  --force-no-cache)
-    FORCE_NO_CACHE=true
-    shift
-    ;;
-  --rollback)
-    ROLLBACK_MODE=true
-    if [[ -n ${2:-} && $2 =~ ^[0-9]+$ ]]; then
-      ROLLBACK_COUNT="$2"
+    --prompt)
+      PROMPT_ARG="${2:-}"
       shift 2
-    else
+      ;;
+    --iterations)
+      ITERATIONS="${2:-}"
+      shift 2
+      ;;
+    --plan-every)
+      PLAN_EVERY="${2:-}"
+      shift 2
+      ;;
+    --yolo)
+      # Placeholder for future yolo mode implementation
       shift
-    fi
-    ;;
-  --resume)
-    RESUME_MODE=true
-    shift
-    ;;
-  -h | --help)
-    usage
-    exit 0
-    ;;
-  *)
-    echo "Unknown arg: $1" >&2
-    usage
-    exit 2
-    ;;
+      ;;
+    --no-yolo)
+      # Placeholder for future no-yolo mode implementation
+      shift
+      ;;
+    --model)
+      MODEL_ARG="${2:-}"
+      shift 2
+      ;;
+    --branch)
+      BRANCH_ARG="${2:-}"
+      shift 2
+      ;;
+    --dry-run)
+      DRY_RUN=true
+      shift
+      ;;
+    --task)
+      TASK_ARG="${2:-}"
+      shift 2
+      ;;
+    --no-monitors)
+      NO_MONITORS=true
+      shift
+      ;;
+    --force-build)
+      FORCE_BUILD=true
+      shift
+      ;;
+    --cache-skip)
+      CACHE_SKIP=true
+      shift
+      ;;
+    --force-no-cache)
+      FORCE_NO_CACHE=true
+      shift
+      ;;
+    --rollback)
+      ROLLBACK_MODE=true
+      if [[ -n ${2:-} && $2 =~ ^[0-9]+$ ]]; then
+        ROLLBACK_COUNT="$2"
+        shift 2
+      else
+        shift
+      fi
+      ;;
+    --resume)
+      RESUME_MODE=true
+      shift
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown arg: $1" >&2
+      usage
+      exit 2
+      ;;
   esac
 done
 
@@ -382,33 +382,33 @@ done
 resolve_model_cerebras() {
   local model="$1"
   case "$model" in
-  llama4 | llama-4 | scout)
-    echo "llama-4-scout-17b"
-    ;;
-  llama4-large | maverick)
-    echo "llama-4-maverick-17b"
-    ;;
-  llama3 | llama-3 | llama3-8b)
-    echo "llama3.1-8b"
-    ;;
-  llama3-large | llama3-70b)
-    echo "llama3.1-70b"
-    ;;
-  qwen | qwen3)
-    echo "qwen-3-32b"
-    ;;
-  qwen-large | qwen-235b)
-    echo "qwen-3-235b-a22b-instruct-2507"
-    ;;
-  glm | glm4 | glm-4.7)
-    echo "zai-glm-4.7"
-    ;;
-  auto | latest | "")
-    echo "llama-4-scout-17b"
-    ;;
-  *)
-    echo "$model"
-    ;;
+    llama4 | llama-4 | scout)
+      echo "llama-4-scout-17b"
+      ;;
+    llama4-large | maverick)
+      echo "llama-4-maverick-17b"
+      ;;
+    llama3 | llama-3 | llama3-8b)
+      echo "llama3.1-8b"
+      ;;
+    llama3-large | llama3-70b)
+      echo "llama3.1-70b"
+      ;;
+    qwen | qwen3)
+      echo "qwen-3-32b"
+      ;;
+    qwen-large | qwen-235b)
+      echo "qwen-3-235b-a22b-instruct-2507"
+      ;;
+    glm | glm4 | glm-4.7)
+      echo "zai-glm-4.7"
+      ;;
+    auto | latest | "")
+      echo "llama-4-scout-17b"
+      ;;
+    *)
+      echo "$model"
+      ;;
   esac
 }
 
