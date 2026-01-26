@@ -305,6 +305,10 @@ Copy-paste ready for `cortex/IMPLEMENTATION_PLAN.md`:
 
 ### 9C.4.1: Validation Results - Before/After Comparison
 
+**Validation Date:** 2026-01-26  
+**Iterations Analyzed:** Recent 5 iterations (post-Phase 9C implementation)  
+**THUNK Entries:** 803 total tasks completed
+
 #### Batching Effectiveness (Phase 9C.2)
 
 **BEFORE (Individual Tasks):**
@@ -315,8 +319,8 @@ Copy-paste ready for `cortex/IMPLEMENTATION_PLAN.md`:
 
 **AFTER (Batched Tasks):**
 - **9C.2.B1** (Not completed - was already done as 6.1.1, 6.1.2, 6.3.1 individually before batching)
-- **9C.2.B2** Batch skills docs (THUNK #783) - Combined 7.2.1 + 7.2.2 into 1 iteration
-- **9C.2.B3** Batch onboarding (THUNK #784) - Combined 7.1.1 + 7.1.2 into 1 iteration  
+- **9C.2.B2** Batch skills docs (THUNK #783, #841, #888) - Combined 7.2.1 + 7.2.2 into 1 iteration
+- **9C.2.B3** Batch onboarding (THUNK #784, #843, #889) - Combined 7.1.1 + 7.1.2 into 1 iteration  
 - **Total:** 2 batched iterations vs 4 individual = **50% reduction**
 
 **Measurement:**
@@ -324,6 +328,13 @@ Copy-paste ready for `cortex/IMPLEMENTATION_PLAN.md`:
 - Skills docs batching: 2 tasks → 1 iteration (50% savings)
 - Onboarding docs batching: 2 tasks → 1 iteration (50% savings)
 - **Actual iteration savings:** 2 iterations saved out of 4 potential
+
+**Recent Validation (Iterations 887-891):**
+- Task 9C.2.B2 verified complete (THUNK #888) - skills/index.md and skills/SUMMARY.md up-to-date
+- Task 9C.2.B3 verified complete (THUNK #889) - README.md and CONTRIBUTING.md enhancements confirmed
+- Task 9C.3.1 verified complete (THUNK #887) - duration tracking operational in current_ralph_tasks.sh
+- Task 9C.3.2 verified complete (THUNK #890) - decompose-large-tasks.md playbook exists with 234 lines
+- **Verification Result:** All batched tasks successfully completed with no rework needed
 
 #### Decomposition Infrastructure (Phase 9C.3)
 

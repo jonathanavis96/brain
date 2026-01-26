@@ -4,7 +4,7 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 
 ---
 
-## Archived on 2026-01-26
+## Archived on 2026-01-26 (Set 1)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
@@ -31,7 +31,7 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | 2026-01-26 | 9C.3.2 | - [x] **9C.3.2** Create decomposition checklist in `skills/playbooks/` |
 | 2026-01-26 | 22.2.3 | - [x] **22.2.3** Fix MD056 in workers/ralph/THUNK.md line 801 (escape pipes) |
 
-### Archived on 2026-01-26
+### Archived on 2026-01-26 (Set 2)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
@@ -46,7 +46,7 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | 2026-01-26 | 24.3.2 | - [x] **24.3.2** FIX IF: Stale/invalid session ID **[MEDIUM]** |
 | 2026-01-26 | 24.3.4 | - [x] **24.3.4** FIX IF: External best-effort cleanup (expected 404) **[MEDIUM]** |
 
-### Archived on 2026-01-26
+### Archived on 2026-01-26 (Set 3)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
@@ -68,3 +68,33 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | 2026-01-26 | 22.4.1 | - [x] **22.4.1** Fix MD032 in workers/IMPLEMENTATION_PLAN.md line 159 |
 | 2026-01-26 | 22.4.2 | - [x] **22.4.2** Fix MD032 in workers/IMPLEMENTATION_PLAN.md line 241 |
 | 2026-01-26 | 22.4.3 | - [x] **22.4.3** Fix MD032 in workers/IMPLEMENTATION_PLAN.md line 295 |
+
+### Archived on 2026-01-26 (Set 4)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-26 | 23.2.2 | - [x] **23.2.2** End-of-loop cleanup when no unchecked tasks remain **[MEDIUM]** |
+| 2026-01-26 | 9C.4.1 | - [x] **9C.4.1** Validate batching recommendations against next 5 iterations |
+| 2026-01-26 | 22.4B.1 | - [x] **22.4B.1** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 261 |
+| 2026-01-26 | 22.4B.2 | - [x] **22.4B.2** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 290 |
+| 2026-01-26 | 22.4B.3 | - [x] **22.4B.3** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 315 |
+| 2026-01-26 | 22.4B.4 | - [x] **22.4B.4** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 319 |
+| 2026-01-26 | 22.4B.5 | - [x] **22.4B.5** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 320 |
+| 2026-01-26 | 22.4B.6 | - [x] **22.4B.6** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 321 |
+| 2026-01-26 | 22.4B.7 | - [x] **22.4B.7** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 325 |
+| 2026-01-26 | 22.4C.1 | - [x] **22.4C.1** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 261 |
+| 2026-01-26 | 22.4C.2 | - [x] **22.4C.2** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 290 |
+| 2026-01-26 | 22.4C.3 | - [x] **22.4C.3** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 315 |
+| 2026-01-26 | 22.4C.4 | - [x] **22.4C.4** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 319 |
+| 2026-01-26 | 22.4C.5 | - [x] **22.4C.5** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 320 |
+| 2026-01-26 | 22.4C.6 | - [x] **22.4C.6** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 321 |
+| 2026-01-26 | 22.4C.7 | - [x] **22.4C.7** Fix MD012 in cortex/IMPLEMENTATION_PLAN.md line 325 |
+| 2026-01-26 | 22.5.1 | - [x] **22.5.1** Fix MD024 in cortex/PLAN_DONE.md line 186 |
+| 2026-01-26 | 22.5.2 | - [x] **22.5.2** Fix MD024 in cortex/PLAN_DONE.md line 210 |
+| 2026-01-26 | 22.5.3 | - [x] **22.5.3** Fix MD024 in cortex/PLAN_DONE.md line 221 |
+| 2026-01-26 | 22.6.1 | - [x] **22.6.1** Fix MD001 in workers/PLAN_DONE.md line 7 |
+| 2026-01-26 | 22.7.1 | - [x] **22.7.1** Fix MD024 in cortex/PLAN_DONE.md line 186 |
+| 2026-01-26 | 22.7.2 | - [x] **22.7.2** Fix MD024 in cortex/PLAN_DONE.md line 210 |
+| 2026-01-26 | 22.7.3 | - [x] **22.7.3** Fix MD024 in cortex/PLAN_DONE.md line 221 |
+| 2026-01-26 | 22.8.1 | - [x] **22.8.1** Fix MD012 in workers/IMPLEMENTATION_PLAN.md lines 31-33 |
+| 2026-01-26 | 22.8.2 | - [x] **22.8.2** Fix MD012 in workers/IMPLEMENTATION_PLAN.md lines 39-40 |

@@ -14,6 +14,11 @@ Quick reference for all CLI tools in the Brain repository. **Use these instead o
 | Suggest knowledge gaps | `bin/gap-radar --dry-run` | From verifier errors |
 | Emit event marker | `bin/brain-event --event iteration_start --iter 5` | For observability |
 | Analyze logs | `python3 -m tools.rollflow_analyze --log-dir DIR` | Detailed metrics |
+| Dedup THUNK entries | `bash tools/thunk_dedup.sh --dry-run` | Remove duplicates |
+| Check stale skills | `bash tools/skill_freshness.sh` | Flag skills >90 days old |
+| Generate skill graph | `bash tools/skill_graph/skill_graph.sh` | DOT dependency graph |
+| View dashboard | `open artifacts/dashboard.html` | Metrics dashboard |
+| Quiz yourself | `bash tools/skill_quiz/quiz.sh` | Test knowledge retention |
 
 ---
 
@@ -207,6 +212,104 @@ Components for detecting knowledge gaps from errors.
 
 ---
 
+### `tools/thunk_dedup.sh` - THUNK Deduplication
+
+Remove duplicate entries from THUNK.md (one-time cleanup utility).
+
+```bash
+# Preview what would be removed
+bash tools/thunk_dedup.sh --dry-run
+
+# Remove duplicates (idempotent)
+bash tools/thunk_dedup.sh
+```
+
+**Output:** Statistics showing original/after/removed counts.
+
+---
+
+### `tools/skill_freshness.sh` - Skill Age Checker
+
+List skills with age and flag stale ones (default: >90 days).
+
+```bash
+# List all skills with age
+bash tools/skill_freshness.sh
+
+# Custom threshold
+bash tools/skill_freshness.sh --days 60
+
+# Exit non-zero if stale skills found (for CI)
+bash tools/skill_freshness.sh --exit-on-stale
+```
+
+---
+
+### `tools/brain_dashboard/` - Metrics Dashboard
+
+Generate HTML dashboard with brain repository metrics.
+
+```bash
+# Collect metrics and generate dashboard
+bash tools/brain_dashboard/collect_metrics.sh
+python3 tools/brain_dashboard/generate_dashboard.py
+```
+
+**Output:** `artifacts/dashboard.html` with skill counts, task stats, coverage.
+
+---
+
+### `tools/skill_graph/` - Skill Dependency Graph
+
+Generate DOT graph of skill dependencies and cross-references.
+
+```bash
+# Generate graph to stdout
+bash tools/skill_graph/skill_graph.sh
+
+# Output to file
+bash tools/skill_graph/skill_graph.sh --output skills.dot
+
+# Render with Graphviz (if installed)
+bash tools/skill_graph/skill_graph.sh | dot -Tpng -o skills.png
+```
+
+**Components:** `extract_links.py` (parse refs), `generate_graph.py` (DOT output).
+
+---
+
+### `tools/pattern_miner/` - Commit Pattern Discovery
+
+Discover recurring patterns in sibling project git logs to identify potential new skills.
+
+```bash
+# Analyze commits from ~/code/ projects
+bash tools/pattern_miner/mine_patterns.sh
+
+# Run analyzer directly
+python3 tools/pattern_miner/analyze_commits.py
+```
+
+**Use case:** Find gaps in brain's skills by analyzing what you repeatedly fix in other projects.
+
+---
+
+### `tools/skill_quiz/` - Interactive Knowledge Quiz
+
+Terminal-based quiz for testing knowledge retention from skill docs.
+
+```bash
+# Start quiz with random skill
+bash tools/skill_quiz/quiz.sh
+
+# Quiz specific skill
+bash tools/skill_quiz/quiz.sh skills/domains/shell/variable-patterns.md
+```
+
+**Format:** Presents scenarios, waits for your answer, reveals solution.
+
+---
+
 ## Validation Tools (`tools/validate_*.sh`)
 
 Pre-commit hooks and CI validators.
@@ -232,6 +335,7 @@ Cache and plan testing utilities.
 | `test_cache_guard_marker.sh` | Test cache guard markers |
 | `test_cache_inheritance.sh` | Test cache inheritance |
 | `test_plan_cleanup.sh` | Test plan cleanup script |
+| `test_plan_only_guard.sh` | Test PLAN-ONLY mode guardrails (15 test cases) |
 
 ---
 

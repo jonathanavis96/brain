@@ -178,12 +178,12 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-26 | 21.1.3 | - [x] **21.1.3** Add `--last-id` option to thunk_parser.py [HIGH] |
 | 2026-01-26 | 21.1.4 | - [x] **21.1.4** Add `--search` option with keyword matching [MEDIUM] |
 
-### Archived on 2026-01-26
+### Archived on 2026-01-26 (Batch 7)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
 
-### Archived on 2026-01-26
+### Archived on 2026-01-26 (Batch 8)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
@@ -207,7 +207,7 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-26 | 9C.3.2 | - [x] **9C.3.2** Create decomposition checklist in `skills/playbooks/` |
 | 2026-01-26 | 22.2.3 | - [x] **22.2.3** Fix MD056 in workers/ralph/THUNK.md line 801 (escape pipes) |
 
-### Archived on 2026-01-26
+### Archived on 2026-01-26 (Batch 9)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
@@ -218,7 +218,7 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-26 |     - [x] Cache files excluded by default |     - [x] Cache files excluded by default |
 | 2026-01-26 |     - [x] Hash regenerated in all `.verify/` directories |     - [x] Hash regenerated in all `.verify/` directories |
 
-### Archived on 2026-01-26
+### Archived on 2026-01-26 (Batch 10)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
