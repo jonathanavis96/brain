@@ -152,11 +152,13 @@ done <"$PLAN_FILE"
 # Second pass: write output
 current_phase=""
 skip_phase=false
+skip_task_subitems=false
 
 while IFS= read -r line; do
   # Detect phase headers
   if echo "$line" | grep -qE '^##[[:space:]]+Phase'; then
     current_phase=$(echo "$line" | sed -E 's/^##[[:space:]]+//')
+    skip_task_subitems=false # Reset on new phase
 
     if [[ "${phase_has_pending[$current_phase]:-false}" == "true" ]]; then
       skip_phase=false
@@ -173,12 +175,33 @@ while IFS= read -r line; do
     continue
   fi
 
-  # Remove completed tasks, keep everything else
-  if echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\[[xX]\]'; then
-    removed_count=$((removed_count + 1))
-  else
-    echo "$line" >>"$temp_file"
+  # Detect new task (pending or completed) - resets sub-item skipping
+  if echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\['; then
+    # Check if this is a completed task
+    if echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\[[xX]\]'; then
+      removed_count=$((removed_count + 1))
+      skip_task_subitems=true # Skip following indented sub-items
+    else
+      skip_task_subitems=false # Pending task - keep its sub-items
+      echo "$line" >>"$temp_file"
+    fi
+    continue
   fi
+
+  # Skip indented sub-items of completed tasks
+  # Sub-items are indented lines starting with "- **" (e.g., "  - **Goal:**")
+  if [[ "$skip_task_subitems" == "true" ]]; then
+    if echo "$line" | grep -qE '^[[:space:]]+'; then
+      # Indented line - skip it (belongs to completed task)
+      continue
+    else
+      # Non-indented line - stop skipping (new section or blank line between tasks)
+      skip_task_subitems=false
+    fi
+  fi
+
+  # Keep everything else
+  echo "$line" >>"$temp_file"
 done <"$PLAN_FILE"
 
 # Apply changes
