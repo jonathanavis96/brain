@@ -5,11 +5,11 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # ROOT can be overridden via RALPH_PROJECT_ROOT env var
-# Default: one level up from ralph/ directory
+# Default: repository root (two levels up from templates/ralph/)
 if [[ -n "${RALPH_PROJECT_ROOT:-}" ]]; then
   ROOT="$RALPH_PROJECT_ROOT"
 else
-  ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+  ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 fi
 
 # AC rules are in ralph/rules/ (relative to script dir)

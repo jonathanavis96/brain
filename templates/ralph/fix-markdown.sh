@@ -60,7 +60,9 @@ echo ""
 
 # Count issues before
 BEFORE_OUTPUT=$(markdownlint "${VALID_TARGETS[@]}" 2>&1 || true)
-BEFORE=$(echo "$BEFORE_OUTPUT" | grep -c "error" || true)
+# markdownlint reports rule IDs like MD040 rather than the literal word "error".
+# Count non-empty output lines so the script works across markdownlint versions.
+BEFORE=$(echo "$BEFORE_OUTPUT" | grep -cve '^\s*$' || true)
 BEFORE=${BEFORE:-0}
 
 # Early exit if no issues to fix
@@ -81,7 +83,7 @@ markdownlint --fix "${VALID_TARGETS[@]}" 2>&1 || true
 
 # Count issues after
 AFTER_OUTPUT=$(markdownlint "${VALID_TARGETS[@]}" 2>&1 || true)
-AFTER=$(echo "$AFTER_OUTPUT" | grep -c "error" || true)
+AFTER=$(echo "$AFTER_OUTPUT" | grep -cve '^\s*$' || true)
 AFTER=${AFTER:-0}
 echo ""
 echo -e "Issues after:  ${YELLOW}${AFTER}${NC}"
