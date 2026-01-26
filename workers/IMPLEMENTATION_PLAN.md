@@ -547,7 +547,7 @@
   - **AC:** Output shows all 90 skills with days since modified, flags those > threshold
   - **Implementation:** `find skills/ -name "*.md" -printf '%T@ %p\n'`, calculate age
 
-- [ ] **18.1.2** Add `--days N` threshold flag [MEDIUM]
+- [x] **18.1.2** Add `--days N` threshold flag [MEDIUM]
   - **Goal:** Configurable staleness threshold (default 90 days)
   - **AC:** `--days 30` flags skills older than 30 days
   - **Depends:** 18.1.1
