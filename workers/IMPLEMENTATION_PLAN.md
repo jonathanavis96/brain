@@ -1,11 +1,12 @@
 # Implementation Plan - Brain Repository
 
-**Last Updated:** 2026-01-26 01:35:00
+**Last Updated:** 2026-01-26 02:30:00
 
-**Current Status:** POST-CR6, Phase 10, and Phase 11 completed. Phase 12 active (1/4 tasks complete). Phases 13-20 queued.
+**Current Status:** Phase 21 (Token Efficiency) is NEXT priority. Phase 21.2 complete (PROMPT.md rules), Phase 21.1 (thunk-parse enhancements) ready to start.
 
 **Active Phases:**
 
+- **Phase 21: Token Efficiency & Tool Consolidation (⚡ NEXT - 6/10 tasks complete)**
 - Phase CR-6: CodeRabbit PR6 Fixes (✅ COMPLETED)
 - Phase POST-CR6: Prevention Systems (✅ COMPLETED - all 7 tasks)
 - Phase 10: RovoDev Parser & Observability (✅ COMPLETED - all 3 tasks)
@@ -25,57 +26,24 @@
 
 ### Major Issues (Ralph Can Fix)
 
-- **File:** `templates/ralph/loop.sh` lines 1707, 1949
-- **Issue:** Script defines `LOGDIR` but references `LOGS_DIR` (undefined)
-- **Fix:** Replace `$LOGS_DIR` with `$LOGDIR`
-- **AC:** `grep -n 'LOGS_DIR' templates/ralph/loop.sh` returns empty
-
-- **File:** `bin/brain-event` lines 84-125
-- **Issue:** Flag parsing consumes next option when value missing
-- **Fix:** Check if value looks like a flag before shifting
-- **AC:** `--event --iter 1` doesn't treat `--iter` as event value
-
-- **File:** `workers/ralph/THUNK.md` lines 748, 770-782
-- **Issue:** Table rows have wrong column count, unescaped pipes
-- **Fix:** Ensure all rows have 5 columns, escape pipes in content
-- **AC:** `markdownlint workers/ralph/THUNK.md` passes MD056
-
-- **File:** `skills/domains/languages/shell/README.md` line 64
-- **Issue:** README documents shfmt config that doesn't match `.pre-commit-config.yaml`
-- **Fix:** Update README to match actual config
-- **AC:** Documented shfmt flags match `.pre-commit-config.yaml`
-
-- **File:** `skills/domains/code-quality/code-review-patterns.md` line 286
-- **Issue:** Code example has bugs or incorrect patterns
-- **Fix:** Review and correct the code example
-- **AC:** Code examples are syntactically valid and demonstrate correct patterns
-
-- **File:** `README.md` line 326
-- **Issue:** Incorrect or misleading documentation
-- **Fix:** Correct the documentation
-- **AC:** Documentation accurately describes the feature/process
-
-- **File:** `skills/domains/infrastructure/observability-patterns.md`
-- **Issues:** PostgreSQL placeholder mismatch, stray fence, hardcoded status, SQL injection
-- **Fix:** Correct all code examples
-- **AC:** All code examples use consistent patterns and are secure
-
-- **Files:** `skills/domains/frontend/README.md`, `skills/domains/languages/javascript/README.md`, `skills/index.md`
-- **Issue:** Links to non-existent typescript README
-- **Fix:** Create typescript README or update links
-- **AC:** All internal links resolve to existing files
-
-- **File:** `skills/domains/infrastructure/deployment-patterns.md`
-- **Issue:** Missing `import time`, undefined `userId`
-- **Fix:** Add missing imports, define or document variables
-- **AC:** Python code examples are complete and runnable
-
-- **Files:** `skills/domains/languages/javascript/README.md`, `skills/domains/code-quality/test-coverage-patterns.md`
-- **Issue:** Undefined `userId`, incorrect Jest flag
-- **Fix:** Complete the examples
-- **AC:** JavaScript examples are syntactically valid
-
-- [x] **CR-6.11** Fix archive header parsing in current_ralph_tasks.sh (from CR-5) - Completed 2026-01-25 (THUNK #773)
+- [x] **CR-6.1** Fix LOGS_DIR reference in templates/ralph/loop.sh - ✅ FIXED
+- [x] **CR-6.2** Fix brain-event flag parsing - ✅ FIXED
+- [ ] **CR-6.3** Fix THUNK.md table column count (MD056)
+  - **AC:** `markdownlint workers/ralph/THUNK.md` passes (no MD056 errors)
+- [ ] **CR-6.4** Verify shfmt config in shell/README.md matches .pre-commit-config.yaml
+  - **AC:** Documented shfmt flags match actual pre-commit config
+- [ ] **CR-6.5** Review code-review-patterns.md line 286 code example
+  - **AC:** Code examples are syntactically valid and demonstrate correct patterns
+- [ ] **CR-6.6** Review README.md line 326 documentation
+  - **AC:** Documentation accurately describes the feature/process
+- [ ] **CR-6.7** Fix observability-patterns.md code examples
+  - **AC:** All code examples use consistent patterns and are secure
+- [x] **CR-6.8** Fix TypeScript README links - ✅ FIXED (file created)
+- [x] **CR-6.9** Fix deployment-patterns.md import time - ✅ FIXED
+- [ ] **CR-6.10** Fix JavaScript examples (userId, Jest flag)
+  - **Files:** `skills/domains/languages/javascript/README.md`, `skills/domains/code-quality/test-coverage-patterns.md`
+  - **AC:** JavaScript examples are syntactically valid
+- [x] **CR-6.11** Fix archive header parsing in current_ralph_tasks.sh - Completed 2026-01-25 (THUNK #773)
 
 ### Human Required (Hash/Protected Files)
 
@@ -653,5 +621,79 @@
   - **Goal:** Document usage and skill file requirements
   - **AC:** README explains how to run quiz and what makes skills quiz-compatible
   - **Depends:** 20.2.1
+
+---
+
+## Phase 21: Token Efficiency & Tool Consolidation ⚡ NEXT
+
+**Goal:** Reduce Ralph's token usage by providing structured query tools and enforcing lean context loading.
+
+**Problem:** Ralph often opens large files (THUNK.md, IMPLEMENTATION_PLAN.md) when targeted queries would suffice. This wastes tokens and slows iterations.
+
+**Priority:** HIGH (directly improves iteration speed and cost)
+
+**Status:** ACTIVE - Start here
+
+### Phase 21.1: Enhance thunk-parse with Query Capabilities
+
+- [ ] **21.1.1** Rename `bin/thunk-parse` → `tools/thunk_parser.py` [MEDIUM]
+  - **Goal:** Consolidate with other Python tools, follow naming convention
+  - **AC:** `python3 tools/thunk_parser.py --help` works, old `bin/thunk-parse` removed
+  - **Update:** Symlink `bin/thunk-parse` → `tools/thunk_parser.py` for backward compat
+
+- [ ] **21.1.2** Add `--query-id` option to thunk_parser.py [HIGH]
+  - **Goal:** Query THUNK by original task ID (e.g., "11.1.3")
+  - **Usage:** `python3 tools/thunk_parser.py --query-id "11.1.3" --json`
+  - **AC:** Returns JSON entry if found, empty if not
+  - **Token savings:** Replaces `grep "11.1.3" THUNK.md` with structured query
+
+- [ ] **21.1.3** Add `--last-id` option to thunk_parser.py [HIGH]
+  - **Goal:** Get last THUNK entry number for appends
+  - **Usage:** `python3 tools/thunk_parser.py --last-id`
+  - **AC:** Prints integer (e.g., "830")
+  - **Token savings:** Replaces `tail THUNK.md | grep | awk`
+
+- [ ] **21.1.4** Add `--search` option with keyword matching [MEDIUM]
+  - **Goal:** Search THUNK entries by keyword
+  - **Usage:** `python3 tools/thunk_parser.py --search "shellcheck" --limit 5`
+  - **AC:** Returns matching entries as JSON
+  - **Token savings:** Structured alternative to grep
+
+### Phase 21.2: Token Efficiency Policy for PROMPT.md
+
+- [x] **21.2.1** Add "Read Budget" section to `workers/ralph/PROMPT.md` [HIGH]
+  - **Goal:** Explicit rules preventing broad file loading
+  - **Content:** Hard rules (no THUNK.md opens, no IMPL_PLAN opens without line slice)
+  - **AC:** PROMPT.md has "Read Budget" section with allowed/forbidden patterns
+  - **Reference:** Use `docs/TOOLS.md` for CLI alternatives
+  - **Completed:** 2026-01-26 (commit 9b087a7)
+
+- [x] **21.2.2** Add "Required Startup Procedure" to PROMPT.md [MEDIUM]
+  - **Goal:** Ralph uses cheap commands first before any file reads
+  - **Content:** Step A (grep for task), Step B (ensure thunk DB exists)
+  - **AC:** PROMPT.md has startup procedure that minimizes reads
+  - **Completed:** 2026-01-26 (commit 9b087a7)
+
+- [x] **21.2.3** Update `templates/ralph/PROMPT.md` with same changes [MEDIUM]
+  - **Goal:** Keep templates in sync
+  - **AC:** Template matches workers/ralph/PROMPT.md token efficiency sections
+  - **Depends:** 21.2.1, 21.2.2
+  - **Completed:** 2026-01-26 (commit 9b087a7)
+
+### Phase 21.3: Documentation Updates
+
+- [x] **21.3.1** Update `skills/domains/ralph/thread-search-patterns.md` [MEDIUM]
+  - **Goal:** Reference CLI tools instead of raw grep/sed
+  - **AC:** Skill doc links to `docs/TOOLS.md`, shows CLI examples first
+  - **Completed:** 2026-01-26 (commit c546cd5)
+
+- [x] **21.3.2** Update `NEURONS.md` to reference `docs/TOOLS.md` [LOW]
+  - **Goal:** Easy discovery of tools reference
+  - **AC:** NEURONS.md has link in appropriate section
+  - **Completed:** 2026-01-26 (commit c546cd5)
+
+- [ ] **21.3.3** Add tools reference to `skills/index.md` [LOW]
+  - **Goal:** Include tools in searchable skills index
+  - **AC:** Index has entry pointing to `docs/TOOLS.md`
 
 ---
