@@ -44,3 +44,8 @@ __pycache__/
 state/
 artifacts/rollflow_reports/*.json
 artifacts/rollflow_cache/test_cache.sqlite
+
+# Rollflow / loop caches (always regenerate, never commit)
+**/rollflow_cache/cache.sqlite
+tools/rollflow_analyze/artifacts/rollflow_cache/cache.sqlite
+workers/ralph/artifacts/rollflow_cache/cache.sqlite

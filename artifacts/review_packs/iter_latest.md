@@ -1,23 +1,23 @@
 # RollFlow Review Pack
 
-**Generated:** 2026-01-25T18:46:07.591341
+**Generated:** 2026-01-26T11:22:04.398954
 **Run ID:** N/A
-**Total Tool Calls:** 460
+**Total Tool Calls:** 3617
 
 ## Executive Summary
 
-**Status:** ✅ Excellent (100% success rate)
+**Status:** ✅ Good (98% success rate)
 
 ### Quick Stats
 
-- **Pass Rate:** 100.0% (460/460)
-- **Fail Rate:** 0.0% (0/460)
-- **Unknown:** 0
+- **Pass Rate:** 98.7% (3570/3617)
+- **Fail Rate:** 0.0% (1/3617)
+- **Unknown:** 46
 
 ### Cache Opportunity
 
-- **Potential skips:** 42 duplicate calls
-- **Time savings:** 287.8s
+- **Potential skips:** 60 duplicate calls
+- **Time savings:** 418.8s
 
 ## Performance Analysis
 
@@ -29,12 +29,12 @@
 | `unknown` | 618.30s |
 | `unknown` | 544.67s |
 | `unknown` | 460.27s |
-| `unknown` | 449.86s |
+| `unknown` | 438.14s |
+| `unknown` | 435.73s |
 | `unknown` | 420.24s |
+| `unknown` | 420.16s |
+| `unknown` | 417.80s |
 | `unknown` | 410.40s |
-| `unknown` | 382.47s |
-| `unknown` | 381.10s |
-| `unknown` | 377.50s |
 
 #### Slowest Tool Call Details
 
@@ -58,11 +58,15 @@
 </details>
 
 
+### Flaky Tools (Both PASS and FAIL)
+
+- `verifier` ⚠️
+
 ## Cache Optimization
 
-- **Reusable PASS calls:** 54
-- **Potential skips:** 42
-- **Estimated time saved:** 287.8s
+- **Reusable PASS calls:** 335
+- **Potential skips:** 60
+- **Estimated time saved:** 418.8s
 
 ### Top Duplicate Cache Keys
 
@@ -75,12 +79,58 @@
 7. `fix-markdown|e574978`
 8. `pre-commit|e574978`
 9. `verifier-pre-build|e574978`
+10. `fix-markdown|4e28fec`
+*... and 8 more*
+
+## ❌ Failures
+
+**Total failures:** 1
+
+### Failures by Tool
+
+| Tool | Count |
+|------|-------|
+| `verifier` | 1 |
+
+### Recent Failures
+
+#### Failure 1: verifier
+
+```text
+interrupted
+```
+
+<details>
+<summary>📋 Log Excerpt</summary>
+
+```text
+     1     :::ITER_START::: iter=2 run_id=run-1769386893-8658 ts=1769386997774
+     2     :::CACHE_CONFIG::: mode=use scope=verify,read exported=1 iter=2 ts=1769386997788
+     3     :::TOOL_START::: id=c70e2844-c31b-46be-a498-c31435c50280 tool=fix-markdown cache_key=fix-markdown|a4755b0 git_sha=a4755b0 ts=2026-01-26T00:23:17Z
+     4     :::TOOL_END::: id=c70e2844-c31b-46be-a498-c31435c50280 result=PASS exit=0 duration_ms=7963 ts=2026-01-26T00:23:25Z
+     5     :::TOOL_START::: id=bf7b7fcf-1bc9-4904-8b1a-9badd71230ab tool=pre-commit cache_key=pre-commit|a4755b0 git_sha=a4755b0 ts=2026-01-26T00:23:25Z
+     6     :::TOOL_END::: id=bf7b7fcf-1bc9-4904-8b1a-9badd71230ab result=PASS exit=0 duration_ms=7122 ts=2026-01-26T00:23:32Z
+     7 >>> :::TOOL_START::: id=cd1c8da7-c1b9-4d31-9378-cb575e3d27c1 tool=verifier cache_key=verifier-pre-build|a4755b0 git_sha=a4755b0 ts=2026-01-26T00:23:32Z
+     8 >>> :::TOOL_END::: id=cd1c8da7-c1b9-4d31-9378-cb575e3d27c1 result=FAIL exit=130 duration_ms=1268 reason=interrupted ts=2026-01-26T00:23:34Z
+```
+
+</details>
+
 
 ## Tool Breakdown
 
 | Tool | Total | Pass | Fail | Success Rate |
 |------|-------|------|------|--------------|
-| `unknown` | 364 | 364 | 0 | 100.0% |
-| `fix-markdown` | 32 | 32 | 0 | 100.0% |
-| `pre-commit` | 32 | 32 | 0 | 100.0% |
-| `verifier` | 32 | 32 | 0 | 100.0% |
+| `bash` | 1954 | 1947 | 0 | 99.6% |
+| `find_and_replace_code` | 343 | 314 | 0 | 91.5% |
+| `update_todo` | 229 | 229 | 0 | 100.0% |
+| `unknown` | 225 | 225 | 0 | 100.0% |
+| `expand_code_chunks` | 182 | 178 | 0 | 97.8% |
+| `open_files` | 166 | 160 | 0 | 96.4% |
+| `fix-markdown` | 132 | 132 | 0 | 100.0% |
+| `pre-commit` | 132 | 132 | 0 | 100.0% |
+| `verifier` | 132 | 131 | 1 | 99.2% |
+| `grep` | 72 | 72 | 0 | 100.0% |
+| `create_file` | 46 | 46 | 0 | 100.0% |
+| `expand_folder` | 3 | 3 | 0 | 100.0% |
+| `mcp__atlassian__get_tool_schema` | 1 | 1 | 0 | 100.0% |

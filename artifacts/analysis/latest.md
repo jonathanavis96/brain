@@ -1,52 +1,53 @@
 # RollFlow Analysis Report
 
-**Generated:** 2026-01-25T19:03:06.306540
+**Generated:** 2026-01-26T12:08:49.274795
 **Run ID:** N/A
 
 ## Summary
 
-- **Total tool calls:** 1731
+- **Total tool calls:** 4072
 - **Pass rate:** 98.8%
 - **Fail rate:** 0.0%
 
 ## Data Sources
 
-- **RovoDev tool calls:** 1589 (bash, grep, open_files, etc.)
-- **Shell marker calls:** 142 (fix-markdown, pre-commit, verifier)
+- **RovoDev tool calls:** 3195 (bash, grep, open_files, etc.)
+- **Shell marker calls:** 877 (fix-markdown, pre-commit, verifier)
 
 ## Tool Breakdown
 
 | Tool | Calls | Avg Duration | Total Time | Pass | Fail |
 |------|-------|--------------|------------|------|------|
-| `bash` | 965 | 753ms | 723.8s | 961 | 0 |
-| `find_and_replace_code` | 199 | 586ms | 110.2s | 188 | 0 |
-| `update_todo` | 138 | 670ms | 91.9s | 137 | 0 |
-| `expand_code_chunks` | 122 | 211ms | 25.1s | 119 | 0 |
-| `open_files` | 84 | 366ms | 30.4s | 83 | 0 |
-| `unknown` | 46 | 162386ms | 7469.7s | 46 | 0 |
-| `grep` | 40 | 414ms | 16.6s | 40 | 0 |
-| `create_file` | 37 | 485ms | 17.9s | 37 | 0 |
-| `fix-markdown` | 32 | 6487ms | 207.6s | 32 | 0 |
-| `pre-commit` | 32 | 11849ms | 379.2s | 32 | 0 |
-| `verifier` | 32 | 2025ms | 64.8s | 32 | 0 |
-| `expand_folder` | 4 | 568ms | 2.3s | 4 | 0 |
+| `bash` | 2102 | 1047ms | 2194.4s | 2095 | 0 |
+| `rovodev-session` | 481 | 130552ms | 62795.5s | 481 | 0 |
+| `find_and_replace_code` | 369 | 761ms | 257.9s | 339 | 0 |
+| `update_todo` | 238 | 450ms | 107.0s | 238 | 0 |
+| `expand_code_chunks` | 189 | 212ms | 39.2s | 185 | 0 |
+| `open_files` | 170 | 193ms | 31.6s | 164 | 0 |
+| `fix-markdown` | 132 | 7496ms | 989.5s | 132 | 0 |
+| `pre-commit` | 132 | 13525ms | 1785.2s | 132 | 0 |
+| `verifier` | 132 | 2025ms | 267.2s | 131 | 1 |
+| `grep` | 77 | 364ms | 28.0s | 77 | 0 |
+| `create_file` | 46 | 453ms | 20.8s | 46 | 0 |
+| `expand_folder` | 3 | 609ms | 1.8s | 3 | 0 |
+| `mcp__atlassian__get_tool_schema` | 1 | 172ms | 0.2s | 1 | 0 |
 
 ## Cache Advice
 
-- **Potential skips:** 42
-- **Estimated time saved:** 287.8s
+- **Potential skips:** 60
+- **Estimated time saved:** 418.8s
 
 ## Slowest Tool Calls
 
 | Tool | Duration |
 |------|----------|
-| `unknown` | 633.0s |
-| `unknown` | 618.3s |
-| `unknown` | 460.3s |
-| `unknown` | 420.2s |
-| `unknown` | 410.4s |
-| `unknown` | 282.2s |
-| `unknown` | 276.5s |
-| `unknown` | 264.0s |
-| `unknown` | 253.7s |
-| `unknown` | 246.8s |
+| `rovodev-session` | 633.0s |
+| `rovodev-session` | 618.3s |
+| `rovodev-session` | 544.7s |
+| `rovodev-session` | 460.3s |
+| `rovodev-session` | 449.9s |
+| `rovodev-session` | 438.1s |
+| `rovodev-session` | 435.7s |
+| `rovodev-session` | 420.2s |
+| `rovodev-session` | 420.2s |
+| `rovodev-session` | 417.8s |
