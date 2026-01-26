@@ -423,7 +423,7 @@
 
 ### Phase 21.1: Enhance thunk-parse with Query Capabilities
 
-- [ ] **21.1.1** Rename `bin/thunk-parse` → `tools/thunk_parser.py` [MEDIUM]
+- [x] **21.1.1** Rename `bin/thunk-parse` → `tools/thunk_parser.py` [MEDIUM]
   - **Goal:** Consolidate with other Python tools, follow naming convention
   - **AC:** `python3 tools/thunk_parser.py --help` works, old `bin/thunk-parse` removed
   - **Update:** Symlink `bin/thunk-parse` → `tools/thunk_parser.py` for backward compat

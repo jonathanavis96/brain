@@ -638,11 +638,12 @@
   - **Update:** Symlink `bin/thunk-parse` → `tools/thunk_parser.py` for backward compat
   - **Completed:** 2026-01-26 (commit 933e246)
 
-- [ ] **21.1.2** Add `--query-id` option to thunk_parser.py [HIGH]
+- [x] **21.1.2** Add `--query-id` option to thunk_parser.py [HIGH]
   - **Goal:** Query THUNK by original task ID (e.g., "11.1.3")
   - **Usage:** `python3 tools/thunk_parser.py --query-id "11.1.3" --json`
   - **AC:** Returns JSON entry if found, empty if not
   - **Token savings:** Replaces `grep "11.1.3" THUNK.md` with structured query
+  - **Completed:** 2026-01-26
 
 - [ ] **21.1.3** Add `--last-id` option to thunk_parser.py [HIGH]
   - **Goal:** Get last THUNK entry number for appends
