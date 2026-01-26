@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# cleanup_cortex_plan.sh - Archive completed tasks from cortex/IMPLEMENTATION_PLAN.md
+# cleanup_plan.sh - Archive completed tasks from workers/IMPLEMENTATION_PLAN.md
 #
 # Usage:
 #   bash cleanup_cortex_plan.sh --dry-run    # Preview what would be archived
@@ -13,8 +13,10 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PLAN_FILE="${SCRIPT_DIR}/IMPLEMENTATION_PLAN.md"
-ARCHIVE_FILE="${SCRIPT_DIR}/PLAN_DONE.md"
+# Plan files are in workers/, one level up from workers/ralph/
+WORKERS_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+PLAN_FILE="${WORKERS_DIR}/IMPLEMENTATION_PLAN.md"
+ARCHIVE_FILE="${WORKERS_DIR}/PLAN_DONE.md"
 
 # Default flags
 DRY_RUN=false
@@ -53,7 +55,7 @@ if [[ ! -f "$ARCHIVE_FILE" ]]; then
   exit 1
 fi
 
-echo "Cleaning up cortex/IMPLEMENTATION_PLAN.md..."
+echo "Cleaning up workers/IMPLEMENTATION_PLAN.md..."
 
 # Warn about orphaned task entries (sub-items without a parent task)
 # These occur when cleanup removes "- [x] **X.Y**" but leaves indented sub-items behind
