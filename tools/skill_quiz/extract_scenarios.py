@@ -71,7 +71,14 @@ def parse_skill_file(file_path: Path) -> Optional[Dict[str, str]]:
 
     # Try to find scenario content (problem statement)
     scenario = None
-    for pattern in [r"^## When to Use", r"^## Problem", r"^## Overview"]:
+    for pattern in [
+        r"^## When to Use",
+        r"^## Problem",
+        r"^## Overview",
+        r"^## Scenario",
+        r"^## Example",
+        r"^## Use Case",
+    ]:
         scenario = extract_section(content, pattern)
         if scenario:
             break
@@ -81,7 +88,14 @@ def parse_skill_file(file_path: Path) -> Optional[Dict[str, str]]:
 
     # Try to find solution content (what to do about it)
     solution = None
-    for pattern in [r"^## Quick Reference$", r"^## Details$", r"^## Purpose$"]:
+    for pattern in [
+        r"^## Quick Reference$",
+        r"^## Details$",
+        r"^## Purpose$",
+        r"^## Solution$",
+        r"^## Implementation$",
+        r"^## How to Apply$",
+    ]:
         solution = extract_section(content, pattern)
         if solution:
             break
