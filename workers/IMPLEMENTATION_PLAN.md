@@ -297,7 +297,7 @@
   - **Replaces:** 6.1.1, 6.1.2, 6.3.1
   - **Status:** 6.1.1 and 6.1.2 complete, 6.3.1 pending
 
-- [ ] **9C.2.B2** BATCH: Update skills documentation (combines 7.2.1, 7.2.2)
+- [x] **9C.2.B2** BATCH: Update skills documentation (combines 7.2.1, 7.2.2)
   - **Scope:** `skills/index.md` + `skills/SUMMARY.md`
   - **Steps:**
     1. Scan `skills/domains/` and `skills/playbooks/` for all files
