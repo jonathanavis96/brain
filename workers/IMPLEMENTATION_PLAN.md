@@ -1,12 +1,13 @@
 # Implementation Plan - Brain Repository
 
-**Last Updated:** 2026-01-26 02:30:00
+**Last Updated:** 2026-01-26 15:05:00
 
-**Current Status:** Phase 21 (Token Efficiency) is NEXT priority. Phase 21.2 complete (PROMPT.md rules), Phase 21.1 (thunk-parse enhancements) ready to start.
+**Current Status:** Phase 23 (Loop Efficiency & Correctness) nearly complete. 5/6 tasks done. Remaining task (23.2.1 scoped staging) requires human approval for loop.sh changes.
 
 **Active Phases:**
 
-- **Phase 21: Token Efficiency & Tool Consolidation (⚡ NEXT - 6/10 tasks complete)**
+- **Phase 23: Loop Efficiency & Correctness Fixes (🔄 5/6 tasks complete - 1 needs human approval)**
+- Phase 21: Token Efficiency & Tool Consolidation (1 task remaining)
 - Phase CR-6: CodeRabbit PR6 Fixes (✅ COMPLETED)
 - Phase POST-CR6: Prevention Systems (✅ COMPLETED - all 7 tasks)
 - Phase 10: RovoDev Parser & Observability (✅ COMPLETED - all 3 tasks)
@@ -16,6 +17,82 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
+## Phase 23: Loop Efficiency & Correctness Fixes
+
+**Goal:** Fix bugs and inefficiencies in the Ralph loop that waste tokens and cause drift.
+
+**Priority:** HIGH (correctness + biggest remaining efficiency wins)
+
+**Reference:** Analysis of iteration logs showing repeated failures and unnecessary work.
+
+### Phase 23.1: Correctness Fixes (HIGH)
+
+- [x] **23.1.1** Fix `sync_completions_to_cortex.sh` unbound variable **[HIGH]**
+  - **Goal:** Sync never fails when no completions exist
+  - **Root Cause:** `${#completed_tasks[@]}` on empty associative array triggers "unbound variable" with `set -u`
+  - **Fix:** Initialize properly and add guard for empty case
+  - **AC:** No "unbound variable" errors; prints "0 completions" and exits 0 when none found; sync works when completions exist
+
+- [x] **23.1.2** Untrack rollflow cache sqlite files and ensure ignored **[HIGH]**
+  - **Goal:** Cache DBs don't show up in git status and don't get staged
+  - **Root Cause:** Files are tracked (in git index) even though `.gitignore` has patterns
+  - **Fix:** `git rm --cached` for any tracked cache files; verify `.gitignore` patterns
+  - **AC:** `git status` clean after runs; caches regenerate locally; `git ls-files` shows no cache.sqlite under rollflow_cache
+
+### Phase 23.2: Staging Efficiency (HIGH - protected file)
+
+- [ ] **23.2.1** Replace `git add -A` with scoped staging allowlist/denylist **[HIGH]**
+  - **Goal:** Only stage intended task files; avoid artifacts/cortex copies/caches by default
+  - **Root Cause:** Broad staging pulls in unrelated files, triggering fix-markdown/pre-commit/verifier unnecessarily
+  - **Fix:** Change staging logic in loop.sh to use explicit paths
+  - **Always stage:** `workers/IMPLEMENTATION_PLAN.md`, `workers/ralph/THUNK.md`, task-specific files
+  - **Never auto-stage:** `artifacts/**`, `cortex/IMPLEMENTATION_PLAN.md`, `cortex/PLAN_DONE.md`, `**/rollflow_cache/**`
+  - **AC:** After typical task, staged diff contains only: workers plan, THUNK, and files touched by task; artifacts/cortex/cache excluded unless explicitly requested
+  - **Note:** Protected file - requires human approval
+  - **Implementation Guide:**
+    1. In loop.sh, find the `git add -A` call(s) in the BUILD commit section
+    2. Replace with: `git add workers/IMPLEMENTATION_PLAN.md workers/ralph/THUNK.md`
+    3. Add logic to stage task-specific files (from git diff --name-only, excluding deny patterns)
+    4. Deny patterns: `artifacts/*`, `cortex/IMPLEMENTATION_PLAN.md`, `cortex/PLAN_DONE.md`, `**/rollflow_cache/*`
+    5. Update hash in `.verify/loop.sha256` after changes
+  - **Verification checklist:**
+    - [ ] `git add -A` no longer used
+    - [ ] Core files always staged (IMPLEMENTATION_PLAN.md, THUNK.md)
+    - [ ] Artifacts excluded by default
+    - [ ] Cortex copies excluded by default
+    - [ ] Cache files excluded by default
+    - [ ] Hash regenerated in all `.verify/` directories
+
+### Phase 23.3: Tool Efficiency (MEDIUM)
+
+- [x] **23.3.1** Make `cortex/snapshot.sh` avoid regenerating dashboard/metrics by default **[MEDIUM]**
+  - **Goal:** Running snapshot for inspection shouldn't dirty artifacts unless requested
+  - **Root Cause:** Dashboard regeneration happens unconditionally, creating unrelated diffs
+  - **Fix:** Search for existing flags/env toggles; if none exist, add `--no-dashboard` option
+  - **AC:** Snapshot can run without modifying `artifacts/dashboard.html` / `artifacts/brain_metrics.json`
+
+- [x] **23.3.2** Pass changed `.md` files to fix-markdown instead of scanning repo root **[MEDIUM]**
+  - **Goal:** Reduce fix-markdown time when there are few changed markdown files
+  - **Root Cause:** Loop passes `.` (whole repo) even when only specific files changed
+  - **Fix:** Update fix-markdown to accept file arguments; update loop.sh to pass only changed `.md` paths
+  - **AC:** fix-markdown processes only changed `.md` paths; no "Issues before: 0" full-repo runs
+
+### Phase 23.4: Workflow Efficiency (LOW)
+
+- [x] **23.4.1** Add PROMPT instruction: check THUNK before re-validating tasks **[LOW]**
+  - **Goal:** Avoid redoing already-completed work
+  - **Root Cause:** Ralph sometimes investigates tasks that THUNK already shows as done
+  - **Fix:** Add instruction to BUILD task-selection step: check THUNK via existing search tool first
+  - **AC:** When task already present in THUNK, Ralph marks it complete without deep investigation
+
+**Phase AC:**
+- sync_completions_to_cortex.sh runs without errors (0 completions case and real completions)
+- No cache.sqlite files tracked in git
+- Staging excludes artifacts/cortex/cache by default
+- snapshot.sh has option to skip dashboard regeneration
+- fix-markdown can process specific file list
+
+---
 
 ## Phase 9C: Task Optimization (Batching + Decomposition)
 
@@ -124,7 +201,7 @@
 
 ### Phase 22.2: THUNK.md Table Fixes
 
-- [ ] **22.2.3** Fix MD056 in workers/ralph/THUNK.md line 801 (escape pipes)
+- [x] **22.2.3** Fix MD056 in workers/ralph/THUNK.md line 801 (escape pipes)
   - **Goal:** Escape unescaped pipe characters in table row description
   - **Error:** Line 801:401 - Table has 10 columns instead of 5
   - **Root Cause:** Description contains `"collect_metrics.sh | generate"` and `"| 2026-01-26 |"` with unescaped pipes
