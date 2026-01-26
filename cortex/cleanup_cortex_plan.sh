@@ -55,18 +55,33 @@ fi
 
 echo "Cleaning up cortex/IMPLEMENTATION_PLAN.md..."
 
-# Warn about malformed task entries (top-level task-like lines without checkboxes)
-# Pattern: lines starting with "- **Goal:**" or "- **Completed:**" at column 0 (not indented sub-items)
-# Indented sub-items like "  - **Goal:**" under a task are legitimate
-orphaned_tasks=$(grep -nE '^-[[:space:]]+\*\*(Goal|Completed):\*\*' "$PLAN_FILE" || true)
+# Warn about orphaned task entries (sub-items without a parent task)
+# These occur when cleanup removes "- [x] **X.Y**" but leaves indented sub-items behind
+# Detect: indented "- **Goal:**" or "- **Completed:**" lines that appear after a blank line
+# (legitimate sub-items follow their parent task directly, orphans follow blank lines or headers)
 
-if [[ -n "$orphaned_tasks" ]]; then
+# Build list of potentially orphaned entries by checking context
+orphaned_entries=""
+prev_line=""
+line_num=0
+while IFS= read -r line; do
+  line_num=$((line_num + 1))
+  # Check for indented sub-item pattern
+  if echo "$line" | grep -qE '^[[:space:]]+-[[:space:]]+\*\*(Goal|AC|Completed):\*\*'; then
+    # If previous line is blank or a header, this is orphaned
+    if [[ -z "$prev_line" ]] || echo "$prev_line" | grep -qE '^###'; then
+      orphaned_entries="${orphaned_entries}${line_num}: ${line}\n"
+    fi
+  fi
+  prev_line="$line"
+done <"$PLAN_FILE"
+
+if [[ -n "$orphaned_entries" ]]; then
   echo ""
-  echo "⚠️  WARNING: Found top-level task entries without checkboxes (will never be cleaned up):"
-  echo "$orphaned_tasks" | head -10
+  echo "⚠️  WARNING: Found orphaned sub-items (no parent task - will never be cleaned up):"
+  echo -e "$orphaned_entries" | head -10
   echo ""
-  echo "Fix: Convert to '- [x] **X.Y.Z** Description' format or '- [ ] **X.Y.Z** Description'"
-  echo "See: commit 5d1a8c2 for example fix"
+  echo "Fix: Remove these lines or add a parent task '- [x] **X.Y.Z** Description' above them"
   echo ""
 fi
 
