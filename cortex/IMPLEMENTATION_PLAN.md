@@ -248,7 +248,7 @@
 
 ### Phase 16.3: Other Anti-Patterns
 
-- [ ] **16.3.1** Create `skills/domains/anti-patterns/markdown-anti-patterns.md` [MEDIUM]
+- [x] **16.3.1** Create `skills/domains/anti-patterns/markdown-anti-patterns.md` [MEDIUM]
   - **Goal:** Document 5+ markdown formatting mistakes from lint history
   - **AC:** File has 5+ anti-patterns with MD codes, bad/good examples
   - **Sources:** MD040 (code fence lang), MD024 (duplicate headings), MD031 (blank lines)
