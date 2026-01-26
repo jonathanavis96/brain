@@ -1883,22 +1883,38 @@ else
         emit_marker ":::PHASE_END::: iter=$i phase=plan status=fail code=$run_result run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts"
       fi
     else
-      # Auto-fix lint issues before BUILD iteration
-      echo "Running auto-fix for lint issues..."
+      # Auto-fix lint issues before BUILD iteration (only if relevant files changed)
       autofix_git_sha="$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')"
 
-      if [[ -f "$RALPH/fix-markdown.sh" ]]; then
+      # Check what files have changed (staged + unstaged)
+      changed_files="$(
+        git diff --name-only HEAD 2>/dev/null
+        git diff --name-only --cached 2>/dev/null
+      )"
+      md_changed=$(echo "$changed_files" | grep -c '\.md$' || true)
+
+      # Run fix-markdown only if .md files changed (saves ~7.5s when no markdown changes)
+      if [[ -f "$RALPH/fix-markdown.sh" ]] && [[ "$md_changed" -gt 0 ]]; then
+        echo "Running auto-fix for markdown ($md_changed .md file(s) changed)..."
         fix_md_id="$(tool_call_id)"
         fix_md_key="fix-markdown|${autofix_git_sha}"
         run_tool "$fix_md_id" "fix-markdown" "$fix_md_key" "$autofix_git_sha" \
           "(cd \"$ROOT\" && bash \"$RALPH/fix-markdown.sh\" . 2>/dev/null) || true" || true
+      elif [[ "$md_changed" -eq 0 ]]; then
+        echo "Skipping fix-markdown (no .md files changed)"
       fi
 
-      if command -v pre-commit &>/dev/null; then
+      # Run pre-commit only if there are staged/unstaged changes
+      # Note: With commit batching, pre-commit now runs at PLAN start, not every BUILD
+      # This is a fallback for edge cases where BUILD has uncommitted changes
+      if command -v pre-commit &>/dev/null && [[ -n "$changed_files" ]]; then
+        echo "Running pre-commit on changed files..."
         precommit_id="$(tool_call_id)"
         precommit_key="pre-commit|${autofix_git_sha}"
         run_tool "$precommit_id" "pre-commit" "$precommit_key" "$autofix_git_sha" \
           "(cd \"$ROOT\" && pre-commit run --all-files 2>/dev/null) || true" || true
+      elif [[ -z "$changed_files" ]]; then
+        echo "Skipping pre-commit (no changes to check)"
       fi
 
       # Run verifier to get current state (Ralph will see WARN/FAIL in context)
