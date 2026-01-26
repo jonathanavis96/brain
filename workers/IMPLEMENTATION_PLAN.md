@@ -321,7 +321,7 @@
   - **Goal:** Show when current task exceeds 2x median (⚠️ warning)
   - **AC:** Footer shows "⚠️ Current task exceeding median" when appropriate
 
-- [ ] **9C.3.2** Create decomposition checklist in `skills/playbooks/`
+- [x] **9C.3.2** Create decomposition checklist in `skills/playbooks/`
   - **Goal:** Playbook for breaking down oversized tasks
   - **AC:** `skills/playbooks/decompose-large-tasks.md` exists with decision criteria
 
