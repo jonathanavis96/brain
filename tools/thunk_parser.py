@@ -203,6 +203,16 @@ def main():
         action="store_true",
         help="Print the last THUNK entry number (for appends)",
     )
+    parser.add_argument(
+        "--search",
+        type=str,
+        help="Search THUNK entries by keyword (case-insensitive)",
+    )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        help="Limit number of search results (used with --search)",
+    )
 
     args = parser.parse_args()
 
@@ -223,6 +233,25 @@ def main():
     if args.last_id:
         last_entry = max(entries, key=lambda e: e.thunk_num)
         print(last_entry.thunk_num)
+        return 0
+
+    # Search by keyword if requested
+    if args.search:
+        keyword = args.search.lower()
+        matching_entries = [
+            e
+            for e in entries
+            if keyword in e.description.lower()
+            or keyword in e.original_id.lower()
+            or keyword in e.era.lower()
+        ]
+
+        # Apply limit if specified
+        if args.limit and args.limit > 0:
+            matching_entries = matching_entries[: args.limit]
+
+        json_data = ThunkExporter.to_json(matching_entries, None)
+        print(json_data)
         return 0
 
     # Query by ID if requested

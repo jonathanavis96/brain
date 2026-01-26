@@ -663,7 +663,7 @@
   - **Token savings:** Replaces `tail THUNK.md | grep | awk`
   - **Completed:** 2026-01-26
 
-- [ ] **21.1.4** Add `--search` option with keyword matching [MEDIUM]
+- [x] **21.1.4** Add `--search` option with keyword matching [MEDIUM]
   - **Goal:** Search THUNK entries by keyword
   - **Usage:** `python3 tools/thunk_parser.py --search "shellcheck" --limit 5`
   - **AC:** Returns matching entries as JSON
