@@ -193,6 +193,11 @@ def main():
     parser.add_argument(
         "--stats", action="store_true", help="Print statistics instead of data"
     )
+    parser.add_argument(
+        "--query-id",
+        type=str,
+        help="Query THUNK by original task ID (e.g., '11.1.3')",
+    )
 
     args = parser.parse_args()
 
@@ -207,6 +212,17 @@ def main():
 
     if not entries:
         print(f"Warning: No entries found in {thunk_file}", file=sys.stderr)
+        return 0
+
+    # Query by ID if requested
+    if args.query_id:
+        matching_entries = [e for e in entries if e.original_id == args.query_id]
+        if matching_entries:
+            json_data = ThunkExporter.to_json(matching_entries, None)
+            print(json_data)
+        else:
+            # Return empty JSON array if not found
+            print("[]")
         return 0
 
     # Print statistics if requested
