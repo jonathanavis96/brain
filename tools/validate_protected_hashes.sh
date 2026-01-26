@@ -39,6 +39,22 @@ check_protected_file() {
 
   # Check if file exists
   if [[ ! -f "$file" ]]; then
+    # If the file is protected and tracked, missing usually means it was deleted
+    # (possibly staged for deletion). Treat that as a failure.
+    if git ls-files --error-unmatch "$file" >/dev/null 2>&1; then
+      # Tracked file is missing
+      echo -e "${RED}[FAIL]${NC} $file (protected file missing; tracked by git)" >&2
+      VALIDATION_FAILED=1
+      return 1
+    fi
+
+    # Also fail if the file is staged for deletion
+    if git diff --name-only --cached --diff-filter=D | grep -qx "$file"; then
+      echo -e "${RED}[FAIL]${NC} $file (protected file staged for deletion)" >&2
+      VALIDATION_FAILED=1
+      return 1
+    fi
+
     echo -e "${YELLOW}[SKIP]${NC} $file (file not found)"
     return 0
   fi
@@ -119,8 +135,8 @@ if [[ $VALIDATION_FAILED -gt 0 ]]; then
   echo -e "${RED}FAILED${NC}: Cannot commit - protected files have hash mismatches"
   echo ""
   echo "To fix:"
-  echo "  1. If changes are intentional, regenerate hash:"
-  echo "     sha256sum <file> > <hash_file>"
+  echo "  1. If changes are intentional, regenerate hash (hash-only):"
+  echo "     sha256sum <file> | cut -d' ' -f1 > <hash_file>"
   echo "  2. If changes are accidental, revert the file:"
   echo "     git checkout <file>"
   echo "  3. To bypass (DANGER - only for emergency fixes):"

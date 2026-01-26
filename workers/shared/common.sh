@@ -670,7 +670,7 @@ guard_plan_only_mode() {
 
   # Pattern-match action against blocked categories
   case "$action" in
-    git\ add | git\ commit | git\ push)
+    git\ add* | git\ commit* | git\ push*)
       # git-write operations blocked
       echo "PLAN-ONLY: Refusing '$action'. Add task to plan instead." >&2
       return 1
@@ -680,7 +680,7 @@ guard_plan_only_mode() {
       echo "PLAN-ONLY: Refusing '$action'. Add task to plan instead." >&2
       return 1
       ;;
-    verifier.sh | pre-commit*)
+    verifier.sh* | pre-commit*)
       # verification operations blocked
       echo "PLAN-ONLY: Refusing '$action'. Add task to plan instead." >&2
       return 1
