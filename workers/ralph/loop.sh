@@ -346,7 +346,7 @@ ROLLBACK_COUNT=1
 RESUME_MODE=false
 NO_MONITORS=false
 CACHE_SKIP="${CACHE_SKIP:-false}"
-CACHE_MODE="${CACHE_MODE:-off}"           # off|record|use - controls cache behavior
+CACHE_MODE="${CACHE_MODE:-use}"           # off|record|use - controls cache behavior (default: use)
 CACHE_SCOPE="${CACHE_SCOPE:-verify,read}" # verify,read,llm_ro - comma-separated list of allowed scopes
 
 # Export cache variables so subprocesses (verifier.sh) inherit them
@@ -892,12 +892,96 @@ stage_scoped_changes() {
     git add "$ROOT/$file" 2>/dev/null && staged_count=$((staged_count + 1))
   done <<<"$changed_files"
 
+  # Protected file rule: ensure .verify hash files are staged with their protected files
+  # This prevents pre-commit hash validation failures
+  # Protected files: loop.sh, verifier.sh, PROMPT.md, rules/AC.rules, AGENTS.md
+  local protected_files=("loop" "verifier" "prompt" "ac" "agents")
+  local verify_dirs=(".verify" "workers/.verify" "workers/ralph/.verify" "templates/ralph/.verify")
+
+  for pf in "${protected_files[@]}"; do
+    # Check if any file with this base is staged
+    if git diff --cached --name-only | grep -qiE "(${pf}\.sh|${pf}\.md|${pf}\.rules)$"; then
+      # Stage all corresponding hash files that have changes
+      for vdir in "${verify_dirs[@]}"; do
+        local hash_file="${vdir}/${pf}.sha256"
+        if [[ -f "$ROOT/$hash_file" ]] && ! git diff --quiet -- "$ROOT/$hash_file" 2>/dev/null; then
+          git add "$ROOT/$hash_file" 2>/dev/null && staged_count=$((staged_count + 1))
+        fi
+      done
+    fi
+  done
+
   if [[ $staged_count -gt 0 ]]; then
     echo "Staged $staged_count file(s) (scoped staging)"
     return 0
   else
     return 1
   fi
+}
+
+# =============================================================================
+# Cache Status Banner - Show effective cache state with reason
+# =============================================================================
+# Prints human-readable banner showing:
+#   - Effective cache mode (ON/OFF)
+#   - Reason for state (pending_tasks, user_disabled, staged_changes, etc.)
+#   - Working tree dirty status (clean/staged/unstaged)
+#   - Phase context
+#
+# Usage: print_cache_banner <phase> <iter>
+print_cache_banner() {
+  local phase="$1"
+  local iter="$2"
+  local effective_mode="$CACHE_MODE"
+  local reason=""
+  local dirty_status="clean"
+
+  # Check dirty status
+  if ! git diff --cached --quiet 2>/dev/null; then
+    dirty_status="staged"
+  elif ! git diff --quiet 2>/dev/null; then
+    dirty_status="unstaged"
+  fi
+
+  # Determine effective mode and reason
+  if [[ "$CACHE_MODE" == "off" ]]; then
+    effective_mode="OFF"
+    reason="user_disabled"
+  elif [[ "$CACHE_MODE" == "record" ]]; then
+    effective_mode="RECORD"
+    reason="recording_mode"
+  else
+    # Cache mode is "use" - check guards
+    local plan_file="${ROOT}/workers/IMPLEMENTATION_PLAN.md"
+    if [[ "$phase" == "build" ]] && [[ -f "$plan_file" ]] && grep -q "^- \[ \]" "$plan_file"; then
+      effective_mode="OFF"
+      reason="pending_tasks"
+    elif [[ "$dirty_status" == "staged" ]]; then
+      # Staged changes = transitional state, disable cache for safety
+      effective_mode="OFF"
+      reason="staged_changes"
+    else
+      effective_mode="ON"
+      reason="normal"
+    fi
+  fi
+
+  # Print banner
+  echo ""
+  echo "========================================"
+  if [[ "$effective_mode" == "ON" ]]; then
+    echo "🚀 CACHE: ON (reason=$reason, phase=$phase, dirty=$dirty_status)"
+  elif [[ "$effective_mode" == "RECORD" ]]; then
+    echo "📝 CACHE: RECORD (reason=$reason, phase=$phase, dirty=$dirty_status)"
+  else
+    echo "⏸️  CACHE: OFF (reason=$reason, phase=$phase, dirty=$dirty_status)"
+  fi
+  echo "========================================"
+  echo ""
+
+  # Emit marker for tooling
+  local banner_ts=$(($(date +%s%N) / 1000000))
+  emit_marker ":::CACHE_EFFECTIVE::: mode=$effective_mode reason=$reason phase=$phase dirty=$dirty_status iter=$iter ts=$banner_ts"
 }
 
 # Emit a structured marker to stderr AND log file (if set)
@@ -1676,6 +1760,9 @@ if [[ -n "$PROMPT_ARG" ]]; then
     cache_config_ts="$(($(date +%s%N) / 1000000))"
     emit_marker ":::CACHE_CONFIG::: mode=$CACHE_MODE scope=$CACHE_SCOPE exported=1 iter=$i ts=$cache_config_ts"
 
+    # Print human-readable cache status banner (shows effective state after guards)
+    print_cache_banner "custom" "$i"
+
     # Check for interrupt before starting iteration
     if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
       echo ""
@@ -1825,6 +1912,14 @@ else
     # Log cache config for Cortex visibility (task X.4.1)
     cache_config_ts="$(($(date +%s%N) / 1000000))"
     emit_marker ":::CACHE_CONFIG::: mode=$CACHE_MODE scope=$CACHE_SCOPE exported=1 iter=$i ts=$cache_config_ts"
+
+    # Determine phase for cache banner (plan vs build)
+    current_phase="build"
+    if [[ "$i" -eq 1 ]] || ((PLAN_EVERY > 0 && ((i - 1) % PLAN_EVERY == 0))); then
+      current_phase="plan"
+    fi
+    # Print human-readable cache status banner (shows effective state after guards)
+    print_cache_banner "$current_phase" "$i"
 
     # Check for interrupt before starting iteration
     if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
@@ -2030,8 +2125,8 @@ else
       if [[ "$current_tasks" -gt "$snapshot_tasks" ]]; then
         new_task_count=$((current_tasks - snapshot_tasks))
         echo ""
-        echo "⚠️  Plan drift detected: $new_task_count new task(s) added directly to workers/IMPLEMENTATION_PLAN.md"
-        echo "    Tasks should be added via cortex/IMPLEMENTATION_PLAN.md and synced."
+        echo "ℹ️  Plan updated: $new_task_count new task(s) added to workers/IMPLEMENTATION_PLAN.md"
+        echo "    (workers/IMPLEMENTATION_PLAN.md is the source of truth - this is normal)"
         echo ""
       fi
       # Clean up snapshot
