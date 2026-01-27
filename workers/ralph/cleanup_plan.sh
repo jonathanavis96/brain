@@ -74,18 +74,28 @@ echo "Cleaning up workers/IMPLEMENTATION_PLAN.md..."
 
 # Build list of potentially orphaned entries by checking context
 orphaned_entries=""
-prev_line=""
+# Track last seen task line and its line number
+last_task_line_num=0
 line_num=0
 while IFS= read -r line; do
   line_num=$((line_num + 1))
-  # Check for indented sub-item pattern
-  if echo "$line" | grep -qE '^[[:space:]]+-[[:space:]]+\*\*(Goal|AC|Completed):\*\*'; then
-    # If previous line is blank or a header, this is orphaned
-    if [[ -z "$prev_line" ]] || echo "$prev_line" | grep -qE '^###'; then
+  
+  # Track parent task lines (- [ ] or - [x] or - [?])
+  # Match task IDs like: **1.2**, **34.1.3**, **0.L.1**, etc.
+  if echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\[[xX \?]\][[:space:]]+\*\*[0-9]+(\.[0-9A-Za-z]+)+'; then
+    last_task_line_num=$line_num
+  fi
+  
+  # Check for indented sub-item pattern (Goal, AC, Completed, Verification, If Blocked, Implementation)
+  if echo "$line" | grep -qE '^[[:space:]]+-[[:space:]]+\*\*(Goal|AC|Completed|Verification|If Blocked|Implementation):\*\*'; then
+    # Calculate distance from last parent task
+    distance=$((line_num - last_task_line_num))
+    
+    # If no parent task seen yet, or distance > 100 lines (reasonable threshold), flag as orphaned
+    if [[ $last_task_line_num -eq 0 ]] || [[ $distance -gt 100 ]]; then
       orphaned_entries="${orphaned_entries}${line_num}: ${line}\n"
     fi
   fi
-  prev_line="$line"
 done <"$PLAN_FILE"
 
 if [[ -n "$orphaned_entries" ]]; then
