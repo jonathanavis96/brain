@@ -3,6 +3,8 @@
 **Date:** 2026-01-21 20:30:00  
 **Analyzed by:** Cortex
 
+**2026-01-27 note:** Atlassian UI "Session context" meter appears to have increased from ~200K max to ~272K max for the same model/profile (likely a platform-side update). Practical implication: slightly more headroom before truncation, but keep using token-efficient practices to reduce latency and cognitive load.
+
 ## Summary Statistics
 
 | Component                    | Lines | Words | Bytes  | Est. Tokens |
