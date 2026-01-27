@@ -330,3 +330,10 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-27 | 27.1 | - [x] **27.1** Review GAP_BACKLOG for P0/P1 items ready for promotion |
 | 2026-01-27 | 27.2 | - [x] **27.2** Promote "Custom Semantic Code Review Tool (LLM-Based Linting)" gap |
 | 2026-01-27 | 28.1 | - [x] **28.1** Audit templates for post-Phase-24 drift |
+
+### Archived on 2026-01-27
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | WARN.MD024.cortex/PLAN_DONE.md | - [x] **WARN.MD024.cortex/PLAN_DONE.md** - Fix MD024/no-duplicate-heading in cortex/PLAN_DONE.md line 323 |
+| 2026-01-27 | WARN.MD024.workers/PLAN_DONE.md | - [x] **WARN.MD024.workers/PLAN_DONE.md** - Fix MD024/no-duplicate-heading in workers/PLAN_DONE.md line 265 |
