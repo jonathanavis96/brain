@@ -52,6 +52,13 @@
   - [Repo root and path discovery](#repo-root-and-path-discovery)
   - [WSL2 runtime assumptions](#wsl2-runtime-assumptions)
   - [Developer quickstart](#developer-quickstart)
+- [Graph Query Contracts (API)](#graph-query-contracts-api)
+  - [General conventions](#general-conventions)
+  - [Canonical error response shape](#canonical-error-response-shape)
+  - [Filtering and pagination (shared)](#filtering-and-pagination-shared)
+  - [Deterministic ordering rules](#deterministic-ordering-rules)
+  - [Write safety and concurrency rules](#write-safety-and-concurrency-rules)
+  - [Endpoints (MVP)](#endpoints-mvp)
 - [F) Step-by-step build plan (phased)](#f-step-by-step-build-plan-phased)
   - [MVP](#mvp)
   - [V1](#v1)
@@ -917,6 +924,555 @@ Commands:
 - Opening `http://localhost:5173` shows the Brain Map UI.
 - The UI successfully calls the backend at `http://localhost:8000`.
 
+## Graph Query Contracts (API)
+
+This section defines the canonical REST API contract between the Brain Map frontend (Vite + React) and backend (FastAPI). These contracts are MVP-first and intended to be sufficient for implementing both backend and frontend integration without guesswork.
+
+The API is local-first and assumes the backend runs on `http://localhost:8000` by default.
+
+### General conventions
+
+#### Content types
+
+- Requests with bodies use `Content-Type: application/json`.
+- Responses use `Content-Type: application/json` unless explicitly noted.
+
+#### Timestamps
+
+- Timestamps are ISO8601 strings with timezone (e.g., `2026-01-27T02:00:00+00:00`).
+
+#### Identifiers
+
+- Node identity is `id` (see [ID rules (precise)](#id-rules-precise)).
+- Path parameters that identify nodes always use `id`.
+
+#### Success response envelope
+
+- Success responses are plain JSON objects as specified per endpoint.
+- Errors always use the canonical error envelope.
+
+### Canonical error response shape
+
+All non-2xx responses (except where explicitly stated) must follow:
+
+```json
+{
+  "error": {
+    "code": "...",
+    "message": "...",
+    "details": {}
+  }
+}
+```
+
+Rules:
+
+- `error.code` is stable and machine-actionable.
+- `error.message` is human-readable.
+- `error.details` is an object; it may be empty `{}`.
+
+#### Example errors
+
+Validation failure (400):
+
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Field 'type' must be one of: Inbox, Concept, System, Decision, TaskContract, Artifact.",
+    "details": {
+      "field": "type",
+      "allowed": ["Inbox", "Concept", "System", "Decision", "TaskContract", "Artifact"],
+      "received": "Idea"
+    }
+  }
+}
+```
+
+Duplicate id (409):
+
+```json
+{
+  "error": {
+    "code": "DUPLICATE_ID",
+    "message": "Duplicate node id detected during index rebuild.",
+    "details": {
+      "id": "bm_550e8400-e29b-41d4-a716-446655440000",
+      "paths": [
+        "app/brain-map/notes/inbox/a.md",
+        "app/brain-map/notes/concepts/b.md"
+      ]
+    }
+  }
+}
+```
+
+Unknown node id (404):
+
+```json
+{
+  "error": {
+    "code": "NODE_NOT_FOUND",
+    "message": "No node exists with id 'bm_...'.",
+    "details": {
+      "id": "bm_00000000-0000-4000-8000-000000000000"
+    }
+  }
+}
+```
+
+Index unavailable (503):
+
+```json
+{
+  "error": {
+    "code": "INDEX_UNAVAILABLE",
+    "message": "No index is currently available. Rebuild required.",
+    "details": {
+      "action": "REBUILD_INDEX"
+    }
+  }
+}
+```
+
+### Filtering and pagination (shared)
+
+This subsection defines canonical filter parameters shared across endpoints.
+
+#### Canonical filter fields
+
+- `type`:
+  - single string (exact match) or list of strings
+- `status`:
+  - single string (exact match) or list of strings
+- `tags`:
+  - list of strings
+  - semantics: match if node has **all** tags by default
+  - optional override: `tags_mode=any` to match any tag
+- `updated_since`:
+  - ISO8601 timestamp; include nodes with `updated_at >= updated_since`
+- `updated_within_days`:
+  - integer; include nodes updated within the last N days
+- Relationship filters (for graph/subgraph endpoints):
+  - `include_rel_types`: list of relationship type strings
+  - `exclude_rel_types`: list of relationship type strings
+
+Rules:
+
+- If both include and exclude are provided, exclude is applied after include.
+- Unknown relationship type strings are a validation error.
+
+#### Pagination fields
+
+All endpoints that return potentially large lists must support pagination.
+
+Canonical pagination parameters:
+
+- `limit` (integer): default `100`, max `1000`.
+- `offset` (integer): default `0`.
+
+Pagination response metadata:
+
+- endpoints that support pagination must return:
+  - `items`: the list
+  - `page`: an object containing `limit`, `offset`, `total` (where total is available cheaply)
+
+If `total` is expensive to compute, it may be omitted in MVP, but `limit` and `offset` must always be present.
+
+### Deterministic ordering rules
+
+Deterministic ordering is required for stable UI rendering and testability.
+
+Canonical ordering rules:
+
+- Nodes are ordered by:
+  1. `type` (lexicographic by the canonical enum string), then
+  2. `title` (case-insensitive), then
+  3. `id` (lexicographic)
+
+- Edges are ordered by:
+  1. `from` (lexicographic id), then
+  2. `type` (lexicographic), then
+  3. `to` (lexicographic id)
+
+Search result ordering:
+
+- Primary order is descending relevance score.
+- Tie-breakers must be stable:
+  - `title` (case-insensitive) then `id`.
+
+### Write safety and concurrency rules
+
+The write path is markdown-first and must preserve data integrity.
+
+#### Atomic write expectations (required)
+
+- Writes to Markdown notes must be atomic (temp file + rename/replace) and must never corrupt Markdown.
+- On write failure, the original file must remain unchanged.
+
+#### Reindex behavior (required)
+
+- Any successful node create/update must trigger a reindex attempt.
+- Index publish rules from [Failure & recovery model](#failure--recovery-model) apply:
+  - rebuild into a temporary index
+  - publish only on full success
+  - preserve last known-good index on failure
+
+#### Optimistic concurrency (MAY)
+
+The backend MAY implement optimistic concurrency. If implemented:
+
+- `PUT /node/{id}` accepts an optional `if_updated_at` field in the request body.
+- If the stored node has `updated_at != if_updated_at`, the backend returns `409 CONFLICT` with:
+  - `error.code = CONFLICT`
+  - details including the current `updated_at`.
+
+If optimistic concurrency is not implemented, the backend must behave as last-write-wins.
+
+### Endpoints (MVP)
+
+All endpoint paths below are relative to the backend base URL.
+
+#### GET /health
+
+Purpose: health check for UI.
+
+- **Response (200):**
+
+```json
+{
+  "status": "ok",
+  "version": "<string>",
+  "time": "<ISO8601>"
+}
+```
+
+- **Errors:** none (this endpoint should return 200 even if index is unavailable, but may include status metadata in the payload).
+
+#### GET /graph
+
+Purpose: return a graph snapshot for rendering.
+
+Request query parameters (all optional):
+
+- Filters:
+  - `type` (string or repeated query param)
+  - `status` (string or repeated)
+  - `tags` (repeated)
+  - `tags_mode` (`all` default, or `any`)
+  - `updated_since` (ISO8601)
+  - `updated_within_days` (int)
+- Relationship filters:
+  - `include_rel_types` (repeated)
+  - `exclude_rel_types` (repeated)
+- Pagination (MVP support required):
+  - `limit` (int)
+  - `offset` (int)
+
+Response (200):
+
+```json
+{
+  "nodes": [
+    {
+      "id": "bm_...",
+      "title": "...",
+      "type": "Concept",
+      "status": "planned",
+      "tags": ["..."],
+      "created_at": "<ISO8601>",
+      "updated_at": "<ISO8601>",
+      "source_path": "app/brain-map/notes/.../file.md",
+      "metrics": {
+        "density": 0.0,
+        "recency": 0.0,
+        "task": 0.0
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "bm_...",
+      "to": "bm_...",
+      "type": "depends_on",
+      "created_at": "<ISO8601>"
+    }
+  ],
+  "page": {
+    "limit": 100,
+    "offset": 0,
+    "total": 123
+  }
+}
+```
+
+Notes:
+
+- `metrics` values are 0..1 floats when available; if a metric is not computed in MVP, it must be present as `null`.
+- Ordering rules must follow [Deterministic ordering rules](#deterministic-ordering-rules).
+
+Status codes:
+
+- `200 OK`: success
+- `400 BAD REQUEST`: invalid filter values or invalid rel types
+- `503 SERVICE UNAVAILABLE`: index unavailable (`INDEX_UNAVAILABLE`)
+
+#### GET /node/{id}
+
+Purpose: fetch a single node.
+
+Path parameters:
+
+- `id` (string): node id.
+
+Response (200):
+
+```json
+{
+  "node": {
+    "id": "bm_...",
+    "title": "...",
+    "type": "System",
+    "status": "active",
+    "tags": ["..."],
+    "created_at": "<ISO8601>",
+    "updated_at": "<ISO8601>",
+    "priority": "P1",
+    "risk": "medium",
+    "owner": "Ralph",
+    "source_links": ["..."],
+    "acceptance_criteria": ["..."],
+    "links": [
+      {
+        "to": "bm_...",
+        "type": "depends_on",
+        "title": "Optional cached title",
+        "note": "Optional note",
+        "created_at": "<ISO8601>"
+      }
+    ],
+    "schema_version": 1
+  },
+  "body_md": "<markdown body without frontmatter>"
+}
+```
+
+Status codes:
+
+- `200 OK`
+- `404 NOT FOUND` (`NODE_NOT_FOUND`)
+- `503 SERVICE UNAVAILABLE` (`INDEX_UNAVAILABLE`)
+
+#### POST /node
+
+Purpose: create a new node (markdown-first).
+
+Request body (JSON):
+
+```json
+{
+  "title": "...",
+  "type": "Inbox",
+  "status": "idea",
+  "tags": ["..."],
+  "priority": "P2",
+  "risk": "low",
+  "owner": "Human",
+  "source_links": ["..."],
+  "acceptance_criteria": ["..."],
+  "links": [
+    {"to": "bm_...", "type": "related_to", "title": "Optional cached title", "note": "Optional"}
+  ],
+  "body_md": "...",
+  "id": "bm_..."
+}
+```
+
+Rules:
+
+- `id` is optional in request.
+  - If omitted, backend generates an id per [ID rules (precise)](#id-rules-precise).
+  - If provided, it must validate and must not conflict with an existing id.
+- If `type` is omitted, backend defaults to `Inbox`.
+- If `status` is omitted, backend defaults to `idea`.
+- If `tags` is omitted, backend defaults to `[]`.
+
+Response (201):
+
+```json
+{
+  "node": {
+    "id": "bm_...",
+    "source_path": "app/brain-map/notes/.../new-file.md",
+    "created_at": "<ISO8601>",
+    "updated_at": "<ISO8601>"
+  },
+  "reindexed": true
+}
+```
+
+Status codes:
+
+- `201 CREATED`
+- `400 BAD REQUEST` (`VALIDATION_ERROR`)
+- `409 CONFLICT` (`DUPLICATE_ID`)
+- `503 SERVICE UNAVAILABLE` (`INDEX_UNAVAILABLE`) if no index exists and rebuild cannot proceed
+
+#### PUT /node/{id}
+
+Purpose: update an existing node (markdown-first write).
+
+Path parameters:
+
+- `id` (string): node id.
+
+Request body (JSON):
+
+```json
+{
+  "title": "...",
+  "status": "active",
+  "tags": ["..."],
+  "priority": "P1",
+  "risk": "medium",
+  "owner": "Ralph",
+  "source_links": ["..."],
+  "acceptance_criteria": ["..."],
+  "links": [
+    {"to": "bm_...", "type": "depends_on", "title": "Optional", "note": "Optional"}
+  ],
+  "body_md": "...",
+  "if_updated_at": "<ISO8601>"
+}
+```
+
+Rules:
+
+- `id` in the path is authoritative.
+- The backend must not allow changing `id`.
+- `type` changes are allowed only as “promotion” (Inbox → other type) but must never change id.
+  - If `type` changes are supported via this endpoint, the request body must include `type`.
+
+Response (200):
+
+```json
+{
+  "node": {
+    "id": "bm_...",
+    "updated_at": "<ISO8601>",
+    "source_path": "app/brain-map/notes/.../file.md"
+  },
+  "reindexed": true
+}
+```
+
+Status codes:
+
+- `200 OK`
+- `400 BAD REQUEST` (`VALIDATION_ERROR`)
+- `404 NOT FOUND` (`NODE_NOT_FOUND`)
+- `409 CONFLICT` (`CONFLICT` or `DUPLICATE_ID`)
+- `503 SERVICE UNAVAILABLE` (`INDEX_UNAVAILABLE`)
+
+#### GET /search
+
+Purpose: fast global search for nodes.
+
+Query parameters:
+
+- `q` (string, required): search query.
+- Filters (optional):
+  - `type` (string or repeated)
+  - `status` (string or repeated)
+  - `tags` (repeated)
+  - `tags_mode` (`all` default, or `any`)
+  - `updated_since` (ISO8601)
+  - `updated_within_days` (int)
+- Pagination:
+  - `limit` (int)
+  - `offset` (int)
+
+Response (200):
+
+```json
+{
+  "items": [
+    {
+      "id": "bm_...",
+      "title": "...",
+      "type": "Concept",
+      "status": "planned",
+      "tags": ["..."],
+      "updated_at": "<ISO8601>",
+      "score": 12.34
+    }
+  ],
+  "page": {
+    "limit": 50,
+    "offset": 0,
+    "total": 200
+  }
+}
+```
+
+Status codes:
+
+- `200 OK`
+- `400 BAD REQUEST` (`VALIDATION_ERROR`)
+- `503 SERVICE UNAVAILABLE` (`INDEX_UNAVAILABLE`)
+
+#### POST /generate-plan
+
+Purpose: generate a deterministic plan from selected nodes and a subgraph extraction rule.
+
+Request body (JSON):
+
+```json
+{
+  "selection": ["bm_...", "bm_..."],
+  "depth": 2,
+  "include_rel_types": ["implements", "depends_on", "blocks", "validated_by", "replaces", "related_to"],
+  "exclude_rel_types": ["related_to"],
+  "output": {
+    "write": true,
+    "path": "app/brain-map/generated/IMPLEMENTATION_PLAN.generated.md"
+  }
+}
+```
+
+Rules:
+
+- `selection` is required and must contain at least one id.
+- `depth` must be a non-negative integer; recommended default `2`.
+- Relationship types must validate against the canonical enum.
+- Output behavior:
+  - If `output.write=true`, the backend writes the plan to `output.path`.
+  - If `output.path` is omitted, the backend writes to a canonical default under `app/brain-map/generated/`.
+
+Response (200):
+
+```json
+{
+  "markdown": "<generated markdown>",
+  "written": {
+    "path": "app/brain-map/generated/IMPLEMENTATION_PLAN.generated.md"
+  },
+  "inputs": {
+    "selection": ["bm_..."],
+    "depth": 2,
+    "include_rel_types": ["implements", "depends_on"],
+    "exclude_rel_types": ["related_to"]
+  }
+}
+```
+
+Status codes:
+
+- `200 OK`
+- `400 BAD REQUEST` (`VALIDATION_ERROR`)
+- `404 NOT FOUND` (`NODE_NOT_FOUND`) if any selection id is unknown
+- `503 SERVICE UNAVAILABLE` (`INDEX_UNAVAILABLE`)
+
 ## F) Step-by-step build plan (phased)
 
 ### MVP
@@ -1445,3 +2001,4 @@ This canonical spec adds and fully specifies the following mandatory sections as
 - Agent Ingestion Contract
 - Appendix added: Frontmatter & Link Schema (Canonical)
 - Added: Repository Layout & Integration (Canonical)
+- Added: Graph Query Contracts (API)
