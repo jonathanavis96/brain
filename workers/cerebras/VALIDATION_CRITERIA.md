@@ -126,10 +126,10 @@ pre-commit run end-of-file-fixer --all-files
 cd workers/cerebras || exit
 
 # 1. Syntax check
-bash -n *.sh
+bash -n ./*.sh
 
 # 2. Quick lint
-markdownlint *.md
+markdownlint ./*.md
 
 # 3. Verifier
 bash verifier.sh
@@ -138,7 +138,7 @@ bash verifier.sh
 ### Full Check (Comprehensive - Before Push)
 
 ```bash
-cd ~/code/brain
+cd ~/code/brain || exit
 
 # 1. All pre-commit hooks
 pre-commit run --all-files
