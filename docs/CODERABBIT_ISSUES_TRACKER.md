@@ -51,6 +51,22 @@ These items were raised by CodeRabbit during review (advisory) and were validate
     - Collapse the checklist into a single valid Markdown table row and clarify that archived line numbers refer to the file state at the time.
     - Add an explicit note that template sync is still required for `templates/ralph/loop.sh` (and its `.verify` hash).
 
+- **Brain map spec — missing Inbox node type in Node types list** (✅ Fixed, `f244e7d`)
+  - **What was broken:** The `Node types` bullet list omitted `Inbox`, while other parts of the spec treat Inbox as a first-class type.
+  - **Fix approach:** Add `Inbox` to the list with a short “capture/triage” description so the spec is self-consistent.
+
+- **Brain dashboard — timestamp freshness + timezone mismatch** (✅ Fixed, `85376f7`)
+  - **What was broken:**
+    - `artifacts/brain_metrics.json.generated_at` could be earlier than `max(commit_frequency[].date)`.
+    - `artifacts/dashboard.html` subtitle used a local timestamp without timezone and drifted from `generated_at`.
+  - **Fix approach:**
+    - In `collect_metrics.sh`, compute `generated_at` in UTC and ensure it is >= max reported commit date (uses end-of-day UTC if needed).
+    - In `generate_dashboard.py`, render the subtitle directly from `metrics.generated_at` and append `(UTC)`.
+
+- **Workers plan marker — task-contract insertion marker misplaced** (✅ Fixed, `836e2d2`)
+  - **What was broken:** `<!-- Cortex adds new Task Contracts below this line -->` appeared after Phase 24, which violates the “append new contracts below the marker” convention.
+  - **Fix approach:** Move the marker line so it is immediately above `## Phase 24: ...` and ensure it exists exactly once.
+
 - **PLAN-only guard — args bypass** (✅ Fixed, `c81c16c`)
   - **Fix approach:** ensure `guard_plan_only_mode` matches command prefixes with wildcards so `git commit -m ...` is blocked.
   - **Snippet (pattern):**
