@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 import Graph from 'graphology'
 import Sigma from 'sigma'
 import FA2Layout from 'graphology-layout-forceatlas2/worker'
@@ -73,6 +73,11 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
   const [expandedClusters, setExpandedClusters] = useState(new Set())
   const [clusterData, setClusterData] = useState(null)
 
+  // Derive showClusters from zoomLevel - only changes when threshold is crossed
+  const showClusters = useMemo(() => {
+    return zoomLevel < ZOOM_THRESHOLDS.CLUSTER_VIEW
+  }, [zoomLevel])
+
   useEffect(() => {
     // Build query string from filters
     const params = new URLSearchParams()
@@ -116,9 +121,6 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
 
     // Create graphology graph
     const graph = new Graph()
-
-    // Determine if we should show clusters or individual nodes
-    const showClusters = zoomLevel < ZOOM_THRESHOLDS.CLUSTER_VIEW
 
     if (showClusters) {
       // Cluster mode: show supernodes
@@ -234,7 +236,8 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
         defaultNodeColor: '#999',
         defaultEdgeColor: '#ccc',
         labelFont: 'system-ui, sans-serif',
-        labelSize: 12
+        labelSize: 12,
+        labelRenderedSizeThreshold: 8
       })
 
       // Handle node clicks
@@ -280,7 +283,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
         layout.kill()
       }
     }
-  }, [filteredData, clusterData, onNodeSelect, zoomLevel, expandedClusters, showRecencyHeat])
+  }, [filteredData, clusterData, onNodeSelect, expandedClusters, showRecencyHeat, showClusters])
 
   // Update node colors when showRecencyHeat changes
   useEffect(() => {
@@ -342,6 +345,80 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
           Click clusters to expand/collapse
         </div>
       )}
+      <div style={{
+        position: 'absolute',
+        bottom: '10px',
+        left: '10px',
+        display: 'flex',
+        gap: '4px'
+      }}>
+        <button
+          onClick={() => {
+            if (sigmaRef.current) {
+              sigmaRef.current.getCamera().animatedZoom({ duration: 300 })
+            }
+          }}
+          style={{
+            background: '#2196F3',
+            color: 'white',
+            border: 'none',
+            padding: '8px 12px',
+            borderRadius: '4px',
+            fontSize: '16px',
+            cursor: 'pointer',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+          }}
+          onMouseOver={(e) => e.target.style.background = '#1976D2'}
+          onMouseOut={(e) => e.target.style.background = '#2196F3'}
+          title="Zoom In"
+        >
+          ➕
+        </button>
+        <button
+          onClick={() => {
+            if (sigmaRef.current) {
+              sigmaRef.current.getCamera().animatedUnzoom({ duration: 300 })
+            }
+          }}
+          style={{
+            background: '#2196F3',
+            color: 'white',
+            border: 'none',
+            padding: '8px 12px',
+            borderRadius: '4px',
+            fontSize: '16px',
+            cursor: 'pointer',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+          }}
+          onMouseOver={(e) => e.target.style.background = '#1976D2'}
+          onMouseOut={(e) => e.target.style.background = '#2196F3'}
+          title="Zoom Out"
+        >
+          ➖
+        </button>
+        <button
+          onClick={() => {
+            if (sigmaRef.current) {
+              sigmaRef.current.getCamera().animatedReset()
+            }
+          }}
+          style={{
+            background: '#2196F3',
+            color: 'white',
+            border: 'none',
+            padding: '8px 12px',
+            borderRadius: '4px',
+            fontSize: '16px',
+            cursor: 'pointer',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+          }}
+          onMouseOver={(e) => e.target.style.background = '#1976D2'}
+          onMouseOut={(e) => e.target.style.background = '#2196F3'}
+          title="Fit to Screen"
+        >
+          🎯
+        </button>
+      </div>
     </div>
   )
 }

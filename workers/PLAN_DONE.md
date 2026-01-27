@@ -346,3 +346,15 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 - [x] **25.3.1** Frontend: semantic zoom + clustering (supernodes)
 - [x] **25.3.2** Backend: dependency analysis (cycles, critical path hints)
 - [x] **25.3.3** Plan generator improvements (toposort, richer dependency sections)
+
+### Archived on 2026-01-27 14:15:16
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | WARN.MD031.workers-impl | - [x] **WARN.MD031.workers-impl** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md |
+| 2026-01-27 | WARN.MD031.cortex-impl | - [x] **WARN.MD031.cortex-impl** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md |
+| 2026-01-27 | 29.2.1 | - [x] **29.2.1** Add `labelRenderedSizeThreshold: 8` to Sigma config in `GraphView.jsx` line 231-237 to auto-hide labels when nodes < 8px on screen. AC: When zoomed out, only large nodes show labels; when zoomed in, all labels visible. Verification: Manual test zoom behavior. If Blocked: Try threshold 6-12 |
+| 2026-01-27 | 29.3.1 | - [x] **29.3.1** Make Hotspots collapsible - Wrap Hotspots section in `InsightsPanel.jsx` lines ~45-80 with `<details open><summary style={{cursor:'pointer'}}>🔥 Hotspots</summary>...</details>`. AC: User can click to collapse/expand. Verification: Manual test collapse → form fields fully visible. If Blocked: Move Hotspots to bottom of panel |
+| 2026-01-27 | 30.1.1 | - [x] **30.1.1** Refactor cluster rebuild to use `showClusters` boolean |
+| 2026-01-27 | 30.2.1 | - [x] **30.2.1** Add "Fit to Screen" button |
+| 2026-01-27 | 30.2.2 | - [x] **30.2.2** Add zoom controls (+/- buttons) |

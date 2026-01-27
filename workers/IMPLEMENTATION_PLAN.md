@@ -20,103 +20,33 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
-## Phase 29: Brain Map UX Quick Wins (30 min) 🔥
+## Phase 0-Lint: Markdown Lint Fixes
 
-**Context:** User testing revealed three critical UX bugs blocking usability:
+**Context:** Auto-fix could not resolve these markdown errors. Manual fixes required.
 
-1. **Zoom reset bug** - Graph rebuilds on every zoom tick, resetting camera position
-2. **Label spaghetti** - All labels always visible, causing unreadable overlap
-3. **Hotspots overlay** - Fixed-position panel covers form input fields
+**Goal:** All markdown files pass `markdownlint` with zero errors.
 
-**Goal:** Fast tactical fixes to make the graph navigable and usable.
+**Tasks:**
 
-**Success Criteria:**
+- [x] **0.L.1** Fix MD046 in cortex/IMPLEMENTATION_PLAN.md line 50
+  - **Issue:** Indented code block should be fenced
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD046 errors)
 
-- User can zoom out without graph resetting
-- Labels readable (auto-hide when nodes too small on screen)
-- Hotspots panel doesn't block ID/Title/Type/Status fields
+- [x] **0.L.2** Fix MD024 in cortex/PLAN_DONE.md lines 341, 347
+  - **Issue:** Duplicate headings "Archived on 2026-01-27"
+  - **AC:** `markdownlint cortex/PLAN_DONE.md` passes (no MD024 errors)
 
----
+- [ ] **0.L.3** Fix MD046 in workers/IMPLEMENTATION_PLAN.md lines 40, 55
+  - **Issue:** Indented code blocks should be fenced
+  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD046 errors)
 
-### Task 29.1: Fix zoom reset bug
+- [ ] **0.L.4** Fix MD007 in workers/IMPLEMENTATION_PLAN.md lines 46-48, 77-79, 90-92
+  - **Issue:** Unordered list indentation (Expected: 0; Actual: 2)
+  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD007 errors)
 
-- [ ] **29.1.1** Remove `zoomLevel` from `useEffect` dependency array in `GraphView.jsx`
-  - **Goal:** Stop graph rebuild on every zoom event
-  - **File:** `app/brain-map/frontend/src/GraphView.jsx` line 282
-  - **Change:** Remove `zoomLevel` from deps array: `[filteredData, clusterData, onNodeSelect, expandedClusters, showRecencyHeat]`
-  - **AC:** After change, user can scroll wheel zoom in/out without graph resetting position
-  - **Verification:** Manual test - zoom out slowly, confirm camera position doesn't jump
-  - **If Blocked:** If cluster switching still feels janky, see 30.1.1 for derived state approach
-
-- [ ] **29.1.2** Add derived state for cluster mode toggle
-  - **Goal:** Rebuild graph only when crossing cluster threshold (0.5), not on every zoom tick
-  - **Implementation:**
-    ```jsx
-    const [showClusters, setShowClusters] = useState(false)
-    
-    // In camera 'updated' handler (line 263-266):
-    sigma.getCamera().on('updated', () => {
-      const ratio = sigma.getCamera().ratio
-      setZoomLevel(ratio)
-      const shouldCluster = ratio < ZOOM_THRESHOLDS.CLUSTER_VIEW
-      if (shouldCluster !== showClusters) {
-        setShowClusters(shouldCluster)
-      }
-    })
-    
-    // Then use showClusters in deps instead of zoomLevel
-    ```
-  - **AC:** Graph rebuilds only when crossing 0.5 zoom threshold (cluster mode on/off)
-  - **Verification:** Console.log in useEffect - should fire only at 0.5 crossing, not every zoom tick
-  - **If Blocked:** Keep 29.1.1 only; this task is optional polish
-
----
-
-### Task 29.2: Fix label overlap (hide small labels)
-
-- [ ] **29.2.1** Add `labelRenderedSizeThreshold` to Sigma config
-  - **Goal:** Auto-hide labels when nodes are too small on screen
-  - **File:** `app/brain-map/frontend/src/GraphView.jsx` line 231-237
-  - **Change:**
-    ```jsx
-    const sigma = new Sigma(graph, containerRef.current, {
-      renderEdgeLabels: false,
-      labelRenderedSizeThreshold: 8,  // Hide labels for nodes < 8px
-      defaultNodeColor: '#999',
-      defaultEdgeColor: '#ccc',
-      labelFont: 'system-ui, sans-serif',
-      labelSize: 12
-    })
-    ```
-  - **AC:** When zoomed out, only large nodes show labels; when zoomed in, all labels visible
-  - **Verification:** Zoom out until nodes are ~5-10px → labels disappear; zoom in → labels reappear
-  - **If Blocked:** Try threshold values 6-12 to find sweet spot
-
----
-
-### Task 29.3: Fix Hotspots panel overlay
-
-- [ ] **29.3.1** Make Hotspots collapsible using `<details>` element
-  - **Goal:** User can collapse Hotspots to reveal form fields below
-  - **File:** `app/brain-map/frontend/src/InsightsPanel.jsx`
-  - **Change:** Wrap Hotspots section (lines ~45-80) in:
-    ```jsx
-    <details open>
-      <summary style={{ 
-        cursor: 'pointer', 
-        fontWeight: 600, 
-        fontSize: '16px',
-        padding: '8px 0',
-        userSelect: 'none'
-      }}>
-        🔥 Hotspots
-      </summary>
-      {/* existing hotspots content */}
-    </details>
-    ```
-  - **AC:** User can click "🔥 Hotspots" to collapse/expand section
-  - **Verification:** Manual test - collapse Hotspots → form fields fully visible
-  - **If Blocked:** Alternative - move Hotspots to bottom of inspector panel (reorder DOM)
+- [ ] **0.L.5** Fix MD005 in workers/IMPLEMENTATION_PLAN.md line 94
+  - **Issue:** Inconsistent indentation for list items at the same level
+  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD005 errors)
 
 ---
 
@@ -136,63 +66,57 @@
 
 ### Task 30.1: Proper cluster mode switching
 
-- [ ] **30.1.1** Refactor cluster rebuild to use `showClusters` boolean
-  - **Goal:** Clean separation between zoom tracking and cluster mode switching
-  - **Implementation:** Move cluster decision logic to separate `useMemo`:
-    ```jsx
-    const showClusters = useMemo(() => {
-      return zoomLevel < ZOOM_THRESHOLDS.CLUSTER_VIEW
-    }, [zoomLevel])
-    ```
-  - **AC:** Graph rebuild fires only when `showClusters` boolean flips
-  - **Verification:** Add console.log in graph rebuild effect - fires only at 0.5 threshold crossing
-  - **If Blocked:** 29.1.2 already handles this; skip if satisfied
+```jsx
+const showClusters = useMemo(() => {
+  return zoomLevel < ZOOM_THRESHOLDS.CLUSTER_VIEW
+}, [zoomLevel])
+```
+
+- **AC:** Graph rebuild fires only when `showClusters` boolean flips
+- **Verification:** Add console.log in graph rebuild effect - fires only at 0.5 threshold crossing
+- **If Blocked:** 29.1.2 already handles this; skip if satisfied
 
 ---
 
 ### Task 30.2: Navigation controls (fit-to-screen + reset)
 
-- [ ] **30.2.1** Add "Fit to Screen" button
-  - **Goal:** User can recenter graph if they pan away and lose context
-  - **Implementation:** Add button to bottom-right controls (near cluster hint):
-    ```jsx
-    <button 
-      onClick={() => {
-        if (sigmaRef.current) {
-          sigmaRef.current.getCamera().animatedReset()
-        }
-      }}
-      style={{
-        position: 'absolute',
-        bottom: '10px',
-        right: '10px',
-        padding: '8px 12px',
-        background: 'rgba(255,255,255,0.9)',
-        border: '1px solid #ccc',
-        borderRadius: '4px',
-        cursor: 'pointer'
+```jsx
+<button 
+  onClick={() => {
+    if (sigmaRef.current) {
+      sigmaRef.current.getCamera().animatedReset()
+    }
+  }}
+  style={{
+    position: 'absolute',
+    bottom: '10px',
+    right: '10px',
+    padding: '8px 12px',
+    background: 'rgba(255,255,255,0.9)',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    cursor: 'pointer'
       }}
     >
       🎯 Fit to Screen
     </button>
     ```
-  - **AC:** Click button → graph zooms out to show all nodes
-  - **Verification:** Pan far away from center → click Fit → all nodes visible
-  - **If Blocked:** Use `sigma.getCamera().setState({ x: 0, y: 0, ratio: 1 })` as simpler alternative
 
-- [ ] **30.2.2** Add zoom controls (+/- buttons)
-  - **Goal:** Explicit zoom in/out buttons for users without scroll wheel
-  - **Implementation:** Add buttons next to Fit button:
-    ```jsx
-    <div style={{ position: 'absolute', bottom: '10px', right: '10px', display: 'flex', gap: '4px' }}>
-      <button onClick={() => sigma.getCamera().animatedZoom({ duration: 300 })}>➕</button>
-      <button onClick={() => sigma.getCamera().animatedUnzoom({ duration: 300 })}>➖</button>
-      <button onClick={() => sigma.getCamera().animatedReset()}>🎯</button>
-    </div>
-    ```
-  - **AC:** +/- buttons zoom in/out smoothly
-  - **Verification:** Click + 3 times → zooms in; click - 3 times → zooms out
-  - **If Blocked:** Lower priority; skip if time constrained
+- **AC:** Click button → graph zooms out to show all nodes
+- **Verification:** Pan far away from center → click Fit → all nodes visible
+- **If Blocked:** Use `sigma.getCamera().setState({ x: 0, y: 0, ratio: 1 })` as simpler alternative
+
+```jsx
+<div style={{ position: 'absolute', bottom: '10px', right: '10px', display: 'flex', gap: '4px' }}>
+  <button onClick={() => sigma.getCamera().animatedZoom({ duration: 300 })}>➕</button>
+  <button onClick={() => sigma.getCamera().animatedUnzoom({ duration: 300 })}>➖</button>
+  <button onClick={() => sigma.getCamera().animatedReset()}>🎯</button>
+</div>
+```
+
+- **AC:** +/- buttons zoom in/out smoothly
+- **Verification:** Click + 3 times → zooms in; click - 3 times → zooms out
+- **If Blocked:** Lower priority; skip if time constrained
 
 - [ ] **30.2.3** Add minimap or breadcrumb indicator
   - **Goal:** Show user where they are in the graph when panned away from center
@@ -212,6 +136,7 @@
 - [ ] **30.3.1** Implement hover-only label mode
   - **Goal:** Show labels only for hovered/selected nodes (alternative to threshold)
   - **Implementation:** Custom label reducer:
+
     ```jsx
     const sigma = new Sigma(graph, containerRef.current, {
       // ...
@@ -232,6 +157,7 @@
       sigma.refresh()
     })
     ```
+
   - **AC:** Labels appear only when mouse hovers over node
   - **Verification:** Move mouse over nodes → labels appear; move away → labels disappear
   - **If Blocked:** Lower priority; 29.2.1 threshold is sufficient for MVP
@@ -239,9 +165,11 @@
 - [ ] **30.3.2** Zoom-based label sizing
   - **Goal:** Scale label font size proportionally with zoom level
   - **Implementation:**
+
     ```jsx
     labelSize: Math.max(10, Math.min(16, 12 * zoomLevel))
     ```
+
   - **AC:** Labels grow/shrink as user zooms in/out
   - **Verification:** Zoom in → labels get bigger; zoom out → labels get smaller
   - **If Blocked:** Skip; static size is fine for MVP

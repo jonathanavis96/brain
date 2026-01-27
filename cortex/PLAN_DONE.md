@@ -331,9 +331,24 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-27 | 27.2 | - [x] **27.2** Promote "Custom Semantic Code Review Tool (LLM-Based Linting)" gap |
 | 2026-01-27 | 28.1 | - [x] **28.1** Audit templates for post-Phase-24 drift |
 
-### Archived on 2026-01-27
+### Archived on 2026-01-27 (Warnings)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
 | 2026-01-27 | WARN.MD024.cortex/PLAN_DONE.md | - [x] **WARN.MD024.cortex/PLAN_DONE.md** - Fix MD024/no-duplicate-heading in cortex/PLAN_DONE.md line 323 |
 | 2026-01-27 | WARN.MD024.workers/PLAN_DONE.md | - [x] **WARN.MD024.workers/PLAN_DONE.md** - Fix MD024/no-duplicate-heading in workers/PLAN_DONE.md line 265 |
+
+### Archived on 2026-01-27 (Batch 1)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 29.1.1 | - [x] **29.1.1** Remove `zoomLevel` from `useEffect` dependency array in `GraphView.jsx` |
+
+### Archived on 2026-01-27 (Batch 2)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 29.1.2 | - [x] **29.1.2** Add derived state for cluster mode toggle |
+| 2026-01-27 | 29.2.1 | - [x] **29.2.1** Add `labelRenderedSizeThreshold` to Sigma config |
+| 2026-01-27 | 29.3.1 | - [x] **29.3.1** Make Hotspots collapsible using `<details>` element |
+| 2026-01-27 | 30.1.1 | - [x] **30.1.1** Refactor cluster rebuild to use `showClusters` boolean |
