@@ -161,7 +161,7 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | 2026-01-27 | 25.1.9 | - [x] **25.1.9** Implement node update (`PUT /node/{id}`) with atomic write + reindex |
 | 2026-01-27 | 25.1.10 | - [x] **25.1.10** Implement `/generate-plan` endpoint (deterministic markdown + optional write) |
 
-### Archived on 2026-01-27 (Batch 5)
+### Archived on 2026-01-27 (Batch 5 - Morning)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
@@ -186,3 +186,24 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | 2026-01-27 |     - [x] Clicking a node selects it and triggers node detail fetch. |     - [x] Clicking a node selects it and triggers node detail fetch. |
 | 2026-01-27 | 25.1.12 | - [x] **25.1.12** Frontend: Node detail panel (read + edit + save) |
 | 2026-01-27 | 25.1.13 | - [x] **25.1.13** Frontend: Search palette (Ctrl+K) via `/search` |
+
+### Archived on 2026-01-27 (Batch 6)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | WARN.MD024.workers/PLAN_DONE.md-line140 | - [x] **WARN.MD024.workers/PLAN_DONE.md-line140** Fix MD024/no-duplicate-heading in workers/PLAN_DONE.md:140 |
+| 2026-01-27 | WARN.MD024.workers/PLAN_DONE.md-line164 | - [x] **WARN.MD024.workers/PLAN_DONE.md-line164** Fix MD024/no-duplicate-heading in workers/PLAN_DONE.md:164 |
+| 2026-01-27 | WARN.MD056.workers/ralph/THUNK.md-line864 | - [x] **WARN.MD056.workers/ralph/THUNK.md-line864** Fix MD056/table-column-count in workers/ralph/THUNK.md:864 |
+| 2026-01-27 | WARN.MD056.workers/ralph/THUNK.md-line865 | - [x] **WARN.MD056.workers/ralph/THUNK.md-line865** Fix MD056/table-column-count in workers/ralph/THUNK.md:865 |
+| 2026-01-27 | WARN.MD056.workers/ralph/THUNK.md-line866 | - [x] **WARN.MD056.workers/ralph/THUNK.md-line866** Fix MD056/table-column-count in workers/ralph/THUNK.md:866 |
+| 2026-01-27 | WARN.MD056.workers/ralph/THUNK.md-line867 | - [x] **WARN.MD056.workers/ralph/THUNK.md-line867** Fix MD056/table-column-count in workers/ralph/THUNK.md:867 |
+| 2026-01-27 | WARN.MD056.workers/ralph/THUNK.md-line868 | - [x] **WARN.MD056.workers/ralph/THUNK.md-line868** Fix MD056/table-column-count in workers/ralph/THUNK.md:868 |
+| 2026-01-27 | - [x] Supports `type/status/tags/updated_since/updated_within_days` filters. | - [x] Supports `type/status/tags/updated_since/updated_within_days` filters. |
+| 2026-01-27 |   - [x] Supports `limit` and `offset`. |   - [x] Supports `limit` and `offset`. |
+| 2026-01-27 |   - [x] Stable tie-break ordering for equal scores. |   - [x] Stable tie-break ordering for equal scores. |
+| 2026-01-27 | 25.1.14 | - [x] **25.1.14** Frontend: Basic recency heat overlay toggle |
+| 2026-01-27 | 25.1.15 | - [x] **25.1.15** Frontend: Generate plan wizard (minimal) using `/generate-plan` |
+| 2026-01-27 | 25.2.1 | - [x] **25.2.1** Backend: compute and return recency heat deterministically |
+| 2026-01-27 | 25.2.2 | - [x] **25.2.2** Backend: density heat (degree + clustering coefficient) with caching |
+| 2026-01-27 | 25.2.3 | - [x] **25.2.3** Backend: task heat based on TaskContract neighborhood |
+| 2026-01-27 | 25.2.4 | - [x] **25.2.4** Frontend: hotspots / insights panel (top N) |

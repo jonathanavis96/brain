@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import GraphView from './GraphView'
+import InsightsPanel from './InsightsPanel'
 
 const API_BASE_URL = import.meta.env.VITE_BRAIN_MAP_API_BASE_URL || 'http://localhost:8000'
 
@@ -20,6 +21,8 @@ function App() {
   const [planLoading, setPlanLoading] = useState(false)
   const [planError, setPlanError] = useState(null)
   const [generatedPlan, setGeneratedPlan] = useState(null)
+  const [graphData, setGraphData] = useState(null)
+  const [showInsightsPanel, setShowInsightsPanel] = useState(true)
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/health`)
@@ -383,6 +386,20 @@ function App() {
               {showRecencyHeat ? '✓ Recency Heat' : 'Recency Heat'}
             </button>
             <button
+              onClick={() => setShowInsightsPanel(!showInsightsPanel)}
+              style={{
+                padding: '8px 16px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                background: showInsightsPanel ? '#4CAF50' : '#fff',
+                color: showInsightsPanel ? '#fff' : '#333',
+                cursor: 'pointer',
+                fontSize: '14px'
+              }}
+            >
+              {showInsightsPanel ? '✓ Insights' : 'Insights'}
+            </button>
+            <button
               onClick={() => {
                 setPlanModalOpen(true)
                 handleGeneratePlan()
@@ -416,8 +433,24 @@ function App() {
 
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
         <div style={{ flex: 1, overflow: 'auto' }}>
-          <GraphView onNodeSelect={handleNodeSelect} showRecencyHeat={showRecencyHeat} />
+          <GraphView
+            onNodeSelect={handleNodeSelect}
+            showRecencyHeat={showRecencyHeat}
+            onGraphDataLoad={setGraphData}
+          />
         </div>
+
+        <InsightsPanel
+          graphData={graphData}
+          onNodeClick={(nodeId) => {
+            // Find the node and trigger selection
+            const node = graphData?.nodes?.find(n => n.id === nodeId)
+            if (node) {
+              handleNodeSelect(node)
+            }
+          }}
+          visible={showInsightsPanel}
+        />
 
         {selectedNode && editedNode && (
           <div style={{

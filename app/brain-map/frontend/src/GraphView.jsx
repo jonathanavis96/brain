@@ -5,7 +5,7 @@ import FA2Layout from 'graphology-layout-forceatlas2/worker'
 
 const API_BASE_URL = import.meta.env.VITE_BRAIN_MAP_API_BASE_URL || 'http://localhost:8000'
 
-function GraphView({ onNodeSelect, showRecencyHeat }) {
+function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad }) {
   const containerRef = useRef(null)
   const sigmaRef = useRef(null)
   const [loading, setLoading] = useState(true)
@@ -22,6 +22,9 @@ function GraphView({ onNodeSelect, showRecencyHeat }) {
       .then(data => {
         setGraphData(data)
         setLoading(false)
+        if (onGraphDataLoad) {
+          onGraphDataLoad(data)
+        }
       })
       .catch(err => {
         setError(err.message)

@@ -114,6 +114,9 @@ MVP is considered "done" when all items below are true:
 ### Phase 25.2: V1
 
 
+
+
+
 - [ ] **25.2.5** Frontend: filtering controls (type/status/tags/recency)
   - **Goal:** UI filters mapped to `/graph` query params.
   - **Inputs:** filtering contracts.
