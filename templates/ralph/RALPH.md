@@ -43,7 +43,7 @@ See `PROMPT.md` (building mode section) for full instructions.
 2. Implement the change
 3. Run build/tests
 4. Update fix_plan.md (mark completed ✅)
-5. Append progress to ralph/progress.txt
+5. Append progress to progress.txt
 6. **DO NOT COMMIT** - PLAN phase handles commits
 
 ### Parallelism Contract
@@ -73,7 +73,7 @@ The loop runner detects this sentinel and stops iteration.
 
 ## Progress Tracking
 
-All Ralph iterations are logged to `ralph/progress.txt` with:
+All Ralph iterations are logged to `progress.txt` with:
 
 - Timestamp
 - Iteration number
@@ -100,35 +100,24 @@ This ensures:
 
 ## Knowledge Base Integration
 
-Ralph MUST consult the shared brain knowledge base:
-
-**Always read first:**
-
-- `../../brain/skills/SUMMARY.md`
-- `../../brain/references/react-best-practices/HOTLIST.md`
-
-**Read on-demand:**
-
-- `../../brain/references/react-best-practices/INDEX.md`
-- `../../brain/references/react-best-practices/react-performance-guidelines.md`
-- `../../brain/references/react-best-practices/rules/*` (specific rules only)
+Ralph can consult project-specific skills in the skills directory when it exists.
 
 **Knowledge growth:**
-When Ralph discovers new conventions or decisions, it creates/updates KB files in `../../brain/skills/` and updates `../../brain/skills/SUMMARY.md`.
+When Ralph discovers new conventions or decisions specific to the project, it can create/update KB files in the skills directory.
 
 ## Running Ralph
 
 ### PowerShell
 
 ```powershell
-.\ralph\ralph.ps1 -Iterations 10 -PlanEvery 3
+.\workers\ralph\ralph.ps1 -Iterations 10 -PlanEvery 3
 ```text
 
 ### Manual (RovoDev CLI)
 
 ```powershell
 # Ralph determines mode from iteration number
-acli rovodev run "$(Get-Content ralph\PROMPT.md -Raw)"
+acli rovodev run "$(Get-Content workers\ralph\PROMPT.md -Raw)"
 ```text
 
 ## File Structure
@@ -140,30 +129,31 @@ project-root/               ← Application code and config files
 ├── tsconfig.json           # Config files - in project root
 ├── index.html              # Entry points - in project root
 ├── README.md               # Project readme
-└── ralph/                  # ALL Ralph-related files
-    ├── RALPH.md            # This file - Ralph contract
-    ├── PROMPT.md           # Unified prompt (mode detection)
-    ├── IMPLEMENTATION_PLAN.md  # Task tracking
-    ├── VALIDATION_CRITERIA.md  # Quality gates
-    ├── AGENTS.md           # Agent guidance for this project
-    ├── THOUGHTS.md         # Project vision, goals, success criteria
-    ├── NEURONS.md          # Codebase map (auto-generated)
-    ├── loop.sh             # Loop runner script
-    ├── logs/               # Iteration logs
-    ├── skills/             # Project-specific knowledge base
-    └── progress.txt        # Iteration log (appended)
+└── workers/
+    └── ralph/                  # ALL Ralph-related files
+        ├── RALPH.md            # This file - Ralph contract
+        ├── PROMPT.md           # Unified prompt (mode detection)
+        ├── IMPLEMENTATION_PLAN.md  # Task tracking
+        ├── VALIDATION_CRITERIA.md  # Quality gates
+        ├── AGENTS.md           # Agent guidance for this project
+        ├── THOUGHTS.md         # Project vision, goals, success criteria
+        ├── NEURONS.md          # Codebase map (auto-generated)
+        ├── loop.sh             # Loop runner script
+        ├── logs/               # Iteration logs
+        ├── skills/             # Project-specific knowledge base
+        └── progress.txt        # Iteration log (appended)
 ```text
 
-### ⚠️ CRITICAL: Source code goes in PROJECT ROOT, not ralph/
+### ⚠️ CRITICAL: Source code goes in PROJECT ROOT, not Ralph directory
 
-**The `ralph/` directory contains Ralph loop infrastructure AND project context files.**
+**The Ralph directory contains Ralph loop infrastructure AND project context files.**
 
 - Source code → `src/` (project root)
 - Config files → project root (`package.json`, `tsconfig.json`, etc.)
 - Entry points → project root (`index.html`, `main.py`, etc.)
-- Ralph files → `ralph/` (PROMPT.md, IMPLEMENTATION_PLAN.md, AGENTS.md, THOUGHTS.md, NEURONS.md, skills/, logs/, etc.)
+- Ralph files → Ralph directory (PROMPT.md, IMPLEMENTATION_PLAN.md, AGENTS.md, THOUGHTS.md, NEURONS.md, skills/, logs/, etc.)
 
-**NEVER create `ralph/src/` or put application code inside `ralph/`.**
+**NEVER put application code inside the Ralph directory.**
 
 ## Philosophy: Ralph Wiggum
 

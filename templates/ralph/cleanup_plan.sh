@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# cleanup_plan.sh - Archive completed tasks from workers/IMPLEMENTATION_PLAN.md
+# cleanup_plan.sh - Archive completed tasks from IMPLEMENTATION_PLAN.md
 #
 # Usage:
 #   bash cleanup_plan.sh --dry-run    # Preview what would be archived
@@ -25,7 +25,7 @@ else
 fi
 
 # Use explicit paths from repo root
-PLAN_FILE="${REPO_ROOT}/workers/IMPLEMENTATION_PLAN.md"
+PLAN_FILE="${REPO_ROOT}/IMPLEMENTATION_PLAN.md"
 ARCHIVE_FILE="${REPO_ROOT}/workers/PLAN_DONE.md"
 
 # Default flags
@@ -65,7 +65,7 @@ if [[ ! -f "$ARCHIVE_FILE" ]]; then
   exit 1
 fi
 
-echo "Cleaning up workers/IMPLEMENTATION_PLAN.md..."
+echo "Cleaning up IMPLEMENTATION_PLAN.md..."
 
 # Warn about orphaned task entries (sub-items without a parent task)
 # These occur when cleanup removes "- [x] **X.Y**" but leaves indented sub-items behind

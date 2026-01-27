@@ -44,7 +44,7 @@ except ImportError:
 
 CEREBRAS_API_URL = "https://api.cerebras.ai/v1/chat/completions"
 DEFAULT_MODEL = "zai-glm-4.7"
-DEFAULT_MAX_TURNS = 25
+DEFAULT_MAX_TURNS = 15
 DEFAULT_MAX_TOKENS = 16384
 DEFAULT_TEMPERATURE = 0.2
 
@@ -52,6 +52,12 @@ DEFAULT_TEMPERATURE = 0.2
 MAX_RETRIES = 5
 INITIAL_BACKOFF = 5
 MAX_BACKOFF = 60
+
+# Context management - prevent unbounded growth
+MAX_CONTEXT_CHARS = 50000  # ~12.5K tokens - keep well under 60K token/min limit
+MAX_TOOL_RESULT_CHARS = 4000  # Truncate individual tool results
+KEEP_RECENT_TURNS = 6  # Always keep last N turns (assistant + tool results)
+SUMMARIZE_AFTER_TURN = 3  # Start summarizing tool results after this many turns
 
 # Terminal formatting
 TERM_WIDTH = shutil.get_terminal_size().columns
@@ -1142,6 +1148,133 @@ def execute_tool(name: str, arguments: dict, cwd: str | None = None) -> ToolResu
 
 
 # =============================================================================
+# Context Management (prevent unbounded growth)
+# =============================================================================
+
+
+def summarize_old_tool_results(
+    messages: list[dict], keep_recent: int = KEEP_RECENT_TURNS
+) -> list[dict]:
+    """
+    Summarize old tool results to reduce token usage.
+    Pattern from SWE-agent: Keep last N observations full, summarize older ones.
+    """
+    if len(messages) <= keep_recent + 2:  # system + user + recent
+        return messages
+
+    result = []
+    # Find where recent messages start (from end)
+    recent_start = len(messages) - keep_recent
+
+    for i, msg in enumerate(messages):
+        # Always keep system (0) and user prompt (1) unchanged
+        if i < 2:
+            result.append(msg)
+            continue
+
+        # Keep recent messages unchanged
+        if i >= recent_start:
+            result.append(msg)
+            continue
+
+        # Summarize old tool results
+        if msg.get("role") == "tool":
+            content = msg.get("content", "")
+            lines = content.count("\n") + 1
+            # Create short summary
+            first_line = content.split("\n")[0][:80] if content else "(empty)"
+            summary = f"[Tool output: {lines} lines] {first_line}..."
+            result.append({**msg, "content": summary})
+        else:
+            result.append(msg)
+
+    return result
+
+
+def prune_messages(
+    messages: list[dict], max_chars: int = MAX_CONTEXT_CHARS
+) -> list[dict]:
+    """
+    Prune message history to stay under token limits.
+    Strategy:
+    1. First, summarize old tool results (keeps structure, reduces size)
+    2. Always keep system message (index 0)
+    3. Always keep original user prompt (index 1)
+    4. Always keep last KEEP_RECENT_TURNS messages
+    5. Drop middle messages only if still over limit
+    """
+    # First pass: summarize old tool results
+    messages = summarize_old_tool_results(messages)
+    if len(messages) <= 3:
+        return messages
+
+    # Calculate current size
+    total_chars = sum(len(json.dumps(m)) for m in messages)
+
+    if total_chars <= max_chars:
+        return messages
+
+    # Keep: system (0), user prompt (1), and last N messages
+    keep_start = messages[:2]  # System + original prompt
+    keep_end = (
+        messages[-KEEP_RECENT_TURNS:]
+        if len(messages) > KEEP_RECENT_TURNS + 2
+        else messages[2:]
+    )
+    middle = (
+        messages[2:-KEEP_RECENT_TURNS] if len(messages) > KEEP_RECENT_TURNS + 2 else []
+    )
+
+    # If still over limit, summarize middle section
+    if middle:
+        # Create a summary of what was done
+        tool_calls_summary = []
+        for m in middle:
+            if m.get("role") == "assistant" and m.get("tool_calls"):
+                for tc in m.get("tool_calls", []):
+                    name = tc.get("function", {}).get("name", "?")
+                    tool_calls_summary.append(name)
+            elif m.get("role") == "tool":
+                # Just note that a tool was called
+                pass
+
+        if tool_calls_summary:
+            summary_msg = {
+                "role": "assistant",
+                "content": f"[Earlier in this session, I called these tools: {', '.join(tool_calls_summary[:20])}. Results were processed. Continuing with current task...]",
+            }
+            pruned = keep_start + [summary_msg] + keep_end
+        else:
+            pruned = keep_start + keep_end
+    else:
+        pruned = keep_start + keep_end
+
+    # Log pruning
+    new_chars = sum(len(json.dumps(m)) for m in pruned)
+    print(
+        f"  {Style.YELLOW}⚠ Pruned context: {total_chars:,} → {new_chars:,} chars ({len(messages)} → {len(pruned)} messages){Style.RESET}"
+    )
+
+    return pruned
+
+
+def truncate_tool_result(result: str, max_chars: int = MAX_TOOL_RESULT_CHARS) -> str:
+    """Truncate a tool result to prevent context explosion."""
+    if len(result) <= max_chars:
+        return result
+
+    # Keep first part and last part
+    keep_start = max_chars * 2 // 3
+    keep_end = max_chars // 3
+
+    return (
+        result[:keep_start]
+        + f"\n\n... [truncated {len(result) - max_chars:,} chars] ...\n\n"
+        + result[-keep_end:]
+    )
+
+
+# =============================================================================
 # Fat Context Loader (minimize API requests by pre-loading context)
 # =============================================================================
 
@@ -1577,10 +1710,12 @@ class Agent:
             result = execute_tool(name, args, cwd=self.cwd)
             self._print_tool_result(name, result)
 
-            # Format result for API
+            # Format result for API (truncate to prevent context explosion)
             result_content = (
                 result.output if result.success else f"ERROR: {result.error}"
             )
+            result_content = truncate_tool_result(result_content)
+
             results.append(
                 {
                     "role": "tool",
@@ -1622,8 +1757,14 @@ class Agent:
         print_divider()
 
         for turn in range(1, max_turns + 1):
+            # Prune context if it's getting too large (prevent 800K token disasters)
+            self.messages = prune_messages(self.messages)
+
+            # Log turn info with context size
+            msg_chars = sum(len(json.dumps(m)) for m in self.messages)
             print(
-                f"\n{Style.GRAY}{'─' * 3} Turn {turn}/{max_turns} {'─' * (TERM_WIDTH - 15)}{Style.RESET}"
+                f"\n{Style.GRAY}{'─' * 3} Turn {turn}/{max_turns} "
+                f"(context: {msg_chars:,} chars) {'─' * (TERM_WIDTH - 40)}{Style.RESET}"
             )
 
             try:

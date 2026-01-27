@@ -4,7 +4,7 @@ You are Ralph. Mode is passed by loop.sh header.
 
 ## Core Mechanics
 
-Read `../brain/templates/ralph/PROMPT.md` for full Ralph loop mechanics (PLANNING vs BUILDING modes, commit flow, stop conditions).
+This is a template file. The actual Ralph loop mechanics are defined in the main PROMPT.md file in this directory.
 
 ## Project Context Files
 
@@ -15,15 +15,9 @@ Read `../brain/templates/ralph/PROMPT.md` for full Ralph loop mechanics (PLANNIN
 | IMPLEMENTATION_PLAN.md | TODO list (persistent across iterations) |
 | AGENTS.md | Validation commands, project conventions |
 
-## Brain Knowledge Base
+## Project Knowledge Base
 
-For patterns and best practices, use progressive disclosure:
-
-1. `../brain/skills/SUMMARY.md` - Knowledge base overview
-2. `../brain/references/react-best-practices/HOTLIST.md` - Top 10 rules (covers 80%)
-3. Specific rule files only if HOTLIST doesn't cover your scenario
-
-❌ Never scan all rules by default
+For project-specific patterns and best practices, consult the skills directory when available.
 
 ## Token Efficiency Rules (CRITICAL)
 
@@ -85,13 +79,8 @@ npm test
 
 If you used undocumented knowledge/procedure/tooling:
 
-1. Search `../brain/skills/` for existing matching skill
-2. Search `cortex/GAP_CAPTURE.md` for existing local gap entry
-3. If not found: append new entry to `cortex/GAP_CAPTURE.md`
-4. Create marker: `touch cortex/.gap_pending`
-5. Brain's Cortex will sync gaps on next session
-
-See `../brain/skills/self-improvement/GAP_CAPTURE_RULES.md` for details (Rule 6: Marker Protocol).
+1. Search the skills directory for existing project-specific skills
+2. If not found and the pattern is reusable: document it in the skills directory
 
 ## Project-Specific Notes
 

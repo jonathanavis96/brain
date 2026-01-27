@@ -132,6 +132,13 @@ extract_tasks() {
       continue
     fi
 
+    # Detect Archive sections - these terminate the current task section
+    # Matches: "### Archive", "## Archive", or "## Era" (THUNK.md format)
+    if [[ "$line_upper" =~ ARCHIVE ]] || [[ "$line" =~ ^##[[:space:]]+Era[[:space:]]+ ]]; then
+      in_task_section=false
+      continue
+    fi
+
     # Detect Phase sections (## Phase X: Description)
     # Match patterns like "## Phase 0-A: ...", "## Phase 1: ...", etc.
     if [[ "$line" =~ ^##[[:space:]]+Phase[[:space:]]+([^:]+):[[:space:]]*(.*)$ ]]; then
@@ -146,15 +153,15 @@ extract_tasks() {
     # Detect High/Medium/Low Priority sections (flexible matching)
     # Matches: "### High Priority", "### Phase 1: Desc (High Priority)", "### 🔴 HIGH PRIORITY: Desc"
     # Case-insensitive matching via converting to uppercase for comparison
-    if [[ "$line_upper" =~ HIGH[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
+    if [[ "$line_upper" =~ HIGH[[:space:]]*PRIORITY ]]; then
       current_section="High Priority"
       in_task_section=true
       task_counter=0
-    elif [[ "$line_upper" =~ MEDIUM[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
+    elif [[ "$line_upper" =~ MEDIUM[[:space:]]*PRIORITY ]]; then
       current_section="Medium Priority"
       in_task_section=true
       task_counter=0
-    elif [[ "$line_upper" =~ LOW[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
+    elif [[ "$line_upper" =~ LOW[[:space:]]*PRIORITY ]]; then
       current_section="Low Priority"
       in_task_section=true
       task_counter=0
@@ -367,13 +374,24 @@ clear_completed_tasks() {
   # Write new file without completed tasks
   {
     while IFS= read -r line; do
-      if [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+      # Detect Archive sections - these terminate the current task section
+      # Matches: "### Archive", "## Archive", or "## Era" (THUNK.md format)
+      local line_upper="${line^^}"
+      if [[ "$line_upper" =~ ARCHIVE ]] || [[ "$line" =~ ^##[[:space:]]+Era[[:space:]]+ ]]; then
+        in_task_section=false
+      fi
+
+      # Detect Phase sections (## Phase X: Description)
+      if [[ "$line" =~ ^##[[:space:]]+Phase[[:space:]]+[^:]+:[[:space:]]* ]]; then
         in_task_section=true
-      elif [[ "$line" =~ Medium[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+      elif [[ "$line" =~ High[[:space:]]+Priority ]]; then
         in_task_section=true
-      elif [[ "$line" =~ Low[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+      elif [[ "$line" =~ Medium[[:space:]]+Priority ]]; then
         in_task_section=true
-      elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
+      elif [[ "$line" =~ Low[[:space:]]+Priority ]]; then
+        in_task_section=true
+      elif [[ "$line" =~ ^##[[:space:]]+ ]] && [[ ! "$line" =~ ^##[[:space:]]+Phase[[:space:]]+ ]]; then
+        # Exit task section on ## headers that are NOT Phase sections
         in_task_section=false
       fi
 

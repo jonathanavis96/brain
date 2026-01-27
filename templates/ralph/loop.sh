@@ -308,22 +308,22 @@ Examples:
   bash ralph/loop.sh --model opus --iterations 1
 
   # Dry-run mode (see what would change)
-  bash ralph/loop.sh --dry-run --iterations 1
+  bash workers/ralph/loop.sh --dry-run --iterations 1
 
   # Run without monitor terminals (useful for CI/CD)
-  bash ralph/loop.sh --no-monitors --iterations 5
+  bash workers/ralph/loop.sh --no-monitors --iterations 5
 
   # Rollback last 2 iterations
-  bash ralph/loop.sh --rollback 2
+  bash workers/ralph/loop.sh --rollback 2
 
   # Resume after error
-  bash ralph/loop.sh --resume
+  bash workers/ralph/loop.sh --resume
 
   # Enable cache skip to speed up repeated runs
-  bash ralph/loop.sh --cache-skip --iterations 5
+  bash workers/ralph/loop.sh --cache-skip --iterations 5
 
   # Force all tools to run even with cache enabled
-  CACHE_SKIP=1 bash ralph/loop.sh --force-no-cache --iterations 1
+  CACHE_SKIP=1 bash workers/ralph/loop.sh --force-no-cache --iterations 1
 EOF
 }
 
@@ -642,7 +642,7 @@ fi
 # Debug output for derived values
 echo "Repo: $REPO_NAME | Branch: $TARGET_BRANCH | Lock: $LOCK_FILE"
 
-# Resolve a prompt path robustly (works from repo root or ralph/)
+# Resolve a prompt path robustly (works from repo root or workers/ralph/)
 resolve_prompt() {
   local p="$1"
   if [[ -z "$p" ]]; then return 1; fi
@@ -861,6 +861,116 @@ emit_marker() {
   if [[ -n "$CURRENT_LOG_FILE" && -f "$CURRENT_LOG_FILE" ]]; then
     echo "$marker" >>"$CURRENT_LOG_FILE"
   fi
+}
+
+# =============================================================================
+# Scoped Staging - Stage only intended files, exclude noise
+# =============================================================================
+# Always stages: IMPLEMENTATION_PLAN.md, workers/ralph/THUNK.md (canonical layout)
+# Never stages: artifacts/**, */rollflow_cache/**, *.sqlite
+# Conditionally stages: Other changed files not in denylist
+#
+# Usage: stage_scoped_changes
+# Returns: 0 if files were staged, 1 if nothing to stage
+stage_scoped_changes() {
+  local staged_count=0
+
+  # Detect canonical paths based on ADR-0001
+  local plan_file="IMPLEMENTATION_PLAN.md"
+  local thunk_file="workers/ralph/THUNK.md"
+
+  # Always stage core Ralph files if they have changes
+  for core_file in "$plan_file" "$thunk_file"; do
+    if [[ -f "$ROOT/$core_file" ]] && ! git diff --quiet -- "$ROOT/$core_file" 2>/dev/null; then
+      git add "$ROOT/$core_file"
+      staged_count=$((staged_count + 1))
+    fi
+  done
+
+  # Get all changed files (unstaged only, since we handle core files above)
+  local changed_files
+  changed_files=$(git diff --name-only 2>/dev/null) || true
+
+  # Also include untracked files (e.g., newly created docs/skills) so flush commits
+  # don't leave the worktree dirty.
+  local untracked_files
+  untracked_files=$(git ls-files --others --exclude-standard 2>/dev/null) || true
+
+  # Stage each file unless it matches denylist patterns
+  local files_to_consider
+  files_to_consider=$(printf "%s\n%s\n" "$changed_files" "$untracked_files" | sed '/^\s*$/d' | sort -u) || true
+
+  while IFS= read -r file; do
+    [[ -z "$file" ]] && continue
+
+    # Denylist patterns - skip these files (template-safe patterns only)
+    case "$file" in
+      artifacts/*) continue ;;        # Dashboard, metrics, reports
+      */rollflow_cache/*) continue ;; # Cache databases
+      *.sqlite) continue ;;           # Any SQLite files
+    esac
+
+    # Stage the file
+    git add "$ROOT/$file" 2>/dev/null && staged_count=$((staged_count + 1))
+  done <<<"$files_to_consider"
+
+  # Protected file rule: ensure .verify hash files are staged with their protected files
+  # This prevents pre-commit hash validation failures
+  # Protected files: loop.sh, verifier.sh, PROMPT.md, rules/AC.rules, AGENTS.md
+  local protected_files=("loop" "verifier" "prompt" "ac" "agents")
+  local verify_dirs=(".verify" "workers/.verify" "workers/ralph/.verify" "templates/ralph/.verify")
+
+  for pf in "${protected_files[@]}"; do
+    # Check if any file with this base is staged
+    if git diff --cached --name-only | grep -qiE "(${pf}\.sh|${pf}\.md|${pf}\.rules)$"; then
+      # Stage all corresponding hash files that have changes
+      for vdir in "${verify_dirs[@]}"; do
+        local hash_file="${vdir}/${pf}.sha256"
+        if [[ -f "$ROOT/$hash_file" ]] && ! git diff --quiet -- "$ROOT/$hash_file" 2>/dev/null; then
+          git add "$ROOT/$hash_file" 2>/dev/null && staged_count=$((staged_count + 1))
+        fi
+      done
+    fi
+  done
+
+  if [[ $staged_count -gt 0 ]]; then
+    echo "Staged $staged_count file(s) (scoped staging)"
+    return 0
+  else
+    return 1
+  fi
+}
+
+# =============================================================================
+# End-of-Run Flush Commit - Ensure no changes are left uncommitted
+# =============================================================================
+# Commits any pending changes using scoped staging so that runs ending on BUILD
+# do not leave a dirty worktree.
+#
+# Usage: flush_scoped_commit_if_needed <reason>
+flush_scoped_commit_if_needed() {
+  local reason="${1:-end_of_run}"
+
+  # Respect dry-run mode: never commit
+  if [[ "${DRY_RUN:-false}" == "true" ]]; then
+    return 0
+  fi
+
+  # Nothing to do if clean
+  if git diff --quiet && git diff --cached --quiet; then
+    return 0
+  fi
+
+  echo ""
+  echo "Flushing uncommitted changes (reason: $reason)..."
+
+  if stage_scoped_changes; then
+    git commit -m "build: flush uncommitted changes ($reason)" || true
+    echo "✓ Flush commit created"
+  else
+    echo "No files to commit after scoped staging"
+  fi
+  echo ""
 }
 
 # Emit structured TOOL_START marker
@@ -1204,17 +1314,17 @@ run_once() {
       echo "⚠️ **CRITICAL: This is a dry-run. DO NOT commit any changes.**"
       echo ""
       echo "Your task:"
-      echo "1. Read workers/IMPLEMENTATION_PLAN.md and identify the first unchecked task"
+      echo "1. Read IMPLEMENTATION_PLAN.md and identify the first unchecked task"
       echo "2. Analyze what changes would be needed to implement it"
       echo "3. Show file diffs or describe modifications you would make"
-      echo "4. Update workers/IMPLEMENTATION_PLAN.md with detailed notes about your findings"
+      echo "4. Update IMPLEMENTATION_PLAN.md with detailed notes about your findings"
       echo "5. DO NOT use git commit - stop after analysis"
       echo ""
       echo "Output format:"
       echo "- List files that would be created/modified"
       echo "- Show code snippets or diffs for key changes"
       echo "- Document any risks or dependencies discovered"
-      echo "- Add findings to workers/IMPLEMENTATION_PLAN.md under 'Discoveries & Notes'"
+      echo "- Add findings to IMPLEMENTATION_PLAN.md under 'Discoveries & Notes'"
       echo ""
       echo "This is a preview only. No commits will be made."
     fi
@@ -1241,7 +1351,7 @@ run_once() {
   if [[ ("$CACHE_SKIP" == "true" || "$CACHE_MODE" == "use") && "$FORCE_NO_CACHE" != "true" && "$FORCE_FRESH" != "true" ]]; then
     # Safety check: If BUILD phase has pending tasks, force fresh run (task 1.4.1)
     if [[ "$phase" == "build" ]]; then
-      local plan_file="${ROOT}/workers/IMPLEMENTATION_PLAN.md"
+      local plan_file="${ROOT}/IMPLEMENTATION_PLAN.md"
       if [[ -f "$plan_file" ]] && grep -q "^- \[ \]" "$plan_file"; then
         local guard_ts=$(($(date +%s%N) / 1000000))
         emit_marker ":::CACHE_GUARD::: iter=${iter} allowed=0 reason=pending_tasks phase=BUILD ts=${guard_ts}"
@@ -1428,10 +1538,10 @@ except Exception:
   fi
 
   # Check if all tasks are done (for true completion)
-  if [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
+  if [[ -f "$ROOT/IMPLEMENTATION_PLAN.md" ]]; then
     local unchecked_count
     # Note: grep -c returns exit 1 when count is 0, so we capture output first then default
-    unchecked_count=$(grep -cE '^\s*-\s*\[ \]' "$ROOT/workers/IMPLEMENTATION_PLAN.md" 2>/dev/null) || unchecked_count=0
+    unchecked_count=$(grep -cE '^\s*-\s*\[ \]' "$ROOT/IMPLEMENTATION_PLAN.md" 2>/dev/null) || unchecked_count=0
     if [[ "$unchecked_count" -eq 0 ]]; then
       # All tasks done - run final verification
       if run_verifier "$iter"; then
@@ -1832,19 +1942,22 @@ else
         echo ""
       fi
 
-      # Commit any accumulated changes from BUILD iterations
+      # Commit any accumulated changes from BUILD iterations using scoped staging
       if ! git diff --quiet || ! git diff --cached --quiet; then
         echo "Committing accumulated BUILD changes..."
-        git add -A
-        git commit -m "build: accumulated changes from BUILD iterations" || true
-        echo "✓ BUILD changes committed"
+        if stage_scoped_changes; then
+          git commit -m "build: accumulated changes from BUILD iterations" || true
+          echo "✓ BUILD changes committed"
+        else
+          echo "No changes to commit (all files in denylist)"
+        fi
         echo ""
       fi
 
       # Snapshot plan BEFORE sync for drift detection (prevents direct-edit bypass)
       PLAN_SNAPSHOT="$ROOT/.verify/plan_snapshot.md"
-      if [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
-        cp "$ROOT/workers/IMPLEMENTATION_PLAN.md" "$PLAN_SNAPSHOT"
+      if [[ -f "$ROOT/IMPLEMENTATION_PLAN.md" ]]; then
+        cp "$ROOT/IMPLEMENTATION_PLAN.md" "$PLAN_SNAPSHOT"
       fi
 
       # Sync tasks from Cortex before PLAN mode
@@ -1917,9 +2030,7 @@ else
       if command -v pre-commit &>/dev/null; then
         # Stage any changes so pre-commit can check them
         if [[ -n "$changed_files" ]]; then
-          git add -A
-          # Only run if something is actually staged
-          if ! git diff --cached --quiet; then
+          if stage_scoped_changes; then
             echo "Running pre-commit on staged files..."
             precommit_id="$(tool_call_id)"
             precommit_key="pre-commit|${autofix_git_sha}"
@@ -1977,14 +2088,14 @@ else
 
     # Plan drift detection: compare snapshot vs current plan
     PLAN_SNAPSHOT="$ROOT/.verify/plan_snapshot.md"
-    if [[ -f "$PLAN_SNAPSHOT" ]] && [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
+    if [[ -f "$PLAN_SNAPSHOT" ]] && [[ -f "$ROOT/IMPLEMENTATION_PLAN.md" ]]; then
       # Check for unexpected changes (tasks added directly, not via cortex sync)
       snapshot_tasks=$(grep -c "^- \[ \]" "$PLAN_SNAPSHOT" 2>/dev/null || echo "0")
-      current_tasks=$(grep -c "^- \[ \]" "$ROOT/workers/IMPLEMENTATION_PLAN.md" 2>/dev/null || echo "0")
+      current_tasks=$(grep -c "^- \[ \]" "$ROOT/IMPLEMENTATION_PLAN.md" 2>/dev/null || echo "0")
       if [[ "$current_tasks" -gt "$snapshot_tasks" ]]; then
         new_task_count=$((current_tasks - snapshot_tasks))
         echo ""
-        echo "⚠️  Plan drift detected: $new_task_count new task(s) added directly to workers/IMPLEMENTATION_PLAN.md"
+        echo "⚠️  Plan drift detected: $new_task_count new task(s) added directly to IMPLEMENTATION_PLAN.md"
         echo "    Tasks should be added via cortex/IMPLEMENTATION_PLAN.md and synced."
         echo ""
       fi
