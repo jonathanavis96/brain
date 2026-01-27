@@ -62,6 +62,12 @@ echo "# MODEL: ${effective_model}"
 - `workers/ralph/.verify/loop.sha256`
 - `.verify/loop.sha256`
 
+**Template drift note:**
+
+- `templates/ralph/loop.sh` is listed as impacted because it is also protected and typically kept in sync.
+- The observability header change was **not** applied to `templates/ralph/loop.sh` in this repo update.
+- **Action:** template sync required (and then update `templates/ralph/.verify/loop.sha256`).
+
 ## Proposed Changes (not yet applied unless explicitly confirmed)
 
 **File:** `workers/ralph/loop.sh` (protected)
