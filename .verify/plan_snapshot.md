@@ -36,35 +36,80 @@
 **Duration:** 30-45 min
 
 
-- [ ] **34.1.2** Add `generate_iteration_summary` function to loop.sh
-  - **Goal:** Extract Ralph's structured summary from iteration logs for Discord posting
-  - **Implementation:**
-    - Add function to `workers/ralph/loop.sh` (near other utility functions, around line 200-300)
-    - Function signature: `generate_iteration_summary(iter_num, mode, logfile)`
-    - Logic:
-      1. Find all "Summary" headers in logfile using `grep -n "^\s*Summary\s*$"`
-      2. If none found, output fallback message with Run ID and logfile path
-      3. If found, extract LAST summary block (from last "Summary" to `:::BUILD_READY:::` marker or EOF)
-      4. Add iteration header: `**Ralph Iteration N (MODE)** — TIMESTAMP`
-      5. If multiple summaries detected, add warning message
-    - Output format (success):
+
       ```
-      **Ralph Iteration 12 (BUILD)** — 2026-01-27 16:47:30
+      **Ralph Iteration ${ITER_NUM} (${MODE})** — $(date "+%Y-%m-%d %H:%M:%S")
       
-      Summary
-      - Updated X
-      - Fixed Y
-      ...
+      ${EXTRACTED_SUMMARY}
       ```
-    - Output format (fallback):
+
+    - Fallback behavior (if no "Summary" section found):
+
       ```
-      **Ralph Iteration 12 (BUILD)** — 2026-01-27 16:47:30
+      **Ralph Iteration ${ITER_NUM} (${MODE})** — $(date "+%Y-%m-%d %H:%M:%S")
       
       No structured summary found in logs.
       
-      Run ID: 20260127_164730
-      Log: workers/ralph/logs/iter12_build.log
+      Run ID: ${ROLLFLOW_RUN_ID}
+      Log: ${LOGFILE}
       ```
+
+    - Implementation example:
+
+      ```bash
+      generate_iteration_summary() {
+        local iter_num="$1"
+        local mode="$2"
+        local logfile="$3"
+        local timestamp
+        timestamp=$(date "+%Y-%m-%d %H:%M:%S")
+        
+        # Find all "Summary" headers (line numbers)
+        local summary_lines
+        summary_lines=$(grep -n "^\s*Summary\s*$" "$logfile" 2>/dev/null | cut -d: -f1) || true
+        
+        if [[ -z "$summary_lines" ]]; then
+          # Fallback: no summary found
+          echo "**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}"
+          echo ""
+          echo "No structured summary found in logs."
+          echo ""
+          echo "Run ID: ${ROLLFLOW_RUN_ID}"
+          echo "Log: ${logfile}"
+          return
+        fi
+        
+        # Get last summary line number
+        local last_summary_line
+        last_summary_line=$(echo "$summary_lines" | tail -1)
+        
+        # Count total summaries (optional safety message)
+        local summary_count
+        summary_count=$(echo "$summary_lines" | wc -l)
+        
+        # Find :::BUILD_READY::: marker line (if present)
+        local end_marker_line
+        end_marker_line=$(grep -n ":::BUILD_READY:::" "$logfile" 2>/dev/null | tail -1 | cut -d: -f1) || true
+        
+        # Extract from last summary to marker or EOF
+        local extracted_summary
+        if [[ -n "$end_marker_line" ]]; then
+          extracted_summary=$(sed -n "${last_summary_line},${end_marker_line}p" "$logfile" | sed '$ d')
+        else
+          extracted_summary=$(sed -n "${last_summary_line},\$ p" "$logfile")
+        fi
+        
+        # Output with header
+        echo "**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}"
+        echo ""
+        if [[ "$summary_count" -gt 1 ]]; then
+          echo "_Detected ${summary_count} summary blocks; posting last one._"
+          echo ""
+        fi
+        echo "$extracted_summary"
+      }
+      ```
+
   - **AC:** Function extracts Ralph's structured summary from log; uses LAST summary block if multiple found; fallback message if no summary present; includes iteration header with timestamp
   - **Verification:** Test with real log: `generate_iteration_summary 12 BUILD workers/ralph/logs/iter12_build.log | head -50`; verify extracts "Summary / Changes Made / Completed" section; test with log containing no summary (fallback message appears); test with multiple summaries (uses last one)
   - **If Blocked:** Start with simple grep-based extraction, refine line number logic later
