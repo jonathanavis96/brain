@@ -122,3 +122,8 @@ Lightweight ordering constraints (non-exhaustive):
 - 25.1.10 must precede 25.1.15 (generate plan wizard).
 
 ---
+
+## Phase 0-Warn: Verifier Warnings
+
+- [x] **0.W.3** Fix MD056 in workers/ralph/THUNK.md lines 931-932
+  - **AC:** `markdownlint workers/ralph/THUNK.md` passes (no MD056 errors)
