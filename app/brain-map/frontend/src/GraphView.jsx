@@ -119,6 +119,8 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
   useEffect(() => {
     if (!filteredData || !clusterData || !containerRef.current) return
 
+    let timeoutId = null
+
     // Create graphology graph
     const graph = new Graph()
 
@@ -226,7 +228,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
     layout.start()
 
     // Wait for layout to settle before rendering
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       layout.stop()
       layout.kill()
 
@@ -274,6 +276,10 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
 
     // Cleanup
     return () => {
+      // Clear pending timeout to prevent stale Sigma creation
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
       if (sigmaRef.current) {
         sigmaRef.current.kill()
         sigmaRef.current = null
@@ -283,7 +289,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
         layout.kill()
       }
     }
-  }, [filteredData, clusterData, onNodeSelect, expandedClusters, showRecencyHeat, showClusters])
+  }, [filteredData, clusterData, onNodeSelect, expandedClusters, showClusters])
 
   // Update node colors when showRecencyHeat changes
   useEffect(() => {
