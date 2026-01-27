@@ -55,77 +55,86 @@ function InsightsPanel({ graphData, onNodeClick, visible = true }) {
       flexDirection: 'column',
       zIndex: 1000
     }}>
-      {/* Header */}
-      <div style={{
-        padding: '16px',
-        borderBottom: '1px solid #eee'
-      }}>
-        <h3 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: '600' }}>
-          🔥 Hotspots
-        </h3>
-        <p style={{ margin: 0, fontSize: '13px', color: '#666' }}>
-          {selectedMetricInfo?.description}
-        </p>
-      </div>
-
-      {/* Controls */}
-      <div style={{
-        padding: '12px 16px',
-        borderBottom: '1px solid #eee',
-        backgroundColor: '#f9f9f9'
-      }}>
-        <div style={{ marginBottom: '12px' }}>
-          <label style={{
-            display: 'block',
-            fontSize: '12px',
-            fontWeight: '500',
-            marginBottom: '4px',
-            color: '#333'
+      {/* Collapsible Hotspots Section */}
+      <details open style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+        <summary style={{
+          padding: '16px',
+          cursor: 'pointer',
+          userSelect: 'none',
+          listStyle: 'none',
+          borderBottom: '1px solid #eee'
+        }}>
+          <h3 style={{
+            display: 'inline',
+            margin: '0 0 8px 0',
+            fontSize: '18px',
+            fontWeight: '600'
           }}>
-            Metric
-          </label>
-          <select
-            value={selectedMetric}
-            onChange={(e) => setSelectedMetric(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '6px 8px',
-              border: '1px solid #ddd',
-              borderRadius: '4px',
-              fontSize: '14px',
-              backgroundColor: 'white'
-            }}
-          >
-            {METRIC_OPTIONS.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
+            🔥 Hotspots
+          </h3>
+          <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#666' }}>
+            {selectedMetricInfo?.description}
+          </p>
+        </summary>
 
-        <div>
-          <label style={{
-            display: 'block',
-            fontSize: '12px',
-            fontWeight: '500',
-            marginBottom: '4px',
-            color: '#333'
-          }}>
-            Show Top
-          </label>
-          <select
-            value={topN}
-            onChange={(e) => setTopN(Number(e.target.value))}
-            style={{
-              width: '100%',
-              padding: '6px 8px',
-              border: '1px solid #ddd',
-              borderRadius: '4px',
-              fontSize: '14px',
-              backgroundColor: 'white'
-            }}
-          >
+        {/* Controls */}
+        <div style={{
+          padding: '12px 16px',
+          borderBottom: '1px solid #eee',
+          backgroundColor: '#f9f9f9'
+        }}>
+          <div style={{ marginBottom: '12px' }}>
+            <label style={{
+              display: 'block',
+              fontSize: '12px',
+              fontWeight: '500',
+              marginBottom: '4px',
+              color: '#333'
+            }}>
+              Metric
+            </label>
+            <select
+              value={selectedMetric}
+              onChange={(e) => setSelectedMetric(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '6px 8px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                fontSize: '14px',
+                backgroundColor: 'white'
+              }}
+            >
+              {METRIC_OPTIONS.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label style={{
+              display: 'block',
+              fontSize: '12px',
+              fontWeight: '500',
+              marginBottom: '4px',
+              color: '#333'
+            }}>
+              Show Top
+            </label>
+            <select
+              value={topN}
+              onChange={(e) => setTopN(Number(e.target.value))}
+              style={{
+                width: '100%',
+                padding: '6px 8px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                fontSize: '14px',
+                backgroundColor: 'white'
+              }}
+            >
             <option value={5}>5</option>
             <option value={10}>10</option>
             <option value={20}>20</option>
@@ -138,7 +147,8 @@ function InsightsPanel({ graphData, onNodeClick, visible = true }) {
       <div style={{
         flex: 1,
         overflowY: 'auto',
-        padding: '8px'
+        padding: '8px',
+        minHeight: 0
       }}>
         {hotspots.length === 0 ? (
           <div style={{
@@ -222,6 +232,7 @@ function InsightsPanel({ graphData, onNodeClick, visible = true }) {
           </ul>
         )}
       </div>
+      </details>
 
       {/* Footer Stats */}
       <div style={{
