@@ -132,6 +132,10 @@ These items were raised by CodeRabbit during review (advisory) and were validate
 - **Protected-file workflow — spec alignment** (✅ Fixed, `11c40b8`)
   - **Fix approach:** ensure `SPEC_CHANGE_REQUEST.md` documents the *actual* protected changes and uses hash-only baseline instructions.
 
+- **SPEC testing guidance — avoid implying casual loop.sh execution** (✅ Fixed, `702ac6e`)
+  - **What was broken:** SPEC testing instructions told readers to run `workers/ralph/loop.sh --dry-run` directly without clarifying it is a protected, potentially side-effecting script.
+  - **Fix approach:** add a preferred non-executing validation option (syntax + protected hash checks) and explicitly mark dry-run execution as human-only controlled execution with safety guardrails.
+
 ---
 
 ## Executive Summary
