@@ -67,6 +67,14 @@ These items were raised by CodeRabbit during review (advisory) and were validate
   - **What was broken:** `<!-- Cortex adds new Task Contracts below this line -->` appeared after Phase 24, which violates the “append new contracts below the marker” convention.
   - **Fix approach:** Move the marker line so it is immediately above `## Phase 24: ...` and ensure it exists exactly once.
 
+- **Brain map implementation plan — placeholder dev commands** (✅ Fixed, `f4f4ec3`)
+  - **What was broken:** The implementation plan used placeholders (`<run backend dev command>`, `<run frontend dev command>`) which are not copy-pastable.
+  - **Fix approach:** Replace placeholders with concrete commands for the intended stack, explicitly labeled "once scaffolding exists".
+
+- **Brain map spec — validated_by direction mismatch in Artifact example** (✅ Fixed, `f4f4ec3`)
+  - **What was broken:** Artifact example used `validated_by` pointing from Artifact → criteria, contradicting the definition `A validated_by Artifact/Test`.
+  - **Fix approach:** Change the Artifact example link type to `related_to` so relationship direction semantics remain consistent.
+
 - **PLAN-only guard — args bypass** (✅ Fixed, `c81c16c`)
   - **Fix approach:** ensure `guard_plan_only_mode` matches command prefixes with wildcards so `git commit -m ...` is blocked.
   - **Snippet (pattern):**
