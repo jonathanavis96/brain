@@ -187,24 +187,14 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
   }, [zoomLevel])
 
   useEffect(() => {
-    // Build query string from filters
-    const params = new URLSearchParams()
-    if (filters?.type) params.set('type', filters.type)
-    if (filters?.status) params.set('status', filters.status)
-    if (filters?.tags) params.set('tags', filters.tags)
-    if (filters?.recency && filters.recency !== 'all') params.set('recency', filters.recency)
-
-    const queryString = params.toString() ? `?${params.toString()}` : ''
-
-    // Fetch graph data from backend
-    fetch(`${API_BASE_URL}/graph${queryString}`)
+    // Fetch all graph data from backend (no server-side filtering)
+    fetch(`${API_BASE_URL}/graph`)
       .then(res => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         return res.json()
       })
       .then(data => {
         setGraphData(data)
-        setFilteredData(data)
         setLoading(false)
         if (onGraphDataLoad) {
           onGraphDataLoad(data)
@@ -214,7 +204,94 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
         setError(err.message)
         setLoading(false)
       })
-  }, [filters, onGraphDataLoad])
+  }, [onGraphDataLoad])
+
+  // Client-side filtering with AND/OR logic
+  useEffect(() => {
+    if (!graphData) return
+
+    // If no filters are active, show all data
+    const hasActiveFilters = filters?.type || filters?.status || filters?.tags ||
+                             (filters?.recency && filters.recency !== 'all') ||
+                             filters?.priority || filters?.risk
+
+    if (!hasActiveFilters) {
+      setFilteredData(graphData)
+      return
+    }
+
+    const booleanMode = filters?.booleanMode || 'AND'
+
+    // Filter nodes based on boolean logic
+    const filteredNodes = graphData.nodes.filter(node => {
+      const checks = []
+
+      // Type filter
+      if (filters?.type) {
+        checks.push(node.type && node.type.toLowerCase() === filters.type.toLowerCase())
+      }
+
+      // Status filter
+      if (filters?.status) {
+        checks.push(node.status && node.status.toLowerCase() === filters.status.toLowerCase())
+      }
+
+      // Tags filter (comma-separated OR logic within tags)
+      if (filters?.tags) {
+        const filterTags = filters.tags.split(',').map(t => t.trim().toLowerCase())
+        const nodeTags = (node.tags || []).map(t => t.toLowerCase())
+        const hasAnyTag = filterTags.some(ft => nodeTags.includes(ft))
+        checks.push(hasAnyTag)
+      }
+
+      // Recency filter
+      if (filters?.recency && filters.recency !== 'all') {
+        const now = Date.now()
+        const recencyMs = {
+          '7d': 7 * 24 * 60 * 60 * 1000,
+          '30d': 30 * 24 * 60 * 60 * 1000,
+          '90d': 90 * 24 * 60 * 60 * 1000
+        }
+        const threshold = recencyMs[filters.recency]
+        if (threshold && node.updated_at) {
+          const nodeTime = new Date(node.updated_at).getTime()
+          checks.push(now - nodeTime <= threshold)
+        } else {
+          checks.push(false)
+        }
+      }
+
+      // Priority filter
+      if (filters?.priority) {
+        checks.push(node.priority && node.priority === filters.priority)
+      }
+
+      // Risk filter
+      if (filters?.risk) {
+        checks.push(node.risk && node.risk.toLowerCase() === filters.risk.toLowerCase())
+      }
+
+      // Apply boolean logic
+      if (booleanMode === 'OR') {
+        // OR: at least one check must pass
+        return checks.length > 0 && checks.some(check => check === true)
+      } else {
+        // AND: all checks must pass
+        return checks.length > 0 && checks.every(check => check === true)
+      }
+    })
+
+    // Filter edges to only include those connecting filtered nodes
+    const nodeIds = new Set(filteredNodes.map(n => n.id))
+    const filteredEdges = graphData.edges.filter(edge =>
+      nodeIds.has(edge.from) && nodeIds.has(edge.to)
+    )
+
+    setFilteredData({
+      nodes: filteredNodes,
+      edges: filteredEdges
+    })
+  }, [graphData, filters])
 
   // Compute clusters when data changes
   useEffect(() => {

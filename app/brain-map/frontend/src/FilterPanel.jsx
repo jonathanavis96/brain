@@ -16,7 +16,8 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
     tags: '',
     recency: 'all',
     priority: '',
-    risk: ''
+    risk: '',
+    booleanMode: 'AND' // 'AND' or 'OR'
   })
 
   // Calculate hotspots based on selected metric
@@ -54,7 +55,8 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
       tags: params.get('tags') || '',
       recency: params.get('recency') || 'all',
       priority: params.get('priority') || '',
-      risk: params.get('risk') || ''
+      risk: params.get('risk') || '',
+      booleanMode: params.get('booleanMode') || 'AND'
     }
     setFilters(urlFilters)
     onFilterChange(urlFilters)
@@ -69,6 +71,7 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
     if (filters.recency !== 'all') params.set('recency', filters.recency)
     if (filters.priority) params.set('priority', filters.priority)
     if (filters.risk) params.set('risk', filters.risk)
+    if (filters.booleanMode !== 'AND') params.set('booleanMode', filters.booleanMode)
 
     const newUrl = params.toString() ? `?${params.toString()}` : window.location.pathname
     window.history.replaceState({}, '', newUrl)
@@ -87,7 +90,8 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
       tags: '',
       recency: 'all',
       priority: '',
-      risk: ''
+      risk: '',
+      booleanMode: 'AND'
     })
   }
 
@@ -137,6 +141,72 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
         >
           Reset
         </button>
+      </div>
+
+      {/* Boolean Logic Mode Toggle */}
+      <div style={{
+        marginBottom: '1rem',
+        padding: '0.75rem',
+        background: '#fff',
+        border: '1px solid #ddd',
+        borderRadius: '4px'
+      }}>
+        <div style={{
+          fontSize: '12px',
+          fontWeight: 'bold',
+          marginBottom: '0.5rem',
+          color: '#666'
+        }}>
+          Filter Logic
+        </div>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button
+            onClick={() => handleChange('booleanMode', 'AND')}
+            style={{
+              flex: 1,
+              padding: '8px 12px',
+              border: `2px solid ${filters.booleanMode === 'AND' ? '#2196f3' : '#ddd'}`,
+              borderRadius: '4px',
+              background: filters.booleanMode === 'AND' ? '#e3f2fd' : '#fff',
+              color: filters.booleanMode === 'AND' ? '#1976d2' : '#333',
+              cursor: 'pointer',
+              fontSize: '13px',
+              fontWeight: filters.booleanMode === 'AND' ? 'bold' : 'normal',
+              transition: 'all 0.2s'
+            }}
+            title="All conditions must match"
+          >
+            AND
+          </button>
+          <button
+            onClick={() => handleChange('booleanMode', 'OR')}
+            style={{
+              flex: 1,
+              padding: '8px 12px',
+              border: `2px solid ${filters.booleanMode === 'OR' ? '#2196f3' : '#ddd'}`,
+              borderRadius: '4px',
+              background: filters.booleanMode === 'OR' ? '#e3f2fd' : '#fff',
+              color: filters.booleanMode === 'OR' ? '#1976d2' : '#333',
+              cursor: 'pointer',
+              fontSize: '13px',
+              fontWeight: filters.booleanMode === 'OR' ? 'bold' : 'normal',
+              transition: 'all 0.2s'
+            }}
+            title="Any condition can match"
+          >
+            OR
+          </button>
+        </div>
+        <div style={{
+          fontSize: '11px',
+          color: '#666',
+          marginTop: '0.5rem',
+          fontStyle: 'italic'
+        }}>
+          {filters.booleanMode === 'AND'
+            ? 'Nodes must match ALL active filters'
+            : 'Nodes match if ANY filter matches'}
+        </div>
       </div>
 
       {/* Active Filter Chips */}

@@ -510,3 +510,10 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | 2026-01-27 | 32.3.2 | - [x] **32.3.2** Create Views dropdown in header - List of saved views, click to load (applies filters, restores camera). AC: Dropdown shows saved views. Verification: Load saved view → graph state restored. If Blocked: Use bookmarks panel in sidebar |
 | 2026-01-27 | 32.3.3 | - [x] **32.3.3** Implement view sharing - "Share View" generates URL with encoded filter params (e.g., `/graph?view=base64encodedstate`). AC: Copy link, open in new tab → same view. Verification: Share link to another user → they see same filtered graph. If Blocked: Copy filter JSON to clipboard |
 | 2026-01-27 | 32.3.4 | - [x] **32.3.4** Add default views - Preset views: "All Tasks", "Blocked Items", "Recent Activity (7d)", "Orphans". AC: Default views available on first load. Verification: Fresh session → 4 default views shown. If Blocked: Just document filter examples in help |
+
+### Archived on 2026-01-27 23:33:17
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 32.4.1 | - [x] **32.4.1** Create filter chip UI - Drag-and-drop chips for filter criteria (Type=task, Status=blocked, Tags contains X, Recency=7d). AC: Filter chips render in panel. Verification: Add chips → filter updates. If Blocked: Use form inputs only (existing FilterPanel) |
+| 2026-01-27 | 32.4.2 | - [x] **32.4.2** Implement AND/OR logic - Support complex queries: "(Type=task OR Type=decision) AND Status=active". AC: Boolean logic works. Verification: Build complex filter → correct nodes shown. If Blocked: AND-only logic (all conditions must match) |
