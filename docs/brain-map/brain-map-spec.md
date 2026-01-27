@@ -52,6 +52,20 @@
   - [Task sizing and independence rules](#task-sizing-and-independence-rules)
   - [Required task metadata](#required-task-metadata)
   - [Verification expectations](#verification-expectations)
+- [Appendix: Frontmatter & Link Schema (Canonical)](#appendix-frontmatter--link-schema-canonical)
+  - [Frontmatter keys (canonical)](#frontmatter-keys-canonical)
+  - [Allowed enums and defaults](#allowed-enums-and-defaults)
+  - [Relationship encoding (canonical)](#relationship-encoding-canonical)
+  - [ID rules (precise)](#id-rules-precise)
+  - [Deterministic validation rules](#deterministic-validation-rules)
+  - [Migration / compatibility](#migration--compatibility)
+  - [Canonical note examples (by node type)](#canonical-note-examples-by-node-type)
+    - [Inbox](#inbox)
+    - [Concept](#concept)
+    - [System](#system)
+    - [Decision (ADR)](#decision-adr)
+    - [TaskContract](#taskcontract)
+    - [Artifact](#artifact)
 - [What changed vs previous draft](#what-changed-vs-previous-draft)
 
 ## Why this exists
@@ -794,6 +808,431 @@ Tasks should prefer verification that is:
 - executable via CLI (tests, linters)
 - minimal manual steps, clearly described
 
+## Appendix: Frontmatter & Link Schema (Canonical)
+
+This appendix defines the canonical Markdown frontmatter schema and relationship encoding used by the Brain Map system.
+
+Goals:
+
+- Unambiguous, deterministic parsing and validation.
+- Stable identity under title/filename changes.
+- Git-friendly notes that are human-editable.
+- A schema that supports future evolution without breaking existing notes.
+
+Non-goals (appendix-level):
+
+- This appendix does not define code, parser implementations, or UI widgets.
+
+### Frontmatter keys (canonical)
+
+All Brain Map notes are Markdown files with a required YAML frontmatter block.
+
+#### Required keys (all node types)
+
+- `id` (string): stable node id.
+- `title` (string): human-readable title.
+- `type` (string enum): node type.
+- `status` (string enum): node lifecycle status.
+- `tags` (list of strings): may be empty.
+- `created_at` (string): ISO8601 timestamp with timezone.
+- `updated_at` (string): ISO8601 timestamp with timezone.
+
+#### Optional keys (all node types)
+
+- `priority` (string enum): `P0 | P1 | P2 | P3`.
+- `risk` (string enum): `low | medium | high`.
+- `owner` (string): e.g., `Human`, `Cortex`, `Ralph`.
+- `source_links` (list of strings): URLs or repo paths.
+- `acceptance_criteria` (list of strings): required for `TaskContract`, recommended for `System`.
+- `links` (list): relationship records (see [Relationship encoding (canonical)](#relationship-encoding-canonical)).
+- `schema_version` (integer): optional; defaults to `1` if omitted.
+
+#### Reserved keys
+
+- Keys listed above are reserved by the Brain Map system.
+- The system must not repurpose reserved keys for different meaning across schema versions.
+
+#### Unknown keys
+
+- Unknown keys are allowed and must round-trip safely.
+- Unknown keys must be preserved when the system writes a note.
+
+### Allowed enums and defaults
+
+#### `type` enum (canonical)
+
+Allowed:
+
+- `Inbox`
+- `Concept`
+- `System`
+- `Decision`
+- `TaskContract`
+- `Artifact`
+
+Defaults:
+
+- When creating a note via “fast capture”, default `type: Inbox`.
+
+#### `status` enum (canonical)
+
+Allowed:
+
+- `idea`
+- `planned`
+- `active`
+- `blocked`
+- `done`
+- `archived`
+
+Defaults:
+
+- For new Inbox capture: `status: idea`.
+
+#### `priority` enum
+
+Allowed: `P0 | P1 | P2 | P3`.
+
+Default:
+
+- If omitted, treat as unspecified (do not assume P2).
+
+#### `risk` enum
+
+Allowed: `low | medium | high`.
+
+Default:
+
+- If omitted, treat as unspecified.
+
+### Relationship encoding (canonical)
+
+Relationships are stored in frontmatter as an array under the `links` key.
+
+This specification intentionally chooses **frontmatter-only** link storage. Inline link syntax (e.g., `[[id]]`) may be supported for display convenience later, but it is not canonical for indexing or identity.
+
+#### Canonical edge record
+
+Each item in the `links` array is a mapping with required keys:
+
+- `to` (string): target node id.
+- `type` (string enum): relationship type.
+
+Optional edge metadata keys:
+
+- `title` (string): optional cached display title of the target at time of linking.
+  - This is for human readability only.
+  - Indexing must resolve by `to` (id), not by this title.
+- `note` (string): optional human explanation.
+- `created_at` (string ISO8601): optional; if omitted, indexer may treat as unknown.
+
+Relationship `type` enum (canonical):
+
+- `implements`
+- `depends_on`
+- `blocks`
+- `validated_by`
+- `replaces`
+- `related_to`
+
+#### Direction rules
+
+- All edges are stored as outgoing edges from the current note.
+  - Example: in node A, `links: [{to: B, type: depends_on}]` means “A depends_on B”.
+- `related_to` is treated as symmetric in UI.
+  - Canonical storage rule: store it as a single directed edge exactly as written.
+  - UI may optionally materialize the reverse direction for visualization.
+
+#### How titles are used/displayed
+
+- UI should display the resolved target node title if available.
+- If the target node is missing, UI may fall back to `links[].title` if present.
+- The system must not use `links[].title` to resolve identity.
+
+### ID rules (precise)
+
+ID rules are strict because links resolve by `id`.
+
+#### Format
+
+Canonical id format is UUID v4 (lowercase) with a `bm_` prefix:
+
+- `bm_<uuid-v4>`
+- Example: `bm_550e8400-e29b-41d4-a716-446655440000`
+
+Rationale:
+
+- avoids collisions during fast capture
+- remains stable under renames
+- is filesystem-safe and URL-safe
+
+#### Generation method
+
+- IDs are generated exactly once at node creation.
+- ID generation is UI/backend responsibility (not user-typed in normal flow).
+- When importing legacy notes missing `id`, the system must not silently generate ids unless the user explicitly triggers a migration/import action.
+
+#### Immutability
+
+- Once created, `id` must not change.
+- If a user manually edits `id`, the system treats it as a different identity and reports it as a likely migration error.
+
+#### Collisions
+
+- UUID collisions are treated as practically impossible.
+- Nevertheless, duplicate ids are a hard index error.
+
+#### Rename behavior
+
+- Changing `title` or filename does not change `id`.
+- Links remain valid because they reference ids.
+
+### Deterministic validation rules
+
+Validation must be deterministic and must classify findings as **hard errors** (index build fails) or **warnings** (index builds but diagnostics are surfaced).
+
+#### Required fields per type
+
+All types require the global required keys:
+
+- `id`, `title`, `type`, `status`, `tags`, `created_at`, `updated_at`
+
+Type-specific requirements:
+
+- `Inbox`:
+  - no additional required keys
+- `Concept`:
+  - no additional required keys
+- `System`:
+  - recommended: `acceptance_criteria` (warning if missing once status is `planned` or beyond)
+- `Decision`:
+  - recommended: `source_links` (warning if missing)
+- `TaskContract`:
+  - required: `acceptance_criteria` (hard error if missing)
+- `Artifact`:
+  - required: at least one of:
+    - `source_links` non-empty, or
+    - a Markdown body containing a clear artifact description (hard error if both empty)
+
+#### Hard errors (must fail index build)
+
+- Duplicate `id` across notes.
+- Missing required keys.
+- Invalid enum values (`type`, `status`, `priority`, `risk`, relationship `type`).
+- Invalid YAML frontmatter (unparseable).
+- `links` not an array.
+- Any `links[]` record missing required keys `to` or `type`.
+- `TaskContract` missing `acceptance_criteria`.
+
+#### Warnings (index builds, but diagnostics are emitted)
+
+- Broken links: `links[].to` references an id not present in the index.
+- Timestamp anomalies:
+  - `updated_at` earlier than `created_at`.
+- Empty `tags` list is allowed (not a warning).
+- Unknown fields are allowed (not a warning).
+- `System` with status `planned|active|blocked` missing `acceptance_criteria`.
+- `Decision` missing `source_links`.
+
+#### Duplicate id handling (explicit)
+
+- Duplicate ids are a hard error.
+- Error output must list:
+  - the duplicated `id`
+  - every file path containing it
+- The system must not “pick one.”
+
+#### Unknown fields handling
+
+- Unknown frontmatter keys must be preserved on write.
+- Unknown keys must not cause failure.
+
+### Migration / compatibility
+
+Schema evolution must not break old notes.
+
+Compatibility rules:
+
+- The parser must be tolerant of unknown fields.
+- The parser must treat `schema_version` as:
+  - default `1` if missing
+  - a hint for future migrations
+- When adding new required fields in future versions:
+  - do so by introducing a new `schema_version`
+  - treat missing new fields as warnings for older versions, not hard errors
+  - provide an explicit migration tool/workflow (user-invoked) to upgrade notes
+
+### Canonical note examples (by node type)
+
+The following examples are canonical reference notes. They demonstrate required fields, optional fields, and relationship encoding.
+
+#### Inbox
+
+```markdown
+---
+id: bm_550e8400-e29b-41d4-a716-446655440000
+title: "idea: plan generator should warn on broken deps"
+type: Inbox
+status: idea
+tags: []
+created_at: 2026-01-27T02:00:00+00:00
+updated_at: 2026-01-27T02:00:00+00:00
+schema_version: 1
+links: []
+---
+
+Messy notes allowed here. This is a scratchpad capture.
+
+- maybe connect to existing plan generator later
+- might be a warning not a hard error
+```
+
+#### Concept
+
+```markdown
+---
+id: bm_11111111-1111-4111-8111-111111111111
+title: "Heat metrics: density vs recency vs task pressure"
+type: Concept
+status: planned
+tags:
+  - brain-map
+  - metrics
+created_at: 2026-01-20T10:00:00+00:00
+updated_at: 2026-01-27T02:00:00+00:00
+schema_version: 1
+links:
+  - to: bm_22222222-2222-4222-8222-222222222222
+    type: related_to
+    title: "Graph clustering and semantic zoom"
+    note: "Metrics should work at both node and cluster level."
+---
+
+Define and compare heat metrics and their visual encodings.
+```
+
+#### System
+
+```markdown
+---
+id: bm_33333333-3333-4333-8333-333333333333
+title: "Brain Map backend: Markdown indexer + API"
+type: System
+status: active
+tags:
+  - brain-map
+  - backend
+owner: Ralph
+risk: medium
+acceptance_criteria:
+  - "Index rebuild is deterministic and atomic (publish only on success)."
+  - "FTS search returns results for title, tags, and body."
+created_at: 2026-01-22T09:00:00+00:00
+updated_at: 2026-01-27T02:00:00+00:00
+schema_version: 1
+links:
+  - to: bm_44444444-4444-4444-8444-444444444444
+    type: depends_on
+    title: "Frontmatter schema validation rules"
+---
+
+This System node describes the backend boundary: parsing, indexing, and API.
+```
+
+#### Decision (ADR)
+
+```markdown
+---
+id: bm_55555555-5555-4555-8555-555555555555
+title: "ADR: Markdown-first source of truth with SQLite derived index"
+type: Decision
+status: done
+tags:
+  - brain-map
+  - adr
+  - storage
+owner: Cortex
+source_links:
+  - docs/brain-map/brain-map-spec.md
+created_at: 2026-01-21T12:00:00+00:00
+updated_at: 2026-01-27T02:00:00+00:00
+schema_version: 1
+links:
+  - to: bm_33333333-3333-4333-8333-333333333333
+    type: implements
+    title: "Brain Map backend: Markdown indexer + API"
+---
+
+## Context
+
+We need git-friendly, reviewable source of truth.
+
+## Decision
+
+Use Markdown notes as canonical data; SQLite is a derived performance index.
+
+## Consequences
+
+- Index rebuilds must be deterministic.
+- Write path must preserve unknown fields.
+```
+
+#### TaskContract
+
+```markdown
+---
+id: bm_66666666-6666-4666-8666-666666666666
+title: "Implement deterministic index publish/swap"
+type: TaskContract
+status: planned
+tags:
+  - brain-map
+  - backend
+priority: P0
+owner: Ralph
+risk: high
+acceptance_criteria:
+  - "Indexer builds index in a temp location and only swaps into place on success."
+  - "On failure, last known-good index remains usable."
+  - "Diagnostics include duplicate id file paths when present."
+created_at: 2026-01-27T02:00:00+00:00
+updated_at: 2026-01-27T02:00:00+00:00
+schema_version: 1
+links:
+  - to: bm_33333333-3333-4333-8333-333333333333
+    type: implements
+    title: "Brain Map backend: Markdown indexer + API"
+---
+
+Task contract nodes represent atomic work units. The real task contract for Ralph execution is generated later.
+```
+
+#### Artifact
+
+```markdown
+---
+id: bm_77777777-7777-4777-8777-777777777777
+title: "Brain Map UI prototype screenshot"
+type: Artifact
+status: active
+tags:
+  - brain-map
+  - ui
+source_links:
+  - artifacts/brain-map/ui-prototype-2026-01-27.png
+created_at: 2026-01-27T02:00:00+00:00
+updated_at: 2026-01-27T02:00:00+00:00
+schema_version: 1
+links:
+  - to: bm_88888888-8888-4888-8888-888888888888
+    type: validated_by
+    title: "Graph view acceptance criteria"
+    note: "Use as a visual baseline for neuron-like styling."
+---
+
+A visual artifact used to validate UI look-and-feel.
+```
+
 ## What changed vs previous draft
 
 This canonical spec adds and fully specifies the following mandatory sections as first-class requirements:
@@ -803,3 +1242,4 @@ This canonical spec adds and fully specifies the following mandatory sections as
 - Explicit Non-Goals
 - Failure & Recovery Model
 - Agent Ingestion Contract
+- Appendix added: Frontmatter & Link Schema (Canonical)
