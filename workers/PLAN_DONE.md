@@ -105,3 +105,84 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | 2026-01-27 | 22.10.4 | - [x] **22.10.4** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 116 |
 | 2026-01-27 | 22.10.5 | - [x] **22.10.5** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 117 |
 | 2026-01-27 | 22.11.1 | - [x] **22.11.1** Fix MD024 in workers/PLAN_DONE.md line 49 |
+
+### Archived on 2026-01-27 (Batch 2)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 0.L.1 | - [x] **0.L.1** Fix MD024 in cortex/PLAN_DONE.md (duplicate heading "Archived on 2026-01-26") |
+| 2026-01-27 | 0.L.2 | - [x] **0.L.2** Fix MD056 table column count errors in TEMPLATE_DRIFT_REPORT.md |
+| 2026-01-27 | 0.L.3 | - [x] **0.L.3** Fix MD032 blank line errors in TEMPLATE_DRIFT_REPORT.md |
+| 2026-01-27 | 0.L.4 | - [x] **0.L.4** Fix MD009 trailing spaces in TEMPLATE_DRIFT_REPORT.md |
+| 2026-01-27 | 0.L.5 | - [x] **0.L.5** Fix MD040 missing language in TEMPLATE_DRIFT_REPORT.md |
+
+### Archived on 2026-01-27 (Batch 3)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 0.L.6 | - [x] **0.L.6** Fix MD056 table column count errors in workers/ralph/THUNK.md |
+| 2026-01-27 | 0.L.7 | - [x] **0.L.7** Fix MD012 in workers/IMPLEMENTATION_PLAN.md lines 25-28 |
+| 2026-01-27 | 0.L.8 | - [x] **0.L.8** Fix MD024 in workers/PLAN_DONE.md line 109 |
+| 2026-01-27 | - [x] Backend can be started in WSL2 and serves `GET /health` successfully. | - [x] Backend can be started in WSL2 and serves `GET /health` successfully. |
+| 2026-01-27 | 25.1.1 | - [x] **25.1.1** Scaffold Brain Map app workspace (frontend + backend skeleton) |
+| 2026-01-27 | 25.1.2 | - [x] **25.1.2** Define Markdown note discovery + loading (scan notes root) |
+| 2026-01-27 | 25.1.3 | - [x] **25.1.3** Implement canonical frontmatter parser and validator |
+| 2026-01-27 |     - [x] Required keys enforced per type. |     - [x] Required keys enforced per type. |
+| 2026-01-27 |     - [x] Invalid enums are hard errors. |     - [x] Invalid enums are hard errors. |
+| 2026-01-27 |     - [x] `TaskContract` without `acceptance_criteria` is a hard error. |     - [x] `TaskContract` without `acceptance_criteria` is a hard error. |
+| 2026-01-27 |     - [x] Unknown fields are preserved (round-trip safety policy documented in tests). |     - [x] Unknown fields are preserved (round-trip safety policy documented in tests). |
+| 2026-01-27 | 25.1.4 | - [x] **25.1.4** Build SQLite schema and deterministic index rebuild |
+| 2026-01-27 |     - [x] Index rebuild is deterministic and idempotent. |     - [x] Index rebuild is deterministic and idempotent. |
+| 2026-01-27 |     - [x] Duplicate ids are a hard error and prevent publishing a new index. |     - [x] Duplicate ids are a hard error and prevent publishing a new index. |
+| 2026-01-27 |     - [x] Last known-good index remains usable if rebuild fails. |     - [x] Last known-good index remains usable if rebuild fails. |
+| 2026-01-27 | 25.1.5 | - [x] **25.1.5** Implement `/search` endpoint using the index (fast global search) |
+
+### Archived on 2026-01-27 (Batch 4)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | WARN.MD046.workers/IMPLEMENTATION_PLAN.md | - [x] **WARN.MD046.workers/IMPLEMENTATION_PLAN.md** - Fix MD046/code-block-style at line 49 (Expected: fenced; Actual: indented) |
+| 2026-01-27 | WARN.MD007.workers/IMPLEMENTATION_PLAN.md | - [x] **WARN.MD007.workers/IMPLEMENTATION_PLAN.md** - Fix MD007/ul-indent errors at lines 52-75 (unordered list indentation) |
+| 2026-01-27 | WARN.MD032.workers/IMPLEMENTATION_PLAN.md | - [x] **WARN.MD032.workers/IMPLEMENTATION_PLAN.md** - Fix MD032/blanks-around-lists at line 52 (lists should be surrounded by blank lines) |
+| 2026-01-27 | WARN.MD005.workers/IMPLEMENTATION_PLAN.md | - [x] **WARN.MD005.workers/IMPLEMENTATION_PLAN.md** - Fix MD005/list-indent errors at lines 77-238 (inconsistent indentation for list items) |
+| 2026-01-27 | WARN.MD012.workers/IMPLEMENTATION_PLAN.md | - [x] **WARN.MD012.workers/IMPLEMENTATION_PLAN.md** - Fix MD012/no-multiple-blanks at line 68 (Expected: 2; Actual: 3) |
+| 2026-01-27 | WARN.MD024.workers/PLAN_DONE.md | - [x] **WARN.MD024.workers/PLAN_DONE.md** - Fix MD024/no-duplicate-heading at line 119 (Multiple headings with same content "Archived on 2026-01-27") |
+| 2026-01-27 | - [x] Markdown-first notes exist under `app/brain-map/notes/` and are treated as the canonical source of truth. | - [x] Markdown-first notes exist under `app/brain-map/notes/` and are treated as the canonical source of truth. |
+| 2026-01-27 | - [x] A deterministic index rebuild can be run that produces a local SQLite index at `app/brain-map/.local/index.db`. | - [x] A deterministic index rebuild can be run that produces a local SQLite index at `app/brain-map/.local/index.db`. |
+| 2026-01-27 | - [x] Frontend dev server starts and serves on port 5173 (or documented override). | - [x] Frontend dev server starts and serves on port 5173 (or documented override). |
+| 2026-01-27 | - [x] Backend dev server starts and serves on port 8000 (or documented override). | - [x] Backend dev server starts and serves on port 8000 (or documented override). |
+| 2026-01-27 | - [x] `GET /health` returns 200 with expected JSON shape. | - [x] `GET /health` returns 200 with expected JSON shape. |
+| 2026-01-27 | 25.1.6 | - [x] **25.1.6** Implement `/graph` endpoint (graph snapshot for UI) |
+| 2026-01-27 |     - [x] Nodes/edges returned in deterministic order. |     - [x] Nodes/edges returned in deterministic order. |
+| 2026-01-27 |     - [x] Filters and pagination behave as specified. |     - [x] Filters and pagination behave as specified. |
+| 2026-01-27 |     - [x] `metrics` object present for each node (`density/recency/task` present as float or null). |     - [x] `metrics` object present for each node (`density/recency/task` present as float or null). |
+| 2026-01-27 | 25.1.7 | - [x] **25.1.7** Implement `/node/{id}` read endpoint |
+| 2026-01-27 | 25.1.8 | - [x] **25.1.8** Implement node create (`POST /node`) with markdown-first write + reindex |
+| 2026-01-27 | 25.1.9 | - [x] **25.1.9** Implement node update (`PUT /node/{id}`) with atomic write + reindex |
+| 2026-01-27 | 25.1.10 | - [x] **25.1.10** Implement `/generate-plan` endpoint (deterministic markdown + optional write) |
+
+### Archived on 2026-01-27 (Batch 5)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | - [x] Backend exposes MVP API endpoints as specified in `docs/brain-map/brain-map-spec.md`: | - [x] Backend exposes MVP API endpoints as specified in `docs/brain-map/brain-map-spec.md`: |
+| 2026-01-27 |   - [x] `GET /graph` |   - [x] `GET /graph` |
+| 2026-01-27 |   - [x] `GET /node/{id}` |   - [x] `GET /node/{id}` |
+| 2026-01-27 |   - [x] `POST /node` |   - [x] `POST /node` |
+| 2026-01-27 |   - [x] `PUT /node/{id}` |   - [x] `PUT /node/{id}` |
+| 2026-01-27 |   - [x] `GET /search` |   - [x] `GET /search` |
+| 2026-01-27 |   - [x] `POST /generate-plan` |   - [x] `POST /generate-plan` |
+| 2026-01-27 | - [x] UI can be started and loaded in a Windows browser and calls the backend successfully. | - [x] UI can be started and loaded in a Windows browser and calls the backend successfully. |
+| 2026-01-27 | - [x] UI renders a graph view (sigma.js) from `GET /graph`. | - [x] UI renders a graph view (sigma.js) from `GET /graph`. |
+| 2026-01-27 | - [x] UI supports selecting a node and viewing/editing details (via `GET /node/{id}` + `PUT /node/{id}`). | - [x] UI supports selecting a node and viewing/editing details (via `GET /node/{id}` + `PUT /node/{id}`). |
+| 2026-01-27 | - [x] UI supports fast search (Ctrl+K) via `GET /search`. | - [x] UI supports fast search (Ctrl+K) via `GET /search`. |
+| 2026-01-27 | - [x] UI supports basic recency heat overlay (even if simple). | - [x] UI supports basic recency heat overlay (even if simple). |
+| 2026-01-27 | - [x] UI supports generating a plan from selected nodes and shows returned markdown (via `POST /generate-plan`). | - [x] UI supports generating a plan from selected nodes and shows returned markdown (via `POST /generate-plan`). |
+| 2026-01-27 | - [x] Notes are discovered recursively. | - [x] Notes are discovered recursively. |
+| 2026-01-27 | - [x] Non-markdown files are ignored. | - [x] Non-markdown files are ignored. |
+| 2026-01-27 | - [x] Discovery order is deterministic (sorted by repo-root-relative path). | - [x] Discovery order is deterministic (sorted by repo-root-relative path). |
+| 2026-01-27 | 25.1.11 | - [x] **25.1.11** Frontend: Graph view rendering from `/graph` (sigma.js) |
+| 2026-01-27 |     - [x] Graph renders with at least dozens of nodes without freezing. |     - [x] Graph renders with at least dozens of nodes without freezing. |
+| 2026-01-27 |     - [x] Clicking a node selects it and triggers node detail fetch. |     - [x] Clicking a node selects it and triggers node detail fetch. |
+| 2026-01-27 | 25.1.12 | - [x] **25.1.12** Frontend: Node detail panel (read + edit + save) |
+| 2026-01-27 | 25.1.13 | - [x] **25.1.13** Frontend: Search palette (Ctrl+K) via `/search` |

@@ -58,7 +58,7 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 
 | ID | File/Path | Diff Type | Intended? | Confidence | Impact | Summary | Action |
 |----|-----------|-----------|-----------|------------|--------|---------|--------|
-| **MATCHED FILES (exist in both)** |
+| **MATCHED FILES (exist in both)** | | | | | | | |
 | D01 | `.gitignore` | Modified | Intended | High | Low | Brain adds `old_md/` ignore | Keep |
 | D02 | `CEREBRAS_AGENT.md` | Identical | - | - | - | No drift | - |
 | D03 | `HUMAN_REQUIRED.md` | Modified | Unknown | Medium | Low | Minor wording changes | Decide |
@@ -74,7 +74,7 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 | D13 | `sync_cortex_plan.sh` | Modified | Intended | Med | Med | Simplified in template | Keep |
 | D14 | `thunk_ralph_tasks.sh` | Identical | - | - | - | No drift | - |
 | D15 | `verifier.sh` | Modified | Mixed | High | High | Template has new path fix; current has caching | Backport-partial |
-| **TEMPLATE-ONLY FILES** |
+| **TEMPLATE-ONLY FILES** | | | | | | | |
 | T01 | `.markdownlint.yaml` | Missing in current | Intended | High | Low | Root-level config used instead | Keep missing |
 | T02 | `IMPLEMENTATION_PLAN.project.md` | Template placeholder | Intended | High | - | Becomes `IMPLEMENTATION_PLAN.md` | - |
 | T03 | `PROMPT.project.md` | Template placeholder | Intended | High | - | Supplementary prompt template | - |
@@ -84,7 +84,7 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 | T07 | `SKILL_TEMPLATE.md` | Missing in current | Intended | High | Low | Template for skills (brain has in skills/) | Keep missing |
 | T08 | `rules/AC.rules` | Different location | Intended | High | Med | Template has sample; brain uses root `rules/` | Keep |
 | T09 | `rules/MANUAL_APPROVALS.rules` | Different location | Intended | High | Low | Same pattern as AC.rules | Keep |
-| **WORKERS-ONLY FILES** |
+| **WORKERS-ONLY FILES** | | | | | | | |
 | W01 | `AGENTS.md` | Not templated | Intended | High | Med | Brain-specific agent guide | Keep |
 | W02 | `NEURONS.md` | Not templated | Intended | High | Med | Brain-specific repo map | Keep |
 | W03 | `THOUGHTS.md` | Not templated | Intended | High | Low | Brain-specific strategy | Keep |
@@ -108,6 +108,7 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 ### 4.1 Missing but Should Be Added (templates → current)
 
 **None identified.** Template files that are "missing" in current are either:
+
 - Placeholder files (`.project.md`) that become instance files
 - Different location by design (AC.rules at root)
 
@@ -143,9 +144,10 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 
 ### 4.5 Modified: Should Backport to Template
 
-#### D06: `cerebras_agent.py` 
+#### D06: `cerebras_agent.py`
 
 **Changes in current:**
+
 - `DEFAULT_MAX_TURNS`: 25 → 15 (safer default)
 - Added `MAX_CONTEXT_CHARS = 50000` (context management)
 - Added `MAX_TOOL_RESULT_CHARS = 4000` (truncation)
@@ -157,6 +159,7 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 #### D07: `current_ralph_tasks.sh`
 
 **Changes in current:**
+
 - +94 lines of improved parsing logic
 - Better state tracking for task extraction
 
@@ -165,11 +168,13 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 #### D11: `loop.sh` (PARTIAL)
 
 **Backport these:**
+
 - `stage_scoped_changes()` function - smart staging that avoids noise
 - Protected file hash co-staging logic
 - `CACHE_MODE` default change (`off` → `use`)
 
 **Keep brain-specific:**
+
 - Hardcoded paths like `workers/IMPLEMENTATION_PLAN.md`
 - Brain-specific denylist patterns
 
@@ -178,6 +183,7 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 **Template already has:** New path logic (RALPH_PROJECT_ROOT, SCRIPT_DIR-relative)
 
 **Backport from current:**
+
 - Caching system for verifier checks
 - Cache key generation with AC.rules hash
 
@@ -186,6 +192,7 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 #### D15: `verifier.sh` ROOT/path logic
 
 **Template version is correct** - we just fixed this today. The template now:
+
 - Uses `RALPH_PROJECT_ROOT` env var if set
 - Defaults to `$SCRIPT_DIR/..` (one level up)
 - Finds AC.rules relative to SCRIPT_DIR
@@ -244,7 +251,7 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 
 ### Dependencies
 
-```
+```text
 Phase 1 items are independent - can be done in parallel
 Phase 2.4 (loop.sh) should come before 2.5 (verifier.sh) - similar patterns
 Phase 3 decisions can happen anytime
@@ -265,7 +272,7 @@ Phase 3 decisions can happen anytime
 
 ---
 
-## 7. Acceptance Checklist
+**Acceptance Checklist:**
 
 - [x] All files inventoried (templates: 30, workers: 40+)
 - [x] Every modified file has semantic summary

@@ -229,7 +229,7 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-26 |     - [x] Cache files excluded by default |     - [x] Cache files excluded by default |
 | 2026-01-26 |     - [x] Hash regenerated in all `.verify/` directories |     - [x] Hash regenerated in all `.verify/` directories |
 
-### Archived on 2026-01-26
+### Archived on 2026-01-26 (Batch 11)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
@@ -275,7 +275,7 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-26 | 22.5.3 | - [x] **22.5.3** Fix MD024 in cortex/PLAN_DONE.md line 221 |
 | 2026-01-26 | 22.6.1 | - [x] **22.6.1** Fix MD001 in workers/PLAN_DONE.md line 7 |
 
-### Archived on 2026-01-26
+### Archived on 2026-01-26 (Batch 12)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
