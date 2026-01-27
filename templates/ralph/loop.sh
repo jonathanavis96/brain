@@ -1367,7 +1367,7 @@ except Exception:
   else
     # Default: RovoDev
     run_tool "$tool_id" "$RUNNER" "$tool_key" "$git_sha" \
-      "script -q -c \"cat \\\"$prompt_with_mode\\\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG}\" \"$log\""
+      "script -q -c \"cat \\\"$prompt_with_mode\\\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG} 2> >(bash $ROOT/workers/shared/filter_acli_errors.sh >&2)\" \"$log\""
     rc=$?
   fi
 
