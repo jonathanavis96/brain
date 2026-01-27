@@ -15,6 +15,8 @@
 - Phase 12: Observability Improvements (🔄 IN PROGRESS - 1/4 tasks complete)
 - Phases 13-20: Meta-tooling & Self-improvement (queued)
 
+<!-- Cortex adds new Task Contracts below this line -->
+
 ## Phase 24: Template Drift Alignment (A1)
 
 **Goal:** Align `templates/ralph/` to the accepted canonical Ralph layout `workers/ralph/` (ADR-0001) and backport the highest-impact, lowest-risk drift items from Brain `workers/ralph/` into templates in small, dependency-ordered batches.
@@ -297,5 +299,3 @@
   - **Where to inspect:** `workers/ralph/HUMAN_REQUIRED.md`, `templates/ralph/HUMAN_REQUIRED.md`
 
 ---
-
-<!-- Cortex adds new Task Contracts below this line -->
