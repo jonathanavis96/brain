@@ -126,7 +126,30 @@ Per task 24.4.3:
 
 ## Testing Plan
 
-After human applies changes and updates hash:
+### Option A (preferred): non-executing validation
+
+These checks validate the change without running `loop.sh`:
+
+```bash
+bash -n workers/ralph/loop.sh
+bash -n workers/shared/common.sh
+bash tools/validate_protected_hashes.sh
+```
+
+Expected: all commands exit 0.
+
+### Option B (human-only, controlled execution): run loop.sh in dry-run
+
+Only a human operator should run this. Even with `--dry-run`, `loop.sh` may still invoke external tools and create transient files/logs.
+
+**Safety guardrails:**
+
+- Run from a clean working tree.
+- Use a controlled environment (no secrets in env vars, no production credentials).
+- Use `--dry-run` only.
+- Review output logs and confirm no git writes occur.
+
+Steps:
 
 1. Test with `RALPH_MODE=PLAN`:
 
@@ -135,16 +158,16 @@ After human applies changes and updates hash:
    bash workers/ralph/loop.sh --dry-run
    ```
 
-   Expected: No git operations, clean exit with guard messages
+   Expected: git operations are skipped/refused via `guard_plan_only_mode`.
 
-2. Test without RALPH_MODE (normal operation):
+2. Test without `RALPH_MODE` (normal operation):
 
    ```bash
    unset RALPH_MODE
    bash workers/ralph/loop.sh --dry-run
    ```
 
-   Expected: Normal git operations proceed
+   Expected: normal flow proceeds (but still no commits due to `--dry-run`).
 
 ## Impact Assessment
 
