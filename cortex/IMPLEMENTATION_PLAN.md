@@ -21,6 +21,39 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
+## Phase 0-Lint: Markdown Lint Fixes
+
+**Goal:** Fix all remaining markdown lint errors that auto-fix cannot resolve.
+
+**Context:** Auto-fix resolved most issues, but MD031 (blank lines around fences) and MD040 (language tags) require manual fixes in cortex/ and workers/ IMPLEMENTATION_PLAN.md files. Also one MD024 (duplicate heading) in cortex/PLAN_DONE.md.
+
+**Tasks:**
+
+- [x] **0.L.1** Fix MD031/MD040 in cortex/IMPLEMENTATION_PLAN.md lines 57-73
+  - **Goal:** Add blank lines around code blocks and specify language tags
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD031/MD040 errors in lines 50-80)
+  - **Verification:** Run markdownlint on file, check line 57-73 errors cleared
+
+- [x] **0.L.2** Fix MD040 in cortex/IMPLEMENTATION_PLAN.md lines 136, 155, 174
+  - **Goal:** Add language tags to fenced code blocks
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD040 errors)
+  - **Verification:** Run markdownlint on file, check all MD040 errors cleared
+
+- [x] **0.L.3** Fix MD024 in cortex/PLAN_DONE.md line 372
+  - **Goal:** Make duplicate "Archived on 2026-01-27" heading unique
+  - **AC:** `markdownlint cortex/PLAN_DONE.md` passes (no MD024 errors)
+  - **Verification:** Run markdownlint on file, check MD024 error cleared
+
+- [x] **0.L.4** Fix MD031/MD040 in workers/IMPLEMENTATION_PLAN.md lines 51-67
+  - **Goal:** Add blank lines around code blocks and specify language tags
+  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD031/MD040 errors in lines 50-70)
+  - **Verification:** Run markdownlint on file, check line 51-67 errors cleared
+
+- [x] **0.L.5** Fix MD040 in workers/IMPLEMENTATION_PLAN.md lines 130, 149, 168
+  - **Goal:** Add language tags to fenced code blocks
+  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD040 errors)
+  - **Verification:** Run markdownlint on file, check all MD040 errors cleared
+
 ## Phase 34: Discord Integration - Live Build Updates 📢
 
 **Goal:** Post real-time iteration summaries to Discord after each Ralph loop iteration completes.
@@ -35,12 +68,20 @@
 
 **Duration:** 30-45 min
 
-- [x] **34.1.1** Create `bin/discord-post` utility script
-  - **Goal:** Standalone script to send messages to Discord webhooks with automatic chunking
-  - **AC:** Script exists at `bin/discord-post`; accepts stdin or --file input; chunks at 1900 chars; supports --dry-run; exits 0 on failure (non-blocking); requires DISCORD_WEBHOOK_URL env var
-  - **Verification:** Run `bin/discord-post --help`; test `echo "test" | bin/discord-post --dry-run`
-  - **If Blocked:** N/A - already complete
-  - **Status:** ✅ Complete (already exists)
+- [ ] **34.1.1** Configure Discord webhook environment variable
+  - **Goal:** Permanently set DISCORD_WEBHOOK_URL in user's shell config
+  - **Implementation:**
+    - Add to `~/.bashrc`:
+
+      ```bash
+      export DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/1465720799729160294/NeBVhxsANqgwfuFvynyzT-4kwvLrFQh_0psXlfQc7sx2TBy99X_15vo-57I6Q7KkLYxI"
+      ```
+
+    - Source the file: `source ~/.bashrc`
+    - Verify: `echo $DISCORD_WEBHOOK_URL` (should print webhook URL)
+  - **AC:** Environment variable persists across shell sessions; URL is correct; variable is set in current shell
+  - **Verification:** Open new terminal, run `echo $DISCORD_WEBHOOK_URL`, verify URL appears
+  - **If Blocked:** User can set manually or Ralph can document steps in cortex/docs/DISCORD_INTEGRATION_SPEC.md
 
 - [ ] **34.1.2** Add `generate_iteration_summary` function to loop.sh
   - **Goal:** Extract Ralph's structured summary from iteration logs for Discord posting
@@ -119,6 +160,7 @@
       4. Loop integration: `cd workers/ralph && bash loop.sh --iterations 1`
       5. Missing webhook: Unset var, verify non-fatal
       6. Invalid webhook: Set bad URL, verify error handling
+
     - Document results in commit message
   - **AC:** All 6 test cases pass; Discord messages appear correctly; no loop crashes
   - **Verification:** Complete checklist, paste results in PR description
@@ -137,7 +179,7 @@
     - After line ~1744 (after `ensure_worktree_branch`)
     - Generate summary:
 
-      ```text
+      ```bash
       **Ralph Loop Starting**
       Iterations: ${MAX_ITERATIONS}
       Mode: PLAN → BUILD cycling
