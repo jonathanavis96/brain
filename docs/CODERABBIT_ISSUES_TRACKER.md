@@ -29,6 +29,28 @@ These items were raised by CodeRabbit during review (advisory) and were validate
     fi
     ```
 
+- **`bin/brain-search` — grep literal safety + `--limit` parsing** (✅ Fixed, `034e8fd`)
+  - **What was broken:**
+    - `grep -i "$QUERY"` treated a query starting with `-` as an option.
+    - `--limit` assumed `$2` existed; could fail when invoked as `--limit` with no value.
+  - **Fix approach:**
+    - Pass `--` before the search pattern (`grep -i -- "$QUERY"`) so leading hyphens are treated literally.
+    - In the `--limit` branch, validate `${2:-}` is present and not another option before assigning `LIMIT`.
+
+- **Skill quiz — counter increments can exit under `set -e`** (✅ Fixed, `04462c4`)
+  - **What was broken:** `((total++))` / `((correct++))` can return status 1 when the previous value is 0, which can terminate the script under `set -e`.
+  - **Fix approach:** use `((++total))` / `((++correct))` (or `+= 1`) so the arithmetic expression evaluates to non-zero and does not trigger `set -e`.
+
+- **Docs hygiene — typos + table cleanup + SPEC clarity** (✅ Fixed, `dca3ff0`)
+  - **What was broken:**
+    - Minor typos (`doesnt`) in both plan files.
+    - `workers/PLAN_DONE.md` had duplicated checklist rows in the archive table and a confusing self-referential line-number mention.
+    - `SPEC_CHANGE_REQUEST.md` listed `templates/ralph/loop.sh` as impacted without stating whether the change had been applied.
+  - **Fix approach:**
+    - Correct spelling (`doesn't`).
+    - Collapse the checklist into a single valid Markdown table row and clarify that archived line numbers refer to the file state at the time.
+    - Add an explicit note that template sync is still required for `templates/ralph/loop.sh` (and its `.verify` hash).
+
 - **PLAN-only guard — args bypass** (✅ Fixed, `c81c16c`)
   - **Fix approach:** ensure `guard_plan_only_mode` matches command prefixes with wildcards so `git commit -m ...` is blocked.
   - **Snippet (pattern):**
