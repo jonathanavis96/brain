@@ -191,7 +191,7 @@
 - [ ] **34.2.3** Add verifier failure alerts
   - **Goal:** Post alert when verifier fails
   - **Implementation:**
-    - In verifier failure block (line ~1240)
+    - In verifier failure block (line ~1240) in `workers/ralph/loop.sh`
     - Generate alert:
 
       ```text
@@ -203,9 +203,16 @@
 
     - Call `bin/discord-post` (non-blocking)
     - Add emoji/formatting for visibility
-  - **AC:** Verifier failures post to Discord with rule details
-  - **Verification:** Trigger verifier failure, check Discord alert
-  - **If Blocked:** Skip this task
+    - **CRITICAL:** Regenerate hash after modifying loop.sh:
+
+      ```bash
+      sha256sum workers/ralph/loop.sh | awk '{print $1}' > workers/ralph/.verify/loop.sha256
+      git add workers/ralph/loop.sh workers/ralph/.verify/loop.sha256
+      ```
+
+  - **AC:** Verifier failures post to Discord with rule details; loop.sha256 hash updated
+  - **Verification:** Trigger verifier failure, check Discord alert; verify `git diff --staged` includes loop.sha256
+  - **If Blocked:** Skip this task (optional enhancement)
 
 ---
 
