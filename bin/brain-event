@@ -5,9 +5,12 @@
 #
 # Usage:
 #   brain-event --event <type> [--iter N] [--phase PHASE] [--status STATUS] [--msg "..."] [--code N]
+#   brain-event --watch [--filter "pattern"] [--workspace DIR]
 #
 # Arguments:
-#   --event TYPE    Required. One of: iteration_start, iteration_end, phase_start, phase_end, error
+#   --event TYPE    Required (emit mode). One of: iteration_start, iteration_end, phase_start, phase_end, error
+#   --watch         Enable watch mode (live tail of events)
+#   --filter REGEX  Optional (watch mode). Filter events by regex pattern (matches entire JSON line)
 #   --iter N        Optional. Iteration number (integer)
 #   --phase PHASE   Optional. Phase name (e.g., PLAN, BUILD, REFLECT)
 #   --status STATUS Optional. "ok" or "fail" (for *_end events and error)
@@ -20,11 +23,16 @@
 #   Appends one JSON line to <repo>/state/events.jsonl
 #   Best-effort: never fails the caller; silently continues on write errors.
 #
-# Example:
+# Example (emit mode):
 #   brain-event --event iteration_start --iter 1
 #   brain-event --event phase_start --iter 1 --phase BUILD
 #   brain-event --event phase_end --iter 1 --phase BUILD --status ok
 #   brain-event --event error --iter 1 --status fail --code 1 --msg "verifier failed"
+#
+# Example (watch mode):
+#   brain-event --watch
+#   brain-event --watch --filter "phase_end"
+#   brain-event --watch --filter "status.*fail"
 #
 # =============================================================================
 
@@ -80,9 +88,22 @@ MSG=""
 CODE=""
 WORKSPACE=""
 RUNNER=""
+WATCH_MODE=false
+FILTER_PATTERN=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --watch)
+      WATCH_MODE=true
+      shift
+      ;;
+    --filter)
+      shift
+      if [[ -n "${1-}" && ! "$1" =~ ^-- ]]; then
+        FILTER_PATTERN="$1"
+        shift
+      fi
+      ;;
     --event)
       shift
       if [[ -n "${1-}" && ! "$1" =~ ^-- ]]; then
@@ -146,7 +167,33 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# Validate required arg
+# Determine workspace/repo root
+if [[ -z "$WORKSPACE" ]]; then
+  WORKSPACE="$(find_repo_root)"
+fi
+
+# Watch mode: tail events.jsonl with optional filtering
+if [[ "$WATCH_MODE" == true ]]; then
+  EVENTS_FILE="$WORKSPACE/state/events.jsonl"
+
+  if [[ ! -f "$EVENTS_FILE" ]]; then
+    echo "brain-event: events file not found: $EVENTS_FILE" >&2
+    echo "brain-event: waiting for events..." >&2
+    # Create file if it doesn't exist
+    mkdir -p "$WORKSPACE/state" 2>/dev/null || true
+    touch "$EVENTS_FILE" 2>/dev/null || true
+  fi
+
+  # Use tail -f with optional grep filter
+  if [[ -n "$FILTER_PATTERN" ]]; then
+    exec tail -f "$EVENTS_FILE" | grep --line-buffered -E "$FILTER_PATTERN"
+  else
+    exec tail -f "$EVENTS_FILE"
+  fi
+  # Never reached (exec replaces process)
+fi
+
+# Emit mode: validate required arg
 if [[ -z "$EVENT" ]]; then
   # Silent exit - best effort means don't complain
   [[ "${DEBUG:-}" == "1" ]] && echo "brain-event: missing --event" >&2
@@ -161,11 +208,6 @@ case "$EVENT" in
     exit 0
     ;;
 esac
-
-# Determine workspace/repo root
-if [[ -z "$WORKSPACE" ]]; then
-  WORKSPACE="$(find_repo_root)"
-fi
 
 # Ensure state directory exists
 STATE_DIR="$WORKSPACE/state"

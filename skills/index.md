@@ -52,6 +52,14 @@ Catalog of all skill files in the brain system.
 - [testing-patterns.md](domains/code-quality/testing-patterns.md) - Testing strategies and patterns
 - [token-efficiency.md](domains/code-quality/token-efficiency.md) - Token optimization strategies for AI agents
 
+### Anti-Patterns
+
+- [README.md](domains/anti-patterns/README.md) - Anti-patterns overview and common mistakes to avoid
+- [documentation-anti-patterns.md](domains/anti-patterns/documentation-anti-patterns.md) - Common documentation mistakes (stale links, missing examples, wall of text)
+- [markdown-anti-patterns.md](domains/anti-patterns/markdown-anti-patterns.md) - Markdown formatting mistakes and lint violations
+- [ralph-anti-patterns.md](domains/anti-patterns/ralph-anti-patterns.md) - Ralph loop anti-patterns (batching tasks, skipping validation, token waste)
+- [shell-anti-patterns.md](domains/anti-patterns/shell-anti-patterns.md) - Shell scripting anti-patterns (unquoted variables, missing error handling, glob injection)
+
 ### Frontend
 
 - [README.md](domains/frontend/README.md) - Frontend development overview
@@ -60,6 +68,7 @@ Catalog of all skill files in the brain system.
 
 ### Infrastructure
 
+- [agent-observability-patterns.md](domains/infrastructure/agent-observability-patterns.md) - Agent instrumentation, event markers, cache observability
 - [deployment-patterns.md](domains/infrastructure/deployment-patterns.md) - Deployment and CI/CD patterns
 - [disaster-recovery-patterns.md](domains/infrastructure/disaster-recovery-patterns.md) - Backup, recovery, and business continuity patterns
 - [observability-patterns.md](domains/infrastructure/observability-patterns.md) - Logging, monitoring, tracing, and alerting patterns
@@ -101,6 +110,8 @@ Catalog of all skill files in the brain system.
 - [cache-debugging.md](domains/ralph/cache-debugging.md) - Cache debugging and troubleshooting patterns
 - [change-propagation.md](domains/ralph/change-propagation.md) - Change propagation and template sync
 - [ralph-patterns.md](domains/ralph/ralph-patterns.md) - Ralph loop operational patterns
+- [thread-search-patterns.md](domains/ralph/thread-search-patterns.md) - Search patterns for THUNK, git, and cache
+- [tool-wrapper-patterns.md](domains/ralph/tool-wrapper-patterns.md) - Tool wrapper patterns and CLI integration
 
 ### Playbooks (End-to-End Workflows)
 
@@ -111,6 +122,7 @@ Catalog of all skill files in the brain system.
 
 - [bootstrap-new-project.md](playbooks/bootstrap-new-project.md) - Set up a new project from templates
 - [debug-ralph-stuck.md](playbooks/debug-ralph-stuck.md) - Troubleshoot Ralph loop issues
+- [decompose-large-tasks.md](playbooks/decompose-large-tasks.md) - Break down complex tasks into atomic units
 - [fix-markdown-lint.md](playbooks/fix-markdown-lint.md) - Resolve markdown linting issues
 - [fix-shellcheck-failures.md](playbooks/fix-shellcheck-failures.md) - Systematic resolution of ShellCheck warnings
 - [investigate-test-failures.md](playbooks/investigate-test-failures.md) - Systematic test failure resolution
@@ -221,6 +233,12 @@ Catalog of all skill files in the brain system.
 ### Brain
 
 - [brain-example.md](projects/brain-example.md) - Brain repository patterns and conventions
+
+---
+
+## Tools & Utilities
+
+- [TOOLS.md](../docs/TOOLS.md) - CLI tools reference (brain-search, thunk-parse, ralph-stats, gap-radar, brain-event)
 
 ---
 

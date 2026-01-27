@@ -1114,6 +1114,13 @@ run_once() {
     echo "# MODE: ${phase^^}"
     echo "# REPOSITORY: $REPO_NAME"
     echo "# ROOT: $ROOT"
+    echo "# RUNNER: $RUNNER"
+
+    # Single source of truth: this is the model value loop.sh will actually use/pass to the runner.
+    # If RESOLVED_MODEL is empty (e.g. user asked for auto/latest), fall back to the requested MODEL_ARG.
+    local effective_model
+    effective_model="${RESOLVED_MODEL:-${MODEL_ARG:-auto}}"
+    echo "# MODEL: ${effective_model}"
     echo ""
 
     # Inject verifier status from previous iteration (if any)
@@ -1150,6 +1157,27 @@ run_once() {
       else
         echo "# ✅ All checks passing!"
       fi
+      echo ""
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo ""
+    fi
+
+    # Inject remaining markdown lint errors (PLAN mode only)
+    # PLAN Ralph should see these so he can add tasks to fix them
+    if [[ "$phase" == "plan" ]] && [[ -n "${MARKDOWN_LINT_ERRORS:-}" ]]; then
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo "# MARKDOWN LINT ERRORS (add tasks to IMPLEMENTATION_PLAN.md)"
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo "#"
+      echo "# The following markdown errors could NOT be auto-fixed."
+      echo "# Add tasks to IMPLEMENTATION_PLAN.md using this format:"
+      echo "#"
+      echo "#   - [ ] **X.Y** Fix <ERROR_CODE> in <filename>"
+      echo "#     - **AC:** \`markdownlint <file>\` passes (no <ERROR_CODE> errors)"
+      echo "#"
+      echo "# Errors to fix:"
+      echo "#"
+      echo "$MARKDOWN_LINT_ERRORS"
       echo ""
       echo "# ═══════════════════════════════════════════════════════════════"
       echo ""
@@ -1792,6 +1820,27 @@ else
     # Capture exit code without triggering set -e
     run_result=0
     if [[ "$i" -eq 1 ]] || ((PLAN_EVERY > 0 && ((i - 1) % PLAN_EVERY == 0))); then
+      # Clean up completed tasks before PLAN phase
+      # Ralph already logs to THUNK.md during BUILD, so no --archive needed
+      if [[ -f "$RALPH/cleanup_plan.sh" ]]; then
+        echo "Cleaning up completed tasks from plan..."
+        if (cd "$RALPH" && bash cleanup_plan.sh) 2>&1; then
+          echo "✓ Plan cleanup complete"
+        else
+          echo "⚠ Plan cleanup failed (non-blocking)"
+        fi
+        echo ""
+      fi
+
+      # Commit any accumulated changes from BUILD iterations
+      if ! git diff --quiet || ! git diff --cached --quiet; then
+        echo "Committing accumulated BUILD changes..."
+        git add -A
+        git commit -m "build: accumulated changes from BUILD iterations" || true
+        echo "✓ BUILD changes committed"
+        echo ""
+      fi
+
       # Snapshot plan BEFORE sync for drift detection (prevents direct-edit bypass)
       PLAN_SNAPSHOT="$ROOT/.verify/plan_snapshot.md"
       if [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
@@ -1808,6 +1857,22 @@ else
         fi
         echo ""
       fi
+
+      # Capture remaining markdown lint errors for PLAN phase
+      # PLAN Ralph should see these so he can add tasks to fix them
+      MARKDOWN_LINT_ERRORS=""
+      if command -v markdownlint &>/dev/null; then
+        echo "Checking for markdown lint errors..."
+        lint_output=$(markdownlint "$ROOT" 2>&1 | grep -E "error MD" | head -40) || true
+        if [[ -n "$lint_output" ]]; then
+          MARKDOWN_LINT_ERRORS="$lint_output"
+          echo "Found $(echo "$lint_output" | wc -l) markdown lint errors for PLAN review"
+        else
+          echo "No markdown lint errors found"
+        fi
+        unset lint_output
+      fi
+
       emit_event --event phase_start --iter "$i" --phase "plan"
       # Emit PHASE_START marker for rollflow_analyze (task X.1.2)
       phase_start_ts="$(($(date +%s%N) / 1000000))"
@@ -1825,30 +1890,60 @@ else
         emit_marker ":::PHASE_END::: iter=$i phase=plan status=fail code=$run_result run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts"
       fi
     else
-      # Auto-fix lint issues before BUILD iteration
-      echo "Running auto-fix for lint issues..."
+      # Auto-fix lint issues before BUILD iteration (only if relevant files changed)
       autofix_git_sha="$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')"
 
-      if [[ -f "$RALPH/fix-markdown.sh" ]]; then
+      # Check what files have changed (staged + unstaged)
+      changed_files="$(
+        git diff --name-only HEAD 2>/dev/null
+        git diff --name-only --cached 2>/dev/null
+      )"
+      md_changed=$(echo "$changed_files" | grep -c '\.md$' || true)
+
+      # Run fix-markdown only if .md files changed (saves ~7.5s when no markdown changes)
+      if [[ -f "$RALPH/fix-markdown.sh" ]] && [[ "$md_changed" -gt 0 ]]; then
+        echo "Running auto-fix for markdown ($md_changed .md file(s) changed)..."
         fix_md_id="$(tool_call_id)"
         fix_md_key="fix-markdown|${autofix_git_sha}"
         run_tool "$fix_md_id" "fix-markdown" "$fix_md_key" "$autofix_git_sha" \
           "(cd \"$ROOT\" && bash \"$RALPH/fix-markdown.sh\" . 2>/dev/null) || true" || true
+      elif [[ "$md_changed" -eq 0 ]]; then
+        echo "Skipping fix-markdown (no .md files changed)"
       fi
 
+      # Run pre-commit only on staged files (saves ~10s vs --all-files)
+      # Note: PLAN-start commit runs full pre-commit via git hooks
+      # This is incremental check for BUILD phase changes only
       if command -v pre-commit &>/dev/null; then
-        precommit_id="$(tool_call_id)"
-        precommit_key="pre-commit|${autofix_git_sha}"
-        run_tool "$precommit_id" "pre-commit" "$precommit_key" "$autofix_git_sha" \
-          "(cd \"$ROOT\" && pre-commit run --all-files 2>/dev/null) || true" || true
+        # Stage any changes so pre-commit can check them
+        if [[ -n "$changed_files" ]]; then
+          git add -A
+          # Only run if something is actually staged
+          if ! git diff --cached --quiet; then
+            echo "Running pre-commit on staged files..."
+            precommit_id="$(tool_call_id)"
+            precommit_key="pre-commit|${autofix_git_sha}"
+            run_tool "$precommit_id" "pre-commit" "$precommit_key" "$autofix_git_sha" \
+              "(cd \"$ROOT\" && pre-commit run 2>/dev/null) || true" || true
+          else
+            echo "Skipping pre-commit (nothing staged)"
+          fi
+        else
+          echo "Skipping pre-commit (no changes to check)"
+        fi
       fi
 
       # Run verifier to get current state (Ralph will see WARN/FAIL in context)
-      echo "Running verifier to check current state..."
-      verifier_pre_id="$(tool_call_id)"
-      verifier_pre_key="verifier-pre-build|${autofix_git_sha}"
-      run_tool "$verifier_pre_id" "verifier" "$verifier_pre_key" "$autofix_git_sha" \
-        "(cd \"$RALPH\" && bash verifier.sh 2>/dev/null) || true" || true
+      # Skip if no changes - post-iteration verifier will still run after Ralph works
+      if [[ -n "$changed_files" ]]; then
+        echo "Running verifier to check current state..."
+        verifier_pre_id="$(tool_call_id)"
+        verifier_pre_key="verifier-pre-build|${autofix_git_sha}"
+        run_tool "$verifier_pre_id" "verifier" "$verifier_pre_key" "$autofix_git_sha" \
+          "(cd \"$RALPH\" && bash verifier.sh 2>/dev/null) || true" || true
+      else
+        echo "Skipping pre-build verifier (no changes since last run)"
+      fi
       echo ""
 
       emit_event --event phase_start --iter "$i" --phase "build"

@@ -303,14 +303,25 @@ class MarkerParser:
                             ToolStatus.FAIL if result == "FAIL" else ToolStatus.UNKNOWN
                         )
                     )
+                    # Infer tool name from duration - orphaned END markers are likely RovoDev sessions
+                    # These occur when the START marker wasn't captured (e.g., script truncation)
+                    # Even short sessions (auth failures, etc.) should be classified as rovodev-session
+                    duration_ms = _safe_int(kv.get("duration_ms"))
+                    inferred_tool = (
+                        "rovodev-session"
+                        if duration_ms
+                        and duration_ms > 500  # 0.5s threshold catches auth failures
+                        else "unknown"
+                    )
+
                     yield ToolCall(
                         id=call_id,
-                        tool_name="unknown",
+                        tool_name=inferred_tool,
                         status=status,
                         exit_code=_safe_int(kv.get("exit")),
                         start_ts=None,
                         end_ts=_parse_timestamp(kv.get("ts")),
-                        duration_ms=_safe_int(kv.get("duration_ms")),
+                        duration_ms=duration_ms,
                         cache_key=None,
                         args_excerpt=None,
                         error_excerpt=kv.get("reason"),
@@ -331,6 +342,22 @@ class MarkerParser:
                 exit_code = _safe_int(kv.get("exit"))
                 duration_ms = _safe_int(kv.get("duration_ms"))
                 reason = kv.get("reason")
+
+                # Infer tool name from cache_key if available, else check duration
+                # Orphaned END markers with duration >10s are likely RovoDev sessions
+                inferred_tool = tc.tool_name
+                if inferred_tool == "unknown":
+                    cache_key = kv.get("cache_key") or tc.cache_key
+                    if cache_key:
+                        # Extract tool name from cache_key (e.g., "verifier|abc123" -> "verifier")
+                        inferred_tool = cache_key.split("|")[0].split("-")[0]
+                    elif duration_ms and duration_ms > 500:
+                        # Orphaned END markers >0.5s are likely RovoDev sessions
+                        inferred_tool = "rovodev-session"
+
+                # Update tool_name if we inferred one
+                if inferred_tool != "unknown":
+                    tc = replace(tc, tool_name=inferred_tool)
 
                 # If FAIL and reason missing, pull a short tail excerpt
                 error_excerpt = reason
@@ -363,15 +390,23 @@ class MarkerParser:
 
                 tc = active.pop(call_id, None)
                 if not tc:
-                    # End without start; emit a synthetic record for visibility
+                    # End without start; orphaned END markers are likely RovoDev sessions
+                    duration_ms = _safe_int(kv.get("duration_ms"))
+                    inferred_tool = (
+                        "rovodev-session"
+                        if duration_ms
+                        and duration_ms > 500  # 0.5s catches auth failures
+                        else "unknown"
+                    )
+
                     yield ToolCall(
                         id=call_id,
-                        tool_name="unknown",
+                        tool_name=inferred_tool,
                         status=_status_from_str(kv.get("status")),
                         exit_code=_safe_int(kv.get("exit")),
                         start_ts=None,
                         end_ts=_parse_timestamp(kv.get("ts")),
-                        duration_ms=_safe_int(kv.get("duration_ms")),
+                        duration_ms=duration_ms,
                         cache_key=kv.get("key"),
                         args_excerpt=None,
                         error_excerpt=kv.get("err"),

@@ -55,6 +55,36 @@ fi
 
 echo "Cleaning up cortex/IMPLEMENTATION_PLAN.md..."
 
+# Warn about orphaned task entries (sub-items without a parent task)
+# These occur when cleanup removes "- [x] **X.Y**" but leaves indented sub-items behind
+# Detect: indented "- **Goal:**" or "- **Completed:**" lines that appear after a blank line
+# (legitimate sub-items follow their parent task directly, orphans follow blank lines or headers)
+
+# Build list of potentially orphaned entries by checking context
+orphaned_entries=""
+prev_line=""
+line_num=0
+while IFS= read -r line; do
+  line_num=$((line_num + 1))
+  # Check for indented sub-item pattern
+  if echo "$line" | grep -qE '^[[:space:]]+-[[:space:]]+\*\*(Goal|AC|Completed):\*\*'; then
+    # If previous line is blank or a header, this is orphaned
+    if [[ -z "$prev_line" ]] || echo "$prev_line" | grep -qE '^###'; then
+      orphaned_entries="${orphaned_entries}${line_num}: ${line}\n"
+    fi
+  fi
+  prev_line="$line"
+done <"$PLAN_FILE"
+
+if [[ -n "$orphaned_entries" ]]; then
+  echo ""
+  echo "⚠️  WARNING: Found orphaned sub-items (no parent task - will never be cleaned up):"
+  echo -e "$orphaned_entries" | head -10
+  echo ""
+  echo "Fix: Remove these lines or add a parent task '- [x] **X.Y.Z** Description' above them"
+  echo ""
+fi
+
 # Collect completed tasks for archiving
 archived_tasks=()
 current_date=$(date '+%Y-%m-%d')
@@ -91,7 +121,10 @@ if [[ "$DRY_RUN" == "true" ]]; then
   exit 0
 fi
 
-# Archive tasks to PLAN_DONE.md
+# Archive tasks to PLAN_DONE.md (with deduplication)
+# Read existing task IDs into memory before writing
+existing_task_ids=$(grep -o '|[[:space:]]*[^|]*[[:space:]]*|[[:space:]]*[^|]*[[:space:]]*|' "$ARCHIVE_FILE" | awk -F'|' '{print $3}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' || true)
+
 {
   echo ""
   echo "### Archived on $current_date"
@@ -99,7 +132,13 @@ fi
   echo "| Date | Task ID | Description |"
   echo "|------|---------|-------------|"
   for task in "${archived_tasks[@]}"; do
-    echo "$task"
+    # Extract task ID from the task string (format: | date | task_id | description |)
+    task_id=$(echo "$task" | awk -F'|' '{print $3}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+    # Check if task_id already exists in the pre-read list
+    if ! echo "$existing_task_ids" | grep -qFx "$task_id"; then
+      echo "$task"
+    fi
   done
 } >>"$ARCHIVE_FILE"
 
@@ -128,11 +167,13 @@ done <"$PLAN_FILE"
 # Second pass: write output
 current_phase=""
 skip_phase=false
+skip_task_subitems=false
 
 while IFS= read -r line; do
   # Detect phase headers
   if echo "$line" | grep -qE '^##[[:space:]]+Phase'; then
     current_phase=$(echo "$line" | sed -E 's/^##[[:space:]]+//')
+    skip_task_subitems=false # Reset on new phase
 
     if [[ "${phase_has_pending[$current_phase]:-false}" == "true" ]]; then
       skip_phase=false
@@ -149,12 +190,33 @@ while IFS= read -r line; do
     continue
   fi
 
-  # Remove completed tasks, keep everything else
-  if echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\[[xX]\]'; then
-    removed_count=$((removed_count + 1))
-  else
-    echo "$line" >>"$temp_file"
+  # Detect new task (pending or completed) - resets sub-item skipping
+  if echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\['; then
+    # Check if this is a completed task
+    if echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\[[xX]\]'; then
+      removed_count=$((removed_count + 1))
+      skip_task_subitems=true # Skip following indented sub-items
+    else
+      skip_task_subitems=false # Pending task - keep its sub-items
+      echo "$line" >>"$temp_file"
+    fi
+    continue
   fi
+
+  # Skip indented sub-items of completed tasks
+  # Sub-items are indented lines starting with "- **" (e.g., "  - **Goal:**")
+  if [[ "$skip_task_subitems" == "true" ]]; then
+    if echo "$line" | grep -qE '^[[:space:]]+'; then
+      # Indented line - skip it (belongs to completed task)
+      continue
+    else
+      # Non-indented line - stop skipping (new section or blank line between tasks)
+      skip_task_subitems=false
+    fi
+  fi
+
+  # Keep everything else
+  echo "$line" >>"$temp_file"
 done <"$PLAN_FILE"
 
 # Apply changes

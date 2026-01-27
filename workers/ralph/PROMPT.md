@@ -31,7 +31,7 @@ If the `# VERIFIER STATUS` section shows `[WARN]` lines:
 8. **NEVER** mark `[x]` until verifier confirms fix (re-run shows `[PASS]`)
 9. **NEVER** add "FALSE POSITIVE" notes - request waiver instead via `../.verify/request_waiver.sh`
 10. **Waivers are one-time-use** - After verifier uses a waiver, it's moved to `.used` and deleted. Only request waivers for issues you genuinely cannot fix.
-11. In BUILD mode: Fix ONE warning, mark `[?]`, commit. Verifier determines `[x]`.
+11. In BUILD mode: Fix ONE warning, mark `[?]`, stage changes (NO commit). Loop commits at PLAN phase.
 12. **BATCHING:** When multiple warnings are in the SAME FILE, fix them ALL in one iteration (e.g., 3 shellcheck warnings in loop.sh = 1 task).
 13. **CROSS-FILE BATCHING:** When the SAME fix type applies to multiple files (e.g., SC2162 "add -r to read" in 5 files), fix ALL files in ONE iteration. Group by fix type, not by file.
 
@@ -67,22 +67,73 @@ Then output `:::BUILD_READY:::` to end the iteration.
 
 ---
 
+## MANDATORY: Startup Procedure (Cheap First)
+
+**Do NOT open large files at startup.** Use targeted commands instead.
+
+### Forbidden at Startup (NEVER open_files for these)
+
+**NEVER call `open_files` on ANY of these files - use grep/sed/head instead:**
+
+- `NEURONS.md` - use `ls` to explore structure
+- `THOUGHTS.md` - slice with `head -30` if needed
+- `cortex/*.md` - Cortex files are NOT needed for BUILD tasks
+- `workers/IMPLEMENTATION_PLAN.md` (full file) - use grep to find tasks
+- `workers/ralph/THUNK.md` (full file) - use tail to append only
+
+**⚠️ Ralph's tasks are in `workers/IMPLEMENTATION_PLAN.md`, NOT `cortex/IMPLEMENTATION_PLAN.md`**
+
+### Required Startup Sequence
+
+```bash
+# 1. Find next unchecked task (DO THIS FIRST)
+grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -20
+
+# 2. If you need context for a specific task, slice by line number
+# Example: task found around line 236
+sed -n '220,280p' workers/IMPLEMENTATION_PLAN.md
+
+# 3. Check for existing tools before creating new ones
+find bin/ -maxdepth 1 -type f | head -20
+find tools/ -maxdepth 1 -name "*.py" -o -name "*.sh" 2>/dev/null | head -10
+```
+
+### THUNK.md Access Rules
+
+- **NEVER** open THUNK.md to "check what's done" - use `grep` or `bin/brain-search`
+- **ONLY** open THUNK.md when appending a new completion entry
+- For last THUNK number: `tail -20 workers/ralph/THUNK.md | grep "^|" | tail -1`
+
+### Search Before Creating
+
+Before proposing to create a tool/script, search first:
+
+```bash
+# Check if tool exists
+ls bin/ | grep -i "search\|thunk\|event"
+rg -l "def main\|usage:" tools/*.py bin/* 2>/dev/null | head -10
+```
+
+**Rule:** Only propose creating something if you searched and it truly doesn't exist.
+
+---
+
 ## MANDATORY: Checkpoint After Every Task
 
-**Every completed task MUST include ALL THREE in ONE commit:**
+**Every completed task MUST include ALL THREE staged together:**
 
 1. ✅ The code/doc fix itself
 2. ✅ workers/ralph/THUNK.md entry (append to current era table)
 3. ✅ workers/IMPLEMENTATION_PLAN.md update (mark task `[x]`)
 
 ```bash
-# CORRECT: Single commit with everything
-git add -A && git commit -m "fix(scope): description"
-```text
+# CORRECT: Stage all changes together (loop.sh commits at PLAN phase)
+git add -A
+```
 
-**NEVER make separate commits** for "mark task complete" or "log to THUNK" - these waste iterations and break traceability.
+**DO NOT commit during BUILD mode** - loop.sh batches commits at the start of each PLAN phase for efficiency (~13 sec saved per iteration).
 
-**If you commit code without updating workers/ralph/THUNK.md and workers/IMPLEMENTATION_PLAN.md, you have NOT completed the task.**
+**If you don't stage workers/ralph/THUNK.md and workers/IMPLEMENTATION_PLAN.md with your fix, you have NOT completed the task.**
 
 ---
 
@@ -177,13 +228,36 @@ See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
 
 ## PLANNING Mode (Iteration 1 or every 3rd)
 
-### Context Gathering (up to 100 parallel subagents)
+### Context Gathering (Cheap First - NO Large File Opens)
 
-- Study `skills/SUMMARY.md` for overview and `skills/index.md` for available skills
-- Study THOUGHTS.md for project goals
-- Study workers/IMPLEMENTATION_PLAN.md (if exists)
-- Compare specs vs current codebase
-- Search for gaps between intent and implementation
+**Step 1: Use grep/head to understand state (DO NOT open full files)**
+
+```bash
+# What tasks exist?
+grep -n "^## Phase\|^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -40
+
+# What skills exist? (don't open index.md)
+ls skills/domains/*/
+```
+
+**Step 2: Only slice specific sections if needed**
+
+```bash
+# Example: need Phase 21 details (found at line 518)
+sed -n '515,580p' workers/IMPLEMENTATION_PLAN.md
+```
+
+**Step 3: Search for existing tools before proposing new ones**
+
+```bash
+ls bin/ tools/*.py tools/*.sh 2>/dev/null | head -20
+```
+
+**Legacy guidance (use sparingly, slice don't open):**
+
+- `skills/SUMMARY.md` - OK to open (small file)
+- `THOUGHTS.md` - slice with `head -50` if needed
+- `workers/IMPLEMENTATION_PLAN.md` - NEVER open full, always grep then slice
 
 ### Pre-Planning State Check
 
@@ -207,14 +281,15 @@ See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
    - Break down complex tasks hierarchically (1.1, 1.2, 1.3)
    - A task is "atomic" when completable in ONE BUILD iteration
 
-2. Commit planning updates (local):
+2. Stage planning updates:
 
    ```bash
    git add -A
-   git commit -m "docs(plan): [summary]"
+   # Note: loop.sh already committed BUILD changes before PLAN started
+   # Your plan updates will be committed by loop.sh after PLAN ends
    ```
 
-3. Push ALL accumulated commits (from BUILD iterations + this commit):
+3. Push accumulated commits (loop.sh committed BUILD changes at PLAN start):
 
    ```bash
    git push
@@ -246,13 +321,35 @@ Awaiting approval before adding to IMPLEMENTATION_PLAN.md.
 
 ## BUILDING Mode (All other iterations)
 
-### Context Gathering (up to 100 parallel subagents)
+### Context Gathering (Cheap First - Follow Startup Procedure)
 
-- Study `skills/SUMMARY.md` for overview and `skills/index.md` for available skills
-- Study THOUGHTS.md and workers/IMPLEMENTATION_PLAN.md
-- Search codebase - **don't assume things are missing**
-- Check NEURONS.md for codebase map
-- Use Brain Skills: `skills/SUMMARY.md` → `references/HOTLIST.md` → specific rules only if needed
+**Step 1: Find your ONE task (mandatory first step)**
+
+```bash
+grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -10
+```
+
+**Step 2: Slice only the task block you need**
+
+```bash
+# Example: task at line 236
+sed -n '230,260p' workers/IMPLEMENTATION_PLAN.md
+```
+
+**Step 3: Search before assuming things are missing**
+
+```bash
+# Check for existing tools/scripts
+ls bin/ | head -20
+rg -l "keyword" tools/ skills/domains/ | head -10
+```
+
+**DO NOT open these files:**
+
+- `NEURONS.md` - use `ls` and `find` instead
+- `THOUGHTS.md` - not needed for BUILD mode
+- `workers/IMPLEMENTATION_PLAN.md` (full) - always grep then slice
+- `workers/ralph/THUNK.md` - only `tail` when appending
 
 ### Actions
 
@@ -267,24 +364,26 @@ Awaiting approval before adding to IMPLEMENTATION_PLAN.md.
 
 2. Pick FIRST unchecked `[ ]` numbered task (e.g., `0.A.1.1`, including subtasks like 1.1)
    - **This is your ONLY task this iteration**
+   - **THUNK pre-check:** Before investigating, verify task isn't already done:
+
+     ```bash
+     grep "task_id" workers/ralph/THUNK.md | head -3
+     ```
+
+     If THUNK shows the task completed, mark `[x]` in plan and pick next task.
 
 3. Implement using exactly 1 subagent for modifications
 
 4. Validate per AGENTS.md commands
 
-5. **SINGLE COMMIT RULE:** Commit ALL changes together (code fix + workers/ralph/THUNK.md + workers/IMPLEMENTATION_PLAN.md):
+5. **STAGE ALL CHANGES:** Stage all changes together (loop.sh commits at PLAN phase):
    - Log completion to workers/ralph/THUNK.md (append to current era table)
    - Mark task `[x]` in workers/IMPLEMENTATION_PLAN.md
-   - **NEVER make separate commits** for "mark task complete" or "log to THUNK" - these waste iterations
+   - **DO NOT commit** - loop.sh batches commits at PLAN phase for efficiency
 
    ```bash
-   git add -A && git commit -m "<type>(<scope>): <summary>
-
-   - Detail 1
-   - Detail 2
-
-   Co-authored-by: ralph-brain <ralph-brain@users.noreply.github.com>
-   Brain-Repo: ${BRAIN_REPO:-jonathanavis96/brain}"
+   git add -A
+   # NO commit - loop.sh handles this at PLAN phase
    ```
 
 6. **DISCOVERY DEFER RULE:** If you discover new issues while fixing:
@@ -371,6 +470,10 @@ When fixing issues, search the ENTIRE repo: `rg "pattern" $ROOT` not just `worke
 
 Target: <20 tool calls per iteration.
 
+### Non-Negotiable Principle
+
+**Prefer commands that return tiny outputs** (grep/head/sed/tail) over opening large files. If you need to read a file, **slice it**.
+
 ### No Duplicate Commands (CRITICAL)
 
 - **NEVER run the same bash command twice** in one iteration
@@ -380,15 +483,40 @@ Target: <20 tool calls per iteration.
 **Anti-patterns (NEVER do these):**
 
 - Trying to read `.verify/latest.txt` (it's already in the header!)
-- Reading `THUNK.md` to check if a task was done (use IMPLEMENTATION_PLAN.md - it's the source of truth for pending tasks)
+- Reading `THUNK.md` to check if a task was done (use `grep` or `bin/brain-search`)
+- Opening `NEURONS.md`, `THOUGHTS.md`, or full `IMPLEMENTATION_PLAN.md` at startup
 - Running `git status` before AND after `git add`
 - Running `shellcheck file.sh`, then `shellcheck -e SC1091 file.sh`, then `shellcheck -x file.sh`
 
+### Constrain Searches (Avoid Grep Explosion)
+
+If a grep returns too many matches (>50), immediately narrow:
+
+```bash
+# BAD: returns 168 matches, wastes tokens
+grep "observability|marker|event" skills/domains/**/*.md
+
+# GOOD: one keyword, one folder, limited output
+rg -n "agent observability" skills/domains/infrastructure -S | head -20
+rg -n "MARKER_SCHEMA" docs -S | head -20
+```
+
 ### Atomic Git Operations
 
-- **Use single combined command:** `git add -A && git commit -m "msg"`
-- **Do NOT:** `git add file` → `git status` → `git add file` → `git commit`
-- One add+commit per logical change
+- **Stage only during BUILD:** `git add -A` (no commit)
+- **Do NOT commit during BUILD** - loop.sh batches commits at PLAN phase
+- **Do NOT:** `git add file` → `git status` → `git add file` (one `git add -A` is enough)
+
+### Stage-Check Before Ending BUILD
+
+Before ending BUILD iteration, verify all files are staged:
+
+```bash
+git status --short
+# Should show IMPLEMENTATION_PLAN.md and THUNK.md staged (along with your fix)
+git add -A
+# NO commit - loop.sh handles this at PLAN phase
+```
 
 ### Fail Fast on Formatting
 
@@ -403,6 +531,52 @@ Target: <20 tool calls per iteration.
 - **NEVER** include "applied shfmt formatting" as the main work - it's incidental to the real fix
 - If a file needs shfmt, note it in PLAN mode for a single "format all shell scripts" task
 
+### Validator-First Debugging
+
+When a validation tool fails on code examples:
+
+1. Reproduce once: `python3 tools/validate_examples.py <file>`
+2. Inspect validator logic: `rg -n "Undefined variables" tools/validate_examples.py`
+3. If code is obviously valid (kwargs, for-loop, comprehension), assume **validator bug** and fix validator
+4. **DO NOT** rewrite valid examples into awkward forms to satisfy broken validators
+
+### Validator Errors: Smallest Reproduction First
+
+When any pre-commit hook fails:
+
+1. Re-run the failing hook **only on the file**: `pre-commit run <hook-id> --files <file>`
+2. Inspect validator logic **before** editing docs: `rg -n "<error message>" tools/`
+3. Fix validator if the example is valid code (don't rewrite examples 3 times)
+
+### Stage Atomicity
+
+Before ending BUILD, verify all files are staged:
+
+```bash
+git status --short
+git diff --cached --stat
+```
+
+**Rule:** If task completion requires both IMPL_PLAN + THUNK updates, they must be staged **together** (loop.sh commits at PLAN phase).
+
+### Search Explosion Guard
+
+If grep/rg output exceeds 100 lines:
+
+1. **STOP** - do not process the output
+2. **Narrow scope** - add path filter, file extension, or more specific pattern
+3. **Rerun** with constrained query
+
+**Never do:** `rg "pattern" skills/domains/**/*.md` with broad patterns
+
+### THUNK Lookup Path
+
+If you need THUNK info (task history, completions):
+
+1. **First discover tools:** `bin/thunk-parse --help || true`
+2. **Use structured queries** via thunk-parse or brain-search
+3. **Only tail THUNK.md** when appending new entries (not for lookups)
+
 ### Context You Already Have
 
 **NEVER repeat these (you already know):**
@@ -413,6 +587,13 @@ Target: <20 tool calls per iteration.
 - Same file content - read ONCE, remember it
 
 **ALWAYS batch:** `grep pattern file1 file2 file3` not 3 separate calls.
+
+### Read Deduplication
+
+Track files read this iteration. Before re-reading:
+
+- If already read → use `sed -n 'start,endp'` for a different slice
+- If same content needed → reference your earlier output, don't re-read
 
 ---
 

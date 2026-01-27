@@ -378,3 +378,50 @@ brain/
 **Rationale:** Clear separation of concerns - Cortex plans, Ralph executes.
 
 **Impact:** Prevents Cortex from overstepping boundaries and maintains clean delegation model.
+
+---
+
+### DEC-2026-01-26-001: shfmt Formatting Source of Truth
+
+**Date:** 2026-01-26 17:01:35
+
+**Decision:** The pre-commit hook's shfmt configuration is the source of truth for shell script formatting. Local shfmt runs must use the same flags as pre-commit to avoid formatting drift.
+
+**Context:** Pre-commit uses `shfmt -ci` (case-indent), while local shfmt runs without flags produce different formatting. This caused repeated formatting diffs and hash churn for protected files like `loop.sh`.
+
+**Resolution:**
+
+- Always run `shfmt -ci -w <file>` when formatting shell scripts locally
+- Pre-commit config location: `.pre-commit-config.yaml` (check `args` for shfmt hook)
+- After formatting, update `.verify/*.sha256` hashes in ALL verify directories
+
+**Affected Files:**
+
+- `workers/ralph/loop.sh` (protected, hash-guarded)
+- Any other shell scripts under pre-commit shfmt hook
+
+**Rationale:** Consistent formatting between local development and CI prevents hash churn and failed commits.
+
+**Impact:** Stable verification hashes, no more reformat/re-hash loops.
+
+---
+
+### DEC-2026-01-26-002: Loop End-of-Run Flush Commit Guarantee
+
+**Date:** 2026-01-26 23:50:42
+
+**Decision:** The Ralph loop must perform a final scoped "flush" commit at end-of-run (and on graceful interrupt after the current iteration) so that runs ending on BUILD do not leave uncommitted work.
+
+**Rationale:**
+
+- Current behavior only commits accumulated BUILD changes at the start of the next PLAN iteration.
+- If a run ends on a BUILD iteration (common with `--iterations N`, early termination, or Ctrl+C after iteration completes), changes can remain unstaged/unstable and may be lost or cause confusion.
+- A dedicated end-of-run flush preserves the semantics of PLAN vs BUILD while guaranteeing repository state consistency.
+
+**Implementation Notes:**
+
+- Use the existing `stage_scoped_changes` denylist (avoids committing `artifacts/**`, `cortex/PLAN_DONE.md`, caches).
+- Do not run in `--dry-run` mode.
+- Because `loop.sh` is hash-guarded, humans must regenerate `.verify/*.sha256` after changes.
+
+**Impact:** More reliable loop behavior; fewer "dirty worktree" surprises; safer interruption/termination.

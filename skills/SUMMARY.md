@@ -172,6 +172,7 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
 ### Skills Directories
 
 - **[Domains](domains/README.md)** - Technical domain knowledge and reusable patterns (authentication, caching, API design, etc.)
+  - [Agent Observability Patterns](domains/infrastructure/agent-observability-patterns.md) - Event markers, iteration tracking, cache observability, tool instrumentation
   - [Authentication Patterns](domains/backend/auth-patterns.md) - OAuth2, JWT, session management
   - [Caching Patterns](domains/backend/caching-patterns.md) - Redis, in-memory, CDN, and browser caching strategies
   - [API Design Patterns](domains/backend/api-design-patterns.md) - REST, GraphQL, versioning, error handling
@@ -208,6 +209,11 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
     - [Cleanup Patterns](domains/languages/shell/cleanup-patterns.md) - Traps, temp files, state restoration
     - [Common Pitfalls](domains/languages/shell/common-pitfalls.md) - TTY guards, magic numbers, DRY
     - [Validation Patterns](domains/languages/shell/validation-patterns.md) - Shell project validation (syntax, shellcheck, permissions, security)
+  - **[Anti-Patterns](domains/anti-patterns/README.md)** - Common mistakes to avoid across documentation, code, and workflows
+    - [Documentation Anti-Patterns](domains/anti-patterns/documentation-anti-patterns.md) - Stale links, missing examples, wall of text, unclear structure
+    - [Markdown Anti-Patterns](domains/anti-patterns/markdown-anti-patterns.md) - Formatting mistakes, lint violations (MD040, MD024, MD012)
+    - [Ralph Anti-Patterns](domains/anti-patterns/ralph-anti-patterns.md) - Task batching, skipping validation, token waste, duplicate commands
+    - [Shell Anti-Patterns](domains/anti-patterns/shell-anti-patterns.md) - Unquoted variables, missing error handling, glob injection, silent failures
   - **[Marketing](domains/marketing/README.md)** - Marketing skills for CRO, SEO, content, strategy, and growth
     - **CRO (Conversion Rate Optimization)**
       - [Page CRO](domains/marketing/cro/page-cro.md) - Optimize marketing pages for conversions
@@ -295,6 +301,7 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
 
 - [Bootstrap New Project](playbooks/bootstrap-new-project.md) - Set up a new project from templates
 - [Debug Ralph Stuck](playbooks/debug-ralph-stuck.md) - Troubleshoot Ralph loop issues (stuck, repeated failures, infinite loops)
+- [Decompose Large Tasks](playbooks/decompose-large-tasks.md) - Break down complex tasks into atomic units
 - [Fix Markdown Lint](playbooks/fix-markdown-lint.md) - Resolve markdown linting issues (MD040, MD032, MD024)
 - [Fix ShellCheck Failures](playbooks/fix-shellcheck-failures.md) - Systematic approach to resolving shellcheck warnings (SC2034, SC2155, SC2086)
 - [Investigate Test Failures](playbooks/investigate-test-failures.md) - Systematic test failure resolution (pytest, bash, integration tests)
@@ -340,6 +347,27 @@ brain/ (repository root)
 ├── docs/                        # Project documentation (shared)
 └── .verify/                     # Validation infrastructure (shared)
 ```text
+
+## Freshness Status
+
+**Last checked:** 2026-01-26
+
+Run `bash tools/skill_freshness.sh` to see current freshness report.
+
+**Quick summary:**
+
+```bash
+# Check freshness with 90-day threshold (default)
+bash tools/skill_freshness.sh
+
+# Check with custom threshold
+bash tools/skill_freshness.sh --days 60
+
+# Exit with error if any stale skills found (for CI)
+bash tools/skill_freshness.sh --exit-on-stale
+```
+
+**Current status:** All skills are fresh (0-90 days old). See full report with command above.
 
 ## Design Philosophy
 

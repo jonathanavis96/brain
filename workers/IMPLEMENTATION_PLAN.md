@@ -1,672 +1,301 @@
 # Implementation Plan - Brain Repository
 
-**Last Updated:** 2026-01-25 23:30:00
+**Last Updated:** 2026-01-26 15:45:00
 
-**Current Status:** All phases consolidated. CR-6 in progress, Phases 10-20 queued.
+**Current Status:** Phase 23 (Loop Efficiency & Correctness) COMPLETE. All 6/6 tasks done.
 
 **Active Phases:**
 
-- Phase CR-6: CodeRabbit PR6 Fixes (in progress)
-- Phase POST-CR6: Prevention Systems
-- Phase 10-13: Observability & Tooling
-- Phase 14-20: Meta-tooling & Self-improvement
+- **Phase 23: Loop Efficiency & Correctness Fixes (✅ 6/6 tasks complete)**
+- Phase 21: Token Efficiency & Tool Consolidation (1 task remaining)
+- Phase CR-6: CodeRabbit PR6 Fixes (✅ COMPLETED)
+- Phase POST-CR6: Prevention Systems (✅ COMPLETED - all 7 tasks)
+- Phase 10: RovoDev Parser & Observability (✅ COMPLETED - all 3 tasks)
+- Phase 11: Thread Persistence & Search (✅ COMPLETED - all 4 tasks)
+- Phase 12: Observability Improvements (🔄 IN PROGRESS - 1/4 tasks complete)
+- Phases 13-20: Meta-tooling & Self-improvement (queued)
 
 <!-- Cortex adds new Task Contracts below this line -->
 
-## Phase CR-6: CodeRabbit PR6 Fixes
-
-**Goal:** Fix remaining CodeRabbit issues before merging PR6.
-
-**Reference:** `docs/CODERABBIT_ISSUES_TRACKER.md`
-
-**Status:** All 11 Ralph-fixable issues identified. Ready for BUILD phase execution.
-
-### Major Issues (Ralph Can Fix)
-
-- [x] **CR-6.1** Fix `LOGS_DIR` → `LOGDIR` typo in templates/ralph/loop.sh (M9)
-  - **File:** `templates/ralph/loop.sh` lines 1707, 1949
-  - **Issue:** Script defines `LOGDIR` but references `LOGS_DIR` (undefined)
-  - **Fix:** Replace `$LOGS_DIR` with `$LOGDIR`
-  - **AC:** `grep -n 'LOGS_DIR' templates/ralph/loop.sh` returns empty
-
-- [x] **CR-6.2** Fix bin/brain-event flag parsing (M1)
-  - **File:** `bin/brain-event` lines 84-125
-  - **Issue:** Flag parsing consumes next option when value missing
-  - **Fix:** Check if value looks like a flag before shifting
-  - **AC:** `--event --iter 1` doesn't treat `--iter` as event value
-
-- [x] **CR-6.3** Fix THUNK.md table column mismatch (M10)
-  - **File:** `workers/ralph/THUNK.md` lines 748, 770-782
-  - **Issue:** Table rows have wrong column count, unescaped pipes
-  - **Fix:** Ensure all rows have 5 columns, escape pipes in content
-  - **AC:** `markdownlint workers/ralph/THUNK.md` passes MD056
-
-- [x] **CR-6.4** Fix shell README config mismatch (C2)
-  - **File:** `skills/domains/languages/shell/README.md` line 64
-  - **Issue:** README documents shfmt config that doesn't match `.pre-commit-config.yaml`
-  - **Fix:** Update README to match actual config
-  - **AC:** Documented shfmt flags match `.pre-commit-config.yaml`
-
-- [x] **CR-6.5** Fix code-review-patterns.md example bugs (M11)
-  - **File:** `skills/domains/code-quality/code-review-patterns.md` line 286
-  - **Issue:** Code example has bugs or incorrect patterns
-  - **Fix:** Review and correct the code example
-  - **AC:** Code examples are syntactically valid and demonstrate correct patterns
-
-- [x] **CR-6.6** Fix README.md documentation issue (M12)
-  - **File:** `README.md` line 326
-  - **Issue:** Incorrect or misleading documentation
-  - **Fix:** Correct the documentation
-  - **AC:** Documentation accurately describes the feature/process
-
-- [x] **CR-6.7** Fix observability-patterns.md issues (m1)
-  - **File:** `skills/domains/infrastructure/observability-patterns.md`
-  - **Issues:** PostgreSQL placeholder mismatch, stray fence, hardcoded status, SQL injection
-  - **Fix:** Correct all code examples
-  - **AC:** All code examples use consistent patterns and are secure
-
-- [x] **CR-6.8** Fix broken documentation links (m3)
-  - **Files:** `skills/domains/frontend/README.md`, `skills/domains/languages/javascript/README.md`, `skills/index.md`
-  - **Issue:** Links to non-existent typescript README
-  - **Fix:** Create typescript README or update links
-  - **AC:** All internal links resolve to existing files
-
-- [x] **CR-6.9** Fix deployment-patterns.md missing imports (m5)
-  - **File:** `skills/domains/infrastructure/deployment-patterns.md`
-  - **Issue:** Missing `import time`, undefined `userId`
-  - **Fix:** Add missing imports, define or document variables
-  - **AC:** Python code examples are complete and runnable
-
-- [x] **CR-6.10** Fix JavaScript example issues (m6)
-  - **Files:** `skills/domains/languages/javascript/README.md`, `skills/domains/code-quality/test-coverage-patterns.md`
-  - **Issue:** Undefined `userId`, incorrect Jest flag
-  - **Fix:** Complete the examples
-  - **AC:** JavaScript examples are syntactically valid
-
-- [x] **CR-6.11** Fix archive header parsing in current_ralph_tasks.sh (from CR-5) - Completed 2026-01-25 (THUNK #773)
-
-### Human Required (Hash/Protected Files)
-
-**Note:** These require human intervention after Ralph prepares fixes:
-
-- [x] **CR-6.H1** Update SHA256 hashes after all fixes
-  - Run hash regeneration for all `.verify/` directories
-  - **Files:** `.verify/`, `workers/ralph/.verify/`, `templates/ralph/.verify/`
-  - **Updated:** agents.sha256 (root + workers/ralph), loop.sha256 (templates/ralph), prompt.sha256 (templates/ralph)
-
----
-
-## Notes
-
-- **Protected files (loop.sh, verifier.sh, PROMPT.md):** Ralph can prepare fixes but human must update hashes
-- **Hash regeneration:** Already handled by human - C1-C8 issues resolved
-- **egg-info cleanup (G1):** Already fixed - directory removed and added to .gitignore
-- **Reference:** See `docs/CODERABBIT_ISSUES_TRACKER.md` for complete issue list
-
-## Phase POST-CR6: Post-CodeRabbit Prevention Systems
-
-**Goal:** Address systemic issues identified by CodeRabbit analysis to prevent future issues.
-
-**Reference:** `docs/CODERABBIT_ISSUES_TRACKER.md` - Prevention Systems section
-
-**Rationale:** CodeRabbit identified 50+ issues across PR5 and PR6 with significant recurring patterns. These prevention systems will catch issues before PR creation.
-
-### High Priority Prevention
-
-- [ ] **POST-CR6.1** Implement hash validation pre-commit hook
-  - **Goal:** Prevent SHA256 hash mismatches (8 instances in PR5, 1 in PR6)
-  - **Implementation:** Pre-commit hook that validates all `.verify/*.sha256` files match targets
-  - **Files:** `.git/hooks/pre-commit` or `.pre-commit-config.yaml`
-  - **AC:** Hook blocks commits when hash mismatches detected
-  - **Priority:** HIGH (recurring critical issue)
-
-- [ ] **POST-CR6.2** Create shell script unit test framework
-  - **Goal:** Catch logic bugs in shell scripts (4 bugs in PR5, 3 in PR6)
-  - **Implementation:** Setup bats-core framework, write tests for bin/brain-event flag parsing
-  - **Files:** `tests/unit/`, `.pre-commit-config.yaml`
-  - **AC:** `bats tests/unit/*.bats` runs successfully
-  - **Priority:** HIGH (recurring logic bugs)
-
-- [ ] **POST-CR6.6** Expand semantic code review skill
-  - **Goal:** Document patterns for LLM-based code review (complementing pre-commit)
-  - **Implementation:** Expand `skills/domains/code-quality/code-review-patterns.md`
-  - **Coverage:** Regex capture groups, dead code detection, variable scope, security
-  - **AC:** Skill includes comprehensive checklist and examples
-  - **Priority:** HIGH (already partially done in CR-4.1, needs expansion)
-
-### Medium Priority Prevention
-
-- [ ] **POST-CR6.3** Implement documentation link validation
-  - **Goal:** Prevent broken internal links (10 documentation issues across PRs)
-  - **Implementation:** Script that validates all `[text](path)` links resolve to existing files
-  - **Files:** `tools/validate_links.sh`, `.pre-commit-config.yaml`
-  - **AC:** Script detects broken links in README.md, skills/, docs/
-  - **Priority:** MEDIUM (recurring but non-breaking)
-
-- [ ] **POST-CR6.4** Create code example validation system
-  - **Goal:** Ensure code examples are runnable (8 broken examples in PR5, 2 in PR6)
-  - **Implementation:** Extract code blocks from markdown, validate syntax, check imports/variables
-  - **Files:** `tools/validate_examples.py`, `.pre-commit-config.yaml`
-  - **AC:** Script identifies missing imports, undefined variables, syntax errors
-  - **Priority:** MEDIUM (quality issue, not functional)
-
-- [ ] **POST-CR6.7** Document prevention system architecture
-  - **Goal:** Explain how prevention layers work together
-  - **Implementation:** Create `docs/QUALITY_GATES.md`
-  - **Coverage:** Pre-commit hooks → verifier → CodeRabbit → human review
-  - **AC:** Document shows what each layer catches, with examples
-  - **Priority:** MEDIUM (helps maintainers understand system)
-
-### Low Priority Prevention
-
-- [ ] **POST-CR6.5** Implement documentation-config sync validation
-  - **Goal:** Keep README.md in sync with actual config files
-  - **Implementation:** Script that compares documented flags/settings with real configs
-  - **Files:** `tools/validate_doc_sync.sh`
-  - **AC:** Script catches shell/README.md shfmt config mismatch (CR-6.4 type issues)
-  - **Priority:** LOW (infrequent)
-
----
-
-## Phase 10: RovoDev Parser & Observability
-
-**Goal:** Build parser for RovoDev's ANSI tool output to enable complete tool visibility.
-
-**Context:** RovoDev emits tool calls in logs (`⬡ Calling <tool>:` / `⬢ Called <tool>:`), but rollflow_analyze doesn't parse this format yet.
-
-### Phase 10.1: RovoDev Parser
-
-- [ ] **10.1.1** Create RovoDev ANSI parser in `tools/rollflow_analyze/src/rollflow_analyze/parsers/`
-  - **Goal:** Parse RovoDev tool output format from logs
-  - **Input format:** `⬡ Calling <tool>:` (start), `⬢ Called <tool>:` (end), optional `N seconds` duration
-  - **Output:** ToolCall objects matching existing model
-  - **AC:** Parser extracts tool_name, start/end markers, duration from sample log
-  - **Test:** Add test file with sample RovoDev output
-
-- [ ] **10.1.2** Integrate RovoDev parser into rollflow_analyze pipeline
-  - **Goal:** Unified parsing across :::MARKER::: and RovoDev formats
-  - **AC:** `rollflow_analyze` reports include RovoDev tool calls
-  - **Depends on:** 10.1.1
-
-### Phase 10.2: Documentation
-
-- [ ] **10.2.1** Update docs/events.md with RovoDev format section
-  - **Goal:** Document RovoDev's tool output format alongside :::MARKER::: format
-  - **AC:** events.md has "RovoDev Format" section with examples
-
----
-
-## Phase 11: Thread Persistence & Search
-
-**Goal:** Enable searchable, queryable thread storage for agent work history.
-
-**Context:** THUNK.md is append-only markdown; rollflow_cache is SQLite. Need unified search across both.
-
-**Research:** `cortex/docs/research/thread-persistence-research.md`
-
-### Phase 11.1: Documentation & Skills
-
-- [ ] **11.1.1** Create `skills/domains/ralph/thread-search-patterns.md`
-  - **Goal:** Document search patterns for THUNK, git, and cache
-  - **AC:** Skill includes grep patterns for THUNK.md, git log examples, sqlite queries
-  - **Priority:** HIGH
-
-- [ ] **11.1.2** Build THUNK.md parser (Python script)
-  - **Goal:** Extract structured data from THUNK.md markdown table
-  - **Output:** JSON or SQLite with thunk_num, task_id, priority, description, date
-  - **AC:** Parser handles current THUNK format (800+ entries), outputs valid JSON
-  - **Priority:** MEDIUM
-
-### Phase 11.2: Tooling
-
-- [ ] **11.1.3** Create SQLite schema for unified thread storage
-  - **Goal:** Single database for threads, work_items, tool_executions
-  - **Schema:** See `cortex/docs/research/thread-persistence-research.md` Section 3.2
-  - **AC:** Schema created with FTS5 index on descriptions
-  - **Priority:** MEDIUM
-
-- [ ] **11.2.1** Build `bin/brain-search` CLI tool
-  - **Goal:** Quick lookups across THUNK, git, cache
-  - **Usage:** `brain-search "shellcheck"` → shows matching tasks, commits, tool calls
-  - **AC:** CLI returns results from at least 2 sources (THUNK + git)
-  - **Priority:** LOW
-
----
-
-## Phase 12: Observability Improvements
-
-**Goal:** Formalize event schemas and improve observability tooling.
-
-**Context:** Brain has multiple event formats (:::MARKER:::, JSONL, RovoDev ANSI). Need unified documentation and tooling.
-
-**Research:** `cortex/docs/research/agent-observability-research.md`
-
-### Phase 12.1: Documentation & Skills
-
-- [ ] **12.1.1** Create `skills/domains/infrastructure/agent-observability-patterns.md`
-  - **Goal:** Document how to add observability to new tools/scripts
-  - **AC:** Skill covers marker emission, JSONL events, log correlation
-  - **Priority:** HIGH
-
-- [ ] **12.1.2** Create `docs/MARKER_SCHEMA.md` - formal spec for all markers
-  - **Goal:** Single source of truth for :::MARKER::: format
-  - **Content:** All marker types, fields, examples, versioning policy
-  - **AC:** Schema doc covers all markers in loop.sh, includes validation rules
-  - **Priority:** HIGH
-
-### Phase 12.2: Tooling
-
-- [ ] **12.2.1** Add real-time event watcher `bin/brain-event --watch`
-  - **Goal:** Live tail of events with filtering
-  - **Usage:** `brain-event --watch --filter="phase_end"`
-  - **AC:** Watcher shows new events in real-time from state/events.jsonl
-  - **Priority:** LOW
-
-- [ ] **12.2.2** Create cross-run aggregation queries for cache.sqlite
-  - **Goal:** Query patterns for analyzing tool performance across runs
-  - **Output:** Add to `skills/domains/ralph/cache-debugging.md`
-  - **AC:** At least 5 useful queries documented (slowest tools, fail rates, etc.)
-  - **Priority:** LOW
-
----
-
-## Phase 13: Tool Registry
-
-**Goal:** Move from implicit tool definitions to declarative registry.
-
-**Context:** Tool cacheability is hardcoded in `case` statement. No discovery or permission model.
-
-**Research:** `cortex/docs/research/tool-registry-research.md`
-
-### Phase 13.1: Documentation & Skills
-
-- [ ] **13.1.1** Create `skills/domains/ralph/tool-wrapper-patterns.md`
-  - **Goal:** Document run_tool() usage, cache key generation, error handling
-  - **AC:** Skill covers wrapper API, cacheability rules, trap-based cleanup
-  - **Priority:** HIGH
-
-- [ ] **13.1.2** Extract non-cacheable tools to config file
-  - **Goal:** Move from hardcoded `case` to `config/non_cacheable_tools.txt`
-  - **Change:** Update `is_non_cacheable()` in loop.sh to read from file
-  - **AC:** Config file exists, loop.sh reads it, behavior unchanged
-  - **Priority:** MEDIUM
-
-### Phase 13.2: Registry Foundation
-
-- [ ] **13.2.1** Prototype YAML tool registry schema
-  - **Goal:** Define registry format with 10 common tools as examples
-  - **Location:** `config/tool-registry.yaml`
-  - **Content:** Tool definitions with type, command, cacheable, tags
-  - **AC:** Valid YAML with schema documented, covers shellcheck/markdownlint/git tools
-  - **Priority:** LOW
-
----
-
-## Phase 9C: Task Optimization (Batching + Decomposition)
-
-**Goal:** Use Phase 0 structured logs to identify batching and decomposition opportunities, reducing task overhead and improving iteration success rate.
-
-**Artifacts:** `artifacts/optimization_hints.md` (analysis output)
-
-### Phase 9C.0: Prerequisites (Marker Pipeline Fix)
-
-- [ ] **9C.0.3** Document RovoDev tool instrumentation limitation
-  - **Goal:** Clarify that RovoDev's native tools bypass shell wrapper
-  - **AC:** `artifacts/optimization_hints.md` has "Limitations" section explaining tool visibility gap
-  - **Note:** RovoDev bash/grep/find_and_replace_code don't go through `log_tool_start()`
-
-### Phase 9C.1: Batching Infrastructure
-
-- [ ] **9C.1.1** Enhance `cortex/snapshot.sh` with batching hints
-  - **Goal:** Show "⚡ Batching opportunities: X" when ≥3 similar pending tasks detected
-  - **AC:** Snapshot output shows batching hints section when opportunities exist
-  - **Detection:** Same error code (MDxxx, SCxxxx), same directory prefix, same file type
-
-  - **Goal:** Document `[S/M/L]` complexity convention for task estimation
-  - **AC:** PROMPT_REFERENCE.md has "Task Complexity" section with realistic time estimates (S=2-3min, M=5-10min, L=10-20min)
-
-### Phase 9C.2: Apply Batching to Current Backlog
-
-- [ ] **9C.2.1** Create batch task template in `templates/ralph/PROMPT.md`
-  - **Goal:** Standard format for batched tasks with multi-file scope
-  - **AC:** Template shows batch task example with glob patterns and verification
-
-  - **Scope:** Create `templates/javascript/`, `templates/go/`, `templates/website/`
+## Phase 24: Template Drift Alignment (A1)
+
+**Goal:** Align `templates/ralph/` to the accepted canonical Ralph layout `workers/ralph/` (ADR-0001) and backport the highest-impact, lowest-risk drift items from Brain `workers/ralph/` into templates in small, dependency-ordered batches.
+
+**Reference Inputs:**
+
+- `TEMPLATE_DRIFT_REPORT.md`
+- `cortex/docs/ADR-0001-canonical-ralph-layout-workers-ralph.md`
+
+**Ordering / Dependencies (execute in order unless noted):**
+
+1. **24.1.1** Normalize template docs to canonical `workers/ralph/` (A1)
+2. **24.1.2** Normalize template scripts to canonical `workers/ralph/` (A1)
+3. **24.1.3** Audit templates for legacy `ralph/` paths and Brain-only path coupling
+4. **24.2.1** Template `new-project.sh` (bootstrapping)
+5. **24.3.1** Template `config/non_cacheable_tools.txt` (caching prerequisite)
+6. **24.4.1** Backport `cerebras_agent.py` context management (stability)
+7. **24.7.1** Backport `loop.sh` scoped staging improvements
+8. **24.8.1** Backport `verifier.sh` caching (keep template path logic)
+9. **24.9.1** Backport `current_ralph_tasks.sh` parsing improvements
+
+> Notes: 24.5.1 (render_ac_status.sh) and 24.6.1 (model header + prompt batching) are gated by the Decisions Needed section and can be scheduled any time after 24.1.3.
+
+### Phase 24.1: A1 Path Normalization Sweep (dependency-first)
+
+- [ ] **24.1.1** Normalize template documentation to canonical `workers/ralph/` layout (A1)
+  - **Goal:** Update template documentation so all examples and instructions refer to `workers/ralph/` (ADR-0001) and do not assume the legacy `ralph/` root.
+  - **Scope:**
+    - `templates/ralph/**/*.md`
+  - **Non-goals:**
+    - Do not modify Brain-only documentation under `workers/`.
+    - Do not add dual-layout auto-detection guidance.
+  - **Interfaces/Assumptions:**
+    - Canonical layout is `workers/ralph/` (ADR-0001).
   - **Steps:**
-    1. Define standard template structure (AGENTS.md, NEURONS.md, VALIDATION_CRITERIA.md)
-    2. Create all three directories with standard files in one pass
-    3. **Templates contain pointers to brain skills, NOT duplicated content**
-    4. Verify each directory has required files
-  - **AC:** All three template directories exist with standard structure and skill references
-  - **Replaces:** 6.1.1, 6.1.2, 6.3.1
-  - **Status:** 6.1.1 and 6.1.2 complete, 6.3.1 pending
+    1. Search docs for legacy `ralph/` path references.
+    2. Replace with `workers/ralph/` where the path refers to the Ralph root.
+    3. Ensure docs do not reference Brain-only paths.
+  - **Acceptance Criteria:**
+    - `rg -n "(^|/)ralph/" templates/ralph/**/*.md` has no matches for layout-root paths (allowlist only if explicitly discussing historical drift).
+    - `rg -n "workers/ralph" templates/ralph/**/*.md` shows updated canonical references.
 
-- [ ] **9C.2.B2** BATCH: Update skills documentation (combines 7.2.1, 7.2.2)
-  - **Scope:** `skills/index.md` + `skills/SUMMARY.md`
+- [ ] **24.1.2** Normalize template scripts to canonical `workers/ralph/` layout (A1)
+  - **Goal:** Ensure template scripts operate correctly when installed under `workers/ralph/` and do not hardcode legacy `ralph/` layout paths.
+  - **Scope:**
+    - `templates/ralph/**/*.sh`
+    - `templates/ralph/.verify/*` (only if any path references are embedded in these files)
+  - **Non-goals:**
+    - Do not add dual-layout auto-detection unless explicitly approved (ADR-0001 selects A1).
+  - **Interfaces/Assumptions:**
+    - Canonical layout is `workers/ralph/`.
+    - Prefer `SCRIPT_DIR`/`BASH_SOURCE`-based root detection and/or `RALPH_PROJECT_ROOT` where appropriate.
   - **Steps:**
-    1. Scan `skills/domains/` and `skills/playbooks/` for all files
-    2. Update `skills/index.md` with any missing entries
-    3. Update `skills/SUMMARY.md` error reference and playbooks section
-  - **AC:** Both index files list all current skills, SUMMARY includes playbooks
-  - **Replaces:** 7.2.1, 7.2.2
+    1. Search scripts for hardcoded `ralph/` and other legacy paths.
+    2. Update path computations and defaults to align with A1.
+    3. Ensure no Brain-only relative paths (e.g., `../../brain/...`) are introduced.
+  - **Acceptance Criteria:**
+    - `rg -n "(^|/)ralph/" templates/ralph/**/*.sh` has no matches for layout-root paths.
+    - `bash -n templates/ralph/*.sh templates/ralph/**/*.sh` passes.
 
-- [ ] **9C.2.B3** BATCH: Improve onboarding docs (combines 7.1.1, 7.1.2)
-  - **Scope:** Root `README.md` + new `CONTRIBUTING.md`
+- [ ] **24.1.3** Audit templates for legacy layout strings and Brain-only path coupling
+  - **Goal:** Provide a deterministic verification pass that A1 normalization is complete before bootstrapping/caching work proceeds.
+  - **Scope:**
+    - `templates/ralph/` (entire subtree)
+  - **Non-goals:**
+    - Do not change Brain files.
+  - **Interfaces/Assumptions:**
+    - A1 is canonical.
   - **Steps:**
-    1. Enhance README.md onboarding flow (quick start, navigation)
-    2. Create CONTRIBUTING.md with guidelines
-    3. Cross-link between files
-  - **AC:** README has clear onboarding, CONTRIBUTING.md exists
-  - **Replaces:** 7.1.1, 7.1.2
-
-### Phase 9C.3: Decomposition Detection
-
-- [ ] **9C.3.1** Add duration tracking to `current_ralph_tasks.sh` footer
-  - **Goal:** Show when current task exceeds 2x median (⚠️ warning)
-  - **AC:** Footer shows "⚠️ Current task exceeding median" when appropriate
-
-- [ ] **9C.3.2** Create decomposition checklist in `skills/playbooks/`
-  - **Goal:** Playbook for breaking down oversized tasks
-  - **AC:** `skills/playbooks/decompose-large-tasks.md` exists with decision criteria
-
-### Phase 9C.4: Validation
-
-- [ ] **9C.4.1** Validate batching recommendations against next 5 iterations
-  - **Goal:** Measure if batched tasks reduce total time vs individual tasks
-  - **AC:** Update `artifacts/optimization_hints.md` with before/after comparison
-
-**Phase AC:**
-
-- `artifacts/optimization_hints.md` updates from iter artifacts
-- ≥3 batching opportunities identified with evidence
-- ≥2 decomposition opportunities documented
-
----
-
-## Phase 0-Warn: Verifier Warnings
-
-**Goal:** Resolve verifier warnings from latest run.
-
-**Status:** 0 warnings present - require HUMAN INTERVENTION (protected file changes).
-
-
----
-
-## Recurring: Performance Monitoring
-
-**Goal:** Continuously scan logs and identify performance optimization opportunities.
-
-**Frequency:** Every 5 Ralph iterations (or when Cortex reviews progress)
-
-**Process:**
-
-1. **Scan iteration logs** in `artifacts/rollflow_cache/` for:
-   - Tasks exceeding 10 minutes (decomposition candidates)
-   - Repeated similar errors (skill gap candidates)
-   - Multiple file edits in same directory (batching candidates)
-
-2. **Update `artifacts/optimization_hints.md`** with:
-   - New batching opportunities discovered
-   - Decomposition recommendations
-   - Skill gaps to fill
-
-3. **Check gap radar output** from `bin/gap-radar --dry-run`:
-   - New error patterns not covered by skills
-   - Promote significant gaps to SKILL_BACKLOG.md
-
-**Trigger:** Cortex should run `bash cortex/snapshot.sh` which shows batching hints when ≥3 similar tasks detected.
-
-**AC:** `artifacts/optimization_hints.md` updated at least every 5 iterations with actionable insights.
-
----
-
-## Phase 14: THUNK.md Deduplication Bug Fix
-
-**Goal:** Fix duplicate entries in THUNK.md and prevent future duplicates from the archive script.
-
-**Problem:** THUNK.md has 765 task rows but only ~500 unique task IDs. The `cleanup_plan.sh --archive` appends tasks without checking if they already exist, causing duplicates when run multiple times.
-
-**Priority:** HIGH (data integrity issue, 30 min effort)
-
-### Phase 14.1: Fix Archive Script
-
-- [ ] **14.1.1** Add idempotency check to `cortex/cleanup_cortex_plan.sh` [HIGH]
-  - **Goal:** Prevent duplicate task entries when archiving
-  - **AC:** Running `cleanup_cortex_plan.sh` twice on same completed tasks produces no duplicates
-  - **Implementation:** Before appending, check `grep -q "| $task_id |" "$THUNK_FILE"`
-
-### Phase 14.2: Cleanup Existing Data
-
-- [ ] **14.2.1** Create `tools/thunk_dedup.sh` one-time cleanup script [HIGH]
-  - **Goal:** Remove duplicate entries from existing THUNK.md
-  - **AC:** Script is idempotent, preserves first occurrence of each task ID, outputs count of removed duplicates
-  - **Implementation:** `awk '!seen[$2]++'` on task ID column
-
-- [ ] **14.2.2** Run dedup on `workers/ralph/THUNK.md` [MEDIUM]
-  - **Goal:** Clean existing data
-  - **AC:** THUNK.md row count equals unique task ID count
-  - **Depends:** 14.2.1
-
----
-
-## Phase 15: Skill Dependency Graph
-
-**Goal:** Visualize relationships between skill files to identify foundational skills, orphans, and clusters.
-
-**Problem:** 90 skill files exist with implicit cross-references but no way to see the dependency structure.
-
-**Priority:** HIGH (reveals hidden structure, 2 hr effort)
-
-### Phase 15.1: Link Extraction
-
-- [ ] **15.1.1** Create `tools/skill_graph/extract_links.py` [HIGH]
-  - **Goal:** Parse all `skills/**/*.md` for internal markdown links
-  - **AC:** Outputs JSON with `{source: "file.md", targets: ["other.md", ...]}` for each skill
-  - **Implementation:** Regex for `\[.*\]\((.*\.md)\)`, resolve relative paths
-
-### Phase 15.2: Graph Generation
-
-- [ ] **15.2.1** Create `tools/skill_graph/generate_graph.py` [MEDIUM]
-  - **Goal:** Convert link JSON to DOT format graph
-  - **AC:** Valid DOT output that renders in Graphviz/online tools
-  - **Depends:** 15.1.1
-
-- [ ] **15.2.2** Create `tools/skill_graph/skill_graph.sh` wrapper [LOW]
-  - **Goal:** One-command pipeline: extract → generate → output
-  - **AC:** `bash tools/skill_graph/skill_graph.sh` outputs valid DOT to stdout
-  - **Depends:** 15.1.1, 15.2.1
-
-### Phase 15.3: Documentation
-
-- [ ] **15.3.1** Create `tools/skill_graph/README.md` [LOW]
-  - **Goal:** Document usage, output format, rendering options
-  - **AC:** README explains how to render DOT (graphviz, online tools like viz-js.com)
-  - **Depends:** 15.2.2
-
----
-
-## Phase 16: Anti-Patterns Library
-
-**Goal:** Document common mistakes to avoid, complementing the "how to do X" skills with "mistakes to avoid" knowledge.
-
-**Problem:** Learning from failures is often more memorable than learning patterns. No anti-pattern documentation exists.
-
-**Priority:** HIGH (high learning value, 1.5 hr effort)
-
-### Phase 16.1: Create Anti-Patterns Directory
-
-- [ ] **16.1.1** Create `skills/domains/anti-patterns/README.md` [HIGH]
-  - **Goal:** Establish anti-patterns directory with format guidelines
-  - **AC:** README defines anti-pattern format: name, bad code, why wrong, fix, frequency rating
-
-### Phase 16.2: Shell Anti-Patterns
-
-- [ ] **16.2.1** Create `skills/domains/anti-patterns/shell-anti-patterns.md` [HIGH]
-  - **Goal:** Document 5+ common bash mistakes from ShellCheck history
-  - **AC:** File has 5+ anti-patterns with SC codes, bad/good examples
-  - **Sources:** SC2034 (unused var), SC2155 (declare+assign), SC2086 (unquoted), SC2181 ($? check), SC1091 (source)
-
-### Phase 16.3: Other Anti-Patterns
-
-- [ ] **16.3.1** Create `skills/domains/anti-patterns/markdown-anti-patterns.md` [MEDIUM]
-  - **Goal:** Document 5+ markdown formatting mistakes from lint history
-  - **AC:** File has 5+ anti-patterns with MD codes, bad/good examples
-  - **Sources:** MD040 (code fence lang), MD024 (duplicate headings), MD031 (blank lines)
-
-- [ ] **16.3.2** Create `skills/domains/anti-patterns/ralph-anti-patterns.md` [MEDIUM]
-  - **Goal:** Document patterns that break the Ralph loop
-  - **AC:** File has 5+ anti-patterns specific to Ralph execution
-  - **Sources:** Protected file edits, infinite loops, missing AC, batching too many tasks
-
-- [ ] **16.3.3** Create `skills/domains/anti-patterns/documentation-anti-patterns.md` [LOW]
-  - **Goal:** Document common documentation mistakes
-  - **AC:** File has 5+ anti-patterns: stale links, missing examples, wall of text, etc.
-
-### Phase 16.4: Index Updates
-
-- [ ] **16.4.1** Update `skills/index.md` and `skills/SUMMARY.md` with anti-patterns [LOW]
-  - **Goal:** Index the new anti-patterns directory
-  - **AC:** Both files list anti-patterns section with all new files
-  - **Depends:** 16.1.1-16.3.3
-
----
-
-## Phase 17: Brain Analytics Dashboard
-
-**Goal:** Visualize Brain's growth, velocity, and health metrics over time.
-
-**Problem:** 1098 commits, 765 THUNK entries, 119 skill commits but no way to visualize the learning trajectory.
-
-**Priority:** MEDIUM (high novelty, 3 hr effort)
-
-### Phase 17.1: Metrics Collection
-
-- [ ] **17.1.1** Create `tools/brain_dashboard/collect_metrics.sh` [HIGH]
-  - **Goal:** Gather metrics from git, THUNK, skills/ into JSON
-  - **AC:** Outputs JSON with: task_velocity (by week), skills_growth (by week), commit_frequency (by day), stale_skills (mtime > 30d)
-  - **Sources:** `git log --format`, THUNK.md parsing, `find -mtime`
-
-### Phase 17.2: Dashboard Generation
-
-- [ ] **17.2.1** Create `tools/brain_dashboard/generate_dashboard.py` [HIGH]
-  - **Goal:** Generate static HTML dashboard from metrics JSON
-  - **AC:** Self-contained HTML with inline CSS, no external dependencies
-  - **Depends:** 17.1.1
-
-- [ ] **17.2.2** Create dashboard HTML template with charts [MEDIUM]
-  - **Goal:** Visual charts for each metric type
-  - **AC:** Dashboard shows: line chart (velocity), bar chart (skills growth), list (stale files)
-  - **Implementation:** Use simple inline SVG or ASCII-based charts for zero dependencies
-  - **Depends:** 17.2.1
-
-### Phase 17.3: Integration
-
-- [ ] **17.3.1** Create `tools/brain_dashboard/README.md` [LOW]
-  - **Goal:** Document usage and metrics explained
-  - **AC:** README shows command to generate and how to interpret metrics
-
-- [ ] **17.3.2** Add dashboard generation to `cortex/snapshot.sh` (optional) [LOW]
-  - **Goal:** Auto-regenerate dashboard on snapshot
-  - **AC:** `artifacts/dashboard.html` updated when snapshot runs
-  - **Depends:** 17.2.2
-
----
-
-## Phase 18: Skill Freshness Decay Detection
-
-**Goal:** Automatically flag stale skills that may need review/update.
-
-**Problem:** Some of the 90 skills may reference outdated APIs or deprecated patterns. No way to detect staleness.
-
-**Priority:** MEDIUM (proactive maintenance, 45 min effort)
-
-### Phase 18.1: Freshness Scanner
-
-- [ ] **18.1.1** Create `tools/skill_freshness.sh` [HIGH]
-  - **Goal:** List all skills with age and flag stale ones
-  - **AC:** Output shows all 90 skills with days since modified, flags those > threshold
-  - **Implementation:** `find skills/ -name "*.md" -printf '%T@ %p\n'`, calculate age
-
-- [ ] **18.1.2** Add `--days N` threshold flag [MEDIUM]
-  - **Goal:** Configurable staleness threshold (default 90 days)
-  - **AC:** `--days 30` flags skills older than 30 days
-  - **Depends:** 18.1.1
-
-- [ ] **18.1.3** Add CI-friendly exit code [LOW]
-  - **Goal:** Exit 1 if any skills exceed threshold (for CI integration)
-  - **AC:** Exit code reflects staleness status
-  - **Depends:** 18.1.1
-
-### Phase 18.2: Integration
-
-- [ ] **18.2.1** Add freshness summary to `skills/SUMMARY.md` [LOW]
-  - **Goal:** Show freshness status in skills overview
-  - **AC:** SUMMARY.md has "Freshness Status" section (can be manually updated or scripted)
-  - **Depends:** 18.1.1
-
----
-
-## Phase 19: Cross-Project Pattern Mining
-
-**Goal:** Create feedback loop from sibling projects back to Brain by identifying repeated patterns that could become skills.
-
-**Problem:** Brain helps other projects but doesn't learn from their commit history.
-
-**Priority:** MEDIUM (high novelty, 2.5 hr effort)
-
-### Phase 19.1: Commit Analysis
-
-- [ ] **19.1.1** Create `tools/pattern_miner/mine_patterns.sh` [HIGH]
-  - **Goal:** Scan sibling project git logs for repeated commit patterns
-  - **AC:** Discovers repos in `~/code/*/`, extracts commit messages from last 90 days
-  - **Implementation:** `for repo in ~/code/*/; do git -C "$repo" log --oneline --since="90 days ago"; done`
-
-- [ ] **19.1.2** Create `tools/pattern_miner/analyze_commits.py` [HIGH]
-  - **Goal:** Group commits by keyword similarity, suggest potential skills
-  - **AC:** Outputs suggestions with frequency: "CORS configuration (5 mentions) → suggest: api-cors-patterns.md"
-  - **Depends:** 19.1.1
-
-### Phase 19.2: Documentation
-
-- [ ] **19.2.1** Create `tools/pattern_miner/README.md` [LOW]
-  - **Goal:** Document usage and how to act on suggestions
-  - **AC:** README explains output format and workflow for creating new skills from suggestions
-  - **Depends:** 19.1.2
-
----
-
-## Phase 20: Interactive Skill Quiz
-
-**Goal:** Test knowledge retention by quizzing on skill content.
-
-**Problem:** 90 skill files exist but no way to verify agents/humans internalized the knowledge.
-
-**Priority:** LOW (high novelty but lower urgency, 2 hr effort)
-
-### Phase 20.1: Scenario Extraction
-
-- [ ] **20.1.1** Create `tools/skill_quiz/extract_scenarios.py` [MEDIUM]
-  - **Goal:** Parse skill files for "When to Use" or "Problem" sections
-  - **AC:** Outputs JSON with `{skill: "file.md", scenario: "text", solution: "text"}`
-  - **Implementation:** Regex for section headers, extract content between headers
-
-### Phase 20.2: Quiz Interface
-
-- [ ] **20.2.1** Create `tools/skill_quiz/quiz.sh` interactive wrapper [MEDIUM]
-  - **Goal:** Terminal-based quiz that presents scenarios and checks answers
-  - **AC:** Randomly selects skill, shows scenario, accepts user input, reveals answer
-  - **Depends:** 20.1.1
-
-- [ ] **20.2.2** Add score tracking across rounds [LOW]
-  - **Goal:** Track score during quiz session
-  - **AC:** Shows "Score: X/Y" after each round
-  - **Depends:** 20.2.1
-
-### Phase 20.3: Documentation
-
-- [ ] **20.3.1** Create `tools/skill_quiz/README.md` [LOW]
-  - **Goal:** Document usage and skill file requirements
-  - **AC:** README explains how to run quiz and what makes skills quiz-compatible
-  - **Depends:** 20.2.1
+    1. Run repo-wide ripgrep checks for legacy layout markers.
+    2. Fix any remaining violations found.
+  - **Acceptance Criteria:**
+    - `rg -n "(^|/)ralph/" templates/ralph` returns no matches (allowlist only if it is prose that explicitly discusses historical drift).
+    - `rg -n "\.{2}/\.{2}/brain|/code/brain|workers/IMPLEMENTATION_PLAN\.md" templates/ralph` returns no matches.
+
+### Phase 24.2: Bootstrapping (new projects must scaffold A1 correctly)
+
+- [ ] **24.2.1** Template `workers/ralph/new-project.sh` bootstrapping script
+  - **Dependencies:** 24.1.3 (A1 normalization + audit complete before copying/adjusting)
+  - **Goal:** Ensure new projects can bootstrap Ralph using the same tool Brain uses, but without Brain-only assumptions.
+  - **Scope:**
+    - Add `templates/ralph/new-project.sh` sourced from `workers/ralph/new-project.sh` with template-appropriate path defaults.
+    - Update any template docs that reference bootstrapping.
+  - **Non-goals:**
+    - Do not modify `workers/ralph/new-project.sh` in Brain as part of this task.
+    - Do not add Brain repo-specific paths or branch names.
+  - **Interfaces/Assumptions:**
+    - Script must target canonical layout `workers/ralph/` and operate from an arbitrary repo root.
+    - Script must not require files outside the target repo (no brain-relative references).
+  - **Steps:**
+    1. Copy `workers/ralph/new-project.sh` into `templates/ralph/new-project.sh`.
+    2. Replace any Brain-only path assumptions with repo-root-relative detection.
+    3. Ensure the script scaffolds `workers/ralph/` layout.
+  - **Acceptance Criteria:**
+    - `test -f templates/ralph/new-project.sh`
+    - `bash -n templates/ralph/new-project.sh` passes.
+    - `rg -n "brain" templates/ralph/new-project.sh` returns no Brain-specific path coupling (allowlist: comments that explain generic behavior without referencing this repo).
+    - `rg -n "workers/ralph" templates/ralph/new-project.sh` returns matches showing canonical output paths.
+
+### Phase 24.3: Caching Prerequisites (template parity)
+
+- [ ] **24.3.1** Template `config/non_cacheable_tools.txt`
+  - **Dependencies:** 24.1.3 (A1 normalization + audit complete)
+  - **Goal:** Provide the config file required by caching-aware scripts so new projects work out-of-the-box.
+  - **Scope:**
+    - Add `templates/ralph/config/non_cacheable_tools.txt` based on `workers/ralph/config/non_cacheable_tools.txt`.
+  - **Non-goals:**
+    - Do not introduce Brain-only tool names unless they are generally applicable.
+  - **Interfaces/Assumptions:**
+    - Paths and scripts in templates should reference `workers/ralph/config/non_cacheable_tools.txt` (A1) after Phase 24.1.
+  - **Steps:**
+    1. Copy file into templates.
+    2. Confirm referenced tools are generic.
+  - **Acceptance Criteria:**
+    - `test -f templates/ralph/config/non_cacheable_tools.txt`
+    - `wc -l templates/ralph/config/non_cacheable_tools.txt` is greater than 0.
+    - `diff -u workers/ralph/config/non_cacheable_tools.txt templates/ralph/config/non_cacheable_tools.txt` shows either identical content or only justified genericization edits.
+
+### Phase 24.4: Stability Backports (Cerebras context management)
+
+- [ ] **24.4.1** Backport Cerebras agent context-management improvements into templates
+  - **Dependencies:** 24.1.3 (A1 normalization + audit complete)
+  - **Goal:** Prevent token/context explosion in new projects by templating the battle-tested context-trimming logic from Brain.
+  - **Scope:**
+    - `templates/ralph/cerebras_agent.py`
+    - (Optional) any template docs referencing Cerebras behavior
+  - **Non-goals:**
+    - Do not add Brain repo-specific defaults (paths, project names, task IDs).
+  - **Interfaces/Assumptions:**
+    - Drift report D06 describes specific constants and truncation limits to backport.
+  - **Steps:**
+    1. Diff `workers/ralph/cerebras_agent.py` vs `templates/ralph/cerebras_agent.py`.
+    2. Backport only the context management, token/char limits, and summarization heuristics.
+    3. Ensure defaults are safe and generic.
+  - **Acceptance Criteria:**
+    - `python3 -m py_compile templates/ralph/cerebras_agent.py` passes.
+    - `rg -n "MAX_CONTEXT_CHARS|MAX_TOOL_RESULT_CHARS|KEEP_RECENT_TURNS|SUMMARIZE_AFTER_TURN" templates/ralph/cerebras_agent.py` finds the expected constants.
+
+### Phase 24.5: Utility Adoption (optional)
+
+- [ ] **24.5.1** Decide + (if approved) template `render_ac_status.sh`
+  - **Dependencies:** 24.1.3 (A1 normalization + audit complete), DN-24.4 (decision)
+  - **Goal:** Provide an optional utility to render verifier / AC status for humans without breaking canonical layout assumptions.
+  - **Scope:**
+    - If templated: `templates/ralph/render_ac_status.sh`
+    - Update template docs to mention it as optional.
+  - **Non-goals:**
+    - Do not make the core loop/verifier depend on this utility.
+  - **Interfaces/Assumptions:**
+    - Must work with canonical `workers/ralph/` layout and `.verify/latest.txt` output location.
+  - **Steps:**
+    1. Inspect `workers/ralph/render_ac_status.sh` behavior and inputs.
+    2. If generally useful, copy into templates and normalize paths per Phase 24.1.
+  - **Acceptance Criteria:**
+    - (If templated) `test -f templates/ralph/render_ac_status.sh`
+    - (If templated) `bash -n templates/ralph/render_ac_status.sh` passes.
+    - (If templated) `rg -n "workers/ralph" templates/ralph/render_ac_status.sh` shows canonical path usage.
+  - **Risk/Notes:**
+    - Gate on Decisions Needed below.
+
+### Phase 24.6: Consistency (model header + prompt batching rule)
+
+- [ ] **24.6.1** Align model-header single-source-of-truth + prompt batching rule across canonical files
+  - **Dependencies:** DN resolution on what is authoritative (typically `workers/ralph/`), then apply to templates
+  - **Goal:** Ensure the "model header" and "markdown batching" guidance are consistent between the canonical workers implementation and templates to prevent regressions.
+  - **Scope:**
+    - Inspect and, if needed, align the following pairs:
+      - `workers/ralph/PROMPT.md` vs `templates/ralph/PROMPT.md`
+      - `workers/ralph/loop.sh` vs `templates/ralph/loop.sh`
+  - **Non-goals:**
+    - Do not change protected/hash-guarded files without following repo protocol (if hashes are involved, handle via the existing baseline mechanisms).
+  - **Interfaces/Assumptions:**
+    - Canonical layout A1.
+    - Recent fixes referenced in drift context: model header, markdown batching rule, `cleanup_plan.sh`.
+  - **Steps:**
+    1. Identify the authoritative wording/behavior for the model header and batching rule.
+    2. Apply minimal edits to bring the non-authoritative copy in sync.
+  - **Acceptance Criteria:**
+    - `rg -n "markdown batching" workers/ralph/PROMPT.md templates/ralph/PROMPT.md` shows consistent guidance.
+    - `rg -n "model header" workers/ralph/PROMPT.md templates/ralph/PROMPT.md` shows consistent guidance.
+  - **Risk/Notes:**
+    - May touch protected files in some repos; if blocked, break into a separate task with explicit hash-update steps.
+
+### Phase 24.7: Loop Staging Improvements (backport-partial)
+
+- [ ] **24.7.1** Backport `loop.sh` scoped staging improvements into templates (without Brain-specific paths)
+  - **Dependencies:** 24.1.3
+  - **Goal:** Improve signal-to-noise in commits by staging only scoped changes, while preserving template path logic and avoiding Brain-only assumptions.
+  - **Scope:**
+    - `templates/ralph/loop.sh`
+  - **Non-goals:**
+    - Do not copy Brain-specific denylist patterns or hardcoded file paths (drift report D11).
+    - Do not change Brain `workers/ralph/loop.sh` in this task.
+  - **Interfaces/Assumptions:**
+    - Canonical layout A1 (`workers/ralph/`).
+    - Use template-appropriate root detection (ADR-0001).
+  - **Steps:**
+    1. Diff `workers/ralph/loop.sh` vs `templates/ralph/loop.sh`.
+    2. Backport `stage_scoped_changes()` and protected-file co-staging behavior.
+    3. Ensure defaults remain safe (notably `CACHE_MODE=use` if applicable).
+  - **Acceptance Criteria:**
+    - `bash -n templates/ralph/loop.sh` passes.
+    - `rg -n "stage_scoped_changes" templates/ralph/loop.sh` finds the function.
+    - `rg -n "CACHE_MODE=use" templates/ralph/loop.sh` matches (or documented justified alternative).
+
+### Phase 24.8: Verifier Caching Backport (keep template path logic)
+
+- [ ] **24.8.1** Backport verifier caching into templates without regressing A1 root/path logic
+  - **Dependencies:** 24.1.3, 24.3.1, 24.7.1
+  - **Goal:** Speed up verifier runs via caching, while preserving the template’s correct root detection (`RALPH_PROJECT_ROOT` / `SCRIPT_DIR` relative) highlighted in drift report D15.
+  - **Scope:**
+    - `templates/ralph/verifier.sh`
+    - `templates/ralph/config/non_cacheable_tools.txt` (must already exist from 24.3.1)
+  - **Non-goals:**
+    - Do not revert template root detection to Brain’s `$SCRIPT_DIR/../..` behavior.
+    - Do not change Brain `workers/ralph/verifier.sh` in this task.
+  - **Interfaces/Assumptions:**
+    - 24.3.1 complete (config file exists).
+    - A1 canonical layout.
+  - **Steps:**
+    1. Diff caching-related sections from `workers/ralph/verifier.sh`.
+    2. Port cache key generation and lookup/store logic.
+    3. Confirm root/path logic matches the template’s already-fixed version.
+  - **Acceptance Criteria:**
+    - `bash -n templates/ralph/verifier.sh` passes.
+    - `rg -n "RALPH_PROJECT_ROOT" templates/ralph/verifier.sh` matches.
+    - `rg -n "cache" templates/ralph/verifier.sh` shows caching logic present (human review allowed, but must be visible via grep).
+
+### Phase 24.9: Observability Convenience (task monitor)
+
+- [ ] **24.9.1** Backport `current_ralph_tasks.sh` parsing improvements into templates
+  - **Dependencies:** 24.1.3
+  - **Goal:** Improve task extraction/state tracking in new projects using the same generic parsing improvements validated in Brain (drift report D07).
+  - **Scope:**
+    - `templates/ralph/current_ralph_tasks.sh`
+  - **Non-goals:**
+    - Do not add Brain-specific parsing rules that assume Brain file layouts beyond A1.
+  - **Interfaces/Assumptions:**
+    - A1 canonical layout.
+  - **Steps:**
+    1. Diff `workers/ralph/current_ralph_tasks.sh` vs `templates/ralph/current_ralph_tasks.sh`.
+    2. Backport generic improvements only.
+  - **Acceptance Criteria:**
+    - `bash -n templates/ralph/current_ralph_tasks.sh` passes.
+    - `rg -n "improved|state|phase|task" templates/ralph/current_ralph_tasks.sh` shows updated parsing logic (exact tokens may differ; reviewer should confirm meaningful diff).
+
+### Decisions Needed (to unblock templating work)
+
+> Ralph should not guess on these; resolve explicitly or use the suggested default to proceed safely.
+
+- **DN-24.1 (`RALPH.md`)**
+  - **Resolved:** ✅ Keep `RALPH.md` in templates, but rewrite it to be a short "Ralph identity + layout" doc that points to `README.md` for operational details (ADR-0001).
+  - **Why it matters:** Avoid duplicative or misleading documentation in new projects.
+  - **Where to inspect:** `templates/ralph/RALPH.md`, `templates/ralph/README.md`
+
+- **DN-24.2 (`PROMPT_cerebras.md`)**
+  - **Resolved:** ✅ Do **not** template this under `templates/ralph/`. This is intended to be **Cerebras-only** (i.e., under `workers/cerebras/`).
+  - **Why it matters:** Avoid clutter/misleading artifacts in standard Ralph scaffolds while still supporting Cerebras-specific workflows.
+  - **Where to inspect:** `workers/cerebras/` (intended home), plus any existing `PROMPT_cerebras.md` references in scripts/docs.
+  - **Follow-up:** Update/move/rename as needed so the repo doesn't imply `PROMPT_cerebras.md` is a standard Ralph artifact.
+
+- **DN-24.3 (`ralph.sh` wrapper)**
+  - **Resolved:** ✅ Do **not** template `ralph.sh` as a global wrapper/entrypoint.
+  - **Why it matters:** Wrapper scripts can become "blessed" commands; templating Brain-specific wrappers creates confusion and coupling.
+  - **Where to inspect:** `workers/ralph/ralph.sh`
+
+- **DN-24.4 (`render_ac_status.sh`)**
+  - **Resolved (tentative):** ✅ Treat as a potentially general utility; template **only if** it is layout-agnostic and depends only on canonical A1 paths + `.verify/latest.txt` (no Brain-specific assumptions).
+  - **Why it matters:** If other projects rely on it, we want it available; but we must avoid templating something brittle.
+  - **Where to inspect:** `workers/ralph/render_ac_status.sh`, `.verify/latest.txt` format assumptions
+
+- **DN-24.5 (`pr-batch.sh`)**
+  - **Resolved:** ✅ Defer for now (do not backport as part of Phase 24 unless we later identify a strict bug-fix + A1 normalization change).
+  - **Why it matters:** Incorrect assumptions about branch naming or paths can break PR automation.
+  - **Where to inspect:** `workers/ralph/pr-batch.sh`, `templates/ralph/pr-batch.sh`
+
+- **DN-24.6 (`HUMAN_REQUIRED.md` wording changes)**
+  - **Resolved:** ✅ Yes: template changes that are A1 path normalization + clarity improvements.
+  - **Why it matters:** This doc controls when humans intervene; wording drift can alter workflow expectations.
+  - **Where to inspect:** `workers/ralph/HUMAN_REQUIRED.md`, `templates/ralph/HUMAN_REQUIRED.md`
 
 ---

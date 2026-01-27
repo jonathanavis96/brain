@@ -346,7 +346,7 @@ ROLLBACK_COUNT=1
 RESUME_MODE=false
 NO_MONITORS=false
 CACHE_SKIP="${CACHE_SKIP:-false}"
-CACHE_MODE="${CACHE_MODE:-off}"           # off|record|use - controls cache behavior
+CACHE_MODE="${CACHE_MODE:-use}"           # off|record|use - controls cache behavior (default: use)
 CACHE_SCOPE="${CACHE_SCOPE:-verify,read}" # verify,read,llm_ro - comma-separated list of allowed scopes
 
 # Export cache variables so subprocesses (verifier.sh) inherit them
@@ -851,6 +851,179 @@ check_protected_file_failures() {
 
 CURRENT_LOG_FILE=""
 
+# =============================================================================
+# Scoped Staging - Stage only intended files, exclude noise
+# =============================================================================
+# Always stages: workers/IMPLEMENTATION_PLAN.md, workers/ralph/THUNK.md
+# Never stages: artifacts/**, cortex/IMPLEMENTATION_PLAN.md, cortex/PLAN_DONE.md, **/rollflow_cache/**
+# Conditionally stages: Other changed files not in denylist
+#
+# Usage: stage_scoped_changes
+# Returns: 0 if files were staged, 1 if nothing to stage
+stage_scoped_changes() {
+  local staged_count=0
+
+  # Always stage core Ralph files if they have changes
+  for core_file in "workers/IMPLEMENTATION_PLAN.md" "workers/ralph/THUNK.md"; do
+    if [[ -f "$ROOT/$core_file" ]] && ! git diff --quiet -- "$ROOT/$core_file" 2>/dev/null; then
+      git add "$ROOT/$core_file"
+      staged_count=$((staged_count + 1))
+    fi
+  done
+
+  # Get all changed files (unstaged only, since we handle core files above)
+  local changed_files
+  changed_files=$(git diff --name-only 2>/dev/null) || true
+
+  # Also include untracked files (e.g., newly created docs/skills) so flush commits
+  # don't leave the worktree dirty.
+  local untracked_files
+  untracked_files=$(git ls-files --others --exclude-standard 2>/dev/null) || true
+
+  # Stage each file unless it matches denylist patterns
+  local files_to_consider
+  files_to_consider=$(printf "%s\n%s\n" "$changed_files" "$untracked_files" | sed '/^\s*$/d' | sort -u) || true
+
+  while IFS= read -r file; do
+    [[ -z "$file" ]] && continue
+
+    # Denylist patterns - skip these files
+    case "$file" in
+      artifacts/*) continue ;;                   # Dashboard, metrics, reports
+      cortex/IMPLEMENTATION_PLAN.md) continue ;; # Read-only copy
+      cortex/PLAN_DONE.md) continue ;;           # Read-only archive
+      */rollflow_cache/*) continue ;;            # Cache databases
+      *.sqlite) continue ;;                      # Any SQLite files
+    esac
+
+    # Stage the file
+    git add "$ROOT/$file" 2>/dev/null && staged_count=$((staged_count + 1))
+  done <<<"$files_to_consider"
+
+  # Protected file rule: ensure .verify hash files are staged with their protected files
+  # This prevents pre-commit hash validation failures
+  # Protected files: loop.sh, verifier.sh, PROMPT.md, rules/AC.rules, AGENTS.md
+  local protected_files=("loop" "verifier" "prompt" "ac" "agents")
+  local verify_dirs=(".verify" "workers/.verify" "workers/ralph/.verify" "templates/ralph/.verify")
+
+  for pf in "${protected_files[@]}"; do
+    # Check if any file with this base is staged
+    if git diff --cached --name-only | grep -qiE "(${pf}\.sh|${pf}\.md|${pf}\.rules)$"; then
+      # Stage all corresponding hash files that have changes
+      for vdir in "${verify_dirs[@]}"; do
+        local hash_file="${vdir}/${pf}.sha256"
+        if [[ -f "$ROOT/$hash_file" ]] && ! git diff --quiet -- "$ROOT/$hash_file" 2>/dev/null; then
+          git add "$ROOT/$hash_file" 2>/dev/null && staged_count=$((staged_count + 1))
+        fi
+      done
+    fi
+  done
+
+  if [[ $staged_count -gt 0 ]]; then
+    echo "Staged $staged_count file(s) (scoped staging)"
+    return 0
+  else
+    return 1
+  fi
+}
+
+# =============================================================================
+# End-of-Run Flush Commit - Ensure no changes are left uncommitted
+# =============================================================================
+# Commits any pending changes using scoped staging so that runs ending on BUILD
+# do not leave a dirty worktree.
+#
+# Usage: flush_scoped_commit_if_needed <reason>
+flush_scoped_commit_if_needed() {
+  local reason="${1:-end_of_run}"
+
+  # Respect dry-run mode: never commit
+  if [[ "${DRY_RUN:-false}" == "true" ]]; then
+    return 0
+  fi
+
+  # Nothing to do if clean
+  if git diff --quiet && git diff --cached --quiet; then
+    return 0
+  fi
+
+  echo "Flushing pending changes (${reason})..."
+  stage_scoped_changes || true
+
+  if ! git diff --cached --quiet; then
+    git commit -m "build: flush pending changes (${reason})" || true
+    echo "✓ Changes flushed"
+  else
+    echo "No files to commit after scoped staging"
+  fi
+  echo ""
+}
+
+# =============================================================================
+# Cache Status Banner - Show effective cache state with reason
+# =============================================================================
+# Prints human-readable banner showing:
+#   - Effective cache mode (ON/OFF)
+#   - Reason for state (pending_tasks, user_disabled, staged_changes, etc.)
+#   - Working tree dirty status (clean/staged/unstaged)
+#   - Phase context
+#
+# Usage: print_cache_banner <phase> <iter>
+print_cache_banner() {
+  local phase="$1"
+  local iter="$2"
+  local effective_mode="$CACHE_MODE"
+  local reason=""
+  local dirty_status="clean"
+
+  # Check dirty status
+  if ! git diff --cached --quiet 2>/dev/null; then
+    dirty_status="staged"
+  elif ! git diff --quiet 2>/dev/null; then
+    dirty_status="unstaged"
+  fi
+
+  # Determine effective mode and reason
+  if [[ "$CACHE_MODE" == "off" ]]; then
+    effective_mode="OFF"
+    reason="user_disabled"
+  elif [[ "$CACHE_MODE" == "record" ]]; then
+    effective_mode="RECORD"
+    reason="recording_mode"
+  else
+    # Cache mode is "use" - check guards
+    local plan_file="${ROOT}/workers/IMPLEMENTATION_PLAN.md"
+    if [[ "$phase" == "build" ]] && [[ -f "$plan_file" ]] && grep -q "^- \[ \]" "$plan_file"; then
+      effective_mode="OFF"
+      reason="pending_tasks"
+    elif [[ "$dirty_status" == "staged" ]]; then
+      # Staged changes = transitional state, disable cache for safety
+      effective_mode="OFF"
+      reason="staged_changes"
+    else
+      effective_mode="ON"
+      reason="normal"
+    fi
+  fi
+
+  # Print banner
+  echo ""
+  echo "========================================"
+  if [[ "$effective_mode" == "ON" ]]; then
+    echo "🚀 CACHE: ON (reason=$reason, phase=$phase, dirty=$dirty_status)"
+  elif [[ "$effective_mode" == "RECORD" ]]; then
+    echo "📝 CACHE: RECORD (reason=$reason, phase=$phase, dirty=$dirty_status)"
+  else
+    echo "⏸️  CACHE: OFF (reason=$reason, phase=$phase, dirty=$dirty_status)"
+  fi
+  echo "========================================"
+  echo ""
+
+  # Emit marker for tooling
+  local banner_ts=$(($(date +%s%N) / 1000000))
+  emit_marker ":::CACHE_EFFECTIVE::: mode=$effective_mode reason=$reason phase=$phase dirty=$dirty_status iter=$iter ts=$banner_ts"
+}
+
 # Emit a structured marker to stderr AND log file (if set)
 # Args: $1 = marker line
 emit_marker() {
@@ -1114,6 +1287,13 @@ run_once() {
     echo "# MODE: ${phase^^}"
     echo "# REPOSITORY: $REPO_NAME"
     echo "# ROOT: $ROOT"
+    echo "# RUNNER: $RUNNER"
+
+    # Single source of truth: this is the model value loop.sh will actually use/pass to the runner.
+    # If RESOLVED_MODEL is empty (e.g. user asked for auto/latest), fall back to the requested MODEL_ARG.
+    local effective_model
+    effective_model="${RESOLVED_MODEL:-${MODEL_ARG:-auto}}"
+    echo "# MODEL: ${effective_model}"
     echo ""
 
     # Inject verifier status from previous iteration (if any)
@@ -1150,6 +1330,27 @@ run_once() {
       else
         echo "# ✅ All checks passing!"
       fi
+      echo ""
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo ""
+    fi
+
+    # Inject remaining markdown lint errors (PLAN mode only)
+    # PLAN Ralph should see these so he can add tasks to fix them
+    if [[ "$phase" == "plan" ]] && [[ -n "${MARKDOWN_LINT_ERRORS:-}" ]]; then
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo "# MARKDOWN LINT ERRORS (add tasks to IMPLEMENTATION_PLAN.md)"
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo "#"
+      echo "# The following markdown errors could NOT be auto-fixed."
+      echo "# Add tasks to IMPLEMENTATION_PLAN.md using this format:"
+      echo "#"
+      echo "#   - [ ] **X.Y** Fix <ERROR_CODE> in <filename>"
+      echo "#     - **AC:** \`markdownlint <file>\` passes (no <ERROR_CODE> errors)"
+      echo "#"
+      echo "# Errors to fix:"
+      echo "#"
+      echo "$MARKDOWN_LINT_ERRORS"
       echo ""
       echo "# ═══════════════════════════════════════════════════════════════"
       echo ""
@@ -1337,9 +1538,9 @@ except Exception:
       return 1
     fi
   else
-    # Default: RovoDev
+    # Default: RovoDev (with error filtering)
     run_tool "$tool_id" "$RUNNER" "$tool_key" "$git_sha" \
-      "script -q -c \"cat \\\"$prompt_with_mode\\\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG}\" \"$log\""
+      "script -q -c \"cat \\\"$prompt_with_mode\\\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG} 2>&1 | bash $ROOT/workers/shared/filter_acli_errors.sh\" \"$log\""
     rc=$?
   fi
 
@@ -1606,9 +1807,13 @@ if [[ -n "$PROMPT_ARG" ]]; then
     cache_config_ts="$(($(date +%s%N) / 1000000))"
     emit_marker ":::CACHE_CONFIG::: mode=$CACHE_MODE scope=$CACHE_SCOPE exported=1 iter=$i ts=$cache_config_ts"
 
+    # Print human-readable cache status banner (shows effective state after guards)
+    print_cache_banner "custom" "$i"
+
     # Check for interrupt before starting iteration
     if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
       echo ""
+      flush_scoped_commit_if_needed "graceful_interrupt"
       echo "Exiting gracefully after iteration $((i - 1))."
       exit 130
     fi
@@ -1756,9 +1961,18 @@ else
     cache_config_ts="$(($(date +%s%N) / 1000000))"
     emit_marker ":::CACHE_CONFIG::: mode=$CACHE_MODE scope=$CACHE_SCOPE exported=1 iter=$i ts=$cache_config_ts"
 
+    # Determine phase for cache banner (plan vs build)
+    current_phase="build"
+    if [[ "$i" -eq 1 ]] || ((PLAN_EVERY > 0 && ((i - 1) % PLAN_EVERY == 0))); then
+      current_phase="plan"
+    fi
+    # Print human-readable cache status banner (shows effective state after guards)
+    print_cache_banner "$current_phase" "$i"
+
     # Check for interrupt before starting iteration
     if [[ "$INTERRUPT_RECEIVED" == "true" ]]; then
       echo ""
+      flush_scoped_commit_if_needed "graceful_interrupt"
       echo "Exiting gracefully after iteration $((i - 1))."
       exit 130
     fi
@@ -1803,10 +2017,50 @@ else
     # Capture exit code without triggering set -e
     run_result=0
     if [[ "$i" -eq 1 ]] || ((PLAN_EVERY > 0 && ((i - 1) % PLAN_EVERY == 0))); then
+      # Clean up completed tasks before PLAN phase
+      # Ralph already logs to THUNK.md during BUILD, so no --archive needed
+      if [[ -f "$RALPH/cleanup_plan.sh" ]]; then
+        echo "Cleaning up completed tasks from plan..."
+        if (cd "$RALPH" && bash cleanup_plan.sh) 2>&1; then
+          echo "✓ Plan cleanup complete"
+        else
+          echo "⚠ Plan cleanup failed (non-blocking)"
+        fi
+        echo ""
+      fi
+
+      # Commit any accumulated changes from BUILD iterations (scoped staging)
+      if ! git diff --quiet || ! git diff --cached --quiet; then
+        echo "Committing accumulated BUILD changes..."
+        stage_scoped_changes || true # May return 1 if nothing staged (denylist)
+        if ! git diff --cached --quiet; then
+          git commit -m "build: accumulated changes from BUILD iterations" || true
+          echo "✓ BUILD changes committed"
+        else
+          echo "No files to commit after scoped staging"
+        fi
+        echo ""
+      fi
+
       # Snapshot plan BEFORE sync for drift detection (prevents direct-edit bypass)
       PLAN_SNAPSHOT="$ROOT/.verify/plan_snapshot.md"
       if [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
         cp "$ROOT/workers/IMPLEMENTATION_PLAN.md" "$PLAN_SNAPSHOT"
+      fi
+
+      # Capture remaining markdown lint errors for PLAN phase
+      # PLAN Ralph should see these so he can add tasks to fix them
+      MARKDOWN_LINT_ERRORS=""
+      if command -v markdownlint &>/dev/null; then
+        echo "Checking for markdown lint errors..."
+        lint_output=$(markdownlint "$ROOT" 2>&1 | grep -E "error MD" | head -40) || true
+        if [[ -n "$lint_output" ]]; then
+          MARKDOWN_LINT_ERRORS="$lint_output"
+          echo "Found $(echo "$lint_output" | wc -l) markdown lint errors for PLAN review"
+        else
+          echo "No markdown lint errors found"
+        fi
+        unset lint_output
       fi
 
       emit_event --event phase_start --iter "$i" --phase "plan"
@@ -1826,30 +2080,60 @@ else
         emit_marker ":::PHASE_END::: iter=$i phase=plan status=fail code=$run_result run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts"
       fi
     else
-      # Auto-fix lint issues before BUILD iteration
-      echo "Running auto-fix for lint issues..."
+      # Auto-fix lint issues before BUILD iteration (only if relevant files changed)
       autofix_git_sha="$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')"
 
-      if [[ -f "$RALPH/fix-markdown.sh" ]]; then
+      # Check what files have changed (staged + unstaged)
+      changed_files="$(
+        git diff --name-only HEAD 2>/dev/null
+        git diff --name-only --cached 2>/dev/null
+      )"
+      md_changed=$(echo "$changed_files" | grep -c '\.md$' || true)
+
+      # Run fix-markdown only if .md files changed (saves ~7.5s when no markdown changes)
+      if [[ -f "$RALPH/fix-markdown.sh" ]] && [[ "$md_changed" -gt 0 ]]; then
+        echo "Running auto-fix for markdown ($md_changed .md file(s) changed)..."
         fix_md_id="$(tool_call_id)"
         fix_md_key="fix-markdown|${autofix_git_sha}"
         run_tool "$fix_md_id" "fix-markdown" "$fix_md_key" "$autofix_git_sha" \
           "(cd \"$ROOT\" && bash \"$RALPH/fix-markdown.sh\" . 2>/dev/null) || true" || true
+      elif [[ "$md_changed" -eq 0 ]]; then
+        echo "Skipping fix-markdown (no .md files changed)"
       fi
 
+      # Run pre-commit only on staged files (saves ~10s vs --all-files)
+      # Note: PLAN-start commit runs full pre-commit via git hooks
+      # This is incremental check for BUILD phase changes only
       if command -v pre-commit &>/dev/null; then
-        precommit_id="$(tool_call_id)"
-        precommit_key="pre-commit|${autofix_git_sha}"
-        run_tool "$precommit_id" "pre-commit" "$precommit_key" "$autofix_git_sha" \
-          "(cd \"$ROOT\" && pre-commit run --all-files 2>/dev/null) || true" || true
+        # Stage changes using scoped staging (excludes artifacts/cortex/caches)
+        if [[ -n "$changed_files" ]]; then
+          stage_scoped_changes || true # May return 1 if nothing staged (denylist)
+          # Only run if something is actually staged
+          if ! git diff --cached --quiet; then
+            echo "Running pre-commit on staged files..."
+            precommit_id="$(tool_call_id)"
+            precommit_key="pre-commit|${autofix_git_sha}"
+            run_tool "$precommit_id" "pre-commit" "$precommit_key" "$autofix_git_sha" \
+              "(cd \"$ROOT\" && pre-commit run 2>/dev/null) || true" || true
+          else
+            echo "Skipping pre-commit (nothing staged after scoped filtering)"
+          fi
+        else
+          echo "Skipping pre-commit (no changes to check)"
+        fi
       fi
 
       # Run verifier to get current state (Ralph will see WARN/FAIL in context)
-      echo "Running verifier to check current state..."
-      verifier_pre_id="$(tool_call_id)"
-      verifier_pre_key="verifier-pre-build|${autofix_git_sha}"
-      run_tool "$verifier_pre_id" "verifier" "$verifier_pre_key" "$autofix_git_sha" \
-        "(cd \"$RALPH\" && bash verifier.sh 2>/dev/null) || true" || true
+      # Skip if no changes - post-iteration verifier will still run after Ralph works
+      if [[ -n "$changed_files" ]]; then
+        echo "Running verifier to check current state..."
+        verifier_pre_id="$(tool_call_id)"
+        verifier_pre_key="verifier-pre-build|${autofix_git_sha}"
+        run_tool "$verifier_pre_id" "verifier" "$verifier_pre_key" "$autofix_git_sha" \
+          "(cd \"$RALPH\" && bash verifier.sh 2>/dev/null) || true" || true
+      else
+        echo "Skipping pre-build verifier (no changes since last run)"
+      fi
       echo ""
 
       emit_event --event phase_start --iter "$i" --phase "build"
@@ -1890,8 +2174,8 @@ else
       if [[ "$current_tasks" -gt "$snapshot_tasks" ]]; then
         new_task_count=$((current_tasks - snapshot_tasks))
         echo ""
-        echo "⚠️  Plan drift detected: $new_task_count new task(s) added directly to workers/IMPLEMENTATION_PLAN.md"
-        echo "    Tasks should be added via cortex/IMPLEMENTATION_PLAN.md and synced."
+        echo "ℹ️  Plan updated: $new_task_count new task(s) added to workers/IMPLEMENTATION_PLAN.md"
+        echo "    (workers/IMPLEMENTATION_PLAN.md is the source of truth - this is normal)"
         echo ""
       fi
       # Clean up snapshot
@@ -1963,6 +2247,9 @@ else
     emit_marker ":::ITER_END::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_end_ts"
   done
 fi
+
+# Ensure no pending changes are left uncommitted when the loop ends
+flush_scoped_commit_if_needed "end_of_run"
 
 # Print cache statistics summary at end of run
 if [[ "$CACHE_SKIP" == "true" ]]; then

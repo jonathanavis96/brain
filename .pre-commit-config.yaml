@@ -41,6 +41,7 @@ repos:
           (?x)^(
             references/.*|
             .*THUNK\.md$|
+            .*IMPLEMENTATION_PLAN\.md$|
             .*latest\.txt$
           )$
 
@@ -106,6 +107,83 @@ repos:
             \.verify/.*|
             .*\.log$
           )$
+
+  # ==========================================================================
+  # Shell Script Unit Tests
+  # ==========================================================================
+  - repo: local
+    hooks:
+      - id: bats-tests
+        name: bats-tests
+        description: Run bats unit tests for shell scripts
+        entry: >
+          bash -c "if command -v bats >/dev/null 2>&1; then
+          bats tests/unit/*.bats;
+          else echo 'WARN bats not installed, skipping unit tests' >&2; exit 0;
+          fi"
+        language: system
+        pass_filenames: false
+        files: \.(sh|bash|bats)$
+
+  # ==========================================================================
+  # ==========================================================================
+  # Documentation Link Validation
+  # ==========================================================================
+  - repo: local
+    hooks:
+      - id: validate-links
+        name: validate-links
+        description: Validate internal markdown links resolve to existing files
+        entry: bash tools/validate_links.sh
+        language: system
+        files: \.md$
+        exclude: |
+          (?x)^(
+            .*THUNK\.md$|
+            .*IMPLEMENTATION_PLAN\.md$|
+            .*/PLAYBOOK_TEMPLATE\.md$|
+            skills/playbooks/README\.md$|
+            skills/conventions\.md$|
+            workers/ralph/README\.md$
+          )$
+
+      - id: validate-code-examples
+        name: validate-code-examples
+        description: Validate code examples in markdown documentation
+        entry: python3 tools/validate_examples.py
+        language: system
+        files: \.md$
+        exclude: |
+          (?x)^(
+            .*THUNK\.md$|
+            .*IMPLEMENTATION_PLAN\.md$|
+            .*/PLAYBOOK_TEMPLATE\.md$|
+            templates/.*|
+            README\.md$|
+            .*/anti-patterns/.*\.md$|
+            CONTRIBUTING\.md$
+          )$
+
+
+  # Protected File Hash Validation
+  # ==========================================================================
+  - repo: local
+    hooks:
+      - id: validate-protected-hashes
+        name: validate-protected-hashes
+        description: Validate SHA256 hashes for protected files
+        entry: bash tools/validate_protected_hashes.sh
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      - id: validate-doc-sync
+        name: validate-doc-sync
+        description: Validate documentation matches actual config files
+        entry: bash tools/validate_doc_sync.sh
+        language: system
+        pass_filenames: false
+        files: \.(md|yaml|sh)$
 
 # ==========================================================================
 # Configuration

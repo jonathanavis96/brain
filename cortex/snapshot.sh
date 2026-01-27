@@ -5,6 +5,30 @@
 
 set -euo pipefail
 
+# Options
+SKIP_DASHBOARD=false
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --no-dashboard | --skip-dashboard)
+      SKIP_DASHBOARD=true
+      shift
+      ;;
+    -h | --help)
+      echo "Usage: bash snapshot.sh [--no-dashboard]"
+      echo ""
+      echo "Options:"
+      echo "  --no-dashboard  Skip dashboard/metrics regeneration (avoids dirtying artifacts/)"
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1"
+      exit 1
+      ;;
+  esac
+done
+
 # Resolve script directory (cortex/)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BRAIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
@@ -125,7 +149,23 @@ echo "## Commits"
 git log --oneline -5 2>/dev/null || echo "None"
 echo ""
 
-# 4. Pending Gaps from sibling projects
+# 4. Brain Analytics Dashboard
+echo "## Analytics Dashboard"
+if [[ "$SKIP_DASHBOARD" == "true" ]]; then
+  echo "Skipped (--no-dashboard)"
+elif [[ -x "tools/brain_dashboard/collect_metrics.sh" ]] && [[ -x "tools/brain_dashboard/generate_dashboard.py" ]]; then
+  echo "Regenerating dashboard..."
+  (
+    cd tools/brain_dashboard
+    bash collect_metrics.sh >../../artifacts/brain_metrics.json 2>/dev/null
+    python3 generate_dashboard.py --input ../../artifacts/brain_metrics.json --output ../../artifacts/dashboard.html 2>/dev/null
+  ) && echo "✓ Dashboard updated: artifacts/dashboard.html" || echo "✗ Dashboard generation failed"
+else
+  echo "Dashboard tools not available"
+fi
+echo ""
+
+# 5. Pending Gaps from sibling projects
 pending_gaps=()
 shopt -s nullglob
 for marker in "${BRAIN_ROOT}"/../*/cortex/.gap_pending; do

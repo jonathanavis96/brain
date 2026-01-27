@@ -1,7 +1,7 @@
 #!/bin/bash
 # fix-markdown.sh - Auto-fix markdown lint issues
 #
-# Usage: bash fix-markdown.sh [file_or_directory]
+# Usage: bash fix-markdown.sh [file1.md file2.md ...] or [directory]
 #
 # This script runs markdownlint --fix to automatically fix common issues:
 #   - MD009: Trailing spaces
@@ -22,31 +22,65 @@
 
 set -euo pipefail
 
-TARGET="${1:-.}"
-
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
+# Collect targets - either from args or default to current directory
+if [[ $# -eq 0 ]]; then
+  TARGETS=(".")
+else
+  TARGETS=("$@")
+fi
+
+# Filter to only existing files/directories
+VALID_TARGETS=()
+for target in "${TARGETS[@]}"; do
+  if [[ -e "$target" ]]; then
+    VALID_TARGETS+=("$target")
+  else
+    echo "Warning: $target does not exist, skipping" >&2
+  fi
+done
+
+if [[ ${#VALID_TARGETS[@]} -eq 0 ]]; then
+  echo "No valid targets to process"
+  exit 0
+fi
+
 echo "=== Markdown Auto-Fix ==="
-echo "Target: $TARGET"
+if [[ ${#VALID_TARGETS[@]} -eq 1 ]]; then
+  echo "Target: ${VALID_TARGETS[0]}"
+else
+  echo "Targets: ${#VALID_TARGETS[@]} files"
+fi
 echo ""
 
 # Count issues before
-BEFORE_OUTPUT=$(markdownlint "$TARGET" 2>&1 || true)
+BEFORE_OUTPUT=$(markdownlint "${VALID_TARGETS[@]}" 2>&1 || true)
 BEFORE=$(echo "$BEFORE_OUTPUT" | grep -c "error" || true)
 BEFORE=${BEFORE:-0}
+
+# Early exit if no issues to fix
+if [[ $BEFORE -eq 0 ]]; then
+  echo -e "Issues before: ${GREEN}0${NC}"
+  echo "No issues found, skipping fix"
+  echo ""
+  echo "Done."
+  exit 0
+fi
+
 echo -e "Issues before: ${YELLOW}${BEFORE}${NC}"
 
 # Run the fix
 echo ""
 echo "Running markdownlint --fix..."
-markdownlint --fix "$TARGET" 2>&1 || true
+markdownlint --fix "${VALID_TARGETS[@]}" 2>&1 || true
 
 # Count issues after
-AFTER_OUTPUT=$(markdownlint "$TARGET" 2>&1 || true)
+AFTER_OUTPUT=$(markdownlint "${VALID_TARGETS[@]}" 2>&1 || true)
 AFTER=$(echo "$AFTER_OUTPUT" | grep -c "error" || true)
 AFTER=${AFTER:-0}
 echo ""

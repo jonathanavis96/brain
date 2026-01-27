@@ -128,12 +128,13 @@ Before ending any session where substantial knowledge was discussed, write a sum
 | Propagation | After any change | Check if templates/ needs same update |
 | Link Integrity | Creating/updating files | Verify referenced paths exist |
 | Markdown Auto-Fix | Before manual fixes | Run `bash workers/ralph/fix-markdown.sh <file>` first |
+| Cortex Pre-Commit | After modifying any `.md` file | Run `bash workers/ralph/fix-markdown.sh <files>` then `markdownlint <files>` — commit only if clean |
 | Protected File Alert | Verifier fails | Notify user: which files, why, commands to fix |
 | Hash Regen | Protected file changed | Update ALL `.verify/` dirs (root, workers/ralph, templates/ralph) |
 | THUNK Cleanup | Task complete | Add to THUNK.md, remove from IMPLEMENTATION_PLAN.md |
 | Task Placement | Adding tasks | Below `<!-- Cortex adds new Task Contracts -->` marker |
 
-## ⚠️ CRITICAL 6 - Check Every Response
+## ⚠️ CRITICAL 7 - Check Every Response
 
 1. **Did I actually make the change?** (Say-Do)
 2. **Did I update templates/?** (Propagation)
@@ -141,6 +142,7 @@ Before ending any session where substantial knowledge was discussed, write a sum
 4. **Am I using full paths?** (Full Path)
 5. **Did I verify before saying done?** (Verify Before Done)
 6. **Did I capture session knowledge?** (Conversation Persistence)
+7. **Did I run fix-markdown + markdownlint?** (Cortex Pre-Commit)
 
 ## Decision Authority
 
