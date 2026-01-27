@@ -134,7 +134,7 @@ Before ending any session where substantial knowledge was discussed, write a sum
 | THUNK Cleanup | Task complete | Add to THUNK.md, remove from IMPLEMENTATION_PLAN.md |
 | Task Placement | Adding tasks | Below `<!-- Cortex adds new Task Contracts -->` marker |
 
-## ⚠️ CRITICAL 7 - Check Every Response
+## ⚠️ CRITICAL 8 - Check Every Response
 
 1. **Did I actually make the change?** (Say-Do)
 2. **Did I update templates/?** (Propagation)
@@ -142,7 +142,25 @@ Before ending any session where substantial knowledge was discussed, write a sum
 4. **Am I using full paths?** (Full Path)
 5. **Did I verify before saying done?** (Verify Before Done)
 6. **Did I capture session knowledge?** (Conversation Persistence)
-7. **Did I run fix-markdown + markdownlint?** (Cortex Pre-Commit)
+7. **Did I add language tags to ALL code fences?** (Code Fence Rules - see below)
+8. **Did I run fix-markdown + markdownlint?** (Cortex Pre-Commit)
+
+### Code Fence Language Tag Rules
+
+**EVERY code fence MUST have a language tag. No exceptions.**
+
+| Content Type | Language Tag | Example |
+|--------------|--------------|---------|
+| Bash/shell scripts | `bash` | ` ```bash ` |
+| Example output/text | `text` | ` ```text ` |
+| JSON payloads | `json` | ` ```json ` |
+| Python code | `python` | ` ```python ` |
+| Markdown examples | `markdown` | ` ```markdown ` |
+| YAML configs | `yaml` | ` ```yaml ` |
+| Unknown/mixed | `text` | ` ```text ` (safe default) |
+
+**Common mistake:** Writing ` ``` ` without a language tag when showing example outputs.
+**Fix:** Always use ` ```text ` for non-executable output examples.
 
 ## Decision Authority
 

@@ -21,6 +21,39 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
+## Phase 0-Lint: Markdown Lint Fixes
+
+**Goal:** Fix all remaining markdown lint errors that auto-fix cannot resolve.
+
+**Context:** Auto-fix resolved most issues, but MD031 (blank lines around fences) and MD040 (language tags) require manual fixes in cortex/ and workers/ IMPLEMENTATION_PLAN.md files. Also one MD024 (duplicate heading) in cortex/PLAN_DONE.md.
+
+**Tasks:**
+
+- [x] **0.L.1** Fix MD031/MD040 in cortex/IMPLEMENTATION_PLAN.md lines 57-73
+  - **Goal:** Add blank lines around code blocks and specify language tags
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD031/MD040 errors in lines 50-80)
+  - **Verification:** Run markdownlint on file, check line 57-73 errors cleared
+
+- [x] **0.L.2** Fix MD040 in cortex/IMPLEMENTATION_PLAN.md lines 136, 155, 174
+  - **Goal:** Add language tags to fenced code blocks
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD040 errors)
+  - **Verification:** Run markdownlint on file, check all MD040 errors cleared
+
+- [x] **0.L.3** Fix MD024 in cortex/PLAN_DONE.md line 372
+  - **Goal:** Make duplicate "Archived on 2026-01-27" heading unique
+  - **AC:** `markdownlint cortex/PLAN_DONE.md` passes (no MD024 errors)
+  - **Verification:** Run markdownlint on file, check MD024 error cleared
+
+- [x] **0.L.4** Fix MD031/MD040 in workers/IMPLEMENTATION_PLAN.md lines 51-67
+  - **Goal:** Add blank lines around code blocks and specify language tags
+  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD031/MD040 errors in lines 50-70)
+  - **Verification:** Run markdownlint on file, check line 51-67 errors cleared
+
+- [x] **0.L.5** Fix MD040 in workers/IMPLEMENTATION_PLAN.md lines 130, 149, 168
+  - **Goal:** Add language tags to fenced code blocks
+  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD040 errors)
+  - **Verification:** Run markdownlint on file, check all MD040 errors cleared
+
 ## Phase 34: Discord Integration - Live Build Updates 📢
 
 **Goal:** Post real-time iteration summaries to Discord after each Ralph loop iteration completes.
@@ -48,7 +81,8 @@
       4. Add iteration header: `**Ralph Iteration N (MODE)** — TIMESTAMP`
       5. If multiple summaries detected, add warning message
     - Output format (success):
-      ```
+
+      ```text
       **Ralph Iteration 12 (BUILD)** — 2026-01-27 16:47:30
       
       Summary
@@ -56,8 +90,10 @@
       - Fixed Y
       ...
       ```
+
     - Output format (fallback):
-      ```
+
+      ```text
       **Ralph Iteration 12 (BUILD)** — 2026-01-27 16:47:30
       
       No structured summary found in logs.
@@ -65,6 +101,7 @@
       Run ID: 20260127_164730
       Log: workers/ralph/logs/iter12_build.log
       ```
+
   - **AC:** Function extracts Ralph's structured summary from log; uses LAST summary block if multiple found; fallback message if no summary present; includes iteration header with timestamp
   - **Verification:** Test with real log: `generate_iteration_summary 12 BUILD workers/ralph/logs/iter12_build.log | head -50`; verify extracts "Summary / Changes Made / Completed" section; test with log containing no summary (fallback message appears); test with multiple summaries (uses last one)
   - **If Blocked:** Start with simple grep-based extraction, refine line number logic later
@@ -109,6 +146,7 @@
       4. Loop integration: `cd workers/ralph && bash loop.sh --iterations 1`
       5. Missing webhook: Unset var, verify non-fatal
       6. Invalid webhook: Set bad URL, verify error handling
+
     - Document results in commit message
   - **AC:** All 6 test cases pass; Discord messages appear correctly; no loop crashes
   - **Verification:** Complete checklist, paste results in PR description
@@ -127,7 +165,7 @@
     - After line ~1744 (after `ensure_worktree_branch`)
     - Generate summary:
 
-      ```
+      ```bash
       **Ralph Loop Starting**
       Iterations: ${MAX_ITERATIONS}
       Mode: PLAN → BUILD cycling
@@ -146,7 +184,7 @@
     - After line ~2275 (after `flush_scoped_commit_if_needed`)
     - Generate summary:
 
-      ```
+      ```text
       **Ralph Loop Complete**
       Total iterations: ${actual_iterations}
       Cache hits: ${CACHE_HITS} | Misses: ${CACHE_MISSES}
@@ -165,7 +203,7 @@
     - In verifier failure block (line ~1240)
     - Generate alert:
 
-      ```
+      ```text
       **⚠️ Verifier Failed**
       Iteration: ${i}
       Failed rules: $(parse_verifier_failures .verify/latest.txt)

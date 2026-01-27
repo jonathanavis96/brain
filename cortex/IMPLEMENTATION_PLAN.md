@@ -35,55 +35,49 @@
 
 **Duration:** 30-45 min
 
-- [ ] **34.1.1** Create `bin/discord-post` with stdin input and chunking
-  - **Goal:** Basic Discord webhook poster that chunks long messages
-  - **Implementation:**
-    - Shebang: `#!/usr/bin/env bash`
-    - Read from stdin (or `--file FILE` option)
-    - Require `DISCORD_WEBHOOK_URL` env var (error if missing in non-dry-run)
-    - Chunk messages at 1900 chars (safety margin from 2000 limit)
-    - Split on paragraph (`\n\n`), then line (`\n`), last resort hard split
-    - Add "(continued...)" footer to chunks 1..N-1
-    - Add "(X of Y)" counter to each chunk header
-    - POST to webhook: `curl -X POST -H "Content-Type: application/json" -d '{"content":"..."}' "$DISCORD_WEBHOOK_URL"`
-    - Use `jq -Rs` to escape content as JSON string
-    - Add 300ms delay between chunks: `sleep 0.3`
-    - Support `--dry-run` flag (print payload, no POST)
-    - Support `--webhook URL` flag to override env var
-    - Never print webhook URL (security)
-  - **AC:** `echo "test" | bin/discord-post --dry-run` prints JSON payload; real post sends to Discord; 3000-char input splits into 2 messages; missing webhook URL prints error
-  - **Verification:** Run `echo "short test" | bin/discord-post --dry-run`, check JSON format. Run with real webhook, verify Discord message. Run `seq 1 200 | bin/discord-post`, verify chunking
-  - **If Blocked:** Start with simple single-message version, add chunking later
+- [x] **34.1.1** Create `bin/discord-post` utility script
+  - **Goal:** Standalone script to send messages to Discord webhooks with automatic chunking
+  - **AC:** Script exists at `bin/discord-post`; accepts stdin or --file input; chunks at 1900 chars; supports --dry-run; exits 0 on failure (non-blocking); requires DISCORD_WEBHOOK_URL env var
+  - **Verification:** Run `bin/discord-post --help`; test `echo "test" | bin/discord-post --dry-run`
+  - **If Blocked:** N/A - already complete
+  - **Status:** ✅ Complete (already exists)
 
-- [ ] **34.1.2** Add `generate_iteration_summary` function to `loop.sh`
-  - **Goal:** Extract structured summary from iteration state
+- [ ] **34.1.2** Add `generate_iteration_summary` function to loop.sh
+  - **Goal:** Extract Ralph's structured summary from iteration logs for Discord posting
   - **Implementation:**
-    - Add function after line ~2260 (before ITER_END marker emission)
-    - Function signature: `generate_iteration_summary ITER_NUM MODE`
-    - Output format:
+    - Add function to `workers/ralph/loop.sh` (near other utility functions, around line 200-300)
+    - Function signature: `generate_iteration_summary(iter_num, mode, logfile)`
+    - Logic:
+      1. Find all "Summary" headers in logfile using `grep -n "^\s*Summary\s*$"`
+      2. If none found, output fallback message with Run ID and logfile path
+      3. If found, extract LAST summary block (from last "Summary" to `:::BUILD_READY:::` marker or EOF)
+      4. Add iteration header: `**Ralph Iteration N (MODE)** — TIMESTAMP`
+      5. If multiple summaries detected, add warning message
+    - Output format (success):
 
-      ```
-      **Ralph Iteration ${ITER_NUM} (${MODE})**
-      Timestamp: $(date -Iseconds)
-      Run ID: ${ROLLFLOW_RUN_ID}
-      Branch: $(git branch --show-current)
+      ```text
+      **Ralph Iteration 12 (BUILD)** — 2026-01-27 16:47:30
       
-      Git Status:
-      $(git diff --stat HEAD~1 2>/dev/null | tail -1)
-      Commit: $(git log -1 --oneline 2>/dev/null)
-      
-      Verifier: $(grep "^SUMMARY" .verify/latest.txt 2>/dev/null || echo "Not run")
-      
-      Cache Stats:
-      - Hits: ${CACHE_HITS} | Misses: ${CACHE_MISSES}
-      - Time saved: $((TIME_SAVED_MS / 1000))s
+      Summary
+      - Updated X
+      - Fixed Y
+      ...
       ```
 
-    - Keep output under 1500 chars (leaves room for Discord formatting)
-    - Use markdown code block for clean formatting
-  - **AC:** Function exists and outputs structured text; includes iteration number, mode, git status, verifier status, cache stats
-  - **Verification:** Add `generate_iteration_summary 1 PLAN` call in loop, check output format
-  - **If Blocked:** Start with minimal version (just iter number + timestamp), expand later
+    - Output format (fallback):
+
+      ```text
+      **Ralph Iteration 12 (BUILD)** — 2026-01-27 16:47:30
+      
+      No structured summary found in logs.
+      
+      Run ID: 20260127_164730
+      Log: workers/ralph/logs/iter12_build.log
+      ```
+
+  - **AC:** Function extracts Ralph's structured summary from log; uses LAST summary block if multiple found; fallback message if no summary present; includes iteration header with timestamp
+  - **Verification:** Test with real log: `generate_iteration_summary 12 BUILD workers/ralph/logs/iter12_build.log | head -50`; verify extracts "Summary / Changes Made / Completed" section; test with log containing no summary (fallback message appears); test with multiple summaries (uses last one)
+  - **If Blocked:** Start with simple grep-based extraction, refine line number logic later
 
 - [ ] **34.1.3** Integrate Discord posting after `:::ITER_END:::` marker
   - **Goal:** Call Discord poster after each iteration completes
@@ -96,7 +90,9 @@
       if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
         echo ""
         echo "Posting iteration summary to Discord..."
-        if generate_iteration_summary "$i" "$mode" | "$ROOT/bin/discord-post" 2>&1 | tee -a "$LOGDIR/iter${i}_${mode}.log"; then
+        # Pass logfile path to extract summary
+        local current_logfile="$LOGDIR/iter${i}_${mode}.log"
+        if generate_iteration_summary "$i" "$mode" "$current_logfile" | "$ROOT/bin/discord-post" 2>&1 | tee -a "$current_logfile"; then
           echo "✓ Discord update posted"
         else
           echo "⚠ Discord post failed (non-blocking)"
@@ -107,8 +103,9 @@
 
     - Ensure failure doesn't stop loop (already wrapped in if-else)
     - Follow gap-radar pattern (non-blocking, log output)
-  - **AC:** Loop runs normally with DISCORD_WEBHOOK_URL unset; loop posts to Discord when webhook configured; posting failure doesn't crash loop
-  - **Verification:** Run `loop.sh --iterations 1` without webhook (no error); set webhook and run again (check Discord); break webhook URL (verify non-fatal error)
+    - Pass logfile path as third parameter to `generate_iteration_summary`
+  - **AC:** Loop runs normally with DISCORD_WEBHOOK_URL unset; loop posts to Discord when webhook configured; posting failure doesn't crash loop; extracts summary from correct log file
+  - **Verification:** Run `loop.sh --iterations 1` without webhook (no error); set webhook and run again (check Discord for Ralph's structured summary); break webhook URL (verify non-fatal error); verify Discord message contains "Summary / Changes Made / Completed" sections
   - **If Blocked:** Make integration optional via feature flag `DISCORD_ENABLED=true`
 
 - [ ] **34.1.4** Add manual verification tests
@@ -140,7 +137,7 @@
     - After line ~1744 (after `ensure_worktree_branch`)
     - Generate summary:
 
-      ```
+      ```text
       **Ralph Loop Starting**
       Iterations: ${MAX_ITERATIONS}
       Mode: PLAN → BUILD cycling
@@ -159,7 +156,7 @@
     - After line ~2275 (after `flush_scoped_commit_if_needed`)
     - Generate summary:
 
-      ```
+      ```text
       **Ralph Loop Complete**
       Total iterations: ${actual_iterations}
       Cache hits: ${CACHE_HITS} | Misses: ${CACHE_MISSES}
@@ -178,7 +175,7 @@
     - In verifier failure block (line ~1240)
     - Generate alert:
 
-      ```
+      ```text
       **⚠️ Verifier Failed**
       Iteration: ${i}
       Failed rules: $(parse_verifier_failures .verify/latest.txt)
@@ -250,10 +247,6 @@
 
 **Success Criteria (Phase 34):**
 
-- [x] MVP complete: Discord posts after every iteration
-- [x] Long summaries chunk correctly (≤2000 chars per message)
-- [x] Missing/invalid webhook doesn't crash loop
-- [x] Dry-run mode works for testing
 - [ ] V1 milestones: Start/end/error notifications (optional)
 - [ ] Templates updated with Discord integration
 - [ ] Documentation complete
@@ -292,7 +285,6 @@
 
 **Goal:** Add the missing workflow primitives (Inbox capture/promote/triage), strict enums (type/status), relationship editor UI, multi-select, and heat legend/multi-metric toggle.
 
-- [x] **31.1.1** Enforce canonical `type` + `status` enums end-to-end - Backend validation: `type ∈ {Inbox, Concept, System, Decision, TaskContract, Artifact}` and `status ∈ {idea, planned, active, blocked, done, archived}` with clear 400 errors; frontend dropdowns use exact values; node creation defaults: `type=Inbox`, `status=idea` when omitted. AC: Creating/updating node with invalid type/status returns 400 with allowed values; UI only allows allowed values. Verification: Try POST invalid type → 400; Quick Add shows dropdowns with exact enums. If Blocked: Add frontend dropdowns first, backend validation second
 
 - [ ] **31.1.2** Implement Inbox-first capture defaults + "Promote" action in node detail - Quick Add defaults to Inbox/idea unless user chooses; Node Detail panel adds "Promote" button that converts `type: Inbox → {Concept|System|Decision|TaskContract|Artifact}` without changing `id` and preserves existing fields. AC: Promote does not change id; type updates in markdown frontmatter; graph refresh shows new type color. Verification: Create Inbox node, promote to Concept, refresh → same id, new type. If Blocked: Implement promotion as a "Type" dropdown change gated by `currentType===Inbox`
 
