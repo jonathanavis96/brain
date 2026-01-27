@@ -17,12 +17,47 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
+## Phase 0-Lint: Markdown Lint Fixes
+
+**Priority:** HIGH (blocks clean lint runs)
+
+- [x] **0.L.1** Fix MD024 in cortex/PLAN_DONE.md (duplicate heading "Archived on 2026-01-26")
+  - **AC:** `markdownlint cortex/PLAN_DONE.md` passes (no MD024 errors)
+  - **Location:** Line 278
+  - **Fix:** Make duplicate headings unique by adding context (e.g., "Archived on 2026-01-26 (Set 1)", "Archived on 2026-01-26 (Set 2)")
+
+- [ ] **0.L.2** Fix MD056 table column count errors in TEMPLATE_DRIFT_REPORT.md
+  - **AC:** `markdownlint TEMPLATE_DRIFT_REPORT.md` passes (no MD056 errors)
+  - **Locations:** Lines 61, 77, 87 (all expected 8 columns, actual 1)
+  - **Fix:** Ensure all table rows have correct number of pipe separators
+
+- [ ] **0.L.3** Fix MD032 blank line errors in TEMPLATE_DRIFT_REPORT.md
+  - **AC:** `markdownlint TEMPLATE_DRIFT_REPORT.md` passes (no MD032 errors)
+  - **Locations:** Lines 111, 149, 160, 168, 173, 181, 189
+  - **Fix:** Add blank lines before and after lists
+
+- [ ] **0.L.4** Fix MD009 trailing spaces in TEMPLATE_DRIFT_REPORT.md
+  - **AC:** `markdownlint TEMPLATE_DRIFT_REPORT.md` passes (no MD009 errors)
+  - **Location:** Line 146:30
+  - **Fix:** Remove trailing space (expected 0 or 2, actual 1)
+
+- [ ] **0.L.5** Fix MD040 missing language in TEMPLATE_DRIFT_REPORT.md
+  - **AC:** `markdownlint TEMPLATE_DRIFT_REPORT.md` passes (no MD040 errors)
+  - **Location:** Line 247
+  - **Fix:** Add language tag to fenced code block (```bash,```text, etc.)
+
+- [ ] **0.L.6** Fix MD056 table column count errors in workers/ralph/THUNK.md
+  - **AC:** `markdownlint workers/ralph/THUNK.md` passes (no MD056 errors)
+  - **Locations:** Lines 829, 839, 841, 842, 843, 844, 845, 846, 847, 848
+  - **Fix:** Ensure all table rows match the header column count (5 columns expected)
+  - **Note:** Multiple rows with mismatched columns - some have 4, some have 6-7
+
 ## Phase 25: Brain Map (MVP-first)
 
 **Source:** `docs/brain-map/brain-map-implementation-plan.md`
 
 
-## MVP cutline checklist
+### MVP cutline checklist
 
 MVP is considered "done" when all items below are true:
 
