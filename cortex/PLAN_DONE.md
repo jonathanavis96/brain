@@ -360,7 +360,7 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-27 | 30.2.1 | - [x] **30.2.1** Add "Fit to Screen" button |
 | 2026-01-27 | 30.2.2 | - [x] **30.2.2** Add zoom controls (+/- buttons) |
 
-### Archived on 2026-01-27
+### Archived on 2026-01-27 (Batch 4)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
@@ -368,3 +368,15 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-27 | 30.3.1 | - [x] **30.3.1** Implement hover-only label mode - Custom label reducer that renders labels only for `data.highlighted` or `data.hovered` nodes, add enterNode/leaveNode handlers to set hovered attribute. AC: Labels appear only on hover. Verification: Mouse over to label appears; move away to disappears. If Blocked: Lower priority; 29.2.1 threshold sufficient |
 | 2026-01-27 | 30.3.2 | - [x] **30.3.2** Zoom-based label sizing - Set `labelSize: Math.max(10, Math.min(16, 12 * zoomLevel))` to scale font size with zoom level. AC: Labels grow/shrink as user zooms in/out. Verification: Zoom in → bigger labels; zoom out → smaller labels. If Blocked: Skip; static size fine for MVP |
 | 2026-01-27 | 30.4.1 | - [x] **30.4.1** Fix `InsightsPanel` positioning (remove `position: fixed`) |
+
+### Archived on 2026-01-27 (Batch 5)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 34.1.1 | - [x] **34.1.1** Create `bin/discord-post` with stdin input and chunking |
+| 2026-01-27 | 34.1.2 | - [x] **34.1.2** Add `generate_iteration_summary` function to `loop.sh` |
+| 2026-01-27 | - [x] MVP complete: Discord posts after every iteration | - [x] MVP complete: Discord posts after every iteration |
+| 2026-01-27 | - [x] Long summaries chunk correctly (≤2000 chars per message) | - [x] Long summaries chunk correctly (≤2000 chars per message) |
+| 2026-01-27 | - [x] Missing/invalid webhook doesn't crash loop | - [x] Missing/invalid webhook doesn't crash loop |
+| 2026-01-27 | - [x] Dry-run mode works for testing | - [x] Dry-run mode works for testing |
+| 2026-01-27 | 31.1.1 | - [x] **31.1.1** Enforce canonical `type` + `status` enums end-to-end - Backend validation: `type ∈ {Inbox, Concept, System, Decision, TaskContract, Artifact}` and `status ∈ {idea, planned, active, blocked, done, archived}` with clear 400 errors; frontend dropdowns use exact values; node creation defaults: `type=Inbox`, `status=idea` when omitted. AC: Creating/updating node with invalid type/status returns 400 with allowed values; UI only allows allowed values. Verification: Try POST invalid type → 400; Quick Add shows dropdowns with exact enums. If Blocked: Add frontend dropdowns first, backend validation second |
