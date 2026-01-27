@@ -131,6 +131,7 @@ The system uses a constrained set of node types to keep the graph legible and ag
 - **Decision (ADR)**: an architectural decision record.
 - **TaskContract**: a single, atomic unit of work suitable for an agent iteration.
 - **Artifact**: any produced output (file, report, dashboard, script output, external URL).
+- **Inbox**: a collection point for incoming items, notes, or tasks awaiting triage.
 
 ### Node fields
 
