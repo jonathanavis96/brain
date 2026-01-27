@@ -11,19 +11,88 @@
 
 These items were raised by CodeRabbit during review (advisory) and were validated and fixed in the current branch.
 
-| Area | Issue | Status | Fix Commit(s) |
-|------|-------|--------|--------------|
-| `bin/brain-search` | SQL quote-breaking/injection risk via direct interpolation of query + unvalidated `LIMIT` | ✅ Fixed | `89180e0` |
-| PLAN-only guard | `guard_plan_only_mode` patterns didn’t catch commands with args (e.g., `git commit -m ...`) | ✅ Fixed | `c81c16c` |
-| Protected hash validation | Missing protected/tracked file treated as `[SKIP]` instead of `[FAIL]`; regen guidance wrote `hash  filename` | ✅ Fixed | `c81c16c` |
-| Marker schema docs | `CACHE_GUARD` docs used `BUILD`/`PLAN` but enum uses `build`/`plan` | ✅ Fixed | `5a8cc1c` |
-| Cache debugging docs | Query 2 could overcount/mislead due to join multiplication; now aggregates passes/failures separately | ✅ Fixed | `5a8cc1c` |
-| Template verifier | `templates/ralph/verifier.sh` default ROOT pointed at `templates/` not repo root | ✅ Fixed | `00bcf62` |
-| Template markdown fix | `fix-markdown.sh` counted literal word `error` (markdownlint outputs `MDxxx`); counts now based on non-empty output lines | ✅ Fixed | `00bcf62` |
-| Pattern miner docs | README output format example out of sync with `format_suggestions()` | ✅ Fixed | `5a8cc1c` |
-| Skill quiz | Scenario/solution heading matching too narrow; `quiz.sh` did not handle extractor failure / invalid JSON before `jq` | ✅ Fixed | `39d7923` |
-| Cortex docs | Conflicting guidance on where task contracts live; extracted PLAN-only block into dedicated doc; removed control char breaking CLI | ✅ Fixed | `11c40b8`, `8b726b1` |
-| Protected-file workflow | `SPEC_CHANGE_REQUEST.md` updated to document protected `loop.sh` header changes + correct hash-only regen instructions | ✅ Fixed | `11c40b8` |
+### Fix Notes (what changed + how to apply elsewhere)
+
+- **`bin/brain-search` — SQL quote-breaking/injection risk** (✅ Fixed, `89180e0`)
+  - **Fix approach:**
+    - Validate `LIMIT` early as a positive integer before interpolating into SQL.
+    - Escape single quotes in user query for SQLite string literals by doubling them (`'` → `''`) before using in `LIKE '%...%'`.
+  - **Snippet (pattern):**
+
+    ```text
+    # SQLite string literal escaping
+    QUERY_SQL_ESCAPED=${QUERY//\'/\'\'}
+
+    if [[ ! "$LIMIT" =~ ^[0-9]+$ ]] || [[ "$LIMIT" -lt 1 ]]; then
+      echo "--limit must be a positive integer" >&2
+      exit 1
+    fi
+    ```
+
+- **PLAN-only guard — args bypass** (✅ Fixed, `c81c16c`)
+  - **Fix approach:** ensure `guard_plan_only_mode` matches command prefixes with wildcards so `git commit -m ...` is blocked.
+  - **Snippet (pattern):**
+
+    ```text
+    case "$action" in
+      git\ add* | git\ commit* | git\ push*)
+        return 1
+        ;;
+      verifier.sh* | pre-commit*)
+        return 1
+        ;;
+    esac
+    ```
+
+- **Protected hash validation — deletion + regen output format** (✅ Fixed, `c81c16c`)
+  - **Fix approach:**
+    - If a protected file is missing but tracked (or staged for deletion), treat as `[FAIL]`.
+    - When regenerating `.sha256` baselines, write **hash-only**, not `hash  filename`.
+  - **Snippet (pattern):**
+
+    ```text
+    # Fail if tracked file is missing
+    if ! [[ -f "$file" ]] && git ls-files --error-unmatch "$file" >/dev/null 2>&1; then
+      echo "[FAIL] protected file missing" >&2
+      return 1
+    fi
+
+    # Hash-only baseline generation
+    sha256sum "$file" | cut -d' ' -f1 > "$hash_file"
+    ```
+
+- **Marker schema docs — phase casing mismatch** (✅ Fixed, `5a8cc1c`)
+  - **Fix approach:** align docs/examples with the enum (`phase=build|plan|custom`) to avoid casing mismatches between emitters/parsers.
+
+- **Cache debugging docs — join multiplication** (✅ Fixed, `5a8cc1c`)
+  - **Fix approach:** aggregate pass/fail counts separately (CTEs) and then join summaries; avoid counting across a `LEFT JOIN` that multiplies rows.
+
+- **Template verifier — wrong ROOT resolution** (✅ Fixed, `00bcf62`)
+  - **Fix approach:** templates should compute repo root correctly by default (two levels up from `templates/ralph/`).
+  - **Snippet (pattern):**
+
+    ```text
+    ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+    ```
+
+- **Template markdown fix — wrong lint issue counting** (✅ Fixed, `00bcf62`)
+  - **Fix approach:** markdownlint output is rule IDs (e.g., `MD040`), not literal `error`; count non-empty output lines (or `MD[0-9]+`).
+
+- **Pattern miner README — output format drift** (✅ Fixed, `5a8cc1c`)
+  - **Fix approach:** keep README examples in sync with `format_suggestions()` labels/sections so users can compare output reliably.
+
+- **Skill quiz — narrow headings + brittle jq pipeline** (✅ Fixed, `39d7923`)
+  - **Fix approach:**
+    - Support alternative headings (`Scenario`, `Example`, `Use Case`, `Solution`, `Implementation`, `How to Apply`).
+    - In `quiz.sh`, check extractor exit status and validate JSON before calling `jq`.
+
+- **Cortex docs — conflicting task contract guidance + CLI break** (✅ Fixed, `11c40b8`, `8b726b1`)
+  - **Fix approach:**
+    - Make the source-of-truth explicit: task contracts live in `workers/IMPLEMENTATION_PLAN.md`.
+    - Avoid non-printable control characters in docs (they can break YAML/JSON parsing in tooling).
+
+- **Protected-file workflow — spec alignment** (✅ Fixed, `11c40b8`)
+  - **Fix approach:** ensure `SPEC_CHANGE_REQUEST.md` documents the *actual* protected changes and uses hash-only baseline instructions.
 
 ---
 
