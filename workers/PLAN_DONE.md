@@ -275,3 +275,74 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | Date | Task ID | Description |
 |------|---------|-------------|
 | 2026-01-27 | WARN.MD024.cortex/PLAN_DONE.md | - [x] **WARN.MD024.cortex/PLAN_DONE.md** - Fix MD024/no-duplicate-heading in cortex/PLAN_DONE.md line 323 |
+
+### Archived on 2026-01-27 12:59:42
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 0.W.3 | - [x] **0.W.3** Fix MD056 in workers/ralph/THUNK.md lines 931-932 |
+
+### Archived on 2026-01-27 13:51:24 (Phase 25 acceptance criteria)
+
+**Phase 25: Brain Map (MVP-first)** - All acceptance criteria verified complete via manual testing and THUNK evidence.
+
+#### Phase 25.1: MVP
+
+**Scaffolding & Discovery:**
+
+- [x] Backend can be started: `cd app/brain-map/backend && python3 -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000`
+- [x] Health endpoint: `curl -s http://localhost:8000/health | jq .` returns `{"status":"ok"}`
+- [x] Frontend starts: `cd app/brain-map/frontend && npm install && npm run dev -- --host 0.0.0.0 --port 5173`
+- [x] Markdown-first notes exist under `app/brain-map/notes/` (4 files discovered)
+- [x] Notes treated as canonical source of truth
+- [x] Recursive discovery with deterministic ordering (repo-root-relative paths)
+- [x] Non-markdown files ignored (README.txt excluded)
+
+**Search & API:**
+
+- [x] Search endpoint: `curl -s "http://localhost:8000/search?q=brain&limit=5&offset=0" | jq .`
+- [x] Returns ranked results with scores and stable tie-breaking
+- [x] Supports filters: `type/status/tags/recency` with `limit` and `offset`
+
+**Node CRUD:**
+
+- [x] `POST /node` returns 201 with created id and source_path
+- [x] Duplicate id conflicts return 409 with canonical error
+- [x] System never corrupts markdown files (atomic writes)
+- [x] `PUT /node/{id}` - attempt to change id rejected (400 validation error)
+- [x] Unknown id returns 404
+- [x] Atomic write guarantees preserved
+
+**Generate Plan:**
+
+- [x] `POST /generate-plan` returns deterministic markdown output
+- [x] Same inputs + same index produce identical output (stable ordering)
+- [x] Unknown selection id returns 404
+- [x] Writing respects atomic file write
+- [x] Graph traversal ordering deterministic (topological sort)
+
+**Frontend UI:**
+
+- [x] Editing title persists to disk (markdown file) and updates `updated_at`
+- [x] UI surfaces validation errors using canonical error shape
+- [x] Ctrl+K opens search palette
+- [x] Selecting result focuses and selects the node
+- [x] Recency heat toggle changes node rendering
+- [x] Recently updated nodes appear hotter
+- [x] User can select nodes and generate plan
+- [x] Markdown preview matches backend response
+
+#### Phase 25.2: V1
+
+- [x] **25.2.1** Backend: compute and return recency heat deterministically
+- [x] **25.2.2** Backend: density heat (degree + clustering coefficient) with caching
+- [x] **25.2.3** Backend: task heat based on TaskContract neighborhood
+- [x] **25.2.4** Frontend: hotspots / insights panel (top N)
+- [x] **25.2.5** Frontend: filtering controls (type/status/tags/recency)
+- [x] **25.2.6** Backend: file watcher + incremental reindex
+
+#### Phase 25.3: V2
+
+- [x] **25.3.1** Frontend: semantic zoom + clustering (supernodes)
+- [x] **25.3.2** Backend: dependency analysis (cycles, critical path hints)
+- [x] **25.3.3** Plan generator improvements (toposort, richer dependency sections)
