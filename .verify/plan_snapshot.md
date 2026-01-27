@@ -21,6 +21,39 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
+## Phase 0-Lint: Markdown Lint Fixes
+
+**Goal:** Fix all remaining markdown lint errors that auto-fix cannot resolve.
+
+**Context:** Auto-fix resolved most issues, but MD031 (blank lines around fences) and MD040 (language tags) require manual fixes in cortex/ and workers/ IMPLEMENTATION_PLAN.md files. Also one MD024 (duplicate heading) in cortex/PLAN_DONE.md.
+
+**Tasks:**
+
+- [x] **0.L.1** Fix MD031/MD040 in cortex/IMPLEMENTATION_PLAN.md lines 57-73
+  - **Goal:** Add blank lines around code blocks and specify language tags
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD031/MD040 errors in lines 50-80)
+  - **Verification:** Run markdownlint on file, check line 57-73 errors cleared
+
+- [x] **0.L.2** Fix MD040 in cortex/IMPLEMENTATION_PLAN.md lines 136, 155, 174
+  - **Goal:** Add language tags to fenced code blocks
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD040 errors)
+  - **Verification:** Run markdownlint on file, check all MD040 errors cleared
+
+- [x] **0.L.3** Fix MD024 in cortex/PLAN_DONE.md line 372
+  - **Goal:** Make duplicate "Archived on 2026-01-27" heading unique
+  - **AC:** `markdownlint cortex/PLAN_DONE.md` passes (no MD024 errors)
+  - **Verification:** Run markdownlint on file, check MD024 error cleared
+
+- [x] **0.L.4** Fix MD031/MD040 in workers/IMPLEMENTATION_PLAN.md lines 51-67
+  - **Goal:** Add blank lines around code blocks and specify language tags
+  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD031/MD040 errors in lines 50-70)
+  - **Verification:** Run markdownlint on file, check line 51-67 errors cleared
+
+- [x] **0.L.5** Fix MD040 in workers/IMPLEMENTATION_PLAN.md lines 130, 149, 168
+  - **Goal:** Add language tags to fenced code blocks
+  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD040 errors)
+  - **Verification:** Run markdownlint on file, check all MD040 errors cleared
+
 ## Phase 34: Discord Integration - Live Build Updates 📢
 
 **Goal:** Post real-time iteration summaries to Discord after each Ralph loop iteration completes.
