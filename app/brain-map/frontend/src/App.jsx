@@ -42,6 +42,7 @@ function App() {
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false)
   const [mobileQuickAddOpen, setMobileQuickAddOpen] = useState(false)
   const [sigmaInstance, setSigmaInstance] = useState(null)
+  const [pathMetadata, setPathMetadata] = useState(null)
 
   // Theme state - initialize from localStorage or default to 'dark'
   const [themeMode, setThemeMode] = useState(() => {
@@ -1034,6 +1035,7 @@ function App() {
               onGraphDrop={handleGraphDrop}
               theme={colors}
               onSigmaReady={setSigmaInstance}
+              onPathFound={setPathMetadata}
             />
 
             {/* Floating Action Buttons for Mobile */}
@@ -1334,6 +1336,7 @@ function App() {
             saving={saving}
             colors={colors}
             visible={true}
+            pathMetadata={pathMetadata}
           />
         </div>
 

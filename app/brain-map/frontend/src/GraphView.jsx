@@ -159,7 +159,7 @@ function computeClusters(nodes, edges) {
   }
 }
 
-function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGraphDataLoad, filters, selectedNodes = [], onGraphClick, clickToPlaceActive = false, onGraphDrop, theme, onSigmaReady }) {
+function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGraphDataLoad, filters, selectedNodes = [], onGraphClick, clickToPlaceActive = false, onGraphDrop, theme, onSigmaReady, onPathFound }) {
   const containerRef = useRef(null)
   const sigmaRef = useRef(null)
   const dragStateRef = useRef({ isDragging: false, draggedNode: null })
@@ -178,6 +178,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
   const [toast, setToast] = useState(null)
   const [contextMenu, setContextMenu] = useState(null) // { nodeId, x, y, nodeData }
   const [pathFinderMode, setPathFinderMode] = useState({ active: false, startNode: null, endNode: null }) // Path finder state
+  const [pathHighlight, setPathHighlight] = useState({ active: false, path: [] }) // Path highlighting state
   const longPressTimerRef = useRef(null)
 
   // Derive showClusters from zoomLevel - only changes when threshold is crossed
@@ -323,22 +324,30 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
       // Full detail mode: show all nodes
       filteredData.nodes.forEach(node => {
         const isSelected = selectedNodes.some(n => n.id === node.id)
+        const isInPath = pathHighlight.active && pathHighlight.path.includes(node.id)
 
         // Use saved position if available, otherwise use random position for force layout
         const hasPosition = node.position && typeof node.position.x === 'number' && typeof node.position.y === 'number'
         const x = hasPosition ? node.position.x : Math.random() * 100
         const y = hasPosition ? node.position.y : Math.random() * 100
 
+        // Apply path highlighting: nodes in path are bright, others are faded
+        const nodeColor = showRecencyHeat ? getHeatColor(node.metrics, heatMetric) : getNodeColor(node.type, theme)
+        const displayColor = pathHighlight.active ? (isInPath ? nodeColor : '#ddd') : nodeColor
+        const nodeSize = isInPath ? 16 : (isSelected ? 14 : 10)
+        const nodeBorderColor = isInPath ? '#00FFFF' : (isSelected ? '#FF5722' : undefined)
+        const nodeBorderSize = isInPath ? 4 : (isSelected ? 3 : 0)
+
         graph.addNode(node.id, {
           label: node.title,
-          size: isSelected ? 14 : 10,
-          color: showRecencyHeat ? getHeatColor(node.metrics, heatMetric) : getNodeColor(node.type, theme),
+          size: nodeSize,
+          color: displayColor,
           x: x,
           y: y,
           nodeData: node,
-          borderColor: isSelected ? '#FF5722' : undefined,
-          borderSize: isSelected ? 3 : 0,
-          highlighted: isSelected
+          borderColor: nodeBorderColor,
+          borderSize: nodeBorderSize,
+          highlighted: isSelected || isInPath
         })
       })
 
@@ -346,10 +355,22 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
       filteredData.edges.forEach(edge => {
         if (graph.hasNode(edge.from) && graph.hasNode(edge.to)) {
           try {
+            // Check if edge is in path (consecutive nodes in path array)
+            const isInPath = pathHighlight.active && pathHighlight.path.length > 1 &&
+              pathHighlight.path.some((nodeId, idx) => {
+                if (idx === pathHighlight.path.length - 1) return false
+                const nextNode = pathHighlight.path[idx + 1]
+                return (edge.from === nodeId && edge.to === nextNode) ||
+                       (edge.to === nodeId && edge.from === nextNode) // Handle undirected
+              })
+
             const edgeColor = getEdgeColor(edge.type)
+            const displayColor = pathHighlight.active ? (isInPath ? '#00FFFF' : '#eee') : edgeColor
+            const edgeSize = isInPath ? 4 : 2
+
             graph.addEdge(edge.from, edge.to, {
-              size: 2,
-              color: edgeColor,
+              size: edgeSize,
+              color: displayColor,
               type: 'arrow',
               label: edge.type || 'related_to'
             })
@@ -426,7 +447,36 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
           } else if (!pathFinderMode.endNode && node !== pathFinderMode.startNode) {
             // Select end node (different from start)
             setPathFinderMode(prev => ({ ...prev, endNode: node }))
-            setToast({ message: `End node selected: ${attrs.label}. Path finding ready!`, type: 'success' })
+
+            // Fetch path from backend and highlight it
+            fetch(`${API_BASE_URL}/path?from=${pathFinderMode.startNode}&to=${node}`)
+              .then(res => res.json())
+              .then(data => {
+                if (data.found && data.path) {
+                  setPathHighlight({ active: true, path: data.path })
+                  setToast({ message: `Path found: ${data.length} hops`, type: 'success' })
+
+                  // Pass path metadata to parent component (App.jsx -> InsightsPanel)
+                  if (onPathFound) {
+                    onPathFound({
+                      length: data.length,
+                      path: data.path,
+                      totalWeight: data.total_weight
+                    })
+                  }
+                } else {
+                  setToast({ message: 'No path found between nodes', type: 'warning' })
+                  if (onPathFound) {
+                    onPathFound(null)
+                  }
+                }
+              })
+              .catch(err => {
+                setToast({ message: `Path finding failed: ${err.message}`, type: 'error' })
+                if (onPathFound) {
+                  onPathFound(null)
+                }
+              })
           } else if (node === pathFinderMode.startNode) {
             setToast({ message: 'Cannot select same node as start and end', type: 'warning' })
           }
@@ -1058,13 +1108,21 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
         <button
           onClick={() => {
             if (pathFinderMode.active) {
-              // Deactivate path finder mode
+              // Deactivate path finder mode and clear highlights
               setPathFinderMode({ active: false, startNode: null, endNode: null })
+              setPathHighlight({ active: false, path: [] })
               setToast({ message: 'Path finder mode deactivated', type: 'success' })
+              if (onPathFound) {
+                onPathFound(null)
+              }
             } else {
               // Activate path finder mode
               setPathFinderMode({ active: true, startNode: null, endNode: null })
+              setPathHighlight({ active: false, path: [] })
               setToast({ message: 'Path finder mode activated. Select start node.', type: 'success' })
+              if (onPathFound) {
+                onPathFound(null)
+              }
             }
           }}
           style={{

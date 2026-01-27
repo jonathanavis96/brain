@@ -7,7 +7,8 @@ function InsightsPanel({
   onPromote,
   saving = false,
   colors,
-  visible = true
+  visible = true,
+  pathMetadata = null
 }) {
   if (!visible) return null
 
@@ -91,6 +92,40 @@ function InsightsPanel({
           </button>
         </div>
       </div>
+
+      {pathMetadata && (
+        <div style={{
+          marginBottom: '1rem',
+          padding: '0.75rem',
+          background: '#e3f2fd',
+          borderLeft: '4px solid #2196F3',
+          borderRadius: '4px'
+        }}>
+          <h3 style={{ margin: '0 0 0.5rem 0', color: '#1565C0', fontSize: '14px', fontWeight: 'bold' }}>
+            🔍 Path Information
+          </h3>
+          <div style={{ fontSize: '13px', color: '#424242', lineHeight: '1.6' }}>
+            <div><strong>Path Length:</strong> {pathMetadata.length} {pathMetadata.length === 1 ? 'hop' : 'hops'}</div>
+            {pathMetadata.path && pathMetadata.path.length > 2 && (
+              <div style={{ marginTop: '0.5rem' }}>
+                <strong>Intermediate Nodes:</strong>
+                <div style={{ marginTop: '0.25rem', paddingLeft: '0.5rem' }}>
+                  {pathMetadata.path.slice(1, -1).map((nodeId, idx) => (
+                    <div key={nodeId} style={{ color: '#666', fontSize: '12px' }}>
+                      {idx + 1}. {nodeId}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {pathMetadata.totalWeight !== undefined && (
+              <div style={{ marginTop: '0.5rem' }}>
+                <strong>Total Weight:</strong> {pathMetadata.totalWeight.toFixed(2)}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       <div style={{ flex: 1, overflowY: 'auto' }}>
         <div style={{ marginBottom: '0.5rem' }}>
