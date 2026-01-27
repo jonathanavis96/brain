@@ -2,8 +2,105 @@ import { useEffect, useRef, useState, useMemo } from 'react'
 import Graph from 'graphology'
 import Sigma from 'sigma'
 import FA2Layout from 'graphology-layout-forceatlas2/worker'
+import HeatLegend from './HeatLegend'
 
 const API_BASE_URL = import.meta.env.VITE_BRAIN_MAP_API_BASE_URL || 'http://localhost:8000'
+
+// Toast notification component
+function Toast({ message, type, onClose }) {
+  useEffect(() => {
+    const timer = setTimeout(onClose, 3000)
+    return () => clearTimeout(timer)
+  }, [onClose])
+
+  const bgColor = type === 'error' ? '#ef4444' : type === 'warning' ? '#f59e0b' : '#10b981'
+
+  return (
+    <div style={{
+      position: 'fixed',
+      top: '20px',
+      right: '20px',
+      backgroundColor: bgColor,
+      color: 'white',
+      padding: '12px 20px',
+      borderRadius: '6px',
+      boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+      zIndex: 10000,
+      maxWidth: '400px',
+      fontSize: '14px',
+      fontWeight: '500'
+    }}>
+      {message}
+    </div>
+  )
+}
+
+// Context menu component for mobile long-press
+function ContextMenu({ x, y, nodeId, nodeData, onClose, onEdit, onDelete, onCreateLink, onViewDetails }) {
+  useEffect(() => {
+    // Close menu when clicking outside
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.context-menu')) {
+        onClose()
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('touchstart', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('touchstart', handleClickOutside)
+    }
+  }, [onClose])
+
+  const menuItems = [
+    { label: '✏️ Edit', action: () => { onEdit(nodeData); onClose() } },
+    { label: '🔗 Create Link', action: () => { onCreateLink(nodeId); onClose() } },
+    { label: '👁️ View Details', action: () => { onViewDetails(nodeData); onClose() } },
+    { label: '🗑️ Delete', action: () => { onDelete(nodeId, nodeData); onClose() }, danger: true }
+  ]
+
+  return (
+    <div
+      className="context-menu"
+      style={{
+        position: 'fixed',
+        left: `${x}px`,
+        top: `${y}px`,
+        backgroundColor: 'white',
+        border: '1px solid #ddd',
+        borderRadius: '8px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        zIndex: 10001,
+        minWidth: '200px',
+        overflow: 'hidden'
+      }}
+    >
+      {menuItems.map((item, index) => (
+        <button
+          key={index}
+          onClick={item.action}
+          style={{
+            width: '100%',
+            padding: '12px 16px',
+            border: 'none',
+            background: 'white',
+            textAlign: 'left',
+            fontSize: '16px',
+            cursor: 'pointer',
+            color: item.danger ? '#ef4444' : '#333',
+            fontWeight: item.danger ? '600' : 'normal',
+            borderBottom: index < menuItems.length - 1 ? '1px solid #f0f0f0' : 'none',
+            transition: 'background 0.2s'
+          }}
+          onMouseOver={(e) => e.target.style.background = '#f5f5f5'}
+          onMouseOut={(e) => e.target.style.background = 'white'}
+        >
+          {item.label}
+        </button>
+      ))}
+    </div>
+  )
+}
 
 // Zoom thresholds for clustering behavior
 const ZOOM_THRESHOLDS = {
@@ -62,9 +159,11 @@ function computeClusters(nodes, edges) {
   }
 }
 
-function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) {
+function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGraphDataLoad, filters, selectedNodes = [], onGraphClick, clickToPlaceActive = false, onGraphDrop, theme, onSigmaReady }) {
   const containerRef = useRef(null)
   const sigmaRef = useRef(null)
+  const dragStateRef = useRef({ isDragging: false, draggedNode: null })
+  const layoutRef = useRef(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [graphData, setGraphData] = useState(null)
@@ -74,6 +173,12 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
   const [clusterData, setClusterData] = useState(null)
   const [selectedNodeId, setSelectedNodeId] = useState(null)
   const [hoveredNode, setHoveredNode] = useState(null)
+  const [layoutLocked, setLayoutLocked] = useState(true) // Start with manual mode (locked)
+  const [linkMode, setLinkMode] = useState({ active: false, sourceNode: null, previewLine: null, hoveredTarget: null })
+  const [toast, setToast] = useState(null)
+  const [contextMenu, setContextMenu] = useState(null) // { nodeId, x, y, nodeData }
+  const [pathFinderMode, setPathFinderMode] = useState({ active: false, startNode: null, endNode: null }) // Path finder state
+  const longPressTimerRef = useRef(null)
 
   // Derive showClusters from zoomLevel - only changes when threshold is crossed
   const showClusters = useMemo(() => {
@@ -123,6 +228,32 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
 
     let timeoutId = null
 
+    // Setup drop zone handlers on container
+    const container = containerRef.current
+
+    const handleDragOver = (e) => {
+      e.preventDefault()
+      e.dataTransfer.dropEffect = 'copy'
+    }
+
+    const handleDrop = (e) => {
+      e.preventDefault()
+
+      if (onGraphDrop && sigmaRef.current) {
+        try {
+          const nodeData = JSON.parse(e.dataTransfer.getData('application/json'))
+          // Convert viewport coordinates to graph coordinates
+          const coords = sigmaRef.current.viewportToGraph({ x: e.offsetX, y: e.offsetY })
+          onGraphDrop(coords, nodeData)
+        } catch (err) {
+          console.error('Error handling drop:', err)
+        }
+      }
+    }
+
+    container.addEventListener('dragover', handleDragOver)
+    container.addEventListener('drop', handleDrop)
+
     // Create graphology graph
     const graph = new Graph()
 
@@ -136,7 +267,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
             graph.addNode(node.id, {
               label: node.title,
               size: 8,
-              color: showRecencyHeat ? getRecencyHeatColor(node.metrics?.recency) : getNodeColor(node.type),
+              color: showRecencyHeat ? getHeatColor(node.metrics, heatMetric) : getNodeColor(node.type, theme),
               x: Math.random() * 100,
               y: Math.random() * 100,
               nodeData: node,
@@ -191,24 +322,36 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
     } else {
       // Full detail mode: show all nodes
       filteredData.nodes.forEach(node => {
+        const isSelected = selectedNodes.some(n => n.id === node.id)
+
+        // Use saved position if available, otherwise use random position for force layout
+        const hasPosition = node.position && typeof node.position.x === 'number' && typeof node.position.y === 'number'
+        const x = hasPosition ? node.position.x : Math.random() * 100
+        const y = hasPosition ? node.position.y : Math.random() * 100
+
         graph.addNode(node.id, {
           label: node.title,
-          size: 10,
-          color: showRecencyHeat ? getRecencyHeatColor(node.metrics?.recency) : getNodeColor(node.type),
-          x: Math.random() * 100,
-          y: Math.random() * 100,
-          nodeData: node
+          size: isSelected ? 14 : 10,
+          color: showRecencyHeat ? getHeatColor(node.metrics, heatMetric) : getNodeColor(node.type, theme),
+          x: x,
+          y: y,
+          nodeData: node,
+          borderColor: isSelected ? '#FF5722' : undefined,
+          borderSize: isSelected ? 3 : 0,
+          highlighted: isSelected
         })
       })
 
-      // Add all edges
+      // Add all edges with relationship type styling
       filteredData.edges.forEach(edge => {
         if (graph.hasNode(edge.from) && graph.hasNode(edge.to)) {
           try {
+            const edgeColor = getEdgeColor(edge.type)
             graph.addEdge(edge.from, edge.to, {
               size: 2,
-              color: '#ccc',
-              type: 'arrow'
+              color: edgeColor,
+              type: 'arrow',
+              label: edge.type || 'related_to'
             })
           } catch (err) {
             // Edge might already exist
@@ -227,12 +370,21 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
         scalingRatio: 10
       }
     })
-    layout.start()
+
+    // Only run initial layout if not locked, otherwise just position nodes
+    if (!layoutLocked) {
+      layout.start()
+    }
 
     // Wait for layout to settle before rendering
     timeoutId = setTimeout(() => {
-      layout.stop()
-      layout.kill()
+      if (!layoutLocked) {
+        layout.stop()
+        layout.kill()
+      } else {
+        // In locked mode, keep layout reference for potential unlock
+        layoutRef.current = layout
+      }
 
       // Create sigma instance
       const sigma = new Sigma(graph, containerRef.current, {
@@ -256,9 +408,30 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
         }
       })
 
-      // Handle node clicks
-      sigma.on('clickNode', ({ node }) => {
+      // Handle node clicks and taps
+      sigma.on('clickNode', ({ node, event }) => {
+        // In click-to-place mode, ignore node clicks
+        if (clickToPlaceActive) {
+          return
+        }
+
         const attrs = graph.getNodeAttributes(node)
+
+        // Handle path finder mode
+        if (pathFinderMode.active && !attrs.isCluster) {
+          if (!pathFinderMode.startNode) {
+            // Select start node
+            setPathFinderMode(prev => ({ ...prev, startNode: node }))
+            setToast({ message: `Start node selected: ${attrs.label}. Now select end node.`, type: 'success' })
+          } else if (!pathFinderMode.endNode && node !== pathFinderMode.startNode) {
+            // Select end node (different from start)
+            setPathFinderMode(prev => ({ ...prev, endNode: node }))
+            setToast({ message: `End node selected: ${attrs.label}. Path finding ready!`, type: 'success' })
+          } else if (node === pathFinderMode.startNode) {
+            setToast({ message: 'Cannot select same node as start and end', type: 'warning' })
+          }
+          return
+        }
 
         if (attrs.isCluster) {
           // Toggle cluster expansion
@@ -272,11 +445,23 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
             return newSet
           })
         } else if (attrs.nodeData) {
-          // Regular node click
+          // Check if Shift key is held for multi-select (desktop) or touch event (mobile tap-to-select)
+          const isMultiSelect = event.original.shiftKey
+
+          // Regular node click/tap
           setSelectedNodeId(node)
           if (onNodeSelect) {
-            onNodeSelect(attrs.nodeData)
+            onNodeSelect(attrs.nodeData, isMultiSelect)
           }
+        }
+      })
+
+      // Handle stage (background) clicks for click-to-place mode
+      sigma.on('clickStage', ({ event }) => {
+        if (clickToPlaceActive && onGraphClick) {
+          // Get the graph coordinates of the click
+          const coords = sigma.viewportToGraph({ x: event.x, y: event.y })
+          onGraphClick({ x: coords.x, y: coords.y })
         }
       })
 
@@ -299,7 +484,325 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
         sigma.refresh()
       })
 
+      // Handle node dragging (only in locked mode) or link creation (Shift+drag)
+      sigma.on('downNode', (e) => {
+        const nodeAttrs = graph.getNodeAttributes(e.node)
+
+        // Start long-press timer for context menu (500ms threshold)
+        longPressTimerRef.current = setTimeout(() => {
+          // Get viewport coordinates for menu positioning
+          const viewportPos = sigma.graphToViewport({ x: nodeAttrs.x, y: nodeAttrs.y })
+
+          setContextMenu({
+            nodeId: e.node,
+            nodeData: nodeAttrs.nodeData,
+            x: viewportPos.x + 20, // Offset slightly to avoid finger/cursor
+            y: viewportPos.y + 20
+          })
+
+          // Prevent drag after long-press
+          dragStateRef.current.isDragging = false
+          dragStateRef.current.draggedNode = null
+        }, 500)
+
+        // Check if Shift key is held - enter link mode
+        if (e.event.original.shiftKey) {
+          clearTimeout(longPressTimerRef.current)
+          setLinkMode({ active: true, sourceNode: e.node, previewLine: null })
+          e.preventSigmaDefault()
+          e.event.original.preventDefault()
+          return
+        }
+
+        // Regular drag in locked mode
+        if (layoutLocked) {
+          dragStateRef.current.isDragging = true
+          dragStateRef.current.draggedNode = e.node
+        }
+      })
+
+      // Handle mouse/touch move during drag or link preview
+      const handleMouseMove = (e) => {
+        // Cancel long-press if mouse/touch moves (indicates drag intent, not long-press)
+        if (longPressTimerRef.current) {
+          clearTimeout(longPressTimerRef.current)
+          longPressTimerRef.current = null
+        }
+        // Handle link mode preview line
+        if (linkMode.active && linkMode.sourceNode) {
+          const pos = sigma.viewportToGraph(e)
+          const sourceAttrs = graph.getNodeAttributes(linkMode.sourceNode)
+
+          // Detect if cursor is over a node (potential link target)
+          let targetNode = null
+          graph.forEachNode((nodeId, attrs) => {
+            if (nodeId === linkMode.sourceNode) return // Skip source node
+            const distance = Math.sqrt(Math.pow(pos.x - attrs.x, 2) + Math.pow(pos.y - attrs.y, 2))
+            if (distance < attrs.size * 2) { // Within 2x node size radius
+              targetNode = nodeId
+            }
+          })
+
+          // Clear previous target highlight
+          if (linkMode.hoveredTarget && linkMode.hoveredTarget !== targetNode) {
+            graph.setNodeAttribute(linkMode.hoveredTarget, 'borderColor', undefined)
+            graph.setNodeAttribute(linkMode.hoveredTarget, 'borderSize', 0)
+          }
+
+          // Highlight new target
+          if (targetNode) {
+            graph.setNodeAttribute(targetNode, 'borderColor', '#2196F3')
+            graph.setNodeAttribute(targetNode, 'borderSize', 4)
+            sigma.refresh()
+          }
+
+          setLinkMode(prev => ({
+            ...prev,
+            previewLine: {
+              x1: sourceAttrs.x,
+              y1: sourceAttrs.y,
+              x2: pos.x,
+              y2: pos.y
+            },
+            hoveredTarget: targetNode
+          }))
+
+          e.preventSigmaDefault()
+          e.original.preventDefault()
+          return
+        }
+
+        // Handle regular node dragging in locked mode
+        if (layoutLocked && dragStateRef.current.isDragging && dragStateRef.current.draggedNode) {
+          // Get mouse position in graph coordinates
+          const pos = sigma.viewportToGraph(e)
+
+          // Update node position
+          graph.setNodeAttribute(dragStateRef.current.draggedNode, 'x', pos.x)
+          graph.setNodeAttribute(dragStateRef.current.draggedNode, 'y', pos.y)
+
+          // Refresh to show new position
+          sigma.refresh()
+
+          // Prevent default camera drag
+          e.preventSigmaDefault()
+          e.original.preventDefault()
+          e.original.stopPropagation()
+        }
+      }
+
+      // Handle touch move for mobile gestures
+      const handleTouchMove = (e) => {
+        const touches = e.touches
+
+        // Pinch-to-zoom: two-finger pinch
+        if (touches.length === 2) {
+          const touch1 = touches[0]
+          const touch2 = touches[1]
+
+          // Calculate distance between two touch points
+          const currentDistance = Math.hypot(
+            touch2.clientX - touch1.clientX,
+            touch2.clientY - touch1.clientY
+          )
+
+          // Store initial distance on first detection
+          if (!sigma._touchPinchDistance) {
+            sigma._touchPinchDistance = currentDistance
+            sigma._touchPinchRatio = sigma.getCamera().ratio
+          } else {
+            // Calculate zoom factor based on distance change
+            const distanceChange = currentDistance / sigma._touchPinchDistance
+            const newRatio = sigma._touchPinchRatio / distanceChange
+
+            // Apply zoom with bounds (0.1 to 10)
+            const boundedRatio = Math.max(0.1, Math.min(10, newRatio))
+            sigma.getCamera().setState({ ratio: boundedRatio })
+          }
+
+          e.preventDefault()
+          return
+        }
+
+        // Single-finger drag: pan canvas (only if not in locked mode with dragged node)
+        if (touches.length === 1 && !(layoutLocked && dragStateRef.current.isDragging)) {
+          const touch = touches[0]
+
+          // Store initial touch position
+          if (!sigma._touchStartPos) {
+            const camera = sigma.getCamera()
+            sigma._touchStartPos = { x: touch.clientX, y: touch.clientY }
+            sigma._touchStartCamera = { x: camera.x, y: camera.y }
+          } else {
+            // Calculate movement delta in viewport coordinates
+            const deltaX = touch.clientX - sigma._touchStartPos.x
+            const deltaY = touch.clientY - sigma._touchStartPos.y
+
+            // Convert viewport delta to graph coordinates (considering current zoom)
+            const camera = sigma.getCamera()
+            const graphDeltaX = -deltaX * camera.ratio
+            const graphDeltaY = -deltaY * camera.ratio
+
+            // Update camera position
+            camera.setState({
+              x: sigma._touchStartCamera.x + graphDeltaX,
+              y: sigma._touchStartCamera.y + graphDeltaY
+            })
+          }
+
+          e.preventDefault()
+        }
+      }
+
+      // Handle touch end to cleanup touch state
+      const handleTouchEnd = (e) => {
+        // Reset pinch distance when fingers are lifted
+        if (e.touches.length < 2) {
+          sigma._touchPinchDistance = null
+          sigma._touchPinchRatio = null
+        }
+
+        // Reset pan state when all fingers are lifted
+        if (e.touches.length === 0) {
+          sigma._touchStartPos = null
+          sigma._touchStartCamera = null
+        }
+      }
+
+      sigma.getMouseCaptor().on('mousemove', handleMouseMove)
+
+      // Add touch event listeners to container
+      const containerElement = containerRef.current
+      containerElement.addEventListener('touchmove', handleTouchMove, { passive: false })
+      containerElement.addEventListener('touchend', handleTouchEnd, { passive: false })
+      containerElement.addEventListener('touchcancel', handleTouchEnd, { passive: false })
+
+      // Handle mouse up to end drag/link mode and persist position
+      sigma.getMouseCaptor().on('mouseup', async () => {
+        // Clear long-press timer on mouse up
+        if (longPressTimerRef.current) {
+          clearTimeout(longPressTimerRef.current)
+          longPressTimerRef.current = null
+        }
+        // Cancel link mode on mouse up (Shift released or finished)
+        if (linkMode.active) {
+          // If dropped on a target, create the link
+          if (linkMode.hoveredTarget) {
+            const sourceId = linkMode.sourceNode
+            const targetId = linkMode.hoveredTarget
+
+            // Clear target highlight
+            graph.setNodeAttribute(targetId, 'borderColor', undefined)
+            graph.setNodeAttribute(targetId, 'borderSize', 0)
+            sigma.refresh()
+
+            // Create link by updating source node
+            try {
+              // Get current node data
+              const nodeResponse = await fetch(`${API_BASE_URL}/node/${sourceId}`)
+              if (!nodeResponse.ok) throw new Error('Failed to fetch source node')
+              const nodeData = await nodeResponse.json()
+
+              // Add new link to existing links
+              const currentLinks = nodeData.node.links || []
+              const newLink = { to: targetId, type: 'related_to' }
+
+              // Check for duplicates
+              const isDuplicate = currentLinks.some(link => link.to === targetId)
+              if (isDuplicate) {
+                setToast({ message: `Link already exists: ${sourceId} → ${targetId}`, type: 'warning' })
+                setLinkMode({ active: false, sourceNode: null, previewLine: null, hoveredTarget: null })
+                return
+              }
+
+              // Check for self-link
+              if (sourceId === targetId) {
+                setToast({ message: 'Cannot create self-link', type: 'error' })
+                setLinkMode({ active: false, sourceNode: null, previewLine: null, hoveredTarget: null })
+                return
+              }
+
+              const updatedLinks = [...currentLinks, newLink]
+
+              // Update node with new links
+              const updateResponse = await fetch(`${API_BASE_URL}/node/${sourceId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ links: updatedLinks })
+              })
+
+              if (!updateResponse.ok) throw new Error('Failed to update node links')
+
+              // Show success toast
+              const sourceLabel = graph.getNodeAttribute(sourceId, 'label')
+              const targetLabel = graph.getNodeAttribute(targetId, 'label')
+              setToast({ message: `Link created: ${sourceLabel} → ${targetLabel}`, type: 'success' })
+
+              // Refresh graph to show new edge
+              fetchGraphData()
+
+            } catch (error) {
+              setToast({ message: `Failed to create link: ${error.message}`, type: 'error' })
+            }
+          }
+
+          setLinkMode({ active: false, sourceNode: null, previewLine: null, hoveredTarget: null })
+          return
+        }
+
+        if (layoutLocked && dragStateRef.current.isDragging && dragStateRef.current.draggedNode) {
+          const nodeId = dragStateRef.current.draggedNode
+          const nodeAttrs = graph.getNodeAttributes(nodeId)
+          const x = nodeAttrs.x
+          const y = nodeAttrs.y
+
+          // Persist position to backend
+          try {
+            const response = await fetch(`${API_BASE_URL}/node/${nodeId}/position`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ x, y })
+            })
+            if (!response.ok) {
+              console.error('Failed to persist node position:', await response.text())
+            }
+          } catch (error) {
+            console.error('Error persisting node position:', error)
+          }
+
+          dragStateRef.current.isDragging = false
+          dragStateRef.current.draggedNode = null
+        }
+      })
+
+      // Handle mouse leave to cancel drag or link mode
+      containerRef.current.addEventListener('mouseleave', () => {
+        // Clear long-press timer
+        if (longPressTimerRef.current) {
+          clearTimeout(longPressTimerRef.current)
+          longPressTimerRef.current = null
+        }
+        if (linkMode.active) {
+          // Clear target highlight before exiting link mode
+          if (linkMode.hoveredTarget) {
+            graph.setNodeAttribute(linkMode.hoveredTarget, 'borderColor', undefined)
+            graph.setNodeAttribute(linkMode.hoveredTarget, 'borderSize', 0)
+            sigma.refresh()
+          }
+          setLinkMode({ active: false, sourceNode: null, previewLine: null, hoveredTarget: null })
+        }
+        if (dragStateRef.current.isDragging) {
+          dragStateRef.current.isDragging = false
+          dragStateRef.current.draggedNode = null
+        }
+      })
+
       sigmaRef.current = sigma
+
+      // Expose sigma instance to parent component
+      if (onSigmaReady) {
+        onSigmaReady(sigma)
+      }
     }, 500)
 
     // Cleanup
@@ -307,6 +810,11 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
       // Clear pending timeout to prevent stale Sigma creation
       if (timeoutId) {
         clearTimeout(timeoutId)
+      }
+      // Clear long-press timer
+      if (longPressTimerRef.current) {
+        clearTimeout(longPressTimerRef.current)
+        longPressTimerRef.current = null
       }
       if (sigmaRef.current) {
         sigmaRef.current.kill()
@@ -316,10 +824,22 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
         layout.stop()
         layout.kill()
       }
+      if (layoutRef.current) {
+        layoutRef.current.stop()
+        layoutRef.current.kill()
+        layoutRef.current = null
+      }
+      // Remove drop zone listeners
+      container.removeEventListener('dragover', handleDragOver)
+      container.removeEventListener('drop', handleDrop)
+      // Remove touch listeners
+      containerElement.removeEventListener('touchmove', handleTouchMove)
+      containerElement.removeEventListener('touchend', handleTouchEnd)
+      containerElement.removeEventListener('touchcancel', handleTouchEnd)
     }
-  }, [filteredData, clusterData, onNodeSelect, expandedClusters, showClusters])
+  }, [filteredData, clusterData, onNodeSelect, expandedClusters, showClusters, selectedNodes, onGraphClick, clickToPlaceActive, onGraphDrop, layoutLocked])
 
-  // Update node colors when showRecencyHeat changes
+  // Update node colors when showRecencyHeat or heatMetric changes
   useEffect(() => {
     if (!sigmaRef.current || !filteredData) return
 
@@ -329,12 +849,12 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
         graph.setNodeAttribute(
           node.id,
           'color',
-          showRecencyHeat ? getRecencyHeatColor(node.metrics?.recency) : getNodeColor(node.type)
+          showRecencyHeat ? getHeatColor(node.metrics, heatMetric) : getNodeColor(node.type, theme)
         )
       }
     })
     sigmaRef.current.refresh()
-  }, [showRecencyHeat, filteredData])
+  }, [showRecencyHeat, heatMetric, filteredData, theme])
 
   if (loading) {
     return <div style={{ padding: '2rem' }}>Loading graph...</div>
@@ -347,6 +867,84 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
   return (
     <div style={{ position: 'relative', width: '100%', height: '600px' }}>
       <div ref={containerRef} style={{ width: '100%', height: '100%', background: '#fff' }} />
+      {linkMode.active && linkMode.previewLine && sigmaRef.current && (
+        <svg
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            pointerEvents: 'none',
+            zIndex: 1000
+          }}
+        >
+          <line
+            x1={sigmaRef.current.graphToViewport({ x: linkMode.previewLine.x1, y: linkMode.previewLine.y1 }).x}
+            y1={sigmaRef.current.graphToViewport({ x: linkMode.previewLine.x1, y: linkMode.previewLine.y1 }).y}
+            x2={sigmaRef.current.graphToViewport({ x: linkMode.previewLine.x2, y: linkMode.previewLine.y2 }).x}
+            y2={sigmaRef.current.graphToViewport({ x: linkMode.previewLine.x2, y: linkMode.previewLine.y2 }).y}
+            stroke="#2196F3"
+            strokeWidth="2"
+            strokeDasharray="5,5"
+            markerEnd="url(#arrowhead)"
+          />
+          <defs>
+            <marker
+              id="arrowhead"
+              markerWidth="10"
+              markerHeight="10"
+              refX="9"
+              refY="3"
+              orient="auto"
+            >
+              <polygon points="0 0, 10 3, 0 6" fill="#2196F3" />
+            </marker>
+          </defs>
+        </svg>
+      )}
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+      {contextMenu && (
+        <ContextMenu
+          x={contextMenu.x}
+          y={contextMenu.y}
+          nodeId={contextMenu.nodeId}
+          nodeData={contextMenu.nodeData}
+          onClose={() => setContextMenu(null)}
+          onEdit={(nodeData) => {
+            if (onNodeSelect) {
+              onNodeSelect(nodeData, false)
+            }
+          }}
+          onDelete={async (nodeId, nodeData) => {
+            try {
+              const response = await fetch(`${API_BASE_URL}/node/${nodeId}`, {
+                method: 'DELETE'
+              })
+              if (!response.ok) throw new Error('Failed to delete node')
+              setToast({ message: `Deleted: ${nodeData.title}`, type: 'success' })
+              // Refresh graph to remove deleted node
+              const refreshResponse = await fetch(`${API_BASE_URL}/graph`)
+              const data = await refreshResponse.json()
+              setGraphData(data)
+              setFilteredData(data)
+            } catch (error) {
+              setToast({ message: `Delete failed: ${error.message}`, type: 'error' })
+            }
+          }}
+          onCreateLink={(nodeId) => {
+            // Enter link mode with this node as source
+            setLinkMode({ active: true, sourceNode: nodeId, previewLine: null })
+            setToast({ message: 'Link mode active - click target node', type: 'success' })
+          }}
+          onViewDetails={(nodeData) => {
+            if (onNodeSelect) {
+              onNodeSelect(nodeData, false)
+            }
+          }}
+        />
+      )}
+      <HeatLegend metric={heatMetric} visible={showRecencyHeat} />
       {filteredData && (
         <div style={{
           position: 'absolute',
@@ -457,12 +1055,82 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
         >
           🎯
         </button>
+        <button
+          onClick={() => {
+            if (pathFinderMode.active) {
+              // Deactivate path finder mode
+              setPathFinderMode({ active: false, startNode: null, endNode: null })
+              setToast({ message: 'Path finder mode deactivated', type: 'success' })
+            } else {
+              // Activate path finder mode
+              setPathFinderMode({ active: true, startNode: null, endNode: null })
+              setToast({ message: 'Path finder mode activated. Select start node.', type: 'success' })
+            }
+          }}
+          style={{
+            background: pathFinderMode.active ? '#9C27B0' : '#673AB7',
+            color: 'white',
+            border: 'none',
+            padding: '8px 12px',
+            borderRadius: '4px',
+            fontSize: '16px',
+            cursor: 'pointer',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+          }}
+          onMouseOver={(e) => e.target.style.background = pathFinderMode.active ? '#7B1FA2' : '#512DA8'}
+          onMouseOut={(e) => e.target.style.background = pathFinderMode.active ? '#9C27B0' : '#673AB7'}
+          title="Find Path Between Nodes"
+        >
+          🔍
+        </button>
+      </div>
+      <div style={{
+        position: 'absolute',
+        top: '10px',
+        right: '10px'
+      }}>
+        <button
+          onClick={() => setLayoutLocked(!layoutLocked)}
+          style={{
+            background: layoutLocked ? '#FF9800' : '#4CAF50',
+            color: 'white',
+            border: 'none',
+            padding: '8px 16px',
+            borderRadius: '4px',
+            fontSize: '14px',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+          onMouseOver={(e) => e.target.style.opacity = '0.9'}
+          onMouseOut={(e) => e.target.style.opacity = '1'}
+          title={layoutLocked ? 'Layout Locked (Manual Mode) - Click to enable auto-layout' : 'Auto-Layout Active - Click to lock for manual positioning'}
+        >
+          {layoutLocked ? '🔒 Locked' : '🔓 Auto'}
+        </button>
       </div>
     </div>
   )
 }
 
-function getNodeColor(type) {
+function getNodeColor(type, theme) {
+  // Use theme colors if available (supports dark mode desaturation)
+  if (theme) {
+    const themeColors = {
+      'task': theme.nodeTaskContract || '#4CAF50',
+      'concept': theme.nodeConcept || '#2196F3',
+      'decision': theme.nodeDecision || '#FF9800',
+      'system': theme.nodeSystem || '#9C27B0',
+      'artifact': theme.nodeArtifact || '#00BCD4',
+      'inbox': theme.nodeInbox || '#999'
+    }
+    return themeColors[type] || theme.nodeDefault || '#999'
+  }
+
+  // Fallback to hardcoded colors if theme not provided
   const colors = {
     'task': '#4CAF50',
     'concept': '#2196F3',
@@ -474,33 +1142,53 @@ function getNodeColor(type) {
   return colors[type] || '#999'
 }
 
-function getRecencyHeatColor(recency) {
-  // recency ranges from 0.0 (old) to 1.0 (recent)
-  if (recency === null || recency === undefined) {
-    return '#ccc' // Gray for nodes without recency data
+function getHeatColor(metrics, heatMetric) {
+  // Select the appropriate metric value
+  const metricValue = metrics?.[heatMetric]
+
+  if (metricValue === null || metricValue === undefined) {
+    return '#ccc' // Gray for nodes without metric data
   }
 
-  // Color gradient: red (old) → yellow (medium) → green (recent)
+  // All metrics range from 0.0 (low) to 1.0 (high)
+  // Color gradient: red (low) → yellow (medium) → green (high)
   // 0.0-0.3: red shades
   // 0.3-0.7: yellow/orange shades
   // 0.7-1.0: green shades
 
-  if (recency < 0.3) {
+  if (metricValue < 0.3) {
     // Red gradient: darker red → lighter red
-    const intensity = Math.floor(100 + (recency / 0.3) * 100)
+    const intensity = Math.floor(100 + (metricValue / 0.3) * 100)
     return `rgb(${intensity + 100}, ${intensity}, ${intensity})`
-  } else if (recency < 0.7) {
+  } else if (metricValue < 0.7) {
     // Yellow/orange gradient
-    const factor = (recency - 0.3) / 0.4
+    const factor = (metricValue - 0.3) / 0.4
     const r = 255
     const g = Math.floor(165 + factor * 90)
     return `rgb(${r}, ${g}, 0)`
   } else {
     // Green gradient: lighter green → bright green
-    const factor = (recency - 0.7) / 0.3
+    const factor = (metricValue - 0.7) / 0.3
     const g = Math.floor(180 + factor * 75)
     return `rgb(76, ${g}, 80)`
   }
+}
+
+function getRecencyHeatColor(recency) {
+  // Legacy function - redirects to getHeatColor
+  return getHeatColor({ recency }, 'recency')
+}
+
+function getEdgeColor(relationType) {
+  const colors = {
+    'related_to': '#999',
+    'depends_on': '#e74c3c',
+    'blocks': '#e67e22',
+    'implements': '#3498db',
+    'extends': '#9b59b6',
+    'references': '#1abc9c'
+  }
+  return colors[relationType] || '#999'
 }
 
 export default GraphView

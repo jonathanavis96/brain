@@ -677,7 +677,7 @@ def get_graph_snapshot(
     nodes_sql = f"""
         SELECT
             id, type, title, filepath, created_at, modified_at,
-            tags, status, priority, context, acceptance_criteria
+            tags, status, priority, context, acceptance_criteria, frontmatter_json
         FROM nodes
         {where_sql}
         ORDER BY type ASC, LOWER(title) ASC, id ASC
@@ -727,25 +727,40 @@ def get_graph_snapshot(
     # Build final nodes list with all metrics
     for row, recency_heat in node_rows_list:
         node_id = row["id"]
-        nodes.append(
-            {
-                "id": node_id,
-                "type": row["type"],
-                "title": row["title"],
-                "status": row["status"],
-                "tags": json.loads(row["tags"]) if row["tags"] else [],
-                "created_at": row["created_at"],
-                "updated_at": row[
-                    "modified_at"
-                ],  # Spec uses updated_at, DB has modified_at
-                "source_path": row["filepath"],
-                "metrics": {
-                    "density": density_metrics.get(node_id),
-                    "recency": recency_heat,
-                    "task": task_heat_metrics.get(node_id),
-                },
-            }
-        )
+
+        # Extract position from frontmatter_json if available
+        position = None
+        if row["frontmatter_json"]:
+            try:
+                frontmatter_data = json.loads(row["frontmatter_json"])
+                if "position" in frontmatter_data:
+                    position = frontmatter_data["position"]
+            except (json.JSONDecodeError, KeyError):
+                pass
+
+        node_dict = {
+            "id": node_id,
+            "type": row["type"],
+            "title": row["title"],
+            "status": row["status"],
+            "tags": json.loads(row["tags"]) if row["tags"] else [],
+            "created_at": row["created_at"],
+            "updated_at": row[
+                "modified_at"
+            ],  # Spec uses updated_at, DB has modified_at
+            "source_path": row["filepath"],
+            "metrics": {
+                "density": density_metrics.get(node_id),
+                "recency": recency_heat,
+                "task": task_heat_metrics.get(node_id),
+            },
+        }
+
+        # Add position if available
+        if position:
+            node_dict["position"] = position
+
+        nodes.append(node_dict)
 
     # Fetch edges for the filtered nodes
     # Edges are deterministic by: from (source_id), type (relationship_type), to (target_id)
