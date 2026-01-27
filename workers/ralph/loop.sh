@@ -1037,38 +1037,72 @@ emit_marker() {
 }
 
 # Generate iteration summary for Discord/observability (task 34.1.2)
-# Args: $1 = iteration_number, $2 = mode
+# Extracts Ralph's structured summary from iteration logs
+# Args: $1 = iteration_number, $2 = mode, $3 = logfile
 generate_iteration_summary() {
   local iter_num="$1"
   local mode="$2"
-  local timestamp git_branch git_stats last_commit verifier_summary time_saved_sec
+  local logfile="$3"
+  local timestamp run_id
 
-  timestamp="$(date -Iseconds)"
-  git_branch="$(git branch --show-current 2>/dev/null || echo "unknown")"
-  git_stats="$(git diff --stat HEAD~1 2>/dev/null | tail -1 || echo "No changes")"
-  last_commit="$(git log -1 --oneline 2>/dev/null || echo "No commits")"
-  verifier_summary="$(grep "^SUMMARY" .verify/latest.txt 2>/dev/null || echo "Not run")"
-  time_saved_sec=$((TIME_SAVED_MS / 1000))
+  timestamp="$(date '+%Y-%m-%d %H:%M:%S')"
+  run_id="${ROLLFLOW_RUN_ID:-unknown}"
 
-  # Output structured summary (keep under 1500 chars for Discord safety)
-  cat <<EOF
-\`\`\`
-**Ralph Iteration ${iter_num} (${mode})**
-Timestamp: ${timestamp}
-Run ID: ${ROLLFLOW_RUN_ID}
-Branch: ${git_branch}
+  # Check if logfile exists
+  if [[ ! -f "$logfile" ]]; then
+    cat <<EOF
+**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}
 
-Git Status:
-${git_stats}
-Commit: ${last_commit}
+No log file found.
 
-Verifier: ${verifier_summary}
-
-Cache Stats:
-- Hits: ${CACHE_HITS} | Misses: ${CACHE_MISSES}
-- Time saved: ${time_saved_sec}s
-\`\`\`
+Run ID: ${run_id}
+Log: ${logfile}
 EOF
+    return
+  fi
+
+  # Find all "Summary" headers in the log (strip ANSI codes first, then match)
+  # Pattern matches "Summary:" with or without colon, with optional whitespace and ANSI codes
+  local summary_lines
+  summary_lines=$(grep -n "Summary:" "$logfile" 2>/dev/null | grep -v "iteration summary" || true)
+
+  if [[ -z "$summary_lines" ]]; then
+    # No summary found - output fallback
+    cat <<EOF
+**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}
+
+No structured summary found in logs.
+
+Run ID: ${run_id}
+Log: ${logfile}
+EOF
+    return
+  fi
+
+  # Get the last summary line number
+  local last_summary_line
+  last_summary_line=$(echo "$summary_lines" | tail -1 | cut -d: -f1)
+
+  # Count number of summaries (warn if multiple)
+  local summary_count
+  summary_count=$(echo "$summary_lines" | wc -l)
+
+  # Extract from last "Summary" to :::BUILD_READY::: or :::PLAN_READY::: or EOF
+  local summary_block
+  summary_block=$(sed -n "${last_summary_line},\$p" "$logfile" | sed '/:::\(BUILD\|PLAN\)_READY:::/q')
+
+  # Output structured summary with header
+  cat <<EOF
+**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}
+EOF
+
+  if [[ $summary_count -gt 1 ]]; then
+    echo ""
+    echo "⚠️ Multiple summaries detected ($summary_count), using last one"
+  fi
+
+  echo ""
+  echo "$summary_block"
 }
 
 # Emit structured TOOL_START marker
@@ -1785,6 +1819,16 @@ echo "========================================"
 ensure_worktree_branch "$TARGET_BRANCH"
 echo ""
 
+# Discord notification: Loop start
+if [[ -x "$ROOT/bin/discord-post" ]]; then
+  pending_count=$(grep -c '^\- \[ \]' "$WORKERS/IMPLEMENTATION_PLAN.md" 2>/dev/null || echo "0")
+  "$ROOT/bin/discord-post" "**Ralph Loop Starting** 🚀
+Iterations: ${MAX_ITERATIONS}
+Mode: PLAN → BUILD cycling
+Branch: $(git branch --show-current)
+Pending tasks: ${pending_count}" >/dev/null 2>&1 &
+fi
+
 # Launch monitors before starting iterations (unless --no-monitors flag is set)
 if [[ "$NO_MONITORS" == "false" ]]; then
   launch_monitors
@@ -2302,11 +2346,23 @@ else
     emit_event --event iteration_end --iter "$i" --status ok
 
     # Generate iteration summary for Discord/observability (task 34.1.2)
-    generate_iteration_summary "$i" "$current_phase"
+    generate_iteration_summary "$i" "$current_phase" "$CURRENT_LOG_FILE"
 
     # Emit ITER_END marker for rollflow_analyze (task X.1.1)
     iter_end_ts="$(($(date +%s%N) / 1000000))"
     emit_marker ":::ITER_END::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_end_ts"
+
+    # Post iteration summary to Discord (if configured) - task 34.1.3
+    if [[ -n "${DISCORD_WEBHOOK_URL:-}" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+      echo ""
+      echo "Posting iteration summary to Discord..."
+      if generate_iteration_summary "$i" "$current_phase" "$CURRENT_LOG_FILE" | "$ROOT/bin/discord-post" 2>&1 | tee -a "$CURRENT_LOG_FILE"; then
+        echo "✓ Discord update posted"
+      else
+        echo "⚠ Discord post failed (non-blocking)"
+      fi
+      echo ""
+    fi
   done
 fi
 
@@ -2326,5 +2382,43 @@ if [[ "$CACHE_SKIP" == "true" ]]; then
     echo "Time saved:   ${TIME_SAVED_SEC}s (${TIME_SAVED_MS}ms)"
   fi
   echo "========================================"
+  echo ""
+fi
+
+# Post loop completion summary to Discord (task 34.2.2)
+if [[ -n "${DISCORD_WEBHOOK_URL:-}" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+  echo ""
+  echo "Posting loop completion summary to Discord..."
+  
+  # Calculate cache time saved
+  time_saved_display=""
+  if [[ "$CACHE_SKIP" == "true" ]] && [[ $CACHE_HITS -gt 0 ]]; then
+    TIME_SAVED_SEC=$((TIME_SAVED_MS / 1000))
+    time_saved_display="Time saved: ${TIME_SAVED_SEC}s"
+  fi
+  
+  # Get final verifier status
+  verifier_status="Unknown"
+  if [[ -f ".verify/latest.txt" ]]; then
+    verifier_status=$(grep "^SUMMARY" .verify/latest.txt | head -1 || echo "Unknown")
+  fi
+  
+  # Build completion message
+  cat <<EOF | "$ROOT/bin/discord-post" 2>&1 | tee -a "${LOGDIR}/loop_completion.log"
+**Ralph Loop Complete** ✅
+
+Total iterations: ${ITERATIONS}
+Cache hits: ${CACHE_HITS} | Misses: ${CACHE_MISSES}
+${time_saved_display}
+Final status: ${verifier_status}
+
+Run ID: ${ROLLFLOW_RUN_ID:-unknown}
+EOF
+  
+  if [[ ${PIPESTATUS[1]} -eq 0 ]]; then
+    echo "✓ Discord completion notification posted"
+  else
+    echo "⚠ Discord post failed (non-blocking)"
+  fi
   echo ""
 fi
