@@ -52,10 +52,10 @@ MVP is considered "done" when all items below are true:
     - [ ] Frontend dev server starts and serves on port 5173 (or documented override).
     - [ ] Backend dev server starts and serves on port 8000 (or documented override).
     - [ ] `GET /health` returns 200 with expected JSON shape.
-  - **Verification:**
-    - `cd app/brain-map/backend && <run backend dev command>`
+  - **Verification (once scaffolding exists):**
+    - Backend: `cd app/brain-map/backend && python3 -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000`
     - `curl -s http://localhost:8000/health | jq .`
-    - `cd app/brain-map/frontend && <run frontend dev command>`
+    - Frontend: `cd app/brain-map/frontend && npm install && npm run dev -- --host 0.0.0.0 --port 5173`
   - **Risk notes:** repo toolchain differences (uv/poetry/pip). Keep minimal.
   - **If Blocked:** If Python packaging is unclear, start with `requirements.txt` + `python -m venv` and document.
 
@@ -241,8 +241,8 @@ MVP is considered "done" when all items below are true:
   - **AC:**
     - [ ] Graph renders with at least dozens of nodes without freezing.
     - [ ] Clicking a node selects it and triggers node detail fetch.
-  - **Verification:**
-    - `cd app/brain-map/frontend && <run frontend dev command>`
+  - **Verification (once scaffolding exists):**
+    - `cd app/brain-map/frontend && npm install && npm run dev -- --host 0.0.0.0 --port 5173`
     - Manual: load UI and confirm graph renders.
   - **Risk notes:** layout choices; start with basic layout then improve.
   - **If Blocked:** Render nodes in a simple grid layout initially to validate data path.
