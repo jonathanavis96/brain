@@ -1036,6 +1036,41 @@ emit_marker() {
   fi
 }
 
+# Generate iteration summary for Discord/observability (task 34.1.2)
+# Args: $1 = iteration_number, $2 = mode
+generate_iteration_summary() {
+  local iter_num="$1"
+  local mode="$2"
+  local timestamp git_branch git_stats last_commit verifier_summary time_saved_sec
+
+  timestamp="$(date -Iseconds)"
+  git_branch="$(git branch --show-current 2>/dev/null || echo "unknown")"
+  git_stats="$(git diff --stat HEAD~1 2>/dev/null | tail -1 || echo "No changes")"
+  last_commit="$(git log -1 --oneline 2>/dev/null || echo "No commits")"
+  verifier_summary="$(grep "^SUMMARY" .verify/latest.txt 2>/dev/null || echo "Not run")"
+  time_saved_sec=$((TIME_SAVED_MS / 1000))
+
+  # Output structured summary (keep under 1500 chars for Discord safety)
+  cat <<EOF
+\`\`\`
+**Ralph Iteration ${iter_num} (${mode})**
+Timestamp: ${timestamp}
+Run ID: ${ROLLFLOW_RUN_ID}
+Branch: ${git_branch}
+
+Git Status:
+${git_stats}
+Commit: ${last_commit}
+
+Verifier: ${verifier_summary}
+
+Cache Stats:
+- Hits: ${CACHE_HITS} | Misses: ${CACHE_MISSES}
+- Time saved: ${time_saved_sec}s
+\`\`\`
+EOF
+}
+
 # Emit structured TOOL_START marker
 # Args: $1 = tool_id, $2 = tool_name, $3 = cache_key, $4 = git_sha
 log_tool_start() {
@@ -2265,6 +2300,9 @@ else
     fi
 
     emit_event --event iteration_end --iter "$i" --status ok
+
+    # Generate iteration summary for Discord/observability (task 34.1.2)
+    generate_iteration_summary "$i" "$current_phase"
 
     # Emit ITER_END marker for rollflow_analyze (task X.1.1)
     iter_end_ts="$(($(date +%s%N) / 1000000))"
