@@ -68,6 +68,20 @@
 
 **Duration:** 30-45 min
 
+- [ ] **34.1.1** Configure Discord webhook environment variable
+  - **Goal:** Permanently set DISCORD_WEBHOOK_URL in user's shell config
+  - **Implementation:**
+    - Add to `~/.bashrc`:
+
+      ```bash
+      export DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/1465720799729160294/NeBVhxsANqgwfuFvynyzT-4kwvLrFQh_0psXlfQc7sx2TBy99X_15vo-57I6Q7KkLYxI"
+      ```
+
+    - Source the file: `source ~/.bashrc`
+    - Verify: `echo $DISCORD_WEBHOOK_URL` (should print webhook URL)
+  - **AC:** Environment variable persists across shell sessions; URL is correct; variable is set in current shell
+  - **Verification:** Open new terminal, run `echo $DISCORD_WEBHOOK_URL`, verify URL appears
+  - **If Blocked:** User can set manually or Ralph can document steps in cortex/docs/DISCORD_INTEGRATION_SPEC.md
 
 - [ ] **34.1.2** Add `generate_iteration_summary` function to loop.sh
   - **Goal:** Extract Ralph's structured summary from iteration logs for Discord posting
