@@ -1821,7 +1821,7 @@ echo ""
 
 # Discord notification: Loop start
 if [[ -x "$ROOT/bin/discord-post" ]]; then
-  pending_count=$(grep -c '^\- \[ \]' "$WORKERS/IMPLEMENTATION_PLAN.md" 2>/dev/null || echo "0")
+  pending_count=$(grep -c '^\- \[ \]' "$ROOT/workers/IMPLEMENTATION_PLAN.md" 2>/dev/null || echo "0")
   "$ROOT/bin/discord-post" "**Ralph Loop Starting** 🚀
 Iterations: ${MAX_ITERATIONS}
 Mode: PLAN → BUILD cycling
