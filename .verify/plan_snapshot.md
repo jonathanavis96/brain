@@ -86,29 +86,32 @@
 - **Verification:** Test with real log: `generate_iteration_summary 12 BUILD workers/ralph/logs/iter12_build.log | head -50`; verify extracts "Summary / Changes Made / Completed" section; test with log containing no summary (fallback message appears); test with multiple summaries (uses last one)
 - **If Blocked:** Start with simple grep-based extraction, refine line number logic later
 
-```bash
-# Post iteration summary to Discord (if configured)
-if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
-  echo ""
-  echo "Posting iteration summary to Discord..."
-  # Pass logfile path to extract summary
-  local current_logfile="$LOGDIR/iter${i}_${mode}.log"
-  if generate_iteration_summary "$i" "$mode" "$current_logfile" | "$ROOT/bin/discord-post" 2>&1 | tee -a "$current_logfile"; then
-    echo "✓ Discord update posted"
-  else
-    echo "⚠ Discord post failed (non-blocking)"
-  fi
-  echo ""
-fi
-```
 
-- Ensure failure doesn't stop loop (already wrapped in if-else)
-- Follow gap-radar pattern (non-blocking, log output)
-- Pass logfile path as third parameter to `generate_iteration_summary`
+   ```bash
+   # Post iteration summary to Discord (if configured)
+   if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+        echo ""
+        echo "Posting iteration summary to Discord..."
+        # Pass logfile path to extract summary
+        local current_logfile="$LOGDIR/iter${i}_${mode}.log"
+        if generate_iteration_summary "$i" "$mode" "$current_logfile" | "$ROOT/bin/discord-post" 2>&1 | tee -a "$current_logfile"; then
+          echo "✓ Discord update posted"
+        else
+          echo "⚠ Discord post failed (non-blocking)"
+        fi
+        echo ""
+      fi
+      ```
+
+  - Ensure failure doesn't stop loop (already wrapped in if-else)
+  - Follow gap-radar pattern (non-blocking, log output)
+  - Pass logfile path as third parameter to `generate_iteration_summary`
 - **AC:** Loop runs normally with DISCORD_WEBHOOK_URL unset; loop posts to Discord when webhook configured; posting failure doesn't crash loop; extracts summary from correct log file
 - **Verification:** Run `loop.sh --iterations 1` without webhook (no error); set webhook and run again (check Discord for Ralph's structured summary); break webhook URL (verify non-fatal error); verify Discord message contains "Summary / Changes Made / Completed" sections
 - **If Blocked:** Make integration optional via feature flag `DISCORD_ENABLED=true`
-- Document results in commit message
+
+
+  - Document results in commit message
 - **AC:** All 6 test cases pass; Discord messages appear correctly; no loop crashes
 - **Verification:** Complete checklist, paste results in PR description
 - **If Blocked:** Run subset of tests (1, 2, 4 minimum)
@@ -190,9 +193,9 @@ fi
 
 **Success Criteria (Phase 34):**
 
-- [x] V1 milestones: Start/end/error notifications - Implemented in loop.sh (start, completion, verifier failures)
-- [x] Templates updated with Discord integration - templates/ralph/bin/discord-post and loop.sh updated
-- [x] Documentation complete - README.md, discord-webhook-patterns.md, secrets-management.md
+- [ ] V1 milestones: Start/end/error notifications (optional)
+- [ ] Templates updated with Discord integration
+- [ ] Documentation complete
 
 **Dependencies:**
 

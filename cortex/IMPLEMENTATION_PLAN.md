@@ -258,7 +258,7 @@
   - **Verification:** Follow README steps, verify webhook works
   - **If Blocked:** Add minimal "See DISCORD_INTEGRATION_SPEC.md" link
 
-- [ ] **34.4.2** Add Discord integration to skills
+- [x] **34.4.2** Add Discord integration to skills
   - **Goal:** Capture Discord webhook pattern for future reference
   - **Implementation:**
     - Create `skills/domains/infrastructure/discord-webhook-patterns.md`
