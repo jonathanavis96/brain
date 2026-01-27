@@ -1,9 +1,29 @@
 # CodeRabbit Issues Tracker
 
 **Created:** 2026-01-25  
-**Last Updated:** 2026-01-25  
+**Last Updated:** 2026-01-27  
 **PRs Covered:** #5, #6  
 **Purpose:** Unified tracker for CodeRabbit findings and prevention systems
+
+---
+
+## Recent Fixes (2026-01-27)
+
+These items were raised by CodeRabbit during review (advisory) and were validated and fixed in the current branch.
+
+| Area | Issue | Status | Fix Commit(s) |
+|------|-------|--------|--------------|
+| `bin/brain-search` | SQL quote-breaking/injection risk via direct interpolation of query + unvalidated `LIMIT` | ✅ Fixed | `89180e0` |
+| PLAN-only guard | `guard_plan_only_mode` patterns didn’t catch commands with args (e.g., `git commit -m ...`) | ✅ Fixed | `c81c16c` |
+| Protected hash validation | Missing protected/tracked file treated as `[SKIP]` instead of `[FAIL]`; regen guidance wrote `hash  filename` | ✅ Fixed | `c81c16c` |
+| Marker schema docs | `CACHE_GUARD` docs used `BUILD`/`PLAN` but enum uses `build`/`plan` | ✅ Fixed | `5a8cc1c` |
+| Cache debugging docs | Query 2 could overcount/mislead due to join multiplication; now aggregates passes/failures separately | ✅ Fixed | `5a8cc1c` |
+| Template verifier | `templates/ralph/verifier.sh` default ROOT pointed at `templates/` not repo root | ✅ Fixed | `00bcf62` |
+| Template markdown fix | `fix-markdown.sh` counted literal word `error` (markdownlint outputs `MDxxx`); counts now based on non-empty output lines | ✅ Fixed | `00bcf62` |
+| Pattern miner docs | README output format example out of sync with `format_suggestions()` | ✅ Fixed | `5a8cc1c` |
+| Skill quiz | Scenario/solution heading matching too narrow; `quiz.sh` did not handle extractor failure / invalid JSON before `jq` | ✅ Fixed | `39d7923` |
+| Cortex docs | Conflicting guidance on where task contracts live; extracted PLAN-only block into dedicated doc; removed control char breaking CLI | ✅ Fixed | `11c40b8`, `8b726b1` |
+| Protected-file workflow | `SPEC_CHANGE_REQUEST.md` updated to document protected `loop.sh` header changes + correct hash-only regen instructions | ✅ Fixed | `11c40b8` |
 
 ---
 
@@ -75,7 +95,7 @@ CodeRabbit has identified **50+ issues** across PR5 and PR6, with significant ov
 
 **Fix:**
 
-```bash
+```text
 --event)
   EVENT="${2-}"
   shift
@@ -335,7 +355,7 @@ CodeRabbit has identified **50+ issues** across PR5 and PR6, with significant ov
 
 A single script that runs ALL checks before creating a PR:
 
-```bash
+```text
 #!/usr/bin/env bash
 # bin/pre-pr-check - Run before creating a PR
 
