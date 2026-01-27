@@ -208,6 +208,61 @@ Current: React/Next.js focused
 - DevOps (infrastructure, automation)
 - Libraries/packages (npm, PyPI)
 
+## Discord Integration
+
+Ralph can post build updates to Discord channels via webhooks. This provides real-time visibility into iteration progress and failures.
+
+### Setup
+
+1. **Create Discord webhook:**
+   - Open Discord Server Settings → Integrations → Webhooks
+   - Click "New Webhook"
+   - Name it (e.g., "Ralph Build Bot")
+   - Select target channel
+   - Copy webhook URL
+
+2. **Configure environment variable:**
+
+   ```bash
+   export DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN"
+   ```
+
+   Add to your shell profile (~/.bashrc or ~/.zshrc) to persist across sessions.
+
+3. **Verify setup:**
+
+   ```bash
+   echo "Test message" | bin/discord-post
+   ```
+
+   Check Discord channel for message.
+
+### What Gets Posted
+
+- **Iteration summaries** - Task completed, files changed, mode (PLAN/BUILD)
+- **Verifier failures** - Failed acceptance criteria with details
+- **Loop completion** - Final status when all tasks complete
+
+### Troubleshooting
+
+| Issue | Solution |
+| ----- | -------- |
+| No messages appearing | Check `DISCORD_WEBHOOK_URL` is set: `echo $DISCORD_WEBHOOK_URL` |
+| "webhook not found" error | Regenerate webhook in Discord settings |
+| Messages truncated | Normal - discord-post chunks at 1900 chars automatically |
+| bin/discord-post not found | Ensure you're in correct directory: `cd workers/ralph` |
+
+### Technical Details
+
+See [cortex/docs/DISCORD_INTEGRATION_SPEC.md](../../cortex/docs/DISCORD_INTEGRATION_SPEC.md) for:
+
+- Integration architecture
+- Message chunking strategy (2000 char Discord limit)
+- Rate limiting handling
+- Error recovery approach
+
+**Note:** Discord posting is **non-blocking** - webhook failures don't stop the loop.
+
 ## Path Convention (CRITICAL)
 
 All templates use **bash-style forward slash paths**:

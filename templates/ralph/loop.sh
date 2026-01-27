@@ -973,6 +973,71 @@ flush_scoped_commit_if_needed() {
   echo ""
 }
 
+generate_iteration_summary() {
+  local iter_num="$1"
+  local mode="$2"
+  local logfile="$3"
+  local timestamp run_id
+
+  timestamp="$(date '+%Y-%m-%d %H:%M:%S')"
+  run_id="${ROLLFLOW_RUN_ID:-unknown}"
+
+  # Check if logfile exists
+  if [[ ! -f "$logfile" ]]; then
+    cat <<EOF
+**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}
+
+No log file found.
+
+Run ID: ${run_id}
+Log: ${logfile}
+EOF
+    return
+  fi
+
+  # Find all "Summary" headers in the log (strip ANSI codes first, then match)
+  # Pattern matches "Summary:" with or without colon, with optional whitespace and ANSI codes
+  local summary_lines
+  summary_lines=$(sed 's/\x1b\[[0-9;]*m//g' "$logfile" | grep -n "^Summary" || true)
+
+  if [[ -z "$summary_lines" ]]; then
+    cat <<EOF
+**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}
+
+No summary found in log.
+
+Run ID: ${run_id}
+Log: ${logfile}
+EOF
+    return
+  fi
+
+  # Get the line number of the last "Summary" occurrence
+  local last_summary_line
+  last_summary_line=$(echo "$summary_lines" | tail -1 | cut -d: -f1)
+
+  # Count number of summaries (warn if multiple)
+  local summary_count
+  summary_count=$(echo "$summary_lines" | wc -l)
+
+  # Extract from last "Summary" to :::BUILD_READY::: or :::PLAN_READY::: or EOF
+  local summary_block
+  summary_block=$(sed -n "${last_summary_line},\$p" "$logfile" | sed '/:::\(BUILD\|PLAN\)_READY:::/q')
+
+  # Output structured summary with header
+  cat <<EOF
+**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}
+EOF
+
+  if [[ $summary_count -gt 1 ]]; then
+    echo ""
+    echo "⚠️ Multiple summaries detected ($summary_count), using last one"
+  fi
+
+  echo ""
+  echo "$summary_block"
+}
+
 # Emit structured TOOL_START marker
 # Args: $1 = tool_id, $2 = tool_name, $3 = cache_key, $4 = git_sha
 log_tool_start() {
@@ -1822,6 +1887,21 @@ if [[ -n "$PROMPT_ARG" ]]; then
         echo "Review .verify/latest.txt for details."
         echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
         echo ""
+
+        # Post critical verifier failure to Discord (if configured)
+        if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+          {
+            echo "**⚠️ Verifier Failed - Loop Stopped**"
+            echo ""
+            echo "Iteration: $i"
+            echo "Consecutive failures: $CONSECUTIVE_VERIFIER_FAILURES"
+            echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
+            echo ""
+            echo "**Recent failures:**"
+            sed -n '/^\[FAIL\]/p' .verify/latest.txt 2>/dev/null | head -10
+          } | "$ROOT/bin/discord-post" 2>/dev/null || true
+        fi
+
         echo "After fixing manually, re-run the loop to continue."
         exit 1
       else
@@ -1832,6 +1912,20 @@ if [[ -n "$PROMPT_ARG" ]]; then
         echo "Next iteration will inject LAST_VERIFIER_RESULT: FAIL"
         echo "Ralph should fix the AC failures before picking new tasks."
         echo ""
+
+        # Post verifier failure alert to Discord (if configured)
+        if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+          {
+            echo "**⚠️ Verifier Failed - Retry Scheduled**"
+            echo ""
+            echo "Iteration: $i"
+            echo "Status: Giving Ralph one retry iteration"
+            echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
+            echo ""
+            echo "**Top failures:**"
+            sed -n '/^\[FAIL\]/p' .verify/latest.txt 2>/dev/null | head -5
+          } | "$ROOT/bin/discord-post" 2>/dev/null || true
+        fi
       fi
     else
       # Reset counter on successful iteration
@@ -1855,6 +1949,18 @@ if [[ -n "$PROMPT_ARG" ]]; then
     # Emit ITER_END marker for rollflow_analyze (task X.1.1)
     iter_end_ts="$(($(date +%s%N) / 1000000))"
     emit_marker ":::ITER_END::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_end_ts"
+
+    # Post iteration summary to Discord (if configured) - task 34.1.3
+    if [[ -n "${DISCORD_WEBHOOK_URL:-}" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+      echo ""
+      echo "Posting iteration summary to Discord..."
+      if generate_iteration_summary "$i" "$current_phase" "$CURRENT_LOG_FILE" | "$ROOT/bin/discord-post" 2>&1 | tee -a "$CURRENT_LOG_FILE"; then
+        echo "✓ Discord update posted"
+      else
+        echo "⚠ Discord post failed (non-blocking)"
+      fi
+      echo ""
+    fi
   done
 else
   # Alternating plan/build
@@ -2130,6 +2236,21 @@ else
         echo "Review .verify/latest.txt for details."
         echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
         echo ""
+
+        # Post critical verifier failure to Discord (if configured)
+        if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+          {
+            echo "**⚠️ Verifier Failed - Loop Stopped**"
+            echo ""
+            echo "Iteration: $i"
+            echo "Consecutive failures: $CONSECUTIVE_VERIFIER_FAILURES"
+            echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
+            echo ""
+            echo "**Recent failures:**"
+            sed -n '/^\[FAIL\]/p' .verify/latest.txt 2>/dev/null | head -10
+          } | "$ROOT/bin/discord-post" 2>/dev/null || true
+        fi
+
         echo "After fixing manually, re-run the loop to continue."
         exit 1
       else
@@ -2140,6 +2261,20 @@ else
         echo "Next iteration will inject LAST_VERIFIER_RESULT: FAIL"
         echo "Ralph should fix the AC failures before picking new tasks."
         echo ""
+
+        # Post verifier failure alert to Discord (if configured)
+        if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+          {
+            echo "**⚠️ Verifier Failed - Retry Scheduled**"
+            echo ""
+            echo "Iteration: $i"
+            echo "Status: Giving Ralph one retry iteration"
+            echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
+            echo ""
+            echo "**Top failures:**"
+            sed -n '/^\[FAIL\]/p' .verify/latest.txt 2>/dev/null | head -5
+          } | "$ROOT/bin/discord-post" 2>/dev/null || true
+        fi
       fi
     else
       # Reset counter on successful iteration
@@ -2166,8 +2301,23 @@ else
     # Emit ITER_END marker for rollflow_analyze (task X.1.1)
     iter_end_ts="$(($(date +%s%N) / 1000000))"
     emit_marker ":::ITER_END::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_end_ts"
+
+    # Post iteration summary to Discord (if configured) - task 34.1.3
+    if [[ -n "${DISCORD_WEBHOOK_URL:-}" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+      echo ""
+      echo "Posting iteration summary to Discord..."
+      if generate_iteration_summary "$i" "$current_phase" "$CURRENT_LOG_FILE" | "$ROOT/bin/discord-post" 2>&1 | tee -a "$CURRENT_LOG_FILE"; then
+        echo "✓ Discord update posted"
+      else
+        echo "⚠ Discord post failed (non-blocking)"
+      fi
+      echo ""
+    fi
   done
 fi
+
+# Ensure no pending changes are left uncommitted when the loop ends
+flush_scoped_commit_if_needed "end_of_run"
 
 # Print cache statistics summary at end of run
 if [[ "$CACHE_SKIP" == "true" ]]; then
@@ -2182,5 +2332,28 @@ if [[ "$CACHE_SKIP" == "true" ]]; then
     echo "Time saved:   ${TIME_SAVED_SEC}s (${TIME_SAVED_MS}ms)"
   fi
   echo "========================================"
+  echo ""
+fi
+
+# Post loop completion summary to Discord (task 34.2.2)
+if [[ -n "${DISCORD_WEBHOOK_URL:-}" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+  echo ""
+  echo "Posting loop completion summary to Discord..."
+  {
+    echo "**🎉 Ralph Loop Complete**"
+    echo ""
+    echo "Total iterations: $ITERATIONS"
+    echo "Run ID: ${ROLLFLOW_RUN_ID:-unknown}"
+    echo ""
+    if [[ "$CACHE_SKIP" == "true" ]] && [[ $CACHE_HITS -gt 0 ]]; then
+      TIME_SAVED_SEC=$((TIME_SAVED_MS / 1000))
+      echo "**Cache Statistics:**"
+      echo "- Cache hits: $CACHE_HITS"
+      echo "- Cache misses: $CACHE_MISSES"
+      echo "- Time saved: ${TIME_SAVED_SEC}s"
+      echo ""
+    fi
+    echo "Check logs for details: \`$LOGDIR\`"
+  } | "$ROOT/bin/discord-post" 2>&1 | tee -a "$LOGDIR/discord_final.log" || echo "⚠ Discord post failed (non-blocking)"
   echo ""
 fi

@@ -400,3 +400,26 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 
 | Date | Task ID | Description |
 |------|---------|-------------|
+
+### Archived on 2026-01-27 18:40:00
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 34.1.3 | - [x] **34.1.3** Integrate Discord posting after `:::ITER_END:::` marker |
+| 2026-01-27 | 34.1.4 | - [x] **34.1.4** Add manual verification tests |
+| 2026-01-27 | 34.2.1 | - [x] **34.2.1** Add loop start notification |
+| 2026-01-27 | 34.2.2 | - [x] **34.2.2** Add loop completion notification |
+| 2026-01-27 | 34.2.3 | - [x] **34.2.3** Add verifier failure alerts |
+
+### Archived on 2026-01-27 19:02:31
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 0.1.1 | - [x] **0.1.1** Fix MD032 errors in skills/domains/infrastructure/secrets-management.md |
+| 2026-01-27 | 0.2.1 | - [x] **0.2.1** Fix MD046 code-block-style errors in workers/IMPLEMENTATION_PLAN.md |
+| 2026-01-27 | 0.2.2 | - [x] **0.2.2** Fix MD007 ul-indent errors in workers/IMPLEMENTATION_PLAN.md |
+| 2026-01-27 | 0.2.3 | - [x] **0.2.3** Fix MD032 blanks-around-lists errors in workers/IMPLEMENTATION_PLAN.md |
+| 2026-01-27 | 34.3.1 | - [x] **34.3.1** Copy `bin/discord-post` to `templates/ralph/bin/` |
+| 2026-01-27 | 34.3.2 | - [x] **34.3.2** Add Discord integration to `templates/ralph/loop.sh` |
+| 2026-01-27 | 34.4.1 | - [x] **34.4.1** Update `workers/ralph/README.md` with Discord setup |
+| 2026-01-27 | 34.4.2 | - [x] **34.4.2** Add Discord integration to skills |
