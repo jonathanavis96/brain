@@ -1982,7 +1982,7 @@ updated_at: 2026-01-27T02:00:00+00:00
 schema_version: 1
 links:
   - to: bm_88888888-8888-4888-8888-888888888888
-    type: validated_by
+    type: related_to
     title: "Graph view acceptance criteria"
     note: "Use as a visual baseline for neuron-like styling."
 ---
