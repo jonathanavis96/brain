@@ -28,11 +28,33 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
+# Options
+RUN_SHFMT=false
+RUN_SHFMT_ALL=false
+
+# Parse options (keep this script backward-compatible)
+#   --shfmt      Run shfmt auto-format on shell files in the provided targets (safe-default limits apply)
+#   --shfmt-all  Same as --shfmt but allows formatting large numbers of files (e.g. when target is '.')
+ARGS=("$@")
+TARGETS=()
+for arg in "${ARGS[@]}"; do
+  case "$arg" in
+    --shfmt)
+      RUN_SHFMT=true
+      ;;
+    --shfmt-all)
+      RUN_SHFMT=true
+      RUN_SHFMT_ALL=true
+      ;;
+    *)
+      TARGETS+=("$arg")
+      ;;
+  esac
+done
+
 # Collect targets - either from args or default to current directory
-if [[ $# -eq 0 ]]; then
+if [[ ${#TARGETS[@]} -eq 0 ]]; then
   TARGETS=(".")
-else
-  TARGETS=("$@")
 fi
 
 # Filter to only existing files/directories
@@ -56,6 +78,34 @@ if [[ ${#VALID_TARGETS[@]} -eq 1 ]]; then
 else
   echo "Targets: ${#VALID_TARGETS[@]} files"
 fi
+
+# Optional: shfmt auto-format for shell scripts (opt-in)
+if [[ "$RUN_SHFMT" == "true" ]]; then
+  if ! command -v shfmt >/dev/null 2>&1; then
+    echo "Warning: shfmt not found; skipping shfmt" >&2
+  else
+    # Find shell files within targets. Keep deterministic ordering.
+    mapfile -t SH_FILES < <(
+      find "${VALID_TARGETS[@]}" -type f \( -name '*.sh' -o -name '*.bash' \) -print 2>/dev/null |
+        LC_ALL=C sort
+    )
+
+    if [[ ${#SH_FILES[@]} -eq 0 ]]; then
+      echo "No shell files found for shfmt"
+    else
+      # Safety: avoid formatting the whole repo unless explicitly requested.
+      if [[ ${#SH_FILES[@]} -gt 50 && "$RUN_SHFMT_ALL" != "true" ]]; then
+        echo "Refusing to run shfmt on ${#SH_FILES[@]} files without --shfmt-all" >&2
+        echo "Tip: rerun with --shfmt-all or pass a narrower directory/file list" >&2
+        exit 1
+      fi
+
+      echo "Running shfmt -w -i 2 -ci on ${#SH_FILES[@]} file(s)..."
+      shfmt -w -i 2 -ci "${SH_FILES[@]}" || true
+    fi
+  fi
+fi
+
 echo ""
 
 # Count issues before
