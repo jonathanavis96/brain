@@ -135,12 +135,12 @@ resolve_model_opencode() {
   esac
 }
 
-# Default to Opus 4.5 for Cortex (higher-level strategic thinking)
+# Default to Sonnet 4.5 for Cortex (fast, capable, cost-effective)
 if [[ -z "$MODEL_ARG" ]]; then
   if [[ "$RUNNER" == "opencode" ]]; then
     MODEL_ARG="grok"
   else
-    MODEL_ARG="opus" # Cortex uses Opus by default
+    MODEL_ARG="sonnet" # Cortex uses Sonnet 4.5 by default
   fi
 fi
 

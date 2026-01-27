@@ -358,3 +358,8 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | 2026-01-27 | 30.1.1 | - [x] **30.1.1** Refactor cluster rebuild to use `showClusters` boolean |
 | 2026-01-27 | 30.2.1 | - [x] **30.2.1** Add "Fit to Screen" button |
 | 2026-01-27 | 30.2.2 | - [x] **30.2.2** Add zoom controls (+/- buttons) |
+
+### Archived on 2026-01-27 16:11:07
+
+| Date | Task ID | Description |
+|------|---------|-------------|

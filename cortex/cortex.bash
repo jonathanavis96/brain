@@ -60,7 +60,7 @@ EOF
 }
 
 # Defaults
-MODEL_ARG="opus" # Default to Opus 4.5 for Cortex strategic planning
+MODEL_ARG="sonnet" # Default to Sonnet 4.5 for Cortex (fast, capable, cost-effective)
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -82,6 +82,11 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Model resolution (same logic as one-shot.sh)
+# Default to Sonnet 4.5 if no model specified
+if [[ -z "$MODEL_ARG" ]]; then
+  MODEL_ARG="sonnet"
+fi
+
 RESOLVED_MODEL=""
 if [[ -n "$MODEL_ARG" ]]; then
   case "$MODEL_ARG" in
@@ -89,7 +94,7 @@ if [[ -n "$MODEL_ARG" ]]; then
       RESOLVED_MODEL="anthropic.claude-opus-4-5-20251101-v1:0"
       ;;
     sonnet)
-      RESOLVED_MODEL="anthropic.claude-sonnet-4-20250514-v1:0"
+      RESOLVED_MODEL="anthropic.claude-sonnet-4-5-20250929-v1:0"
       ;;
     auto)
       RESOLVED_MODEL=""
