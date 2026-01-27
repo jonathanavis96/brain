@@ -2423,6 +2423,9 @@ else
       echo ""
       echo "Posting iteration summary to Discord..."
 
+      # Use the generated summary (includes Ralph's structured summary from logs)
+      summary_content=$(generate_iteration_summary "$i" "$current_phase" "$CURRENT_LOG_FILE")
+
       # Calculate cache time saved
       time_saved_display=""
       if [[ "$CACHE_SKIP" == "true" ]] && [[ $CACHE_HITS -gt 0 ]]; then
@@ -2436,16 +2439,15 @@ else
         verifier_status=$(grep "^SUMMARY" .verify/latest.txt | head -1 || echo "Unknown")
       fi
 
-      # Build iteration completion message with stats
+      # Post the full summary with additional stats
       {
-        echo "**Ralph Iteration $i Complete** ✅"
+        echo "$summary_content"
         echo ""
-        echo "Phase: ${current_phase}"
-        echo "Cache hits: ${CACHE_HITS} | Misses: ${CACHE_MISSES}"
-        [[ -n "$time_saved_display" ]] && echo "${time_saved_display}"
-        echo "Verifier status: ${verifier_status}"
-        echo ""
-        echo "Run ID: ${ROLLFLOW_RUN_ID:-unknown}"
+        echo "---"
+        echo "**Stats:** Cache hits: ${CACHE_HITS} | Misses: ${CACHE_MISSES}"
+        [[ -n "$time_saved_display" ]] && echo "**Performance:** ${time_saved_display}"
+        echo "**Verifier:** ${verifier_status}"
+        echo "**Run ID:** ${ROLLFLOW_RUN_ID:-unknown}"
       } | "$ROOT/bin/discord-post" 2>&1 | tee -a "${LOGDIR}/iter${i}_completion.log"
 
       if [[ ${PIPESTATUS[1]} -eq 0 ]]; then

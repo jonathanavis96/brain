@@ -43,7 +43,6 @@
 
 ### Task 32.2: AI-Powered Insights
 
-
 ---
 
 ### Task 32.3: Saved Views & Bookmarks
