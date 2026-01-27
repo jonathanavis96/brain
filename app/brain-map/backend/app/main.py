@@ -276,6 +276,118 @@ async def get_node(node_id: str) -> dict:
         )
 
 
+@app.put("/node/{node_id}/position")
+async def update_node_position(node_id: str, request: dict) -> dict:
+    """Update node position in frontmatter.
+
+    Args:
+        node_id: Node ID to update.
+        request: JSON body with {x: float, y: float}.
+
+    Returns:
+        JSON response with success status.
+
+    Status codes:
+        200 OK: Position updated successfully.
+        400 BAD REQUEST: Invalid position data.
+        404 NOT FOUND: Node ID not found.
+    """
+    from fastapi import HTTPException
+    from datetime import datetime, timezone
+    from app.notes import load_note_content, _find_repo_root
+    from app.frontmatter import parse_and_validate
+    import yaml
+
+    # Validate request
+    if "x" not in request or "y" not in request:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "VALIDATION_ERROR",
+                "message": "Request must include 'x' and 'y' coordinates",
+            },
+        )
+
+    try:
+        x = float(request["x"])
+        y = float(request["y"])
+    except (ValueError, TypeError):
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "VALIDATION_ERROR",
+                "message": "Coordinates must be numeric",
+            },
+        )
+
+    # Find node file
+    repo_root = _find_repo_root()
+    notes_dir = repo_root / "notes"
+    file_path = None
+    for f in notes_dir.rglob("*.md"):
+        try:
+            content = load_note_content(str(f))
+            fm, _, _ = parse_and_validate(content)
+            if fm.get("id") == node_id:
+                file_path = f
+                break
+        except Exception:
+            continue
+
+    if file_path is None:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "error": "NODE_NOT_FOUND",
+                "message": f"Node '{node_id}' not found",
+            },
+        )
+
+    # Load and update frontmatter
+    try:
+        content = load_note_content(str(file_path))
+        frontmatter, body, _ = parse_and_validate(content)
+    except (FileNotFoundError, ValueError) as e:
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "INTERNAL_ERROR",
+                "message": f"Failed to load node: {str(e)}",
+            },
+        )
+
+    # Update position and timestamp
+    frontmatter["position"] = {"x": x, "y": y}
+    frontmatter["updated_at"] = datetime.now(timezone.utc).isoformat()
+
+    # Write updated content
+    frontmatter_yaml = yaml.dump(frontmatter, default_flow_style=False, sort_keys=False)
+    new_content = f"---\n{frontmatter_yaml}---\n\n{body}"
+
+    temp_path = file_path.with_suffix(".tmp")
+    try:
+        temp_path.write_text(new_content, encoding="utf-8")
+        temp_path.replace(file_path)
+    except Exception as e:
+        try:
+            temp_path.unlink()
+        except Exception:
+            pass
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "WRITE_ERROR",
+                "message": f"Failed to write position: {str(e)}",
+            },
+        )
+
+    return {
+        "success": True,
+        "node_id": node_id,
+        "position": {"x": x, "y": y},
+    }
+
+
 @app.put("/node/{node_id}")
 async def update_node(node_id: str, request: dict) -> dict:
     """Update an existing node (markdown-first).
