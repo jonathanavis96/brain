@@ -21,64 +21,254 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
-## Phase 30: Brain Map UX Refinements (2 hours) 🎨
+## Phase 34: Discord Integration - Live Build Updates 📢
 
-**Context:** After Phase 29 quick wins, polish the graph navigation and rendering for production quality.
+**Goal:** Post real-time iteration summaries to Discord after each Ralph loop iteration completes.
 
-**Goal:** Professional graph UX with proper navigation controls, smart label rendering, and clean layout.
+**Context:** Users want to monitor Ralph's progress remotely without checking logs manually. Discord webhooks provide a simple, reliable notification channel.
 
-**Success Criteria:**
-
-- User never "loses" position in graph (fit-to-screen button or minimap)
-- Labels render intelligently (hover-only mode, zoom-based sizing)
-- Inspector layout is clean (no overlapping panels)
+**Reference:** `cortex/docs/DISCORD_INTEGRATION_SPEC.md`
 
 ---
 
-### Task 30.1: Proper cluster mode switching
+### Task 34.1: Discord Webhook Sender Utility (MVP)
 
+**Duration:** 30-45 min
+
+- [ ] **34.1.1** Create `bin/discord-post` with stdin input and chunking
+  - **Goal:** Basic Discord webhook poster that chunks long messages
+  - **Implementation:**
+    - Shebang: `#!/usr/bin/env bash`
+    - Read from stdin (or `--file FILE` option)
+    - Require `DISCORD_WEBHOOK_URL` env var (error if missing in non-dry-run)
+    - Chunk messages at 1900 chars (safety margin from 2000 limit)
+    - Split on paragraph (`\n\n`), then line (`\n`), last resort hard split
+    - Add "(continued...)" footer to chunks 1..N-1
+    - Add "(X of Y)" counter to each chunk header
+    - POST to webhook: `curl -X POST -H "Content-Type: application/json" -d '{"content":"..."}' "$DISCORD_WEBHOOK_URL"`
+    - Use `jq -Rs` to escape content as JSON string
+    - Add 300ms delay between chunks: `sleep 0.3`
+    - Support `--dry-run` flag (print payload, no POST)
+    - Support `--webhook URL` flag to override env var
+    - Never print webhook URL (security)
+  - **AC:** `echo "test" | bin/discord-post --dry-run` prints JSON payload; real post sends to Discord; 3000-char input splits into 2 messages; missing webhook URL prints error
+  - **Verification:** Run `echo "short test" | bin/discord-post --dry-run`, check JSON format. Run with real webhook, verify Discord message. Run `seq 1 200 | bin/discord-post`, verify chunking
+  - **If Blocked:** Start with simple single-message version, add chunking later
+
+- [ ] **34.1.2** Add `generate_iteration_summary` function to `loop.sh`
+  - **Goal:** Extract structured summary from iteration state
+  - **Implementation:**
+    - Add function after line ~2260 (before ITER_END marker emission)
+    - Function signature: `generate_iteration_summary ITER_NUM MODE`
+    - Output format:
+
+      ```
+      **Ralph Iteration ${ITER_NUM} (${MODE})**
+      Timestamp: $(date -Iseconds)
+      Run ID: ${ROLLFLOW_RUN_ID}
+      Branch: $(git branch --show-current)
+      
+      Git Status:
+      $(git diff --stat HEAD~1 2>/dev/null | tail -1)
+      Commit: $(git log -1 --oneline 2>/dev/null)
+      
+      Verifier: $(grep "^SUMMARY" .verify/latest.txt 2>/dev/null || echo "Not run")
+      
+      Cache Stats:
+      - Hits: ${CACHE_HITS} | Misses: ${CACHE_MISSES}
+      - Time saved: $((TIME_SAVED_MS / 1000))s
+      ```
+
+    - Keep output under 1500 chars (leaves room for Discord formatting)
+    - Use markdown code block for clean formatting
+  - **AC:** Function exists and outputs structured text; includes iteration number, mode, git status, verifier status, cache stats
+  - **Verification:** Add `generate_iteration_summary 1 PLAN` call in loop, check output format
+  - **If Blocked:** Start with minimal version (just iter number + timestamp), expand later
+
+- [ ] **34.1.3** Integrate Discord posting after `:::ITER_END:::` marker
+  - **Goal:** Call Discord poster after each iteration completes
+  - **Implementation:**
+    - Location: `workers/ralph/loop.sh` line ~2270 (after `emit_marker ":::ITER_END:::"`)
+    - Add integration block:
+
+      ```bash
+      # Post iteration summary to Discord (if configured)
+      if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+        echo ""
+        echo "Posting iteration summary to Discord..."
+        if generate_iteration_summary "$i" "$mode" | "$ROOT/bin/discord-post" 2>&1 | tee -a "$LOGDIR/iter${i}_${mode}.log"; then
+          echo "✓ Discord update posted"
+        else
+          echo "⚠ Discord post failed (non-blocking)"
+        fi
+        echo ""
+      fi
+      ```
+
+    - Ensure failure doesn't stop loop (already wrapped in if-else)
+    - Follow gap-radar pattern (non-blocking, log output)
+  - **AC:** Loop runs normally with DISCORD_WEBHOOK_URL unset; loop posts to Discord when webhook configured; posting failure doesn't crash loop
+  - **Verification:** Run `loop.sh --iterations 1` without webhook (no error); set webhook and run again (check Discord); break webhook URL (verify non-fatal error)
+  - **If Blocked:** Make integration optional via feature flag `DISCORD_ENABLED=true`
+
+- [ ] **34.1.4** Add manual verification tests
+  - **Goal:** Document testing procedure
+  - **Implementation:**
+    - Create test checklist in `cortex/docs/DISCORD_INTEGRATION_SPEC.md` (already exists)
+    - Run each test case:
+      1. Dry-run mode: `echo "test" | bin/discord-post --dry-run`
+      2. Real post: Set webhook, `echo "test" | bin/discord-post`
+      3. Chunking: `seq 1 200 | bin/discord-post`
+      4. Loop integration: `cd workers/ralph && bash loop.sh --iterations 1`
+      5. Missing webhook: Unset var, verify non-fatal
+      6. Invalid webhook: Set bad URL, verify error handling
+    - Document results in commit message
+  - **AC:** All 6 test cases pass; Discord messages appear correctly; no loop crashes
+  - **Verification:** Complete checklist, paste results in PR description
+  - **If Blocked:** Run subset of tests (1, 2, 4 minimum)
 
 ---
 
-### Task 30.2: Navigation controls (fit-to-screen + reset)
+### Task 34.2: Milestone Notifications (V1)
 
+**Duration:** 20-30 min
+**Priority:** Optional enhancement after MVP
+
+- [ ] **34.2.1** Add loop start notification
+  - **Goal:** Post summary when loop begins
+  - **Implementation:**
+    - After line ~1744 (after `ensure_worktree_branch`)
+    - Generate summary:
+
+      ```
+      **Ralph Loop Starting**
+      Iterations: ${MAX_ITERATIONS}
+      Mode: PLAN → BUILD cycling
+      Branch: $(git branch --show-current)
+      Pending tasks: $(grep -c '^\- \[ \]' IMPLEMENTATION_PLAN.md)
+      ```
+
+    - Call `bin/discord-post` (non-blocking)
+  - **AC:** Loop start posts to Discord with task count
+  - **Verification:** Run loop, check Discord for start message
+  - **If Blocked:** Skip this task
+
+- [ ] **34.2.2** Add loop completion notification
+  - **Goal:** Post summary when loop finishes
+  - **Implementation:**
+    - After line ~2275 (after `flush_scoped_commit_if_needed`)
+    - Generate summary:
+
+      ```
+      **Ralph Loop Complete**
+      Total iterations: ${actual_iterations}
+      Cache hits: ${CACHE_HITS} | Misses: ${CACHE_MISSES}
+      Time saved: ${TIME_SAVED_SEC}s
+      Final status: $(cat .verify/latest.txt | grep "^SUMMARY")
+      ```
+
+    - Call `bin/discord-post` (non-blocking)
+  - **AC:** Loop end posts to Discord with totals
+  - **Verification:** Run loop, check Discord for completion message
+  - **If Blocked:** Skip this task
+
+- [ ] **34.2.3** Add verifier failure alerts
+  - **Goal:** Post alert when verifier fails
+  - **Implementation:**
+    - In verifier failure block (line ~1240)
+    - Generate alert:
+
+      ```
+      **⚠️ Verifier Failed**
+      Iteration: ${i}
+      Failed rules: $(parse_verifier_failures .verify/latest.txt)
+      $(sed -n '/^\[FAIL\]/p' .verify/latest.txt | head -10)
+      ```
+
+    - Call `bin/discord-post` (non-blocking)
+    - Add emoji/formatting for visibility
+  - **AC:** Verifier failures post to Discord with rule details
+  - **Verification:** Trigger verifier failure, check Discord alert
+  - **If Blocked:** Skip this task
 
 ---
 
-### Task 30.3: Smart label rendering
+### Task 34.3: Template Propagation
+
+**Duration:** 10-15 min
+
+- [ ] **34.3.1** Copy `bin/discord-post` to `templates/ralph/bin/`
+  - **Goal:** Make Discord integration available for new projects
+  - **Implementation:**
+    - Create `templates/ralph/bin/discord-post` (copy from `bin/discord-post`)
+    - Ensure executable: `chmod +x templates/ralph/bin/discord-post`
+    - Add to `.gitignore` if needed (no, this should be tracked)
+  - **AC:** Template has discord-post utility
+  - **Verification:** `test -x templates/ralph/bin/discord-post`
+  - **If Blocked:** Skip if bin/ not in template structure yet
+
+- [ ] **34.3.2** Add Discord integration to `templates/ralph/loop.sh`
+  - **Goal:** Template projects get Discord integration by default
+  - **Implementation:**
+    - Copy integration block from `workers/ralph/loop.sh`
+    - Copy `generate_iteration_summary` function
+    - Ensure paths work in template context (use `$ROOT` prefix)
+  - **AC:** Template loop.sh includes Discord integration
+  - **Verification:** Diff workers/ralph/loop.sh and templates/ralph/loop.sh shows matching blocks
+  - **If Blocked:** Document manual steps in templates/ralph/README.md
 
 ---
 
-### Task 30.4: Inspector layout cleanup
+### Task 34.4: Documentation
 
+**Duration:** 10-15 min
 
-- [x] **30.4.2** Add proper scrolling to right panel
-  - **Goal:** Long Hotspots lists or node bodies scroll within panel (don't push form fields off screen)
-  - **Implementation:** Add `overflow-y: auto` and `max-height` to scrollable sections
-  - **AC:** Hotspots list with 20+ items scrolls within panel; form fields always visible below
-  - **Verification:** Add 20 fake hotspot entries → list scrolls; form fields still visible
-  - **If Blocked:** Lower priority; most graphs won't have 20+ hotspots
+- [ ] **34.4.1** Update `workers/ralph/README.md` with Discord setup
+  - **Goal:** Document Discord configuration
+  - **Implementation:**
+    - Add section "Discord Integration"
+    - Document env var: `export DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."`
+    - Document webhook creation: Discord Server Settings → Integrations → Webhooks
+    - Add troubleshooting tips
+    - Link to `cortex/docs/DISCORD_INTEGRATION_SPEC.md`
+  - **AC:** README documents Discord setup
+  - **Verification:** Follow README steps, verify webhook works
+  - **If Blocked:** Add minimal "See DISCORD_INTEGRATION_SPEC.md" link
 
----
-
-## Task Dependencies
-
-**Phase 29 (parallel execution allowed):**
-
-- 29.1.1 → 29.1.2 (derived state depends on removing zoomLevel from deps)
-- 29.2.1 independent
-- 29.3.1 independent
-
-**Phase 30:**
-
-- 30.1.1 depends on 29.1.2 (or supersedes it)
-- 30.2.1-30.2.3 independent (navigation controls)
-- 30.3.1-30.3.2 independent (label rendering)
-- 30.4.1 → 30.4.2 (layout refactor before scroll tuning)
-
-**Critical path:** 29.1.1 → 29.1.2 → 30.2.1 (zoom fix → fit-to-screen button)
+- [ ] **34.4.2** Add Discord integration to skills
+  - **Goal:** Capture Discord webhook pattern for future reference
+  - **Implementation:**
+    - Create `skills/domains/infrastructure/discord-webhook-patterns.md`
+    - Document chunking strategy, rate limiting, error handling
+    - Include example code snippets
+    - Reference Brain's implementation
+  - **AC:** Skill document exists with Discord patterns
+  - **Verification:** Skill readable and useful
+  - **If Blocked:** Skip skill creation, add to GAP_BACKLOG.md instead
 
 ---
+
+**Success Criteria (Phase 34):**
+
+- [x] MVP complete: Discord posts after every iteration
+- [x] Long summaries chunk correctly (≤2000 chars per message)
+- [x] Missing/invalid webhook doesn't crash loop
+- [x] Dry-run mode works for testing
+- [ ] V1 milestones: Start/end/error notifications (optional)
+- [ ] Templates updated with Discord integration
+- [ ] Documentation complete
+
+**Dependencies:**
+
+- Requires: bash, curl, jq
+- Reads: DISCORD_WEBHOOK_URL env var
+- Writes: Discord channel via webhook
+
+**Rollback Plan:**
+
+- Remove integration block from loop.sh
+- Delete bin/discord-post
+- No data loss (all changes are additive)
 
 ## Phase 31: Brain Map V2 - Core Interactions 🔥
 
@@ -102,7 +292,7 @@
 
 **Goal:** Add the missing workflow primitives (Inbox capture/promote/triage), strict enums (type/status), relationship editor UI, multi-select, and heat legend/multi-metric toggle.
 
-- [ ] **31.1.1** Enforce canonical `type` + `status` enums end-to-end - Backend validation: `type ∈ {Inbox, Concept, System, Decision, TaskContract, Artifact}` and `status ∈ {idea, planned, active, blocked, done, archived}` with clear 400 errors; frontend dropdowns use exact values; node creation defaults: `type=Inbox`, `status=idea` when omitted. AC: Creating/updating node with invalid type/status returns 400 with allowed values; UI only allows allowed values. Verification: Try POST invalid type → 400; Quick Add shows dropdowns with exact enums. If Blocked: Add frontend dropdowns first, backend validation second
+- [x] **31.1.1** Enforce canonical `type` + `status` enums end-to-end - Backend validation: `type ∈ {Inbox, Concept, System, Decision, TaskContract, Artifact}` and `status ∈ {idea, planned, active, blocked, done, archived}` with clear 400 errors; frontend dropdowns use exact values; node creation defaults: `type=Inbox`, `status=idea` when omitted. AC: Creating/updating node with invalid type/status returns 400 with allowed values; UI only allows allowed values. Verification: Try POST invalid type → 400; Quick Add shows dropdowns with exact enums. If Blocked: Add frontend dropdowns first, backend validation second
 
 - [ ] **31.1.2** Implement Inbox-first capture defaults + "Promote" action in node detail - Quick Add defaults to Inbox/idea unless user chooses; Node Detail panel adds "Promote" button that converts `type: Inbox → {Concept|System|Decision|TaskContract|Artifact}` without changing `id` and preserves existing fields. AC: Promote does not change id; type updates in markdown frontmatter; graph refresh shows new type color. Verification: Create Inbox node, promote to Concept, refresh → same id, new type. If Blocked: Implement promotion as a "Type" dropdown change gated by `currentType===Inbox`
 

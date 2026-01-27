@@ -21,6 +21,283 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
+## Phase 34: Discord Integration - Live Build Updates 📢
+
+**Goal:** Post real-time iteration summaries to Discord after each Ralph loop iteration completes.
+
+**Context:** Users want to monitor Ralph's progress remotely without checking logs manually. Discord webhooks provide a simple, reliable notification channel.
+
+**Reference:** `cortex/docs/DISCORD_INTEGRATION_SPEC.md`
+
+---
+
+### Task 34.1: Discord Webhook Sender Utility (MVP)
+
+**Duration:** 30-45 min
+
+
+
+      ```
+      **Ralph Iteration ${ITER_NUM} (${MODE})** — $(date "+%Y-%m-%d %H:%M:%S")
+      
+      ${EXTRACTED_SUMMARY}
+      ```
+
+    - Fallback behavior (if no "Summary" section found):
+
+      ```
+      **Ralph Iteration ${ITER_NUM} (${MODE})** — $(date "+%Y-%m-%d %H:%M:%S")
+      
+      No structured summary found in logs.
+      
+      Run ID: ${ROLLFLOW_RUN_ID}
+      Log: ${LOGFILE}
+      ```
+
+    - Implementation example:
+
+      ```bash
+      generate_iteration_summary() {
+        local iter_num="$1"
+        local mode="$2"
+        local logfile="$3"
+        local timestamp
+        timestamp=$(date "+%Y-%m-%d %H:%M:%S")
+        
+        # Find all "Summary" headers (line numbers)
+        local summary_lines
+        summary_lines=$(grep -n "^\s*Summary\s*$" "$logfile" 2>/dev/null | cut -d: -f1) || true
+        
+        if [[ -z "$summary_lines" ]]; then
+          # Fallback: no summary found
+          echo "**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}"
+          echo ""
+          echo "No structured summary found in logs."
+          echo ""
+          echo "Run ID: ${ROLLFLOW_RUN_ID}"
+          echo "Log: ${logfile}"
+          return
+        fi
+        
+        # Get last summary line number
+        local last_summary_line
+        last_summary_line=$(echo "$summary_lines" | tail -1)
+        
+        # Count total summaries (optional safety message)
+        local summary_count
+        summary_count=$(echo "$summary_lines" | wc -l)
+        
+        # Find :::BUILD_READY::: marker line (if present)
+        local end_marker_line
+        end_marker_line=$(grep -n ":::BUILD_READY:::" "$logfile" 2>/dev/null | tail -1 | cut -d: -f1) || true
+        
+        # Extract from last summary to marker or EOF
+        local extracted_summary
+        if [[ -n "$end_marker_line" ]]; then
+          extracted_summary=$(sed -n "${last_summary_line},${end_marker_line}p" "$logfile" | sed '$ d')
+        else
+          extracted_summary=$(sed -n "${last_summary_line},\$ p" "$logfile")
+        fi
+        
+        # Output with header
+        echo "**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}"
+        echo ""
+        if [[ "$summary_count" -gt 1 ]]; then
+          echo "_Detected ${summary_count} summary blocks; posting last one._"
+          echo ""
+        fi
+        echo "$extracted_summary"
+      }
+      ```
+
+  - **AC:** Function extracts Ralph's structured summary from log; uses LAST summary block if multiple found; fallback message if no summary present; includes iteration header with timestamp
+  - **Verification:** Test with real log: `generate_iteration_summary 12 BUILD workers/ralph/logs/iter12_build.log | head -50`; verify extracts "Summary / Changes Made / Completed" section; test with log containing no summary (fallback message appears); test with multiple summaries (uses last one)
+  - **If Blocked:** Start with simple grep-based extraction, refine line number logic later
+
+- [ ] **34.1.3** Integrate Discord posting after `:::ITER_END:::` marker
+  - **Goal:** Call Discord poster after each iteration completes
+  - **Implementation:**
+    - Location: `workers/ralph/loop.sh` line ~2270 (after `emit_marker ":::ITER_END:::"`)
+    - Add integration block:
+
+      ```bash
+      # Post iteration summary to Discord (if configured)
+      if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+        echo ""
+        echo "Posting iteration summary to Discord..."
+        # Pass logfile path to extract summary
+        local current_logfile="$LOGDIR/iter${i}_${mode}.log"
+        if generate_iteration_summary "$i" "$mode" "$current_logfile" | "$ROOT/bin/discord-post" 2>&1 | tee -a "$current_logfile"; then
+          echo "✓ Discord update posted"
+        else
+          echo "⚠ Discord post failed (non-blocking)"
+        fi
+        echo ""
+      fi
+      ```
+
+    - Ensure failure doesn't stop loop (already wrapped in if-else)
+    - Follow gap-radar pattern (non-blocking, log output)
+    - Pass logfile path as third parameter to `generate_iteration_summary`
+  - **AC:** Loop runs normally with DISCORD_WEBHOOK_URL unset; loop posts to Discord when webhook configured; posting failure doesn't crash loop; extracts summary from correct log file
+  - **Verification:** Run `loop.sh --iterations 1` without webhook (no error); set webhook and run again (check Discord for Ralph's structured summary); break webhook URL (verify non-fatal error); verify Discord message contains "Summary / Changes Made / Completed" sections
+  - **If Blocked:** Make integration optional via feature flag `DISCORD_ENABLED=true`
+
+- [ ] **34.1.4** Add manual verification tests
+  - **Goal:** Document testing procedure
+  - **Implementation:**
+    - Create test checklist in `cortex/docs/DISCORD_INTEGRATION_SPEC.md` (already exists)
+    - Run each test case:
+      1. Dry-run mode: `echo "test" | bin/discord-post --dry-run`
+      2. Real post: Set webhook, `echo "test" | bin/discord-post`
+      3. Chunking: `seq 1 200 | bin/discord-post`
+      4. Loop integration: `cd workers/ralph && bash loop.sh --iterations 1`
+      5. Missing webhook: Unset var, verify non-fatal
+      6. Invalid webhook: Set bad URL, verify error handling
+    - Document results in commit message
+  - **AC:** All 6 test cases pass; Discord messages appear correctly; no loop crashes
+  - **Verification:** Complete checklist, paste results in PR description
+  - **If Blocked:** Run subset of tests (1, 2, 4 minimum)
+
+---
+
+### Task 34.2: Milestone Notifications (V1)
+
+**Duration:** 20-30 min
+**Priority:** Optional enhancement after MVP
+
+- [ ] **34.2.1** Add loop start notification
+  - **Goal:** Post summary when loop begins
+  - **Implementation:**
+    - After line ~1744 (after `ensure_worktree_branch`)
+    - Generate summary:
+
+      ```
+      **Ralph Loop Starting**
+      Iterations: ${MAX_ITERATIONS}
+      Mode: PLAN → BUILD cycling
+      Branch: $(git branch --show-current)
+      Pending tasks: $(grep -c '^\- \[ \]' IMPLEMENTATION_PLAN.md)
+      ```
+
+    - Call `bin/discord-post` (non-blocking)
+  - **AC:** Loop start posts to Discord with task count
+  - **Verification:** Run loop, check Discord for start message
+  - **If Blocked:** Skip this task
+
+- [ ] **34.2.2** Add loop completion notification
+  - **Goal:** Post summary when loop finishes
+  - **Implementation:**
+    - After line ~2275 (after `flush_scoped_commit_if_needed`)
+    - Generate summary:
+
+      ```
+      **Ralph Loop Complete**
+      Total iterations: ${actual_iterations}
+      Cache hits: ${CACHE_HITS} | Misses: ${CACHE_MISSES}
+      Time saved: ${TIME_SAVED_SEC}s
+      Final status: $(cat .verify/latest.txt | grep "^SUMMARY")
+      ```
+
+    - Call `bin/discord-post` (non-blocking)
+  - **AC:** Loop end posts to Discord with totals
+  - **Verification:** Run loop, check Discord for completion message
+  - **If Blocked:** Skip this task
+
+- [ ] **34.2.3** Add verifier failure alerts
+  - **Goal:** Post alert when verifier fails
+  - **Implementation:**
+    - In verifier failure block (line ~1240)
+    - Generate alert:
+
+      ```
+      **⚠️ Verifier Failed**
+      Iteration: ${i}
+      Failed rules: $(parse_verifier_failures .verify/latest.txt)
+      $(sed -n '/^\[FAIL\]/p' .verify/latest.txt | head -10)
+      ```
+
+    - Call `bin/discord-post` (non-blocking)
+    - Add emoji/formatting for visibility
+  - **AC:** Verifier failures post to Discord with rule details
+  - **Verification:** Trigger verifier failure, check Discord alert
+  - **If Blocked:** Skip this task
+
+---
+
+### Task 34.3: Template Propagation
+
+**Duration:** 10-15 min
+
+- [ ] **34.3.1** Copy `bin/discord-post` to `templates/ralph/bin/`
+  - **Goal:** Make Discord integration available for new projects
+  - **Implementation:**
+    - Create `templates/ralph/bin/discord-post` (copy from `bin/discord-post`)
+    - Ensure executable: `chmod +x templates/ralph/bin/discord-post`
+    - Add to `.gitignore` if needed (no, this should be tracked)
+  - **AC:** Template has discord-post utility
+  - **Verification:** `test -x templates/ralph/bin/discord-post`
+  - **If Blocked:** Skip if bin/ not in template structure yet
+
+- [ ] **34.3.2** Add Discord integration to `templates/ralph/loop.sh`
+  - **Goal:** Template projects get Discord integration by default
+  - **Implementation:**
+    - Copy integration block from `workers/ralph/loop.sh`
+    - Copy `generate_iteration_summary` function
+    - Ensure paths work in template context (use `$ROOT` prefix)
+  - **AC:** Template loop.sh includes Discord integration
+  - **Verification:** Diff workers/ralph/loop.sh and templates/ralph/loop.sh shows matching blocks
+  - **If Blocked:** Document manual steps in templates/ralph/README.md
+
+---
+
+### Task 34.4: Documentation
+
+**Duration:** 10-15 min
+
+- [ ] **34.4.1** Update `workers/ralph/README.md` with Discord setup
+  - **Goal:** Document Discord configuration
+  - **Implementation:**
+    - Add section "Discord Integration"
+    - Document env var: `export DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."`
+    - Document webhook creation: Discord Server Settings → Integrations → Webhooks
+    - Add troubleshooting tips
+    - Link to `cortex/docs/DISCORD_INTEGRATION_SPEC.md`
+  - **AC:** README documents Discord setup
+  - **Verification:** Follow README steps, verify webhook works
+  - **If Blocked:** Add minimal "See DISCORD_INTEGRATION_SPEC.md" link
+
+- [ ] **34.4.2** Add Discord integration to skills
+  - **Goal:** Capture Discord webhook pattern for future reference
+  - **Implementation:**
+    - Create `skills/domains/infrastructure/discord-webhook-patterns.md`
+    - Document chunking strategy, rate limiting, error handling
+    - Include example code snippets
+    - Reference Brain's implementation
+  - **AC:** Skill document exists with Discord patterns
+  - **Verification:** Skill readable and useful
+  - **If Blocked:** Skip skill creation, add to GAP_BACKLOG.md instead
+
+---
+
+**Success Criteria (Phase 34):**
+
+- [ ] V1 milestones: Start/end/error notifications (optional)
+- [ ] Templates updated with Discord integration
+- [ ] Documentation complete
+
+**Dependencies:**
+
+- Requires: bash, curl, jq
+- Reads: DISCORD_WEBHOOK_URL env var
+- Writes: Discord channel via webhook
+
+**Rollback Plan:**
+
+- Remove integration block from loop.sh
+- Delete bin/discord-post
+- No data loss (all changes are additive)
+
 ## Phase 31: Brain Map V2 - Core Interactions 🔥
 
 **Context:** User testing feedback - need node dragging, drag-to-link edge creation, dark mode, and mobile support for production use.
@@ -43,7 +320,6 @@
 
 **Goal:** Add the missing workflow primitives (Inbox capture/promote/triage), strict enums (type/status), relationship editor UI, multi-select, and heat legend/multi-metric toggle.
 
-- [ ] **31.1.1** Enforce canonical `type` + `status` enums end-to-end - Backend validation: `type ∈ {Inbox, Concept, System, Decision, TaskContract, Artifact}` and `status ∈ {idea, planned, active, blocked, done, archived}` with clear 400 errors; frontend dropdowns use exact values; node creation defaults: `type=Inbox`, `status=idea` when omitted. AC: Creating/updating node with invalid type/status returns 400 with allowed values; UI only allows allowed values. Verification: Try POST invalid type → 400; Quick Add shows dropdowns with exact enums. If Blocked: Add frontend dropdowns first, backend validation second
 
 - [ ] **31.1.2** Implement Inbox-first capture defaults + "Promote" action in node detail - Quick Add defaults to Inbox/idea unless user chooses; Node Detail panel adds "Promote" button that converts `type: Inbox → {Concept|System|Decision|TaskContract|Artifact}` without changing `id` and preserves existing fields. AC: Promote does not change id; type updates in markdown frontmatter; graph refresh shows new type color. Verification: Create Inbox node, promote to Concept, refresh → same id, new type. If Blocked: Implement promotion as a "Type" dropdown change gated by `currentType===Inbox`
 

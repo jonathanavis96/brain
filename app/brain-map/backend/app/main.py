@@ -361,8 +361,35 @@ async def update_node(node_id: str, request: dict) -> dict:
     if "title" in request:
         frontmatter["title"] = request["title"]
     if "type" in request:
+        # Validate type enum
+        valid_types = {
+            "Inbox",
+            "Concept",
+            "System",
+            "Decision",
+            "TaskContract",
+            "Artifact",
+        }
+        if request["type"] not in valid_types:
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "error": "VALIDATION_ERROR",
+                    "message": f"Invalid type '{request['type']}'. Allowed values: {sorted(valid_types)}",
+                },
+            )
         frontmatter["type"] = request["type"]
     if "status" in request:
+        # Validate status enum
+        valid_statuses = {"idea", "planned", "active", "blocked", "done", "archived"}
+        if request["status"] not in valid_statuses:
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "error": "VALIDATION_ERROR",
+                    "message": f"Invalid status '{request['status']}'. Allowed values: {sorted(valid_statuses)}",
+                },
+            )
         frontmatter["status"] = request["status"]
     if "tags" in request:
         frontmatter["tags"] = request["tags"]
@@ -515,6 +542,28 @@ async def create_node(request: dict) -> dict:
             detail={
                 "error": "VALIDATION_ERROR",
                 "message": "Field 'title' is required",
+            },
+        )
+
+    # Validate type enum
+    valid_types = {"Inbox", "Concept", "System", "Decision", "TaskContract", "Artifact"}
+    if node_type not in valid_types:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "VALIDATION_ERROR",
+                "message": f"Invalid type '{node_type}'. Allowed values: {sorted(valid_types)}",
+            },
+        )
+
+    # Validate status enum
+    valid_statuses = {"idea", "planned", "active", "blocked", "done", "archived"}
+    if status not in valid_statuses:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "VALIDATION_ERROR",
+                "message": f"Invalid status '{status}'. Allowed values: {sorted(valid_statuses)}",
             },
         )
 

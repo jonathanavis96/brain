@@ -557,36 +557,50 @@ function App() {
                 <label style={{ display: 'block', marginBottom: '0.25rem' }}>
                   <strong>Type:</strong>
                 </label>
-                <input
-                  type="text"
-                  value={editedNode.type || ''}
+                <select
+                  value={editedNode.type || 'Inbox'}
                   onChange={(e) => handleFieldChange('type', e.target.value)}
                   style={{
                     width: '100%',
                     padding: '0.5rem',
                     border: '1px solid #ddd',
                     borderRadius: '4px',
-                    fontSize: '14px'
+                    fontSize: '14px',
+                    background: '#fff'
                   }}
-                />
+                >
+                  <option value="Inbox">Inbox</option>
+                  <option value="Concept">Concept</option>
+                  <option value="System">System</option>
+                  <option value="Decision">Decision</option>
+                  <option value="TaskContract">TaskContract</option>
+                  <option value="Artifact">Artifact</option>
+                </select>
               </div>
 
               <div style={{ marginBottom: '0.5rem' }}>
                 <label style={{ display: 'block', marginBottom: '0.25rem' }}>
                   <strong>Status:</strong>
                 </label>
-                <input
-                  type="text"
-                  value={editedNode.status || ''}
+                <select
+                  value={editedNode.status || 'idea'}
                   onChange={(e) => handleFieldChange('status', e.target.value)}
                   style={{
                     width: '100%',
                     padding: '0.5rem',
                     border: '1px solid #ddd',
                     borderRadius: '4px',
-                    fontSize: '14px'
+                    fontSize: '14px',
+                    background: '#fff'
                   }}
-                />
+                >
+                  <option value="idea">idea</option>
+                  <option value="planned">planned</option>
+                  <option value="active">active</option>
+                  <option value="blocked">blocked</option>
+                  <option value="done">done</option>
+                  <option value="archived">archived</option>
+                </select>
               </div>
 
               <div style={{ marginBottom: '0.5rem' }}>
