@@ -1075,8 +1075,25 @@ EOF
   summary_lines=$(grep -n "Summary:" "$logfile" 2>/dev/null | grep -v "iteration summary" || true)
 
   if [[ -z "$summary_lines" ]]; then
-    # No summary found - output fallback
-    cat <<EOF
+    # No "Summary:" header found - try to extract from STATUS/PROGRESS markers
+    local status_line
+    status_line=$(grep -n "^STATUS |" "$logfile" 2>/dev/null | tail -1 | cut -d: -f1 || echo "")
+    
+    if [[ -n "$status_line" ]]; then
+      # Extract from STATUS to :::BUILD_READY::: or :::PLAN_READY::: or EOF
+      local summary_block
+      summary_block=$(sed -n "${status_line},\$p" "$logfile" | sed '/:::\(BUILD\|PLAN\)_READY:::/q')
+      
+      # Output with header
+      cat <<EOF
+**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}
+
+$summary_block
+EOF
+      return
+    else
+      # No summary markers found at all - output fallback
+      cat <<EOF
 **Ralph Iteration ${iter_num} (${mode})** — ${timestamp}
 
 No structured summary found in logs.
@@ -1084,7 +1101,8 @@ No structured summary found in logs.
 Run ID: ${run_id}
 Log: ${logfile}
 EOF
-    return
+      return
+    fi
   fi
 
   # Get the last summary line number
