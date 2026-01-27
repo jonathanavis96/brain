@@ -21,36 +21,6 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
-## Phase 0-Lint: Markdown Lint Fixes
-
-**Context:** Auto-fix could not resolve these markdown errors. Manual fixes required.
-
-**Goal:** All markdown files pass `markdownlint` with zero errors.
-
-**Tasks:**
-
-- [x] **0.L.1** Fix MD046 in cortex/IMPLEMENTATION_PLAN.md line 50
-  - **Issue:** Indented code block should be fenced
-  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD046 errors)
-
-- [x] **0.L.2** Fix MD024 in cortex/PLAN_DONE.md lines 341, 347
-  - **Issue:** Duplicate headings "Archived on 2026-01-27"
-  - **AC:** `markdownlint cortex/PLAN_DONE.md` passes (no MD024 errors)
-
-- [ ] **0.L.3** Fix MD046 in workers/IMPLEMENTATION_PLAN.md lines 40, 55
-  - **Issue:** Indented code blocks should be fenced
-  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD046 errors)
-
-- [ ] **0.L.4** Fix MD007 in workers/IMPLEMENTATION_PLAN.md lines 46-48, 77-79, 90-92
-  - **Issue:** Unordered list indentation (Expected: 0; Actual: 2)
-  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD007 errors)
-
-- [ ] **0.L.5** Fix MD005 in workers/IMPLEMENTATION_PLAN.md line 94
-  - **Issue:** Inconsistent indentation for list items at the same level
-  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD005 errors)
-
----
-
 ## Phase 30: Brain Map UX Refinements (2 hours) 🎨
 
 **Context:** After Phase 29 quick wins, polish the graph navigation and rendering for production quality.
@@ -67,51 +37,22 @@
 
 ### Task 30.1: Proper cluster mode switching
 
-- [ ] **30.1.1** Refactor cluster rebuild to use `showClusters` boolean - Use `useMemo` to derive `showClusters` from `zoomLevel < 0.5`, then use in useEffect deps instead of raw zoomLevel. AC: Graph rebuild fires only when boolean flips. Verification: Console.log fires only at threshold crossing. If Blocked: 29.1.2 already handles this; skip if satisfied
 
 ---
 
 ### Task 30.2: Navigation controls (fit-to-screen + reset)
 
-- [x] **30.2.1** Add "Fit to Screen" button - Add button to GraphView bottom-right that calls `sigmaRef.current.getCamera().animatedReset()`. AC: Click button → graph zooms out to show all nodes. Verification: Pan far away → click Fit → all nodes visible. If Blocked: Use `setState({ x: 0, y: 0, ratio: 1 })` as simpler alternative
-
-- [x] **30.2.2** Add zoom controls (+/- buttons) - Add +/- buttons next to Fit button that call `animatedZoom()` and `animatedUnzoom()`. AC: +/- buttons zoom in/out smoothly. Verification: Click + 3 times → zooms in; click - 3 times → zooms out. If Blocked: Lower priority; skip if time constrained
-
-- [ ] **30.2.3** Add minimap or breadcrumb indicator
-  - **Goal:** Show user where they are in the graph when panned away from center
-  - **Options:**
-    - **Minimap:** Small thumbnail of full graph with viewport indicator (requires canvas overlay)
-    - **Breadcrumb:** "Viewing: Cluster X / Node Y" indicator (simpler)
-    - **Center distance:** "50m from center" indicator (cheapest)
-  - **Recommendation:** Start with breadcrumb (show selected node path)
-  - **AC:** User can see current location context even when panned far from origin
-  - **Verification:** Pan away → indicator shows "Viewing: Node ABC" or similar
-  - **If Blocked:** Skip for MVP; reconsider if user testing shows disorientation
 
 ---
 
 ### Task 30.3: Smart label rendering
 
-- [ ] **30.3.1** Implement hover-only label mode - Custom label reducer that renders labels only for `data.highlighted || data.hovered` nodes, add enterNode/leaveNode handlers to set hovered attribute. AC: Labels appear only on hover. Verification: Mouse over → label appears; move away → disappears. If Blocked: Lower priority; 29.2.1 threshold sufficient
-
-- [ ] **30.3.2** Zoom-based label sizing - Set `labelSize: Math.max(10, Math.min(16, 12 * zoomLevel))` to scale font size with zoom level. AC: Labels grow/shrink as user zooms in/out. Verification: Zoom in → bigger labels; zoom out → smaller labels. If Blocked: Skip; static size fine for MVP
-
 ---
 
 ### Task 30.4: Inspector layout cleanup
 
-- [ ] **30.4.1** Fix `InsightsPanel` positioning (remove `position: fixed`)
-  - **Goal:** Make Insights panel part of natural document flow (no overlay)
-  - **File:** `app/brain-map/frontend/src/InsightsPanel.jsx` line 45
-  - **Change:** Remove `position: fixed` and adjust `App.jsx` layout to use flexbox properly
-  - **Implementation:**
-    - In `InsightsPanel.jsx`: Remove `position: fixed, top, right, width` (let parent control sizing)
-    - In `App.jsx`: Ensure right column uses `display: flex, flexDirection: column` and panels use `flex: 1`
-  - **AC:** Hotspots and form fields never overlap; both scroll naturally within right panel
-  - **Verification:** Resize window → panels stay in column; no overlapping elements
-  - **If Blocked:** 29.3.1 collapsible is sufficient; skip layout refactor
 
-- [ ] **30.4.2** Add proper scrolling to right panel
+- [x] **30.4.2** Add proper scrolling to right panel
   - **Goal:** Long Hotspots lists or node bodies scroll within panel (don't push form fields off screen)
   - **Implementation:** Add `overflow-y: auto` and `max-height` to scrollable sections
   - **AC:** Hotspots list with 20+ items scrolls within panel; form fields always visible below

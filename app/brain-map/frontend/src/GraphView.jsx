@@ -72,6 +72,8 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
   const [zoomLevel, setZoomLevel] = useState(1.0)
   const [expandedClusters, setExpandedClusters] = useState(new Set())
   const [clusterData, setClusterData] = useState(null)
+  const [selectedNodeId, setSelectedNodeId] = useState(null)
+  const [hoveredNode, setHoveredNode] = useState(null)
 
   // Derive showClusters from zoomLevel - only changes when threshold is crossed
   const showClusters = useMemo(() => {
@@ -238,8 +240,20 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
         defaultNodeColor: '#999',
         defaultEdgeColor: '#ccc',
         labelFont: 'system-ui, sans-serif',
-        labelSize: 12,
-        labelRenderedSizeThreshold: 8
+        labelSize: Math.max(10, Math.min(16, 12 * zoomLevel)),
+        labelRenderedSizeThreshold: 8,
+        // Custom label reducer: only show labels for hovered nodes
+        labelRenderer: (context, data, settings) => {
+          if (!data.hovered && !data.highlighted) return
+
+          const size = settings.labelSize
+          const font = settings.labelFont
+          const weight = settings.labelWeight || 'normal'
+
+          context.fillStyle = '#000'
+          context.font = `${weight} ${size}px ${font}`
+          context.fillText(data.label, data.x, data.y + data.size + 3)
+        }
       })
 
       // Handle node clicks
@@ -259,6 +273,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
           })
         } else if (attrs.nodeData) {
           // Regular node click
+          setSelectedNodeId(node)
           if (onNodeSelect) {
             onNodeSelect(attrs.nodeData)
           }
@@ -269,6 +284,19 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
       sigma.getCamera().on('updated', () => {
         const ratio = sigma.getCamera().ratio
         setZoomLevel(ratio)
+      })
+
+      // Handle node hover events
+      sigma.on('enterNode', ({ node }) => {
+        setHoveredNode(node)
+        graph.setNodeAttribute(node, 'hovered', true)
+        sigma.refresh()
+      })
+
+      sigma.on('leaveNode', ({ node }) => {
+        setHoveredNode(null)
+        graph.setNodeAttribute(node, 'hovered', false)
+        sigma.refresh()
       })
 
       sigmaRef.current = sigma
@@ -333,6 +361,11 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) 
           {zoomLevel < ZOOM_THRESHOLDS.CLUSTER_VIEW && (
             <div style={{ marginTop: '4px', fontSize: '12px', color: '#666' }}>
               Cluster view • {expandedClusters.size} expanded
+            </div>
+          )}
+          {selectedNodeId && (
+            <div style={{ marginTop: '4px', fontSize: '12px', color: '#2196F3', fontWeight: '500' }}>
+              Viewing: {filteredData.nodes.find(n => n.id === selectedNodeId)?.title || selectedNodeId}
             </div>
           )}
         </div>

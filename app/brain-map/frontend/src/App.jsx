@@ -468,17 +468,28 @@ function App() {
           />
         </div>
 
-        <InsightsPanel
-          graphData={graphData}
-          onNodeClick={(nodeId) => {
-            // Find the node and trigger selection
-            const node = graphData?.nodes?.find(n => n.id === nodeId)
-            if (node) {
-              handleNodeSelect(node)
-            }
-          }}
-          visible={showInsightsPanel}
-        />
+        {showInsightsPanel && (
+          <div style={{
+            width: '320px',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            padding: '20px',
+            borderLeft: '1px solid #ddd'
+          }}>
+            <InsightsPanel
+              graphData={graphData}
+              onNodeClick={(nodeId) => {
+                // Find the node and trigger selection
+                const node = graphData?.nodes?.find(n => n.id === nodeId)
+                if (node) {
+                  handleNodeSelect(node)
+                }
+              }}
+              visible={true}
+            />
+          </div>
+        )}
 
         {selectedNode && editedNode && (
           <div style={{

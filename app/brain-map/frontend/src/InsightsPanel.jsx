@@ -42,18 +42,14 @@ function InsightsPanel({ graphData, onNodeClick, visible = true }) {
 
   return (
     <div style={{
-      position: 'fixed',
-      top: '80px',
-      right: '20px',
-      width: '320px',
-      maxHeight: 'calc(100vh - 100px)',
       backgroundColor: 'white',
       border: '1px solid #ddd',
       borderRadius: '8px',
       boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
       display: 'flex',
       flexDirection: 'column',
-      zIndex: 1000
+      overflow: 'hidden',
+      height: '100%'
     }}>
       {/* Collapsible Hotspots Section */}
       <details open style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>

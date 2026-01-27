@@ -363,3 +363,13 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 
 | Date | Task ID | Description |
 |------|---------|-------------|
+
+### Archived on 2026-01-27 16:34:58
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 30.2.3 | - [x] **30.2.3** Add minimap or breadcrumb indicator |
+| 2026-01-27 | 30.3.1 | - [x] **30.3.1** Implement hover-only label mode - Custom label reducer that renders labels only for `data.highlighted` or `data.hovered` nodes, add enterNode/leaveNode handlers to set hovered attribute. AC: Labels appear only on hover. Verification: Mouse over to label appears; move away to disappears. If Blocked: Lower priority; 29.2.1 threshold sufficient |
+| 2026-01-27 | 30.3.2 | - [x] **30.3.2** Zoom-based label sizing - Set `labelSize: Math.max(10, Math.min(16, 12 * zoomLevel))` to scale font size with zoom level. AC: Labels grow/shrink as user zooms in/out. Verification: Zoom in → bigger labels; zoom out → smaller labels. If Blocked: Skip; static size fine for MVP |
+| 2026-01-27 | 30.4.1 | - [x] **30.4.1** Fix `InsightsPanel` positioning (remove `position: fixed`) |
+| 2026-01-27 | 30.4.2 | - [x] **30.4.2** Add proper scrolling to right panel |
