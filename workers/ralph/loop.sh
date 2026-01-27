@@ -27,6 +27,14 @@ LOGDIR="$RALPH/logs"
 VERIFY_REPORT="$RALPH/.verify/latest.txt"
 mkdir -p "$LOGDIR"
 
+# Load environment variables from .env file (if exists)
+if [[ -f "$ROOT/.env" ]]; then
+  # shellcheck source=../../.env
+  set -a  # Auto-export all variables
+  source "$ROOT/.env"
+  set +a
+fi
+
 # Source shared utilities (includes RollFlow tracking functions)
 # shellcheck source=../shared/common.sh
 source "$(dirname "$RALPH")/shared/common.sh"
@@ -1980,7 +1988,7 @@ if [[ -n "$PROMPT_ARG" ]]; then
         echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
         echo ""
         echo "After fixing manually, re-run the loop to continue."
-        
+
         # Post verifier failure alert to Discord (if configured)
         if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
           {
@@ -1994,7 +2002,7 @@ if [[ -n "$PROMPT_ARG" ]]; then
             sed -n '/^\[FAIL\]/p' .verify/latest.txt 2>/dev/null | head -10
           } | "$ROOT/bin/discord-post" 2>/dev/null || true
         fi
-        
+
         exit 1
       else
         echo ""
@@ -2004,7 +2012,7 @@ if [[ -n "$PROMPT_ARG" ]]; then
         echo "Next iteration will inject LAST_VERIFIER_RESULT: FAIL"
         echo "Ralph should fix the AC failures before picking new tasks."
         echo ""
-        
+
         # Post verifier failure alert to Discord (if configured)
         if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
           {
@@ -2330,7 +2338,7 @@ else
         echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
         echo ""
         echo "After fixing manually, re-run the loop to continue."
-        
+
         # Post verifier failure alert to Discord (if configured)
         if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
           {
@@ -2344,7 +2352,7 @@ else
             sed -n '/^\[FAIL\]/p' .verify/latest.txt 2>/dev/null | head -10
           } | "$ROOT/bin/discord-post" 2>/dev/null || true
         fi
-        
+
         exit 1
       else
         echo ""
@@ -2354,7 +2362,7 @@ else
         echo "Next iteration will inject LAST_VERIFIER_RESULT: FAIL"
         echo "Ralph should fix the AC failures before picking new tasks."
         echo ""
-        
+
         # Post verifier failure alert to Discord (if configured)
         if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
           {
@@ -2414,20 +2422,20 @@ else
     if [[ -n "${DISCORD_WEBHOOK_URL:-}" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
       echo ""
       echo "Posting iteration summary to Discord..."
-      
+
       # Calculate cache time saved
       time_saved_display=""
       if [[ "$CACHE_SKIP" == "true" ]] && [[ $CACHE_HITS -gt 0 ]]; then
         TIME_SAVED_SEC=$((TIME_SAVED_MS / 1000))
         time_saved_display="Time saved: ${TIME_SAVED_SEC}s"
       fi
-      
+
       # Get current verifier status
       verifier_status="Unknown"
       if [[ -f ".verify/latest.txt" ]]; then
         verifier_status=$(grep "^SUMMARY" .verify/latest.txt | head -1 || echo "Unknown")
       fi
-      
+
       # Build iteration completion message with stats
       {
         echo "**Ralph Iteration $i Complete** ✅"
@@ -2439,7 +2447,7 @@ else
         echo ""
         echo "Run ID: ${ROLLFLOW_RUN_ID:-unknown}"
       } | "$ROOT/bin/discord-post" 2>&1 | tee -a "${LOGDIR}/iter${i}_completion.log"
-      
+
       if [[ ${PIPESTATUS[1]} -eq 0 ]]; then
         echo "✓ Discord update posted"
       else
