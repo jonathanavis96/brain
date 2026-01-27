@@ -19,8 +19,8 @@ Example structure checks:
 - [ ] Configuration files present and valid
 - [ ] Required dependencies installed
 - [ ] Entry points properly configured
-- [ ] Source code in project root src/, NOT ralph/src/
-- [ ] Scripts in project root bin/, NOT ralph/bin/
+- [ ] Source code in project root src/, NOT workers/ralph/src/
+- [ ] Scripts in project root bin/, NOT workers/ralph/bin/
 
 Example specific checks:
 

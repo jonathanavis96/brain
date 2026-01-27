@@ -1119,6 +1119,55 @@ def extract_subgraph(
     return nodes, edges
 
 
+def _topological_sort(nodes: list[dict], edges: list[dict]) -> list[str]:
+    """
+    Perform topological sort on nodes using Kahn's algorithm.
+
+    Returns a stable ordering of node IDs respecting dependencies.
+    If cycles exist, remaining nodes are sorted lexicographically.
+
+    Args:
+        nodes: List of node dicts with 'id' field
+        edges: List of edge dicts with 'from' and 'to' fields
+
+    Returns:
+        List of node IDs in topological order
+    """
+    # Build adjacency list and in-degree map
+    adjacency = {node["id"]: [] for node in nodes}
+    in_degree = {node["id"]: 0 for node in nodes}
+
+    for edge in edges:
+        source, target = edge["from"], edge["to"]
+        if source in adjacency and target in in_degree:
+            adjacency[source].append(target)
+            in_degree[target] += 1
+
+    # Find all nodes with in-degree 0 (no dependencies)
+    queue = sorted([nid for nid, deg in in_degree.items() if deg == 0])
+    result = []
+
+    while queue:
+        # Pop node with smallest ID (for determinism)
+        current = queue.pop(0)
+        result.append(current)
+
+        # Reduce in-degree for neighbors
+        for neighbor in sorted(adjacency[current]):
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                # Insert in sorted position for determinism
+                queue.append(neighbor)
+                queue.sort()
+
+    # If not all nodes processed, there are cycles
+    # Add remaining nodes in lexicographic order
+    remaining = sorted([nid for nid in in_degree if in_degree[nid] > 0])
+    result.extend(remaining)
+
+    return result
+
+
 def generate_plan_markdown(
     nodes: list[dict],
     edges: list[dict],
@@ -1129,6 +1178,8 @@ def generate_plan_markdown(
 
     Creates agent-readable implementation plan with:
     - Selected nodes (prominently marked)
+    - Topologically sorted task ordering
+    - Cycle detection and explicit reporting
     - Dependency graph visualization
     - Acceptance criteria extraction
     - Relationship mapping
@@ -1153,12 +1204,135 @@ def generate_plan_markdown(
         "",
     ]
 
-    # Section 1: Selected Nodes (starting points)
-    lines.append("## Selected Nodes")
+    # Run cycle detection on dependency relationships
+    depends_on_edges = [e for e in edges if e["type"] == "depends_on"]
+
+    # Build in-memory cycle detection (no database connection)
+    # Extract unique node IDs from edges
+    node_ids_in_graph = set()
+    for edge in depends_on_edges:
+        node_ids_in_graph.add(edge["from"])
+        node_ids_in_graph.add(edge["to"])
+
+    # Build adjacency list for cycle detection
+    adjacency: dict[str, list[str]] = {nid: [] for nid in node_ids_in_graph}
+    for edge in depends_on_edges:
+        adjacency[edge["from"]].append(edge["to"])
+
+    # Detect cycles using DFS
+    from app.dependency_analysis import CycleDetectionResult
+
+    cycle_result = CycleDetectionResult()
+
+    # Detect self-loops
+    for edge in depends_on_edges:
+        if edge["from"] == edge["to"]:
+            cycle_result.self_loops.append(edge["from"])
+            cycle_result.has_cycles = True
+
+    # DFS-based cycle detection
+    WHITE, GRAY, BLACK = 0, 1, 2
+    state = {node: WHITE for node in node_ids_in_graph}
+    parent = {node: None for node in node_ids_in_graph}
+
+    def extract_cycle(current: str, back_target: str) -> list[str]:
+        """Extract cycle path from DFS traversal."""
+        cycle = [back_target]
+        node = current
+        while node != back_target and node is not None:
+            cycle.append(node)
+            node = parent.get(node)
+        cycle.reverse()
+        return cycle
+
+    def dfs_visit(node: str) -> None:
+        """Visit node and detect cycles via back edges."""
+        state[node] = GRAY
+        for neighbor in adjacency.get(node, []):
+            if state[neighbor] == WHITE:
+                parent[neighbor] = node
+                dfs_visit(neighbor)
+            elif state[neighbor] == GRAY:
+                # Back edge detected - cycle found
+                cycle = extract_cycle(node, neighbor)
+                cycle_result.cycles.append(cycle)
+                cycle_result.has_cycles = True
+        state[node] = BLACK
+
+    # Run DFS from all unvisited nodes
+    for node in node_ids_in_graph:
+        if state[node] == WHITE:
+            dfs_visit(node)
+
+    # Report cycles if detected
+    if cycle_result.has_cycles:
+        lines.append("## ⚠️ Dependency Cycles Detected")
+        lines.append("")
+        lines.append(
+            f"**Warning:** {len(cycle_result.cycles)} dependency cycle(s) found. "
+            "Tasks in cycles cannot be strictly ordered and may need manual review."
+        )
+        lines.append("")
+
+        for i, cycle in enumerate(cycle_result.cycles, 1):
+            # Find node titles for cycle display
+            cycle_titles = []
+            for node_id in cycle:
+                node = next((n for n in nodes if n["id"] == node_id), None)
+                title = node["title"] if node else node_id
+                cycle_titles.append(title)
+
+            cycle_path = " → ".join(cycle_titles + [cycle_titles[0]])
+            lines.append(f"{i}. **Cycle {i}:** {cycle_path}")
+
+        lines.append("")
+        lines.append("---")
+        lines.append("")
+
+    # Compute topological ordering for task execution
+    sorted_node_ids = _topological_sort(nodes, depends_on_edges)
+    node_order = {nid: idx for idx, nid in enumerate(sorted_node_ids)}
+
+    # Section 1: Execution Order (topologically sorted)
+    lines.append("## Execution Order")
+    lines.append("")
+    lines.append(
+        "Tasks ordered by dependencies (topological sort on `depends_on` relationships):"
+    )
     lines.append("")
 
     selection_set = set(selection)
+
+    for idx, node_id in enumerate(sorted_node_ids, 1):
+        node = next((n for n in nodes if n["id"] == node_id), None)
+        if not node:
+            continue
+
+        # Mark selected nodes prominently
+        marker = "🎯 " if node_id in selection_set else ""
+        lines.append(f"{idx}. {marker}**{node['title']}** (`{node['id']}`)")
+
+        # Show immediate dependencies
+        deps = [e["from"] for e in depends_on_edges if e["to"] == node_id]
+        if deps:
+            dep_titles = []
+            for dep_id in deps:
+                dep_node = next((n for n in nodes if n["id"] == dep_id), None)
+                dep_title = dep_node["title"] if dep_node else dep_id
+                dep_titles.append(dep_title)
+            lines.append(f"   - **Depends on:** {', '.join(dep_titles)}")
+
+    lines.append("")
+    lines.append("---")
+    lines.append("")
+
+    # Section 2: Selected Nodes (starting points with full details)
+    lines.append("## Selected Nodes (Details)")
+    lines.append("")
+
+    # Sort selected nodes by topological order
     selected_nodes = [n for n in nodes if n["id"] in selection_set]
+    selected_nodes.sort(key=lambda n: node_order.get(n["id"], float("inf")))
 
     for node in selected_nodes:
         lines.append(f"### {node['title']} ({node['type']})")
@@ -1169,6 +1343,33 @@ def generate_plan_markdown(
             lines.append(f"- **Priority:** {node['priority']}")
         if node.get("tags"):
             lines.append(f"- **Tags:** {', '.join(node['tags'])}")
+
+        # Show dependency information
+        deps = [e["from"] for e in depends_on_edges if e["to"] == node["id"]]
+        if deps:
+            lines.append("")
+            lines.append("**Dependencies:**")
+            lines.append("")
+            for dep_id in deps:
+                dep_node = next((n for n in nodes if n["id"] == dep_id), None)
+                dep_title = dep_node["title"] if dep_node else dep_id
+                lines.append(f"- {dep_title} (`{dep_id}`)")
+
+        # Show reverse dependencies (what depends on this)
+        dependents = [e["to"] for e in depends_on_edges if e["from"] == node["id"]]
+        if dependents:
+            lines.append("")
+            lines.append("**Blocks:**")
+            lines.append("")
+            for dependent_id in dependents:
+                dependent_node = next(
+                    (n for n in nodes if n["id"] == dependent_id), None
+                )
+                dependent_title = (
+                    dependent_node["title"] if dependent_node else dependent_id
+                )
+                lines.append(f"- {dependent_title} (`{dependent_id}`)")
+
         if node.get("acceptance_criteria"):
             lines.append("")
             lines.append("**Acceptance Criteria:**")
@@ -1177,12 +1378,15 @@ def generate_plan_markdown(
                 lines.append(f"- {criterion}")
         lines.append("")
 
-    # Section 2: Related Nodes (discovered via traversal)
+    # Section 3: Related Nodes (discovered via traversal)
     related_nodes = [n for n in nodes if n["id"] not in selection_set]
 
     if related_nodes:
         lines.append("## Related Nodes")
         lines.append("")
+
+        # Sort by topological order
+        related_nodes.sort(key=lambda n: node_order.get(n["id"], float("inf")))
 
         for node in related_nodes:
             lines.append(f"### {node['title']} ({node['type']})")
@@ -1191,6 +1395,18 @@ def generate_plan_markdown(
             lines.append(f"- **Status:** {node['status']}")
             if node.get("priority"):
                 lines.append(f"- **Priority:** {node['priority']}")
+
+            # Show dependency information
+            deps = [e["from"] for e in depends_on_edges if e["to"] == node["id"]]
+            if deps:
+                lines.append("")
+                lines.append("**Dependencies:**")
+                lines.append("")
+                for dep_id in deps:
+                    dep_node = next((n for n in nodes if n["id"] == dep_id), None)
+                    dep_title = dep_node["title"] if dep_node else dep_id
+                    lines.append(f"- {dep_title} (`{dep_id}`)")
+
             if node.get("acceptance_criteria"):
                 lines.append("")
                 lines.append("**Acceptance Criteria:**")
@@ -1199,7 +1415,7 @@ def generate_plan_markdown(
                     lines.append(f"- {criterion}")
             lines.append("")
 
-    # Section 3: Relationship Graph
+    # Section 4: Relationship Graph (all relationship types)
     if edges:
         lines.append("## Relationship Graph")
         lines.append("")
@@ -1228,7 +1444,7 @@ def generate_plan_markdown(
 
             lines.append("")
 
-    # Section 4: Summary Statistics
+    # Section 5: Summary Statistics
     lines.append("## Summary")
     lines.append("")
 
@@ -1252,6 +1468,12 @@ def generate_plan_markdown(
     lines.append("")
     for node_type in sorted(type_counts.keys()):
         lines.append(f"- {node_type}: {type_counts[node_type]}")
+    lines.append("")
+
+    lines.append("**Dependencies:**")
+    lines.append("")
+    lines.append(f"- Total `depends_on` edges: {len(depends_on_edges)}")
+    lines.append(f"- Cycles detected: {len(cycle_result.cycles)}")
     lines.append("")
 
     return "\n".join(lines)

@@ -5,22 +5,93 @@ import FA2Layout from 'graphology-layout-forceatlas2/worker'
 
 const API_BASE_URL = import.meta.env.VITE_BRAIN_MAP_API_BASE_URL || 'http://localhost:8000'
 
-function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad }) {
+// Zoom thresholds for clustering behavior
+const ZOOM_THRESHOLDS = {
+  FULL_DETAIL: 1.0,      // Above this: show all nodes
+  CLUSTER_VIEW: 0.5,     // Below this: show clusters
+  MIN_ZOOM: 0.1          // Minimum zoom level
+}
+
+// Cluster nodes by tag similarity or connection density
+function computeClusters(nodes, edges) {
+  const clusters = new Map()
+  const nodeToCluster = new Map()
+
+  // Group nodes by primary tag (first tag)
+  nodes.forEach(node => {
+    const primaryTag = node.tags && node.tags.length > 0 ? node.tags[0] : 'untagged'
+
+    if (!clusters.has(primaryTag)) {
+      clusters.set(primaryTag, {
+        id: `cluster_${primaryTag}`,
+        label: `${primaryTag} (0)`,
+        nodes: [],
+        tags: [primaryTag]
+      })
+    }
+
+    clusters.get(primaryTag).nodes.push(node)
+    nodeToCluster.set(node.id, primaryTag)
+  })
+
+  // Update cluster labels with node counts
+  clusters.forEach(cluster => {
+    cluster.label = `${cluster.tags[0]} (${cluster.nodes.length})`
+  })
+
+  // Compute cluster edges (connections between clusters)
+  const clusterEdges = new Map()
+  edges.forEach(edge => {
+    const fromCluster = nodeToCluster.get(edge.from)
+    const toCluster = nodeToCluster.get(edge.to)
+
+    if (fromCluster && toCluster && fromCluster !== toCluster) {
+      const edgeKey = `${fromCluster}=>${toCluster}`
+      clusterEdges.set(edgeKey, {
+        from: `cluster_${fromCluster}`,
+        to: `cluster_${toCluster}`,
+        weight: (clusterEdges.get(edgeKey)?.weight || 0) + 1
+      })
+    }
+  })
+
+  return {
+    clusters: Array.from(clusters.values()),
+    clusterEdges: Array.from(clusterEdges.values()),
+    nodeToCluster
+  }
+}
+
+function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad, filters }) {
   const containerRef = useRef(null)
   const sigmaRef = useRef(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [graphData, setGraphData] = useState(null)
+  const [filteredData, setFilteredData] = useState(null)
+  const [zoomLevel, setZoomLevel] = useState(1.0)
+  const [expandedClusters, setExpandedClusters] = useState(new Set())
+  const [clusterData, setClusterData] = useState(null)
 
   useEffect(() => {
+    // Build query string from filters
+    const params = new URLSearchParams()
+    if (filters?.type) params.set('type', filters.type)
+    if (filters?.status) params.set('status', filters.status)
+    if (filters?.tags) params.set('tags', filters.tags)
+    if (filters?.recency && filters.recency !== 'all') params.set('recency', filters.recency)
+
+    const queryString = params.toString() ? `?${params.toString()}` : ''
+
     // Fetch graph data from backend
-    fetch(`${API_BASE_URL}/graph`)
+    fetch(`${API_BASE_URL}/graph${queryString}`)
       .then(res => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         return res.json()
       })
       .then(data => {
         setGraphData(data)
+        setFilteredData(data)
         setLoading(false)
         if (onGraphDataLoad) {
           onGraphDataLoad(data)
@@ -30,40 +101,115 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad }) {
         setError(err.message)
         setLoading(false)
       })
-  }, [])
+  }, [filters, onGraphDataLoad])
+
+  // Compute clusters when data changes
+  useEffect(() => {
+    if (!filteredData) return
+
+    const computed = computeClusters(filteredData.nodes, filteredData.edges)
+    setClusterData(computed)
+  }, [filteredData])
 
   useEffect(() => {
-    if (!graphData || !containerRef.current) return
+    if (!filteredData || !clusterData || !containerRef.current) return
 
     // Create graphology graph
     const graph = new Graph()
 
-    // Add nodes
-    graphData.nodes.forEach(node => {
-      graph.addNode(node.id, {
-        label: node.title,
-        size: 10,
-        color: showRecencyHeat ? getRecencyHeatColor(node.metrics?.recency) : getNodeColor(node.type),
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        nodeData: node // Store full node data for later use
-      })
-    })
+    // Determine if we should show clusters or individual nodes
+    const showClusters = zoomLevel < ZOOM_THRESHOLDS.CLUSTER_VIEW
 
-    // Add edges
-    graphData.edges.forEach(edge => {
-      if (graph.hasNode(edge.from) && graph.hasNode(edge.to)) {
-        try {
-          graph.addEdge(edge.from, edge.to, {
-            size: 2,
-            color: '#ccc',
-            type: 'arrow'
+    if (showClusters) {
+      // Cluster mode: show supernodes
+      clusterData.clusters.forEach(cluster => {
+        // Skip clusters that are expanded
+        if (expandedClusters.has(cluster.id)) {
+          // Show individual nodes from expanded cluster
+          cluster.nodes.forEach(node => {
+            graph.addNode(node.id, {
+              label: node.title,
+              size: 8,
+              color: showRecencyHeat ? getRecencyHeatColor(node.metrics?.recency) : getNodeColor(node.type),
+              x: Math.random() * 100,
+              y: Math.random() * 100,
+              nodeData: node,
+              isClusterMember: true,
+              clusterId: cluster.id
+            })
           })
-        } catch (err) {
-          // Edge might already exist, ignore
+        } else {
+          // Show cluster as supernode
+          graph.addNode(cluster.id, {
+            label: cluster.label,
+            size: 15 + Math.min(cluster.nodes.length * 2, 30), // Larger size for clusters
+            color: '#FF6B6B',
+            x: Math.random() * 100,
+            y: Math.random() * 100,
+            isCluster: true,
+            clusterData: cluster
+          })
         }
-      }
-    })
+      })
+
+      // Add cluster edges
+      clusterData.clusterEdges.forEach(edge => {
+        // Only add edge if both clusters are collapsed
+        if (graph.hasNode(edge.from) && graph.hasNode(edge.to)) {
+          try {
+            graph.addEdge(edge.from, edge.to, {
+              size: Math.min(edge.weight * 0.5, 4),
+              color: '#999',
+              type: 'arrow'
+            })
+          } catch (err) {
+            // Edge might already exist
+          }
+        }
+      })
+
+      // Add edges between expanded cluster members
+      filteredData.edges.forEach(edge => {
+        if (graph.hasNode(edge.from) && graph.hasNode(edge.to)) {
+          try {
+            graph.addEdge(edge.from, edge.to, {
+              size: 2,
+              color: '#ccc',
+              type: 'arrow'
+            })
+          } catch (err) {
+            // Edge might already exist
+          }
+        }
+      })
+    } else {
+      // Full detail mode: show all nodes
+      filteredData.nodes.forEach(node => {
+        graph.addNode(node.id, {
+          label: node.title,
+          size: 10,
+          color: showRecencyHeat ? getRecencyHeatColor(node.metrics?.recency) : getNodeColor(node.type),
+          x: Math.random() * 100,
+          y: Math.random() * 100,
+          nodeData: node
+        })
+      })
+
+      // Add all edges
+      filteredData.edges.forEach(edge => {
+        if (graph.hasNode(edge.from) && graph.hasNode(edge.to)) {
+          try {
+            graph.addEdge(edge.from, edge.to, {
+              size: 2,
+              color: '#ccc',
+              type: 'arrow'
+            })
+          } catch (err) {
+            // Edge might already exist
+          }
+        }
+      })
+    }
 
     // Apply force-directed layout
     const layout = new FA2Layout(graph, {
@@ -93,10 +239,31 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad }) {
 
       // Handle node clicks
       sigma.on('clickNode', ({ node }) => {
-        const nodeData = graph.getNodeAttributes(node).nodeData
-        if (onNodeSelect) {
-          onNodeSelect(nodeData)
+        const attrs = graph.getNodeAttributes(node)
+
+        if (attrs.isCluster) {
+          // Toggle cluster expansion
+          setExpandedClusters(prev => {
+            const newSet = new Set(prev)
+            if (newSet.has(node)) {
+              newSet.delete(node)
+            } else {
+              newSet.add(node)
+            }
+            return newSet
+          })
+        } else if (attrs.nodeData) {
+          // Regular node click
+          if (onNodeSelect) {
+            onNodeSelect(attrs.nodeData)
+          }
         }
+      })
+
+      // Track zoom changes
+      sigma.getCamera().on('updated', () => {
+        const ratio = sigma.getCamera().ratio
+        setZoomLevel(ratio)
       })
 
       sigmaRef.current = sigma
@@ -113,14 +280,14 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad }) {
         layout.kill()
       }
     }
-  }, [graphData, onNodeSelect])
+  }, [filteredData, clusterData, onNodeSelect, zoomLevel, expandedClusters, showRecencyHeat])
 
   // Update node colors when showRecencyHeat changes
   useEffect(() => {
-    if (!sigmaRef.current || !graphData) return
+    if (!sigmaRef.current || !filteredData) return
 
     const graph = sigmaRef.current.getGraph()
-    graphData.nodes.forEach(node => {
+    filteredData.nodes.forEach(node => {
       if (graph.hasNode(node.id)) {
         graph.setNodeAttribute(
           node.id,
@@ -130,7 +297,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad }) {
       }
     })
     sigmaRef.current.refresh()
-  }, [showRecencyHeat, graphData])
+  }, [showRecencyHeat, filteredData])
 
   if (loading) {
     return <div style={{ padding: '2rem' }}>Loading graph...</div>
@@ -143,7 +310,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad }) {
   return (
     <div style={{ position: 'relative', width: '100%', height: '600px' }}>
       <div ref={containerRef} style={{ width: '100%', height: '100%', background: '#fff' }} />
-      {graphData && (
+      {filteredData && (
         <div style={{
           position: 'absolute',
           top: '10px',
@@ -153,7 +320,26 @@ function GraphView({ onNodeSelect, showRecencyHeat, onGraphDataLoad }) {
           borderRadius: '4px',
           fontSize: '14px'
         }}>
-          {graphData.nodes.length} nodes, {graphData.edges.length} edges
+          {filteredData.nodes.length} nodes, {filteredData.edges.length} edges
+          {zoomLevel < ZOOM_THRESHOLDS.CLUSTER_VIEW && (
+            <div style={{ marginTop: '4px', fontSize: '12px', color: '#666' }}>
+              Cluster view • {expandedClusters.size} expanded
+            </div>
+          )}
+        </div>
+      )}
+      {zoomLevel < ZOOM_THRESHOLDS.CLUSTER_VIEW && (
+        <div style={{
+          position: 'absolute',
+          bottom: '10px',
+          right: '10px',
+          background: 'rgba(255,255,255,0.9)',
+          padding: '8px 12px',
+          borderRadius: '4px',
+          fontSize: '12px',
+          color: '#666'
+        }}>
+          Click clusters to expand/collapse
         </div>
       )}
     </div>

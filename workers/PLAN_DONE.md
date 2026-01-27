@@ -207,3 +207,32 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | 2026-01-27 | 25.2.2 | - [x] **25.2.2** Backend: density heat (degree + clustering coefficient) with caching |
 | 2026-01-27 | 25.2.3 | - [x] **25.2.3** Backend: task heat based on TaskContract neighborhood |
 | 2026-01-27 | 25.2.4 | - [x] **25.2.4** Frontend: hotspots / insights panel (top N) |
+
+### Archived on 2026-01-27 (Batch 7)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 25.2.5 | - [x] **25.2.5** Frontend: filtering controls (type/status/tags/recency) |
+| 2026-01-27 | 25.2.6 | - [x] **25.2.6** Backend: file watcher + incremental reindex |
+| 2026-01-27 | 25.3.1 | - [x] **25.3.1** Frontend: semantic zoom + clustering (supernodes) |
+| 2026-01-27 | 25.3.2 | - [x] **25.3.2** Backend: dependency analysis (cycles, critical path hints) |
+| 2026-01-27 | 25.3.3 | - [x] **25.3.3** Plan generator improvements (toposort, richer dependency sections) |
+
+### Archived on 2026-01-27 (Batch 8)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 0.1.IMPL_PLAN.117 | - [x] **0.1.IMPL_PLAN.117** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 117 |
+| 2026-01-27 | 0.2.IMPL_PLAN.118 | - [x] **0.2.IMPL_PLAN.118** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 118 |
+| 2026-01-27 | 0.3.IMPL_PLAN.122 | - [x] **0.3.IMPL_PLAN.122** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 122 |
+| 2026-01-27 | 0.4.IMPL_PLAN.123 | - [x] **0.4.IMPL_PLAN.123** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 123 |
+| 2026-01-27 | 0.5.IMPL_PLAN.164 | - [x] **0.5.IMPL_PLAN.164** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 164 |
+| 2026-01-27 | 0.6.IMPL_PLAN.165 | - [x] **0.6.IMPL_PLAN.165** Fix MD012 in workers/IMPLEMENTATION_PLAN.md line 165 |
+| 2026-01-27 | 0.7.PLAN_DONE.211 | - [x] **0.7.PLAN_DONE.211** Fix MD024 in workers/PLAN_DONE.md line 211 |
+| 2026-01-27 | 0.8.THUNK.897 | - [x] **0.8.THUNK.897** Fix MD056 in workers/ralph/THUNK.md line 897 |
+| 2026-01-27 | 0.9.THUNK.898 | - [x] **0.9.THUNK.898** Fix MD056 in workers/ralph/THUNK.md line 898 |
+| 2026-01-27 | 0.10.THUNK.899 | - [x] **0.10.THUNK.899** Fix MD056 in workers/ralph/THUNK.md line 899 |
+| 2026-01-27 | 24.5.1 | - [x] **24.5.1** Decide + (if approved) template `render_ac_status.sh` |
+| 2026-01-27 | 24.6.1 | - [x] **24.6.1** Align model-header single-source-of-truth + prompt batching rule across canonical files |
+| 2026-01-27 | 24.7.1 | - [x] **24.7.1** Backport `loop.sh` scoped staging improvements into templates (without Brain-specific paths) |
+| 2026-01-27 | 24.8.1 | - [x] **24.8.1** Backport verifier caching into templates without regressing A1 root/path logic |

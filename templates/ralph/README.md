@@ -24,6 +24,12 @@ This directory contains template files for bootstrapping new Ralph worker instan
 - **IMPLEMENTATION_PLAN.project.md** - Task backlog template
 - **THUNK.md** - Completed task log template
 
+### Optional Utilities
+
+- **render_ac_status.sh** - Generate human-readable verifier status dashboard from `.verify/latest.txt`
+  - Usage: `./render_ac_status.sh` (stdout) or `./render_ac_status.sh --inline` (update IMPLEMENTATION_PLAN.md)
+  - Requires markers `<!-- AC_STATUS_START -->` and `<!-- AC_STATUS_END -->` in IMPLEMENTATION_PLAN.md for inline mode
+
 ### Template Sync Policy
 
 **Files that SHOULD stay in sync** (copy workers/ralph/ → templates/ralph/ when changed):
@@ -56,7 +62,6 @@ This directory contains template files for bootstrapping new Ralph worker instan
 - `fix-markdown.sh` - Markdown auto-fix script (brain-specific tooling)
 - `ralph.sh` - Brain repository convenience wrapper
 - `new-project.sh` - Project bootstrapping (already at repo root)
-- `render_ac_status.sh` - Verifier status renderer (brain-specific)
 - `sync_completions_to_cortex.sh` - Brain-to-Cortex sync (brain-specific)
 
 ## Why Template Drift Exists

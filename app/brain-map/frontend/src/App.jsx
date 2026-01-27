@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import GraphView from './GraphView'
 import InsightsPanel from './InsightsPanel'
+import FilterPanel from './FilterPanel'
 
 const API_BASE_URL = import.meta.env.VITE_BRAIN_MAP_API_BASE_URL || 'http://localhost:8000'
 
@@ -23,6 +24,13 @@ function App() {
   const [generatedPlan, setGeneratedPlan] = useState(null)
   const [graphData, setGraphData] = useState(null)
   const [showInsightsPanel, setShowInsightsPanel] = useState(true)
+  const [showFilterPanel, setShowFilterPanel] = useState(true)
+  const [filters, setFilters] = useState({
+    type: '',
+    status: '',
+    tags: '',
+    recency: 'all'
+  })
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/health`)
@@ -372,6 +380,20 @@ function App() {
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
             <button
+              onClick={() => setShowFilterPanel(!showFilterPanel)}
+              style={{
+                padding: '8px 16px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                background: showFilterPanel ? '#4CAF50' : '#fff',
+                color: showFilterPanel ? '#fff' : '#333',
+                cursor: 'pointer',
+                fontSize: '14px'
+              }}
+            >
+              {showFilterPanel ? '✓ Filters' : 'Filters'}
+            </button>
+            <button
               onClick={() => setShowRecencyHeat(!showRecencyHeat)}
               style={{
                 padding: '8px 16px',
@@ -432,11 +454,17 @@ function App() {
       </div>
 
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+        <FilterPanel
+          onFilterChange={setFilters}
+          visible={showFilterPanel}
+        />
+
         <div style={{ flex: 1, overflow: 'auto' }}>
           <GraphView
             onNodeSelect={handleNodeSelect}
             showRecencyHeat={showRecencyHeat}
             onGraphDataLoad={setGraphData}
+            filters={filters}
           />
         </div>
 

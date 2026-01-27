@@ -403,7 +403,7 @@ MVP is considered "done" when all items below are true:
   - **Risk notes:** UX scope creep.
   - **If Blocked:** Simple list in side panel.
 
-- [ ] **25.2.5** Frontend: filtering controls (type/status/tags/recency)
+- [x] **25.2.5** Frontend: filtering controls (type/status/tags/recency)
   - **Goal:** UI filters mapped to `/graph` query params.
   - **Inputs:** filtering contracts.
   - **Outputs:** filter UI, filtered graph.
@@ -413,7 +413,7 @@ MVP is considered "done" when all items below are true:
   - **Risk notes:** filter state complexity.
   - **If Blocked:** Provide type/status only.
 
-- [ ] **25.2.6** Backend: file watcher + incremental reindex
+- [x] **25.2.6** Backend: file watcher + incremental reindex
   - **Goal:** Auto-reindex on markdown file change with debounce.
   - **Inputs:** failure/recovery model.
   - **Outputs:** updated index without manual rebuild.
@@ -425,7 +425,7 @@ MVP is considered "done" when all items below are true:
 
 ### Phase 25.3: V2
 
-- [ ] **25.3.1** Frontend: semantic zoom + clustering (supernodes)
+- [x] **25.3.1** Frontend: semantic zoom + clustering (supernodes)
   - **Goal:** Implement cluster-aware zoom behavior.
   - **Inputs:** graph rendering guidance.
   - **Outputs:** clustered nodes at low zoom.
@@ -435,7 +435,7 @@ MVP is considered "done" when all items below are true:
   - **Risk notes:** complex UX.
   - **If Blocked:** manual expand/collapse only.
 
-- [ ] **25.3.2** Backend: dependency analysis (cycles, critical path hints)
+- [x] **25.3.2** Backend: dependency analysis (cycles, critical path hints)
   - **Goal:** Detect depends_on cycles and surface diagnostics.
   - **Inputs:** relationship schema.
   - **Outputs:** diagnostics endpoint or included in plan generation.
@@ -445,7 +445,7 @@ MVP is considered "done" when all items below are true:
   - **Risk notes:** algorithm correctness.
   - **If Blocked:** Only detect direct self-cycles.
 
-- [ ] **25.3.3** Plan generator improvements (toposort, richer dependency sections)
+- [x] **25.3.3** Plan generator improvements (toposort, richer dependency sections)
   - **Goal:** Improve plan output deterministically while obeying agent ingestion contract.
   - **Inputs:** plan template + agent ingestion rules.
   - **Outputs:** higher quality markdown with explicit ordering.
@@ -494,7 +494,7 @@ Lightweight ordering constraints (non-exhaustive):
 
 ### Phase 24.1: A1 Path Normalization Sweep (dependency-first)
 
-- [ ] **24.1.1** Normalize template documentation to canonical `workers/ralph/` layout (A1)
+- [x] **24.1.1** Normalize template documentation to canonical `workers/ralph/` layout (A1)
   - **Goal:** Update template documentation so all examples and instructions refer to `workers/ralph/` (ADR-0001) and do not assume the legacy `ralph/` root.
   - **Scope:**
     - `templates/ralph/**/*.md`
@@ -511,7 +511,7 @@ Lightweight ordering constraints (non-exhaustive):
     - `rg -n "(^|/)ralph/" templates/ralph/**/*.md` has no matches for layout-root paths (allowlist only if explicitly discussing historical drift).
     - `rg -n "workers/ralph" templates/ralph/**/*.md` shows updated canonical references.
 
-- [ ] **24.1.2** Normalize template scripts to canonical `workers/ralph/` layout (A1)
+- [x] **24.1.2** Normalize template scripts to canonical `workers/ralph/` layout (A1)
   - **Goal:** Ensure template scripts operate correctly when installed under `workers/ralph/` and do not hardcode legacy `ralph/` layout paths.
   - **Scope:**
     - `templates/ralph/**/*.sh`
@@ -529,7 +529,7 @@ Lightweight ordering constraints (non-exhaustive):
     - `rg -n "(^|/)ralph/" templates/ralph/**/*.sh` has no matches for layout-root paths.
     - `bash -n templates/ralph/*.sh templates/ralph/**/*.sh` passes.
 
-- [ ] **24.1.3** Audit templates for legacy layout strings and Brain-only path coupling
+- [x] **24.1.3** Audit templates for legacy layout strings and Brain-only path coupling
   - **Goal:** Provide a deterministic verification pass that A1 normalization is complete before bootstrapping/caching work proceeds.
   - **Scope:**
     - `templates/ralph/` (entire subtree)
@@ -546,7 +546,7 @@ Lightweight ordering constraints (non-exhaustive):
 
 ### Phase 24.2: Bootstrapping (new projects must scaffold A1 correctly)
 
-- [ ] **24.2.1** Template `workers/ralph/new-project.sh` bootstrapping script
+- [x] **24.2.1** Template `workers/ralph/new-project.sh` bootstrapping script
   - **Dependencies:** 24.1.3 (A1 normalization + audit complete before copying/adjusting)
   - **Goal:** Ensure new projects can bootstrap Ralph using the same tool Brain uses, but without Brain-only assumptions.
   - **Scope:**
@@ -570,7 +570,7 @@ Lightweight ordering constraints (non-exhaustive):
 
 ### Phase 24.3: Caching Prerequisites (template parity)
 
-- [ ] **24.3.1** Template `config/non_cacheable_tools.txt`
+- [x] **24.3.1** Template `config/non_cacheable_tools.txt`
   - **Dependencies:** 24.1.3 (A1 normalization + audit complete)
   - **Goal:** Provide the config file required by caching-aware scripts so new projects work out-of-the-box.
   - **Scope:**
@@ -589,7 +589,7 @@ Lightweight ordering constraints (non-exhaustive):
 
 ### Phase 24.4: Stability Backports (Cerebras context management)
 
-- [ ] **24.4.1** Backport Cerebras agent context-management improvements into templates
+- [x] **24.4.1** Backport Cerebras agent context-management improvements into templates
   - **Dependencies:** 24.1.3 (A1 normalization + audit complete)
   - **Goal:** Prevent token/context explosion in new projects by templating the battle-tested context-trimming logic from Brain.
   - **Scope:**
@@ -609,7 +609,7 @@ Lightweight ordering constraints (non-exhaustive):
 
 ### Phase 24.5: Utility Adoption (optional)
 
-- [ ] **24.5.1** Decide + (if approved) template `render_ac_status.sh`
+- [x] **24.5.1** Decide + (if approved) template `render_ac_status.sh`
   - **Dependencies:** 24.1.3 (A1 normalization + audit complete), DN-24.4 (decision)
   - **Goal:** Provide an optional utility to render verifier / AC status for humans without breaking canonical layout assumptions.
   - **Scope:**
@@ -631,7 +631,7 @@ Lightweight ordering constraints (non-exhaustive):
 
 ### Phase 24.6: Consistency (model header + prompt batching rule)
 
-- [ ] **24.6.1** Align model-header single-source-of-truth + prompt batching rule across canonical files
+- [x] **24.6.1** Align model-header single-source-of-truth + prompt batching rule across canonical files
   - **Dependencies:** DN resolution on what is authoritative (typically `workers/ralph/`), then apply to templates
   - **Goal:** Ensure the "model header" and "markdown batching" guidance are consistent between the canonical workers implementation and templates to prevent regressions.
   - **Scope:**
@@ -654,7 +654,7 @@ Lightweight ordering constraints (non-exhaustive):
 
 ### Phase 24.7: Loop Staging Improvements (backport-partial)
 
-- [ ] **24.7.1** Backport `loop.sh` scoped staging improvements into templates (without Brain-specific paths)
+- [x] **24.7.1** Backport `loop.sh` scoped staging improvements into templates (without Brain-specific paths)
   - **Dependencies:** 24.1.3
   - **Goal:** Improve signal-to-noise in commits by staging only scoped changes, while preserving template path logic and avoiding Brain-only assumptions.
   - **Scope:**
@@ -676,7 +676,7 @@ Lightweight ordering constraints (non-exhaustive):
 
 ### Phase 24.8: Verifier Caching Backport (keep template path logic)
 
-- [ ] **24.8.1** Backport verifier caching into templates without regressing A1 root/path logic
+- [x] **24.8.1** Backport verifier caching into templates without regressing A1 root/path logic
   - **Dependencies:** 24.1.3, 24.3.1, 24.7.1
   - **Goal:** Speed up verifier runs via caching, while preserving the template’s correct root detection (`RALPH_PROJECT_ROOT` / `SCRIPT_DIR` relative) highlighted in drift report D15.
   - **Scope:**
@@ -699,7 +699,7 @@ Lightweight ordering constraints (non-exhaustive):
 
 ### Phase 24.9: Observability Convenience (task monitor)
 
-- [ ] **24.9.1** Backport `current_ralph_tasks.sh` parsing improvements into templates
+- [x] **24.9.1** Backport `current_ralph_tasks.sh` parsing improvements into templates
   - **Dependencies:** 24.1.3
   - **Goal:** Improve task extraction/state tracking in new projects using the same generic parsing improvements validated in Brain (drift report D07).
   - **Scope:**

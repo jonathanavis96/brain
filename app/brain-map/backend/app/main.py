@@ -1,13 +1,58 @@
 """Brain Map FastAPI Backend - Main Application Entry Point."""
 
+import logging
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import yaml
+
+from app.watcher import FileWatcher
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
+
+# Global file watcher instance
+file_watcher: FileWatcher | None = None
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Manage application lifecycle (startup/shutdown)."""
+    global file_watcher
+
+    # Startup: Initialize and start file watcher
+    logger.info("Starting Brain Map backend")
+    file_watcher = FileWatcher(debounce_seconds=2.0)
+
+    try:
+        await file_watcher.start()
+        logger.info("File watcher started successfully")
+    except Exception as e:
+        logger.error(f"Failed to start file watcher: {e}", exc_info=True)
+        # Continue running even if watcher fails (degraded mode)
+
+    yield
+
+    # Shutdown: Stop file watcher gracefully
+    logger.info("Shutting down Brain Map backend")
+    if file_watcher:
+        try:
+            await file_watcher.stop()
+            logger.info("File watcher stopped successfully")
+        except Exception as e:
+            logger.error(f"Error stopping file watcher: {e}", exc_info=True)
+
 
 app = FastAPI(
     title="Brain Map API",
     description="Local-first knowledge graph API for Brain Map system",
     version="0.1.0",
+    lifespan=lifespan,
 )
 
 # CORS middleware for local development (frontend on :5173, backend on :8000)

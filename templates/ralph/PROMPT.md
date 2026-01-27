@@ -13,7 +13,7 @@ Look for the `# VERIFIER STATUS` section at the top of this prompt. It contains:
 
 If the header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
-1. **STOP** - Do not pick a new task from workers/IMPLEMENTATION_PLAN.md
+1. **STOP** - Do not pick a new task from IMPLEMENTATION_PLAN.md
 2. **CHECK** the `# VERIFIER STATUS` section above for failure details
 3. **FIX** the failing acceptance criteria listed in `# FAILED_RULES:`
 4. **COMMIT** your fix with message: `fix(ralph): resolve AC failure <RULE_ID>`
@@ -21,7 +21,7 @@ If the header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
 If the `# VERIFIER STATUS` section shows `[WARN]` lines:
 
-1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of workers/IMPLEMENTATION_PLAN.md (after header, before other phases)
+1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of IMPLEMENTATION_PLAN.md (after header, before other phases)
 2. **⚠️ DO NOT create "## Verifier Warnings" without the "Phase 0-Warn:" prefix** - This breaks the task monitor!
 3. **LIST** each as: `- [ ] WARN.<RULE_ID>.<filename> - <description>` (include filename to prevent duplicate IDs)
 4. **NEVER use numbered lists (1. 2. 3.)** - ALWAYS use checkbox format `- [ ]`
@@ -78,20 +78,18 @@ Then output `:::BUILD_READY:::` to end the iteration.
 - `NEURONS.md` - use `ls` to explore structure
 - `THOUGHTS.md` - slice with `head -30` if needed
 - `cortex/*.md` - Cortex files are NOT needed for BUILD tasks
-- `workers/IMPLEMENTATION_PLAN.md` (full file) - use grep to find tasks
-- `workers/ralph/THUNK.md` (full file) - use tail to append only
-
-**⚠️ Ralph's tasks are in `workers/IMPLEMENTATION_PLAN.md` (or `ralph/IMPLEMENTATION_PLAN.md` in project repos)**
+- `IMPLEMENTATION_PLAN.md` (full file) - use grep to find tasks
+- `THUNK.md` (full file) - use tail to append only
 
 ### Required Startup Sequence
 
 ```bash
 # 1. Find next unchecked task (DO THIS FIRST)
-grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -20
+grep -n "^- \[ \]" IMPLEMENTATION_PLAN.md | head -20
 
 # 2. If you need context for a specific task, slice by line number
 # Example: task found around line 236
-sed -n '220,280p' workers/IMPLEMENTATION_PLAN.md
+sed -n '220,280p' IMPLEMENTATION_PLAN.md
 
 # 3. Check for existing tools before creating new ones
 find bin/ -maxdepth 1 -type f | head -20
@@ -102,7 +100,7 @@ find tools/ -maxdepth 1 -name "*.py" -o -name "*.sh" 2>/dev/null | head -10
 
 - **NEVER** open THUNK.md to "check what's done" - use `grep` or `bin/brain-search`
 - **ONLY** open THUNK.md when appending a new completion entry
-- For last THUNK number: `tail -20 workers/ralph/THUNK.md | grep "^|" | tail -1`
+- For last THUNK number: `tail -20 THUNK.md | grep "^|" | tail -1`
 
 ### Search Before Creating
 
@@ -123,8 +121,8 @@ rg -l "def main\|usage:" tools/*.py bin/* 2>/dev/null | head -10
 **Every completed task MUST include ALL THREE staged together:**
 
 1. ✅ The code/doc fix itself
-2. ✅ workers/ralph/THUNK.md entry (append to current era table)
-3. ✅ workers/IMPLEMENTATION_PLAN.md update (mark task `[x]`)
+2. ✅ THUNK.md entry (append to current era table)
+3. ✅ IMPLEMENTATION_PLAN.md update (mark task `[x]`)
 
 ```bash
 # CORRECT: Stage all changes together (loop.sh commits at PLAN phase)
@@ -133,7 +131,7 @@ git add -A
 
 **DO NOT commit during BUILD mode** - loop.sh batches commits at the start of each PLAN phase for efficiency (~13 sec saved per iteration).
 
-**If you don't stage workers/ralph/THUNK.md and workers/IMPLEMENTATION_PLAN.md with your fix, you have NOT completed the task.**
+**If you don't stage THUNK.md and IMPLEMENTATION_PLAN.md with your fix, you have NOT completed the task.**
 
 ---
 
@@ -218,7 +216,7 @@ See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
 
 **Start:** `STATUS | branch=<branch> | runner=<rovodev|opencode> | model=<model>`
 
-**Model detection:** Report the model from the injected prompt header (`# MODEL: ...`). If missing, report `auto`. Do NOT guess or use outdated model names.
+**Model detection:** Report the model from your system info (e.g., `anthropic.claude-sonnet-4-5-20250929-v1:0`). If unknown, use `auto`. Do NOT guess or use outdated model names.
 
 **Progress:** `PROGRESS | phase=<plan|build> | step=<short> | tasks=<done>/<total> | file=<path>`
 
@@ -234,7 +232,7 @@ See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
 
 ```bash
 # What tasks exist?
-grep -n "^## Phase\|^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -40
+grep -n "^## Phase\|^- \[ \]" IMPLEMENTATION_PLAN.md | head -40
 
 # What skills exist? (don't open index.md)
 ls skills/domains/*/
@@ -244,7 +242,7 @@ ls skills/domains/*/
 
 ```bash
 # Example: need Phase 21 details (found at line 518)
-sed -n '515,580p' workers/IMPLEMENTATION_PLAN.md
+sed -n '515,580p' IMPLEMENTATION_PLAN.md
 ```
 
 **Step 3: Search for existing tools before proposing new ones**
@@ -257,7 +255,7 @@ ls bin/ tools/*.py tools/*.sh 2>/dev/null | head -20
 
 - `skills/SUMMARY.md` - OK to open (small file)
 - `THOUGHTS.md` - slice with `head -50` if needed
-- `workers/IMPLEMENTATION_PLAN.md` - NEVER open full, always grep then slice
+- `IMPLEMENTATION_PLAN.md` - NEVER open full, always grep then slice
 
 ### Pre-Planning State Check
 
@@ -317,7 +315,7 @@ git add -A && git commit -m "fix(scope): resolve SC2162 across 8 shell scripts
 
 ### Actions
 
-1. Create/update workers/IMPLEMENTATION_PLAN.md:
+1. Create/update IMPLEMENTATION_PLAN.md:
    - **⚠️ CRITICAL:** ALL task sections MUST be "## Phase X:" format (e.g., "## Phase 0-Quick: Quick Wins", "## Phase 1: Maintenance")
    - **⚠️ NEVER create these non-phase sections:** "## Overview", "## Quick Wins" (without Phase prefix), "## Verifier Warnings" (without Phase prefix), "## Maintenance Check", "## TODO Items"
    - **⚠️ CORRECT format:** "## Phase 0-Warn: Verifier Warnings", "## Phase 0-Quick: Quick Wins", "## Phase 1: Core Features"
@@ -373,14 +371,14 @@ Awaiting approval before adding to IMPLEMENTATION_PLAN.md.
 **Step 1: Find your ONE task (mandatory first step)**
 
 ```bash
-grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -10
+grep -n "^- \[ \]" IMPLEMENTATION_PLAN.md | head -10
 ```
 
 **Step 2: Slice only the task block you need**
 
 ```bash
 # Example: task at line 236
-sed -n '230,260p' workers/IMPLEMENTATION_PLAN.md
+sed -n '230,260p' IMPLEMENTATION_PLAN.md
 ```
 
 **Step 3: Search before assuming things are missing**
@@ -395,13 +393,13 @@ rg -l "keyword" tools/ skills/domains/ | head -10
 
 - `NEURONS.md` - use `ls` and `find` instead
 - `THOUGHTS.md` - not needed for BUILD mode
-- `workers/IMPLEMENTATION_PLAN.md` (full) - always grep then slice
-- `workers/ralph/THUNK.md` - only `tail` when appending
+- `IMPLEMENTATION_PLAN.md` (full) - always grep then slice
+- `THUNK.md` - only `tail` when appending
 
 ### Actions
 
 1. **CHECK FOR VERIFIER WARNINGS FIRST:**
-   - If `workers/IMPLEMENTATION_PLAN.md` has a "## Verifier Warnings" section with unchecked `- [ ]` tasks:
+   - If `IMPLEMENTATION_PLAN.md` has a "## Verifier Warnings" section with unchecked `- [ ]` tasks:
      - Pick ONE warning task (prioritize High > Medium > Low)
      - Fix that warning
      - Mark it complete `- [x]` in the Verifier Warnings section
@@ -417,8 +415,8 @@ rg -l "keyword" tools/ skills/domains/ | head -10
 4. Validate per AGENTS.md commands
 
 5. **STAGE ALL CHANGES:** Stage all changes together (loop.sh commits at PLAN phase):
-   - Log completion to workers/ralph/THUNK.md (append to current era table)
-   - Mark task `[x]` in workers/IMPLEMENTATION_PLAN.md
+   - Log completion to THUNK.md (append to current era table)
+   - Mark task `[x]` in IMPLEMENTATION_PLAN.md
    - **DO NOT commit** - loop.sh batches commits at PLAN phase for efficiency
 
    ```bash
@@ -427,9 +425,9 @@ rg -l "keyword" tools/ skills/domains/ | head -10
    ```
 
 6. **DISCOVERY DEFER RULE:** If you discover new issues while fixing:
-   - **DO NOT** update workers/IMPLEMENTATION_PLAN.md with new tasks during BUILD mode
+   - **DO NOT** update IMPLEMENTATION_PLAN.md with new tasks during BUILD mode
    - **DO** note them in your commit message body (e.g., "Note: also found SC2034 in foo.sh")
-   - **WAIT** until PLAN mode to add new tasks to workers/IMPLEMENTATION_PLAN.md
+   - **WAIT** until PLAN mode to add new tasks to IMPLEMENTATION_PLAN.md
    - This prevents "docs(plan): add new task" spam commits
 
 7. **Self-Improvement Check:** If you used undocumented knowledge/procedure/tooling:
@@ -479,16 +477,16 @@ You may mark tasks `[?]` when you've implemented changes. The verifier determine
 
 ## Workspace Boundaries
 
-**You have access to the ENTIRE brain repository** (from `$ROOT`), not just `workers/ralph/`.
+**You have access to the project repository** (from `$ROOT`).
 
 | Access Level | Paths | Notes |
 | ------------ | ----- | ----- |
-| **Full access** | `skills/`, `templates/`, `cortex/`, `docs/`, `workers/` | Read, write, create, delete |
+| **Full access** | Project files, documentation, source code | Read, write, create, delete |
 | **Protected** | `rules/AC.rules`, `verifier.sh`, `loop.sh`, `PROMPT.md`, `AGENTS.md` | Read only - hash-guarded |
 | **Protected** | `.verify/*.sha256` | Baseline hashes - human updates |
 | **Forbidden** | `.verify/waivers/*.approved` | OTP-protected - cannot read/write |
 
-When fixing issues, search the ENTIRE repo: `rg "pattern" $ROOT` not just `workers/ralph/`.
+When fixing issues, search the entire repo: `rg "pattern" $ROOT`
 
 ---
 
@@ -506,7 +504,7 @@ If the work is **small, homogeneous markdown/doc fixes** (e.g., markdownlint war
 - Combine up to **5–10** related markdown issues per iteration (or until changes stop being “small”).
 - Prefer one cohesive patch over many tiny patches.
 - Split into separate iterations only if changes become risky, cross-cutting, or require separate verification.
-- **Never remove uncompleted items** - NEVER delete `[ ]` tasks from workers/IMPLEMENTATION_PLAN.md
+- **Never remove uncompleted items** - NEVER delete `[ ]` tasks from IMPLEMENTATION_PLAN.md
 - **Never delete completed tasks** - Mark tasks `[x]` complete but NEVER delete them (they stay forever as history)
 - **Never delete sections** - NEVER remove entire sections (## Phase X:, ## Verifier Warnings, etc.) even if all tasks are complete
 - **Never use numbered lists** - ALL tasks must use checkbox format `- [ ]` or `- [x]`, NEVER `1. 2. 3.`
@@ -594,7 +592,7 @@ When a validation tool fails on code examples:
 
 - `pwd`, `git branch` - known from header
 - Verifier status - already injected in header (NEVER read the file)
-- `tail workers/ralph/THUNK.md` - get next number ONCE
+- `tail THUNK.md` - get next number ONCE
 - Same file content - read ONCE, remember it
 
 **ALWAYS batch:** `grep pattern file1 file2 file3` not 3 separate calls.
