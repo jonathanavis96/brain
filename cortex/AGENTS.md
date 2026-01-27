@@ -101,6 +101,18 @@ You CAN research online (Ralph CANNOT - he captures gaps in GAP_BACKLOG.md).
   - **If Blocked:** Check PowerShell script syntax
 ```text
 
+#### Formatting guardrails (prevents orphaned sub-items)
+
+- Never write standalone indented bullets like `  - **AC:** ...` / `  - **Goal:** ...` unless they are *immediately* under a parent task line `- [ ] **X.Y** ...`.
+- If you include code fences, keep them inside a sub-item under a parent task (usually `- **Implementation:**`) so plan cleanup scripts can reliably associate them.
+- Before syncing or running cleanup, sanity-check with:
+
+```bash
+bash cortex/cleanup_cortex_plan.sh --dry-run
+```
+
+If you see an “orphaned sub-items” warning, fix the formatting before proceeding.
+
 ---
 
 ## 📏 File Size Limits

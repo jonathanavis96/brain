@@ -352,3 +352,10 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-27 | 29.2.1 | - [x] **29.2.1** Add `labelRenderedSizeThreshold` to Sigma config |
 | 2026-01-27 | 29.3.1 | - [x] **29.3.1** Make Hotspots collapsible using `<details>` element |
 | 2026-01-27 | 30.1.1 | - [x] **30.1.1** Refactor cluster rebuild to use `showClusters` boolean |
+
+### Archived on 2026-01-27 (Batch 3)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 30.2.1 | - [x] **30.2.1** Add "Fit to Screen" button |
+| 2026-01-27 | 30.2.2 | - [x] **30.2.2** Add zoom controls (+/- buttons) |
