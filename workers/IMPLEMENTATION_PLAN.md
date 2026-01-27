@@ -1,8 +1,8 @@
 # Implementation Plan - Brain Repository
 
-**Last Updated:** 2026-01-27 11:56:00
+**Last Updated:** 2026-01-27 12:18:30
 
-**Current Status:** Phase 26, 27, 28 COMPLETED. All active tasks complete. Awaiting new planning from Cortex.
+**Current Status:** Phase 0-Warn active (markdown lint errors). Phase 25-28 COMPLETED.
 
 **Recent Completions:**
 
@@ -18,91 +18,6 @@
 - All phases complete - ready for new strategic direction from Cortex
 
 <!-- Cortex adds new Task Contracts below this line -->
-
-## Phase 26: Environment & Testing Infrastructure
-
-**Goal:** Ensure Brain Map backend tests can run in CI/local environments without dependency issues. Setup testing best practices and documentation.
-
-**Context:** Phase 25 completed all MVP implementation (backend API, frontend UI, 80 tests). Tests currently fail with `ModuleNotFoundError: No module named 'fastapi'` because dependencies aren't installed in test environment.
-
-**Priority:** HIGH - Blocks verification of Phase 25 work
-
-**Dependencies:** Phase 25 completion (✅ done)
-
-### Tasks
-
-
-- [x] **26.4** Document Brain Map development workflow
-  - **Goal:** Enable future developers to contribute to Brain Map
-  - **Dependencies:** 26.1, 26.2
-  - **Steps:**
-    1. Update `app/brain-map/backend/README.md` with full dev workflow
-    2. Include: setup, running backend, running tests, adding endpoints
-    3. Add frontend README with dev workflow
-  - **Acceptance:**
-    - Both READMEs have complete dev workflows
-    - A new developer can get started from scratch using only the READMEs
-
-## Phase 27: Skills Knowledge Base Expansion
-
-**Goal:** Promote high-priority gaps from GAP_BACKLOG to full skill documents
-
-**Context:** GAP_BACKLOG has identified knowledge gaps during recent work. Priority items should be promoted to actionable skills.
-
-**Priority:** MEDIUM - Improves agent capabilities
-
-**Source:** `skills/self-improvement/GAP_BACKLOG.md`
-
-### Tasks
-
-- [x] **27.1** Review GAP_BACKLOG for P0/P1 items ready for promotion
-  - **Goal:** Identify gaps meeting promotion criteria
-  - **Steps:**
-    1. Read full GAP_BACKLOG
-    2. Check promotion criteria in GAP_CAPTURE_RULES.md
-    3. List candidates for promotion
-  - **Acceptance:**
-    - List of 3-5 gaps ready for promotion with justification
-  - **Results:** Reviewed all 4 gaps against criteria (clear, specific, recurring, LLM-executable):
-    - Gap 1 (tput): NOT READY - Already reviewed 2026-01-18 as non-recurring (only 2 scripts use it)
-    - Gap 2 (associative arrays): NOT READY - Too specialized, used in 1 monitor script
-    - Gap 3 (shell validation): ALREADY PROMOTED 2026-01-23 to SKILL_BACKLOG
-    - Gap 4 (semantic code review): BORDERLINE - Meets 3.5/4 criteria but is "tool to build" not "skill to document". Existing `code-review-patterns.md` already mentions LLM-based semantic checks as future direction. This is a feature request, not a promotable skill.
-  - **Conclusion:** Only 1 gap was promotion-ready (Gap 3) and already promoted. Remaining gaps either don't meet recurring criteria or represent tooling to build rather than knowledge to document.
-
-- [x] **27.2** Promote "Custom Semantic Code Review Tool (LLM-Based Linting)" gap
-  - **Goal:** Document approach for semantic code analysis
-  - **Priority:** P1 (per GAP_BACKLOG)
-  - **Dependencies:** 27.1
-  - **Steps:**
-    1. Create `skills/domains/code-quality/semantic-code-review.md`
-    2. Document patterns: regex validation, example completeness, logic checking
-    3. Reference CodeRabbit PR5 findings
-    4. Add to skills/index.md and skills/SUMMARY.md
-  - **Acceptance:**
-    - New skill file created with comprehensive patterns
-    - Indexed in summary files
-    - GAP_BACKLOG entry marked as "Done"
-
-## Phase 28: Template Maintenance
-
-**Goal:** Keep templates synchronized with Brain's canonical worker patterns
-
-**Priority:** LOW - Maintenance task, no urgent drift
-
-**Context:** Phase 24 completed major template drift alignment. This phase handles ongoing maintenance.
-
-### Tasks
-
-- [x] **28.1** Audit templates for post-Phase-24 drift
-  - **Goal:** Ensure no new drift introduced during Phase 25-26 work
-  - **Steps:**
-    1. Run: `diff -r templates/ralph/ workers/ralph/ | grep -v ".verify\|THUNK.md\|artifacts" | head -100`
-    2. Identify any new Brain-specific patterns that should be templated
-    3. Document findings
-  - **Acceptance:**
-    - Drift report generated
-    - No critical drift identified, or mitigation plan documented
 
 ## Phase 25: Brain Map (MVP-first) ✅ COMPLETED
 

@@ -280,7 +280,7 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | Date | Task ID | Description |
 |------|---------|-------------|
 
-### Archived on 2026-01-27
+### Archived on 2026-01-27 (Batch 13)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
@@ -319,3 +319,14 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-27 | 24.7.1 | - [x] **24.7.1** Backport `loop.sh` scoped staging improvements into templates (without Brain-specific paths) |
 | 2026-01-27 | 24.8.1 | - [x] **24.8.1** Backport verifier caching into templates without regressing A1 root/path logic |
 | 2026-01-27 | 24.9.1 | - [x] **24.9.1** Backport `current_ralph_tasks.sh` parsing improvements into templates |
+
+### Archived on 2026-01-27 (Batch 14)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 26.2 | - [x] **26.2** Verify all Brain Map backend tests pass |
+| 2026-01-27 | 26.3 | - [x] **26.3** Add Brain Map test running to verifier (optional check) |
+| 2026-01-27 | 26.4 | - [x] **26.4** Document Brain Map development workflow |
+| 2026-01-27 | 27.1 | - [x] **27.1** Review GAP_BACKLOG for P0/P1 items ready for promotion |
+| 2026-01-27 | 27.2 | - [x] **27.2** Promote "Custom Semantic Code Review Tool (LLM-Based Linting)" gap |
+| 2026-01-27 | 28.1 | - [x] **28.1** Audit templates for post-Phase-24 drift |

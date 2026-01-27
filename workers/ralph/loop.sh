@@ -1916,6 +1916,18 @@ if [[ -n "$PROMPT_ARG" ]]; then
       CONSECUTIVE_VERIFIER_FAILURES=0
     fi
 
+    # Update THUNK.md from completed tasks in workers/IMPLEMENTATION_PLAN.md
+    # This makes THUNK append deterministic and prevents markdown table corruption.
+    if [[ -x "$RALPH/update_thunk_from_plan.sh" ]]; then
+      echo "Updating THUNK from plan completions..."
+      if (cd "$RALPH" && bash update_thunk_from_plan.sh) 2>&1; then
+        echo "✓ THUNK update complete"
+      else
+        echo "⚠ THUNK update failed (non-blocking)"
+      fi
+      echo ""
+    fi
+
     # Run gap radar after iteration completes (task 7.4.1)
     if [[ -x "$ROOT/bin/gap-radar" ]]; then
       echo ""
@@ -2223,6 +2235,18 @@ else
     else
       # Reset counter on successful iteration
       CONSECUTIVE_VERIFIER_FAILURES=0
+    fi
+
+    # Update THUNK.md from completed tasks in workers/IMPLEMENTATION_PLAN.md
+    # This makes THUNK append deterministic and prevents markdown table corruption.
+    if [[ -x "$RALPH/update_thunk_from_plan.sh" ]]; then
+      echo "Updating THUNK from plan completions..."
+      if (cd "$RALPH" && bash update_thunk_from_plan.sh) 2>&1; then
+        echo "✓ THUNK update complete"
+      else
+        echo "⚠ THUNK update failed (non-blocking)"
+      fi
+      echo ""
     fi
 
     # Run gap radar after BUILD iteration completes (task 7.4.1)
