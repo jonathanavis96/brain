@@ -914,6 +914,260 @@ async def search(
         )
 
 
+@app.get("/path")
+async def find_path(from_id: str, to_id: str) -> dict:
+    """Find shortest path between two nodes using BFS.
+
+    Args:
+        from_id: Source node ID (query parameter).
+        to_id: Target node ID (query parameter).
+
+    Returns:
+        JSON response with path array and metadata.
+
+    Status codes:
+        200 OK: Path found successfully.
+        404 NOT FOUND: One or both nodes not found, or no path exists.
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from collections import deque
+    from app.index import get_index_connection
+
+    # Validate parameters
+    if not from_id or not to_id:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "VALIDATION_ERROR",
+                "message": "Both 'from_id' and 'to_id' query parameters are required",
+            },
+        )
+
+    try:
+        conn = get_index_connection()
+        cursor = conn.cursor()
+
+        # Verify both nodes exist
+        cursor.execute("SELECT id FROM nodes WHERE id IN (?, ?)", (from_id, to_id))
+        existing_nodes = {row["id"] for row in cursor.fetchall()}
+
+        if from_id not in existing_nodes:
+            conn.close()
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "NODE_NOT_FOUND",
+                    "message": f"Source node '{from_id}' not found",
+                },
+            )
+
+        if to_id not in existing_nodes:
+            conn.close()
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "NODE_NOT_FOUND",
+                    "message": f"Target node '{to_id}' not found",
+                },
+            )
+
+        # If source and target are the same, return single-node path
+        if from_id == to_id:
+            conn.close()
+            return {
+                "path": [from_id],
+                "length": 0,
+                "found": True,
+            }
+
+        # Build adjacency list (treat graph as undirected for path finding)
+        cursor.execute("SELECT source_id, target_id FROM edges")
+        edge_rows = cursor.fetchall()
+
+        adjacency = {}
+        for row in edge_rows:
+            src, tgt = row["source_id"], row["target_id"]
+
+            if src not in adjacency:
+                adjacency[src] = []
+            if tgt not in adjacency:
+                adjacency[tgt] = []
+
+            adjacency[src].append(tgt)
+            adjacency[tgt].append(src)  # Undirected
+
+        # BFS to find shortest path
+        queue = deque([from_id])
+        visited = {from_id}
+        parent = {from_id: None}
+
+        found = False
+        while queue:
+            current = queue.popleft()
+
+            if current == to_id:
+                found = True
+                break
+
+            for neighbor in adjacency.get(current, []):
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    parent[neighbor] = current
+                    queue.append(neighbor)
+
+        conn.close()
+
+        if not found:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "PATH_NOT_FOUND",
+                    "message": f"No path exists between '{from_id}' and '{to_id}'",
+                },
+            )
+
+        # Reconstruct path from parent pointers
+        path = []
+        current = to_id
+        while current is not None:
+            path.append(current)
+            current = parent[current]
+
+        path.reverse()
+
+        return {
+            "path": path,
+            "length": len(path) - 1,  # Number of edges
+            "found": True,
+        }
+
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
+@app.get("/node/{node_id}/suggest-tags")
+async def suggest_tags_for_node(node_id: str) -> dict:
+    """Suggest tags for a node based on content analysis.
+
+    Args:
+        node_id: Node ID to analyze.
+
+    Returns:
+        JSON response with suggested tags array.
+
+    Status codes:
+        200 OK: Suggestions generated successfully.
+        404 NOT FOUND: Node ID not found.
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from app.index import get_index_connection
+    from app.notes import load_note_content
+    from app.frontmatter import parse_and_validate
+    from app.tagging import suggest_tags
+    import json
+
+    try:
+        conn = get_index_connection()
+        cursor = conn.cursor()
+
+        # Fetch node from index
+        cursor.execute(
+            """
+            SELECT id, title, filepath, tags
+            FROM nodes
+            WHERE id = ?
+        """,
+            (node_id,),
+        )
+
+        row = cursor.fetchone()
+        conn.close()
+
+        if not row:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "NODE_NOT_FOUND",
+                    "message": f"Node '{node_id}' not found",
+                },
+            )
+
+        # Load markdown content to extract body
+        try:
+            content = load_note_content(row["filepath"])
+            _, body, _ = parse_and_validate(content)
+        except (FileNotFoundError, ValueError) as e:
+            raise HTTPException(
+                status_code=500,
+                detail={
+                    "error": "INTERNAL_ERROR",
+                    "message": f"Failed to load node content: {str(e)}",
+                },
+            )
+
+        # Parse existing tags
+        existing_tags = json.loads(row["tags"]) if row["tags"] else []
+
+        # Generate suggestions
+        suggestions = suggest_tags(
+            title=row["title"],
+            body=body or "",
+            existing_tags=existing_tags,
+        )
+
+        return {
+            "node_id": node_id,
+            "suggestions": suggestions,
+        }
+
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
+@app.get("/insights/orphans")
+async def get_orphans() -> dict:
+    """Get list of orphan nodes (nodes with zero edges).
+
+    Returns:
+        JSON response with orphan nodes list.
+
+    Status codes:
+        200 OK: Orphans retrieved successfully.
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from app.index import get_orphan_nodes
+
+    try:
+        orphans = get_orphan_nodes()
+        return {
+            "orphans": orphans,
+            "count": len(orphans),
+        }
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
 @app.post("/generate-plan")
 async def generate_plan(request: dict) -> dict:
     """

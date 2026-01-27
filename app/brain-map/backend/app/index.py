@@ -1183,6 +1183,53 @@ def _topological_sort(nodes: list[dict], edges: list[dict]) -> list[str]:
     return result
 
 
+def get_orphan_nodes() -> list[dict]:
+    """
+    Identify orphan nodes (nodes with zero in-degree and out-degree).
+
+    An orphan node has no incoming or outgoing edges in the graph.
+
+    Returns:
+        List of node dicts with basic metadata (id, title, type, status, tags, created_at, updated_at).
+        Results are ordered deterministically by type, title, id.
+
+    Raises:
+        FileNotFoundError: If index doesn't exist.
+    """
+    conn = get_index_connection()
+    cursor = conn.cursor()
+
+    # Find all nodes that don't appear in edges table (neither as source nor target)
+    query = """
+        SELECT n.id, n.title, n.type, n.status, n.tags, n.created_at, n.modified_at
+        FROM nodes n
+        WHERE n.id NOT IN (
+            SELECT DISTINCT source_id FROM edges
+            UNION
+            SELECT DISTINCT target_id FROM edges
+        )
+        ORDER BY n.type ASC, LOWER(n.title) ASC, n.id ASC
+    """
+
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
+    orphans = []
+    for row in rows:
+        orphans.append({
+            "id": row["id"],
+            "title": row["title"],
+            "type": row["type"],
+            "status": row["status"],
+            "tags": json.loads(row["tags"]) if row["tags"] else [],
+            "created_at": row["created_at"],
+            "updated_at": row["modified_at"],
+        })
+
+    conn.close()
+    return orphans
+
+
 def generate_plan_markdown(
     nodes: list[dict],
     edges: list[dict],
