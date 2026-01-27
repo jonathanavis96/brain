@@ -279,3 +279,43 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 
 | Date | Task ID | Description |
 |------|---------|-------------|
+
+### Archived on 2026-01-27
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 0.L.1 | - [x] **0.L.1** Fix MD024 in cortex/PLAN_DONE.md (duplicate heading "Archived on 2026-01-26") |
+| 2026-01-27 | 0.L.2 | - [x] **0.L.2** Fix MD056 table column count errors in TEMPLATE_DRIFT_REPORT.md |
+| 2026-01-27 | 0.L.3 | - [x] **0.L.3** Fix MD032 blank line errors in TEMPLATE_DRIFT_REPORT.md |
+| 2026-01-27 | 0.L.4 | - [x] **0.L.4** Fix MD009 trailing spaces in TEMPLATE_DRIFT_REPORT.md |
+| 2026-01-27 | 0.L.5 | - [x] **0.L.5** Fix MD040 missing language in TEMPLATE_DRIFT_REPORT.md |
+| 2026-01-27 | 0.L.6 | - [x] **0.L.6** Fix MD056 table column count errors in workers/ralph/THUNK.md |
+| 2026-01-27 | 25.1.1 | - [x] **25.1.1** Scaffold Brain Map app workspace (frontend + backend skeleton) |
+| 2026-01-27 | 25.1.2 | - [x] **25.1.2** Define Markdown note discovery + loading (scan notes root) |
+| 2026-01-27 | 25.1.3 | - [x] **25.1.3** Implement canonical frontmatter parser and validator |
+| 2026-01-27 | 25.1.4 | - [x] **25.1.4** Build SQLite schema and deterministic index rebuild |
+| 2026-01-27 | 25.1.5 | - [x] **25.1.5** Implement `/search` endpoint using the index (fast global search) |
+| 2026-01-27 | 25.1.6 | - [x] **25.1.6** Implement `/graph` endpoint (graph snapshot for UI) |
+| 2026-01-27 | 25.1.7 | - [x] **25.1.7** Implement `/node/{id}` read endpoint |
+| 2026-01-27 | 25.1.8 | - [x] **25.1.8** Implement node create (`POST /node`) with markdown-first write + reindex |
+| 2026-01-27 | 25.1.9 | - [x] **25.1.9** Implement node update (`PUT /node/{id}`) with atomic write + reindex |
+| 2026-01-27 | 25.1.10 | - [x] **25.1.10** Implement `/generate-plan` endpoint (deterministic markdown + optional write) |
+| 2026-01-27 | 25.1.11 | - [x] **25.1.11** Frontend: Graph view rendering from `/graph` (sigma.js) |
+| 2026-01-27 | 25.1.12 | - [x] **25.1.12** Frontend: Node detail panel (read + edit + save) |
+| 2026-01-27 | 25.1.13 | - [x] **25.1.13** Frontend: Search palette (Ctrl+K) via `/search` |
+| 2026-01-27 | 25.1.14 | - [x] **25.1.14** Frontend: Basic recency heat overlay toggle |
+| 2026-01-27 | 25.1.15 | - [x] **25.1.15** Frontend: Generate plan wizard (minimal) using `/generate-plan` |
+| 2026-01-27 | 25.2.1 | - [x] **25.2.1** Backend: compute and return recency heat deterministically |
+| 2026-01-27 | 25.2.2 | - [x] **25.2.2** Backend: density heat (degree + clustering coefficient) with caching |
+| 2026-01-27 | 25.2.3 | - [x] **25.2.3** Backend: task heat based on TaskContract neighborhood |
+| 2026-01-27 | 25.2.4 | - [x] **25.2.4** Frontend: hotspots / insights panel (top N) |
+| 2026-01-27 | 25.2.5 | - [x] **25.2.5** Frontend: filtering controls (type/status/tags/recency) |
+| 2026-01-27 | 25.2.6 | - [x] **25.2.6** Backend: file watcher + incremental reindex |
+| 2026-01-27 | 25.3.1 | - [x] **25.3.1** Frontend: semantic zoom + clustering (supernodes) |
+| 2026-01-27 | 25.3.2 | - [x] **25.3.2** Backend: dependency analysis (cycles, critical path hints) |
+| 2026-01-27 | 25.3.3 | - [x] **25.3.3** Plan generator improvements (toposort, richer dependency sections) |
+| 2026-01-27 | 24.5.1 | - [x] **24.5.1** Decide + (if approved) template `render_ac_status.sh` |
+| 2026-01-27 | 24.6.1 | - [x] **24.6.1** Align model-header single-source-of-truth + prompt batching rule across canonical files |
+| 2026-01-27 | 24.7.1 | - [x] **24.7.1** Backport `loop.sh` scoped staging improvements into templates (without Brain-specific paths) |
+| 2026-01-27 | 24.8.1 | - [x] **24.8.1** Backport verifier caching into templates without regressing A1 root/path logic |
+| 2026-01-27 | 24.9.1 | - [x] **24.9.1** Backport `current_ralph_tasks.sh` parsing improvements into templates |

@@ -124,6 +124,9 @@
 | find-and-replace | Bulk editing needed | [Bulk Edit Patterns](domains/code-quality/bulk-edit-patterns.md) |
 | sed | Stream editing needed | [Bulk Edit Patterns](domains/code-quality/bulk-edit-patterns.md) |
 | batch-editing | Mass changes needed | [Bulk Edit Patterns](domains/code-quality/bulk-edit-patterns.md) |
+| semantic-analysis | Logic bugs beyond syntax | [Semantic Code Review](domains/code-quality/semantic-code-review.md) |
+| llm-code-review | LLM-based code checking | [Semantic Code Review](domains/code-quality/semantic-code-review.md) |
+| code-intent-checking | Verify code matches description | [Semantic Code Review](domains/code-quality/semantic-code-review.md) |
 
 **Generic Error Handling:**
 

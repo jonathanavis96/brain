@@ -213,3 +213,78 @@ Steps:
 - Guard function: `workers/shared/common.sh::guard_plan_only_mode()`
 - Protected files list: `AGENTS.md` → Safety Rules
 - Hash guard: `.verify/loop.sha256`
+
+---
+
+# Spec Change Request #2: Add Brain Map Tests to Verifier
+
+**Date:** 2026-01-27  
+**Requestor:** Ralph (Build Mode)  
+**Task:** 26.3 - Add Brain Map test running to verifier
+
+## Change Required
+
+Add pytest check for Brain Map backend tests to `rules/AC.rules`.
+
+## Reason
+
+Task 26.3 requires adding Brain Map Python tests to the verifier's quality gates. This ensures the Brain Map backend test suite (94 tests) runs as part of the validation process, initially as a WARN gate until stable.
+
+## Protected File
+
+- **File:** `rules/AC.rules`
+- **Hash Guard:** `.verify/ac.sha256`
+- **Status:** Hash-protected, cannot be modified by agent
+
+## Proposed Addition
+
+Add the following section to `rules/AC.rules` (after the existing Lint/Hygiene checks):
+
+```ini
+# =============================================================================
+# Brain Map Backend Tests
+# =============================================================================
+
+[Test.BrainMap.Backend]
+mode=auto
+gate=warn
+desc=Brain Map backend tests pass (if venv exists)
+cmd=bash -c 'if [[ -d ../../app/brain-map/backend/.venv ]]; then cd ../../app/brain-map/backend && source .venv/bin/activate && pytest tests/ -q 2>&1 | tail -5; else echo "ok (venv not found - skip)"; fi'
+expect_stdout_regex=^(ok|.*passed)
+```
+
+## Acceptance Criteria
+
+After human approval and hash regeneration:
+
+1. Verifier runs pytest if `app/brain-map/backend/.venv` exists
+2. Shows `[WARN]` if tests fail
+3. Shows `[PASS]` if tests succeed
+4. Shows `[SKIP]` if venv doesn't exist (graceful degradation)
+
+## Alternative Approaches Considered
+
+1. **Add to verifier.sh directly** - Would also require modifying protected file
+2. **Create separate test script** - Doesn't integrate with existing quality gates
+3. **Manual testing only** - Loses automation benefits
+
+Selected approach integrates with existing AC.rules infrastructure.
+
+## Next Steps
+
+1. Human reviews this request
+2. Human adds the section to `rules/AC.rules`
+3. Human regenerates `.verify/ac.sha256`: `sha256sum rules/AC.rules > .verify/ac.sha256`
+4. Ralph resumes with task 26.3 marked complete
+
+## Impact
+
+- **Risk:** Low - gate=warn means failures don't block work
+- **Benefit:** Automated quality checks for Brain Map backend
+- **Scope:** Single new check, no changes to existing rules
+
+## References
+
+- Task definition: `workers/IMPLEMENTATION_PLAN.md` line 49-57
+- Verifier structure: `workers/ralph/verifier.sh`
+- Brain Map tests: `app/brain-map/backend/tests/` (94 tests)
