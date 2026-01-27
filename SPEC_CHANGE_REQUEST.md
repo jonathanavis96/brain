@@ -33,6 +33,11 @@ Separately (not yet applied unless explicitly confirmed), Phase 24 also proposes
   - `# RUNNER: ...`
   - `# MODEL: ...` (effective model actually used)
 
+### A2) Follow-up loop.sh correctness fixes (applied)
+
+- Ensure scoped staging includes **untracked files** so end-of-run flush commits can actually leave a clean worktree.
+- Use a deterministic `filter_acli_errors.sh` path based on `$ROOT` to avoid cwd-dependent failures.
+
 ### B) PLAN-only and end-of-run safety (proposed)
 
 - **Task 24.4.3** requires adding PLAN-ONLY mode guards to prevent git operations (staging, committing, pushing) when `RALPH_MODE=PLAN`.

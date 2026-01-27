@@ -875,7 +875,15 @@ stage_scoped_changes() {
   local changed_files
   changed_files=$(git diff --name-only 2>/dev/null) || true
 
+  # Also include untracked files (e.g., newly created docs/skills) so flush commits
+  # don't leave the worktree dirty.
+  local untracked_files
+  untracked_files=$(git ls-files --others --exclude-standard 2>/dev/null) || true
+
   # Stage each file unless it matches denylist patterns
+  local files_to_consider
+  files_to_consider=$(printf "%s\n%s\n" "$changed_files" "$untracked_files" | sed '/^\s*$/d' | sort -u) || true
+
   while IFS= read -r file; do
     [[ -z "$file" ]] && continue
 
@@ -890,7 +898,7 @@ stage_scoped_changes() {
 
     # Stage the file
     git add "$ROOT/$file" 2>/dev/null && staged_count=$((staged_count + 1))
-  done <<<"$changed_files"
+  done <<<"$files_to_consider"
 
   # Protected file rule: ensure .verify hash files are staged with their protected files
   # This prevents pre-commit hash validation failures
@@ -1532,7 +1540,7 @@ except Exception:
   else
     # Default: RovoDev (with error filtering)
     run_tool "$tool_id" "$RUNNER" "$tool_key" "$git_sha" \
-      "script -q -c \"cat \\\"$prompt_with_mode\\\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG} 2>&1 | bash ../shared/filter_acli_errors.sh\" \"$log\""
+      "script -q -c \"cat \\\"$prompt_with_mode\\\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG} 2>&1 | bash $ROOT/workers/shared/filter_acli_errors.sh\" \"$log\""
     rc=$?
   fi
 
