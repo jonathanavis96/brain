@@ -1,0 +1,9 @@
+# Markdownlint ignore patterns
+# Exclude third-party dependencies and generated files
+
+node_modules/
+**/node_modules/
+.git/
+.verify/
+artifacts/rollflow_cache/
+app/brain-map/generated/
