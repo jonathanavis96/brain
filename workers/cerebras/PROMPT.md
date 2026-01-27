@@ -172,13 +172,66 @@ See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
 
 ---
 
+## MANDATORY: Startup Procedure (Cheap First)
+
+**Do NOT open large files at startup.** Use targeted commands instead.
+
+### Forbidden at Startup (NEVER open_files for these)
+
+**NEVER call `open_files` on ANY of these files - use grep/sed/head instead:**
+
+- `NEURONS.md` - use `ls` to explore structure
+- `THOUGHTS.md` - slice with `head -30` if needed
+- `cortex/*.md` - Cortex files are NOT needed for BUILD tasks
+- `workers/IMPLEMENTATION_PLAN.md` (full file) - use grep to find tasks
+- `workers/cerebras/THUNK.md` (full file) - use tail to append only
+
+### Required Startup Sequence
+
+```bash
+# 1. Find next unchecked task (DO THIS FIRST)
+grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -20
+
+# 2. If you need context for a specific task, slice by line number
+# Example: task found around line 236
+sed -n '220,280p' workers/IMPLEMENTATION_PLAN.md
+
+# 3. Check for existing tools before creating new ones
+find bin/ -maxdepth 1 -type f | head -20
+find tools/ -maxdepth 1 -name "*.py" -o -name "*.sh" 2>/dev/null | head -10
+```
+
+### Token Efficiency Rules
+
+**Target: <20 tool calls per iteration**
+
+| Anti-Pattern (DON'T) | Best Practice (DO) |
+| -------------------- | ----------------- |
+| Running same command 3 times | Read ONCE, cache result mentally |
+| Running `pwd`, `git branch` repeatedly | Known from header - never run |
+| Opening same file multiple times | Read ONCE, remember content |
+| `grep pattern file1; grep pattern file2` | `grep pattern file1 file2` (1 call) |
+| `shellcheck file1.sh; shellcheck file2.sh` | `shellcheck file1.sh file2.sh` (1 call) |
+
+**Rule:** If you ran a command and got the result, you HAVE that information. Don't run it again.
+
+---
+
 ## PLANNING Mode (Iteration 1 or every 3rd)
 
-### Context Gathering (up to 100 parallel subagents)
+### Context Gathering (Cheap First - NO Large File Opens)
+
+**DO NOT use `open_files` on:**
+
+- `NEURONS.md`, `THOUGHTS.md`, `cortex/*.md`
+- `workers/IMPLEMENTATION_PLAN.md` (full file) - always grep then slice
+- `workers/cerebras/THUNK.md` - only `tail` when appending
+
+**Use targeted commands:**
 
 - Study `skills/SUMMARY.md` for overview and `skills/index.md` for available skills
-- Study THOUGHTS.md for project goals
-- Study workers/IMPLEMENTATION_PLAN.md (if exists)
+- Slice THOUGHTS.md: `head -30 THOUGHTS.md` if needed
+- Search plan: `grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -20`
 - Compare specs vs current codebase
 - Search for gaps between intent and implementation
 
@@ -217,13 +270,41 @@ See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
 
 ## BUILDING Mode (All other iterations)
 
-### Build Context Gathering (up to 100 parallel subagents)
+### Build Context Gathering (Cheap First - Follow Startup Procedure)
+
+**Step 1: Find your ONE task (mandatory first step)**
+
+```bash
+grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -10
+```
+
+**Step 2: Slice only the task block you need**
+
+```bash
+# Example: task at line 236
+sed -n '230,260p' workers/IMPLEMENTATION_PLAN.md
+```
+
+**Step 3: Search before assuming things are missing**
+
+```bash
+# Check for existing tools/scripts
+ls bin/ | head -20
+rg -l "keyword" tools/ skills/domains/ | head -10
+```
+
+**DO NOT open these files:**
+
+- `NEURONS.md` - use `ls` and `find` instead
+- `THOUGHTS.md` - not needed for BUILD mode
+- `workers/IMPLEMENTATION_PLAN.md` (full) - always grep then slice
+- `workers/cerebras/THUNK.md` - only `tail` when appending
+
+**Use targeted commands:**
 
 - Study `skills/SUMMARY.md` for overview and `skills/index.md` for available skills
-- Study THOUGHTS.md and workers/IMPLEMENTATION_PLAN.md
 - Search codebase - **don't assume things are missing**
-- Check NEURONS.md for codebase map
-- Use Brain Skills: `skills/SUMMARY.md` → `references/HOTLIST.md` → specific rules only if needed
+- Use Brain Skills: `skills/SUMMARY.md` → specific rules only if needed
 
 ### Hard Rules (MUST FOLLOW - Prevents Read-Only Loops)
 
@@ -370,6 +451,10 @@ When fixing issues, search the ENTIRE repo: `rg "pattern" $ROOT` not just `worke
 
 Target: <20 tool calls per iteration.
 
+### Non-Negotiable Principle
+
+**Prefer commands that return tiny outputs** (grep/head/sed/tail) over opening large files. If you need to read a file, **slice it**.
+
 ### No Duplicate Commands (CRITICAL)
 
 - **NEVER run the same bash command twice** in one iteration
@@ -379,15 +464,39 @@ Target: <20 tool calls per iteration.
 **Anti-patterns (NEVER do these):**
 
 - Trying to read `.verify/latest.txt` (it's already in the header!)
-- Reading `THUNK.md` to check if a task was done (use IMPLEMENTATION_PLAN.md - it's the source of truth for pending tasks)
+- Reading `THUNK.md` to check if a task was done (use `grep` or `bin/brain-search`)
+- Opening `NEURONS.md`, `THOUGHTS.md`, or full `IMPLEMENTATION_PLAN.md` at startup
 - Running `git status` before AND after `git add`
 - Running `shellcheck file.sh`, then `shellcheck -e SC1091 file.sh`, then `shellcheck -x file.sh`
+
+### Constrain Searches (Avoid Grep Explosion)
+
+If a grep returns too many matches (>50), immediately narrow:
+
+```bash
+# BAD: returns 168 matches, wastes tokens
+grep "observability|marker|event" skills/domains/**/*.md
+
+# GOOD: one keyword, one folder, limited output
+rg -n "agent observability" skills/domains/infrastructure -S | head -20
+rg -n "MARKER_SCHEMA" docs -S | head -20
+```
 
 ### Atomic Git Operations
 
 - **Use single combined command:** `git add -A && git commit -m "msg"`
 - **Do NOT:** `git add file` → `git status` → `git add file` → `git commit`
 - One add+commit per logical change
+
+### Stage-Check Before Ending BUILD
+
+Before ending BUILD iteration, verify all files are staged:
+
+```bash
+git status --short
+# Should show IMPLEMENTATION_PLAN.md and THUNK.md staged (along with your fix)
+git add -A
+```
 
 ### Fail Fast on Formatting
 
@@ -408,7 +517,7 @@ Target: <20 tool calls per iteration.
 
 - `pwd`, `git branch` - known from header
 - Verifier status - already injected in header (NEVER read the file)
-- `tail workers/ralph/THUNK.md` - get next number ONCE
+- `tail workers/cerebras/THUNK.md` - get next number ONCE
 - Same file content - read ONCE, remember it
 
 **ALWAYS batch:** `grep pattern file1 file2 file3` not 3 separate calls.
