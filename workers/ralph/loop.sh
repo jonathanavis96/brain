@@ -2414,7 +2414,33 @@ else
     if [[ -n "${DISCORD_WEBHOOK_URL:-}" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
       echo ""
       echo "Posting iteration summary to Discord..."
-      if generate_iteration_summary "$i" "$current_phase" "$CURRENT_LOG_FILE" | "$ROOT/bin/discord-post" 2>&1 | tee -a "$CURRENT_LOG_FILE"; then
+      
+      # Calculate cache time saved
+      time_saved_display=""
+      if [[ "$CACHE_SKIP" == "true" ]] && [[ $CACHE_HITS -gt 0 ]]; then
+        TIME_SAVED_SEC=$((TIME_SAVED_MS / 1000))
+        time_saved_display="Time saved: ${TIME_SAVED_SEC}s"
+      fi
+      
+      # Get current verifier status
+      verifier_status="Unknown"
+      if [[ -f ".verify/latest.txt" ]]; then
+        verifier_status=$(grep "^SUMMARY" .verify/latest.txt | head -1 || echo "Unknown")
+      fi
+      
+      # Build iteration completion message with stats
+      {
+        echo "**Ralph Iteration $i Complete** ✅"
+        echo ""
+        echo "Phase: ${current_phase}"
+        echo "Cache hits: ${CACHE_HITS} | Misses: ${CACHE_MISSES}"
+        [[ -n "$time_saved_display" ]] && echo "${time_saved_display}"
+        echo "Verifier status: ${verifier_status}"
+        echo ""
+        echo "Run ID: ${ROLLFLOW_RUN_ID:-unknown}"
+      } | "$ROOT/bin/discord-post" 2>&1 | tee -a "${LOGDIR}/iter${i}_completion.log"
+      
+      if [[ ${PIPESTATUS[1]} -eq 0 ]]; then
         echo "✓ Discord update posted"
       else
         echo "⚠ Discord post failed (non-blocking)"
@@ -2443,40 +2469,4 @@ if [[ "$CACHE_SKIP" == "true" ]]; then
   echo ""
 fi
 
-# Post loop completion summary to Discord (task 34.2.2)
-if [[ -n "${DISCORD_WEBHOOK_URL:-}" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
-  echo ""
-  echo "Posting loop completion summary to Discord..."
-  
-  # Calculate cache time saved
-  time_saved_display=""
-  if [[ "$CACHE_SKIP" == "true" ]] && [[ $CACHE_HITS -gt 0 ]]; then
-    TIME_SAVED_SEC=$((TIME_SAVED_MS / 1000))
-    time_saved_display="Time saved: ${TIME_SAVED_SEC}s"
-  fi
-  
-  # Get final verifier status
-  verifier_status="Unknown"
-  if [[ -f ".verify/latest.txt" ]]; then
-    verifier_status=$(grep "^SUMMARY" .verify/latest.txt | head -1 || echo "Unknown")
-  fi
-  
-  # Build completion message
-  cat <<EOF | "$ROOT/bin/discord-post" 2>&1 | tee -a "${LOGDIR}/loop_completion.log"
-**Ralph Loop Complete** ✅
-
-Total iterations: ${ITERATIONS}
-Cache hits: ${CACHE_HITS} | Misses: ${CACHE_MISSES}
-${time_saved_display}
-Final status: ${verifier_status}
-
-Run ID: ${ROLLFLOW_RUN_ID:-unknown}
-EOF
-  
-  if [[ ${PIPESTATUS[1]} -eq 0 ]]; then
-    echo "✓ Discord completion notification posted"
-  else
-    echo "⚠ Discord post failed (non-blocking)"
-  fi
-  echo ""
-fi
+# Loop completion summary is now sent after each iteration (removed duplicate)
