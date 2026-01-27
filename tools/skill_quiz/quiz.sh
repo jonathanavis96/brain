@@ -146,9 +146,9 @@ present_quiz() {
     echo -e "${YELLOW}Did you get it right? (y/n)${NC}"
     read -r assessment
 
-    ((total++))
+    ((++total))
     if [[ "${assessment}" =~ ^[Yy] ]]; then
-      ((correct++))
+      ((++correct))
       echo -e "${GREEN}✓ Correct!${NC}"
     else
       echo -e "${RED}✗ Review this pattern${NC}"
