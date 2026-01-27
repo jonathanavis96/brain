@@ -43,6 +43,44 @@ function App() {
   const [mobileQuickAddOpen, setMobileQuickAddOpen] = useState(false)
   const [sigmaInstance, setSigmaInstance] = useState(null)
   const [pathMetadata, setPathMetadata] = useState(null)
+  // Default preset views
+  const getDefaultViews = () => [
+    {
+      name: "All Tasks",
+      filters: { type: 'task', status: '', tags: '', recency: 'all' },
+      zoom: 1,
+      camera: { x: 0, y: 0, angle: 0 },
+      isDefault: true
+    },
+    {
+      name: "Blocked Items",
+      filters: { type: '', status: 'blocked', tags: '', recency: 'all' },
+      zoom: 1,
+      camera: { x: 0, y: 0, angle: 0 },
+      isDefault: true
+    },
+    {
+      name: "Recent Activity (7d)",
+      filters: { type: '', status: '', tags: '', recency: '7d' },
+      zoom: 1,
+      camera: { x: 0, y: 0, angle: 0 },
+      isDefault: true
+    },
+    {
+      name: "Orphans",
+      filters: { type: '', status: '', tags: 'orphan', recency: 'all' },
+      zoom: 1,
+      camera: { x: 0, y: 0, angle: 0 },
+      isDefault: true
+    }
+  ]
+
+  const [savedViews, setSavedViews] = useState(() => {
+    const saved = localStorage.getItem('brainMapSavedViews')
+    const userViews = saved ? JSON.parse(saved) : []
+    // Merge default views with user views
+    return [...getDefaultViews(), ...userViews]
+  })
 
   // Theme state - initialize from localStorage or default to 'dark'
   const [themeMode, setThemeMode] = useState(() => {
@@ -58,6 +96,39 @@ function App() {
       .then(data => setHealthStatus(data))
       .catch(err => setError(err.message))
   }, [])
+
+  // Load shared view from URL parameter on mount
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const encodedView = urlParams.get('view')
+
+    if (encodedView) {
+      try {
+        const viewState = JSON.parse(atob(encodedView))
+
+        // Apply filters
+        if (viewState.filters) {
+          setFilters(viewState.filters)
+        }
+
+        // Restore camera position (delayed until sigma is ready)
+        if (sigmaInstance && viewState.camera && viewState.zoom) {
+          setTimeout(() => {
+            const camera = sigmaInstance.getCamera()
+            camera.animate({
+              x: viewState.camera.x,
+              y: viewState.camera.y,
+              angle: viewState.camera.angle,
+              ratio: viewState.zoom
+            }, { duration: 500 })
+          }, 500) // Wait for graph to render
+        }
+      } catch (err) {
+        console.error('Failed to parse shared view:', err)
+        alert('Invalid share link - could not load view')
+      }
+    }
+  }, [sigmaInstance])
 
   // Persist theme changes to localStorage
   useEffect(() => {
@@ -349,6 +420,91 @@ function App() {
     console.log('Creating node via drag-drop at position:', position, nodeData)
     // Clear the form data after successful drop
     setClickToPlaceData(null)
+  }
+
+  const handleSaveView = () => {
+    const viewName = prompt('Enter a name for this view:')
+    if (!viewName || !viewName.trim()) return
+
+    // Capture current state
+    const viewState = {
+      name: viewName.trim(),
+      filters: filters,
+      zoom: sigmaInstance ? sigmaInstance.getCamera().ratio : 1,
+      camera: sigmaInstance ? {
+        x: sigmaInstance.getCamera().x,
+        y: sigmaInstance.getCamera().y,
+        angle: sigmaInstance.getCamera().angle
+      } : { x: 0, y: 0, angle: 0 },
+      timestamp: new Date().toISOString(),
+      isDefault: false
+    }
+
+    // Add to saved views (only save user views to localStorage)
+    const updatedViews = [...savedViews, viewState]
+    setSavedViews(updatedViews)
+    const userViews = updatedViews.filter(v => !v.isDefault)
+    localStorage.setItem('brainMapSavedViews', JSON.stringify(userViews))
+
+    alert(`View "${viewName}" saved successfully!`)
+  }
+
+  const handleLoadView = (view) => {
+    // Apply filters
+    setFilters(view.filters)
+
+    // Restore camera position
+    if (sigmaInstance && view.camera) {
+      const camera = sigmaInstance.getCamera()
+      camera.animate({
+        x: view.camera.x,
+        y: view.camera.y,
+        angle: view.camera.angle,
+        ratio: view.zoom
+      }, { duration: 500 })
+    }
+  }
+
+  const handleDeleteView = (viewIndex) => {
+    const view = savedViews[viewIndex]
+
+    // Prevent deletion of default views
+    if (view.isDefault) {
+      alert('Cannot delete default views')
+      return
+    }
+
+    if (!confirm(`Delete view "${view.name}"?`)) return
+
+    const updatedViews = savedViews.filter((_, index) => index !== viewIndex)
+    setSavedViews(updatedViews)
+    const userViews = updatedViews.filter(v => !v.isDefault)
+    localStorage.setItem('brainMapSavedViews', JSON.stringify(userViews))
+  }
+
+  const handleShareView = () => {
+    // Capture current state (same as handleSaveView but without prompting for name)
+    const viewState = {
+      filters: filters,
+      zoom: sigmaInstance ? sigmaInstance.getCamera().ratio : 1,
+      camera: sigmaInstance ? {
+        x: sigmaInstance.getCamera().x,
+        y: sigmaInstance.getCamera().y,
+        angle: sigmaInstance.getCamera().angle
+      } : { x: 0, y: 0, angle: 0 }
+    }
+
+    // Encode state as base64 URL parameter
+    const encodedState = btoa(JSON.stringify(viewState))
+    const shareUrl = `${window.location.origin}${window.location.pathname}?view=${encodedState}`
+
+    // Copy to clipboard
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      alert('Share link copied to clipboard!\n\nAnyone with this link will see the same filtered graph view.')
+    }).catch(() => {
+      // Fallback: show URL in prompt for manual copy
+      prompt('Copy this link to share the current view:', shareUrl)
+    })
   }
 
   return (
@@ -699,6 +855,66 @@ function App() {
             >
               {showQuickAddPanel ? '✓ Quick Add' : 'Quick Add'}
             </button>
+            <button
+              onClick={handleSaveView}
+              style={{
+                padding: '8px 16px',
+                border: `1px solid ${colors.buttonBorder}`,
+                borderRadius: '4px',
+                background: colors.buttonBackground,
+                color: colors.buttonText,
+                cursor: 'pointer',
+                fontSize: '14px'
+              }}
+              title="Save current view (filters + camera position)"
+            >
+              💾 Save View
+            </button>
+            <button
+              onClick={handleShareView}
+              style={{
+                padding: '8px 16px',
+                border: `1px solid ${colors.buttonBorder}`,
+                borderRadius: '4px',
+                background: colors.buttonBackground,
+                color: colors.buttonText,
+                cursor: 'pointer',
+                fontSize: '14px'
+              }}
+              title="Generate shareable link with current view state"
+            >
+              🔗 Share View
+            </button>
+            {savedViews.length > 0 && (
+              <div style={{ position: 'relative', display: 'inline-block' }}>
+                <select
+                  onChange={(e) => {
+                    const viewIndex = parseInt(e.target.value, 10)
+                    if (!isNaN(viewIndex) && viewIndex >= 0) {
+                      handleLoadView(savedViews[viewIndex])
+                    }
+                    e.target.value = '' // Reset dropdown
+                  }}
+                  style={{
+                    padding: '8px 16px',
+                    border: `1px solid ${colors.buttonBorder}`,
+                    borderRadius: '4px',
+                    background: colors.buttonBackground,
+                    color: colors.buttonText,
+                    cursor: 'pointer',
+                    fontSize: '14px'
+                  }}
+                  defaultValue=""
+                >
+                  <option value="" disabled>📂 Load View ({savedViews.length})</option>
+                  {savedViews.map((view, index) => (
+                    <option key={index} value={index}>
+                      {view.name} ({new Date(view.timestamp).toLocaleDateString()})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
             <button
               onClick={() => {
                 setPlanModalOpen(true)

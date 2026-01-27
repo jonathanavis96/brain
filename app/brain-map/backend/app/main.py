@@ -1168,6 +1168,83 @@ async def get_orphans() -> dict:
         )
 
 
+@app.get("/insights/bridges")
+async def get_bridges(top_n: int = 5, use_degree_fallback: bool = False) -> dict:
+    """Get list of bridge nodes (high betweenness centrality).
+
+    Bridge nodes connect disparate clusters in the graph. This endpoint
+    identifies the top N nodes by betweenness centrality score.
+
+    Args:
+        top_n: Number of top bridge nodes to return (default 5).
+        use_degree_fallback: Use degree centrality instead of betweenness (default False).
+
+    Returns:
+        JSON response with bridge nodes list and metadata.
+
+    Status codes:
+        200 OK: Bridge nodes retrieved successfully.
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from app.index import get_bridge_nodes
+
+    try:
+        bridges = get_bridge_nodes(top_n=top_n, use_degree_fallback=use_degree_fallback)
+        return {
+            "bridges": bridges,
+            "count": len(bridges),
+            "algorithm": "degree_centrality"
+            if use_degree_fallback
+            else "betweenness_centrality",
+        }
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
+@app.get("/insights/stale")
+async def get_stale_nodes(threshold_days: int = 90) -> dict:
+    """Get list of stale nodes (not updated recently).
+
+    Stale nodes are those with updated_at > threshold_days ago.
+    Useful for identifying notes that may need review or updates.
+
+    Args:
+        threshold_days: Number of days after which a node is considered stale (default 90).
+
+    Returns:
+        JSON response with stale nodes list and metadata.
+
+    Status codes:
+        200 OK: Stale nodes retrieved successfully.
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from app.index import get_stale_nodes
+
+    try:
+        stale_nodes = get_stale_nodes(threshold_days=threshold_days)
+        return {
+            "stale_nodes": stale_nodes,
+            "count": len(stale_nodes),
+            "threshold_days": threshold_days,
+        }
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
 @app.post("/generate-plan")
 async def generate_plan(request: dict) -> dict:
     """

@@ -1183,6 +1183,230 @@ def _topological_sort(nodes: list[dict], edges: list[dict]) -> list[str]:
     return result
 
 
+def calculate_betweenness_centrality(
+    adjacency_dict: dict[str, list[str]],
+) -> dict[str, float]:
+    """Calculate betweenness centrality using Brandes' algorithm.
+
+    Betweenness centrality measures how often a node appears on shortest
+    paths between other nodes. High betweenness indicates bridge nodes
+    that connect different clusters.
+
+    Args:
+        adjacency_dict: Graph as {node_id: [neighbor_id, ...]}.
+
+    Returns:
+        Dictionary mapping node_id to betweenness score.
+    """
+    from collections import deque
+
+    nodes = list(adjacency_dict.keys())
+    betweenness = {node: 0.0 for node in nodes}
+
+    # For each node as source
+    for source in nodes:
+        # BFS to find shortest paths
+        stack = []
+        paths = {node: [] for node in nodes}  # predecessors
+        sigma = {node: 0.0 for node in nodes}  # number of shortest paths
+        sigma[source] = 1.0
+        dist = {node: -1 for node in nodes}
+        dist[source] = 0
+
+        queue = deque([source])
+
+        while queue:
+            v = queue.popleft()
+            stack.append(v)
+
+            for w in adjacency_dict.get(v, []):
+                # First time we see w?
+                if dist[w] < 0:
+                    queue.append(w)
+                    dist[w] = dist[v] + 1
+
+                # Shortest path to w via v?
+                if dist[w] == dist[v] + 1:
+                    sigma[w] += sigma[v]
+                    paths[w].append(v)
+
+        # Accumulation: back-propagate dependencies
+        delta = {node: 0.0 for node in nodes}
+
+        while stack:
+            w = stack.pop()
+            for v in paths[w]:
+                delta[v] += (sigma[v] / sigma[w]) * (1.0 + delta[w])
+
+            if w != source:
+                betweenness[w] += delta[w]
+
+    # Normalize (undirected graph, divide by 2)
+    for node in betweenness:
+        betweenness[node] /= 2.0
+
+    return betweenness
+
+
+def calculate_degree_centrality(adjacency_dict: dict[str, list[str]]) -> dict[str, int]:
+    """Calculate degree centrality (fallback for betweenness).
+
+    Degree centrality is simply the count of edges connected to each node.
+    Simpler but less accurate than betweenness for bridge detection.
+
+    Args:
+        adjacency_dict: Graph as {node_id: [neighbor_id, ...]}.
+
+    Returns:
+        Dictionary mapping node_id to degree count.
+    """
+    return {node: len(neighbors) for node, neighbors in adjacency_dict.items()}
+
+
+def get_bridge_nodes(top_n: int = 5, use_degree_fallback: bool = False) -> list[dict]:
+    """Identify bridge nodes using betweenness centrality.
+
+    Bridge nodes are those that connect disparate clusters in the graph.
+    Returns the top N nodes by betweenness centrality score.
+
+    Args:
+        top_n: Number of top bridge nodes to return (default 5).
+        use_degree_fallback: Use degree centrality instead of betweenness.
+
+    Returns:
+        List of bridge node dictionaries with metadata and scores.
+
+    Raises:
+        FileNotFoundError: If index database doesn't exist.
+    """
+    conn = get_index_connection()
+    cursor = conn.cursor()
+
+    # Build adjacency list (treat as undirected)
+    cursor.execute("SELECT source_id, target_id FROM edges")
+    edge_rows = cursor.fetchall()
+
+    adjacency = {}
+    for row in edge_rows:
+        src, tgt = row["source_id"], row["target_id"]
+
+        if src not in adjacency:
+            adjacency[src] = []
+        if tgt not in adjacency:
+            adjacency[tgt] = []
+
+        adjacency[src].append(tgt)
+        adjacency[tgt].append(src)  # Undirected
+
+    # Calculate centrality scores
+    if use_degree_fallback:
+        scores = calculate_degree_centrality(adjacency)
+    else:
+        scores = calculate_betweenness_centrality(adjacency)
+
+    # Get top N nodes by score
+    sorted_nodes = sorted(scores.items(), key=lambda x: x[1], reverse=True)[:top_n]
+
+    # Fetch node metadata
+    bridge_nodes = []
+    for node_id, score in sorted_nodes:
+        cursor.execute(
+            """
+            SELECT id, title, type, status, created_at, modified_at
+            FROM nodes
+            WHERE id = ?
+        """,
+            (node_id,),
+        )
+        row = cursor.fetchone()
+
+        if row:
+            bridge_nodes.append(
+                {
+                    "id": row["id"],
+                    "title": row["title"],
+                    "type": row["type"],
+                    "status": row["status"],
+                    "created_at": row["created_at"],
+                    "updated_at": row["modified_at"],
+                    "betweenness_score": score,
+                }
+            )
+
+    conn.close()
+    return bridge_nodes
+
+
+def get_stale_nodes(threshold_days: int = 90) -> list[dict]:
+    """Identify stale nodes that haven't been updated recently.
+
+    Stale nodes are those with modified_at (updated_at) older than
+    threshold_days. Useful for identifying notes that may need review.
+
+    Args:
+        threshold_days: Number of days after which a node is considered stale (default 90).
+
+    Returns:
+        List of stale node dictionaries with metadata and days_old.
+
+    Raises:
+        FileNotFoundError: If index database doesn't exist.
+    """
+    from datetime import datetime, timedelta, timezone
+
+    conn = get_index_connection()
+    cursor = conn.cursor()
+
+    # Calculate cutoff timestamp
+    cutoff = datetime.now(timezone.utc) - timedelta(days=threshold_days)
+    cutoff_iso = cutoff.isoformat()
+
+    # Query nodes older than threshold
+    cursor.execute(
+        """
+        SELECT id, title, type, status, created_at, modified_at
+        FROM nodes
+        WHERE modified_at < ?
+        ORDER BY modified_at ASC
+    """,
+        (cutoff_iso,),
+    )
+
+    rows = cursor.fetchall()
+
+    # Build stale nodes list with days_old metric
+    stale_nodes = []
+    now = datetime.now(timezone.utc)
+
+    for row in rows:
+        modified_at_str = row["modified_at"]
+        days_old = None
+
+        if modified_at_str:
+            try:
+                modified_at = datetime.fromisoformat(
+                    modified_at_str.replace("Z", "+00:00")
+                )
+                days_old = (now - modified_at).total_seconds() / 86400.0
+            except (ValueError, TypeError):
+                pass
+
+        stale_nodes.append(
+            {
+                "id": row["id"],
+                "title": row["title"],
+                "type": row["type"],
+                "status": row["status"],
+                "created_at": row["created_at"],
+                "updated_at": row["modified_at"],
+                "days_old": round(days_old, 1) if days_old else None,
+            }
+        )
+
+    conn.close()
+    return stale_nodes
+
+
 def get_orphan_nodes() -> list[dict]:
     """
     Identify orphan nodes (nodes with zero in-degree and out-degree).
@@ -1216,15 +1440,17 @@ def get_orphan_nodes() -> list[dict]:
 
     orphans = []
     for row in rows:
-        orphans.append({
-            "id": row["id"],
-            "title": row["title"],
-            "type": row["type"],
-            "status": row["status"],
-            "tags": json.loads(row["tags"]) if row["tags"] else [],
-            "created_at": row["created_at"],
-            "updated_at": row["modified_at"],
-        })
+        orphans.append(
+            {
+                "id": row["id"],
+                "title": row["title"],
+                "type": row["type"],
+                "status": row["status"],
+                "tags": json.loads(row["tags"]) if row["tags"] else [],
+                "created_at": row["created_at"],
+                "updated_at": row["modified_at"],
+            }
+        )
 
     conn.close()
     return orphans

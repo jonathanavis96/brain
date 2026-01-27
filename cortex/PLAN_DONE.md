@@ -390,3 +390,18 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-27 | 32.1.4 | - [x] **32.1.4** Show path metadata - Display path length, intermediate nodes, estimated "semantic distance" (based on edge weights). AC: Path info panel shows details. Verification: Find path → see "4 hops via Node X, Y, Z". If Blocked: Just show node count |
 | 2026-01-27 | 32.2.1 | - [x] **32.2.1** Implement auto-tagging suggestions - Backend analyzes node body text, suggests tags using keyword extraction (TF-IDF or simple regex). AC: API endpoint `/node/{id}/suggest-tags` returns tag array. Verification: Request suggestions for sample note → relevant tags returned. If Blocked: Use predefined tag dictionary matching |
 | 2026-01-27 | 32.2.2 | - [x] **32.2.2** Orphan node detection - Backend identifies nodes with zero edges (in/out degree = 0), returns list via `/insights/orphans`. AC: Orphans endpoint works. Verification: Create isolated node → appears in orphans list. If Blocked: Client-side filter (graph.nodes.filter(n => graph.degree(n) === 0)) |
+
+### Archived on 2026-01-27 (Batch 6)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 0.1 | - [x] **0.1** Fix MD012 in workers/IMPLEMENTATION_PLAN.md:43 (Expected: 2; Actual: 3) |
+| 2026-01-27 | 0.2 | - [x] **0.2** Fix MD012 in workers/IMPLEMENTATION_PLAN.md:44 (Expected: 2; Actual: 4) |
+| 2026-01-27 | 0.3 | - [x] **0.3** Fix MD012 in workers/IMPLEMENTATION_PLAN.md:45 (Expected: 2; Actual: 5) |
+| 2026-01-27 | 0.4 | - [x] **0.4** Fix MD012 in workers/IMPLEMENTATION_PLAN.md:51 (Expected: 2; Actual: 3) |
+| 2026-01-27 | 32.2.3 | - [x] **32.2.3** Bridge node identification - Calculate betweenness centrality (nodes that connect disparate clusters), highlight top 5 in UI. AC: Bridge nodes marked with icon. Verification: Manually create bridge topology → correct nodes identified. If Blocked: Skip betweenness, use degree centrality (most connected) |
+| 2026-01-27 | 32.2.4 | - [x] **32.2.4** Stale note alerts - Flag nodes with `updated_at > 90 days`, show in insights panel with "Update recommended". AC: Stale nodes listed. Verification: Create old note → appears in stale list. If Blocked: Use recency metric already implemented |
+| 2026-01-27 | 32.3.1 | - [x] **32.3.1** Add "Save View" button - Captures current filter state + zoom + camera position, stores in localStorage with user-defined name. AC: Save View → prompts for name → saved. Verification: Save view "My Project" → appears in views list. If Blocked: Save filters only (not camera state) |
+| 2026-01-27 | 32.3.2 | - [x] **32.3.2** Create Views dropdown in header - List of saved views, click to load (applies filters, restores camera). AC: Dropdown shows saved views. Verification: Load saved view → graph state restored. If Blocked: Use bookmarks panel in sidebar |
+| 2026-01-27 | 32.3.3 | - [x] **32.3.3** Implement view sharing - "Share View" generates URL with encoded filter params (e.g., `/graph?view=base64encodedstate`). AC: Copy link, open in new tab → same view. Verification: Share link to another user → they see same filtered graph. If Blocked: Copy filter JSON to clipboard |
+| 2026-01-27 | 32.3.4 | - [x] **32.3.4** Add default views - Preset views: "All Tasks", "Blocked Items", "Recent Activity (7d)", "Orphans". AC: Default views available on first load. Verification: Fresh session → 4 default views shown. If Blocked: Just document filter examples in help |
