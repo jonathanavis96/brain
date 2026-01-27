@@ -188,7 +188,7 @@
   - **Verification:** Run loop, check Discord for completion message
   - **If Blocked:** Skip this task
 
-- [ ] **34.2.3** Add verifier failure alerts
+- [x] **34.2.3** Add verifier failure alerts
   - **Goal:** Post alert when verifier fails
   - **Implementation:**
     - In verifier failure block (line ~1240) in `workers/ralph/loop.sh`

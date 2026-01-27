@@ -1980,6 +1980,21 @@ if [[ -n "$PROMPT_ARG" ]]; then
         echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
         echo ""
         echo "After fixing manually, re-run the loop to continue."
+        
+        # Post verifier failure alert to Discord (if configured)
+        if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+          {
+            echo "**⚠️ Verifier Failed - Loop Stopped**"
+            echo ""
+            echo "Iteration: $i"
+            echo "Consecutive failures: $CONSECUTIVE_VERIFIER_FAILURES"
+            echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
+            echo ""
+            echo "**Recent failures:**"
+            sed -n '/^\[FAIL\]/p' .verify/latest.txt 2>/dev/null | head -10
+          } | "$ROOT/bin/discord-post" 2>/dev/null || true
+        fi
+        
         exit 1
       else
         echo ""
@@ -1989,6 +2004,20 @@ if [[ -n "$PROMPT_ARG" ]]; then
         echo "Next iteration will inject LAST_VERIFIER_RESULT: FAIL"
         echo "Ralph should fix the AC failures before picking new tasks."
         echo ""
+        
+        # Post verifier failure alert to Discord (if configured)
+        if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+          {
+            echo "**⚠️ Verifier Failed - Retry Scheduled**"
+            echo ""
+            echo "Iteration: $i"
+            echo "Status: Giving Ralph one retry iteration"
+            echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
+            echo ""
+            echo "**Top failures:**"
+            sed -n '/^\[FAIL\]/p' .verify/latest.txt 2>/dev/null | head -5
+          } | "$ROOT/bin/discord-post" 2>/dev/null || true
+        fi
       fi
     else
       # Reset counter on successful iteration
@@ -2301,6 +2330,21 @@ else
         echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
         echo ""
         echo "After fixing manually, re-run the loop to continue."
+        
+        # Post verifier failure alert to Discord (if configured)
+        if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+          {
+            echo "**⚠️ Verifier Failed - Loop Stopped**"
+            echo ""
+            echo "Iteration: $i"
+            echo "Consecutive failures: $CONSECUTIVE_VERIFIER_FAILURES"
+            echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
+            echo ""
+            echo "**Recent failures:**"
+            sed -n '/^\[FAIL\]/p' .verify/latest.txt 2>/dev/null | head -10
+          } | "$ROOT/bin/discord-post" 2>/dev/null || true
+        fi
+        
         exit 1
       else
         echo ""
@@ -2310,6 +2354,20 @@ else
         echo "Next iteration will inject LAST_VERIFIER_RESULT: FAIL"
         echo "Ralph should fix the AC failures before picking new tasks."
         echo ""
+        
+        # Post verifier failure alert to Discord (if configured)
+        if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+          {
+            echo "**⚠️ Verifier Failed - Retry Scheduled**"
+            echo ""
+            echo "Iteration: $i"
+            echo "Status: Giving Ralph one retry iteration"
+            echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
+            echo ""
+            echo "**Top failures:**"
+            sed -n '/^\[FAIL\]/p' .verify/latest.txt 2>/dev/null | head -5
+          } | "$ROOT/bin/discord-post" 2>/dev/null || true
+        fi
       fi
     else
       # Reset counter on successful iteration
