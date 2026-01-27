@@ -10,13 +10,7 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 |------|---------|-------------|
 | 2026-01-26 | 23.1.1 | - [x] **23.1.1** Fix `sync_completions_to_cortex.sh` unbound variable **[HIGH]** |
 | 2026-01-26 | 23.1.2 | - [x] **23.1.2** Untrack rollflow cache sqlite files and ensure ignored **[HIGH]** |
-| 2026-01-26 | 23.2.1 | - [x] **23.2.1** Replace `git add -A` with scoped staging allowlist/denylist **[HIGH]** |
-| 2026-01-26 |     - [x] `git add -A` no longer used |     - [x] `git add -A` no longer used |
-| 2026-01-26 |     - [x] Core files always staged (IMPLEMENTATION_PLAN.md, THUNK.md) |     - [x] Core files always staged (IMPLEMENTATION_PLAN.md, THUNK.md) |
-| 2026-01-26 |     - [x] Artifacts excluded by default |     - [x] Artifacts excluded by default |
-| 2026-01-26 |     - [x] Cortex copies excluded by default |     - [x] Cortex copies excluded by default |
-| 2026-01-26 |     - [x] Cache files excluded by default |     - [x] Cache files excluded by default |
-| 2026-01-26 |     - [x] Hash regenerated in all `.verify/` directories |     - [x] Hash regenerated in all `.verify/` directories |
+| 2026-01-26 | 23.2.1 | - [x] **23.2.1** Replace `git add -A` with scoped staging allowlist/denylist **[HIGH]**<br>- [x] `git add -A` no longer used<br>- [x] Core files always staged (IMPLEMENTATION_PLAN.md, THUNK.md)<br>- [x] Artifacts excluded by default<br>- [x] Cortex copies excluded by default<br>- [x] Cache files excluded by default<br>- [x] Hash regenerated in all `.verify/` directories |
 | 2026-01-26 | 23.3.1 | - [x] **23.3.1** Make `cortex/snapshot.sh` avoid regenerating dashboard/metrics by default **[MEDIUM]** |
 | 2026-01-26 | 23.3.2 | - [x] **23.3.2** Pass changed `.md` files to fix-markdown instead of scanning repo root **[MEDIUM]** |
 | 2026-01-26 | 23.4.1 | - [x] **23.4.1** Add PROMPT instruction: check THUNK before re-validating tasks **[LOW]** |
@@ -92,7 +86,7 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | 2026-01-26 | 22.5.1 | - [x] **22.5.1** Fix MD024 in cortex/PLAN_DONE.md line 186 |
 | 2026-01-26 | 22.5.2 | - [x] **22.5.2** Fix MD024 in cortex/PLAN_DONE.md line 210 |
 | 2026-01-26 | 22.5.3 | - [x] **22.5.3** Fix MD024 in cortex/PLAN_DONE.md line 221 |
-| 2026-01-26 | 22.6.1 | - [x] **22.6.1** Fix MD001 in workers/PLAN_DONE.md line 7 |
+| 2026-01-26 | 22.6.1 | - [x] **22.6.1** Fix MD001 in workers/PLAN_DONE.md (line numbers refer to file state at the time of the original issue) |
 | 2026-01-26 | 22.7.1 | - [x] **22.7.1** Fix MD024 in cortex/PLAN_DONE.md line 186 |
 | 2026-01-26 | 22.7.2 | - [x] **22.7.2** Fix MD024 in cortex/PLAN_DONE.md line 210 |
 | 2026-01-26 | 22.7.3 | - [x] **22.7.3** Fix MD024 in cortex/PLAN_DONE.md line 221 |

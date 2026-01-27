@@ -274,7 +274,7 @@
   - **Resolved:** ✅ Do **not** template this under `templates/ralph/`. This is intended to be **Cerebras-only** (i.e., under `workers/cerebras/`).
   - **Why it matters:** Avoid clutter/misleading artifacts in standard Ralph scaffolds while still supporting Cerebras-specific workflows.
   - **Where to inspect:** `workers/cerebras/` (intended home), plus any existing `PROMPT_cerebras.md` references in scripts/docs.
-  - **Follow-up:** Update/move/rename as needed so the repo doesnt imply `PROMPT_cerebras.md` is a standard Ralph artifact.
+  - **Follow-up:** Update/move/rename as needed so the repo doesn't imply `PROMPT_cerebras.md` is a standard Ralph artifact.
 
 - **DN-24.3 (`ralph.sh` wrapper)**
   - **Resolved:** ✅ Do **not** template `ralph.sh` as a global wrapper/entrypoint.
