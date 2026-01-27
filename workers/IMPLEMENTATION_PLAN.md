@@ -1,8 +1,8 @@
 # Implementation Plan - Brain Repository
 
-**Last Updated:** 2026-01-27 15:05:00
+**Last Updated:** 2026-01-27 18:40:00
 
-**Current Status:** Phase 31-33 active (Brain Map V2 power features)
+**Current Status:** Phase 0-Warn active (markdown lint fixes), Phase 31-33 (Brain Map V2 power features)
 
 **Recent Completions:**
 
@@ -15,6 +15,7 @@
 
 **Active Focus:**
 
+- Phase 0-Warn: Markdown lint errors (MD032, MD007, MD046)
 - Phase 31: Brain Map V2 Core Interactions (node dragging, drag-to-link, dark mode, mobile)
 - Phase 32: Brain Map V2 Discovery & Intelligence (path finder, AI insights, saved views)
 - Phase 33: Brain Map V2 Polish & Power Features (temporal viz, collaboration, export)
@@ -35,113 +36,82 @@
 
 **Duration:** 30-45 min
 
-- [x] **34.1.1** Configure Discord webhook environment variable
-  - **Goal:** Securely configure DISCORD_WEBHOOK_URL without exposing secret in git
-  - **Implementation:**
-    - Create `.env` file in brain root (gitignored):
 
-      ```bash
-      # Discord webhook for Ralph iteration notifications
-      DISCORD_WEBHOOK_URL="<REDACTED - user provides actual webhook URL>"
-      ```
+   ```bash
+   # Discord webhook for Ralph iteration notifications
+   DISCORD_WEBHOOK_URL="<REDACTED - user provides actual webhook URL>"
+   ```
 
-    - Add to `~/.bashrc` to source `.env`:
+   Setup steps:
 
-      ```bash
-      # Load Discord webhook from .env file
-      if [ -f ~/code/brain/.env ]; then
-        export $(grep -v '^#' ~/code/brain/.env | xargs)
-      fi
-      ```
+   1. Add to `~/.bashrc` to source `.env` (see example below)
+   2. Source the file: `source ~/.bashrc`
+   3. Verify: `echo $DISCORD_WEBHOOK_URL` (should print webhook URL without revealing in git)
 
-    - Source the file: `source ~/.bashrc`
-    - Verify: `echo $DISCORD_WEBHOOK_URL` (should print webhook URL without revealing in git)
-  - **AC:** Environment variable loads from .env file; persists across shell sessions; .env is gitignored; no secrets in committed files
-  - **Verification:** Run `git status` (verify .env not staged); open new terminal, run `echo $DISCORD_WEBHOOK_URL` (verify URL appears)
-  - **Status:** ⚠️ Completed but exposed secret in git history - see commit 4dc2c21 (REVOKED)
+   Example `.bashrc` addition:
 
-- [x] **34.1.2** Add `generate_iteration_summary` function to loop.sh
-  - **Goal:** Extract Ralph's structured summary from iteration logs for Discord posting
-  - **Implementation:**
-    - Add function to `workers/ralph/loop.sh` (near other utility functions, around line 200-300)
-    - Function signature: `generate_iteration_summary(iter_num, mode, logfile)`
-    - Logic:
-      1. Find all "Summary" headers in logfile using `grep -n "^\s*Summary\s*$"`
-      2. If none found, output fallback message with Run ID and logfile path
-      3. If found, extract LAST summary block (from last "Summary" to `:::BUILD_READY:::` marker or EOF)
-      4. Add iteration header: `**Ralph Iteration N (MODE)** — TIMESTAMP`
-      5. If multiple summaries detected, add warning message
-    - Output format (success):
+   ```bash
+   # Load Discord webhook from .env file
+   if [ -f ~/code/brain/.env ]; then
+     export $(grep -v '^#' ~/code/brain/.env | xargs)
+   fi
+   ```
 
-      ```text
-      **Ralph Iteration 12 (BUILD)** — 2026-01-27 16:47:30
-      
-      Summary
-      - Updated X
-      - Fixed Y
-      ...
-      ```
+- **AC:** Environment variable loads from .env file; persists across shell sessions; .env is gitignored; no secrets in committed files
+- **Verification:** Run `git status` (verify .env not staged); open new terminal, run `echo $DISCORD_WEBHOOK_URL` (verify URL appears)
+- **Status:** ⚠️ Completed but exposed secret in git history - see commit 4dc2c21 (REVOKED)
 
-    - Output format (fallback):
 
-      ```text
-      **Ralph Iteration 12 (BUILD)** — 2026-01-27 16:47:30
-      
-      No structured summary found in logs.
-      
-      Run ID: 20260127_164730
-      Log: workers/ralph/logs/iter12_build.log
-      ```
+   ```text
+   **Ralph Iteration 12 (BUILD)** — 2026-01-27 16:47:30
+   
+   Summary
+   - Updated X
+   - Fixed Y
+   ...
+   ```
 
-  - **AC:** Function extracts Ralph's structured summary from log; uses LAST summary block if multiple found; fallback message if no summary present; includes iteration header with timestamp
-  - **Verification:** Test with real log: `generate_iteration_summary 12 BUILD workers/ralph/logs/iter12_build.log | head -50`; verify extracts "Summary / Changes Made / Completed" section; test with log containing no summary (fallback message appears); test with multiple summaries (uses last one)
-  - **If Blocked:** Start with simple grep-based extraction, refine line number logic later
+  - Output format (fallback):
 
-- [x] **34.1.3** Integrate Discord posting after `:::ITER_END:::` marker
-  - **Goal:** Call Discord poster after each iteration completes
-  - **Implementation:**
-    - Location: `workers/ralph/loop.sh` line ~2270 (after `emit_marker ":::ITER_END:::"`)
-    - Add integration block:
+   ```text
+   **Ralph Iteration 12 (BUILD)** — 2026-01-27 16:47:30
+   
+   No structured summary found in logs.
+   
+   Run ID: 20260127_164730
+   Log: workers/ralph/logs/iter12_build.log
+   ```
 
-      ```bash
-      # Post iteration summary to Discord (if configured)
-      if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
-        echo ""
-        echo "Posting iteration summary to Discord..."
-        # Pass logfile path to extract summary
-        local current_logfile="$LOGDIR/iter${i}_${mode}.log"
-        if generate_iteration_summary "$i" "$mode" "$current_logfile" | "$ROOT/bin/discord-post" 2>&1 | tee -a "$current_logfile"; then
-          echo "✓ Discord update posted"
-        else
-          echo "⚠ Discord post failed (non-blocking)"
-        fi
-        echo ""
-      fi
-      ```
+- **AC:** Function extracts Ralph's structured summary from log; uses LAST summary block if multiple found; fallback message if no summary present; includes iteration header with timestamp
+- **Verification:** Test with real log: `generate_iteration_summary 12 BUILD workers/ralph/logs/iter12_build.log | head -50`; verify extracts "Summary / Changes Made / Completed" section; test with log containing no summary (fallback message appears); test with multiple summaries (uses last one)
+- **If Blocked:** Start with simple grep-based extraction, refine line number logic later
 
-    - Ensure failure doesn't stop loop (already wrapped in if-else)
-    - Follow gap-radar pattern (non-blocking, log output)
-    - Pass logfile path as third parameter to `generate_iteration_summary`
-  - **AC:** Loop runs normally with DISCORD_WEBHOOK_URL unset; loop posts to Discord when webhook configured; posting failure doesn't crash loop; extracts summary from correct log file
-  - **Verification:** Run `loop.sh --iterations 1` without webhook (no error); set webhook and run again (check Discord for Ralph's structured summary); break webhook URL (verify non-fatal error); verify Discord message contains "Summary / Changes Made / Completed" sections
-  - **If Blocked:** Make integration optional via feature flag `DISCORD_ENABLED=true`
+```bash
+# Post iteration summary to Discord (if configured)
+if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+  echo ""
+  echo "Posting iteration summary to Discord..."
+  # Pass logfile path to extract summary
+  local current_logfile="$LOGDIR/iter${i}_${mode}.log"
+  if generate_iteration_summary "$i" "$mode" "$current_logfile" | "$ROOT/bin/discord-post" 2>&1 | tee -a "$current_logfile"; then
+    echo "✓ Discord update posted"
+  else
+    echo "⚠ Discord post failed (non-blocking)"
+  fi
+  echo ""
+fi
+```
 
-- [x] **34.1.4** Add manual verification tests
-  - **Goal:** Document testing procedure
-  - **Implementation:**
-    - Create test checklist in `cortex/docs/DISCORD_INTEGRATION_SPEC.md` (already exists)
-    - Run each test case:
-      1. Dry-run mode: `echo "test" | bin/discord-post --dry-run`
-      2. Real post: Set webhook, `echo "test" | bin/discord-post`
-      3. Chunking: `seq 1 200 | bin/discord-post`
-      4. Loop integration: `cd workers/ralph && bash loop.sh --iterations 1`
-      5. Missing webhook: Unset var, verify non-fatal
-      6. Invalid webhook: Set bad URL, verify error handling
-
-    - Document results in commit message
-  - **AC:** All 6 test cases pass; Discord messages appear correctly; no loop crashes
-  - **Verification:** Complete checklist, paste results in PR description
-  - **If Blocked:** Run subset of tests (1, 2, 4 minimum)
+- Ensure failure doesn't stop loop (already wrapped in if-else)
+- Follow gap-radar pattern (non-blocking, log output)
+- Pass logfile path as third parameter to `generate_iteration_summary`
+- **AC:** Loop runs normally with DISCORD_WEBHOOK_URL unset; loop posts to Discord when webhook configured; posting failure doesn't crash loop; extracts summary from correct log file
+- **Verification:** Run `loop.sh --iterations 1` without webhook (no error); set webhook and run again (check Discord for Ralph's structured summary); break webhook URL (verify non-fatal error); verify Discord message contains "Summary / Changes Made / Completed" sections
+- **If Blocked:** Make integration optional via feature flag `DISCORD_ENABLED=true`
+- Document results in commit message
+- **AC:** All 6 test cases pass; Discord messages appear correctly; no loop crashes
+- **Verification:** Complete checklist, paste results in PR description
+- **If Blocked:** Run subset of tests (1, 2, 4 minimum)
 
 ---
 
@@ -150,69 +120,55 @@
 **Duration:** 20-30 min
 **Priority:** Optional enhancement after MVP
 
-- [x] **34.2.1** Add loop start notification
-  - **Goal:** Post summary when loop begins
-  - **Implementation:**
-    - After line ~1744 (after `ensure_worktree_branch`)
-    - Generate summary:
 
-      ```bash
-      **Ralph Loop Starting**
-      Iterations: ${MAX_ITERATIONS}
-      Mode: PLAN → BUILD cycling
+   ```bash
+   **Ralph Loop Starting**
+   Iterations: ${MAX_ITERATIONS}
+   Mode: PLAN → BUILD cycling
       Branch: $(git branch --show-current)
       Pending tasks: $(grep -c '^\- \[ \]' IMPLEMENTATION_PLAN.md)
       ```
 
     - Call `bin/discord-post` (non-blocking)
-  - **AC:** Loop start posts to Discord with task count
-  - **Verification:** Run loop, check Discord for start message
-  - **If Blocked:** Skip this task
 
-- [x] **34.2.2** Add loop completion notification
-  - **Goal:** Post summary when loop finishes
-  - **Implementation:**
-    - After line ~2275 (after `flush_scoped_commit_if_needed`)
-    - Generate summary:
+- **AC:** Loop start posts to Discord with task count
+- **Verification:** Run loop, check Discord for start message
+- **If Blocked:** Skip this task
 
-      ```text
-      **Ralph Loop Complete**
-      Total iterations: ${actual_iterations}
-      Cache hits: ${CACHE_HITS} | Misses: ${CACHE_MISSES}
+
+   ```text
+   **Ralph Loop Complete**
+   Total iterations: ${actual_iterations}
+   Cache hits: ${CACHE_HITS} | Misses: ${CACHE_MISSES}
       Time saved: ${TIME_SAVED_SEC}s
       Final status: $(cat .verify/latest.txt | grep "^SUMMARY")
       ```
 
-    - Call `bin/discord-post` (non-blocking)
-  - **AC:** Loop end posts to Discord with totals
-  - **Verification:** Run loop, check Discord for completion message
-  - **If Blocked:** Skip this task
+  - Call `bin/discord-post` (non-blocking)
+- **AC:** Loop end posts to Discord with totals
+- **Verification:** Run loop, check Discord for completion message
+- **If Blocked:** Skip this task
 
-- [x] **34.2.3** Add verifier failure alerts
-  - **Goal:** Post alert when verifier fails
-  - **Implementation:**
-    - In verifier failure block (line ~1240) in `workers/ralph/loop.sh`
-    - Generate alert:
 
-      ```text
-      **⚠️ Verifier Failed**
-      Iteration: ${i}
+   ```text
+   **⚠️ Verifier Failed**
+   Iteration: ${i}
       Failed rules: $(parse_verifier_failures .verify/latest.txt)
       $(sed -n '/^\[FAIL\]/p' .verify/latest.txt | head -10)
       ```
 
-    - Call `bin/discord-post` (non-blocking)
-    - Add emoji/formatting for visibility
-    - **CRITICAL:** Regenerate hash after modifying loop.sh:
+  - Call `bin/discord-post` (non-blocking)
+  - Add emoji/formatting for visibility
+  - **CRITICAL:** Regenerate hash after modifying loop.sh:
 
       ```bash
       sha256sum workers/ralph/loop.sh | awk '{print $1}' > workers/ralph/.verify/loop.sha256
       git add workers/ralph/loop.sh workers/ralph/.verify/loop.sha256
       ```
 
-  - **AC:** Verifier failures post to Discord with rule details; loop.sha256 hash updated
-  - **Verification:** Trigger verifier failure, check Discord alert; verify `git diff --staged` includes loop.sha256
-  - **If Blocked:** Skip this task (optional enhancement)
+- **AC:** Verifier failures post to Discord with rule details; loop.sha256 hash updated
+- **Verification:** Trigger verifier failure, check Discord alert; verify `git diff --staged` includes loop.sha256
+- **If Blocked:** Skip this task (optional enhancement)
 
 ---
 
@@ -220,25 +176,7 @@
 
 **Duration:** 10-15 min
 
-- [ ] **34.3.1** Copy `bin/discord-post` to `templates/ralph/bin/`
-  - **Goal:** Make Discord integration available for new projects
-  - **Implementation:**
-    - Create `templates/ralph/bin/discord-post` (copy from `bin/discord-post`)
-    - Ensure executable: `chmod +x templates/ralph/bin/discord-post`
-    - Add to `.gitignore` if needed (no, this should be tracked)
-  - **AC:** Template has discord-post utility
-  - **Verification:** `test -x templates/ralph/bin/discord-post`
-  - **If Blocked:** Skip if bin/ not in template structure yet
 
-- [ ] **34.3.2** Add Discord integration to `templates/ralph/loop.sh`
-  - **Goal:** Template projects get Discord integration by default
-  - **Implementation:**
-    - Copy integration block from `workers/ralph/loop.sh`
-    - Copy `generate_iteration_summary` function
-    - Ensure paths work in template context (use `$ROOT` prefix)
-  - **AC:** Template loop.sh includes Discord integration
-  - **Verification:** Diff workers/ralph/loop.sh and templates/ralph/loop.sh shows matching blocks
-  - **If Blocked:** Document manual steps in templates/ralph/README.md
 
 ---
 
@@ -246,28 +184,7 @@
 
 **Duration:** 10-15 min
 
-- [ ] **34.4.1** Update `workers/ralph/README.md` with Discord setup
-  - **Goal:** Document Discord configuration
-  - **Implementation:**
-    - Add section "Discord Integration"
-    - Document env var: `export DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."`
-    - Document webhook creation: Discord Server Settings → Integrations → Webhooks
-    - Add troubleshooting tips
-    - Link to `cortex/docs/DISCORD_INTEGRATION_SPEC.md`
-  - **AC:** README documents Discord setup
-  - **Verification:** Follow README steps, verify webhook works
-  - **If Blocked:** Add minimal "See DISCORD_INTEGRATION_SPEC.md" link
 
-- [ ] **34.4.2** Add Discord integration to skills
-  - **Goal:** Capture Discord webhook pattern for future reference
-  - **Implementation:**
-    - Create `skills/domains/infrastructure/discord-webhook-patterns.md`
-    - Document chunking strategy, rate limiting, error handling
-    - Include example code snippets
-    - Reference Brain's implementation
-  - **AC:** Skill document exists with Discord patterns
-  - **Verification:** Skill readable and useful
-  - **If Blocked:** Skip skill creation, add to GAP_BACKLOG.md instead
 
 ---
 

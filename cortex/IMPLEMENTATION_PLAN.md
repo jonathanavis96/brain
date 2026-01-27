@@ -220,7 +220,7 @@
 
 **Duration:** 10-15 min
 
-- [ ] **34.3.1** Copy `bin/discord-post` to `templates/ralph/bin/`
+- [x] **34.3.1** Copy `bin/discord-post` to `templates/ralph/bin/`
   - **Goal:** Make Discord integration available for new projects
   - **Implementation:**
     - Create `templates/ralph/bin/discord-post` (copy from `bin/discord-post`)
@@ -230,7 +230,7 @@
   - **Verification:** `test -x templates/ralph/bin/discord-post`
   - **If Blocked:** Skip if bin/ not in template structure yet
 
-- [ ] **34.3.2** Add Discord integration to `templates/ralph/loop.sh`
+- [x] **34.3.2** Add Discord integration to `templates/ralph/loop.sh`
   - **Goal:** Template projects get Discord integration by default
   - **Implementation:**
     - Copy integration block from `workers/ralph/loop.sh`
@@ -246,7 +246,7 @@
 
 **Duration:** 10-15 min
 
-- [ ] **34.4.1** Update `workers/ralph/README.md` with Discord setup
+- [x] **34.4.1** Update `workers/ralph/README.md` with Discord setup
   - **Goal:** Document Discord configuration
   - **Implementation:**
     - Add section "Discord Integration"

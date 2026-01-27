@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# discord-post - Send messages to Discord webhook with automatic chunking
+#
+# Usage:
+#   echo "message" | discord-post [OPTIONS]
+#   discord-post --file FILE [OPTIONS]
+#
+# Options:
+#   --file FILE       Read input from file instead of stdin
+#   --dry-run        Print payload without sending
+#   --help           Show this help message
+#
+# Environment:
+#   DISCORD_WEBHOOK_URL   Discord webhook URL (required unless --dry-run)
+#
+# Features:
+#   - Chunks messages at 1900 chars (safety margin from 2000 limit)
+#   - Sends as JSON with code block formatting
+#   - Non-blocking: exits 0 even if webhook fails
+
+usage() {
+  sed -n '3,17p' "$0" | sed 's/^# //' | sed 's/^#//'
+  exit 0
+}
+
+# Parse arguments
+DRY_RUN=false
+INPUT_FILE=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --dry-run)
+      DRY_RUN=true
+      shift
+      ;;
+    --file)
+      INPUT_FILE="$2"
+      shift 2
+      ;;
+    --help)
+      usage
+      ;;
+    *)
+      echo "Error: Unknown option '$1'" >&2
+      echo "Run 'discord-post --help' for usage" >&2
+      exit 1
+      ;;
+  esac
+done
+
+# Read input
+if [[ -n "$INPUT_FILE" ]]; then
+  if [[ ! -f "$INPUT_FILE" ]]; then
+    echo "Error: File not found: $INPUT_FILE" >&2
+    exit 1
+  fi
+  MESSAGE=$(cat "$INPUT_FILE")
+else
+  MESSAGE=$(cat)
+fi
+
+# Check webhook URL (unless dry-run)
+if [[ "$DRY_RUN" == "false" ]] && [[ -z "${DISCORD_WEBHOOK_URL:-}" ]]; then
+  echo "Error: DISCORD_WEBHOOK_URL not set" >&2
+  echo "Set the environment variable or use --dry-run for testing" >&2
+  exit 1
+fi
+
+# Chunk message at 1900 chars (safety margin from 2000 Discord limit)
+CHUNK_SIZE=1900
+MESSAGE_LEN=${#MESSAGE}
+
+if [[ $MESSAGE_LEN -le $CHUNK_SIZE ]]; then
+  # Single message
+  CHUNKS=("$MESSAGE")
+else
+  # Split into chunks
+  CHUNKS=()
+  OFFSET=0
+  while [[ $OFFSET -lt $MESSAGE_LEN ]]; do
+    CHUNK="${MESSAGE:$OFFSET:$CHUNK_SIZE}"
+    CHUNKS+=("$CHUNK")
+    OFFSET=$((OFFSET + CHUNK_SIZE))
+  done
+fi
+
+# Send each chunk
+CHUNK_COUNT=${#CHUNKS[@]}
+for i in "${!CHUNKS[@]}"; do
+  CHUNK="${CHUNKS[$i]}"
+
+  # Add chunk header if multiple chunks
+  if [[ $CHUNK_COUNT -gt 1 ]]; then
+    CONTENT="[Part $((i + 1))/$CHUNK_COUNT]\n\`\`\`\n${CHUNK}\n\`\`\`"
+  else
+    CONTENT="\`\`\`\n${CHUNK}\n\`\`\`"
+  fi
+
+  # Escape JSON special characters
+  CONTENT=$(echo -e "$CONTENT" | jq -Rs .)
+
+  # Build JSON payload
+  PAYLOAD="{\"content\": ${CONTENT}}"
+
+  if [[ "$DRY_RUN" == "true" ]]; then
+    echo "=== DRY RUN: Chunk $((i + 1))/$CHUNK_COUNT ==="
+    echo "$PAYLOAD" | jq .
+  else
+    # Send to Discord (non-blocking - errors logged but don't fail)
+    if ! curl -s -X POST \
+      -H "Content-Type: application/json" \
+      -d "$PAYLOAD" \
+      "${DISCORD_WEBHOOK_URL}" >/dev/null 2>&1; then
+      echo "Warning: Failed to send chunk $((i + 1))/$CHUNK_COUNT to Discord" >&2
+    fi
+
+    # Rate limit protection: 50ms delay between chunks
+    if [[ $((i + 1)) -lt $CHUNK_COUNT ]]; then
+      sleep 0.05
+    fi
+  fi
+done
+
+exit 0

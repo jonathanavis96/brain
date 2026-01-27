@@ -70,12 +70,14 @@ const apiKey = process.env.API_KEY;
 ### Pros and Cons
 
 ✅ **Pros:**
+
 - Simple to implement
 - Works for local development
 - Easy to share template (.env.example)
 - No external dependencies (shell scripts)
 
 ❌ **Cons:**
+
 - File-based (can be accidentally committed)
 - No rotation/expiry management
 - Not suitable for production deployments
@@ -116,12 +118,14 @@ if not api_key:
 ### Pros and Cons
 
 ✅ **Pros:**
+
 - Native cloud provider encryption
 - No files to manage
 - Works across environments
 - Easy rotation via cloud console
 
 ❌ **Cons:**
+
 - Different syntax per provider
 - Harder to debug locally
 - May require cloud provider access
@@ -160,12 +164,14 @@ api_key = secrets['api_key']
 ### Pros and Cons
 
 ✅ **Pros:**
+
 - Centralized secret management
 - Audit logs and versioning
 - Automatic rotation support
 - Access control (IAM/RBAC)
 
 ❌ **Cons:**
+
 - Additional infrastructure
 - Cost (most charge per secret)
 - Learning curve
