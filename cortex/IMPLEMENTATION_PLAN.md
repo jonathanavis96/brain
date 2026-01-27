@@ -21,39 +21,6 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
-## Phase 0-Lint: Markdown Lint Fixes
-
-**Goal:** Fix all remaining markdown lint errors that auto-fix cannot resolve.
-
-**Context:** Auto-fix resolved most issues, but MD031 (blank lines around fences) and MD040 (language tags) require manual fixes in cortex/ and workers/ IMPLEMENTATION_PLAN.md files. Also one MD024 (duplicate heading) in cortex/PLAN_DONE.md.
-
-**Tasks:**
-
-- [x] **0.L.1** Fix MD031/MD040 in cortex/IMPLEMENTATION_PLAN.md lines 57-73
-  - **Goal:** Add blank lines around code blocks and specify language tags
-  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD031/MD040 errors in lines 50-80)
-  - **Verification:** Run markdownlint on file, check line 57-73 errors cleared
-
-- [x] **0.L.2** Fix MD040 in cortex/IMPLEMENTATION_PLAN.md lines 136, 155, 174
-  - **Goal:** Add language tags to fenced code blocks
-  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD040 errors)
-  - **Verification:** Run markdownlint on file, check all MD040 errors cleared
-
-- [x] **0.L.3** Fix MD024 in cortex/PLAN_DONE.md line 372
-  - **Goal:** Make duplicate "Archived on 2026-01-27" heading unique
-  - **AC:** `markdownlint cortex/PLAN_DONE.md` passes (no MD024 errors)
-  - **Verification:** Run markdownlint on file, check MD024 error cleared
-
-- [x] **0.L.4** Fix MD031/MD040 in workers/IMPLEMENTATION_PLAN.md lines 51-67
-  - **Goal:** Add blank lines around code blocks and specify language tags
-  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD031/MD040 errors in lines 50-70)
-  - **Verification:** Run markdownlint on file, check line 51-67 errors cleared
-
-- [x] **0.L.5** Fix MD040 in workers/IMPLEMENTATION_PLAN.md lines 130, 149, 168
-  - **Goal:** Add language tags to fenced code blocks
-  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD040 errors)
-  - **Verification:** Run markdownlint on file, check all MD040 errors cleared
-
 ## Phase 34: Discord Integration - Live Build Updates 📢
 
 **Goal:** Post real-time iteration summaries to Discord after each Ralph loop iteration completes.
@@ -68,22 +35,32 @@
 
 **Duration:** 30-45 min
 
-- [ ] **34.1.1** Configure Discord webhook environment variable
-  - **Goal:** Permanently set DISCORD_WEBHOOK_URL in user's shell config
+- [x] **34.1.1** Configure Discord webhook environment variable
+  - **Goal:** Securely configure DISCORD_WEBHOOK_URL without exposing secret in git
   - **Implementation:**
-    - Add to `~/.bashrc`:
+    - Create `.env` file in brain root (gitignored):
 
       ```bash
-      export DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/1465720799729160294/NeBVhxsANqgwfuFvynyzT-4kwvLrFQh_0psXlfQc7sx2TBy99X_15vo-57I6Q7KkLYxI"
+      # Discord webhook for Ralph iteration notifications
+      DISCORD_WEBHOOK_URL="<REDACTED - user provides actual webhook URL>"
+      ```
+
+    - Add to `~/.bashrc` to source `.env`:
+
+      ```bash
+      # Load Discord webhook from .env file
+      if [ -f ~/code/brain/.env ]; then
+        export $(grep -v '^#' ~/code/brain/.env | xargs)
+      fi
       ```
 
     - Source the file: `source ~/.bashrc`
-    - Verify: `echo $DISCORD_WEBHOOK_URL` (should print webhook URL)
-  - **AC:** Environment variable persists across shell sessions; URL is correct; variable is set in current shell
-  - **Verification:** Open new terminal, run `echo $DISCORD_WEBHOOK_URL`, verify URL appears
-  - **If Blocked:** User can set manually or Ralph can document steps in cortex/docs/DISCORD_INTEGRATION_SPEC.md
+    - Verify: `echo $DISCORD_WEBHOOK_URL` (should print webhook URL without revealing in git)
+  - **AC:** Environment variable loads from .env file; persists across shell sessions; .env is gitignored; no secrets in committed files
+  - **Verification:** Run `git status` (verify .env not staged); open new terminal, run `echo $DISCORD_WEBHOOK_URL` (verify URL appears)
+  - **Status:** ⚠️ Completed but exposed secret in git history - see commit 4dc2c21 (REVOKED)
 
-- [ ] **34.1.2** Add `generate_iteration_summary` function to loop.sh
+- [x] **34.1.2** Add `generate_iteration_summary` function to loop.sh
   - **Goal:** Extract Ralph's structured summary from iteration logs for Discord posting
   - **Implementation:**
     - Add function to `workers/ralph/loop.sh` (near other utility functions, around line 200-300)
@@ -120,7 +97,7 @@
   - **Verification:** Test with real log: `generate_iteration_summary 12 BUILD workers/ralph/logs/iter12_build.log | head -50`; verify extracts "Summary / Changes Made / Completed" section; test with log containing no summary (fallback message appears); test with multiple summaries (uses last one)
   - **If Blocked:** Start with simple grep-based extraction, refine line number logic later
 
-- [ ] **34.1.3** Integrate Discord posting after `:::ITER_END:::` marker
+- [x] **34.1.3** Integrate Discord posting after `:::ITER_END:::` marker
   - **Goal:** Call Discord poster after each iteration completes
   - **Implementation:**
     - Location: `workers/ralph/loop.sh` line ~2270 (after `emit_marker ":::ITER_END:::"`)
@@ -149,7 +126,7 @@
   - **Verification:** Run `loop.sh --iterations 1` without webhook (no error); set webhook and run again (check Discord for Ralph's structured summary); break webhook URL (verify non-fatal error); verify Discord message contains "Summary / Changes Made / Completed" sections
   - **If Blocked:** Make integration optional via feature flag `DISCORD_ENABLED=true`
 
-- [ ] **34.1.4** Add manual verification tests
+- [x] **34.1.4** Add manual verification tests
   - **Goal:** Document testing procedure
   - **Implementation:**
     - Create test checklist in `cortex/docs/DISCORD_INTEGRATION_SPEC.md` (already exists)
@@ -173,7 +150,7 @@
 **Duration:** 20-30 min
 **Priority:** Optional enhancement after MVP
 
-- [ ] **34.2.1** Add loop start notification
+- [x] **34.2.1** Add loop start notification
   - **Goal:** Post summary when loop begins
   - **Implementation:**
     - After line ~1744 (after `ensure_worktree_branch`)
@@ -192,7 +169,7 @@
   - **Verification:** Run loop, check Discord for start message
   - **If Blocked:** Skip this task
 
-- [ ] **34.2.2** Add loop completion notification
+- [x] **34.2.2** Add loop completion notification
   - **Goal:** Post summary when loop finishes
   - **Implementation:**
     - After line ~2275 (after `flush_scoped_commit_if_needed`)

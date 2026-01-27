@@ -27,6 +27,7 @@ Thumbs.db
 # Credentials/secrets (if any)
 *.gpg
 .gpg_passphrase
+.env
 # Local development files
 ralph/.opencode/
 ralph/opencode.json
