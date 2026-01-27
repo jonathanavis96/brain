@@ -2,7 +2,7 @@
 # sync_cortex_plan.sh - Copy workers plan to cortex for review
 #
 # Purpose: Copy the workers/IMPLEMENTATION_PLAN.md to cortex/ so Cortex
-#          can review what changed during Ralph's execution.
+#          can review what changed during Cerebras's execution.
 #
 # Direction: workers/ → cortex/ (one-way copy)
 # Called by: loop.sh (once at start, before any iterations)
@@ -16,7 +16,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"; then
   :
 else
-  # Script is in workers/ralph/, so repo root is two levels up
+  # Script is in workers/cerebras/, so repo root is two levels up
   REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 fi
 

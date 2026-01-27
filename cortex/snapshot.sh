@@ -82,7 +82,8 @@ if [[ -f "workers/IMPLEMENTATION_PLAN.md" ]]; then
       path="${BASH_REMATCH[1]}"
       # Get directory prefix (e.g., skills/, templates/)
       dir_prefix=$(echo "$path" | cut -d'/' -f1)
-      directories[$dir_prefix]=$((${directories[$dir_prefix]:-0} + 1))
+      dir_prefix="${dir_prefix:-__root__}"
+      directories["$dir_prefix"]=$((${directories["$dir_prefix"]:-0} + 1))
 
       # Get file extension
       if [[ $path =~ \.([a-z]+)$ ]]; then

@@ -73,9 +73,9 @@
 
 ### Task 30.2: Navigation controls (fit-to-screen + reset)
 
-- [ ] **30.2.1** Add "Fit to Screen" button - Add button to GraphView bottom-right that calls `sigmaRef.current.getCamera().animatedReset()`. AC: Click button → graph zooms out to show all nodes. Verification: Pan far away → click Fit → all nodes visible. If Blocked: Use `setState({ x: 0, y: 0, ratio: 1 })` as simpler alternative
+- [x] **30.2.1** Add "Fit to Screen" button - Add button to GraphView bottom-right that calls `sigmaRef.current.getCamera().animatedReset()`. AC: Click button → graph zooms out to show all nodes. Verification: Pan far away → click Fit → all nodes visible. If Blocked: Use `setState({ x: 0, y: 0, ratio: 1 })` as simpler alternative
 
-- [ ] **30.2.2** Add zoom controls (+/- buttons) - Add +/- buttons next to Fit button that call `animatedZoom()` and `animatedUnzoom()`. AC: +/- buttons zoom in/out smoothly. Verification: Click + 3 times → zooms in; click - 3 times → zooms out. If Blocked: Lower priority; skip if time constrained
+- [x] **30.2.2** Add zoom controls (+/- buttons) - Add +/- buttons next to Fit button that call `animatedZoom()` and `animatedUnzoom()`. AC: +/- buttons zoom in/out smoothly. Verification: Click + 3 times → zooms in; click - 3 times → zooms out. If Blocked: Lower priority; skip if time constrained
 
 - [ ] **30.2.3** Add minimap or breadcrumb indicator
   - **Goal:** Show user where they are in the graph when panned away from center
@@ -155,81 +155,105 @@
 
 ---
 
-### Task 31.1: Node Dragging & Position Persistence
+### Task 31.1: Spec Gap Closure (Inbox, Promotion, Enums, Relationship Editor, Multi-Select, Heat Legend)
 
-- [ ] **31.1.1** Enable Sigma drag mode - Set `sigma.setSetting('enableCameraMovement', false)` when dragging node, add `dragNode` and `dropNode` event handlers to GraphView.jsx. AC: User can click-drag node to new position. Verification: Drag node → position updates in real-time. If Blocked: Check Sigma docs for drag event API
+**Context:** Spec gaps discovered vs current V2 plan. These are required for V1 usability and schema correctness.
 
-- [ ] **31.1.2** Persist node positions to frontmatter - On `dropNode` event, POST to new `/node/{id}/position` endpoint with `{x, y}` coords, backend writes to markdown frontmatter `position: {x: 123, y: 456}`. AC: Reload page → node stays in dragged position. Verification: Drag node, refresh browser, node is in same spot. If Blocked: Store in localStorage as temporary solution
+**Goal:** Add the missing workflow primitives (Inbox capture/promote/triage), strict enums (type/status), relationship editor UI, multi-select, and heat legend/multi-metric toggle.
 
-- [ ] **31.1.3** Add "Lock Layout" toggle - Button in top-right controls to switch between manual (draggable) and auto-layout (ForceAtlas2) modes. AC: Toggle on → nodes lockable; toggle off → force-directed layout resumes. Verification: Lock layout, drag nodes, unlock, nodes animate back to force positions. If Blocked: Default to manual mode only
+- [ ] **31.1.1** Enforce canonical `type` + `status` enums end-to-end - Backend validation: `type ∈ {Inbox, Concept, System, Decision, TaskContract, Artifact}` and `status ∈ {idea, planned, active, blocked, done, archived}` with clear 400 errors; frontend dropdowns use exact values; node creation defaults: `type=Inbox`, `status=idea` when omitted. AC: Creating/updating node with invalid type/status returns 400 with allowed values; UI only allows allowed values. Verification: Try POST invalid type → 400; Quick Add shows dropdowns with exact enums. If Blocked: Add frontend dropdowns first, backend validation second
 
-- [ ] **31.1.4** Load saved positions on graph render - Backend includes `position` in `/graph` response, frontend uses saved coords if present (skip random x/y). AC: Nodes with saved positions render at those coords; unsaved nodes use force layout. Verification: Mix of saved/unsaved nodes renders correctly. If Blocked: All-or-nothing (either all manual or all auto)
+- [ ] **31.1.2** Implement Inbox-first capture defaults + "Promote" action in node detail - Quick Add defaults to Inbox/idea unless user chooses; Node Detail panel adds "Promote" button that converts `type: Inbox → {Concept|System|Decision|TaskContract|Artifact}` without changing `id` and preserves existing fields. AC: Promote does not change id; type updates in markdown frontmatter; graph refresh shows new type color. Verification: Create Inbox node, promote to Concept, refresh → same id, new type. If Blocked: Implement promotion as a "Type" dropdown change gated by `currentType===Inbox`
 
----
+- [ ] **31.1.3** Bulk triage for Inbox - Add left sidebar filter preset "Inbox" (type=Inbox) + sort-by-recency; add multi-action bar for selected Inbox nodes: Promote (choose target type), Archive (status=archived). AC: User can filter to Inbox, select multiple, and promote/archive in one action. Verification: Filter Inbox → select 3 → archive → nodes now have status archived and disappear from default view. If Blocked: Start with single-node promote/archive actions (no bulk) and add bulk next
 
-### Task 31.2: Drag-to-Link Edge Creation
+- [ ] **31.1.4** Relationship editor in Node Detail panel (typed, directional) - Add UI to view outbound and inbound relationships for the selected node; add "Add relationship" control: choose relation type, search-by-title (autocomplete), store target by `id`; backend updates frontmatter relationships; graph refresh renders edge with type label/color. AC: Can add relationship from detail panel without drag-to-link; inbound/outbound lists show correct nodes. Verification: Add relationship A -[blocks]-> B from panel → edge appears; open B → inbound shows A. If Blocked: Implement outbound-only editor first, inbound list computed from graph
 
-- [ ] **31.2.1** Detect drag-for-link gesture - On node mousedown, check if Shift key held → enter link mode (show dashed line following cursor). AC: Shift+drag from node shows link preview line. Verification: Shift+drag → dashed line appears; release Shift → cancels. If Blocked: Use right-click drag as alternative trigger
+- [ ] **31.1.5** Multi-select (Shift-click) + bulk operations hook - Implement shift-click multi-select in graph; selection list shown in side panel; add "Generate plan from selection" button (can call existing plan endpoint later, or just collect IDs now). AC: User can select multiple nodes; selection persists until cleared; list of selected IDs visible. Verification: Shift-click 5 nodes → selection count updates; click Clear → selection resets. If Blocked: Implement multi-select in sidebar list first (without graph shift-click)
 
-- [ ] **31.2.2** Highlight link target on hover - During link drag, detect when cursor over another node → highlight target with glow effect. AC: Hover over target node → visual feedback. Verification: Drag link line over multiple nodes → each highlights. If Blocked: Skip hover feedback; just support drop
+- [ ] **31.1.6** Heat overlay: multi-metric toggle + legend - UI toggle for heat metric: density/recency/task; add legend explaining color/halo intensity scale; ensure node halo/glow reflects selected metric. AC: Switching metric changes halo intensity; legend visible and updates labels. Verification: Toggle metric → node halos change; legend shows 0..1 scale and metric description. If Blocked: Legend-only first, then add density/task toggles once metrics are wired
 
-- [ ] **31.2.3** Create link on drop - On drop over target node, POST to `/node/{source_id}` with updated `links: [target_id]` array, backend updates source markdown frontmatter. AC: Drop creates link, graph refreshes showing new edge. Verification: Shift+drag node A to B → edge appears, markdown updated. If Blocked: Show "Link created" modal with undo button
-
-- [ ] **31.2.4** Visual feedback for link creation - Toast notification on success ("Link created: A → B"), error handling for self-links or duplicates. AC: Success toast shows for 3 seconds. Verification: Create link → toast appears; try duplicate → error message. If Blocked: Console.log only
+- [ ] **31.1.7** (Optional) Priority + risk fields - Add `priority ∈ {P0,P1,P2,P3}` and `risk ∈ {low,medium,high}` validation + dropdowns; persist in frontmatter and show in filters. AC: Dropdowns present and values validated. Verification: Set priority P0 → saved to markdown. If Blocked: Defer to Phase 32
 
 ---
 
-### Task 31.3: Dark Mode & Theme System
 
-- [ ] **31.3.1** Implement dark theme CSS variables - Create theme object with light/dark palettes (background, text, panels, borders, node colors), apply via CSS-in-JS or style props. AC: Dark theme renders correctly (readable text, good contrast). Verification: Toggle theme → colors switch. If Blocked: Start with dark-only, add toggle later
+### Task 31.2: Quick Add Node Creation
 
-- [ ] **31.3.2** Add theme toggle button - Sun/moon icon in header (top-right), onClick toggles theme and saves to localStorage. AC: Toggle persists across sessions. Verification: Set dark mode, refresh → still dark. If Blocked: Use browser `prefers-color-scheme` detection only
+- [ ] **31.2.1** Replace InsightsPanel with QuickAddPanel - Create new `QuickAddPanel.jsx` component with form fields (Title, Body, Type, Status, Tags), replace InsightsPanel in App.jsx right sidebar. AC: Right panel shows Quick Add form. Verification: Load app → see create form on right. If Blocked: Keep both panels, add mode toggle
 
-- [ ] **31.3.3** Adjust node colors for dark mode - Slightly desaturate node type colors for dark backgrounds (task green, concept blue, etc. → darker shades). AC: Node colors readable on dark canvas. Verification: Dark mode → all node types distinguishable. If Blocked: Keep light-mode colors, just change canvas background
+- [ ] **31.2.2** Implement Quick Add form with Enter key support - Title input (required, Enter → focus Body), Body textarea (required, Ctrl/Cmd+Enter → submit), Type dropdown (optional, default "note"), Status input (optional, default "active"), Tags input (optional, comma-separated). AC: Press Enter in Title → focuses Body; Ctrl+Enter in Body → creates node. Verification: Fill form, Ctrl+Enter → node created. If Blocked: Use button-only submission
 
-- [ ] **31.3.4** Set dark mode as default - Initialize theme state to 'dark', show light mode as opt-in. AC: First load shows dark mode. Verification: Fresh browser session → dark mode active. If Blocked: Respect `prefers-color-scheme` instead of forcing dark
+- [ ] **31.2.3** Add "Click to Place" mode - Button activates click-to-place mode, cursor changes to crosshair, click on graph → POST `/node` with title/body/position, place node at clicked coordinates. AC: Click button → cursor changes; click graph → node appears at click location. Verification: Click to Place → click graph → node placed exactly there. If Blocked: Use center placement only
 
----
+- [ ] **31.2.4** Add "Drag to Place" mode - Drag ghost node icon from Quick Add form onto graph, drop to place node at drop coordinates. AC: Drag ghost → shows preview; drop → creates node at drop location. Verification: Drag icon onto graph → node appears where dropped. If Blocked: Click to Place only
 
-### Task 31.4: Move Hotspots to Left Sidebar
+- [ ] **31.2.5** Add collapsible right sidebar - Small tab on right edge with collapse/expand icon, clicking collapses sidebar to edge (graph expands), clicking tab reopens. AC: Tab toggle works. Verification: Click tab → sidebar collapses; click again → reopens. If Blocked: Always visible (no collapse)
 
-- [ ] **31.4.1** Move Hotspots component from InsightsPanel to FilterPanel - Cut Hotspots section from `InsightsPanel.jsx` lines 58-235, paste into `FilterPanel.jsx` after Recency dropdown (after line 157). AC: Hotspots appear in left sidebar below filters. Verification: Open app → Hotspots in left panel. If Blocked: Create duplicate initially, remove from right later
+- [ ] **31.2.6** Add swipe gesture for mobile sidebar collapse - On mobile (<768px), swipe right-to-left on sidebar → collapses it, swipe left-to-right on collapsed tab → opens. AC: Swipe gestures work on mobile. Verification: Test on mobile → swipe collapses sidebar. If Blocked: Desktop tab-only, mobile uses hamburger menu
 
-- [ ] **31.4.2** Style Hotspots for left sidebar - Match FilterPanel styling (compact, no wide padding), limit to top 5 hotspots with "Show more" expansion. AC: Hotspots fit naturally in left sidebar width (300px). Verification: Hotspots list doesn't overflow or break layout. If Blocked: Use accordion/collapse to save space
+- [ ] **31.2.7** Clear form after node creation - After successful POST, clear Title/Body/Tags fields, show success toast "Node created", focus Title input for next note. AC: Form clears after create. Verification: Create node → form resets, ready for next. If Blocked: Manual clear only
 
-- [ ] **31.4.3** Update InsightsPanel layout - Remove empty space where Hotspots were, ensure form fields (ID, Title, Type, Status, Tags, Body) take full height. AC: Right panel shows node details only. Verification: Select node → right panel shows form fields cleanly. If Blocked: Keep old layout, hide Hotspots section
-
----
-
-### Task 31.5: Mobile & Touch Support
-
-- [ ] **31.5.1** Add touch event handlers - Implement pinch-to-zoom (two-finger pinch), pan (single-finger drag on canvas), tap-to-select (single tap on node). AC: Pinch zoom works on mobile. Verification: Test on phone/tablet simulator → gestures work. If Blocked: Desktop-only for now, document mobile as Phase 34
-
-- [ ] **31.5.2** Optimize layout for mobile screens - Media queries for <768px width: collapse sidebars, show hamburger menu, make graph full-screen. AC: Mobile layout usable (no horizontal scroll). Verification: Resize browser to 375px width → UI adapts. If Blocked: Min-width warning ("Desktop recommended")
-
-- [ ] **31.5.3** Add mobile-friendly controls - Larger touch targets (48px min), floating action buttons for zoom/fit-to-screen, bottom sheet for node details. AC: Controls tappable on mobile without precision. Verification: Tap controls on phone → no mis-taps. If Blocked: Increase button size only
-
-- [ ] **31.5.4** Handle long-press for context menu - Long-press node → show context menu (Edit, Delete, Create Link, View Details). AC: Long-press triggers menu. Verification: Long-press node on mobile → menu appears. If Blocked: Skip context menu, use double-tap to edit
+- [ ] **31.2.8** Improve field labels - Change "ID" to "Node ID (auto-generated)", "Title" to "Note Title", "Body" to "Note Content (Markdown)", "Type" to "Node Type (optional)", "Status" to "Task Status (optional)", "Tags" to "Tags (comma-separated)". AC: Labels are clear and descriptive. Verification: Read form → labels self-explanatory. If Blocked: Tooltips instead
 
 ---
 
-### Task 31.6: Quick Add Node Creation
 
-- [ ] **31.6.1** Replace InsightsPanel with QuickAddPanel - Create new `QuickAddPanel.jsx` component with form fields (Title, Body, Type, Status, Tags), replace InsightsPanel in App.jsx right sidebar. AC: Right panel shows Quick Add form. Verification: Load app → see create form on right. If Blocked: Keep both panels, add mode toggle
+### Task 31.3: Node Dragging & Position Persistence
 
-- [ ] **31.6.2** Implement Quick Add form with Enter key support - Title input (required, Enter → focus Body), Body textarea (required, Ctrl/Cmd+Enter → submit), Type dropdown (optional, default "note"), Status input (optional, default "active"), Tags input (optional, comma-separated). AC: Press Enter in Title → focuses Body; Ctrl+Enter in Body → creates node. Verification: Fill form, Ctrl+Enter → node created. If Blocked: Use button-only submission
+- [ ] **31.3.1** Enable Sigma drag mode - Set `sigma.setSetting('enableCameraMovement', false)` when dragging node, add `dragNode` and `dropNode` event handlers to GraphView.jsx. AC: User can click-drag node to new position. Verification: Drag node → position updates in real-time. If Blocked: Check Sigma docs for drag event API
 
-- [ ] **31.6.3** Add "Click to Place" mode - Button activates click-to-place mode, cursor changes to crosshair, click on graph → POST `/node` with title/body/position, place node at clicked coordinates. AC: Click button → cursor changes; click graph → node appears at click location. Verification: Click to Place → click graph → node placed exactly there. If Blocked: Use center placement only
+- [ ] **31.3.2** Persist node positions to frontmatter - On `dropNode` event, POST to new `/node/{id}/position` endpoint with `{x, y}` coords, backend writes to markdown frontmatter `position: {x: 123, y: 456}`. AC: Reload page → node stays in dragged position. Verification: Drag node, refresh browser, node is in same spot. If Blocked: Store in localStorage as temporary solution
 
-- [ ] **31.6.4** Add "Drag to Place" mode - Drag ghost node icon from Quick Add form onto graph, drop to place node at drop coordinates. AC: Drag ghost → shows preview; drop → creates node at drop location. Verification: Drag icon onto graph → node appears where dropped. If Blocked: Click to Place only
+- [ ] **31.3.3** Add "Lock Layout" toggle - Button in top-right controls to switch between manual (draggable) and auto-layout (ForceAtlas2) modes. AC: Toggle on → nodes lockable; toggle off → force-directed layout resumes. Verification: Lock layout, drag nodes, unlock, nodes animate back to force positions. If Blocked: Default to manual mode only
 
-- [ ] **31.6.5** Add collapsible right sidebar - Small tab on right edge with collapse/expand icon, clicking collapses sidebar to edge (graph expands), clicking tab reopens. AC: Tab toggle works. Verification: Click tab → sidebar collapses; click again → reopens. If Blocked: Always visible (no collapse)
+- [ ] **31.3.4** Load saved positions on graph render - Backend includes `position` in `/graph` response, frontend uses saved coords if present (skip random x/y). AC: Nodes with saved positions render at those coords; unsaved nodes use force layout. Verification: Mix of saved/unsaved nodes renders correctly. If Blocked: All-or-nothing (either all manual or all auto)
 
-- [ ] **31.6.6** Add swipe gesture for mobile sidebar collapse - On mobile (<768px), swipe right-to-left on sidebar → collapses it, swipe left-to-right on collapsed tab → opens. AC: Swipe gestures work on mobile. Verification: Test on mobile → swipe collapses sidebar. If Blocked: Desktop tab-only, mobile uses hamburger menu
+---
 
-- [ ] **31.6.7** Clear form after node creation - After successful POST, clear Title/Body/Tags fields, show success toast "Node created", focus Title input for next note. AC: Form clears after create. Verification: Create node → form resets, ready for next. If Blocked: Manual clear only
+### Task 31.4: Drag-to-Link Edge Creation
 
-- [ ] **31.6.8** Improve field labels - Change "ID" to "Node ID (auto-generated)", "Title" to "Note Title", "Body" to "Note Content (Markdown)", "Type" to "Node Type (optional)", "Status" to "Task Status (optional)", "Tags" to "Tags (comma-separated)". AC: Labels are clear and descriptive. Verification: Read form → labels self-explanatory. If Blocked: Tooltips instead
+- [ ] **31.4.1** Detect drag-for-link gesture - On node mousedown, check if Shift key held → enter link mode (show dashed line following cursor). AC: Shift+drag from node shows link preview line. Verification: Shift+drag → dashed line appears; release Shift → cancels. If Blocked: Use right-click drag as alternative trigger
+
+- [ ] **31.4.2** Highlight link target on hover - During link drag, detect when cursor over another node → highlight target with glow effect. AC: Hover over target node → visual feedback. Verification: Drag link line over multiple nodes → each highlights. If Blocked: Skip hover feedback; just support drop
+
+- [ ] **31.4.3** Create link on drop - On drop over target node, POST to `/node/{source_id}` with updated `links: [target_id]` array, backend updates source markdown frontmatter. AC: Drop creates link, graph refreshes showing new edge. Verification: Shift+drag node A to B → edge appears, markdown updated. If Blocked: Show "Link created" modal with undo button
+
+- [ ] **31.4.4** Visual feedback for link creation - Toast notification on success ("Link created: A → B"), error handling for self-links or duplicates. AC: Success toast shows for 3 seconds. Verification: Create link → toast appears; try duplicate → error message. If Blocked: Console.log only
+
+---
+
+### Task 31.5: Dark Mode & Theme System
+
+- [ ] **31.5.1** Implement dark theme CSS variables - Create theme object with light/dark palettes (background, text, panels, borders, node colors), apply via CSS-in-JS or style props. AC: Dark theme renders correctly (readable text, good contrast). Verification: Toggle theme → colors switch. If Blocked: Start with dark-only, add toggle later
+
+- [ ] **31.5.2** Add theme toggle button - Sun/moon icon in header (top-right), onClick toggles theme and saves to localStorage. AC: Toggle persists across sessions. Verification: Set dark mode, refresh → still dark. If Blocked: Use browser `prefers-color-scheme` detection only
+
+- [ ] **31.5.3** Adjust node colors for dark mode - Slightly desaturate node type colors for dark backgrounds (task green, concept blue, etc. → darker shades). AC: Node colors readable on dark canvas. Verification: Dark mode → all node types distinguishable. If Blocked: Keep light-mode colors, just change canvas background
+
+- [ ] **31.5.4** Set dark mode as default - Initialize theme state to 'dark', show light mode as opt-in. AC: First load shows dark mode. Verification: Fresh browser session → dark mode active. If Blocked: Respect `prefers-color-scheme` instead of forcing dark
+
+---
+
+### Task 31.6: Move Hotspots to Left Sidebar
+
+- [ ] **31.6.1** Move Hotspots component from InsightsPanel to FilterPanel - Cut Hotspots section from `InsightsPanel.jsx` lines 58-235, paste into `FilterPanel.jsx` after Recency dropdown (after line 157). AC: Hotspots appear in left sidebar below filters. Verification: Open app → Hotspots in left panel. If Blocked: Create duplicate initially, remove from right later
+
+- [ ] **31.6.2** Style Hotspots for left sidebar - Match FilterPanel styling (compact, no wide padding), limit to top 5 hotspots with "Show more" expansion. AC: Hotspots fit naturally in left sidebar width (300px). Verification: Hotspots list doesn't overflow or break layout. If Blocked: Use accordion/collapse to save space
+
+- [ ] **31.6.3** Update InsightsPanel layout - Remove empty space where Hotspots were, ensure form fields (ID, Title, Type, Status, Tags, Body) take full height. AC: Right panel shows node details only. Verification: Select node → right panel shows form fields cleanly. If Blocked: Keep old layout, hide Hotspots section
+
+---
+
+### Task 31.7: Mobile & Touch Support
+
+- [ ] **31.7.1** Add touch event handlers - Implement pinch-to-zoom (two-finger pinch), pan (single-finger drag on canvas), tap-to-select (single tap on node). AC: Pinch zoom works on mobile. Verification: Test on phone/tablet simulator → gestures work. If Blocked: Desktop-only for now, document mobile as Phase 34
+
+- [ ] **31.7.2** Optimize layout for mobile screens - Media queries for <768px width: collapse sidebars, show hamburger menu, make graph full-screen. AC: Mobile layout usable (no horizontal scroll). Verification: Resize browser to 375px width → UI adapts. If Blocked: Min-width warning ("Desktop recommended")
+
+- [ ] **31.7.3** Add mobile-friendly controls - Larger touch targets (48px min), floating action buttons for zoom/fit-to-screen, bottom sheet for node details. AC: Controls tappable on mobile without precision. Verification: Tap controls on phone → no mis-taps. If Blocked: Increase button size only
+
+- [ ] **31.7.4** Handle long-press for context menu - Long-press node → show context menu (Edit, Delete, Create Link, View Details). AC: Long-press triggers menu. Verification: Long-press node on mobile → menu appears. If Blocked: Skip context menu, use double-tap to edit
 
 ---
 
@@ -372,31 +396,40 @@
 
 ---
 
-## Task Dependencies
+## Dependencies (Phase 31+)
 
 **Phase 31 (Core Interactions):**
-- 31.1.1 → 31.1.2 → 31.1.3 → 31.1.4 (drag → persist → toggle → load)
-- 31.2.1 → 31.2.2 → 31.2.3 → 31.2.4 (detect drag → highlight → create → feedback)
-- 31.3.1 → 31.3.2 → 31.3.3 → 31.3.4 (theme vars → toggle → adjust colors → default dark)
-- 31.4.1 → 31.4.2 → 31.4.3 (move hotspots → style → cleanup)
-- 31.5.1 → 31.5.2 → 31.5.3 → 31.5.4 (touch events → layout → controls → long-press)
+
+- 31.1.1 → 31.1.2 → 31.1.3 (enums/defaults → promote → bulk triage)
+- 31.1.1 → 31.1.4 (enums/defaults → relationship editor)
+- 31.1.5 → 31.1.3 (multi-select → bulk triage actions)
+- 31.1.6 depends on heat metric availability (recency exists; density/task may require backend wiring)
+- 31.3.1 → 31.3.2 → 31.3.3 → 31.3.4 (drag → persist → toggle → load)
+- 31.4.1 → 31.4.2 → 31.4.3 → 31.4.4 (detect drag → highlight → create → feedback)
+- 31.5.1 → 31.5.2 → 31.5.3 → 31.5.4 (theme vars → toggle → adjust colors → default dark)
+- 31.6.1 → 31.6.2 → 31.6.3 (move hotspots → style → cleanup)
+- 31.7.1 → 31.7.2 → 31.7.3 → 31.7.4 (touch events → layout → controls → long-press)
 
 **Phase 32 (Discovery & Intelligence):**
+
 - 32.1.1 → 32.1.2 → 32.1.3 → 32.1.4 (path mode → algorithm → highlight → metadata)
 - 32.2.1-32.2.4 independent (AI insights)
 - 32.3.1 → 32.3.2 → 32.3.3 → 32.3.4 (save → dropdown → share → defaults)
 - 32.4.1 → 32.4.2 → 32.4.3 → 32.4.4 (chips → logic → preview → save)
 
 **Phase 33 (Polish & Power):**
+
 - 33.1.1 → 33.1.2 → 33.1.3 → 33.1.4 (scrubber → filter → play → calendar)
 - 33.2.1 → 33.2.2 → 33.2.3 → 33.2.4 (comments tab → backend → frontend → mentions)
 - 33.3.1-33.3.4 independent (export formats)
 - 33.4.1 → 33.4.2 → 33.4.3 → 33.4.4 (present mode → keyboard → transitions → notes)
 - 33.5.1 → 33.5.2 → 33.5.3 → 33.5.4 (metrics → dashboard → suggestions → trends)
 
-**Critical paths:**
-- P0: 31.1.x (dragging), 31.2.x (drag-to-link), 31.3.x (dark mode), 31.5.x (mobile)
-- P1: 32.1.x (path finder), 32.3.x (saved views)
-- P2: 33.1.x (temporal viz), 33.3.x (export)
+**Critical paths (re-ranked):**
+
+- **P0 (Spec-critical):** 31.1.1 (type/status enums + defaults) → 31.1.2 (Inbox-first + Promote) → 31.1.4 (relationship editor). These unlock correct schema + low-friction capture/triage.
+- **P0 (Core interaction):** 31.1.x (dragging + persistence), 31.2.x (drag-to-link), 31.3.x (dark mode), 31.5.x (mobile)
+- **P1 (Workflow power):** 31.1.3 (bulk triage), 31.1.5 (multi-select), 31.1.6 (heat legend + multi-metric toggle)
+- **P2 (Discovery/Polish):** 32.1.x (path finder), 32.3.x (saved views), 33.1.x (temporal viz), 33.3.x (export)
 
 ---

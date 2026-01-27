@@ -12,9 +12,18 @@
 
 set -euo pipefail
 
-# Paths (relative to workers/ralph/)
-CORTEX_PLAN="../../cortex/IMPLEMENTATION_PLAN.md"
-RALPH_PLAN="../IMPLEMENTATION_PLAN.md"
+# Resolve repository root reliably
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"; then
+  :
+else
+  # Script lives in workers/ralph/, so repo root is two levels up
+  REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+fi
+
+# Paths
+CORTEX_PLAN="${REPO_ROOT}/cortex/IMPLEMENTATION_PLAN.md"
+RALPH_PLAN="${REPO_ROOT}/workers/IMPLEMENTATION_PLAN.md"
 LAST_SYNC_FILE=".last_sync"
 LOG_PREFIX="[SYNC]"
 
