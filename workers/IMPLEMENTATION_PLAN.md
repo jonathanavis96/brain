@@ -1,6 +1,6 @@
 # Implementation Plan - Brain Repository
 
-**Last Updated:** 2026-01-27 15:47:00
+**Last Updated:** 2026-01-27 15:05:00
 
 **Current Status:** Phase 31-33 active (Brain Map V2 power features)
 
@@ -210,6 +210,26 @@
 - [ ] **31.5.3** Add mobile-friendly controls - Larger touch targets (48px min), floating action buttons for zoom/fit-to-screen, bottom sheet for node details. AC: Controls tappable on mobile without precision. Verification: Tap controls on phone → no mis-taps. If Blocked: Increase button size only
 
 - [ ] **31.5.4** Handle long-press for context menu - Long-press node → show context menu (Edit, Delete, Create Link, View Details). AC: Long-press triggers menu. Verification: Long-press node on mobile → menu appears. If Blocked: Skip context menu, use double-tap to edit
+
+---
+
+### Task 31.6: Quick Add Node Creation
+
+- [ ] **31.6.1** Replace InsightsPanel with QuickAddPanel - Create new `QuickAddPanel.jsx` component with form fields (Title, Body, Type, Status, Tags), replace InsightsPanel in App.jsx right sidebar. AC: Right panel shows Quick Add form. Verification: Load app → see create form on right. If Blocked: Keep both panels, add mode toggle
+
+- [ ] **31.6.2** Implement Quick Add form with Enter key support - Title input (required, Enter → focus Body), Body textarea (required, Ctrl/Cmd+Enter → submit), Type dropdown (optional, default "note"), Status input (optional, default "active"), Tags input (optional, comma-separated). AC: Press Enter in Title → focuses Body; Ctrl+Enter in Body → creates node. Verification: Fill form, Ctrl+Enter → node created. If Blocked: Use button-only submission
+
+- [ ] **31.6.3** Add "Click to Place" mode - Button activates click-to-place mode, cursor changes to crosshair, click on graph → POST `/node` with title/body/position, place node at clicked coordinates. AC: Click button → cursor changes; click graph → node appears at click location. Verification: Click to Place → click graph → node placed exactly there. If Blocked: Use center placement only
+
+- [ ] **31.6.4** Add "Drag to Place" mode - Drag ghost node icon from Quick Add form onto graph, drop to place node at drop coordinates. AC: Drag ghost → shows preview; drop → creates node at drop location. Verification: Drag icon onto graph → node appears where dropped. If Blocked: Click to Place only
+
+- [ ] **31.6.5** Add collapsible right sidebar - Small tab on right edge with collapse/expand icon, clicking collapses sidebar to edge (graph expands), clicking tab reopens. AC: Tab toggle works. Verification: Click tab → sidebar collapses; click again → reopens. If Blocked: Always visible (no collapse)
+
+- [ ] **31.6.6** Add swipe gesture for mobile sidebar collapse - On mobile (<768px), swipe right-to-left on sidebar → collapses it, swipe left-to-right on collapsed tab → opens. AC: Swipe gestures work on mobile. Verification: Test on mobile → swipe collapses sidebar. If Blocked: Desktop tab-only, mobile uses hamburger menu
+
+- [ ] **31.6.7** Clear form after node creation - After successful POST, clear Title/Body/Tags fields, show success toast "Node created", focus Title input for next note. AC: Form clears after create. Verification: Create node → form resets, ready for next. If Blocked: Manual clear only
+
+- [ ] **31.6.8** Improve field labels - Change "ID" to "Node ID (auto-generated)", "Title" to "Note Title", "Body" to "Note Content (Markdown)", "Type" to "Node Type (optional)", "Status" to "Task Status (optional)", "Tags" to "Tags (comma-separated)". AC: Labels are clear and descriptive. Verification: Read form → labels self-explanatory. If Blocked: Tooltips instead
 
 ---
 
