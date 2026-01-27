@@ -22,21 +22,6 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
-## Phase 0-Warn: Verifier Warnings
-
-**Context:** Markdown lint errors detected in workers/IMPLEMENTATION_PLAN.md that could not be auto-fixed.
-
-**Goal:** Resolve all MD012 errors (multiple consecutive blank lines).
-
-- [x] **0.1** Fix MD012 in workers/IMPLEMENTATION_PLAN.md:43 (Expected: 2; Actual: 3)
-  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 43)
-- [x] **0.2** Fix MD012 in workers/IMPLEMENTATION_PLAN.md:44 (Expected: 2; Actual: 4)
-  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 44)
-- [x] **0.3** Fix MD012 in workers/IMPLEMENTATION_PLAN.md:45 (Expected: 2; Actual: 5)
-  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 45)
-- [x] **0.4** Fix MD012 in workers/IMPLEMENTATION_PLAN.md:51 (Expected: 2; Actual: 3)
-  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD012 errors at line 51)
-
 ## Phase 32: Brain Map V2 - Discovery & Intelligence 🧠
 
 **Context:** Power users need advanced navigation, AI insights, and saved views for complex knowledge graphs.
@@ -58,27 +43,16 @@
 
 ### Task 32.2: AI-Powered Insights
 
-- [ ] **32.2.3** Bridge node identification - Calculate betweenness centrality (nodes that connect disparate clusters), highlight top 5 in UI. AC: Bridge nodes marked with icon. Verification: Manually create bridge topology → correct nodes identified. If Blocked: Skip betweenness, use degree centrality (most connected)
-
-- [ ] **32.2.4** Stale note alerts - Flag nodes with `updated_at > 90 days`, show in insights panel with "Update recommended". AC: Stale nodes listed. Verification: Create old note → appears in stale list. If Blocked: Use recency metric already implemented
 
 ---
 
 ### Task 32.3: Saved Views & Bookmarks
 
-- [ ] **32.3.1** Add "Save View" button - Captures current filter state + zoom + camera position, stores in localStorage with user-defined name. AC: Save View → prompts for name → saved. Verification: Save view "My Project" → appears in views list. If Blocked: Save filters only (not camera state)
-
-- [ ] **32.3.2** Create Views dropdown in header - List of saved views, click to load (applies filters, restores camera). AC: Dropdown shows saved views. Verification: Load saved view → graph state restored. If Blocked: Use bookmarks panel in sidebar
-
-- [ ] **32.3.3** Implement view sharing - "Share View" generates URL with encoded filter params (e.g., `/graph?view=base64encodedstate`). AC: Copy link, open in new tab → same view. Verification: Share link to another user → they see same filtered graph. If Blocked: Copy filter JSON to clipboard
-
-- [ ] **32.3.4** Add default views - Preset views: "All Tasks", "Blocked Items", "Recent Activity (7d)", "Orphans". AC: Default views available on first load. Verification: Fresh session → 4 default views shown. If Blocked: Just document filter examples in help
-
 ---
 
 ### Task 32.4: Visual Query Builder
 
-- [ ] **32.4.1** Create filter chip UI - Drag-and-drop chips for filter criteria (Type=task, Status=blocked, Tags contains X, Recency=7d). AC: Filter chips render in panel. Verification: Add chips → filter updates. If Blocked: Use form inputs only (existing FilterPanel)
+- [x] **32.4.1** Create filter chip UI - Drag-and-drop chips for filter criteria (Type=task, Status=blocked, Tags contains X, Recency=7d). AC: Filter chips render in panel. Verification: Add chips → filter updates. If Blocked: Use form inputs only (existing FilterPanel)
 
 - [ ] **32.4.2** Implement AND/OR logic - Support complex queries: "(Type=task OR Type=decision) AND Status=active". AC: Boolean logic works. Verification: Build complex filter → correct nodes shown. If Blocked: AND-only logic (all conditions must match)
 

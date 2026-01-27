@@ -91,6 +91,27 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
     })
   }
 
+  const handleRemoveChip = (field) => {
+    setFilters(prev => ({
+      ...prev,
+      [field]: field === 'recency' ? 'all' : ''
+    }))
+  }
+
+  // Get active filter chips
+  const getActiveChips = () => {
+    const chips = []
+    if (filters.type) chips.push({ field: 'type', label: 'Type', value: filters.type })
+    if (filters.status) chips.push({ field: 'status', label: 'Status', value: filters.status })
+    if (filters.tags) chips.push({ field: 'tags', label: 'Tags', value: filters.tags })
+    if (filters.recency !== 'all') chips.push({ field: 'recency', label: 'Recency', value: filters.recency })
+    if (filters.priority) chips.push({ field: 'priority', label: 'Priority', value: filters.priority })
+    if (filters.risk) chips.push({ field: 'risk', label: 'Risk', value: filters.risk })
+    return chips
+  }
+
+  const activeChips = getActiveChips()
+
   if (!visible) return null
 
   return (
@@ -117,6 +138,70 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
           Reset
         </button>
       </div>
+
+      {/* Active Filter Chips */}
+      {activeChips.length > 0 && (
+        <div style={{
+          marginBottom: '1rem',
+          padding: '0.75rem',
+          background: '#fff',
+          border: '1px solid #ddd',
+          borderRadius: '4px'
+        }}>
+          <div style={{
+            fontSize: '12px',
+            fontWeight: 'bold',
+            marginBottom: '0.5rem',
+            color: '#666'
+          }}>
+            Active Filters ({activeChips.length})
+          </div>
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '8px'
+          }}>
+            {activeChips.map(chip => (
+              <div
+                key={chip.field}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '4px 8px',
+                  background: '#e3f2fd',
+                  border: '1px solid #2196f3',
+                  borderRadius: '16px',
+                  fontSize: '12px',
+                  color: '#1976d2'
+                }}
+              >
+                <span style={{ fontWeight: '500' }}>
+                  {chip.label}:
+                </span>
+                <span>{chip.value}</span>
+                <button
+                  onClick={() => handleRemoveChip(chip.field)}
+                  style={{
+                    border: 'none',
+                    background: 'transparent',
+                    cursor: 'pointer',
+                    padding: '0 2px',
+                    fontSize: '14px',
+                    lineHeight: '1',
+                    color: '#1976d2',
+                    fontWeight: 'bold'
+                  }}
+                  title={`Remove ${chip.label} filter`}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
 
       <div style={{ marginBottom: '1rem' }}>
         <label style={{ display: 'block', marginBottom: '0.25rem', fontWeight: 'bold', fontSize: '14px' }}>
