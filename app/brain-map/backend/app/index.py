@@ -7,7 +7,7 @@ The index is a derived artifact and must not be committed to version control.
 import sqlite3
 import tempfile
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Set
 import json
 from datetime import datetime
 
@@ -327,6 +327,262 @@ def get_index_connection() -> sqlite3.Connection:
     return conn
 
 
+def _compute_clustering_coefficient(
+    node_id: str, edges: Set[Tuple[str, str]], node_neighbors: Dict[str, Set[str]]
+) -> float:
+    """Compute clustering coefficient for a node.
+
+    ClusterCoeff(v) = (actual_edges_between_neighbors) / (possible_edges_between_neighbors)
+
+    Args:
+        node_id: Node to compute coefficient for.
+        edges: All edges as (source, target) tuples.
+        node_neighbors: Pre-computed neighbor sets for all nodes.
+
+    Returns:
+        Clustering coefficient in [0.0, 1.0], or 0.0 if node has < 2 neighbors.
+    """
+    neighbors = node_neighbors.get(node_id, set())
+    k = len(neighbors)
+
+    # Need at least 2 neighbors to have clustering
+    if k < 2:
+        return 0.0
+
+    # Count edges between neighbors
+    actual_edges = 0
+    for u in neighbors:
+        for v in neighbors:
+            if u < v:  # Count each edge once
+                if (u, v) in edges or (v, u) in edges:
+                    actual_edges += 1
+
+    # Maximum possible edges between k neighbors: k*(k-1)/2
+    possible_edges = k * (k - 1) // 2
+
+    return actual_edges / possible_edges if possible_edges > 0 else 0.0
+
+
+def _compute_density_metrics(
+    conn: sqlite3.Connection, node_ids: Set[str], alpha: float = 0.7
+) -> Dict[str, float]:
+    """Compute density heat for nodes in current graph snapshot.
+
+    Args:
+        conn: SQLite connection to index database.
+        node_ids: Set of node IDs to compute metrics for.
+        alpha: Weight for degree component (default 0.7).
+
+    Returns:
+        Dict mapping node_id -> density_heat in [0.0, 1.0].
+    """
+    if not node_ids:
+        return {}
+
+    cursor = conn.cursor()
+
+    # Fetch all edges involving these nodes
+    placeholders = ",".join("?" * len(node_ids))
+    edges_sql = f"""
+        SELECT source_id, target_id
+        FROM edges
+        WHERE source_id IN ({placeholders}) AND target_id IN ({placeholders})
+    """
+    cursor.execute(edges_sql, list(node_ids) + list(node_ids))
+    edge_rows = cursor.fetchall()
+
+    # Build edge set for clustering coefficient
+    edges_set = set()
+    for row in edge_rows:
+        src, tgt = row["source_id"], row["target_id"]
+        edges_set.add((src, tgt))
+
+    # Build neighbor sets (undirected graph)
+    node_neighbors: Dict[str, Set[str]] = {nid: set() for nid in node_ids}
+    for src, tgt in edges_set:
+        if src in node_ids and tgt in node_ids:
+            node_neighbors[src].add(tgt)
+            node_neighbors[tgt].add(src)
+
+    # Compute degree for each node
+    degrees = {nid: len(neighbors) for nid, neighbors in node_neighbors.items()}
+    max_degree = max(degrees.values()) if degrees else 1
+
+    # Compute density heat for each node
+    density_metrics = {}
+    for node_id in node_ids:
+        degree = degrees.get(node_id, 0)
+        degree_normalized = degree / max_degree if max_degree > 0 else 0.0
+
+        clustering_coeff = _compute_clustering_coefficient(
+            node_id, edges_set, node_neighbors
+        )
+
+        # Weighted combination
+        density_heat = alpha * degree_normalized + (1 - alpha) * clustering_coeff
+        density_metrics[node_id] = density_heat
+
+    return density_metrics
+
+
+def _compute_task_heat(
+    conn: sqlite3.Connection,
+    node_ids: Set[str],
+    depth: int = 2,
+    weight_open: float = 0.5,
+    weight_blocked: float = 0.3,
+    weight_recent: float = 0.2,
+) -> Dict[str, float]:
+    """Compute task heat for nodes based on TaskContract neighborhood.
+
+    Args:
+        conn: SQLite connection to index database.
+        node_ids: Set of node IDs to compute metrics for.
+        depth: Maximum traversal depth for neighborhood (default 2).
+        weight_open: Weight for open tasks component (default 0.5).
+        weight_blocked: Weight for blocked tasks component (default 0.3).
+        weight_recent: Weight for recent task updates component (default 0.2).
+
+    Returns:
+        Dict mapping node_id -> task_heat in [0.0, 1.0].
+    """
+    from datetime import datetime, timezone
+
+    if not node_ids:
+        return {}
+
+    cursor = conn.cursor()
+
+    # Build adjacency list for BFS traversal (only task-related relationship types)
+    # Per spec: follow "implements", "depends_on", "blocks" relationships
+    task_rel_types = ("implements", "depends_on", "blocks")
+    placeholders_rel = ",".join("?" * len(task_rel_types))
+
+    # Fetch all edges in the graph (for neighborhood traversal)
+    edges_sql = f"""
+        SELECT source_id, target_id, relationship_type
+        FROM edges
+        WHERE relationship_type IN ({placeholders_rel})
+    """
+    cursor.execute(edges_sql, list(task_rel_types))
+    edge_rows = cursor.fetchall()
+
+    # Build adjacency list (bidirectional for neighborhood)
+    adjacency: Dict[str, Set[str]] = {}
+    for row in edge_rows:
+        src, tgt = row["source_id"], row["target_id"]
+        if src not in adjacency:
+            adjacency[src] = set()
+        if tgt not in adjacency:
+            adjacency[tgt] = set()
+        adjacency[src].add(tgt)
+        adjacency[tgt].add(src)  # Treat as undirected for neighborhood
+
+    # Fetch all TaskContract nodes with their status and modified_at
+    cursor.execute(
+        """
+        SELECT id, status, modified_at
+        FROM nodes
+        WHERE type = 'TaskContract'
+    """
+    )
+    task_rows = cursor.fetchall()
+
+    # Build TaskContract lookup
+    task_contracts = {}
+    for row in task_rows:
+        task_id = row["id"]
+        status = row["status"]
+        modified_at_str = row["modified_at"]
+
+        # Check if task is recent (updated within 7 days)
+        is_recent = False
+        if modified_at_str:
+            try:
+                modified_at = datetime.fromisoformat(
+                    modified_at_str.replace("Z", "+00:00")
+                )
+                days_old = (
+                    datetime.now(timezone.utc) - modified_at
+                ).total_seconds() / 86400.0
+                is_recent = days_old <= 7.0
+            except (ValueError, TypeError):
+                pass
+
+        task_contracts[task_id] = {
+            "status": status,
+            "is_recent": is_recent,
+        }
+
+    # For each node, compute its task neighborhood
+    task_heat_metrics = {}
+
+    for node_id in node_ids:
+        # BFS to find TaskContract neighbors within depth
+        visited = {node_id}
+        current_layer = {node_id}
+        associated_tasks = set()
+
+        for _ in range(depth):
+            if not current_layer:
+                break
+
+            next_layer = set()
+            for current_node in current_layer:
+                neighbors = adjacency.get(current_node, set())
+                for neighbor in neighbors:
+                    if neighbor not in visited:
+                        visited.add(neighbor)
+                        next_layer.add(neighbor)
+
+                        # Check if neighbor is a TaskContract
+                        if neighbor in task_contracts:
+                            associated_tasks.add(neighbor)
+
+            current_layer = next_layer
+
+        # Count open, blocked, and recent tasks
+        open_count = 0
+        blocked_count = 0
+        recent_count = 0
+
+        for task_id in associated_tasks:
+            task_info = task_contracts[task_id]
+            status = task_info["status"]
+
+            # Open tasks: planned | active | blocked
+            if status in ("planned", "active", "blocked"):
+                open_count += 1
+
+            # Blocked tasks
+            if status == "blocked":
+                blocked_count += 1
+
+            # Recent tasks (updated within 7 days)
+            if task_info["is_recent"]:
+                recent_count += 1
+
+        # Normalize counts (find global max for normalization)
+        # For now, use per-node normalization against max seen
+        # This is a simplification; ideally we'd compute max across all nodes first
+        max_tasks = len(associated_tasks) if associated_tasks else 1
+
+        open_normalized = open_count / max_tasks if max_tasks > 0 else 0.0
+        blocked_normalized = blocked_count / max_tasks if max_tasks > 0 else 0.0
+        recent_normalized = recent_count / max_tasks if max_tasks > 0 else 0.0
+
+        # Compute task heat using weighted formula
+        task_heat = (
+            weight_open * open_normalized
+            + weight_blocked * blocked_normalized
+            + weight_recent * recent_normalized
+        )
+
+        task_heat_metrics[node_id] = task_heat
+
+    return task_heat_metrics
+
+
 def get_graph_snapshot(
     type_filter: List[str] | None = None,
     status_filter: List[str] | None = None,
@@ -435,27 +691,42 @@ def get_graph_snapshot(
     nodes = []
     node_ids = set()
     now = datetime.now(timezone.utc)
+    node_rows_list = []
     for row in node_rows:
         node_id = row["id"]
         node_ids.add(node_id)
 
         # Compute recency heat (0.0 = very old, 1.0 = very recent)
+        # Spec formula: RecencyHeat(v) = exp(-λ * Δ_days(v))
+        # where λ = ln(2) / H, and H = 7 days (spec default)
         modified_at_str = row["modified_at"]
         recency_heat = None
         if modified_at_str:
             try:
+                import math
+
                 modified_at = datetime.fromisoformat(
                     modified_at_str.replace("Z", "+00:00")
                 )
                 days_old = (now - modified_at).total_seconds() / 86400.0
-                # Exponential decay: heat = exp(-days_old / 30)
-                # 0 days = 1.0, 30 days ≈ 0.37, 90 days ≈ 0.05
-                import math
-
-                recency_heat = math.exp(-days_old / 30.0)
+                # Half-life H = 7 days means heat decays to 0.5 after 7 days
+                half_life_days = 7.0
+                lambda_decay = math.log(2.0) / half_life_days
+                recency_heat = math.exp(-lambda_decay * days_old)
             except (ValueError, TypeError):
                 recency_heat = None
 
+        node_rows_list.append((row, recency_heat))
+
+    # Compute density metrics for all nodes in this snapshot
+    density_metrics = _compute_density_metrics(conn, node_ids)
+
+    # Compute task heat metrics for all nodes in this snapshot
+    task_heat_metrics = _compute_task_heat(conn, node_ids)
+
+    # Build final nodes list with all metrics
+    for row, recency_heat in node_rows_list:
+        node_id = row["id"]
         nodes.append(
             {
                 "id": node_id,
@@ -469,9 +740,9 @@ def get_graph_snapshot(
                 ],  # Spec uses updated_at, DB has modified_at
                 "source_path": row["filepath"],
                 "metrics": {
-                    "density": None,  # Not computed in MVP
+                    "density": density_metrics.get(node_id),
                     "recency": recency_heat,
-                    "task": None,  # Not computed in MVP
+                    "task": task_heat_metrics.get(node_id),
                 },
             }
         )

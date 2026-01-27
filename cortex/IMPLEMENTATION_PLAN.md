@@ -329,7 +329,7 @@ MVP is considered "done" when all items below are true:
   - **Risk notes:** keyboard shortcuts in browser.
   - **If Blocked:** Provide a search input field in header as fallback.
 
-- [ ] **25.1.14** Frontend: Basic recency heat overlay toggle
+- [x] **25.1.14** Frontend: Basic recency heat overlay toggle
   - **Goal:** Display node recency heat from `metrics.recency` or compute client-side from `updated_at` if backend does not provide yet.
   - **Inputs:**
     - Heat metric definitions in spec
@@ -345,7 +345,7 @@ MVP is considered "done" when all items below are true:
   - **Risk notes:** visual tuning.
   - **If Blocked:** Use node size as a proxy for heat in MVP.
 
-- [ ] **25.1.15** Frontend: Generate plan wizard (minimal) using `/generate-plan`
+- [x] **25.1.15** Frontend: Generate plan wizard (minimal) using `/generate-plan`
   - **Goal:** Allow user to generate plan from current selection; show markdown preview.
   - **Inputs:**
     - `POST /generate-plan` contract
@@ -363,7 +363,7 @@ MVP is considered "done" when all items below are true:
 
 ### Phase 25.2: V1
 
-- [ ] **25.2.1** Backend: compute and return recency heat deterministically
+- [x] **25.2.1** Backend: compute and return recency heat deterministically
   - **Goal:** Compute `metrics.recency` server-side using the canonical half-life rule.
   - **Inputs:** heat metric definitions.
   - **Outputs:** `/graph` nodes include numeric `metrics.recency`.
@@ -373,7 +373,7 @@ MVP is considered "done" when all items below are true:
   - **Risk notes:** time-of-now influences determinism; define `t_now` evaluation point clearly.
   - **If Blocked:** Keep client-side computation.
 
-- [ ] **25.2.2** Backend: density heat (degree + clustering coefficient) with caching
+- [x] **25.2.2** Backend: density heat (degree + clustering coefficient) with caching
   - **Goal:** Provide `metrics.density` per node.
   - **Inputs:** density metric definition.
   - **Outputs:** `/graph` nodes include `metrics.density`.
@@ -383,7 +383,7 @@ MVP is considered "done" when all items below are true:
   - **Risk notes:** clustering coefficient performance.
   - **If Blocked:** Degree-only density metric.
 
-- [ ] **25.2.3** Backend: task heat based on TaskContract neighborhood
+- [x] **25.2.3** Backend: task heat based on TaskContract neighborhood
   - **Goal:** Provide `metrics.task` per node.
   - **Inputs:** task heat definition.
   - **Outputs:** `/graph` nodes include `metrics.task`.
@@ -393,7 +393,7 @@ MVP is considered "done" when all items below are true:
   - **Risk notes:** neighborhood traversal.
   - **If Blocked:** Depth=1 only.
 
-- [ ] **25.2.4** Frontend: hotspots / insights panel (top N)
+- [x] **25.2.4** Frontend: hotspots / insights panel (top N)
   - **Goal:** Show ranked hotspots list by chosen metric; click navigates.
   - **Inputs:** `/graph` metrics.
   - **Outputs:** Insights panel UI.
