@@ -96,7 +96,7 @@ skills_growth() {
 # 3. Commit frequency by day (last 30 days)
 commit_frequency() {
   # Get commits from last 30 days, count by date
-  git log --since="30 days ago" --pretty=format:'%ad' --date=short 2>/dev/null |
+  TZ=UTC git log --since="30 days ago" --pretty=format:'%ad' --date=short 2>/dev/null |
     sort | uniq -c |
     awk '{
     printf "%s{\"date\":\"%s\",\"commits\":%d}", (NR>1?",":""), $2, $1
@@ -140,9 +140,32 @@ stale_skills() {
 
 # Build final JSON
 build_json() {
+  # Ensure generated_at is in UTC and at/after the newest commit date we report.
+  local now_utc
+  now_utc="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  local max_commit_date
+  max_commit_date="$(TZ=UTC git log --since="30 days ago" --pretty=format:'%ad' --date=short 2>/dev/null | sort | tail -n 1 || true)"
+
+  local generated_at
+  if [[ -n "${max_commit_date}" ]]; then
+    # If commit_frequency includes today's date but now_utc could be slightly earlier due to TZ,
+    # pick end-of-day UTC for max_commit_date so generated_at >= max(commit_frequency[].date).
+    local max_commit_eod
+    max_commit_eod="${max_commit_date}T23:59:59Z"
+
+    if [[ "${now_utc}" < "${max_commit_eod}" ]]; then
+      generated_at="${max_commit_eod}"
+    else
+      generated_at="${now_utc}"
+    fi
+  else
+    generated_at="${now_utc}"
+  fi
+
   cat <<EOF
 {
-  "generated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "generated_at": "${generated_at}",
   "task_velocity": $(task_velocity),
   "skills_growth": $(skills_growth),
   "commit_frequency": $(commit_frequency),

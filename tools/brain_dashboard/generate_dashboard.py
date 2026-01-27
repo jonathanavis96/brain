@@ -9,7 +9,7 @@ Usage:
 import argparse
 import json
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List
 
 
@@ -211,7 +211,14 @@ def generate_dashboard_html(metrics: Dict[str, Any]) -> str:
     )
     stale_count = len(stale_skills)
 
-    generated_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # Prefer the collector's timestamp so the HTML subtitle matches brain_metrics.json.
+    generated_at = metrics.get("generated_at")
+    if isinstance(generated_at, str) and generated_at:
+        generated_time = generated_at
+        if generated_time.endswith("Z"):
+            generated_time = f"{generated_time} (UTC)"
+    else:
+        generated_time = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ (UTC)")
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -329,7 +336,7 @@ def generate_dashboard_html(metrics: Dict[str, Any]) -> str:
 <body>
   <div class="container">
     <h1>🧠 Brain Repository Dashboard</h1>
-    <p class="subtitle">Generated on {generated_time}</p>
+    <p class="subtitle">Generated at {generated_time}</p>
 
     <div class="stats-grid">
       <div class="stat-card">
