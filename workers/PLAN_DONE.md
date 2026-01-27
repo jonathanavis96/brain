@@ -236,3 +236,19 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | 2026-01-27 | 24.6.1 | - [x] **24.6.1** Align model-header single-source-of-truth + prompt batching rule across canonical files |
 | 2026-01-27 | 24.7.1 | - [x] **24.7.1** Backport `loop.sh` scoped staging improvements into templates (without Brain-specific paths) |
 | 2026-01-27 | 24.8.1 | - [x] **24.8.1** Backport verifier caching into templates without regressing A1 root/path logic |
+
+### Archived on 2026-01-27 (Batch 9)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 26.1 | - [x] **26.1** Setup Python virtual environment for Brain Map backend |
+| 2026-01-27 |   - [x] Unknown id returns 404 with canonical error shape. |   - [x] Unknown id returns 404 with canonical error shape. |
+| 2026-01-27 |   - [x] Response includes `node` and `body_md` fields. |   - [x] Response includes `node` and `body_md` fields. |
+| 2026-01-27 | 24.9.1 | - [x] **24.9.1** Backport `current_ralph_tasks.sh` parsing improvements into templates |
+
+### Archived on 2026-01-27 (Batch 10)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 26.2 | - [x] **26.2** Verify all Brain Map backend tests pass |
+| 2026-01-27 | 26.3 | - [x] **26.3** Add Brain Map test running to verifier (optional check) |

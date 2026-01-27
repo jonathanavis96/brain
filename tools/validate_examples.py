@@ -189,6 +189,10 @@ def validate_python_imports(block: CodeBlock) -> List[str]:
             for item in node.items:
                 if item.optional_vars and isinstance(item.optional_vars, ast.Name):
                     defined_names.add(item.optional_vars.id)
+        # Track exception handler variables (except SyntaxError as e:)
+        elif isinstance(node, ast.ExceptHandler):
+            if node.name:
+                defined_names.add(node.name)
 
         # Track name usage
         elif isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load):
