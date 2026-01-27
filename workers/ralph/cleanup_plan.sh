@@ -100,6 +100,7 @@ fi
 # Collect completed tasks for archiving
 archived_tasks=()
 current_date=$(date '+%Y-%m-%d')
+current_time=$(date '+%H:%M:%S')
 current_phase=""
 
 while IFS= read -r line; do
@@ -139,7 +140,7 @@ existing_task_ids=$(grep -o '|[[:space:]]*[^|]*[[:space:]]*|[[:space:]]*[^|]*[[:
 
 {
   echo ""
-  echo "### Archived on $current_date"
+  echo "### Archived on $current_date $current_time"
   echo ""
   echo "| Date | Task ID | Description |"
   echo "|------|---------|-------------|"

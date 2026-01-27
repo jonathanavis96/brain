@@ -252,3 +252,26 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 |------|---------|-------------|
 | 2026-01-27 | 26.2 | - [x] **26.2** Verify all Brain Map backend tests pass |
 | 2026-01-27 | 26.3 | - [x] **26.3** Add Brain Map test running to verifier (optional check) |
+
+### Archived on 2026-01-27 (Batch 11)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 26.4 | - [x] **26.4** Document Brain Map development workflow |
+| 2026-01-27 | 27.1 | - [x] **27.1** Review GAP_BACKLOG for P0/P1 items ready for promotion |
+| 2026-01-27 | 27.2 | - [x] **27.2** Promote "Custom Semantic Code Review Tool (LLM-Based Linting)" gap |
+| 2026-01-27 | 28.1 | - [x] **28.1** Audit templates for post-Phase-24 drift |
+
+### Archived on 2026-01-27 (Batch 12)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | WARN.MD056.workers/ralph/THUNK.md.921 | - [x] **WARN.MD056.workers/ralph/THUNK.md.921** - Fix MD056/table-column-count in workers/ralph/THUNK.md line 921 (Expected: 5; Actual: 3) |
+| 2026-01-27 | WARN.MD056.workers/ralph/THUNK.md.926 | - [x] **WARN.MD056.workers/ralph/THUNK.md.926** - Fix MD056/table-column-count in workers/ralph/THUNK.md line 926 (Expected: 5; Actual: 6) |
+| 2026-01-27 | WARN.MD056.workers/ralph/THUNK.md.928 | - [x] **WARN.MD056.workers/ralph/THUNK.md.928** - Fix MD056/table-column-count in workers/ralph/THUNK.md line 928 (Expected: 5; Actual: 7) |
+
+### Archived on 2026-01-27 12:40:49
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | WARN.MD024.cortex/PLAN_DONE.md | - [x] **WARN.MD024.cortex/PLAN_DONE.md** - Fix MD024/no-duplicate-heading in cortex/PLAN_DONE.md line 323 |
