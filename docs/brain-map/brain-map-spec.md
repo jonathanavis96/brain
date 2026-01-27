@@ -44,6 +44,14 @@
   - [Markdown parse failures](#markdown-parse-failures)
   - [UI/backend failure behavior](#uibackend-failure-behavior)
   - [Markdown corruption prevention guarantees](#markdown-corruption-prevention-guarantees)
+- [Repository Layout & Integration (Canonical)](#repository-layout--integration-canonical)
+  - [Canonical paths (repo-root relative)](#canonical-paths-repo-root-relative)
+  - [SQLite index DB policy (commit vs ignore)](#sqlite-index-db-policy-commit-vs-ignore)
+  - [Logs, cache, and temp policy](#logs-cache-and-temp-policy)
+  - [Commit policy (what is committed)](#commit-policy-what-is-committed)
+  - [Repo root and path discovery](#repo-root-and-path-discovery)
+  - [WSL2 runtime assumptions](#wsl2-runtime-assumptions)
+  - [Developer quickstart](#developer-quickstart)
 - [F) Step-by-step build plan (phased)](#f-step-by-step-build-plan-phased)
   - [MVP](#mvp)
   - [V1](#v1)
@@ -716,6 +724,198 @@ Guarantees:
   - Markdown body content
 - On write failure, the original file must remain unchanged.
 
+## Repository Layout & Integration (Canonical)
+
+This section defines the canonical repository locations, commit policy, and runtime expectations for the Brain Map system. The purpose is to eliminate ambiguity so tooling can discover the same paths deterministically and so contributors know what is safe to commit.
+
+### Canonical paths (repo-root relative)
+
+All paths below are **relative to the repository root**.
+
+#### Application workspace root
+
+- `app/brain-map/`
+
+The Brain Map application is a self-contained workspace under this directory.
+
+#### Frontend (UI)
+
+- `app/brain-map/frontend/`
+
+Contains the Vite + React UI application.
+
+#### Backend (API)
+
+- `app/brain-map/backend/`
+
+Contains the FastAPI backend.
+
+#### Markdown notes location (source of truth)
+
+- `app/brain-map/notes/`
+
+Canonical properties:
+
+- Markdown notes in this directory are the **source of truth** for Brain Map nodes.
+- Notes may be nested under subfolders (e.g., `app/brain-map/notes/concepts/`, `.../systems/`).
+- Filenames are **not identity**; identity is the `id` field in frontmatter.
+
+#### Generated outputs location (plans, exports)
+
+- `app/brain-map/generated/`
+
+Canonical properties:
+
+- Generated Markdown outputs (plans, exported subgraphs, etc.) are written here by default.
+- The UI must allow choosing an alternate export path, but this is the canonical default.
+
+### SQLite index DB policy (commit vs ignore)
+
+Canonical SQLite index location:
+
+- `app/brain-map/.local/index.db`
+
+Policy:
+
+- The SQLite index is a **derived artifact**.
+- It must **not** be committed.
+- The system must be able to rebuild it deterministically from Markdown notes.
+
+Optional additional derived files (also not committed):
+
+- `app/brain-map/.local/index.db-wal`
+- `app/brain-map/.local/index.db-shm`
+
+### Logs, cache, and temp policy
+
+Canonical locations:
+
+- `app/brain-map/.local/` (derived local state root)
+  - `app/brain-map/.local/logs/` (logs)
+  - `app/brain-map/.local/cache/` (caches)
+  - `app/brain-map/.local/tmp/` (temporary files)
+
+Policy:
+
+- Everything under `app/brain-map/.local/` is **runtime-only**.
+- It must be **gitignored**.
+- Temporary files must be safe to delete at any time.
+
+### Commit policy (what is committed)
+
+#### MUST be committed
+
+- The canonical specification:
+  - `docs/brain-map/brain-map-spec.md`
+- Markdown notes (source of truth):
+  - `app/brain-map/notes/**/*.md`
+
+#### MAY be committed (team choice; default is "no")
+
+- Generated plans and exports:
+  - `app/brain-map/generated/**/*.md`
+
+If committed, generated outputs must be treated as reviewable artifacts. If not committed, they are considered ephemeral.
+
+#### MUST NOT be committed
+
+- SQLite index DB and related files:
+  - `app/brain-map/.local/index.db*`
+- Logs, caches, temp files:
+  - `app/brain-map/.local/**`
+
+#### Recommended `.gitignore` entries
+
+These entries should be present in the repo `.gitignore` (or in a dedicated ignore under `app/brain-map/` if preferred):
+
+```gitignore
+# Brain Map local state (derived, never commit)
+app/brain-map/.local/
+
+# If you choose to treat generated outputs as ephemeral, ignore them too:
+# app/brain-map/generated/
+
+# Node / frontend build artifacts
+app/brain-map/frontend/node_modules/
+app/brain-map/frontend/dist/
+
+# Python backend artifacts
+app/brain-map/backend/.venv/
+app/brain-map/backend/__pycache__/
+app/brain-map/backend/.pytest_cache/
+```
+
+### Repo root and path discovery
+
+The system must discover the repo root deterministically.
+
+Canonical rule (deterministic):
+
+1. Start at the current working directory.
+2. Walk upward until a `.git/` directory is found.
+3. That directory is the **repo root**.
+4. All canonical paths are then resolved relative to this root.
+
+If `.git/` is not found:
+
+- The backend must fail fast with a clear error explaining that it must be run inside a Brain repo working tree.
+
+Overrides:
+
+- The system may support an explicit environment variable override for advanced use.
+- If an override exists, it must be explicit and documented (e.g., `BRAIN_MAP_REPO_ROOT`).
+
+### WSL2 runtime assumptions
+
+- Backend commands are run in WSL2.
+- The backend listens on `localhost` and is reachable from the Windows browser via `http://localhost:<port>`.
+- The UI is accessed from a Windows browser and is served from the frontend dev server (also bound to localhost).
+
+Networking expectations:
+
+- Default configuration must work with no special port forwarding.
+- If WSL2 networking behaves differently on a given machine, the developer is responsible for local adjustment, but the canonical ports below are the baseline.
+
+### Developer quickstart
+
+This subsection is intentionally explicit and command-oriented.
+
+#### Backend
+
+- Working directory: `app/brain-map/backend/`
+- Expected port: `8000`
+- Expected base URL: `http://localhost:8000`
+
+Canonical environment variables:
+
+- `BRAIN_MAP_REPO_ROOT` (optional): override repo root discovery.
+- `BRAIN_MAP_PORT` (optional): override backend port.
+
+Commands:
+
+- Create a virtual environment and install dependencies (exact tooling may vary, but must be documented in the backend README once implemented).
+- Start the FastAPI server in dev mode.
+
+#### Frontend
+
+- Working directory: `app/brain-map/frontend/`
+- Expected port: `5173` (Vite default)
+- Expected URL: `http://localhost:5173`
+
+Canonical environment variables:
+
+- `VITE_BRAIN_MAP_API_BASE_URL` (optional): defaults to `http://localhost:8000`
+
+Commands:
+
+- Install dependencies.
+- Start the Vite dev server.
+
+#### Expected result
+
+- Opening `http://localhost:5173` shows the Brain Map UI.
+- The UI successfully calls the backend at `http://localhost:8000`.
+
 ## F) Step-by-step build plan (phased)
 
 ### MVP
@@ -1243,3 +1443,4 @@ This canonical spec adds and fully specifies the following mandatory sections as
 - Failure & Recovery Model
 - Agent Ingestion Contract
 - Appendix added: Frontmatter & Link Schema (Canonical)
+- Added: Repository Layout & Integration (Canonical)
