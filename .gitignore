@@ -1,5 +1,6 @@
 # Logs
 ralph/logs/
+workers/ralph/logs/
 # *.log
 !workers/ralph/tests/fixtures/*.log
 
