@@ -1,8 +1,8 @@
 # Implementation Plan - Brain Repository
 
-**Last Updated:** 2026-01-28 10:15:00
+**Last Updated:** 2026-01-28 19:34:25
 
-**Current Status:** Phase 33 nearly complete (14/20 tasks done), focusing on remaining polish features
+**Current Status:** Phase 37-38 active, Phase 0-Warn markdown lint cleanup required
 
 **Recent Completions:**
 
@@ -15,10 +15,53 @@
 
 **Active Focus:**
 
-- Phase 0-Warn: Markdown lint errors (MD032, MD007, MD046, MD012)
-- Phase 0-Lint: MD004 list style errors in cortex docs
+- Phase 0-Warn: MD012 errors in workers/PLAN_DONE.md
+- Phase 37: Repo Cleanup & Drift Control
+- Phase 38: Documentation Consolidation & Navigation
 
 <!-- Cortex adds new Task Contracts below this line -->
+
+---
+
+## Phase 0-Warn: Verifier Warnings
+
+- [x] **0-Warn.MD012.workers-PLAN_DONE.753** Fix MD012 in workers/PLAN_DONE.md line 753
+  - **AC:** `markdownlint workers/PLAN_DONE.md` passes (no MD012 errors at line 753)
+
+- [x] **0-Warn.MD012.workers-PLAN_DONE.760** Fix MD012 in workers/PLAN_DONE.md line 760
+  - **AC:** `markdownlint workers/PLAN_DONE.md` passes (no MD012 errors at line 760)
+
+- [x] **0-Warn.MD012.workers-PLAN_DONE.767** Fix MD012 in workers/PLAN_DONE.md line 767
+  - **AC:** `markdownlint workers/PLAN_DONE.md` passes (no MD012 errors at line 767)
+
+- [x] **0-Warn.MD012.workers-PLAN_DONE.774** Fix MD012 in workers/PLAN_DONE.md line 774
+  - **AC:** `markdownlint workers/PLAN_DONE.md` passes (no MD012 errors at line 774)
+
+- [x] **0-Warn.MD012.workers-PLAN_DONE.781** Fix MD012 in workers/PLAN_DONE.md line 781
+  - **AC:** `markdownlint workers/PLAN_DONE.md` passes (no MD012 errors at line 781)
+
+- [x] **0-Warn.MD012.workers-PLAN_DONE.788** Fix MD012 in workers/PLAN_DONE.md line 788
+  - **AC:** `markdownlint workers/PLAN_DONE.md` passes (no MD012 errors at line 788)
+
+- [x] **0-Warn.MD012.workers-PLAN_DONE.795** Fix MD012 in workers/PLAN_DONE.md line 795
+  - **AC:** `markdownlint workers/PLAN_DONE.md` passes (no MD012 errors at line 795)
+
+- [x] **0-Warn.MD012.workers-PLAN_DONE.802** Fix MD012 in workers/PLAN_DONE.md line 802
+  - **AC:** `markdownlint workers/PLAN_DONE.md` passes (no MD012 errors at line 802)
+
+- [x] **0-Warn.MD012.workers-PLAN_DONE.809** Fix MD012 in workers/PLAN_DONE.md line 809
+  - **AC:** `markdownlint workers/PLAN_DONE.md` passes (no MD012 errors at line 809)
+
+- [x] **0-Warn.MD012.workers-PLAN_DONE.816** Fix MD012 in workers/PLAN_DONE.md line 816
+  - **AC:** `markdownlint workers/PLAN_DONE.md` passes (no MD012 errors at line 816)
+
+- [x] **0-Warn.MD012.workers-PLAN_DONE.823** Fix MD012 in workers/PLAN_DONE.md line 823
+  - **AC:** `markdownlint workers/PLAN_DONE.md` passes (no MD012 errors at line 823)
+
+- [x] **0-Warn.MD012.workers-PLAN_DONE.824** Fix MD012 in workers/PLAN_DONE.md line 824
+  - **AC:** `markdownlint workers/PLAN_DONE.md` passes (no MD012 errors at line 824)
+
+---
 
 ## Phase 37: Repo Cleanup & Drift Control
 
@@ -37,7 +80,7 @@
 
 ### Task 37.1: Link + reference integrity
 
-- [ ] **37.1.2** Remove references to renamed/deleted scripts and paths
+- [x] **37.1.2** Remove references to renamed/deleted scripts and paths
   - **Goal:** Ensure docs/templates don’t reference removed scripts (e.g., old sync names) or obsolete paths.
   - **AC:** `grep -R "sync_cortex_plan.sh" -n .` and `grep -R "sync_completions_to_cortex.sh" -n .` return no matches outside historical changelogs.
   - **If Blocked:** Add a small “Deprecated names” section to the relevant doc with the correct replacements.
@@ -46,7 +89,7 @@
 
 ### Task 37.2: Tools documentation correctness (`docs/TOOLS.md`)
 
-- [ ] **37.2.1** Inventory runnable tools and reconcile with `docs/TOOLS.md`
+- [x] **37.2.1** Inventory runnable tools and reconcile with `docs/TOOLS.md`
   - **Goal:** Make `docs/TOOLS.md` match what’s actually runnable in this repo.
   - **AC:** `docs/TOOLS.md` includes:
     - `bin/*` entrypoints
@@ -54,7 +97,7 @@
     - key worker scripts under `workers/ralph/` that humans run
   - **If Blocked:** Generate an inventory list via `find bin tools -maxdepth 2 -type f` and paste into the task notes.
 
-- [ ] **37.2.2** Add missing usage/outputs/prereqs for each documented tool
+- [x] **37.2.2** Add missing usage/outputs/prereqs for each documented tool
   - **Goal:** Make each tool entry actionable.
   - **AC:** Each tool in `docs/TOOLS.md` has: purpose, command example, where outputs go, and prerequisites.
   - **If Blocked:** Start with top 10 most-used tools and mark remaining entries as TODO.
@@ -63,12 +106,12 @@
 
 ### Task 37.3: Repo maps + docs drift cleanup
 
-- [ ] **37.3.1** Refresh `NEURONS.md` to match current repo structure
+- [x] **37.3.1** Refresh `NEURONS.md` to match current repo structure
   - **Goal:** Ensure the repo map reflects actual directories/files.
   - **AC:** `NEURONS.md` matches current structure and contains no dead links.
-  - **If Blocked:** Add a “Delta to fix” checklist at the bottom and stop.
+  - **If Blocked:** Add a "Delta to fix" checklist at the bottom and stop.
 
-- [ ] **37.3.2** Reconcile `cortex/docs/REPO_MAP.md` and other high-level docs with current structure
+- [x] **37.3.2** Reconcile `cortex/docs/REPO_MAP.md` and other high-level docs with current structure
   - **Goal:** Reduce contradictions between maps/runbooks and the actual repo.
   - **AC:** `cortex/docs/REPO_MAP.md` and `cortex/docs/RUNBOOK.md` have no stale path references.
   - **If Blocked:** Prioritize updating the runbook first.
@@ -77,14 +120,14 @@
 
 ### Task 37.4: Drift guardrails (prevent recurrence)
 
-- [ ] **37.4.1** Add a lightweight “tool inventory” validator (optional) or documented procedure
+- [x] **37.4.1** Add a lightweight "tool inventory" validator (optional) or documented procedure
   - **Goal:** Prevent `docs/TOOLS.md` from drifting.
   - **AC:** Either:
     - A script exists under `tools/` that compares `docs/TOOLS.md` entries to actual files, or
     - A documented procedure exists in `docs/TOOLS.md` describing how to regenerate the inventory.
   - **If Blocked:** Add a TODO checklist to `docs/TOOLS.md` describing the intended validator.
 
-- [ ] **37.4.2** Add/extend a check to catch out-of-workspace brain references in templates
+- [x] **37.4.2** Add/extend a check to catch out-of-workspace brain references in templates
   - **Goal:** Prevent regressions to `../../brain/...` in templates.
   - **AC:** `grep -R "\.\./\.\./brain/" templates/` returns 0 matches.
   - **If Blocked:** Document the rule in `templates/README.md` and add it to pre-commit later.
@@ -107,9 +150,9 @@
 
 ### Task 38.1: Identify duplication + contradictions
 
-- [ ] **38.1.1** Inventory duplicated topics and pick canonical docs
+- [x] **38.1.1** Inventory duplicated topics and pick canonical docs
   - **Goal:** Identify where the same topic is documented in multiple places (e.g., bootstrapping, task sync, running Ralph/Cortex, gap capture) and pick one canonical location per topic.
-  - **AC:** A short “canonical map” table is added to `docs/REFERENCE_SUMMARY.md` (or `docs/CHANGES.md` if preferred) listing topic → canonical file, plus “deprecated copies” list.
+  - **AC:** A short "canonical map" table is added to `docs/REFERENCE_SUMMARY.md` (or `docs/CHANGES.md` if preferred) listing topic → canonical file, plus "deprecated copies" list.
   - **If Blocked:** Start with the top 5 topics and leave the rest as a TODO list.
 
 - [ ] **38.1.2** Resolve the highest-impact contradictions

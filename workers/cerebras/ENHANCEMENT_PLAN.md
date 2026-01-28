@@ -437,7 +437,7 @@ cp -r workers/ralph/docs workers/cerebras/docs
 
 ### Tasks (if YES to integration)
 
-#### 17. Copy sync_cortex_plan.sh
+#### 17. Copy task sync script
 
 **Actions:**
 
@@ -453,7 +453,7 @@ cp workers/ralph/sync_cortex_plan.sh workers/cerebras/sync_cortex_plan.sh
 
 ---
 
-#### 18. Copy sync_completions_to_cortex.sh
+#### 18. Copy task completion sync script
 
 **Actions:**
 
@@ -577,8 +577,8 @@ DOCUMENTATION:
 
 [OPTIONAL if Phase E done]
 CORTEX INTEGRATION:
-- Add sync_cortex_plan.sh
-- Add sync_completions_to_cortex.sh
+- Add task sync script
+- Add task completion sync script
 - Update loop.sh for automatic sync
 
 TESTING:

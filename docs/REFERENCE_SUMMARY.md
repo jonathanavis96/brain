@@ -4,6 +4,29 @@
 
 Ralph Wiggum is an iterative development loop pattern that alternates between PLAN and BUILD phases, using AI agents to progressively improve a codebase.
 
+## Canonical Documentation Map
+
+This table identifies the single source of truth for each major topic to avoid conflicting documentation.
+
+| Topic | Canonical Location | Deprecated/Duplicate Copies |
+|-------|-------------------|----------------------------|
+| **Bootstrapping new projects** | `docs/BOOTSTRAPPING.md` | `README.md` (brief mention), `cortex/docs/REPO_MAP.md` (overview) |
+| **Running Ralph loop** | `workers/ralph/README.md` | `AGENTS.md` (quick start), `workers/ralph/AGENTS.md` (operational), `docs/HISTORY.md` (historical) |
+| **Task planning authority** | `workers/IMPLEMENTATION_PLAN.md` (canonical source) | `cortex/IMPLEMENTATION_PLAN.md` (mirror for Cortex context) |
+| **Gap capture workflow** | `skills/self-improvement/GAP_CAPTURE_RULES.md` | `cortex/docs/RUNBOOK.md` (partial), `skills/self-improvement/README.md` (overview) |
+| **Acceptance criteria & verifier** | `workers/ralph/VALIDATION_CRITERIA.md` | `docs/QUALITY_GATES.md` (conceptual), `docs/HASH_VALIDATION.md` (hash guard details) |
+| **Task completion logging** | `workers/ralph/THUNK.md` (canonical log) | `cortex/docs/TASK_SYNC_PROTOCOL.md` (protocol spec), `docs/HISTORY.md` (historical context) |
+| **Repository structure** | `NEURONS.md` | `cortex/docs/REPO_MAP.md` (detailed analysis) |
+| **Tool inventory** | `docs/TOOLS.md` | Various READMEs in `bin/` and `tools/` subdirs |
+| **Operational guide for agents** | `AGENTS.md` (root level, all agents) | `workers/ralph/AGENTS.md` (Ralph-specific), `workers/cerebras/AGENTS.md` (Cerebras-specific) |
+| **Strategic vision** | `THOUGHTS.md` | `cortex/THOUGHTS.md` (project-specific if exists) |
+
+### Notes on Authority
+
+- **Plan authority**: `workers/IMPLEMENTATION_PLAN.md` is the single source of truth; `cortex/IMPLEMENTATION_PLAN.md` is a read-only mirror for Cortex's strategic planning context
+- **Bootstrap layout**: Current reality is `workers/ralph/` (per ADR-0001), NOT `ralph/` at project root
+- **Gap capture**: Use `skills/self-improvement/GAP_CAPTURE_RULES.md` for the process; gaps flow to `.gap_pending` then `cortex/sync_gaps.sh` merges to `GAP_BACKLOG.md`
+
 ## Key References
 
 ### 1. Ralph Playbook (<https://github.com/ghuntley/how-to-ralph-wiggum>)
