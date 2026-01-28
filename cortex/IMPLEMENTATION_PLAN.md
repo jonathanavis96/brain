@@ -59,14 +59,17 @@ At the end of every iteration (PLAN/BUILD), immediately before the marker line, 
     - If generated summary exceeds ~1800 chars, it truncates and appends a "(truncated)" note.
     - Retains at least the title, Summary section, and Next Steps section.
 
-- [ ] **1.10** Fix MD012 in workers/PLAN_DONE.md
+- [x] **1.10** Fix MD012 in workers/PLAN_DONE.md
   - **AC:** `markdownlint workers/PLAN_DONE.md` passes (no MD012 errors)
   - **Verification:**
     - Add/extend a fixture with >1800 chars and validate truncation via `bash workers/ralph/tests/verify_summary_extraction.sh`.
   - **Risk notes:** Naive truncation can cut headings; ensure truncation preserves section boundaries where possible.
   - **If Blocked:** Truncate by sections rather than raw characters.
 
-- [ ] **1.10** Propagate changes to templates to prevent drift
+- [x] **1.11** Fix MD024 in cortex/PLAN_DONE.md
+  - **AC:** `markdownlint cortex/PLAN_DONE.md` passes (no MD024 errors)
+
+- [x] **1.10** Propagate changes to templates to prevent drift
   - **Goal:** Ensure template Ralph loop + Discord tooling match the fixed behavior so new projects behave correctly.
   - **Inputs:** Implemented changes in workers.
   - **Outputs:** Template updates mirroring the same logic/behavior.
@@ -84,7 +87,7 @@ At the end of every iteration (PLAN/BUILD), immediately before the marker line, 
   - **Risk notes:** Template drift is a recurring source of regressions.
   - **If Blocked:** Split propagation into smaller tasks per file if changes are too large.
 
-- [ ] **1.11** Verification / Done Definition (lint + end-to-end iteration)
+- [x] **1.11** Verification / Done Definition (lint + end-to-end iteration)
   - **Goal:** Prove reliability end-to-end: strict block emitted, extractor finds correct block around last marker, Discord payload is clean.
   - **Inputs:** Updated prompts, extractor, Discord post tool, fixtures.
   - **Outputs:** Passing local checks and at least one end-to-end iteration producing a Discord-ready summary.
@@ -118,10 +121,10 @@ At the end of every iteration (PLAN/BUILD), immediately before the marker line, 
 
 ### Task 36.1: Label rendering correctness (always-visible + hover upgrade)
 
-- [ ] **36.1.1** Align hover label geometry with Sigma defaults (no clipped first letters)
+- [x] **36.1.1** Align hover label geometry with Sigma defaults (no clipped first letters)
   - **Goal:** Fix hover pill positioning so the node circle does not cover the start of the label.
   - **AC:** Hover label pill never overlaps the first characters of the label at any zoom; label baseline matches Sigma disc-node label placement.
-  - **If Blocked:** Copy Sigma’s `drawDiscNodeHover` geometry from `node_modules/sigma` into the hover draw override and only change fill colors.
+  - **If Blocked:** Copy Sigma's `drawDiscNodeHover` geometry from `node_modules/sigma` into the hover draw override and only change fill colors.
 
 - [ ] **36.1.2** Remove hover/zoom label duplication by matching default placement and ensuring hover “upgrades” the same label
   - **Goal:** Hover should visually upgrade the existing label (pill) rather than showing a second label in a different place.
