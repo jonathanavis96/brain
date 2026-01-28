@@ -31,9 +31,12 @@ brain/                           # Root of brain repository
 ├── SPEC_CHANGE_REQUEST.md       # Specification change requests
 ├── STAGING_COPY_REPORT.md       # Staging environment reports
 ├── TEMPLATE_DRIFT_REPORT.md     # Template drift analysis
-├── new-project.sh               # Project bootstrapping script
-├── setup.sh                     # Repository setup script
-├── setup-linters.sh             # Linter configuration script
+├── scripts/                     # Setup and utility scripts
+│   ├── new-project.sh          # Project bootstrapping script
+│   ├── setup.sh                # Repository setup script
+│   └── setup-linters.sh        # Linter configuration script
+├── state/                       # Runtime state (event logs)
+│   └── events.jsonl            # Event stream log
 ├── .editorconfig                # Editor configuration
 ├── .env.example                 # Environment variables template
 ├── .gitignore                   # Git ignore rules
@@ -245,10 +248,11 @@ brain/                           # Root of brain repository
 
 ## File Counts
 
-- **Markdown files:** 150+
-- **Shell scripts:** 35+
-- **Python files:** 25+
-- **Total directories:** 50+
+- **Markdown files:** 387
+- **Shell scripts:** 77
+- **Python files:** 40+ (excluding .venv)
+- **Total files:** 6,589
+- **Total directories:** 449 (excluding .git, .venv, node_modules, caches)
 
 ## Key Files by Purpose
 
@@ -469,4 +473,5 @@ Ralph has **full access** to entire brain repository from root (`/home/grafe/cod
 
 | Date       | Changes                                                       |
 |------------|---------------------------------------------------------------|
+| 2026-01-28 | Added scripts/ and state/ directories; updated file counts to 387 MD, 77 shell, 6,589 total files, 449 directories |
 | 2026-01-22 | Initial creation - mapped brain repository structure         |

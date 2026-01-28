@@ -204,6 +204,6 @@ A scored shortlist with clear MVP loops and an automation plan.
 
 ## Sources (starting set)
 
-- Wikipedia: Product-market fit (definition) (https://en.wikipedia.org/wiki/Product-market_fit)
-- Wikipedia: Lean startup (validated learning framing) (https://en.wikipedia.org/wiki/Lean_startup)
-- Paul Graham: How to Get Startup Ideas (problem-first principle) (https://www.paulgraham.com/startupideas.html)
+- Wikipedia: Product-market fit (definition) - <https://en.wikipedia.org/wiki/Product-market_fit>
+- Wikipedia: Lean startup (validated learning framing) - <https://en.wikipedia.org/wiki/Lean_startup>
+- Paul Graham: How to Get Startup Ideas (problem-first principle) - <https://www.paulgraham.com/startupideas.html>

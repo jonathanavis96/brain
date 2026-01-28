@@ -44,19 +44,24 @@
 
 ### Task 35.3: Documentation Quality
 
-- [ ] **35.3.2** Example validation
+- [x] **35.3.1** Fix MD034 bare URLs in business-ideas.md
+  - **Goal:** Convert bare URLs to proper markdown link syntax
+  - **AC:** `markdownlint skills/domains/marketing/strategy/business-ideas.md` passes (no MD034 errors)
+  - **Files:** `skills/domains/marketing/strategy/business-ideas.md` lines 207-209
+
+- [x] **35.3.2** Example validation
   - **Goal:** Ensure code examples in skills docs are complete and runnable.
   - **AC:** `python3 tools/validate_examples.py skills/` succeeds.
-  - **If Blocked:** Identify and quarantine failing examples with an “EXAMPLE INCOMPLETE” marker and file follow-up tasks.
+  - **If Blocked:** Identify and quarantine failing examples with an "EXAMPLE INCOMPLETE" marker and file follow-up tasks.
 
-- [ ] **35.3.3** Update `NEURONS.md`
+- [x] **35.3.3** Update `NEURONS.md`
   - **Goal:** Keep the repository map accurate and current.
   - **AC:** All current directories are listed and descriptions are up to date.
   - **If Blocked:** Document the delta as a TODO list under the task and stop.
 
-- [ ] **35.3.4** Refresh `skills/SUMMARY.md`
+- [x] **35.3.4** Refresh `skills/SUMMARY.md`
   - **Goal:** Keep the error reference and domain list accurate.
   - **AC:** `skills/SUMMARY.md` reflects current domains and error guidance; manual review confirms consistency.
-  - **If Blocked:** Add a short “needs review” section with the specific missing items.
+  - **If Blocked:** Add a short "needs review" section with the specific missing items.
 
 ### Archive - 2026-01-28 21:21

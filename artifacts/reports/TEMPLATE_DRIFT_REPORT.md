@@ -242,7 +242,7 @@ BEFORE=$(echo "$BEFORE_OUTPUT" | grep -c "error" || true)
 
 ## Appendix: Previous Audit Results (2026-01-27)
 
-#### 3.4 `PROMPT.md` Path Adjustments (From Previous Audit)
+### 3.4 `PROMPT.md` Path Adjustments (From Previous Audit)
 
 **Status:** ✅ Context-appropriate (not drift)
 

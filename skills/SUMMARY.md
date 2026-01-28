@@ -182,10 +182,12 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
   - [Change Propagation](domains/ralph/change-propagation.md) - Template sync, knowledge persistence, verification checklists
   - [Bulk Edit Patterns](domains/code-quality/bulk-edit-patterns.md) - Bulk editing strategies and markdown auto-fix patterns
   - [Code Consistency](domains/code-quality/code-consistency.md) - Documentation accuracy, terminology, parsing consistency
+  - [Code Review Patterns](domains/code-quality/code-review-patterns.md) - Automated and manual code review strategies
   - [Config Patterns](domains/backend/config-patterns.md) - Portable configs, templates, environment variables
   - [Database Patterns](domains/backend/database-patterns.md) - Schema design, ORMs, query optimization, migrations, transactions
   - [Markdown Patterns](domains/code-quality/markdown-patterns.md) - Lint rules (MD040, MD024, MD050), documentation accuracy
   - [Python Patterns](domains/languages/python/python-patterns.md) - datetime, f-strings, JSON handling, type hints, import scope
+  - [Semantic Code Review](domains/code-quality/semantic-code-review.md) - Context-aware code review and quality analysis
   - [Testing Patterns](domains/code-quality/testing-patterns.md) - Unit, integration, e2e testing across Jest, pytest, Go testing
   - [Test Coverage Patterns](domains/code-quality/test-coverage-patterns.md) - Coverage tracking, differential coverage, CI integration
   - [Research Patterns](domains/code-quality/research-patterns.md) - Systematic research methodology (CRAAP test, triangulation, source evaluation)
@@ -194,17 +196,26 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
   - [Ralph Loop Architecture](domains/ralph/ralph-patterns.md) - How Ralph works internally (subagents, tool visibility, execution flow)
   - [Bootstrap Patterns](domains/ralph/bootstrap-patterns.md) - Project bootstrapping, scaffold templates, initialization flows
   - [Cache Debugging](domains/ralph/cache-debugging.md) - Cache troubleshooting, invalidation, performance analysis
+  - [Thread Search Patterns](domains/ralph/thread-search-patterns.md) - Search and analyze Ralph thread history
+  - [Tool Wrapper Patterns](domains/ralph/tool-wrapper-patterns.md) - Wrap external tools for Ralph integration
   - [Code Hygiene](domains/code-quality/code-hygiene.md) - Dead code removal, linting, formatting consistency
   - [Deployment Patterns](domains/infrastructure/deployment-patterns.md) - CI/CD, rollout strategies, environment management
   - [Disaster Recovery Patterns](domains/infrastructure/disaster-recovery-patterns.md) - Backup strategies, failover procedures, recovery testing
+  - [Discord Webhook Patterns](domains/infrastructure/discord-webhook-patterns.md) - Discord notifications and webhook integration
   - [Error Handling Patterns](domains/backend/error-handling-patterns.md) - Exception handling, error boundaries, retry strategies
   - [Observability Patterns](domains/infrastructure/observability-patterns.md) - Logging, metrics, tracing, alerting
+  - [Secrets Management](domains/infrastructure/secrets-management.md) - Secure credential storage and rotation
   - [Security Patterns](domains/infrastructure/security-patterns.md) - Input validation, secrets management, secure defaults
   - [State Management Patterns](domains/infrastructure/state-management-patterns.md) - React state, global stores, persistence
   - **[Frontend Development](domains/frontend/README.md)** - Frontend development overview
     - [Accessibility Patterns](domains/frontend/accessibility-patterns.md) - WCAG compliance, ARIA attributes, keyboard navigation, screen reader support
+    - [Component Architecture](domains/frontend/component-architecture.md) - Component design and organization patterns
     - [React Patterns](domains/frontend/react-patterns.md) - Component composition, hooks, state management, performance optimization
+    - [Vue Patterns](domains/frontend/vue-patterns.md) - Vue.js composition API, reactivity, lifecycle management
+  - **[Go Patterns](domains/languages/go/README.md)** - Go idioms, concurrency, error handling, testing patterns
+    - [Go Patterns](domains/languages/go/go-patterns.md) - Goroutines, channels, defer, interfaces, struct composition
   - **[JavaScript Patterns](domains/languages/javascript/README.md)** - Modern JavaScript (ES6+), async patterns, module systems
+    - [JavaScript Patterns](domains/languages/javascript/javascript-patterns.md) - Promises, async/await, destructuring, modules
   - **[TypeScript Patterns](domains/languages/typescript/README.md)** - Type system fundamentals, generics, advanced types, JavaScript integration
   - **[Shell Scripting](domains/languages/shell/README.md)** - Bash best practices, ShellCheck patterns, cleanup/traps
     - [Strict Mode](domains/languages/shell/strict-mode.md) - `set -euo pipefail` patterns
