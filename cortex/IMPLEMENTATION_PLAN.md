@@ -16,6 +16,7 @@
 **Active Focus:**
 
 - Phase 0-Warn: Markdown lint errors (MD032, MD007, MD046, MD012)
+- Phase 0-Lint: MD004 list style errors in cortex docs
 
 <!-- Cortex adds new Task Contracts below this line -->
 
@@ -37,10 +38,6 @@
 
 ### Task 36.1: Label rendering correctness (always-visible + hover upgrade)
 
-- [x] **36.1.2** Remove hover/zoom label duplication by matching default placement and ensuring hover "upgrades" the same label
-  - **Goal:** Hover should visually upgrade the existing label (pill) rather than showing a second label in a different place.
-  - **AC:** When zoomed-in labels are visible, hovering a node results in exactly one label being readable (the pill version), with no second label visible/offset.
-  - **If Blocked:** Consider temporarily suppressing base label rendering for the hovered node (e.g., during `enterNode`, set node `label` to empty and restore on `leaveNode`) and document tradeoffs.
 
 - [ ] **36.1.3** Ensure label colors are correct in dark mode for both base and hover labels
   - **Goal:** Base labels render white in dark mode; hover pill renders black text on white pill.

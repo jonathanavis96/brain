@@ -730,3 +730,14 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
   - **Archived At:** 2026-01-28 17:19:52
   - **Block:**
 
+### Archived on 2026-01-28 19:06:12
+
+- [x] **0-Lint.1.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 19:06:12
+  - **Block:**
+
+- [x] **36.1.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 19:06:12
+  - **Block:**

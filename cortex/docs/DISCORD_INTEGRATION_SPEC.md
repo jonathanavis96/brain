@@ -192,6 +192,34 @@ Tasks:
 
 ### Manual Verification Checklist
 
+#### 0) First sanity check (avoid bash quoting pitfalls)
+
+Before debugging formatting/chunking/markers, validate the end-to-end pipeline with a *known-good* summary body:
+
+- Prefer piping content via stdin (no shell interpolation):
+
+```bash
+cat /path/to/known_good_summary.txt | bin/discord-post
+```
+
+- If you must construct content in bash, **never** embed Markdown backticks (`` ` ``) in an unquoted string or unquoted heredoc. Backticks trigger command substitution.
+  - Safe options:
+
+```bash
+# 1) Quoted heredoc (no expansion)
+cat <<'EOF' | bin/discord-post
+**Title**
+- Log: `/path/to/log`
+EOF
+
+# 2) Build JSON with jq (no shell backtick expansion)
+payload=$(jq -n --arg c "- Log: `/path/to/log`" '{content:$c}')
+curl -X POST -H 'Content-Type: application/json' -d "$payload" "$DISCORD_WEBHOOK_URL"
+```
+
+If this step fails, fix webhook/config first; do not proceed to log parsing or formatting changes.
+
+
 - [ ] Set DISCORD_WEBHOOK_URL
 - [ ] Run `echo "test" | bin/discord-post --dry-run`
 - [ ] Run `echo "test" | bin/discord-post` (check Discord)

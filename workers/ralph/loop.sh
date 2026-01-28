@@ -1060,90 +1060,183 @@ generate_iteration_summary() {
   local iter_num="$1"
   local mode="$2"
   local logfile="$3"
-  local timestamp run_id
 
-  timestamp="$(date '+%Y-%m-%d %H:%M:%S')"
+  local timestamp run_id
+  timestamp="$(date '+%Y-%m-%d %H:%M')"
   run_id="${ROLLFLOW_RUN_ID:-unknown}"
 
-  # Helper: strip ANSI/CSI sequences (colors AND cursor movement like ESC[2K ESC[1A)
-  # - CSI: ESC [ ... <final byte>
-  # - OSC: ESC ] ... BEL or ST
+  # Context (best-effort)
+  local branch runner model
+  branch="${TARGET_BRANCH:-$(git -C "$ROOT" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown") }"
+  runner="${RUNNER:-unknown}"
+  model="${MODEL_DISPLAY:-${RESOLVED_MODEL:-${MODEL_ARG:-auto}}}"
+
   strip_ansi_csi() {
     sed -E $'s/\x1B\[[0-?]*[ -/]*[@-~]//g; s/\x1B\][^\x07]*(\x07|\x1B\\\\)//g'
   }
 
-  # Check if logfile exists
   if [[ ! -f "$logfile" ]]; then
     cat <<EOF
-**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}
+**Ralph — Iteration ${iter_num} (${mode^^})** • ${timestamp}
 
-No log file found.
-
-Run ID: ${run_id}
-Log: ${logfile}
+**Run**
+- Run ID: `${run_id}`
+- Log: `${logfile}`
 EOF
     return
   fi
 
-  # 1) Find the LAST occurrence of :::PLAN_READY::: or :::BUILD_READY:::
   local marker_line
   marker_line=$(grep -n ":::\(PLAN\|BUILD\)_READY:::" "$logfile" 2>/dev/null | tail -1 | cut -d: -f1 || echo "")
 
   if [[ -z "$marker_line" ]]; then
     cat <<EOF
-**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}
+**Ralph — Iteration ${iter_num} (${mode^^})** • ${timestamp}
 
-No marker found (:::PLAN_READY::: or :::BUILD_READY:::)
-
-Run ID: ${run_id}
-Log: ${logfile}
+**Run**
+- Run ID: `${run_id}`
+- Log: `${logfile}`
 EOF
     return
   fi
 
-  # 2) Find the nearest preceding "─── Response" separator BEFORE marker_line.
-  #    We strip ANSI/CSI FIRST for searching so it matches even when "Response" is colorized.
-  local search_prefix response_line
+  local search_prefix response_line start_line
   search_prefix=$(sed -n "1,${marker_line}p" "$logfile" | strip_ansi_csi)
   response_line=$(echo "$search_prefix" | grep -n "─── Response" | tail -1 | cut -d: -f1 || echo "")
 
-  local start_line
   if [[ -n "$response_line" ]]; then
-    # Extract AFTER the response separator line
     start_line=$((response_line + 1))
   else
-    # Fallback: extract from beginning (still between start and marker)
     start_line=1
   fi
 
-  # 3) Extract everything between Response separator and marker (marker excluded)
-  local summary_block
-  summary_block=$(sed -n "${start_line},$((marker_line - 1))p" "$logfile" | strip_ansi_csi)
+  local raw_block
+  raw_block=$(sed -n "${start_line},$((marker_line - 1))p" "$logfile" | strip_ansi_csi)
 
-  # Trim leading/trailing empty lines
-  summary_block=$(echo "$summary_block" | sed '/^[[:space:]]*$/d')
+  local awk_program
+  awk_program=$(cat <<'AWK'
+function flush_section() {
+  if (sec == "") return
+  out[sec] = buf
+  buf = ""
+}
 
-  # 4) Build message and truncate if needed (Discord 2000 char limit; leave room for footer)
-  local header message
-  header="**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}"
-  message="${header}
+function add_line(s) {
+  if (s ~ /^[[:space:]]*$/) return
+  sub(/\r$/, "", s)
 
-${summary_block}"
+  # Convert bullet glyphs to dash bullets
+  if (s ~ /^[[:space:]]*[•●]/) {
+    sub(/^[[:space:]]*[•●][[:space:]]*/, "- ", s)
+  }
 
-  if [[ ${#message} -gt 1800 ]]; then
-    message="${message:0:1750}
+  # If this is an indented continuation and last line was a bullet, indent it
+  if (s ~ /^[[:space:]]+/ && last_was_bullet) {
+    s = "  " s
+  }
 
-*(truncated — see full log for details)*"
+  last_was_bullet = (s ~ /^- /)
+  buf = buf s "\n"
+}
+
+BEGIN {
+  sec = "Preamble"
+  buf = ""
+  last_was_bullet = 0
+}
+
+/^PROGRESS[[:space:]]*\|/ {
+  if (match($0, /file=([^[:space:]]+)/, m)) file = m[1]
+  next
+}
+
+/^STATUS[[:space:]]*\|/ { next }
+
+/^Summary[[:space:]]*$/       { flush_section(); sec = "Summary"; next }
+/^Changes Made[[:space:]]*$/  { flush_section(); sec = "Changes Made"; next }
+/^Next Steps[[:space:]]*$/    { flush_section(); sec = "Next Steps"; next }
+/^Completed[[:space:]]*$/     { flush_section(); sec = "Completed"; next }
+
+{ add_line($0) }
+
+END {
+  flush_section()
+
+  if (file != "") print "__FILE__=" file
+
+  if (out["Summary"] == "" && out["Preamble"] != "") out["Summary"] = out["Preamble"]
+
+  # If Summary has no dash bullets, bulletize each line
+  if (out["Summary"] != "" && out["Summary"] !~ /^- /) {
+    n = split(out["Summary"], a, "\n")
+    tmp = ""
+    for (i=1; i<=n; i++) {
+      if (a[i] ~ /^[[:space:]]*$/) continue
+      tmp = tmp "- " a[i] "\n"
+    }
+    out["Summary"] = tmp
+  }
+
+  print "__SECTION__Summary";       printf "%s", out["Summary"]
+  print "__SECTION__Changes Made";  printf "%s", out["Changes Made"]
+  print "__SECTION__Next Steps";    printf "%s", out["Next Steps"]
+}
+AWK
+)
+
+  local parsed
+  parsed=$(echo "$raw_block" | awk "$awk_program")
+
+  local context_file=""
+  if echo "$parsed" | head -1 | grep -q '^__FILE__='; then
+    context_file=$(echo "$parsed" | head -1 | sed 's/^__FILE__=//')
+    parsed=$(echo "$parsed" | tail -n +2)
   fi
 
-  cat <<EOF
-${message}
+  local summary_section changes_section next_steps_section
+  summary_section=$(echo "$parsed" | awk '/^__SECTION__Summary$/{p=1;next} /^__SECTION__Changes Made$/{p=0} p{print}')
+  changes_section=$(echo "$parsed" | awk '/^__SECTION__Changes Made$/{p=1;next} /^__SECTION__Next Steps$/{p=0} p{print}')
+  next_steps_section=$(echo "$parsed" | awk '/^__SECTION__Next Steps$/{p=1;next} p{print}')
 
----
-**Run ID:** ${run_id}
-**Log:** ${logfile}
-EOF
+  summary_section=$(echo "$summary_section" | sed '/^[[:space:]]*$/d')
+  changes_section=$(echo "$changes_section" | sed '/^[[:space:]]*$/d')
+  next_steps_section=$(echo "$next_steps_section" | sed '/^[[:space:]]*$/d')
+
+  echo "**Ralph — Iteration ${iter_num} (${mode^^})** • ${timestamp}"
+  echo ""
+  echo "**Context**"
+  echo "- Branch: \`${branch}\`"
+  echo "- Runner: \`${runner}\`"
+  echo "- Model: \`${model}\`"
+  if [[ -n "$context_file" ]]; then
+    echo "- File: \`${context_file}\`"
+  fi
+  echo ""
+
+  if [[ -n "$summary_section" ]]; then
+    echo "**Summary**"
+    echo "$summary_section"
+    echo ""
+  fi
+
+  if [[ -n "$changes_section" ]]; then
+    echo "**Changes Made**"
+    echo "$changes_section"
+    echo ""
+  fi
+
+  if [[ -n "$next_steps_section" ]]; then
+    echo "**Next Steps**"
+    echo "$next_steps_section"
+    echo ""
+  fi
+
+  echo "**Run**"
+  echo "- Run ID: \`${run_id}\`"
+  echo "- Log: \`${logfile}\`"
 }
+
+
 
 # Emit structured TOOL_START marker
 # Args: $1 = tool_id, $2 = tool_name, $3 = cache_key, $4 = git_sha

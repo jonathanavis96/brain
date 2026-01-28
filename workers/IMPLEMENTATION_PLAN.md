@@ -20,23 +20,44 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
-## Phase 0-Lint: Markdown Lint Fixes
+## Phase 0-Warn: Markdown Lint Errors
 
-**Context:** Automated markdown linting detected MD004 (unordered list style) errors in `cortex/docs/MindMerge_MindMerge-PR.md` that could not be auto-fixed.
+**Context:** Automated markdown fixes resolved most issues, but the following errors require manual intervention (not auto-fixable).
 
-**Goal:** Fix all remaining markdown lint errors to achieve clean `markdownlint` runs across the repository.
+**Goal:** Resolve remaining markdown lint errors to maintain documentation quality.
 
 **Success Criteria:**
 
-- `markdownlint cortex/docs/MindMerge_MindMerge-PR.md` passes with no MD004 errors
-- All unordered lists use consistent dash (`-`) style instead of asterisk (`*`)
+- All listed markdown files pass `markdownlint` without errors
+- Changes preserve document readability and structure
 
 ---
 
-### Task 0-Lint.1: Fix MD004 errors in MindMerge_MindMerge-PR.md
+### Task 0-Warn.1: Fix duplicate heading in cortex/PLAN_DONE.md
 
-- [x] **0-Lint.1.1** Fix MD004/ul-style errors in cortex/docs/MindMerge_MindMerge-PR.md
-  - **AC:** `markdownlint cortex/docs/MindMerge_MindMerge-PR.md` passes (no MD004 errors)
+- [x] **0-Warn.MD024.cortex-PLAN_DONE** Fix MD024 in cortex/PLAN_DONE.md (line 441)
+  - **Issue:** Multiple headings with the same content "Archived on 2026-01-28"
+  - **Fix:** Make duplicate headings unique by adding context or merging sections
+  - **AC:** `markdownlint cortex/PLAN_DONE.md` passes (no MD024 errors)
+
+---
+
+### Task 0-Warn.2: Fix multiple blank lines in workers/PLAN_DONE.md
+
+- [x] **0-Warn.MD012.workers-PLAN_DONE.742** Fix MD012 in workers/PLAN_DONE.md (line 742)
+  - **Issue:** Multiple consecutive blank lines (Expected: 2; Actual: 3)
+  - **Fix:** Reduce to maximum 2 consecutive blank lines
+  - **AC:** `markdownlint workers/PLAN_DONE.md` passes (no MD012 errors at line 742)
+
+- [x] **0-Warn.MD012.workers-PLAN_DONE.749** Fix MD012 in workers/PLAN_DONE.md (line 749)
+  - **Issue:** Multiple consecutive blank lines (Expected: 2; Actual: 3)
+  - **Fix:** Reduce to maximum 2 consecutive blank lines
+  - **AC:** `markdownlint workers/PLAN_DONE.md` passes (no MD012 errors at line 749)
+
+- [x] **0-Warn.MD012.workers-PLAN_DONE.750** Fix MD012 in workers/PLAN_DONE.md (line 750)
+  - **Issue:** Multiple consecutive blank lines (Expected: 2; Actual: 4)
+  - **Fix:** Reduce to maximum 2 consecutive blank lines
+  - **AC:** `markdownlint workers/PLAN_DONE.md` passes (no MD012 errors at line 750)
 
 ---
 
@@ -58,23 +79,18 @@
 
 ### Task 36.1: Label rendering correctness (always-visible + hover upgrade)
 
-- [x] **36.1.2** Remove hover/zoom label duplication by matching default placement and ensuring hover "upgrades" the same label
-  - **Goal:** Hover should visually upgrade the existing label (pill) rather than showing a second label in a different place.
-  - **AC:** When zoomed-in labels are visible, hovering a node results in exactly one label being readable (the pill version), with no second label visible/offset.
-  - **If Blocked:** Consider temporarily suppressing base label rendering for the hovered node (e.g., during `enterNode`, set node `label` to empty and restore on `leaveNode`) and document tradeoffs.
-
-- [ ] **36.1.3** Ensure label colors are correct in dark mode for both base and hover labels
+- [x] **36.1.3** Ensure label colors are correct in dark mode for both base and hover labels
   - **Goal:** Base labels render white in dark mode; hover pill renders black text on white pill.
   - **AC:** Dark mode: base labels are white; hover labels are black-on-white; light mode remains readable.
-  - **If Blocked:** Add a small “label rendering debug” toggle to log active Sigma settings (labelColor, defaultDrawNodeHover) while diagnosing.
+  - **If Blocked:** Add a small "label rendering debug" toggle to log active Sigma settings (labelColor, defaultDrawNodeHover) while diagnosing.
 
 ---
 
 ### Task 36.2: Node dragging stability (stop magnet repulsion)
 
-- [ ] **36.2.0** Fix Locked/Auto toggle UI labeling (currently inverted)
+- [x] **36.2.0** Fix Locked/Auto toggle UI labeling (currently inverted)
   - **Goal:** Ensure the toggle label/state matches the actual behavior (Locked means manual/no simulation; Auto means layout running).
-  - **AC:** When the UI shows “Locked”, nodes do not shift due to physics; when the UI shows “Auto”, layout/physics can run (when not dragging).
+  - **AC:** When the UI shows "Locked", nodes do not shift due to physics; when the UI shows "Auto", layout/physics can run (when not dragging).
   - **If Blocked:** Add a temporary debug label showing the underlying boolean (e.g., `layoutLocked=true/false`) to confirm state-to-label mapping.
 
 - [ ] **36.2.1** Stop layout/physics updates while dragging a node
@@ -253,18 +269,6 @@
   - **Goal:** Improve navigation without duplicating content.
   - **AC:** Major docs (`docs/TOOLS.md`, `docs/BOOTSTRAPPING.md`, `skills/SUMMARY.md`, `NEURONS.md`, `cortex/docs/RUNBOOK.md`) include a small “See also” list to related canonical docs.
   - **If Blocked:** Add “See also” only to `docs/TOOLS.md` and `docs/BOOTSTRAPPING.md` first.
-
----
-
-## Phase 0-Quick: Quick Wins
-
-### Task 0.1: Markdown Lint Fixes
-
-- [ ] **0.1.1** Fix MD004 in cortex/docs/MindMerge_MindMerge-PR.md
-  - **AC:** `markdownlint cortex/docs/MindMerge_MindMerge-PR.md` passes (no MD004 errors)
-  - **Fix:** Replace all asterisk (`*`) list markers with dash (`-`) markers throughout the file
-  - **Scope:** 40 lines need conversion (lines 11, 15, 19-21, 25-27, 37-41, 45-47, 62-67, 69-79, 87-95)
-  - **Estimated Time:** [S] 2-3 minutes
 
 ---
 
