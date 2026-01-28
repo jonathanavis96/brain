@@ -45,7 +45,7 @@ cp workers/ralph/verifier.sh workers/cerebras/verifier.sh
 - Change `RALPH=` to `CEREBRAS=`
 - Update AC_RULES path if different
 - Update .verify/ directory references
-- Update THUNK.md path references
+- Update workers/ralph/THUNK.md path references
 
 **Files to modify:** workers/cerebras/verifier.sh
 
@@ -154,7 +154,7 @@ cp workers/ralph/current_ralph_tasks.sh workers/cerebras/current_cerebras_tasks.
 **Path Adaptations:**
 
 - Change `RALPH_DIR` to `CEREBRAS_DIR`
-- Update `IMPLEMENTATION_PLAN.md` path
+- Update `workers/IMPLEMENTATION_PLAN.md` path
 - Update script title/headers
 
 **Test:**
@@ -179,7 +179,7 @@ cp workers/ralph/thunk_ralph_tasks.sh workers/cerebras/thunk_cerebras_tasks.sh
 **Path Adaptations:**
 
 - Change `RALPH_DIR` to `CEREBRAS_DIR`
-- Update `THUNK.md` path
+- Update `workers/ralph/THUNK.md` path
 - Update script title/headers
 
 **Test:**
@@ -193,7 +193,7 @@ bash thunk_cerebras_tasks.sh
 
 #### 8. Copy cleanup_plan.sh
 
-**Why:** Archive completed tasks from IMPLEMENTATION_PLAN.md
+**Why:** Archive completed tasks from workers/IMPLEMENTATION_PLAN.md
 
 **Actions:**
 
@@ -203,7 +203,7 @@ cp workers/ralph/cleanup_plan.sh workers/cerebras/cleanup_plan.sh
 
 **Path Adaptations:**
 
-- Update IMPLEMENTATION_PLAN.md path
+- Update workers/IMPLEMENTATION_PLAN.md path
 - Update archive directory path
 
 **Test:**
@@ -447,7 +447,7 @@ cp workers/ralph/sync_cortex_plan.sh workers/cerebras/sync_cortex_plan.sh
 
 **Path Adaptations:**
 
-- Update source IMPLEMENTATION_PLAN.md path
+- Update source workers/IMPLEMENTATION_PLAN.md path
 - Update cortex destination path
 - Update script name references
 
@@ -463,7 +463,7 @@ cp workers/ralph/sync_completions_to_cortex.sh workers/cerebras/sync_completions
 
 **Path Adaptations:**
 
-- Update THUNK.md path
+- Update workers/ralph/THUNK.md path
 - Update cortex paths
 - Update worker name references
 
@@ -507,7 +507,7 @@ bash loop.sh             # Run one iteration
 - Loop completes without errors
 - Verifier runs and reports status
 - Files are committed properly
-- THUNK.md updated correctly
+- workers/ralph/THUNK.md updated correctly
 
 ---
 
@@ -535,7 +535,7 @@ bash loop.sh             # Run one iteration
 
 **Test Plan:**
 
-- Add test task to IMPLEMENTATION_PLAN.md
+- Add test task to workers/IMPLEMENTATION_PLAN.md
 - Monitor with current_cerebras_tasks.sh
 - Complete task
 - Check with thunk_cerebras_tasks.sh

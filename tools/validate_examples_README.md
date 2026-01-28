@@ -64,7 +64,7 @@ It **excludes**:
 
 - Templates (`templates/*`)
 - Root docs (`README.md`, `CONTRIBUTING.md`)
-- Generated files (`THUNK.md`, `IMPLEMENTATION_PLAN.md`)
+- Generated files (`workers/ralph/THUNK.md`, `workers/IMPLEMENTATION_PLAN.md`)
 
 ## Dependencies
 

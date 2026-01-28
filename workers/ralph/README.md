@@ -10,6 +10,8 @@ The **brain** repository is the shared consciousness for all projects - a centra
 
 ## Quick Start
 
+> **📖 For operational guidance (troubleshooting, verifier, waivers):** See [cortex/docs/RUNBOOK.md](../../cortex/docs/RUNBOOK.md)
+
 ### Bootstrap a New Project
 
 ```bash
@@ -36,7 +38,7 @@ bash ralph/loop.sh --iterations 10
 - Complete Ralph infrastructure (`ralph/loop.sh`, `ralph/PROMPT.md`, etc.)
 - Custom `THOUGHTS.md` (generated from your project idea)
 - Custom `NEURONS.md` (codebase map inferred from tech stack)
-- Custom `IMPLEMENTATION_PLAN.md` (prioritized first tasks)
+- Custom `workers/IMPLEMENTATION_PLAN.md` (prioritized first tasks)
 - `AGENTS.md` with brain knowledge base references
 
 **Bootstrap time:** ~14 seconds
@@ -49,7 +51,7 @@ brain/
 ├── AGENTS.md                      # How to run Ralph
 ├── NEURONS.md                     # Brain repository map
 ├── THOUGHTS.md                    # Vision & Ralph's mission
-├── IMPLEMENTATION_PLAN.md         # Current tasks for brain maintenance
+├── workers/IMPLEMENTATION_PLAN.md         # Current tasks for brain maintenance
 │
 ├── skills/                        # Skills & Knowledge Base (33 files)
 │   ├── SUMMARY.md                 # KB index
@@ -136,7 +138,7 @@ bash watch_ralph_tasks.sh
 
 ### Task Monitor (Interactive)
 
-Real-time display of `IMPLEMENTATION_PLAN.md` with hotkeys:
+Real-time display of `workers/IMPLEMENTATION_PLAN.md` with hotkeys:
 
 ```bash
 bash watch_ralph_tasks.sh
@@ -354,8 +356,8 @@ Brain can improve itself:
 ```bash
 cd /path/to/brain/ralph/
 
-# Add tasks to IMPLEMENTATION_PLAN.md
-echo "- [ ] **My improvement task**" >> IMPLEMENTATION_PLAN.md
+# Add tasks to workers/IMPLEMENTATION_PLAN.md
+echo "- [ ] **My improvement task**" >> workers/IMPLEMENTATION_PLAN.md
 
 # Run Ralph
 bash loop.sh --iterations 5
@@ -367,7 +369,7 @@ bash watch_ralph_tasks.sh
 **Ralph's Design Philosophy:**
 
 - **PROMPT.md** - Single prompt with conditional logic (plan + build modes)
-- **IMPLEMENTATION_PLAN.md** - The persistent TODO list (actionable tasks only)
+- **workers/IMPLEMENTATION_PLAN.md** - The persistent TODO list (actionable tasks only)
 - **VALIDATION_CRITERIA.md** - Quality gates and acceptance criteria (reference document)
 - **NEURONS.md** - Codebase map (read via subagent when needed, not first-load)
 - **One Iteration = One Unit** - Implement + validate + update plan + STOP
@@ -481,7 +483,7 @@ The brain repository is successful when:
 - ✅ Interactive task monitor with hotkeys
 - ✅ Templates use bash paths consistently
 - ✅ Ralph loop maintains brain repository
-- 📝 10 tasks in IMPLEMENTATION_PLAN.md for continuous improvement
+- 📝 10 tasks in workers/IMPLEMENTATION_PLAN.md for continuous improvement
 
 ---
 

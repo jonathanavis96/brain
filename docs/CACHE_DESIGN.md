@@ -421,4 +421,4 @@ bash loop.sh --cache-mode use --cache-scope verify,read --iterations 5
 - **[loop.sh](../workers/ralph/loop.sh)** - Cache implementation
 - **[common.sh](../workers/shared/common.sh)** - Cache functions (lookup_cache_pass, log_cache_hit)
 - **[config.yml](../artifacts/rollflow_cache/config.yml)** - Cache configuration
-- **[workers/IMPLEMENTATION_PLAN.md](../workers/IMPLEMENTATION_PLAN.md)** - Phase 1 implementation plan
+- **[workers/workers/IMPLEMENTATION_PLAN.md](../workers/IMPLEMENTATION_PLAN.md)** - Phase 1 implementation plan

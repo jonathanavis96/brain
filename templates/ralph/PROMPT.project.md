@@ -12,7 +12,7 @@ This is a template file. The actual Ralph loop mechanics are defined in the main
 |------|---------|
 | THOUGHTS.md | Project goals, success criteria, tech stack - **READ FIRST** |
 | NEURONS.md | Codebase map (read via subagent when needed) |
-| IMPLEMENTATION_PLAN.md | TODO list (persistent across iterations) |
+| workers/IMPLEMENTATION_PLAN.md | TODO list (persistent across iterations) |
 | AGENTS.md | Validation commands, project conventions |
 
 ## Project Knowledge Base
@@ -71,14 +71,14 @@ When you encounter multiple instances of the same issue type (e.g., SC2155, SC20
 
 - `pwd`, `git branch` - known from header
 - Verifier status - already injected in header (NEVER read the file)
-- `tail THUNK.md` - get next number ONCE
+- `tail workers/ralph/THUNK.md` - get next number ONCE
 - Same file content - read ONCE, remember it
 
 **ALWAYS batch:** `grep pattern file1 file2 file3` not 3 separate calls.
 
 ### Task ID Uniqueness
 
-**CRITICAL:** Before creating any task ID, search IMPLEMENTATION_PLAN.md to verify it doesn't exist.
+**CRITICAL:** Before creating any task ID, search workers/IMPLEMENTATION_PLAN.md to verify it doesn't exist.
 
 - Use format: `<phase>.<sequence>` (e.g., `9.1`, `9.2`)
 - If `9.1` exists, use `9.2`, not `9.1` again

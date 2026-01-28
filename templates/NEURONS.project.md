@@ -13,7 +13,7 @@ This is the **project map** that Ralph and all agents read on-demand when needed
 1. `AGENTS.md` (injected first by loop.sh - operational guide)
 2. `PROMPT.md` (injected second - contains conditional logic for plan/build modes)
 3. `NEURONS.md` (this file - read via subagent when needed, NOT injected)
-4. `IMPLEMENTATION_PLAN.md` (TODO list - read in BUILD mode via subagent)
+4. `workers/IMPLEMENTATION_PLAN.md` (TODO list - read in BUILD mode via subagent)
 5. `THOUGHTS.md` (project goals - read as needed via subagent)
 6. Project-specific files as needed
 
@@ -35,7 +35,7 @@ This is the **project map** that Ralph and all agents read on-demand when needed
 │   ├── loop.sh                  # Ralph loop runner (bash)
 │   ├── verifier.sh              # AC verifier script
 │   ├── PROMPT.md                # Unified prompt (plan + build modes)
-│   ├── IMPLEMENTATION_PLAN.md   # Persistent TODO list
+│   ├── workers/IMPLEMENTATION_PLAN.md   # Persistent TODO list
 │   ├── VALIDATION_CRITERIA.md   # Quality gates and acceptance criteria
 │   ├── rovodev-config.yml       # RovoDev configuration
 │   ├── rules/                   # Acceptance criteria rules
@@ -68,7 +68,7 @@ This is the **project map** that Ralph and all agents read on-demand when needed
 |------|------------|
 | **Understand project structure** | `NEURONS.md` (this file) |
 | **Run Ralph loop** | `AGENTS.md` → `bash ralph/loop.sh` |
-| **Find TODO list** | `ralph/IMPLEMENTATION_PLAN.md` |
+| **Find TODO list** | `ralph/workers/IMPLEMENTATION_PLAN.md` |
 | **Check project goals** | `THOUGHTS.md` |
 | **[Common task 1]** | `[location/file.ext]` |
 | **[Common task 2]** | `[location/file.ext]` |
@@ -148,7 +148,7 @@ This is the **project map** that Ralph and all agents read on-demand when needed
 **Prompts:**
 
 - `PROMPT.md` - Unified prompt with conditional logic (plan mode: gap analysis, NO code changes, updates TODO list; build mode: implement top task, validate, commit)
-- `IMPLEMENTATION_PLAN.md` - Persistent TODO list (updated by planning mode, read by building mode)
+- `workers/IMPLEMENTATION_PLAN.md` - Persistent TODO list (updated by planning mode, read by building mode)
 - `VALIDATION_CRITERIA.md` - Quality gates and acceptance criteria
 
 **Stop Sentinel:**
@@ -157,7 +157,7 @@ This is the **project map** that Ralph and all agents read on-demand when needed
 :::COMPLETE:::
 ```text
 
-Only output when ALL tasks in IMPLEMENTATION_PLAN.md are 100% complete.
+Only output when ALL tasks in workers/IMPLEMENTATION_PLAN.md are 100% complete.
 
 ---
 
@@ -240,7 +240,7 @@ ls -la [src/] [tests/] [config/]
 bash -n [script.sh]
 
 # Check critical files exist
-ls -lh AGENTS.md NEURONS.md THOUGHTS.md ralph/PROMPT.md ralph/IMPLEMENTATION_PLAN.md
+ls -lh AGENTS.md NEURONS.md THOUGHTS.md ralph/PROMPT.md ralph/workers/IMPLEMENTATION_PLAN.md
 ```text
 
 ---

@@ -20,8 +20,8 @@ Ralph is the automated self-improvement loop for brain repositories and projects
 | File | Purpose | When Updated |
 |------|---------|--------------|
 | `PROMPT.md` | Instructions for each iteration | Rarely (core behavior) |
-| `IMPLEMENTATION_PLAN.md` | Task list with priorities | Every BUILD (mark progress) |
-| `THUNK.md` | Completed work log | On task completion |
+| `workers/IMPLEMENTATION_PLAN.md` | Task list with priorities | Every BUILD (mark progress) |
+| `workers/ralph/THUNK.md` | Completed work log | On task completion |
 | `THOUGHTS.md` | Goals, context, decisions | On major decisions |
 | `NEURONS.md` | Codebase map | When structure changes |
 | `AGENTS.md` | Operational commands | When features change |
@@ -78,7 +78,7 @@ RovoDev Agent (executes prompt instructions)
     ↓
 Spawns subagents as instructed by prompt
     ↓
-Updates IMPLEMENTATION_PLAN.md + THUNK.md
+Updates workers/IMPLEMENTATION_PLAN.md + workers/ralph/THUNK.md
     ↓
 Monitors detect changes and update displays
 ```text
@@ -143,7 +143,7 @@ Ralph includes two real-time monitoring scripts that demonstrate advanced bash p
 
 ### Current Ralph Tasks Monitor (`current_ralph_tasks.sh`)
 
-**Purpose**: Display pending tasks from IMPLEMENTATION_PLAN.md in real-time
+**Purpose**: Display pending tasks from workers/IMPLEMENTATION_PLAN.md in real-time
 
 **Key Features**:
 
@@ -221,12 +221,12 @@ fi
 
 ### THUNK Monitor (`thunk_ralph_tasks.sh`)
 
-**Purpose**: Display completed tasks appended to THUNK.md in real-time
+**Purpose**: Display completed tasks appended to workers/ralph/THUNK.md in real-time
 
 **Key Features**:
 
-- Watches THUNK.md for Ralph-appended completions
-- Safety net: Auto-syncs from IMPLEMENTATION_PLAN.md if Ralph forgets
+- Watches workers/ralph/THUNK.md for Ralph-appended completions
+- Safety net: Auto-syncs from workers/IMPLEMENTATION_PLAN.md if Ralph forgets
 - Append-only display optimization (tail parsing)
 - Interactive hotkeys: `r` (refresh), `f` (force sync), `e` (new era), `q` (quit)
 - Sequential THUNK numbering across project lifecycle
@@ -294,18 +294,18 @@ parse_new_thunk_entries() {
 **Auto-Sync Pattern** (Safety Net):
 
 ```bash
-# Scan IMPLEMENTATION_PLAN.md for new [x] tasks
+# Scan workers/IMPLEMENTATION_PLAN.md for new [x] tasks
 scan_for_new_completions() {
     while IFS= read -r line; do
         if [[ "$line" =~ ^[[:space:]]*-[[:space:]]\[x\][[:space:]]*(.*)$ ]]; then
             local task_desc="${BASH_REMATCH[1]}"
             
-            # Check if already in THUNK.md
+            # Check if already in workers/ralph/THUNK.md
             if task_exists_in_thunk "$task_desc"; then
                 continue
             fi
             
-            # Append to THUNK.md
+            # Append to workers/ralph/THUNK.md
             append_to_thunk_table "$task_desc"
         fi
     done < "$PLAN_FILE"

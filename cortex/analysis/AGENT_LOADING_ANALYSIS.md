@@ -185,7 +185,7 @@ project/
 
 ## Quick Tips
 - You are the strategic manager (plan, don't code)
-- Write tasks in cortex/IMPLEMENTATION_PLAN.md
+- Write tasks in workers/workers/IMPLEMENTATION_PLAN.md
 - Ralph syncs from your plan automatically
 - Use snapshot.sh, not interactive scripts
 

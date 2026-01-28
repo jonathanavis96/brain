@@ -17,7 +17,7 @@ A complete plan for Discord webhook integration that posts real-time Ralph itera
 
 ### 2. Task Contracts (Phase 34)
 
-- **Location:** `workers/IMPLEMENTATION_PLAN.md` (lines 23-263)
+- **Location:** `workers/workers/IMPLEMENTATION_PLAN.md` (lines 23-263)
 - **Tasks:** 13 atomic tasks across 4 sub-phases
 - **Duration:** ~90-120 min total
 
@@ -101,7 +101,7 @@ Completed:
 
  • ✅ Backend validation enforces enums with 400 errors
  • ✅ Frontend UI only allows valid enum values via dropdowns
- • ✅ Task logged to THUNK.md (#48)
+ • ✅ Task logged to workers/ralph/THUNK.md (#48)
 ```
 
 **Extraction Logic:**
@@ -192,7 +192,7 @@ Completed:
 
 **For Human:**
 
-1. Review task contracts in `workers/IMPLEMENTATION_PLAN.md`
+1. Review task contracts in `workers/workers/IMPLEMENTATION_PLAN.md`
 2. Create Discord webhook in your server
 3. Set `DISCORD_WEBHOOK_URL` env var
 4. Run Ralph loop to execute tasks
@@ -200,8 +200,8 @@ Completed:
 
 ## Files Modified
 
-- `workers/IMPLEMENTATION_PLAN.md` - Added Phase 34 tasks
-- `cortex/IMPLEMENTATION_PLAN.md` - Synced copy
+- `workers/workers/IMPLEMENTATION_PLAN.md` - Added Phase 34 tasks
+- `workers/workers/IMPLEMENTATION_PLAN.md` - Synced copy
 - `cortex/docs/DISCORD_INTEGRATION_SPEC.md` - Design spec (new)
 - `cortex/docs/DISCORD_INTEGRATION_SUMMARY.md` - This file (new)
 

@@ -133,7 +133,7 @@ project-root/               ← Application code and config files
     └── ralph/                  # ALL Ralph-related files
         ├── RALPH.md            # This file - Ralph contract
         ├── PROMPT.md           # Unified prompt (mode detection)
-        ├── IMPLEMENTATION_PLAN.md  # Task tracking
+        ├── workers/IMPLEMENTATION_PLAN.md  # Task tracking
         ├── VALIDATION_CRITERIA.md  # Quality gates
         ├── AGENTS.md           # Agent guidance for this project
         ├── THOUGHTS.md         # Project vision, goals, success criteria
@@ -151,7 +151,7 @@ project-root/               ← Application code and config files
 - Source code → `src/` (project root)
 - Config files → project root (`package.json`, `tsconfig.json`, etc.)
 - Entry points → project root (`index.html`, `main.py`, etc.)
-- Ralph files → Ralph directory (PROMPT.md, IMPLEMENTATION_PLAN.md, AGENTS.md, THOUGHTS.md, NEURONS.md, skills/, logs/, etc.)
+- Ralph files → Ralph directory (PROMPT.md, workers/IMPLEMENTATION_PLAN.md, AGENTS.md, THOUGHTS.md, NEURONS.md, skills/, logs/, etc.)
 
 **NEVER put application code inside the Ralph directory.**
 

@@ -140,7 +140,7 @@ Code block missing language tag
 | Anti-Cheat | AntiCheat.1-5 | Dismissive language | "by design", "works as intended" |
 | Code Hygiene | Hygiene.Shellcheck.1-4 | Dead code | Unused variables (SC2034), local var masking (SC2155) |
 | Terminology | Hygiene.TermSync.1-3 | Outdated terms | References to "kb/" instead of "skills/" |
-| Markdown | Hygiene.Markdown.1 | Structure issues | Duplicate H2 headings in IMPLEMENTATION_PLAN.md |
+| Markdown | Hygiene.Markdown.1 | Structure issues | Duplicate H2 headings in workers/IMPLEMENTATION_PLAN.md |
 | Linting | Lint.Shellcheck.* | Tool integration | Shellcheck issues in core scripts |
 | Linting | Lint.Markdownlint.* | Tool integration | Markdownlint issues in key docs |
 | Waiver | Waiver.* | Governance | Unapproved waiver requests in use |
@@ -236,7 +236,7 @@ SUMMARY
 - Updating `.verify/*.sha256` hash files
 - Approving waiver requests via OTP
 - Merging pull requests
-- Creating new phases in IMPLEMENTATION_PLAN.md
+- Creating new phases in workers/IMPLEMENTATION_PLAN.md
 
 ## Prevention System Effectiveness
 
@@ -336,7 +336,7 @@ pre-commit run --all-files
 
 3. If `[FAIL]` present: Ralph must fix before new tasks
 
-4. If `[WARN]` present: Ralph adds to "Phase 0-Warn" section in IMPLEMENTATION_PLAN.md
+4. If `[WARN]` present: Ralph adds to "Phase 0-Warn" section in workers/IMPLEMENTATION_PLAN.md
 
 5. Ralph fixes one warning/task per iteration
 

@@ -190,7 +190,7 @@ Steps:
 3. **Human regenerates** hash baselines (hash-only):
    - `sha256sum workers/ralph/loop.sh | cut -d' ' -f1 > workers/ralph/.verify/loop.sha256`
    - `sha256sum workers/ralph/loop.sh | cut -d' ' -f1 > .verify/loop.sha256`
-4. **Human marks** task 24.4.3 as `[x]` complete in `workers/IMPLEMENTATION_PLAN.md`
+4. **Human marks** task 24.4.3 as `[x]` complete in `workers/workers/IMPLEMENTATION_PLAN.md`
 5. **Ralph continues** with next task in BUILD mode
 
 ## Alternative Approaches Considered
@@ -209,7 +209,7 @@ Steps:
 
 ## References
 
-- Task definition: `workers/IMPLEMENTATION_PLAN.md` line 104
+- Task definition: `workers/workers/IMPLEMENTATION_PLAN.md` line 104
 - Guard function: `workers/shared/common.sh::guard_plan_only_mode()`
 - Protected files list: `AGENTS.md` → Safety Rules
 - Hash guard: `.verify/loop.sha256`
@@ -285,6 +285,6 @@ Selected approach integrates with existing AC.rules infrastructure.
 
 ## References
 
-- Task definition: `workers/IMPLEMENTATION_PLAN.md` line 49-57
+- Task definition: `workers/workers/IMPLEMENTATION_PLAN.md` line 49-57
 - Verifier structure: `workers/ralph/verifier.sh`
 - Brain Map tests: `app/brain-map/backend/tests/` (94 tests)

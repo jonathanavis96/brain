@@ -2,7 +2,7 @@
 
 ## Overview
 
-Gap Radar automatically detects missing skills by analyzing errors and failures across Ralph runs. It extracts error codes from verifier output and Ralph logs, matches them against existing skills coverage, and suggests new entries for `GAP_BACKLOG.md`.
+Gap Radar automatically detects missing skills by analyzing errors and failures across Ralph runs. It extracts error codes from verifier output and Ralph logs, matches them against existing skills coverage, and suggests new entries for `skills/self-improvement/GAP_BACKLOG.md`.
 
 ## Purpose
 
@@ -177,7 +177,7 @@ Output format (dry-run):
 **Suggested Action:** Create/update skill in `domains/languages/shell/` to document SC2320 patterns and fixes
 ```
 
-**De-duplication:** Automatically checks `GAP_BACKLOG.md` for existing entries with same error code to avoid duplicates.
+**De-duplication:** Automatically checks `skills/self-improvement/GAP_BACKLOG.md` for existing entries with same error code to avoid duplicates.
 
 ## Typical Workflows
 
@@ -267,7 +267,7 @@ bash tools/gap_radar/suggest_gaps.sh --dry-run
 - **`errors.json`** - Raw error extraction (if saved with `> errors.json`)
 - **`coverage.json`** - Matched errors with coverage info
 - **`coverage.txt`** - Human-readable coverage report
-- **`skills/self-improvement/GAP_BACKLOG.md`** - Updated with new gaps (--auto-append mode)
+- **`skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md`** - Updated with new gaps (--auto-append mode)
 
 ## Dependencies
 
@@ -304,6 +304,6 @@ bash tools/gap_radar/suggest_gaps.sh --dry-run
 ## See Also
 
 - **[skills/self-improvement/README.md](../../skills/self-improvement/README.md)** - Gap capture protocol
-- **[skills/self-improvement/GAP_BACKLOG.md](../../skills/self-improvement/GAP_BACKLOG.md)** - Gap log
+- **[skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md](../../skills/self-improvement/GAP_BACKLOG.md)** - Gap log
 - **[skills/self-improvement/GAP_CAPTURE_RULES.md](../../skills/self-improvement/GAP_CAPTURE_RULES.md)** - Manual gap capture rules
 - **[skills/SUMMARY.md](../../skills/SUMMARY.md)** - Skills overview and error reference

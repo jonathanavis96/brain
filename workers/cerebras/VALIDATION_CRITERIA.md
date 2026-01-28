@@ -223,8 +223,8 @@ Before marking a task `[x]` complete, verify:
 - [ ] **1. Functionality:** Code changes implemented and tested
 - [ ] **2. Quality:** All acceptance criteria pass (`bash verifier.sh`)
 - [ ] **3. Standards:** Pre-commit hooks pass (`pre-commit run --all-files`)
-- [ ] **4. Documentation:** THUNK.md updated with completion entry
-- [ ] **5. Planning:** `workers/IMPLEMENTATION_PLAN.md` task marked `[x]`
+- [ ] **4. Documentation:** workers/ralph/THUNK.md updated with completion entry
+- [ ] **5. Planning:** `workers/workers/IMPLEMENTATION_PLAN.md` task marked `[x]`
 - [ ] **6. Atomicity:** Single commit with all changes (code + THUNK + PLAN)
 - [ ] **7. Message:** Commit message follows conventional format
 - [ ] **8. Attribution:** Co-authored-by line included
@@ -234,8 +234,8 @@ Before marking a task `[x]` complete, verify:
 **One task = One commit** containing:
 
 - Code changes (feature/fix)
-- THUNK.md entry (what was done)
-- IMPLEMENTATION_PLAN.md update (mark task [x])
+- workers/ralph/THUNK.md entry (what was done)
+- workers/IMPLEMENTATION_PLAN.md update (mark task [x])
 
 **DO NOT:**
 
@@ -297,8 +297,8 @@ Brain-Repo: jonathanavis96/brain
 ```text
 fix(cerebras): correct path references in monitoring scripts
 
-- Fix current_cerebras_tasks.sh to use correct IMPLEMENTATION_PLAN.md path
-- Fix thunk_cerebras_tasks.sh to read from correct THUNK.md location
+- Fix current_cerebras_tasks.sh to use correct workers/IMPLEMENTATION_PLAN.md path
+- Fix thunk_cerebras_tasks.sh to read from correct workers/ralph/THUNK.md location
 - All scripts now work correctly
 
 Tested with manual runs - all scripts start successfully
@@ -326,7 +326,7 @@ Brain-Repo: jonathanavis96/brain
 | **cerebras** | Changes to cerebras worker files |
 | **templates** | Changes to templates/ directory |
 | **skills** | Changes to skills/ directory |
-| **plan** | Changes to IMPLEMENTATION_PLAN.md |
+| **plan** | Changes to workers/IMPLEMENTATION_PLAN.md |
 | **docs** | Changes to documentation |
 | **tools** | Changes to tools/ utilities |
 

@@ -33,7 +33,7 @@ From `THOUGHTS.md`: {{PROJECT_PURPOSE}}
   - **AC:**
     - [ ] Run `bash loop.sh` completes without errors
     - [ ] Verifier runs and produces `.verify/latest.txt`
-    - [ ] THUNK.md created with first entry
+    - [ ] workers/ralph/THUNK.md created with first entry
   - **If Blocked:** Check loop.sh syntax, verifier rules, file permissions
 
 - [ ] **0.2** Document project structure in NEURONS.md
@@ -57,7 +57,7 @@ From `THOUGHTS.md`: {{PROJECT_PURPOSE}}
 
 - This is your first project with Cortex management
 - Check `cortex/THOUGHTS.md` for strategic context
-- Tasks will be synced from `cortex/IMPLEMENTATION_PLAN.md` automatically
+- Tasks will be synced from `workers/workers/IMPLEMENTATION_PLAN.md` automatically
 - Focus on one task per iteration (atomic completion)
 
 ---

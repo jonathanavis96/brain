@@ -47,13 +47,13 @@ The brain repository is a **self-improving skills knowledge base for AI agents**
 **Workflow:**
 
 ```text
-Agent discovers gap → Log to GAP_BACKLOG.md → Review and refine → Promote to SKILL_BACKLOG.md → Create skill document
+Agent discovers gap → Log to skills/self-improvement/GAP_BACKLOG.md → Review and refine → Promote to SKILL_BACKLOG.md → Create skill document
 ```
 
 **Components:**
 
 - `skills/self-improvement/GAP_CAPTURE_RULES.md` - Mandatory capture protocol
-- `skills/self-improvement/GAP_BACKLOG.md` - Raw log of discovered gaps
+- `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` - Raw log of discovered gaps
 - `skills/self-improvement/SKILL_BACKLOG.md` - Promotion queue for validated gaps
 - `skills/self-improvement/SKILL_TEMPLATE.md` - Template for new skills
 
@@ -118,7 +118,7 @@ Agent discovers gap → Log to GAP_BACKLOG.md → Review and refine → Promote 
 ### Agent Self-Service
 
 - **Target:** Agents resolve 90%+ of tasks without human escalation
-- **Measure:** THUNK.md completion rate vs HUMAN_REQUIRED.md escalations
+- **Measure:** workers/ralph/THUNK.md completion rate vs HUMAN_REQUIRED.md escalations
 - **Current:** Post-restructure, high completion rate observed
 
 ### Ralph Reliability
@@ -130,7 +130,7 @@ Agent discovers gap → Log to GAP_BACKLOG.md → Review and refine → Promote 
 ### Knowledge Growth
 
 - **Target:** Regular gap capture and skill promotion
-- **Measure:** GAP_BACKLOG.md and SKILL_BACKLOG.md activity
+- **Measure:** skills/self-improvement/GAP_BACKLOG.md and SKILL_BACKLOG.md activity
 - **Current:** System in place, underutilized (needs improvement)
 
 ### Template Usability
@@ -260,7 +260,7 @@ Why keep skills/ and templates/ at root instead of workers/ralph/?
 ## References
 
 - [README.md](README.md) - Getting started guide
-- [IMPLEMENTATION_PLAN.md](workers/IMPLEMENTATION_PLAN.md) - Current task queue
+- [workers/IMPLEMENTATION_PLAN.md](workers/IMPLEMENTATION_PLAN.md) - Current task queue
 - [skills/SUMMARY.md](skills/SUMMARY.md) - Skills knowledge base entry point
 - [cortex/THOUGHTS.md](cortex/THOUGHTS.md) - Cortex manager planning
 - [workers/ralph/THOUGHTS.md](workers/ralph/THOUGHTS.md) - Ralph worker execution log

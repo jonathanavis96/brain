@@ -342,7 +342,7 @@ brain/ (repository root)
 │   └── self-improvement/       # Gap capture & skill promotion system
 │       ├── README.md
 │       ├── GAP_CAPTURE_RULES.md
-│       ├── GAP_BACKLOG.md
+│       ├── skills/self-improvement/GAP_BACKLOG.md
 │       ├── SKILL_BACKLOG.md
 │       └── SKILL_TEMPLATE.md
 ├── templates/                   # Project scaffolding (shared)
@@ -378,3 +378,11 @@ bash tools/skill_freshness.sh --exit-on-stale
 - **Agent-first** - Optimized for programmatic consumption
 - **Reference-focused** - Knowledge, not executable skills
 - **Ralph Wiggum friendly** - Simple, obvious, no surprises
+
+## See Also
+
+- **[NEURONS.md](../NEURONS.md)** - Brain repository structure map
+- **[README.md](../README.md)** - Getting started and overview
+- **[workers/ralph/AGENTS.md](../workers/ralph/AGENTS.md)** - Ralph operational guide
+- **[self-improvement/README.md](self-improvement/README.md)** - Gap capture and skill development protocol
+- **[docs/TOOLS.md](../docs/TOOLS.md)** - Available tools and utilities

@@ -8,7 +8,7 @@ You are Cerebras. AGENTS.md is injected above. Mode is in the header.
 
 Check the `# VERIFIER STATUS` section at the top:
 
-- **PASS** → Pick next task from `workers/IMPLEMENTATION_PLAN.md`
+- **PASS** → Pick next task from `workers/workers/IMPLEMENTATION_PLAN.md`
 - **FAIL** → Fix the failing AC first, then `:::BUILD_READY:::`
 - **WARN** → Note warnings, proceed with task
 
@@ -28,7 +28,7 @@ If header shows `# LAST_VERIFIER_RESULT: FAIL`:
 3. **Find** with `grep` or `head_file`
 4. **Change** with `patch_file` → verify with `diff`
 5. **Commit** with `git_commit` (auto-retries pre-commit)
-6. **Log** to `workers/ralph/THUNK.md` with `append_file`
+6. **Log** to `workers/ralph/workers/ralph/THUNK.md` with `append_file`
 7. **Output** `:::BUILD_READY:::` or `:::PLAN_READY:::`
 
 ---
@@ -37,7 +37,7 @@ If header shows `# LAST_VERIFIER_RESULT: FAIL`:
 
 1. **ONE TASK** - Complete assigned task only
 2. **READ BEFORE WRITE** - Use `head_file` before `patch_file`
-3. **SINGLE COMMIT** - Code + THUNK.md + IMPLEMENTATION_PLAN.md together
+3. **SINGLE COMMIT** - Code + workers/ralph/THUNK.md + workers/IMPLEMENTATION_PLAN.md together
 4. **USE git_commit** - Never `bash git commit` (pre-commit issues)
 
 ---
@@ -54,7 +54,7 @@ If header shows `# LAST_VERIFIER_RESULT: FAIL`:
 
 ---
 
-## THUNK.md Entry Format
+## workers/ralph/THUNK.md Entry Format
 
 ```markdown
 ### <Task ID> - <Short Description>

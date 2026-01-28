@@ -1,6 +1,6 @@
 # Ralph Discovery History
 
-Archived discovery entries from IMPLEMENTATION_PLAN.md. These entries document completed analysis and fixes that are no longer actively relevant but provide historical context.
+Archived discovery entries from workers/IMPLEMENTATION_PLAN.md. These entries document completed analysis and fixes that are no longer actively relevant but provide historical context.
 
 ---
 
@@ -12,7 +12,7 @@ Three critical bugs in the Ralph monitoring system:
 
 1. **current_ralph_tasks.sh shows wrong tasks** - Parser exits on `###` headers, missing tasks under Phase subsections
 2. **Display rendering corrupted** - Duplicate headers/footers due to startup messages + differential updates
-3. **thunk_ralph_tasks.sh watches wrong file** - Auto-syncs from IMPLEMENTATION_PLAN.md instead of just watching THUNK.md
+3. **thunk_ralph_tasks.sh watches wrong file** - Auto-syncs from workers/IMPLEMENTATION_PLAN.md instead of just watching workers/ralph/THUNK.md
 
 ### Root Cause Analysis
 
@@ -64,17 +64,17 @@ When parser hits `### Phase 4:` under `## HIGH PRIORITY`, it doesn't contain "HI
 
 **Location:** `thunk_ralph_tasks.sh` `scan_for_new_completions()` function
 
-**Issue:** Script watches IMPLEMENTATION_PLAN.md and tries to sync `[x]` tasks to THUNK.md. This is:
+**Issue:** Script watches workers/IMPLEMENTATION_PLAN.md and tries to sync `[x]` tasks to workers/ralph/THUNK.md. This is:
 
-1. Redundant - Ralph should append to THUNK.md directly
-2. Confusing - Output says "Scanning IMPLEMENTATION_PLAN.md"
+1. Redundant - Ralph should append to workers/ralph/THUNK.md directly
+2. Confusing - Output says "Scanning workers/IMPLEMENTATION_PLAN.md"
 3. Wrong responsibility - Monitor should only display, not modify
 
 **Fix:**
 
 - Remove auto-sync logic entirely
-- Watch ONLY THUNK.md
-- Ralph appends to THUNK.md when completing tasks (add instruction to PROMPT.md)
+- Watch ONLY workers/ralph/THUNK.md
+- Ralph appends to workers/ralph/THUNK.md when completing tasks (add instruction to PROMPT.md)
 
 ### Design Decisions
 
@@ -112,11 +112,11 @@ No row cache. No differential updates. Parsing 100 tasks takes <50ms - impercept
 
 #### D3: THUNK Responsibility Split
 
-- **Ralph:** Appends to THUNK.md when marking task `[x]` in IMPLEMENTATION_PLAN.md
-- **thunk_ralph_tasks.sh:** Only watches and displays THUNK.md content
+- **Ralph:** Appends to workers/ralph/THUNK.md when marking task `[x]` in workers/IMPLEMENTATION_PLAN.md
+- **thunk_ralph_tasks.sh:** Only watches and displays workers/ralph/THUNK.md content
 - **No auto-sync:** Monitor doesn't modify files, only displays
 
-### THUNK.md Format Fix
+### workers/ralph/THUNK.md Format Fix
 
 Current format has alignment issues. New format:
 

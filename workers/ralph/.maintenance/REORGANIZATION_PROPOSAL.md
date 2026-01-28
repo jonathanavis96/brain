@@ -17,7 +17,7 @@ The `brain/ralph/` root has 26 files + 8 directories. It's cluttered:
 | **Task Monitors** | `current_ralph_tasks.sh`, `thunk_ralph_tasks.sh`, `render_ac_status.sh` | 3 |
 | **Project Setup** | `new-project.sh`, `pr-batch.sh` | 2 |
 | **Rules** | `AC.rules`, `AC-hygiene-additions.rules`, `MANUAL_APPROVALS.rules` | 3 |
-| **Planning Docs** | `IMPLEMENTATION_PLAN.md`, `THOUGHTS.md`, `THUNK.md`, `VALIDATION_CRITERIA.md` | 4 |
+| **Planning Docs** | `workers/IMPLEMENTATION_PLAN.md`, `THOUGHTS.md`, `workers/ralph/THUNK.md`, `VALIDATION_CRITERIA.md` | 4 |
 | **Reference Docs** | `AGENTS.md`, `NEURONS.md`, `README.md` | 3 |
 | **Historical** | `HISTORY.md`, `CHANGES.md`, `CODERABBIT_REVIEW_ANALYSIS.md` | 3 |
 | **Edge Cases** | `EDGE_CASES.md`, `TEST_SCENARIOS.md` | 2 |
@@ -75,9 +75,9 @@ brain/ralph/
 │   └── TEST_SCENARIOS.md   # Move from root
 │
 ├── planning/               # NEW - active planning files
-│   ├── IMPLEMENTATION_PLAN.md
+│   ├── workers/IMPLEMENTATION_PLAN.md
 │   ├── THOUGHTS.md
-│   ├── THUNK.md
+│   ├── workers/ralph/THUNK.md
 │   ├── NEURONS.md
 │   └── VALIDATION_CRITERIA.md
 │
@@ -113,7 +113,7 @@ These files would need path updates:
 
 | File | References To Update |
 |------|---------------------|
-| `loop.sh` | `verifier.sh`, `PROMPT.md`, `THUNK.md`, etc. |
+| `loop.sh` | `verifier.sh`, `PROMPT.md`, `workers/ralph/THUNK.md`, etc. |
 | `PROMPT.md` | Various doc references |
 | `AGENTS.md` | File locations |
 | `templates/ralph/*` | All path references |

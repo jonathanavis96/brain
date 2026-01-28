@@ -23,13 +23,13 @@ This directory contains template files for bootstrapping new Ralph worker instan
 - **THOUGHTS.md** - Project vision and goals template
 - **VALIDATION_CRITERIA.project.md** - Acceptance criteria template
 - **IMPLEMENTATION_PLAN.project.md** - Task backlog template
-- **THUNK.md** - Completed task log template
+- **workers/ralph/THUNK.md** - Completed task log template
 
 ### Optional Utilities
 
 - **render_ac_status.sh** - Generate human-readable verifier status dashboard from `.verify/latest.txt`
   - Usage: `./render_ac_status.sh` (stdout) or `./render_ac_status.sh --inline` (update IMPLEMENTATION_PLAN.md)
-  - Requires markers `<!-- AC_STATUS_START -->` and `<!-- AC_STATUS_END -->` in IMPLEMENTATION_PLAN.md for inline mode
+  - Requires markers `<!-- AC_STATUS_START -->` and `<!-- AC_STATUS_END -->` in workers/IMPLEMENTATION_PLAN.md for inline mode
 
 ### Template Sync Policy
 

@@ -34,7 +34,6 @@ brain/                           # Root of brain repository
 ├── new-project.sh               # Project bootstrapping script
 ├── setup.sh                     # Repository setup script
 ├── setup-linters.sh             # Linter configuration script
-├── rovodev-config.template.yml  # RovoDev configuration template
 ├── .editorconfig                # Editor configuration
 ├── .env.example                 # Environment variables template
 ├── .gitignore                   # Git ignore rules
@@ -75,10 +74,12 @@ brain/                           # Root of brain repository
 │   ├── gap-radar               # Gap detection tool
 │   ├── ralph-stats             # Ralph statistics viewer
 │   ├── ralph-summary           # Ralph summary generator
-│   └── thunk-parse             # THUNK.md parser
+│   └── thunk-parse             # workers/ralph/THUNK.md parser
 │
 ├── config/                      # Configuration files
-│   └── tool-registry.yaml      # Tool registry
+│   ├── tool-registry.yaml      # Tool registry
+│   └── templates/              # Configuration templates
+│       └── rovodev-config.template.yml
 │
 ├── skills/                      # Skills knowledge base (domain patterns)
 │   ├── SUMMARY.md              # Skills overview and hotlist
@@ -108,8 +109,8 @@ brain/                           # Root of brain repository
 │   └── website/                # Website project templates
 │
 ├── workers/                     # Worker agents (executors)
-│   ├── IMPLEMENTATION_PLAN.md  # Shared worker tasks
-│   ├── PLAN_DONE.md            # Completed planning phases
+│   ├── workers/IMPLEMENTATION_PLAN.md  # Shared worker tasks
+│   ├── workers/PLAN_DONE.md            # Completed planning phases
 │   ├── .verify/                # Worker-level verification
 │   ├── shared/                 # Shared worker utilities
 │   │   ├── cache.sh            # Caching utilities
@@ -120,7 +121,7 @@ brain/                           # Root of brain repository
 │   │   ├── AGENTS.md           # Ralph operational guide
 │   │   ├── NEURONS.md          # Ralph codebase map
 │   │   ├── THOUGHTS.md         # Ralph tactical notes
-│   │   ├── THUNK.md            # Ralph completion log
+│   │   ├── workers/ralph/THUNK.md            # Ralph completion log
 │   │   ├── PROMPT.md           # Ralph agent instructions (protected)
 │   │   ├── VALIDATION_CRITERIA.md # Quality gates
 │   │   ├── loop.sh             # Ralph execution loop (protected)
@@ -147,7 +148,7 @@ brain/                           # Root of brain repository
 │       ├── AGENTS.md           # Cerebras operational guide
 │       ├── NEURONS.md          # Cerebras codebase map
 │       ├── THOUGHTS.md         # Cerebras tactical notes
-│       ├── THUNK.md            # Cerebras completion log
+│       ├── workers/ralph/THUNK.md            # Cerebras completion log
 │       ├── PROMPT.md           # Cerebras instructions (protected)
 │       ├── VALIDATION_CRITERIA.md # Quality gates
 │       ├── ENHANCEMENT_PLAN.md # Cerebras enhancements
@@ -166,8 +167,8 @@ brain/                           # Root of brain repository
 │   ├── NEURONS.md              # Cortex codebase map
 │   ├── THOUGHTS.md             # Cortex strategic notes
 │   ├── DECISIONS.md            # Strategic decisions log
-│   ├── IMPLEMENTATION_PLAN.md  # Cortex planning queue
-│   ├── PLAN_DONE.md            # Completed cortex plans
+│   ├── workers/IMPLEMENTATION_PLAN.md  # Cortex planning queue
+│   ├── workers/PLAN_DONE.md            # Completed cortex plans
 │   ├── cortex.bash             # Cortex execution script
 │   ├── ralph.sh                # Ralph delegation script
 │   ├── one-shot.sh             # One-shot task executor
@@ -255,7 +256,7 @@ brain/                           # Root of brain repository
 
 - `THOUGHTS.md` - What we're achieving (mission, goals, metrics)
 - `README.md` - How to use the brain (onboarding)
-- `IMPLEMENTATION_PLAN.md` - What we're working on (tasks)
+- `workers/IMPLEMENTATION_PLAN.md` - What we're working on (tasks)
 
 ### Navigation & Context
 
@@ -273,9 +274,9 @@ brain/                           # Root of brain repository
 
 ### Self-Improvement System
 
-- `skills/self-improvement/GAP_BACKLOG.md` - Identified knowledge gaps
+- `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` - Identified knowledge gaps
 - `skills/self-improvement/SKILL_BACKLOG.md` - Skills to create
-- `workers/ralph/THUNK.md` - Completed tasks log
+- `workers/ralph/workers/ralph/THUNK.md` - Completed tasks log
 
 ## Domain Coverage
 
@@ -340,10 +341,10 @@ brain/                           # Root of brain repository
 | Understand Ralph loop | `workers/ralph/AGENTS.md` → `skills/domains/ralph/` |
 | Check acceptance criteria | `rules/AC.rules` (read only) |
 | Review verifier output | `.verify/latest.txt` |
-| See completed work | `workers/ralph/THUNK.md` |
+| See completed work | `workers/ralph/workers/ralph/THUNK.md` |
 | Understand brain mission | `THOUGHTS.md` |
 | Get started (human) | `README.md` |
-| Add new skill | `skills/self-improvement/GAP_BACKLOG.md` |
+| Add new skill | `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` |
 | **Use CLI tools** | **`docs/TOOLS.md`** → bin/, tools/ |
 | Search THUNK/git quickly | `bin/brain-search "keyword"` |
 | Get THUNK stats | `bin/thunk-parse --stats` |
@@ -356,14 +357,14 @@ The brain repository follows Option B structure (worker-in-repo):
 
 - **Location:** `cortex/`
 - **Role:** Strategic planning, coordination, analysis
-- **Files:** AGENTS.md, NEURONS.md, THOUGHTS.md, IMPLEMENTATION_PLAN.md
+- **Files:** AGENTS.md, NEURONS.md, THOUGHTS.md, workers/IMPLEMENTATION_PLAN.md
 - **Scope:** Multi-project orchestration, resource allocation
 
 ### Ralph (Worker)
 
 - **Location:** `workers/ralph/`
 - **Role:** Tactical execution, self-improvement loop
-- **Files:** AGENTS.md, NEURONS.md, THOUGHTS.md, IMPLEMENTATION_PLAN.md, THUNK.md
+- **Files:** AGENTS.md, NEURONS.md, THOUGHTS.md, workers/IMPLEMENTATION_PLAN.md, workers/ralph/THUNK.md
 - **Scope:** Brain repository maintenance and improvement
 
 ### Brain Root
@@ -413,7 +414,7 @@ grep -c "^- \[" skills/index.md
 
 ### Adding a New Skill
 
-1. Capture gap in `skills/self-improvement/GAP_BACKLOG.md`
+1. Capture gap in `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md`
 2. Promote to `SKILL_BACKLOG.md` when clear
 3. Create skill file in appropriate `skills/domains/` subdirectory
 4. Update `skills/index.md` with new entry
@@ -433,13 +434,13 @@ grep -c "^- \[" skills/index.md
 2. Check `AGENTS.md` for prerequisites
 3. Run `bash loop.sh` for single iteration
 4. Monitor with `bash current_ralph_tasks.sh`
-5. View completed work in `THUNK.md`
+5. View completed work in `workers/ralph/THUNK.md`
 
 ### Checking Verifier Status
 
 1. Read `.verify/latest.txt` for pass/fail/warn
 2. If FAIL: Fix issues before continuing
-3. If WARN: Add to IMPLEMENTATION_PLAN.md Phase 0-Warn section
+3. If WARN: Add to workers/IMPLEMENTATION_PLAN.md Phase 0-Warn section
 4. Protected file changes: Requires human intervention
 
 ## Workspace Boundaries

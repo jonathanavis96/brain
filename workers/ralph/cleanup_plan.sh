@@ -28,6 +28,22 @@ fi
 PLAN_FILE="${REPO_ROOT}/workers/IMPLEMENTATION_PLAN.md"
 ARCHIVE_FILE="${REPO_ROOT}/workers/PLAN_DONE.md"
 
+normalize_markdown_blank_lines() {
+  local file="$1"
+  # Enforce markdown whitespace invariant: at most one blank line between blocks.
+  # (i.e., collapse any run of 3+ newlines down to exactly 2 newlines).
+  python3 - "$file" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+text = path.read_text(encoding="utf-8")
+text = re.sub(r"\n{3,}", "\n\n", text)
+path.write_text(text, encoding="utf-8")
+PY
+}
+
 # Default flags
 DRY_RUN=false
 
@@ -79,18 +95,18 @@ last_task_line_num=0
 line_num=0
 while IFS= read -r line; do
   line_num=$((line_num + 1))
-  
+
   # Track parent task lines (- [ ] or - [x] or - [?])
   # Match task IDs like: **1.2**, **34.1.3**, **0.L.1**, etc.
   if echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\[[xX \?]\][[:space:]]+\*\*[0-9]+(\.[0-9A-Za-z]+)+'; then
     last_task_line_num=$line_num
   fi
-  
+
   # Check for indented sub-item pattern (Goal, AC, Completed, Verification, If Blocked, Implementation)
   if echo "$line" | grep -qE '^[[:space:]]+-[[:space:]]+\*\*(Goal|AC|Completed|Verification|If Blocked|Implementation):\*\*'; then
     # Calculate distance from last parent task
     distance=$((line_num - last_task_line_num))
-    
+
     # If no parent task seen yet, or distance > 100 lines (reasonable threshold), flag as orphaned
     if [[ $last_task_line_num -eq 0 ]] || [[ $distance -gt 100 ]]; then
       orphaned_entries="${orphaned_entries}${line_num}: ${line}\n"
@@ -264,6 +280,8 @@ existing_task_ids=$(grep -oE '\|[[:space:]]*[^|]*[[:space:]]*\|[[:space:]]*[^|]*
     echo ""
   done
 } >>"$ARCHIVE_FILE"
+
+normalize_markdown_blank_lines "$ARCHIVE_FILE"
 
 echo "Archived ${#archived_task_ids[@]} tasks to PLAN_DONE.md"
 

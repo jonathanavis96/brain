@@ -28,6 +28,22 @@ fi
 PLAN_FILE="${REPO_ROOT}/IMPLEMENTATION_PLAN.md"
 ARCHIVE_FILE="${REPO_ROOT}/workers/PLAN_DONE.md"
 
+normalize_markdown_blank_lines() {
+  local file="$1"
+  # Enforce markdown whitespace invariant: at most one blank line between blocks.
+  # (i.e., collapse any run of 3+ newlines down to exactly 2 newlines).
+  python3 - "$file" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+text = path.read_text(encoding="utf-8")
+text = re.sub(r"\n{3,}", "\n\n", text)
+path.write_text(text, encoding="utf-8")
+PY
+}
+
 # Default flags
 DRY_RUN=false
 
@@ -154,6 +170,8 @@ existing_task_ids=$(grep -o '|[[:space:]]*[^|]*[[:space:]]*|[[:space:]]*[^|]*[[:
     fi
   done
 } >>"$ARCHIVE_FILE"
+
+normalize_markdown_blank_lines "$ARCHIVE_FILE"
 
 echo "Archived ${#archived_tasks[@]} tasks to PLAN_DONE.md"
 

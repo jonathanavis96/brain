@@ -9,7 +9,7 @@ This file logs all tasks completed by the Cerebras worker. Each entry records th
 Each era contains a table with columns:
 
 - **THUNK #**: Sequential completion number (auto-increment)
-- **Original #**: Task ID from workers/IMPLEMENTATION_PLAN.md
+- **Original #**: Task ID from workers/workers/IMPLEMENTATION_PLAN.md
 - **Priority**: HIGH, MEDIUM, LOW
 - **Description**: Brief task summary
 - **Completed**: Timestamp (YYYY-MM-DD)

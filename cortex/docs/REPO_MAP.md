@@ -16,18 +16,18 @@ This document provides a human-friendly overview of the Brain repository structu
 - `docs/REPO_MAP.md` - This file - navigation guide for the repository
 - `DECISIONS.md` - Architectural decisions and conventions (stability anchor)
 - `docs/RUNBOOK.md` - Operations guide (how to start Cortex, troubleshooting)
-- `IMPLEMENTATION_PLAN.md` - Task contracts for workers (delegation format)
+- `workers/IMPLEMENTATION_PLAN.md` - Task contracts for workers (delegation format)
 - `THOUGHTS.md` - Cortex's analysis and decision log
 - `cortex.bash` - Main entry point to start Cortex
 - `snapshot.sh` - Generates current state summary for Cortex context
 
 **What Cortex Can Modify:**
 
-- `cortex/IMPLEMENTATION_PLAN.md` - Task contracts for workers
+- `workers/workers/IMPLEMENTATION_PLAN.md` - Task contracts for workers
 - `cortex/THOUGHTS.md` - Cortex's own thinking space
-- Root-level `IMPLEMENTATION_PLAN.md` - When delegating to Ralph
+- Root-level `workers/IMPLEMENTATION_PLAN.md` - When delegating to Ralph
 - Root-level `THOUGHTS.md` - Strategic decisions
-- `skills/self-improvement/GAP_BACKLOG.md` - Knowledge gaps
+- `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` - Knowledge gaps
 - `skills/self-improvement/SKILL_BACKLOG.md` - Skill promotion queue
 
 **What Cortex Cannot Modify:**
@@ -49,8 +49,8 @@ This document provides a human-friendly overview of the Brain repository structu
   - `verifier.sh` - Acceptance criteria validation
   - `current_ralph_tasks.sh` - Real-time task monitor
   - `thunk_ralph_tasks.sh` - Completed task log viewer
-  - `IMPLEMENTATION_PLAN.md` - Ralph's local copy of tasks
-  - `THUNK.md` - Completed task log
+  - `workers/IMPLEMENTATION_PLAN.md` - Ralph's local copy of tasks
+  - `workers/ralph/THUNK.md` - Completed task log
   - `NEURONS.md` - Ralph's codebase map
   - `THOUGHTS.md` - Ralph's working context
   - `.maintenance/` - Repository health checks and maintenance tracking
@@ -70,7 +70,7 @@ This document provides a human-friendly overview of the Brain repository structu
 - `projects/` - Project-specific conventions and context
 - `self-improvement/` - Gap capture and skill promotion system
   - `GAP_CAPTURE_RULES.md` - Protocol for logging knowledge gaps
-  - `GAP_BACKLOG.md` - Raw log of discovered gaps
+  - `skills/self-improvement/GAP_BACKLOG.md` - Raw log of discovered gaps
   - `SKILL_BACKLOG.md` - Gaps ready for promotion to skills
   - `SKILL_TEMPLATE.md` - Template for creating new skill files
 
@@ -158,7 +158,7 @@ This document provides a human-friendly overview of the Brain repository structu
 | File | Purpose | Owner |
 |------|---------|-------|
 | `README.md` | Human-readable overview | Human/Cortex |
-| `IMPLEMENTATION_PLAN.md` | High-level task list | Cortex |
+| `workers/IMPLEMENTATION_PLAN.md` | High-level task list | Cortex |
 
 **Worker-Specific Files (in `workers/ralph/`):**
 
@@ -167,8 +167,8 @@ This document provides a human-friendly overview of the Brain repository structu
 | `AGENTS.md` | Operational guide for Ralph | Human/Cortex |
 | `NEURONS.md` | Ralph's codebase map | Ralph |
 | `THOUGHTS.md` | Ralph's working context | Ralph |
-| `IMPLEMENTATION_PLAN.md` | Ralph's local task list | Ralph (synced from root) |
-| `THUNK.md` | Completed task log | Ralph |
+| `workers/IMPLEMENTATION_PLAN.md` | Ralph's local task list | Ralph (synced from root) |
+| `workers/ralph/THUNK.md` | Completed task log | Ralph |
 | `PROMPT.md` | Ralph's instructions | Human (protected) |
 | `VALIDATION_CRITERIA.md` | Quality gates | Human/Cortex |
 | `loop.sh` | Ralph's main loop | Human (protected) |
@@ -176,11 +176,11 @@ This document provides a human-friendly overview of the Brain repository structu
 
 ## Where State Lives
 
-- **Current tasks:** `IMPLEMENTATION_PLAN.md` (root and `workers/ralph/`)
-- **Completed tasks:** `workers/ralph/THUNK.md`
+- **Current tasks:** `workers/IMPLEMENTATION_PLAN.md` (root and `workers/ralph/`)
+- **Completed tasks:** `workers/ralph/workers/ralph/THUNK.md`
 - **Strategic context:** `cortex/THOUGHTS.md`
 - **Ralph's context:** `workers/ralph/THOUGHTS.md`
-- **Knowledge gaps:** `skills/self-improvement/GAP_BACKLOG.md`
+- **Knowledge gaps:** `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md`
 - **Skill backlog:** `skills/self-improvement/SKILL_BACKLOG.md`
 - **Verifier status:** `.verify/latest.txt`
 - **Git state:** `.git/` (local commits before push)
@@ -197,11 +197,11 @@ This document provides a human-friendly overview of the Brain repository structu
 
 ### "I need to see what tasks are active"
 
-→ Read `IMPLEMENTATION_PLAN.md` (root level)
+→ Read `workers/IMPLEMENTATION_PLAN.md` (root level)
 
 ### "I need to know what's been completed"
 
-→ Read `THUNK.md`
+→ Read `workers/ralph/THUNK.md`
 
 ### "I need to understand the codebase structure"
 
@@ -255,7 +255,7 @@ This document provides a human-friendly overview of the Brain repository structu
 │         │                            │                      │
 │         ▼                            ▼                      │
 │  ┌──────────────┐         ┌─────────────────────┐          │
-│  │   THUNK.md   │<────────│      Ralph          │          │
+│  │   workers/ralph/THUNK.md   │<────────│      Ralph          │          │
 │  │  (completed) │  writes │    (Worker)         │          │
 │  └──────────────┘         │                     │          │
 │                           └─────────────────────┘          │

@@ -1,7 +1,7 @@
 # Task Optimization Hints
 
 **Generated:** 2026-01-25 15:20:00  
-**Analysis Basis:** THUNK.md (693 entries), iter_001-003.json, pending tasks  
+**Analysis Basis:** workers/ralph/THUNK.md (693 entries), iter_001-003.json, pending tasks  
 **Focus:** Direction C - Batching + Decomposition
 
 ---
@@ -189,7 +189,7 @@ RovoDev's native tools are implemented at the platform level and do not execute 
 
 **Workarounds:**
 
-- **Heuristic analysis:** Use THUNK.md descriptions to infer tool usage patterns (e.g., "Fix SC2162 in 5 files" = likely 5× find_and_replace_code)
+- **Heuristic analysis:** Use workers/ralph/THUNK.md descriptions to infer tool usage patterns (e.g., "Fix SC2162 in 5 files" = likely 5× find_and_replace_code)
 - **Manual timing:** Add explicit `time` commands around critical shell operations
 - **Iteration-level metrics:** Focus on total iteration duration as primary optimization signal
 - **Log pattern inference:** Parse log output for tool signatures (e.g., "Successfully opened" → open_files, "Successfully replaced" → find_and_replace_code)
@@ -280,7 +280,7 @@ This is a **critical prerequisite** for full Phase 9C value.
 
 ## Suggested Plan Edits
 
-Copy-paste ready for `cortex/IMPLEMENTATION_PLAN.md`:
+Copy-paste ready for `workers/workers/IMPLEMENTATION_PLAN.md`:
 
 ```markdown
 ## Phase 9C: Task Optimization (Batching + Decomposition)
@@ -381,11 +381,11 @@ For future comparison:
 
 | Metric | Current Value | Source |
 |--------|---------------|--------|
-| Tasks completed | 693 | THUNK.md line count |
+| Tasks completed | 693 | workers/ralph/THUNK.md line count |
 | Avg task duration | ~309s | current_ralph_tasks.sh ETA |
 | Tool calls analyzed | 275 | iter_001.json |
 | Tool name extraction | 0% (all "unknown") | iter_001.json |
-| Pending tasks | 15 | grep pending IMPLEMENTATION_PLAN.md |
+| Pending tasks | 15 | grep pending workers/IMPLEMENTATION_PLAN.md |
 
 ---
 

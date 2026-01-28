@@ -388,4 +388,4 @@ When implementing semantic code review tooling:
 
 ## Gap Identification
 
-If you encounter semantic review patterns not covered here, add to `skills/self-improvement/GAP_BACKLOG.md`.
+If you encounter semantic review patterns not covered here, add to `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md`.

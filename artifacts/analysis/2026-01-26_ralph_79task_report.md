@@ -1,5 +1,7 @@
 # Ralph 79-Task Run: Comprehensive Analysis Report
 
+> **⚠️ HISTORICAL DOCUMENT** - This is a historical analysis from 2026-01-26. For current metrics, run `tools/rollflow_analyze/` or see [artifacts/analysis/](.) for newer reports.
+
 **Date:** 2026-01-26
 **Session:** 54 iterations, 162 log files
 **Tasks Completed:** 79
@@ -70,10 +72,10 @@
 | Check | Issue Found |
 |-------|-------------|
 | **Check 1 (Forbidden Opens)** | Opening `NEURONS.md`, `THOUGHTS.md` at startup |
-| **Check 2a (THUNK via open_files)** | Opening `THUNK.md` directly instead of using `thunk-parse` |
-| **Check 3 (IMPL_PLAN in full)** | Opening full `IMPLEMENTATION_PLAN.md` instead of grep+slice |
+| **Check 2a (THUNK via open_files)** | Opening `workers/ralph/THUNK.md` directly instead of using `thunk-parse` |
+| **Check 3 (IMPL_PLAN in full)** | Opening full `workers/IMPLEMENTATION_PLAN.md` instead of grep+slice |
 
-**Post-prompt failures:** Mostly Check 2a (THUNK.md direct opens) — Ralph occasionally forgets to use `thunk-parse` or `brain-search`.
+**Post-prompt failures:** Mostly Check 2a (workers/ralph/THUNK.md direct opens) — Ralph occasionally forgets to use `thunk-parse` or `brain-search`.
 
 ---
 
@@ -162,14 +164,14 @@ This was a user interrupt (Ctrl+C), not a real failure.
 
 ### ⚠️ Areas for Improvement
 
-1. **Post-prompt tripwire failures (11)** — Ralph still occasionally opens THUNK.md directly
+1. **Post-prompt tripwire failures (11)** — Ralph still occasionally opens workers/ralph/THUNK.md directly
 2. **Infrastructure overhead (56.6%)** — Pre-commit/verifier consume significant time
 3. **"Unknown" tool calls** — 228 calls not properly categorized in parser
 4. **bash-heavy patterns** — 498 greps via bash could use native tool
 
 ### 🔧 Recommendations
 
-1. **Reinforce THUNK.md rule** — Add reminder in prompt about using `thunk-parse`/`brain-search`
+1. **Reinforce workers/ralph/THUNK.md rule** — Add reminder in prompt about using `thunk-parse`/`brain-search`
 2. **Improve tool parser** — Fix "unknown" categorization for better analytics
 3. **Consider caching** — 60 potential skips = ~7 min savings per similar run
 4. **Batch lint fixes** — MD and shellcheck fixes could be grouped
@@ -185,7 +187,7 @@ The **prompt change at 01:48** was the key inflection point:
 - Before: 19/19 iterations failed tripwire (100%)
 - After: 11/35 iterations failed tripwire (31%)
 
-Remaining failures are primarily THUNK.md direct opens — a minor compliance gap that could be addressed with prompt reinforcement.
+Remaining failures are primarily workers/ralph/THUNK.md direct opens — a minor compliance gap that could be addressed with prompt reinforcement.
 
 The cache system is healthy, infrastructure is working, and log sizes are trending smaller indicating improved token efficiency.
 

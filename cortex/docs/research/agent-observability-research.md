@@ -164,7 +164,7 @@ From `cortex/docs/loom_brain_feature_deltas.md`:
 1. **Create skill document** with patterns for adding observability
 2. **Expand docs/events.md** with complete marker reference
 3. **Propose MARKER_SCHEMA.md** for formal specification
-4. **Track G1 (RovoDev blindness)** in GAP_BACKLOG.md if not already
+4. **Track G1 (RovoDev blindness)** in skills/self-improvement/GAP_BACKLOG.md if not already
 
 ---
 

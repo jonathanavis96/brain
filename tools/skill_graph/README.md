@@ -174,4 +174,4 @@ python3 tools/skill_graph/extract_links.py | jq '[.[] | select(.source | startsw
 
 - **[skills/index.md](../../skills/index.md)** - Complete skills catalog
 - **[skills/SUMMARY.md](../../skills/SUMMARY.md)** - Skills overview
-- **[skills/self-improvement/GAP_BACKLOG.md](../../skills/self-improvement/GAP_BACKLOG.md)** - Skill gaps
+- **[skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md](../../skills/self-improvement/GAP_BACKLOG.md)** - Skill gaps

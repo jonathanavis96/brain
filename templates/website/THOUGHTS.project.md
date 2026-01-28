@@ -204,8 +204,8 @@ Example: "A conversion-optimized landing page that establishes trust and drives 
 
 ## Related Documents
 
-- **[AGENTS.md](AGENTS.md)** - How to work on this project
-- **[NEURONS.md](NEURONS.md)** - Project structure
-- **[VALIDATION_CRITERIA.md](VALIDATION_CRITERIA.md)** - Quality gates
+- **[AGENTS.project.md](AGENTS.project.md)** - How to work on this project
+- **[NEURONS.project.md](NEURONS.project.md)** - Project structure
+- **[VALIDATION_CRITERIA.project.md](VALIDATION_CRITERIA.project.md)** - Quality gates
 - **[docs/sitemap.md](docs/sitemap.md)** - Navigation structure
 - **[docs/sections.md](docs/sections.md)** - Page composition

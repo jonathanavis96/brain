@@ -35,7 +35,7 @@ Brain-Repo: ${BRAIN_REPO}
 | `templates` | Changes to project templates |
 | `skills` | Skills additions/updates |
 | `refs` | Reference documentation changes |
-| `plan` | IMPLEMENTATION_PLAN.md updates |
+| `plan` | workers/IMPLEMENTATION_PLAN.md updates |
 | `loop` | loop.sh changes |
 
 ### Examples
@@ -81,7 +81,7 @@ Brain-Repo: jonathanavis96/brain
 
 ## Plan Structure Template
 
-When creating/updating IMPLEMENTATION_PLAN.md:
+When creating/updating workers/IMPLEMENTATION_PLAN.md:
 
 ```markdown
 # Implementation Plan
@@ -141,7 +141,7 @@ If you're unsure what state the codebase is in:
 
 1. Run `git status` to see uncommitted changes
 2. Run `git log --oneline -5` to see recent commits
-3. Check IMPLEMENTATION_PLAN.md for last completed task
+3. Check workers/IMPLEMENTATION_PLAN.md for last completed task
 4. Resume from the first unchecked task
 
 ## Subagent Usage Patterns
@@ -179,7 +179,7 @@ If you're unsure what state the codebase is in:
 |------|----------|
 | Project goals | THOUGHTS.md |
 | Codebase map | NEURONS.md (read via subagent) |
-| Task list | IMPLEMENTATION_PLAN.md |
+| Task list | workers/IMPLEMENTATION_PLAN.md |
 | Validation commands | AGENTS.md |
 | Patterns/conventions | skills/SUMMARY.md → specific domain files |
 | React best practices | references/react-best-practices/HOTLIST.md |

@@ -96,7 +96,7 @@ When you discover a new convention, architectural decision, or project-specific 
 - Keep configuration separate from code
 - Document setup and usage in README.md
 - Keep project goals and vision in `THOUGHTS.md`
-- Maintain `workers/ralph/IMPLEMENTATION_PLAN.md` as a prioritized task list
+- Maintain `workers/ralph/workers/IMPLEMENTATION_PLAN.md` as a prioritized task list
 
 ### Backend-Specific Best Practices
 

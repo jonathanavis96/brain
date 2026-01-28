@@ -12,7 +12,6 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 
 <!-- Tasks are appended here by cleanup_cortex_plan.sh -->
 
-
 ### Archived on 2026-01-25 (Phase 10, 9C, 6, 7)
 
 | Date | Task ID | Description |
@@ -445,8 +444,48 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-28 | 0-Lint.1.1 | - [x] **0-Lint.1.1** Fix MD004/ul-style errors in cortex/docs/MindMerge_MindMerge-PR.md |
 | 2026-01-28 | 36.1.2 | - [x] **36.1.2** Remove hover/zoom label duplication by matching default placement and ensuring hover "upgrades" the same label |
 
-### Archived on 2026-01-28
+### Archived on 2026-01-28 (Ad-hoc 1)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
 | 2026-01-28 | 0.1.1 | - [x] **0.1.1** Fix MD004 in cortex/docs/MindMerge_MindMerge-PR.md |
+
+### Archived on 2026-01-28 (Ad-hoc 2)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.753 | - [x] **0-Warn.MD012.workers-PLAN_DONE.753** Fix MD012 in workers/PLAN_DONE.md line 753 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.760 | - [x] **0-Warn.MD012.workers-PLAN_DONE.760** Fix MD012 in workers/PLAN_DONE.md line 760 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.767 | - [x] **0-Warn.MD012.workers-PLAN_DONE.767** Fix MD012 in workers/PLAN_DONE.md line 767 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.774 | - [x] **0-Warn.MD012.workers-PLAN_DONE.774** Fix MD012 in workers/PLAN_DONE.md line 774 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.781 | - [x] **0-Warn.MD012.workers-PLAN_DONE.781** Fix MD012 in workers/PLAN_DONE.md line 781 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.788 | - [x] **0-Warn.MD012.workers-PLAN_DONE.788** Fix MD012 in workers/PLAN_DONE.md line 788 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.795 | - [x] **0-Warn.MD012.workers-PLAN_DONE.795** Fix MD012 in workers/PLAN_DONE.md line 795 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.802 | - [x] **0-Warn.MD012.workers-PLAN_DONE.802** Fix MD012 in workers/PLAN_DONE.md line 802 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.809 | - [x] **0-Warn.MD012.workers-PLAN_DONE.809** Fix MD012 in workers/PLAN_DONE.md line 809 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.816 | - [x] **0-Warn.MD012.workers-PLAN_DONE.816** Fix MD012 in workers/PLAN_DONE.md line 816 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.823 | - [x] **0-Warn.MD012.workers-PLAN_DONE.823** Fix MD012 in workers/PLAN_DONE.md line 823 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.824 | - [x] **0-Warn.MD012.workers-PLAN_DONE.824** Fix MD012 in workers/PLAN_DONE.md line 824 |
+| 2026-01-28 | 37.1.2 | - [x] **37.1.2** Remove references to renamed/deleted scripts and paths |
+| 2026-01-28 | 37.2.1 | - [x] **37.2.1** Inventory runnable tools and reconcile with `docs/TOOLS.md` |
+| 2026-01-28 | 37.2.2 | - [x] **37.2.2** Add missing usage/outputs/prereqs for each documented tool |
+| 2026-01-28 | 37.3.1 | - [x] **37.3.1** Refresh `NEURONS.md` to match current repo structure |
+| 2026-01-28 | 37.3.2 | - [x] **37.3.2** Reconcile `cortex/docs/REPO_MAP.md` and other high-level docs with current structure |
+| 2026-01-28 | 37.4.1 | - [x] **37.4.1** Add a lightweight "tool inventory" validator (optional) or documented procedure |
+| 2026-01-28 | 37.4.2 | - [x] **37.4.2** Add/extend a check to catch out-of-workspace brain references in templates |
+| 2026-01-28 | 38.1.1 | - [x] **38.1.1** Inventory duplicated topics and pick canonical docs |
+
+### Archived on 2026-01-28 (Batch 7)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-28 | 38.1.2 | - [x] **38.1.2** Resolve the highest-impact contradictions |
+| 2026-01-28 | 38.2.1 | - [x] **38.2.1** Create/refresh a single top-level “Start Here” section |
+| 2026-01-28 | 38.2.2 | - [x] **38.2.2** Reduce redundant onboarding text in `AGENTS.md`/`cortex/docs/*` |
+| 2026-01-28 | 38.3.1 | - [x] **38.3.1** Mark historical change logs and old analysis as “historical” and de-emphasize in navigation |
+| 2026-01-28 | 38.3.2 | - [x] **38.3.2** Merge or remove duplicate runbooks |
+| 2026-01-28 | 38.4.1 | - [x] **38.4.1** Standardize references to canonical files across the repo |
+| 2026-01-28 | 38.4.2 | - [x] **38.4.2** Add/refresh “See also” sections on major docs |
+| 2026-01-28 | 38.2.2 | - [x] **38.2.2** Reduce redundant onboarding text in `AGENTS.md`/`cortex/docs/*` |
+| 2026-01-28 | 38.3.1 | - [x] **38.3.1** Mark historical change logs and old analysis as "historical" and de-emphasize in navigation |
+| 2026-01-28 | 38.4.1 | - [x] **38.4.1** Standardize references to canonical files across the repo |

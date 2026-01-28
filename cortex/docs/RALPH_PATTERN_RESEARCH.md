@@ -13,7 +13,7 @@
 | specs/ | specs/ | Requirement documents per "topic of concern" |
 | AGENTS.md | AGENTS.md | Operational learnings (updated by weaver during BUILD) |
 | PROMPT.md | PROMPT.md | Core identity/instructions (~1-2KB, lean) |
-| IMPLEMENTATION_PLAN.md | IMPLEMENTATION_PLAN.md | Task list derived from specs |
+| workers/IMPLEMENTATION_PLAN.md | workers/IMPLEMENTATION_PLAN.md | Task list derived from specs |
 
 ## Core Architecture
 
@@ -21,7 +21,7 @@
 
 | Mode | Purpose | Prompt Focus |
 |------|---------|--------------|
-| PLANNING | Generate/update IMPLEMENTATION_PLAN.md | Gap analysis (specs vs code), no implementation |
+| PLANNING | Generate/update workers/IMPLEMENTATION_PLAN.md | Gap analysis (specs vs code), no implementation |
 | BUILDING | Implement tasks, commit | Pick task, implement, validate, commit |
 
 ### Context Loading Per Iteration
@@ -35,12 +35,12 @@
 ### BUILDING Mode Lifecycle (Ralph/Weaver)
 
 1. **Orient** – subagents study `specs/*` (requirements)
-2. **Read plan** – study `IMPLEMENTATION_PLAN.md`
+2. **Read plan** – study `workers/IMPLEMENTATION_PLAN.md`
 3. **Select** – pick the most important task
 4. **Investigate** – subagents study relevant `/src` ("don't assume not implemented")
 5. **Implement** – N subagents for file operations
 6. **Validate** – 1 subagent for build/tests (backpressure)
-7. **Update IMPLEMENTATION_PLAN.md** – mark task done, note discoveries/bugs
+7. **Update workers/IMPLEMENTATION_PLAN.md** – mark task done, note discoveries/bugs
 8. **Update AGENTS.md** – if operational learnings discovered
 9. **Commit**
 10. **Loop ends** → context cleared → next iteration starts fresh
@@ -49,7 +49,7 @@
 
 1. Subagents study `specs/*` and existing `/src`
 2. Compare specs against code (gap analysis)
-3. Create/update `IMPLEMENTATION_PLAN.md` with prioritized tasks
+3. Create/update `workers/IMPLEMENTATION_PLAN.md` with prioritized tasks
 4. **No implementation**
 
 ## Key Principles
@@ -237,7 +237,7 @@ This is why Ghuntley uses terminal conversations for planning - the AI maintains
 cortex.bash (current) → planning conversation
 - Load context once at start
 - Human and AI discuss, iterate, refine
-- Output: updated IMPLEMENTATION_PLAN.md
+- Output: updated workers/IMPLEMENTATION_PLAN.md
 - Human decides when plan is ready
 
 one-shot.sh → quick status/updates

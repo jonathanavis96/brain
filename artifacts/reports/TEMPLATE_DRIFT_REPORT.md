@@ -117,8 +117,8 @@ BEFORE=$(echo "$BEFORE_OUTPUT" | grep -c "error" || true)
 
 Differences are Brain-specific path references:
 
-- `workers/IMPLEMENTATION_PLAN.md` vs `IMPLEMENTATION_PLAN.md`
-- `workers/ralph/THUNK.md` vs `THUNK.md`
+- `workers/workers/IMPLEMENTATION_PLAN.md` vs `workers/IMPLEMENTATION_PLAN.md`
+- `workers/ralph/workers/ralph/THUNK.md` vs `workers/ralph/THUNK.md`
 
 These reflect Brain's multi-worker structure and are **appropriate for each context**.
 
@@ -200,7 +200,7 @@ Continue following the **Template Sync Rule** from `AGENTS.md`:
 ```bash
 # Full drift check (run from brain root)
 diff -r templates/ralph/ workers/ralph/ | \
-  grep -vc ".verify\|THUNK.md\|artifacts\|logs\|__pycache__\|\.bak"
+  grep -vc ".verify\|workers/ralph/THUNK.md\|artifacts\|logs\|__pycache__\|\.bak"
 
 # Expected output: ~3,179 lines (mostly context differences)
 

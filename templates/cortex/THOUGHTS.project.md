@@ -51,7 +51,7 @@
 
 **Actions Taken:**
 
-1. Created initial IMPLEMENTATION_PLAN.md with Phase 0 tasks
+1. Created initial workers/IMPLEMENTATION_PLAN.md with Phase 0 tasks
 2. Validated generated project structure
 3. Documented strategic context
 
@@ -88,7 +88,7 @@ From THOUGHTS.md:
 
 ## Notes for Future Sessions
 
-- Review Ralph's THUNK.md for patterns and blockers
+- Review Ralph's workers/ralph/THUNK.md for patterns and blockers
 - Update NEURONS.md as project structure evolves
 - Capture reusable patterns in Brain skills/
 - Promote decisions to DECISIONS.md when patterns emerge

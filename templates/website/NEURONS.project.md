@@ -52,7 +52,7 @@ project-root/
 ├── NEURONS.md              # Structure map (this file)
 ├── THOUGHTS.md             # Project vision and goals
 ├── VALIDATION_CRITERIA.md  # Acceptance criteria
-└── IMPLEMENTATION_PLAN.md  # Task backlog
+└── workers/IMPLEMENTATION_PLAN.md  # Task backlog
 ```
 
 ## Key Files
@@ -63,7 +63,7 @@ project-root/
 | `NEURONS.md` | Project structure map | When adding new directories |
 | `THOUGHTS.md` | Vision, goals, success criteria | During discovery/planning |
 | `VALIDATION_CRITERIA.md` | Quality gates and testing | Before each build phase |
-| `IMPLEMENTATION_PLAN.md` | Task backlog | Every planning session |
+| `workers/IMPLEMENTATION_PLAN.md` | Task backlog | Every planning session |
 | `docs/sitemap.md` | Navigation structure | When adding/removing pages |
 | `docs/sections.md` | Page section composition | During content planning |
 
@@ -210,7 +210,7 @@ npm run format
 
 ## Related
 
-- **[AGENTS.md](AGENTS.md)** - How to work on this project
+- **[AGENTS.project.md](AGENTS.project.md)** - How to work on this project
 - **[docs/sitemap.md](docs/sitemap.md)** - Navigation structure
 - **[docs/sections.md](docs/sections.md)** - Page section composition
 - **brain/skills/domains/websites/** - Website development patterns

@@ -11,7 +11,7 @@ We have drift between:
 - templates assuming `project/ralph/` (single-level), and
 - Brain using `project/workers/ralph/` (two-level)
 
-Multiple scripts/docs in Brain reference `workers/IMPLEMENTATION_PLAN.md`, `workers/ralph/THUNK.md`,
+Multiple scripts/docs in Brain reference `workers/workers/IMPLEMENTATION_PLAN.md`, `workers/ralph/workers/ralph/THUNK.md`,
 and other workers-root paths. Supporting both layouts via auto-detect would require branching logic
 across scripts and docs and still leaves ambiguity about the canonical “source of truth”.
 

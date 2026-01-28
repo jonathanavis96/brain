@@ -45,7 +45,7 @@ Quick reference for all CLI tools in the Brain repository. **Use these instead o
 
 ### `bin/brain-search` - Quick Multi-Source Search
 
-Search across THUNK.md, git history, and cache database.
+Search across workers/ralph/THUNK.md, git history, and cache database.
 
 **Purpose:** Fast multi-source search for task history and code changes.
 
@@ -76,11 +76,11 @@ bin/brain-search --limit 5 "cache"
 
 ---
 
-### `bin/thunk-parse` - THUNK.md Parser & Exporter
+### `bin/thunk-parse` - workers/ralph/THUNK.md Parser & Exporter
 
-Extract structured data from THUNK.md markdown tables.
+Extract structured data from workers/ralph/THUNK.md markdown tables.
 
-**Purpose:** Parse THUNK.md into structured formats for analysis and querying.
+**Purpose:** Parse workers/ralph/THUNK.md into structured formats for analysis and querying.
 
 **Usage:**
 
@@ -89,7 +89,7 @@ Extract structured data from THUNK.md markdown tables.
 bin/thunk-parse --stats
 
 # Export to JSON (stdout)
-bin/thunk-parse --format json workers/ralph/THUNK.md
+bin/thunk-parse --format json workers/ralph/workers/ralph/THUNK.md
 
 # Export to JSON file
 bin/thunk-parse --format json -o thunk.json
@@ -102,7 +102,7 @@ bin/thunk-parse --format sqlite -o thunk.db
 
 **Prerequisites:** Python 3, SQLite (for database export).
 
-**Token savings:** Use `--stats` instead of opening THUNK.md to count entries.
+**Token savings:** Use `--stats` instead of opening workers/ralph/THUNK.md to count entries.
 
 ---
 
@@ -135,7 +135,7 @@ bin/ralph-stats --full
 
 ### `bin/gap-radar` - Knowledge Gap Suggester
 
-Analyze errors and suggest entries for GAP_BACKLOG.md.
+Analyze errors and suggest entries for skills/self-improvement/GAP_BACKLOG.md.
 
 **Purpose:** Discover missing skills from error patterns and verifier failures.
 
@@ -148,11 +148,11 @@ bin/gap-radar --dry-run
 # Analyze specific log file
 bin/gap-radar --from-log path/to/log.txt
 
-# Auto-append to GAP_BACKLOG.md
+# Auto-append to skills/self-improvement/GAP_BACKLOG.md
 bin/gap-radar --append
 ```
 
-**Output:** Gap suggestions printed to stdout, optionally appended to `skills/self-improvement/GAP_BACKLOG.md`.
+**Output:** Gap suggestions printed to stdout, optionally appended to `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md`.
 
 **Prerequisites:** Python 3, `tools/gap_radar/patterns.yaml` for error matching.
 
@@ -250,23 +250,23 @@ echo "Long message..." | bin/discord-post --max-length 1500
 
 ## Python Tools (`tools/`)
 
-### `tools/thunk_parser.py` - THUNK.md Parser
+### `tools/thunk_parser.py` - workers/ralph/THUNK.md Parser
 
-Extract structured data from THUNK.md markdown tables.
+Extract structured data from workers/ralph/THUNK.md markdown tables.
 
-**Purpose:** Parse THUNK.md and export to JSON or SQLite for complex queries. Provides statistics on task completion.
+**Purpose:** Parse workers/ralph/THUNK.md and export to JSON or SQLite for complex queries. Provides statistics on task completion.
 
 **Usage:**
 
 ```bash
 # Parse and display stats
-python3 tools/thunk_parser.py workers/ralph/THUNK.md --stats
+python3 tools/thunk_parser.py workers/ralph/workers/ralph/THUNK.md --stats
 
 # Export to JSON
-python3 tools/thunk_parser.py workers/ralph/THUNK.md --format json --output thunk.json
+python3 tools/thunk_parser.py workers/ralph/workers/ralph/THUNK.md --format json --output thunk.json
 
 # Export to SQLite
-python3 tools/thunk_parser.py workers/ralph/THUNK.md --format sqlite --output thunk.db
+python3 tools/thunk_parser.py workers/ralph/workers/ralph/THUNK.md --format sqlite --output thunk.db
 ```
 
 **Output:** JSON array or SQLite database with fields: `thunk_num`, `original_id`, `priority`, `description`, `completed`, `era`.
@@ -328,7 +328,7 @@ Components for detecting knowledge gaps from errors.
 
 ### `tools/thunk_dedup.sh` - THUNK Deduplication
 
-Remove duplicate entries from THUNK.md (one-time cleanup utility).
+Remove duplicate entries from workers/ralph/THUNK.md (one-time cleanup utility).
 
 **Purpose:** Remove duplicate THUNK entries while preserving first occurrence.
 
@@ -342,7 +342,7 @@ bash tools/thunk_dedup.sh --dry-run
 bash tools/thunk_dedup.sh
 ```
 
-**Output:** Updates `workers/ralph/THUNK.md` in-place, prints statistics to stdout.
+**Output:** Updates `workers/ralph/workers/ralph/THUNK.md` in-place, prints statistics to stdout.
 
 **Prerequisites:** Bash, standard Unix tools (awk, sort).
 
@@ -569,9 +569,9 @@ bash workers/ralph/loop.sh --resume
 
 ### `workers/ralph/current_ralph_tasks.sh` - Task Monitor
 
-Real-time display of pending tasks from IMPLEMENTATION_PLAN.md.
+Real-time display of pending tasks from workers/IMPLEMENTATION_PLAN.md.
 
-**Purpose:** Monitor pending tasks from workers/IMPLEMENTATION_PLAN.md in real-time.
+**Purpose:** Monitor pending tasks from workers/workers/IMPLEMENTATION_PLAN.md in real-time.
 
 **Usage:**
 
@@ -585,15 +585,15 @@ bash workers/ralph/current_ralph_tasks.sh --once
 
 **Output:** Terminal display with pending tasks grouped by phase, updates on file change.
 
-**Prerequisites:** Bash, access to `workers/IMPLEMENTATION_PLAN.md`.
+**Prerequisites:** Bash, access to `workers/workers/IMPLEMENTATION_PLAN.md`.
 
 ---
 
 ### `workers/ralph/thunk_ralph_tasks.sh` - Completion Log Monitor
 
-Display completed task log from THUNK.md.
+Display completed task log from workers/ralph/THUNK.md.
 
-**Purpose:** View completed tasks from THUNK.md grouped by era.
+**Purpose:** View completed tasks from workers/ralph/THUNK.md grouped by era.
 
 **Usage:**
 
@@ -607,7 +607,7 @@ bash workers/ralph/thunk_ralph_tasks.sh --once
 
 **Output:** Terminal display of completed tasks with timestamps and descriptions.
 
-**Prerequisites:** Bash, access to `workers/ralph/THUNK.md`.
+**Prerequisites:** Bash, access to `workers/ralph/workers/ralph/THUNK.md`.
 
 ---
 
@@ -678,7 +678,7 @@ bash workers/ralph/render_ac_status.sh
 
 ### `workers/ralph/sync_workers_plan_to_cortex.sh` - Plan Sync
 
-Sync workers/IMPLEMENTATION_PLAN.md to cortex/IMPLEMENTATION_PLAN.md.
+Sync workers/workers/IMPLEMENTATION_PLAN.md to workers/workers/IMPLEMENTATION_PLAN.md.
 
 **Purpose:** Propagate Ralph's plan updates to Cortex manager layer.
 
@@ -689,7 +689,7 @@ Sync workers/IMPLEMENTATION_PLAN.md to cortex/IMPLEMENTATION_PLAN.md.
 bash workers/ralph/sync_workers_plan_to_cortex.sh
 ```
 
-**Output:** Copies `workers/IMPLEMENTATION_PLAN.md` to `cortex/IMPLEMENTATION_PLAN.md`.
+**Output:** Copies `workers/workers/IMPLEMENTATION_PLAN.md` to `workers/workers/IMPLEMENTATION_PLAN.md`.
 
 **Prerequisites:** Bash, write access to `cortex/` directory.
 
@@ -720,7 +720,7 @@ bash workers/ralph/init_verifier_baselines.sh
 
 Archive completed plan sections and reset for new work.
 
-**Purpose:** Archive completed sections from IMPLEMENTATION_PLAN.md.
+**Purpose:** Archive completed sections from workers/IMPLEMENTATION_PLAN.md.
 
 **Usage:**
 
@@ -729,7 +729,7 @@ Archive completed plan sections and reset for new work.
 bash workers/ralph/cleanup_plan.sh
 ```
 
-**Use case:** Periodic maintenance to prevent IMPLEMENTATION_PLAN.md from growing too large.
+**Use case:** Periodic maintenance to prevent workers/IMPLEMENTATION_PLAN.md from growing too large.
 
 ---
 
@@ -765,14 +765,14 @@ bash workers/ralph/pr-batch.sh
 
 ### `workers/ralph/update_thunk_from_plan.sh` - THUNK Sync
 
-Sync completed tasks from IMPLEMENTATION_PLAN.md to THUNK.md (utility for recovery).
+Sync completed tasks from workers/IMPLEMENTATION_PLAN.md to workers/ralph/THUNK.md (utility for recovery).
 
 ```bash
 # Sync completed tasks
 bash workers/ralph/update_thunk_from_plan.sh
 ```
 
-**Use case:** Recovery when THUNK.md and IMPLEMENTATION_PLAN.md get out of sync.
+**Use case:** Recovery when workers/ralph/THUNK.md and workers/IMPLEMENTATION_PLAN.md get out of sync.
 
 ---
 
@@ -785,7 +785,7 @@ SQLite schema for unified thread storage with FTS5 full-text search.
 **Tables:**
 
 - `threads` - Run/era records
-- `work_items` - Tasks from THUNK.md
+- `work_items` - Tasks from workers/ralph/THUNK.md
 - `tool_executions` - Tool call records
 
 **Usage:**
@@ -806,17 +806,17 @@ bin/thunk-parse --format sqlite -o threads.db
 
 | Bad (high tokens) | Good (low tokens) |
 |-------------------|-------------------|
-| `open_files workers/ralph/THUNK.md` | `bin/thunk-parse --stats` |
-| `grep "pattern" THUNK.md` | `bin/brain-search "pattern"` |
+| `open_files workers/ralph/workers/ralph/THUNK.md` | `bin/thunk-parse --stats` |
+| `grep "pattern" workers/ralph/THUNK.md` | `bin/brain-search "pattern"` |
 | Manual `git log \| grep` | `bin/brain-search --git-only "pattern"` |
-| Read whole IMPL_PLAN | `grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md \| head -10` |
+| Read whole IMPL_PLAN | `grep -n "^- \[ \]" workers/workers/IMPLEMENTATION_PLAN.md \| head -10` |
 
 ### For THUNK operations
 
 | Task | Command |
 |------|---------|
 | Check if task done | `bin/brain-search --thunk-only "11.1.3"` |
-| Get last THUNK # | `tail -5 workers/ralph/THUNK.md` then grep for `^\|` |
+| Get last THUNK # | `tail -5 workers/ralph/workers/ralph/THUNK.md` then grep for `^\|` |
 | Count completions | `bin/thunk-parse --stats` |
 | Find similar work | `bin/brain-search "keyword"` |
 

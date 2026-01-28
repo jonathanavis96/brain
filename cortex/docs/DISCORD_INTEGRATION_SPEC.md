@@ -132,7 +132,7 @@ Tasks:
 2. Git status: `git status --short`, `git log -1`
 3. Verifier: `.verify/latest.txt` SUMMARY section
 4. Cache stats: Global vars `CACHE_HITS`, `CACHE_MISSES`, `TIME_SAVED_MS`
-5. Tasks: Parse THUNK.md for this iteration's completions
+5. Tasks: Parse workers/ralph/THUNK.md for this iteration's completions
 
 ## Discord Webhook Format
 

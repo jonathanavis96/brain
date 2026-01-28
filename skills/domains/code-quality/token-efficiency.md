@@ -16,7 +16,7 @@ Minimize tool calls per iteration to save tokens and time. Target: <20 tool call
 | **Multi-File Search** | `grep pattern file1`, `grep pattern file2`, `grep pattern file3` (3 calls) | `grep pattern file1 file2 file3` (1 call) |
 | **Sequential Checks** | `shellcheck file1.sh`, `shellcheck file2.sh` (2 calls) | `shellcheck file1.sh file2.sh` (1 call) |
 | **Git Operations** | `git add file`, `git status`, `git add file`, `git commit` | `git add -A && git commit -m "msg"` (1 call) |
-| **Context Gathering** | Running `tail THUNK.md` multiple times | Get next number ONCE |
+| **Context Gathering** | Running `tail workers/ralph/THUNK.md` multiple times | Get next number ONCE |
 | **Formatting** | Running `shfmt -i 2`, `shfmt -w`, `shfmt -ci` variants | Run ONCE with correct flags |
 
 **Rule:** If you ran a command and got the result, you HAVE that information. Don't run it again.
@@ -29,7 +29,7 @@ Minimize tool calls per iteration to save tokens and time. Target: <20 tool call
 | ------ | ------ | ----- |
 | Reading `.verify/latest.txt` multiple times | 64x | Read ONCE at start, cache result |
 | Running `pwd`/`git branch` repeatedly | 38x | Known from header - never run |
-| Checking `tail THUNK.md` multiple times | 22x | Get next number ONCE |
+| Checking `tail workers/ralph/THUNK.md` multiple times | 22x | Get next number ONCE |
 | Same grep pattern on different calls | 100+ | Combine: `grep pattern file1 file2 file3` |
 | Checking same file repeatedly | 80+ | Read ONCE, remember content |
 

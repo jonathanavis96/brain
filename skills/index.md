@@ -247,7 +247,7 @@ Catalog of all skill files in the brain system.
 
 - [README.md](self-improvement/README.md) - Self-improvement system overview
 - [GAP_CAPTURE_RULES.md](self-improvement/GAP_CAPTURE_RULES.md) - Gap capture protocol
-- [GAP_BACKLOG.md](self-improvement/GAP_BACKLOG.md) - Raw gap capture log
+- [skills/self-improvement/GAP_BACKLOG.md](self-improvement/GAP_BACKLOG.md) - Raw gap capture log
 - [GAP_LOG_AND_AUTO_SKILL_SPEC.md](self-improvement/GAP_LOG_AND_AUTO_SKILL_SPEC.md) - Gap log structure and auto-skill generation spec
 - [SKILL_BACKLOG.md](self-improvement/SKILL_BACKLOG.md) - Promotion queue
 - [SKILL_TEMPLATE.md](self-improvement/SKILL_TEMPLATE.md) - Template for new skills

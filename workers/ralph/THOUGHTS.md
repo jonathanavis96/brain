@@ -149,7 +149,7 @@ brain/
     REPO_MAP.md                ← Human-friendly repo map
     DECISIONS.md               ← Stability anchor ("we decided X")
     RUNBOOK.md                 ← How to troubleshoot
-    IMPLEMENTATION_PLAN.md     ← HIGH-LEVEL atomic tasks (Cortex writes)
+    workers/IMPLEMENTATION_PLAN.md     ← HIGH-LEVEL atomic tasks (Cortex writes)
     THOUGHTS.md                ← Cortex's thinking/decisions
     run.sh                     ← Invoke: bash cortex/run.sh
     snapshot.sh                ← Generate current state for context
@@ -157,8 +157,8 @@ brain/
   workers/
     ralph/                     ← Worker - execution only
       PROMPT.md                ← Ralph's instructions
-      IMPLEMENTATION_PLAN.md   ← Ralph's COPY (tracks progress)
-      THUNK.md                 ← Completion log
+      workers/IMPLEMENTATION_PLAN.md   ← Ralph's COPY (tracks progress)
+      workers/ralph/THUNK.md                 ← Completion log
       loop.sh                  ← Existing loop machinery
       ...
       
@@ -169,10 +169,10 @@ brain/
 **Workflow:**
 
 1. Human runs `bash cortex/run.sh` → Opus loads as Cortex
-2. Cortex writes `cortex/IMPLEMENTATION_PLAN.md` (atomic tasks)
+2. Cortex writes `workers/workers/IMPLEMENTATION_PLAN.md` (atomic tasks)
 3. Human runs `bash workers/ralph/loop.sh`
-4. Ralph copies Cortex plan to `workers/IMPLEMENTATION_PLAN.md` (once at startup)
-5. Ralph executes tasks, updates his copy, logs to THUNK.md
+4. Ralph copies Cortex plan to `workers/workers/IMPLEMENTATION_PLAN.md` (once at startup)
+5. Ralph executes tasks, updates his copy, logs to workers/ralph/THUNK.md
 6. Cortex can compare both plans to check alignment
 
 **Restructure Strategy (Copy-Verify-Delete):**
@@ -188,7 +188,7 @@ This avoids Ralph breaking his own loop mid-execution.
 
 ## Next Actions
 
-**IMPLEMENTATION_PLAN.md now has 7 phases (Cortex is Phase 0 - highest priority):**
+**workers/IMPLEMENTATION_PLAN.md now has 7 phases (Cortex is Phase 0 - highest priority):**
 
 0. **Phase 0:** Cortex Manager Pack (NEW - human approved 2026-01-20)
    - Create cortex/ folder and core files

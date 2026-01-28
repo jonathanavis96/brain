@@ -2,7 +2,7 @@
 
 **Research Question:** How does Brain persist agent work history, and what capabilities are needed for searchable, queryable thread storage?
 
-**Scope:** THUNK.md, rollflow cache, conversation history, search patterns
+**Scope:** workers/ralph/THUNK.md, rollflow cache, conversation history, search patterns
 **Out of Scope:** Full-text search engines (Elasticsearch), cloud storage
 **Success Criteria:** Map current persistence → identify gaps → propose schema evolution
 **Confidence:** High (based on codebase analysis)
@@ -11,9 +11,9 @@
 
 ## 1. Current State
 
-### 1.1 THUNK.md - Completed Task Log
+### 1.1 workers/ralph/THUNK.md - Completed Task Log
 
-**Location:** `workers/ralph/THUNK.md`
+**Location:** `workers/ralph/workers/ralph/THUNK.md`
 
 **Purpose:** Append-only record of all completed tasks across iterations.
 
@@ -43,7 +43,7 @@ Started: 2026-01-18
 | Field | Type | Description |
 |-------|------|-------------|
 | THUNK # | Integer | Sequential ID (auto-incremented) |
-| Original # | String | Task ID from IMPLEMENTATION_PLAN.md |
+| Original # | String | Task ID from workers/IMPLEMENTATION_PLAN.md |
 | Priority | Enum | HIGH, MEDIUM, LOW |
 | Description | String | Task description + completion notes |
 | Completed | Date | YYYY-MM-DD format |
@@ -78,9 +78,9 @@ CREATE TABLE fail_log (
 
 **Purpose:** Track tool execution results for cache decisions.
 
-### 1.3 IMPLEMENTATION_PLAN.md - Active Tasks
+### 1.3 workers/IMPLEMENTATION_PLAN.md - Active Tasks
 
-**Location:** `workers/IMPLEMENTATION_PLAN.md` (synced from `cortex/IMPLEMENTATION_PLAN.md`)
+**Location:** `workers/workers/IMPLEMENTATION_PLAN.md` (synced from `workers/workers/IMPLEMENTATION_PLAN.md`)
 
 **Format:** Markdown checkboxes with task contracts
 
@@ -110,7 +110,7 @@ Every commit represents work done. Commit messages follow conventions:
 
 | Capability | Maturity | Notes |
 |------------|----------|-------|
-| Task completion log | ✅ Mature | THUNK.md is reliable, sequential |
+| Task completion log | ✅ Mature | workers/ralph/THUNK.md is reliable, sequential |
 | Era grouping | ✅ Mature | Logical phases preserved |
 | Tool cache | ✅ Mature | SQLite with pass/fail tracking |
 | Git history | ✅ Mature | Full audit trail |
@@ -119,12 +119,12 @@ Every commit represents work done. Commit messages follow conventions:
 
 | Gap | Severity | Description |
 |-----|----------|-------------|
-| **G1: No full-text search** | HIGH | Can't search THUNK.md efficiently |
+| **G1: No full-text search** | HIGH | Can't search workers/ralph/THUNK.md efficiently |
 | **G2: No cross-file correlation** | HIGH | THUNK ↔ commits ↔ cache not linked |
-| **G3: Markdown-only format** | MEDIUM | THUNK.md not queryable like SQLite |
+| **G3: Markdown-only format** | MEDIUM | workers/ralph/THUNK.md not queryable like SQLite |
 | **G4: No conversation persistence** | MEDIUM | Agent reasoning not stored |
 | **G5: No semantic search** | LOW | Can't search by concept/intent |
-| **G6: No retention policy** | LOW | THUNK.md grows indefinitely |
+| **G6: No retention policy** | LOW | workers/ralph/THUNK.md grows indefinitely |
 
 ---
 
@@ -134,7 +134,7 @@ Every commit represents work done. Commit messages follow conventions:
 
 ```text
 ┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│ IMPLEMENTATION  │────▶│    THUNK.md      │────▶│   Git Commit    │
+│ IMPLEMENTATION  │────▶│    workers/ralph/THUNK.md      │────▶│   Git Commit    │
 │   _PLAN.md      │     │  (completed)     │     │   (artifact)    │
 │  - [ ] tasks    │     │  - THUNK #       │     │  - sha          │
 │  - [x] tasks    │     │  - description   │     │  - message      │
@@ -221,7 +221,7 @@ CREATE INDEX idx_tool_executions_work_item ON tool_executions(work_item_id);
 
 **Goal:** Unified queryable storage.
 
-1. **THUNK → SQLite Sync** - Parse THUNK.md into SQLite on startup
+1. **THUNK → SQLite Sync** - Parse workers/ralph/THUNK.md into SQLite on startup
 2. **FTS Index** - Full-text search across descriptions
 3. **Cross-Reference Links** - THUNK # → commit SHA → tool calls
 4. **Query CLI** - `bin/brain-search "pattern"` for quick lookups
@@ -239,17 +239,17 @@ CREATE INDEX idx_tool_executions_work_item ON tool_executions(work_item_id);
 
 ## 5. Search Patterns (Current Workarounds)
 
-### 5.1 Search THUNK.md
+### 5.1 Search workers/ralph/THUNK.md
 
 ```bash
 # Find task by keyword
-grep -i "shellcheck" workers/ralph/THUNK.md
+grep -i "shellcheck" workers/ralph/workers/ralph/THUNK.md
 
 # Find tasks in date range
-grep "2026-01-25" workers/ralph/THUNK.md
+grep "2026-01-25" workers/ralph/workers/ralph/THUNK.md
 
 # Count tasks by era
-grep -c "^|" workers/ralph/THUNK.md
+grep -c "^|" workers/ralph/workers/ralph/THUNK.md
 ```
 
 ### 5.2 Search Git History
@@ -285,7 +285,7 @@ sqlite3 artifacts/rollflow_cache/cache.sqlite \
 
 | Action | Owner | Deliverable |
 |--------|-------|-------------|
-| Document THUNK.md schema | Ralph | Add schema section to README |
+| Document workers/ralph/THUNK.md schema | Ralph | Add schema section to README |
 | Create search patterns skill | Ralph | `skills/domains/ralph/thread-search-patterns.md` |
 | Add git log examples | Ralph | `skills/domains/code-quality/research-cheatsheet.md` |
 
@@ -312,9 +312,9 @@ From `cortex/docs/loom_brain_feature_deltas.md`:
 
 | Source | Relevance | Trust |
 |--------|-----------|-------|
-| `workers/ralph/THUNK.md` | Primary - task history | High |
+| `workers/ralph/workers/ralph/THUNK.md` | Primary - task history | High |
 | `tools/rollflow_analyze/src/rollflow_analyze/cache_db.py` | Primary - cache schema | High |
-| `workers/IMPLEMENTATION_PLAN.md` | Primary - active tasks | High |
+| `workers/workers/IMPLEMENTATION_PLAN.md` | Primary - active tasks | High |
 | Git history | Supporting - commit trail | High |
 | Loom feature deltas | Context - inspiration | Medium |
 

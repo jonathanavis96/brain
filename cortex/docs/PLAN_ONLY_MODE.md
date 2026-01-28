@@ -31,8 +31,8 @@ When Ralph runs in PLAN-ONLY mode (controlled by `RALPH_MODE=PLAN` environment v
   - `cat`, `grep`, `git status`, `git diff`, `git log`, `ls`, `find`
   - Example: `guard_plan_only_mode "grep"` → exits 0, no output
 - **plan-write:** Edits to planning documents
-  - Modifications to `workers/IMPLEMENTATION_PLAN.md` only
-  - Example: `guard_plan_only_mode "edit IMPLEMENTATION_PLAN.md"` → exits 0
+  - Modifications to `workers/workers/IMPLEMENTATION_PLAN.md` only
+  - Example: `guard_plan_only_mode "edit workers/IMPLEMENTATION_PLAN.md"` → exits 0
 
 ## Fail-Safe Design
 

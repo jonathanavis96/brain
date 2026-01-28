@@ -36,7 +36,7 @@ firefox artifacts/dashboard.html
 
 **What it measures:** Number of tasks completed per week over the last 12 weeks.
 
-**How it's calculated:** Parses `workers/ralph/THUNK.md` for completion timestamps, groups by week.
+**How it's calculated:** Parses `workers/ralph/workers/ralph/THUNK.md` for completion timestamps, groups by week.
 
 **Why it matters:** Tracks Ralph loop productivity and identifies bottlenecks. Declining velocity may indicate:
 
@@ -143,7 +143,7 @@ fi
 
 - Fresh repository with no history
 - Git log parsing issues (check date formats)
-- THUNK.md format changes
+- workers/ralph/THUNK.md format changes
 
 **Fix:** Verify `bash collect_metrics.sh` produces valid JSON with non-empty arrays.
 
@@ -174,4 +174,4 @@ fi
 - **[tools/gap_radar/](../gap_radar/)** - Error pattern detection
 - **[tools/skill_graph/](../skill_graph/)** - Skill dependency visualization
 - **[cortex/snapshot.sh](../../cortex/snapshot.sh)** - Repository snapshot tool
-- **[workers/ralph/THUNK.md](../../workers/ralph/THUNK.md)** - Completed task log
+- **[workers/ralph/workers/ralph/THUNK.md](../../workers/ralph/THUNK.md)** - Completed task log

@@ -41,8 +41,8 @@ Mode: Iteration 1 or every 3rd = PLAN, others = BUILD.
 
 Ralph uses two complementary monitors for real-time task tracking:
 
-**Current Ralph Tasks:** `bash current_ralph_tasks.sh` - Shows pending tasks from IMPLEMENTATION_PLAN.md  
-**THUNK Monitor:** `bash thunk_ralph_tasks.sh` - Shows completed task log from THUNK.md
+**Current Ralph Tasks:** `bash current_ralph_tasks.sh` - Shows pending tasks from workers/IMPLEMENTATION_PLAN.md  
+**THUNK Monitor:** `bash thunk_ralph_tasks.sh` - Shows completed task log from workers/ralph/THUNK.md
 
 See README.md for detailed monitor features and hotkeys.
 

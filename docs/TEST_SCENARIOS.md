@@ -76,25 +76,25 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
 
 ### Current Tasks Monitor (IMPLEMENTATION_PLAN.md)
 
-- [ ] **Test: Modify IMPLEMENTATION_PLAN.md → expect monitor updates within 1 second**
+- [ ] **Test: Modify workers/IMPLEMENTATION_PLAN.md → expect monitor updates within 1 second**
   - Run: Add/remove task in plan file
   - Expected: Monitor detects change within 1s (2x poll interval)
   - Validation: mtime polling at 0.5s intervals
 
 - [ ] **Test: Complete task in plan → expect monitor shows [x]**
-  - Run: Change `[ ]` to `[x]` in IMPLEMENTATION_PLAN.md
+  - Run: Change `[ ]` to `[x]` in workers/IMPLEMENTATION_PLAN.md
   - Expected: Task status updates in monitor display
   - Validation: Completed count increases
 
 ### Thunk Monitor (THUNK.md)
 
-- [ ] **Test: Modify THUNK.md → expect monitor updates within 1 second**
-  - Run: Append new row to THUNK.md
+- [ ] **Test: Modify workers/ralph/THUNK.md → expect monitor updates within 1 second**
+  - Run: Append new row to workers/ralph/THUNK.md
   - Expected: Monitor detects change within 1s
   - Validation: New entry appears in display
 
-- [ ] **Test: Add entry to THUNK.md → expect new entry appears without full redraw**
-  - Run: Manually append table row to THUNK.md
+- [ ] **Test: Add entry to workers/ralph/THUNK.md → expect new entry appears without full redraw**
+  - Run: Manually append table row to workers/ralph/THUNK.md
   - Expected: New entry appends to bottom, previous entries stable
   - Validation: No screen clear, incremental update only
 
@@ -122,7 +122,7 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
 ### Thunk Monitor UX
 
 - [ ] **Test: Startup time < 1 second with 100 entries**
-  - Run: Launch thunk monitor with 100 THUNK.md entries
+  - Run: Launch thunk monitor with 100 workers/ralph/THUNK.md entries
   - Expected: Initial display renders in < 1 second
   - Validation: Optimized title generation, no subprocesses
 
@@ -205,12 +205,12 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
 
 ### Graceful Degradation
 
-- [ ] **Test: THUNK.md line count decreases → expect full refresh**
-  - Run: Delete rows from THUNK.md
+- [ ] **Test: workers/ralph/THUNK.md line count decreases → expect full refresh**
+  - Run: Delete rows from workers/ralph/THUNK.md
   - Expected: Monitor detects decrease, triggers full refresh
   - Validation: Handles rare edit/deletion case
 
-- [ ] **Test: IMPLEMENTATION_PLAN.md becomes empty → expect monitors handle gracefully**
+- [ ] **Test: workers/IMPLEMENTATION_PLAN.md becomes empty → expect monitors handle gracefully**
   - Run: Remove all tasks from plan
   - Expected: Monitor shows "No tasks found" or similar
   - Validation: No crashes or errors
@@ -222,13 +222,13 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
 
 ### File System
 
-- [ ] **Test: IMPLEMENTATION_PLAN.md deleted → expect monitor detects and waits**
+- [ ] **Test: workers/IMPLEMENTATION_PLAN.md deleted → expect monitor detects and waits**
   - Run: Remove plan file while monitor running
   - Expected: Monitor detects missing file, waits for restoration
   - Validation: Handles temporary file absence
 
 - [ ] **Test: File permissions prevent reading → expect graceful error**
-  - Run: `chmod 000 IMPLEMENTATION_PLAN.md`
+  - Run: `chmod 000 workers/IMPLEMENTATION_PLAN.md`
   - Expected: Monitor logs error but doesn't crash
   - Validation: Permission errors handled gracefully
 
@@ -249,7 +249,7 @@ Comprehensive test checklist for Ralph loop and monitor system. Use this to veri
   - Validation: No DBus error messages in output
 
 - [ ] **Test: Monitors decouple from Ralph planning mode**
-  - Run: Modify THUNK.md during BUILD iteration
+  - Run: Modify workers/ralph/THUNK.md during BUILD iteration
   - Expected: Thunk monitor updates immediately
   - Validation: File watching independent of Ralph phase
 
@@ -318,7 +318,7 @@ Examples:
 
 ## References
 
-- **IMPLEMENTATION_PLAN.md** - Task definitions and completion status
+- **workers/IMPLEMENTATION_PLAN.md** - Task definitions and completion status
 - **THOUGHTS.md** - Design rationale and test format standard (Section H)
 - **VALIDATION_CRITERIA.md** - Quality gates and validation commands
 - **loop.sh** - Main Ralph loop implementation
