@@ -533,12 +533,11 @@ fi
 
 # Model version configuration - SINGLE SOURCE OF TRUTH
 # Update these when new model versions are released
-# Last updated: 2026-01-28 (RovoDev only supports Anthropic models)
+# Last updated: 2026-01-28
 MODEL_SONNET_45="anthropic.claude-sonnet-4-5-20250929-v1:0"
 MODEL_OPUS_45="anthropic.claude-opus-4-5-20251101-v1:0"
 MODEL_SONNET_4="anthropic.claude-sonnet-4-20250514-v1:0"
-# Note: gpt-5.2-codex is not a valid RovoDev model - RovoDev only supports Anthropic Claude models
-MODEL_GPT52_CODEX="$MODEL_OPUS_45"  # Default to Opus 4.5 (most powerful available)
+MODEL_GPT52_CODEX="gpt-5.2-codex"  # Valid RovoDev model ID (400K context)
 
 # Resolve model shortcut to full model ID
 resolve_model() {
@@ -622,7 +621,7 @@ if [[ "$RUNNER" == "rovodev" ]]; then
     # It always reads from ~/.rovodev/config.yml regardless
     # The temp config approach was abandoned because RovoDev rewrites any temp config
     # and falls back to the base config anyway
-    echo "Using model from base config: ~/.rovodev/config.yml"
+    # Silent - no need to print anything, user will see model in RovoDev output
     
     # Temp config creation code disabled - RovoDev ignores --config-file
     # Keeping this commented out for reference in case RovoDev behavior changes
@@ -697,7 +696,13 @@ else
 fi
 
 # Debug output for derived values
+# Note: For RovoDev, actual model comes from ~/.rovodev/config.yml
+MODEL_DISPLAY="${RESOLVED_MODEL:-<base config>}"
+if [[ "$RUNNER" == "rovodev" ]]; then
+  MODEL_DISPLAY="<from ~/.rovodev/config.yml>"
+fi
 echo "Repo: $REPO_NAME | Branch: $TARGET_BRANCH | Lock: $LOCK_FILE"
+echo "Runner=$RUNNER Model=$MODEL_DISPLAY Format=${OPENCODE_FORMAT:-default} Attach=${OPENCODE_ATTACH:-<none>} Serve=${OPENCODE_SERVE:-false}"
 
 # Resolve a prompt path robustly (works from repo root or ralph/)
 resolve_prompt() {
@@ -1881,9 +1886,6 @@ if [[ -n "${OPENCODE_ATTACH:-}" ]]; then
     OPENCODE_ATTACH=""
   fi
 fi
-
-# Print effective config for debugging
-echo "Runner=${RUNNER} Model=${RESOLVED_MODEL:-<default>} Format=${OPENCODE_FORMAT:-<default>} Attach=${OPENCODE_ATTACH:-<none>} Serve=${OPENCODE_SERVE:-false}"
 
 # Change to repository root for all git operations
 cd "$ROOT"

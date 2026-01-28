@@ -50,7 +50,7 @@ function InsightsPanel({
   useEffect(() => {
     const fetchNodes = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/nodes`)
+        const response = await fetch(`${API_BASE_URL}/graph`)
         if (response.ok) {
           const data = await response.json()
           setAvailableNodes(data.nodes || [])
