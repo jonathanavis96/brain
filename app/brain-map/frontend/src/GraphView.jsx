@@ -383,6 +383,8 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
 
     let timeoutId = null
     let containerElement = null
+    let handleTouchMove = null
+    let handleTouchEnd = null
 
     // Setup drop zone handlers on container
     const container = containerRef.current
@@ -797,7 +799,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
       }
 
       // Handle touch move for mobile gestures
-      const handleTouchMove = (e) => {
+      handleTouchMove = (e) => {
         const touches = e.touches
 
         // Pinch-to-zoom: two-finger pinch
@@ -860,7 +862,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
       }
 
       // Handle touch end to cleanup touch state
-      const handleTouchEnd = (e) => {
+      handleTouchEnd = (e) => {
         // Reset pinch distance when fingers are lifted
         if (e.touches.length < 2) {
           sigma._touchPinchDistance = null
