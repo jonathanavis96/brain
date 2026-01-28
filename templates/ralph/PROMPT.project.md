@@ -31,6 +31,26 @@ In PLANNING mode, you MUST end with:
 
 This signals loop.sh to proceed to BUILD mode. Without this marker, the iteration is wasted.
 
+### Required End-of-Iteration Summary Block
+
+Immediately before the marker, always output this strict block (fixed order):
+
+```text
+**Summary**
+- ...
+
+**Changes Made**
+- ...
+
+**Next Steps**
+- ...
+
+**Completed** (optional)
+- ...
+```
+
+Rules: bullets/short paragraphs; no code fences/boxes; no STATUS lines; marker on its own line after.
+
 ### Batch Similar Fixes
 
 When you encounter multiple instances of the same issue type (e.g., SC2155, SC2086):

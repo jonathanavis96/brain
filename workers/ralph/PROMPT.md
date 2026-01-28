@@ -224,6 +224,24 @@ See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
 
 **End:** `:::PLAN_READY:::` or `:::BUILD_READY:::` on its own line.
 
+**STRICT SUMMARY BLOCK (required; immediately before the marker):**
+
+```text
+**Summary**
+- ...
+
+**Changes Made**
+- ...
+
+**Next Steps**
+- ...
+
+**Completed** (optional)
+- ...
+```
+
+Rules: fixed order; bullets/short paragraphs; no code fences/boxes; exclude STATUS; marker on its own line after.
+
 ---
 
 ## PLANNING Mode (Iteration 1 or every 3rd)
