@@ -133,8 +133,8 @@ function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActiv
       )}
 
       <div style={{
-        backgroundColor: 'white',
-        border: '1px solid #ddd',
+        backgroundColor: 'var(--color-panel-background)',
+        border: '1px solid var(--color-panel-border)',
         borderRadius: '8px',
         boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         display: 'flex',
@@ -203,10 +203,12 @@ function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActiv
                 width: '100%',
                 minHeight: '150px',
                 padding: '0.5rem',
-                border: '1px solid #ddd',
+                border: '1px solid var(--color-panel-border)',
                 borderRadius: '4px',
                 fontSize: '14px',
                 fontFamily: 'monospace',
+                background: 'var(--color-panel-background)',
+                color: 'var(--color-text)',
                 resize: 'vertical',
                 boxSizing: 'border-box'
               }}
@@ -229,10 +231,11 @@ function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActiv
               style={{
                 width: '100%',
                 padding: '0.5rem',
-                border: '1px solid #ddd',
+                border: '1px solid var(--color-panel-border)',
                 borderRadius: '4px',
                 fontSize: '14px',
-                background: '#fff',
+                background: 'var(--color-panel-background)',
+                color: 'var(--color-text)',
                 boxSizing: 'border-box'
               }}
             >
@@ -262,10 +265,11 @@ function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActiv
               style={{
                 width: '100%',
                 padding: '0.5rem',
-                border: '1px solid #ddd',
+                border: '1px solid var(--color-panel-border)',
                 borderRadius: '4px',
                 fontSize: '14px',
-                background: '#fff',
+                background: 'var(--color-panel-background)',
+                color: 'var(--color-text)',
                 boxSizing: 'border-box'
               }}
             >
@@ -296,13 +300,15 @@ function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActiv
               style={{
                 width: '100%',
                 padding: '0.5rem',
-                border: '1px solid #ddd',
+                border: '1px solid var(--color-panel-border)',
                 borderRadius: '4px',
                 fontSize: '14px',
+                background: 'var(--color-panel-background)',
+                color: 'var(--color-text)',
                 boxSizing: 'border-box'
               }}
             />
-            <div style={{ fontSize: '12px', color: '#666', marginTop: '0.25rem' }}>
+            <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginTop: '0.25rem' }}>
               Separate multiple tags with commas
             </div>
           </div>
@@ -314,7 +320,7 @@ function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActiv
             gap: '0.5rem',
             marginBottom: '0.5rem',
             padding: '0.75rem',
-            background: '#f5f5f5',
+            background: 'var(--color-panel-background-alt)',
             borderRadius: '4px',
             border: '2px dashed #2196F3'
           }}>
@@ -342,7 +348,7 @@ function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActiv
             >
               📍
             </div>
-            <div style={{ flex: 1, fontSize: '12px', color: '#666' }}>
+            <div style={{ flex: 1, fontSize: '12px', color: 'var(--color-text-secondary)' }}>
               <strong>Drag to Place</strong>
               <div>Drag the 📍 icon onto the graph to place the node at a specific location</div>
             </div>

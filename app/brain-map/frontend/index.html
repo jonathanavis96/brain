@@ -5,6 +5,124 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Brain Map</title>
+    <style>
+      /* CSS Variables for Theme Support */
+      :root {
+        /* Base colors */
+        --color-background: #ffffff;
+        --color-background-secondary: #f9f9f9;
+        --color-text: #333333;
+        --color-text-secondary: #666666;
+
+        /* Panel colors */
+        --color-panel-border: #dddddd;
+        --color-panel-background: #ffffff;
+        --color-panel-background-alt: #f5f5f5;
+
+        /* Interactive elements */
+        --color-button-border: #dddddd;
+        --color-button-background: #ffffff;
+        --color-button-background-hover: #f5f5f5;
+        --color-button-background-active: #4CAF50;
+        --color-button-text: #333333;
+        --color-button-text-active: #ffffff;
+
+        /* Status colors */
+        --color-status-success: #d4edda;
+        --color-status-success-text: #155724;
+        --color-status-error: #f8d7da;
+        --color-status-error-text: #721c24;
+        --color-status-warning: #fff3cd;
+        --color-status-info: #e3f2fd;
+        --color-status-info-border: #90caf9;
+        --color-status-info-text: #1976d2;
+
+        /* Modal/overlay */
+        --color-modal-overlay: rgba(0, 0, 0, 0.5);
+        --color-modal-background: #ffffff;
+        --color-modal-border: #eeeeee;
+
+        /* Canvas */
+        --color-canvas-background: #f8f9fa;
+
+        /* Edges/links */
+        --color-edge-default: #999999;
+        --color-edge-highlight: #00bcd4;
+
+        /* Danger */
+        --color-danger: #ef4444;
+        --color-danger-hover: #dc2626;
+      }
+
+      /* Dark mode variables */
+      :root[data-theme="dark"] {
+        /* Base colors */
+        --color-background: #1a1a1a;
+        --color-background-secondary: #242424;
+        --color-text: #e0e0e0;
+        --color-text-secondary: #a0a0a0;
+
+        /* Panel colors */
+        --color-panel-border: #3a3a3a;
+        --color-panel-background: #242424;
+        --color-panel-background-alt: #2a2a2a;
+
+        /* Interactive elements */
+        --color-button-border: #3a3a3a;
+        --color-button-background: #2a2a2a;
+        --color-button-background-hover: #333333;
+        --color-button-background-active: #388e3c;
+        --color-button-text: #e0e0e0;
+        --color-button-text-active: #ffffff;
+
+        /* Status colors */
+        --color-status-success: #1e4620;
+        --color-status-success-text: #81c784;
+        --color-status-error: #4a1f1f;
+        --color-status-error-text: #e57373;
+        --color-status-warning: #4a3f1f;
+        --color-status-info: #1a3a52;
+        --color-status-info-border: #5c8ab8;
+        --color-status-info-text: #64b5f6;
+
+        /* Modal/overlay */
+        --color-modal-overlay: rgba(0, 0, 0, 0.8);
+        --color-modal-background: #2a2a2a;
+        --color-modal-border: #3a3a3a;
+
+        /* Canvas */
+        --color-canvas-background: #1e1e1e;
+
+        /* Edges/links */
+        --color-edge-default: #505050;
+        --color-edge-highlight: #00acc1;
+
+        /* Danger */
+        --color-danger: #f87171;
+        --color-danger-hover: #ef4444;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: var(--color-background);
+        color: var(--color-text);
+      }
+
+      /* Sensible defaults for form controls (many components use inline styles but omit bg/text) */
+      input,
+      select,
+      textarea {
+        background-color: var(--color-panel-background);
+        color: var(--color-text);
+        border: 1px solid var(--color-panel-border);
+      }
+
+      input::placeholder,
+      textarea::placeholder {
+        color: var(--color-text-secondary);
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

@@ -141,6 +141,11 @@ function App() {
     localStorage.setItem('brainMapTheme', themeMode)
   }, [themeMode])
 
+  // Wire themeMode into CSS variable theme (index.html uses :root[data-theme="dark"])
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', themeMode)
+  }, [themeMode])
+
   // Keyboard shortcuts for search (Ctrl+K) and presentation mode navigation
   useEffect(() => {
     const handleKeyDown = (e) => {
