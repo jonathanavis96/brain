@@ -375,7 +375,27 @@ else
   warn "Template not found: ralph/RALPH.md"
 fi
 
+# Create Cortex gap capture file (cross-project pattern mining)
+if [ -f "$TEMPLATES_DIR/cortex/GAP_CAPTURE.project.md" ]; then
+  mkdir -p "$PROJECT_LOCATION/cortex"
+  cp "$TEMPLATES_DIR/cortex/GAP_CAPTURE.project.md" "$PROJECT_LOCATION/cortex/GAP_CAPTURE.md"
+  substitute_placeholders "$PROJECT_LOCATION/cortex/GAP_CAPTURE.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Created cortex/GAP_CAPTURE.md"
+else
+  warn "Template not found: cortex/GAP_CAPTURE.project.md"
+fi
+
 # Copy loop.sh with placeholder substitution
+
+# Copy gap capture helper (cross-project pattern mining)
+if [ -f "$TEMPLATES_DIR/ralph/capture_gap.sh" ]; then
+  mkdir -p "$PROJECT_LOCATION/ralph"
+  cp "$TEMPLATES_DIR/ralph/capture_gap.sh" "$PROJECT_LOCATION/ralph/capture_gap.sh"
+  chmod +x "$PROJECT_LOCATION/ralph/capture_gap.sh" || true
+  success "Copied ralph/capture_gap.sh"
+else
+  warn "Template not found: ralph/capture_gap.sh"
+fi
 
 # Copy brain skills sync helper into ralph/ (workspace-safe brain snapshot refresh)
 if [ -f "$TEMPLATES_DIR/ralph/sync_brain_skills.sh" ]; then

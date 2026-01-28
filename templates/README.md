@@ -40,6 +40,25 @@ To refresh that snapshot later, run:
 bash workers/ralph/sync_brain_skills.sh --from-sibling
 ```text
 
+## Cross-Project Pattern Mining (Gap Capture)
+
+Bootstrapped projects can capture missing knowledge locally in `cortex/GAP_CAPTURE.md`.
+To flag gaps for ingestion into Brain, touch `cortex/.gap_pending`.
+
+**Helper (recommended):**
+
+```bash
+bash workers/ralph/capture_gap.sh "Suggested Skill Name" \
+  --type "Pattern" \
+  --priority "P1" \
+  --why "1-2 lines" \
+  --trigger "what you were doing" \
+  --evidence "paths/notes"
+```text
+
+**Brain-side ingestion:** run `bash cortex/sync_gaps.sh` from the Brain repo to import pending gaps into `skills/self-improvement/GAP_BACKLOG.md`.
+
+
 Templates use **relative paths with forward slashes**:
 
 ```markdown
