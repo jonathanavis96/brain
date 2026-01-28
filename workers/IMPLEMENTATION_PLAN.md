@@ -22,6 +22,193 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
+## Phase 1: Iteration Summary Reliability / Discord summaries
+
+**Context:** The current system sometimes prints "No structured summary found in logs." Example logs contain a response header line ("─── Response ─────────────────────────────────────────"), then a multi-line STATUS header (e.g., `STATUS | ...` and one or more continuation lines like `phase=...`), then the plan/summary body, then a sentinel marker line (`:::PLAN_READY:::` or `:::BUILD_READY:::`). We need reliable iteration summary capture and Discord-ready formatting every time.
+
+**Goal:** Make iteration summaries reliably captured and posted every time by:
+
+1. Enforcing a strict structured summary block emitted by the agent on every iteration (PLAN + BUILD)
+2. Making the log extractor robust (extract the block between the response header and the last `:::PLAN_READY:::` / `:::BUILD_READY:::` marker)
+3. Producing a clean Discord payload (strip ANSI/ASCII art, remove STATUS + marker lines, format as readable headings + bullets, not a code block)
+
+**Strict Output Contract (must be enforced via prompts/templates):**
+
+At the end of every iteration (PLAN/BUILD), immediately before the marker line, output **exactly** this block shape:
+
+- **Summary**
+  - ...
+- **Changes Made**
+  - ...
+- **Next Steps**
+  - ...
+- **Completed** (optional)
+  - ...
+
+**Rules:**
+
+- Do not include ANSI framing/box lines.
+- Do not include `STATUS | ...` lines in the summary block.
+- Marker line must be on its own line after the block.
+
+---
+
+- [ ] **1.2** Define and document the strict structured summary block contract (fixed headings, fixed order)
+  - **Goal:** Remove ambiguity by specifying a strict, fixed-shape summary block that the agent must always emit immediately before `:::PLAN_READY:::` / `:::BUILD_READY:::`.
+  - **Inputs:** The desired strict contract and current prompt/template guidance.
+  - **Outputs:** A clear, enforceable contract wording that can be inserted into prompts/templates.
+  - **Files likely to touch:** `workers/ralph/PROMPT.md`, `templates/ralph/PROMPT.md`, `templates/ralph/PROMPT.project.md` (and any related prompt references)
+  - **AC:**
+    - Contract requires headings in this exact order: Summary, Changes Made, Next Steps, optional Completed.
+    - Each section must be bullets (or short paragraphs) and must not include box-drawing / ASCII framing.
+    - Explicitly states: always emit the block every iteration even if the agent would otherwise output something else.
+    - Explicitly states: marker is on its own line after the block.
+  - **Verification:**
+    - `rg -n "\\*\\*Summary\\*\\*|\\*\\*Changes Made\\*\\*|\\*\\*Next Steps\\*\\*|\\*\\*Completed\\*\\*" workers/ralph/PROMPT.md templates/ralph/PROMPT.md templates/ralph/PROMPT.project.md`
+  - **Risk notes:** `workers/ralph/PROMPT.md` may be hash-guarded; updating may require hash baseline updates.
+  - **If Blocked:** If protected-file rules prevent edits, create/update `SPEC_CHANGE_REQUEST.md` and stop.
+
+- [ ] **1.3** Add extraction fixtures and a quick local verification command
+  - **Goal:** Prevent regressions by adding small saved log fixtures capturing real failure cases and a repeatable local command to validate extraction output.
+  - **Inputs:** Representative log snippets (response header + multi-line STATUS + strict summary block + marker; plus failure/fallback cases).
+  - **Outputs:** Fixture files and a lightweight verification command/script to run extraction against them.
+  - **Files likely to touch:**
+    - `workers/ralph/tests/fixtures/summary_case1_plan.log`
+    - `workers/ralph/tests/fixtures/summary_case2_build.log`
+    - `workers/ralph/tests/fixtures/summary_case3_missing_response_header.log`
+    - `workers/ralph/tests/verify_summary_extraction.sh` (or similar)
+  - **AC:**
+    - Fixtures cover: PLAN marker, BUILD marker, fallback to STATUS when response header missing, and a marker-present-but-unextractable case.
+    - Verification script exists and is runnable, and prints Discord-ready extracted text for each fixture.
+  - **Verification:**
+    - `bash -n workers/ralph/tests/verify_summary_extraction.sh`
+    - `bash workers/ralph/tests/verify_summary_extraction.sh`
+  - **Risk notes:** Keeping fixtures too large increases noise; keep them minimal.
+  - **If Blocked:** If a tests directory does not exist, create it under `workers/ralph/tests/` with minimal footprint.
+
+- [ ] **1.4** Update extractor to anchor on response header → marker (last marker wins)
+  - **Goal:** Make extraction robust and deterministic: find the last `:::PLAN_READY:::` / `:::BUILD_READY:::`, then extract the block between the response start and the marker.
+  - **Inputs:** Raw log text (including response header, STATUS header, body, marker).
+  - **Outputs:** Extracted summary block text suitable for Discord posting.
+  - **Files likely to touch:** `workers/ralph/loop.sh` (function `generate_iteration_summary()`)
+  - **AC:**
+    - Finds the last occurrence of either `:::PLAN_READY:::` or `:::BUILD_READY:::`.
+    - Locates start boundary by preferring nearest preceding "─── Response" separator; fallback to nearest preceding `^STATUS |`.
+    - Extracts inclusive block between start and marker (marker excluded).
+    - Removes STATUS header portion (per 1.5), strips ANSI, removes decorative framing.
+    - Works on fixtures from 1.3.
+  - **Verification:**
+    - `bash -n workers/ralph/loop.sh`
+    - `bash workers/ralph/tests/verify_summary_extraction.sh`
+  - **Risk notes:** Incorrect anchoring could capture the wrong iteration in multi-iteration logs.
+  - **If Blocked:** If response header format differs across runners, expand the header-match pattern conservatively and update fixtures.
+
+- [ ] **1.5** Robustly drop multi-line STATUS header (continuations only when immediately after STATUS)
+  - **Goal:** Drop 2+ status lines reliably without deleting legitimate body content later.
+  - **Inputs:** Extracted block starting at response header or STATUS.
+  - **Outputs:** Clean body text without status header lines.
+  - **Files likely to touch:** `workers/ralph/loop.sh` (cleaning stage inside `generate_iteration_summary()`)
+  - **AC:**
+    - Drops the `^STATUS |` line.
+    - Then drops immediately following "status continuation" metadata lines only if they directly follow STATUS, stopping at the first blank line or first non-metadata body line.
+    - Does not delete later `phase=` content in the body.
+  - **Verification:**
+    - `bash workers/ralph/tests/verify_summary_extraction.sh` covers a fixture where body includes later `phase=` text.
+  - **Risk notes:** Overly broad continuation matching could delete real content.
+  - **If Blocked:** Tighten continuation matching to an allowlist (e.g., `^(phase|step|tasks|file|runner|model)=`).
+
+- [ ] **1.6** Add graceful fallback when markers exist but structured block cannot be extracted
+  - **Goal:** If marker exists but block extraction fails, provide a Discord-friendly fallback including iteration metadata and an ANSI-stripped excerpt of the last ~40 lines.
+  - **Inputs:** Raw log text with marker present.
+  - **Outputs:** Fallback summary message (not a code block) including iteration number, phase, log path, and excerpt.
+  - **Files likely to touch:** `workers/ralph/loop.sh` (fallback branch in `generate_iteration_summary()`)
+  - **AC:**
+    - If markers exist but extraction fails, output includes iteration number, phase, log path, and a "Recent log excerpt" section of ~40 lines after ANSI stripping.
+    - Output is formatted as readable headings + bullets; no code fences.
+  - **Verification:**
+    - Fixture case includes marker but no extractable block; verify output matches spec via `bash workers/ralph/tests/verify_summary_extraction.sh`.
+  - **Risk notes:** Excerpts can leak noise; ensure ANSI and decorative lines are stripped.
+  - **If Blocked:** Reduce excerpt length and ensure stripping is applied before truncation.
+
+- [ ] **1.7** Update prompts/templates to force the strict summary block every iteration (PLAN + BUILD)
+  - **Goal:** Ensure the agent always emits the strict block immediately before the marker line, regardless of other content.
+  - **Inputs:** Strict contract from 1.2.
+  - **Outputs:** Prompt instructions that force the strict summary block at end of every iteration.
+  - **Files likely to touch:**
+    - `workers/ralph/PROMPT.md`
+    - `templates/ralph/PROMPT.md`
+    - `templates/ralph/PROMPT.project.md`
+    - Potentially `.verify/prompt.sha256`, `workers/ralph/.verify/prompt.sha256`, `templates/ralph/.verify/prompt.sha256`
+  - **AC:**
+    - Prompt explicitly instructs: "At the end of every iteration (PLAN/BUILD), immediately before the marker line, output EXACTLY this block shape:" and includes the strict headings and bullet requirements.
+    - Explicitly forbids ANSI framing/box lines and forbids including STATUS lines inside the summary block.
+    - Requires marker line on its own line after the block.
+  - **Verification:**
+    - `rg -n "EXACTLY this block shape" workers/ralph/PROMPT.md templates/ralph/PROMPT.md templates/ralph/PROMPT.project.md`
+  - **Risk notes:** `workers/ralph/PROMPT.md` may be protected/hash-guarded and require hash regeneration.
+  - **If Blocked:** Create/update `SPEC_CHANGE_REQUEST.md` and stop if protected-file changes are disallowed.
+
+- [ ] **1.8** Produce a clean Discord payload (no code blocks; readable headings + bullets)
+  - **Goal:** Discord messages should be readable markdown (bold headings + bullets), not wrapped in code fences.
+  - **Inputs:** Generated summary content from `generate_iteration_summary()`.
+  - **Outputs:** Discord webhook payload with clean markdown formatting.
+  - **Files likely to touch:** `bin/discord-post`
+  - **AC:**
+    - `bin/discord-post` does not wrap content in triple-backtick fences (single and multi-chunk cases).
+    - Chunking remains safe at ~1900 chars.
+    - Headings and bullets are preserved.
+  - **Verification:**
+    - `echo "**Title**\n\n**Summary**\n- a" | DISCORD_WEBHOOK_URL=dummy bin/discord-post --dry-run | jq -r .content` contains no triple-backtick fences.
+  - **Risk notes:** Some users may rely on code block formatting; change is intentional per spec.
+  - **If Blocked:** Add a flag to preserve old behavior only if required by backward compatibility, otherwise proceed with spec.
+
+- [ ] **1.9** Enforce compacting + truncation (< 1800 characters target)
+  - **Goal:** Keep Discord summaries compact; if longer, truncate with a clear note and keep key sections.
+  - **Inputs:** Potentially long extracted summaries.
+  - **Outputs:** Truncated summary with "(truncated)" note when needed.
+  - **Files likely to touch:** `workers/ralph/loop.sh` (preferred) and/or `bin/discord-post` (guardrail)
+  - **AC:**
+    - If generated summary exceeds ~1800 chars, it truncates and appends a "(truncated)" note.
+    - Retains at least the title, Summary section, and Next Steps section.
+  - **Verification:**
+    - Add/extend a fixture with >1800 chars and validate truncation via `bash workers/ralph/tests/verify_summary_extraction.sh`.
+  - **Risk notes:** Naive truncation can cut headings; ensure truncation preserves section boundaries where possible.
+  - **If Blocked:** Truncate by sections rather than raw characters.
+
+- [ ] **1.10** Propagate changes to templates to prevent drift
+  - **Goal:** Ensure template Ralph loop + Discord tooling match the fixed behavior so new projects behave correctly.
+  - **Inputs:** Implemented changes in workers.
+  - **Outputs:** Template updates mirroring the same logic/behavior.
+  - **Files likely to touch:**
+    - `templates/ralph/loop.sh`
+    - `templates/ralph/bin/discord-post`
+    - `templates/ralph/PROMPT.md`
+    - `templates/ralph/PROMPT.project.md`
+  - **AC:**
+    - Template versions match the fixed extraction logic, strict summary contract, and Discord formatting changes.
+    - Any intentional differences are documented in comments.
+  - **Verification:**
+    - `rg -n "generate_iteration_summary" templates/ralph/loop.sh`
+    - `diff -u bin/discord-post templates/ralph/bin/discord-post` (expect identical or documented deltas)
+  - **Risk notes:** Template drift is a recurring source of regressions.
+  - **If Blocked:** Split propagation into smaller tasks per file if changes are too large.
+
+- [ ] **1.11** Verification / Done Definition (lint + end-to-end iteration)
+  - **Goal:** Prove reliability end-to-end: strict block emitted, extractor finds correct block around last marker, Discord payload is clean.
+  - **Inputs:** Updated prompts, extractor, Discord post tool, fixtures.
+  - **Outputs:** Passing local checks and at least one end-to-end iteration producing a Discord-ready summary.
+  - **Files likely to touch:** None (verification-only)
+  - **AC:**
+    - `markdownlint workers/IMPLEMENTATION_PLAN.md` succeeds.
+    - `bash -n workers/ralph/loop.sh bin/discord-post` succeeds.
+    - At least one end-to-end iteration produces a Discord-ready summary (dry-run acceptable): no ANSI, no marker line, no STATUS header, no code fences, readable headings + bullets.
+  - **Verification:**
+    - `markdownlint workers/IMPLEMENTATION_PLAN.md`
+    - `bash -n workers/ralph/loop.sh bin/discord-post`
+    - `DISCORD_WEBHOOK_URL=... bash workers/ralph/loop.sh --iterations 1` (or `bin/discord-post --dry-run` if no network)
+  - **Risk notes:** Network/webhook failures should remain non-blocking; validate dry-run output if needed.
+  - **If Blocked:** Use `--dry-run` for `bin/discord-post` and verify payload content locally.
+
 ## Phase 36: Brain Map V2 UX + Interaction Fixes
 
 **Context:** Recent Brain Map V2 work improved dark mode, label readability, and timeline performance, but several interaction bugs remain (label hover geometry/duplication, node drag repulsion, Quick Add details panel not reflecting created nodes).
