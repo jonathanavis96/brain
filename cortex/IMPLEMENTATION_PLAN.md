@@ -40,17 +40,45 @@
 
 ### Task 33.1: Temporal Visualization
 
+- [ ] **33.1.1** Timeline scrubber UI - Add slider component at bottom of canvas, shows date range from oldest to newest note. AC: Slider renders. Verification: Open Brain Map → slider visible at bottom. If Blocked: Show date range text only
+
+- [ ] **33.1.2** Filter graph by date - Backend endpoint `/index?before=YYYY-MM-DD` returns nodes/edges created before specified date. AC: Endpoint works. Verification: Request with date → returns filtered graph. If Blocked: Client-side date filtering
+
+- [ ] **33.1.3** Animate timeline playback - "Play" button advances scrubber forward in time, nodes fade in as they appear. AC: Play button works. Verification: Click play → scrubber moves, graph updates. If Blocked: Manual scrubber only
+
+- [ ] **33.1.4** Activity calendar integration - Click calendar date → scrubber jumps to that date, graph filters. AC: Calendar integration works. Verification: Click ActivityCalendar date → scrubber updates. If Blocked: Separate controls
+
 ---
 
 ### Task 33.2: Collaboration (Comments)
+
+- [ ] **33.2.1** Comments tab in InsightsPanel - Add "Comments" tab next to "Details", shows threaded discussion for selected node. AC: Tab renders. Verification: Select node → Comments tab appears. If Blocked: Read-only comment display
+
+- [ ] **33.2.2** Comments backend - Backend stores comments in `notes/{id}.comments.json`, endpoints: `GET/POST /notes/{id}/comments`. AC: Endpoints work. Verification: POST comment → appears in GET. If Blocked: Frontmatter-only comments
+
+- [ ] **33.2.3** Comment posting UI - Text area + "Post Comment" button, shows author/timestamp, supports markdown. AC: Can post comments. Verification: Write comment → submit → appears in list. If Blocked: Plain text only
+
+- [ ] **33.2.4** @mentions autocomplete - Type `@` in comment → shows node name suggestions, creates backlink. AC: Mentions work. Verification: Type `@test` → suggestions appear. If Blocked: Manual [[wikilinks]]
 
 ---
 
 ### Task 33.3: Export & Integration
 
+- [ ] **33.3.1** Export as PNG - "Export → PNG" button captures canvas as image file, downloads to user. AC: PNG export works. Verification: Click export → downloads valid PNG. If Blocked: Screenshot instructions
+
+- [ ] **33.3.2** Export as SVG - "Export → SVG" button generates vector graphic, preserves node positions/colors. AC: SVG export works. Verification: Click export → downloads valid SVG. If Blocked: PNG only
+
+- [ ] **33.3.3** Export as GraphML - "Export → GraphML" button generates XML format compatible with Gephi/Cytoscape. AC: GraphML export works. Verification: Import in Gephi → graph loads. If Blocked: JSON export
+
+- [ ] **33.3.4** Import from Obsidian - Upload Obsidian vault ZIP → backend parses markdown, creates nodes. AC: Import works. Verification: Upload test vault → nodes appear. If Blocked: Manual copy-paste
+
 ---
 
 ### Task 33.4: Presentation Mode
+
+- [ ] **33.4.1** Presentation mode toggle - "Present Mode" button in header, hides panels, shows only canvas + selected node. AC: Mode toggles. Verification: Click Present → panels hide. If Blocked: Fullscreen canvas
+
+- [ ] **33.4.2** Keyboard navigation - Arrow keys navigate between connected nodes, ESC exits mode, Space toggles node body. AC: Keys work. Verification: Present mode → arrow keys navigate. If Blocked: Click navigation
 
 - [ ] **33.4.3** Slide-style transitions - Smooth camera animations between nodes, optional fade-in for node details. AC: Transitions smooth. Verification: Navigate nodes → camera pans smoothly. If Blocked: Instant jumps
 
