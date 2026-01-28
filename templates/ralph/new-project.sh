@@ -342,6 +342,17 @@ else
 fi
 
 # Copy verifier and rules
+
+# Copy brain skills sync helper
+if [ -f "$TEMPLATES_DIR/ralph/sync_brain_skills.sh" ]; then
+  cp "$TEMPLATES_DIR/ralph/sync_brain_skills.sh" "$PROJECT_LOCATION/workers/ralph/sync_brain_skills.sh"
+  chmod +x "$PROJECT_LOCATION/workers/ralph/sync_brain_skills.sh" || true
+  success "Copied workers/ralph/sync_brain_skills.sh"
+else
+  warn "Template not found: ralph/sync_brain_skills.sh"
+fi
+
+# Copy verifier and rules
 if [ -f "$TEMPLATES_DIR/ralph/verifier.sh" ]; then
   cp "$TEMPLATES_DIR/ralph/verifier.sh" "$PROJECT_LOCATION/workers/ralph/verifier.sh"
   chmod +x "$PROJECT_LOCATION/workers/ralph/verifier.sh"
