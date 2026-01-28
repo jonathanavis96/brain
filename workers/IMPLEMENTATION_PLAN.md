@@ -235,6 +235,18 @@
 
 ---
 
+## Phase 0-Quick: Quick Wins
+
+### Task 0.1: Markdown Lint Fixes
+
+- [ ] **0.1.1** Fix MD004 in cortex/docs/MindMerge_MindMerge-PR.md
+  - **AC:** `markdownlint cortex/docs/MindMerge_MindMerge-PR.md` passes (no MD004 errors)
+  - **Fix:** Replace all asterisk (`*`) list markers with dash (`-`) markers throughout the file
+  - **Scope:** 40 lines need conversion (lines 11, 15, 19-21, 25-27, 37-41, 45-47, 62-67, 69-79, 87-95)
+  - **Estimated Time:** [S] 2-3 minutes
+
+---
+
 ## Phase 35: Skills & Knowledge Base Maintenance
 
 **Context:** Brain repository skills need periodic review and updates based on recent discoveries, tool usage patterns, and emerging best practices.
