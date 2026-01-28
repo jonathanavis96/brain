@@ -598,11 +598,12 @@ CONFIG_FLAG=""
 TEMP_CONFIG=""
 
 # Use provided model or default based on runner
+# Match Cortex pattern: explicit model shortcut (not "auto")
 if [[ -z "$MODEL_ARG" ]]; then
   if [[ "$RUNNER" == "opencode" ]]; then
     MODEL_ARG="grok" # Default for OpenCode
   else
-    MODEL_ARG="gpt52" # Default for RovoDev (GPT-5.2-Codex)
+    MODEL_ARG="gpt52" # Default for RovoDev (GPT-5.2-Codex) - explicit shortcut like Cortex
   fi
 fi
 
@@ -619,7 +620,51 @@ if [[ "$RUNNER" == "rovodev" ]]; then
 
     # Copy base config and override modelId
     if [[ -f "$HOME/.rovodev/config.yml" ]]; then
-      sed "s|^  modelId:.*|  modelId: $RESOLVED_MODEL|" "$HOME/.rovodev/config.yml" >"$TEMP_CONFIG"
+      echo "DEBUG: Running Python script with model_id=$RESOLVED_MODEL" >&2
+      python3 - "$HOME/.rovodev/config.yml" "$TEMP_CONFIG" "$RESOLVED_MODEL" <<'PY'
+import sys
+from pathlib import Path
+
+source_path, target_path, model_id = sys.argv[1:4]
+print(f"DEBUG PYTHON: source={source_path}, target={target_path}, model_id={model_id}", file=sys.stderr)
+lines = Path(source_path).read_text().splitlines()
+
+new_lines = []
+replaced = False
+inserted = False
+in_agent = False
+agent_indent = ""
+child_indent = "  "
+
+for line in lines:
+    stripped = line.lstrip()
+    indent = line[: len(line) - len(stripped)]
+    if stripped.startswith("agent:"):
+        in_agent = True
+        agent_indent = indent
+        child_indent = agent_indent + "  "
+        new_lines.append(line)
+        continue
+
+    if in_agent and stripped.startswith("modelId:"):
+        new_lines.append(f"{child_indent}modelId: {model_id}")
+        replaced = True
+        continue
+
+    if in_agent and stripped and not line.startswith(child_indent):
+        if not replaced and not inserted:
+            new_lines.append(f"{child_indent}modelId: {model_id}")
+            inserted = True
+        in_agent = False
+
+    new_lines.append(line)
+
+if in_agent and not replaced and not inserted:
+    new_lines.append(f"{child_indent}modelId: {model_id}")
+
+Path(target_path).write_text("\n".join(new_lines) + "\n")
+print(f"DEBUG PYTHON: Wrote {len(new_lines)} lines. replaced={replaced}, inserted={inserted}", file=sys.stderr)
+PY
     else
       cat >"$TEMP_CONFIG" <<EOFCONFIG
 version: 1
@@ -629,6 +674,8 @@ EOFCONFIG
     fi
     CONFIG_FLAG="--config-file $TEMP_CONFIG"
     echo "Using model: $RESOLVED_MODEL"
+    echo "DEBUG: Temp config created at: $TEMP_CONFIG"
+    echo "DEBUG: Config contains modelId: $(grep 'modelId:' "$TEMP_CONFIG" || echo 'NOT FOUND')"
   fi
 else
   # OpenCode runner uses provider/model directly; no temp config needed.
@@ -1082,13 +1129,13 @@ EOF
     # No "Summary:" header found - try to extract from STATUS/PROGRESS markers
     local status_line
     status_line=$(grep -n "^STATUS |" "$logfile" 2>/dev/null | tail -1 | cut -d: -f1 || echo "")
-    
+
     if [[ -n "$status_line" ]]; then
       # Extract from STATUS to :::BUILD_READY::: or :::PLAN_READY::: or EOF
       # Strip ANSI color codes for Discord
       local summary_block
       summary_block=$(sed -n "${status_line},\$p" "$logfile" | sed '/:::\(BUILD\|PLAN\)_READY:::/q' | sed $'s/\x1b\[[0-9;]*m//g')
-      
+
       # Output with header
       cat <<EOF
 **Ralph Iteration ${iter_num} (${mode})** — ${timestamp}
