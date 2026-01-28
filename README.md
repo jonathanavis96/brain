@@ -164,7 +164,7 @@ ls domains/  # shell, python, frontend, backend, infrastructure, etc.
 **📖 Explore the library:**
 
 - **[skills/SUMMARY.md](skills/SUMMARY.md)** - Quick overview and error reference
-- **[skills/index.md](skills/index.md)** - Complete catalog of all 119 skills
+- **[skills/index.md](skills/index.md)** - Complete catalog of all 120 skills
 - **[skills/playbooks/](skills/playbooks/)** - Step-by-step procedures for common tasks
 
 ---

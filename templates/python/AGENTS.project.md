@@ -82,7 +82,7 @@ When you discover a new convention, architectural decision, or project-specific 
 - Use `requirements.txt` or `pyproject.toml` for dependencies
 - Document setup and usage in README.md
 - Keep project goals and vision in `THOUGHTS.md`
-- Maintain `workers/ralph/workers/IMPLEMENTATION_PLAN.md` as a prioritized task list
+- Maintain `workers/IMPLEMENTATION_PLAN.md` as a prioritized task list
 
 ### Python Best Practices
 

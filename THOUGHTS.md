@@ -159,7 +159,7 @@ Agent discovers gap → Log to skills/self-improvement/GAP_BACKLOG.md → Review
 
 #### Phase 1: High Priority
 
-- Create THOUGHTS.md, NEURONS.md, AGENTS.md at brain root
+- Refresh root docs (THOUGHTS.md, NEURONS.md, AGENTS.md) to remove stale “planned” notes and keep status accurate
 - Ensure templates/ and new-project.sh exist in root
 - Complete brain repository setup
 
@@ -216,7 +216,7 @@ Why keep skills/ and templates/ at root instead of workers/ralph/?
 
 **Short-term (Next 10 iterations):**
 
-- Complete Phase 1 high-priority tasks (THOUGHTS.md, NEURONS.md, AGENTS.md)
+- Complete Phase 1 high-priority tasks (documentation cleanup and any remaining template/bootstrapping polish)
 - Establish brain root structure clarity
 - Sync remaining template/worker differences
 

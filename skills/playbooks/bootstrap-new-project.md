@@ -341,7 +341,7 @@ If new-project.sh doesn't fit (existing repo, custom setup):
 # Generate individual files
 bash generators/generate-thoughts.sh idea.md project/ralph/THOUGHTS.md
 bash generators/generate-neurons.sh idea.md project/ralph/NEURONS.md
-bash generators/generate-implementation-plan.sh idea.md project/ralph/workers/IMPLEMENTATION_PLAN.md
+bash generators/generate-implementation-plan.sh idea.md project/workers/IMPLEMENTATION_PLAN.md
 
 # Copy template files manually
 cp -r templates/ralph/* project/ralph/

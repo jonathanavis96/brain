@@ -104,4 +104,4 @@ rg "import.*from.*'react'" src/
 - **AGENTS.md** - Operational guide for AI agents
 - **THOUGHTS.md** - Project vision and goals
 - **README.md** - Setup and usage instructions
-- **workers/ralph/workers/IMPLEMENTATION_PLAN.md** - Current task backlog
+- **workers/IMPLEMENTATION_PLAN.md** - Current task backlog

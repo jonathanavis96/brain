@@ -352,9 +352,10 @@ else
 fi
 
 if [ -f "$TEMPLATES_DIR/ralph/IMPLEMENTATION_PLAN.project.md" ]; then
-  cp "$TEMPLATES_DIR/ralph/IMPLEMENTATION_PLAN.project.md" "$PROJECT_LOCATION/workers/ralph/IMPLEMENTATION_PLAN.md"
-  substitute_placeholders "$PROJECT_LOCATION/workers/ralph/IMPLEMENTATION_PLAN.md" "$REPO_NAME" "$WORK_BRANCH"
-  success "Copied workers/ralph/IMPLEMENTATION_PLAN.md"
+  mkdir -p "$PROJECT_LOCATION/workers"
+  cp "$TEMPLATES_DIR/ralph/IMPLEMENTATION_PLAN.project.md" "$PROJECT_LOCATION/workers/IMPLEMENTATION_PLAN.md"
+  substitute_placeholders "$PROJECT_LOCATION/workers/IMPLEMENTATION_PLAN.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied workers/IMPLEMENTATION_PLAN.md"
 else
   warn "Template not found: ralph/IMPLEMENTATION_PLAN.project.md"
 fi
@@ -476,7 +477,7 @@ fi
 # Generate IMPLEMENTATION_PLAN.md using HIGH INTELLIGENCE generator
 if [ -f "$BRAIN_DIR/generators/generate-implementation-plan.sh" ]; then
   info "Generating custom IMPLEMENTATION_PLAN.md..."
-  bash "$BRAIN_DIR/generators/generate-implementation-plan.sh" "$IDEA_FILE" "$PROJECT_LOCATION/workers/ralph/IMPLEMENTATION_PLAN.md"
+  bash "$BRAIN_DIR/generators/generate-implementation-plan.sh" "$IDEA_FILE" "$PROJECT_LOCATION/workers/IMPLEMENTATION_PLAN.md"
   success "Generated custom IMPLEMENTATION_PLAN.md"
 else
   warn "Generator not found: generate-implementation-plan.sh (using template)"

@@ -28,7 +28,7 @@ Manual verification tasks that cannot be automated. Complete these and update `r
 **Steps:**
 
 1. Open a terminal and run: `bash workers/ralph/thunk_ralph_tasks.sh`
-2. In another terminal, edit `workers/ralph/workers/IMPLEMENTATION_PLAN.md`
+2. In another terminal, edit `workers/IMPLEMENTATION_PLAN.md`
 3. Mark any task as complete: change `- [ ]` to `- [x]`
 4. Save the file and wait 5-10 seconds
 5. Check `workers/ralph/workers/ralph/THUNK.md` - it should NOT be auto-updated

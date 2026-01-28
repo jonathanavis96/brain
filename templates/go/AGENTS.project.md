@@ -88,7 +88,7 @@ When you discover a new convention, architectural decision, or project-specific 
 - Use `go.mod` for dependency management
 - Document setup and usage in `README.md`
 - Keep project goals and vision in `THOUGHTS.md`
-- Maintain `workers/ralph/workers/IMPLEMENTATION_PLAN.md` as a prioritized task list
+- Maintain `workers/IMPLEMENTATION_PLAN.md` as a prioritized task list
 
 ### Go Best Practices
 
