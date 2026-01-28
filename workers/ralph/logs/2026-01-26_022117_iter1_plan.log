@@ -1,0 +1,100 @@
+Script started on 2026-01-26 02:21:17+02:00 [COMMAND="cat "/tmp/rovodev_prompt_with_mode_7115_1.md" | acli rovodev run --config-file /tmp/rovodev_config_7115_1769386874.yml --yolo" TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="49" LINES="54"]
+]11;?\[6n[?25l[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠸[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠴[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠦[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠧[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠇[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠸[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠦[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠧[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠇[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠏[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠴[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠦[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠧[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠇[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠏[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠸[0m Loading Rovo Dev...
+
+[?25h[1A[2K[1A[2K[33m─────────────────────────────────────────────────[0m
+[38;5;214mWARNING:[0m The configured Atlassian site could 
+not be found with the provided credentials.
+
+Please run [2m/usage site[0m to select a valid site 
+URL.
+[33m─────────────────────────────────────────────────[0m
+Working in [1;32m/home/grafe/code/[0m[1;32mbrain[0m
+
+[?2004h[?25l[32m✔[0m [90mLoaded memory from AGENTS.md[0m
+[32m⠋[0m [90mCreating agent...[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m✔[0m [90mUsing model: [0m
+[90manthropic.claude-sonnet-[0m[1;90m4[0m[90m-[0m[1;90m5[0m[90m-[0m[1;90m20250929[0m[90m-v[0m[1;90m1:0[0m
+[32m⠋[0m [90mCreating agent...[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠋[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠙[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠹[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠸[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+^C[2K[1A[2K[32m⠼[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠴[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠦[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠧[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠇[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠏[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠋[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠙[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠹[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[31m───[0m[31m Failed to start built-in MCP server [0m[31m────────[0m[31m─[0m
+
+Failed to start STDIO MCP server: atlassian 
+(command: 
+/home/grafe/.local/share/acli/1.3.11-stable/plu
+gin/rovodev/...
+
+If you continue to see this error, please 
+report it to the Rovo Dev team: 
+[4;34mhttps://customerfeedback.atlassian.net/serviced[0m
+[4;34mesk/customer/portal/159/group/220/create/3002[0m
+
+Tools from this server will not be available.
+
+[31m─────────────────────────────────────────────────[0m
+[32m⠹[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠸[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[31m───[0m[31m Failed to start built-in MCP server [0m[31m────────[0m[31m─[0m
+
+Failed to start STDIO MCP server: 
+filesystem-tools (command: 
+/home/grafe/.local/share/acli/1.3.11-stable/plu
+gin/r...
+
+If you continue to see this error, please 
+report it to the Rovo Dev team: 
+[4;34mhttps://customerfeedback.atlassian.net/serviced[0m
+[4;34mesk/customer/portal/159/group/220/create/3002[0m
+
+[31m─────────────────────────────────────────────────[0m
+[32m⠸[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠸[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+
+[?25h[1A[2K[1A[2K[32m─────────────────────────────────────────────────[0m
+To resume your session, restart Rovo Dev CLI 
+with the --restore flag.
+[32m─────────────────────────────────────────────────[0m
+^C
+Script done on 2026-01-26 02:21:26+02:00 [COMMAND_EXIT_CODE="130"]
+:::TOOL_END::: id=0e68f247-5e19-42d7-9a66-a43a9aa50b90 result=PASS exit=0 duration_ms=8097 ts=2026-01-26T00:21:26Z
+:::VERIFIER_ENV::: iter=1 ts=1769386886 run_id=1769386886-7115

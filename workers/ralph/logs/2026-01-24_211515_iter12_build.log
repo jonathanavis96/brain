@@ -1,0 +1,10 @@
+Script started on 2026-01-24 21:15:15+02:00 [COMMAND="cat "/tmp/rovodev_prompt_with_mode_25279_12.md" | acli rovodev run --config-file /tmp/rovodev_config_25279_1769280452.yml --yolo" TERM="xterm-256color" TTY="/dev/pts/4" COLUMNS="45" LINES="56"]
+]11;?\[6n[31m✗[0m Error: To get started, authenticate your Atlassian account:
+
+1. Create a Rovo Dev scoped API token: https://go.atlassian.com/rovo-dev-api-token
+2. Authenticate with: 'acli rovodev auth login'
+3. Start using ‘acli rovodev run'
+
+
+Script done on 2026-01-24 21:15:16+02:00 [COMMAND_EXIT_CODE="1"]
+::TOOL_CALL_END:: id=1f245517-b7f5-4ef0-98fc-b22bcab16495 status=PASS exit=0 duration_ms=1396

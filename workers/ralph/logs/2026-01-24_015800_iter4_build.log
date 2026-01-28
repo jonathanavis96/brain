@@ -1,0 +1,83 @@
+Script started on 2026-01-24 01:58:00+02:00 [COMMAND="cat "/tmp/rovodev_prompt_with_mode_14758_4.md" | acli rovodev run --config-file /tmp/rovodev_config_14758_1769212345.yml --yolo" TERM="xterm-256color" TTY="/dev/pts/4" COLUMNS="45" LINES="56"]
+]11;?\[6n[?25l[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠸[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠴[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠦[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠧[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠇[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠏[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+^C[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+
+[?25h[1A[2K[1A[2KTraceback (most recent call last):
+  File "rovodev/__main__.py", line 3, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "rovodev/rovodev_cli.py", line 50, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "rovodev/commands/run/__init__.py", line 4, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "rovodev/commands/run/changelog.py", line 11, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "rovodev/commands/run/command_registry.py", line 69, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "nemo/agents/__init__.py", line 3, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "nemo/agents/acceptance_criteria_agent/agent.py", line 9, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "nemo/agent.py", line 11, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "nemo/constants.py", line 8, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "nautilus/__init__.py", line 15, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "nautilus/models/__init__.py", line 1, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "nautilus/models/code_node.py", line 13, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "nautilus/language_configs/__init__.py", line 46, in <module>
+KeyboardInterrupt
+[PYI-4578:ERROR] Failed to execute script '__main__' due to unhandled exception!
+^C
+Script done on 2026-01-24 01:58:02+02:00 [COMMAND_EXIT_CODE="130"]

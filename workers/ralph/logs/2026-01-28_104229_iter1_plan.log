@@ -1,0 +1,80 @@
+Script started on 2026-01-28 10:42:29+02:00 [COMMAND="cat "/tmp/rovodev_prompt_with_mode_16760_1.md" | acli rovodev run --config-file /tmp/rovodev_config_16760_1769589744.yml --yolo 2> >(bash /home/grafe/code/brain/workers/shared/filter_acli_errors.sh >&2)" TERM="xterm-256color" TTY="/dev/pts/10" COLUMNS="103" LINES="54"]
+]11;?\[6n[?25l[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠸[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠴[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠦[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠧[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠏[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠸[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠦[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠧[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠇[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠏[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠸[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠴[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠦[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠧[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠇[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠏[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+
+[?25h[1A[2K[1A[2K
+[32m───────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[1mEvent hooks are now available in Rovo Dev CLI![0m 🚀
+
+Run shell commands at points in an agent's lifecycle. ]8;id=791808;https://www.atlassian.com/blog/developer/streamline-rovo-dev-cli-with-event-hooks\[1;34mGet started with event hooks[0m]8;;\
+[32m───────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+
+[32m───────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+Help shape the future of Rovo Dev. Fill out the survey and take part in a short interview to earn a 
+gift card.
+
+https://go.atlassian.com/rovodevresearch
+[32m───────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+Working in [1;32m/home/grafe/code/[0m[1;32mbrain[0m
+
+[?2004h[?25l[32m✔[0m [90mLoaded memory from AGENTS.md[0m
+[32m⠋[0m [90mCreating agent...[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m✔[0m [90mUsing model: auto[0m
+[32m⠋[0m [90mCreating agent...[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠋[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠙[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠹[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠸[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠼[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠴[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠦[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠧[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠇[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠏[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠋[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠙[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠹[0m [90mStarting MCP servers: 2/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m✔[0m [90mStarted [0m[1;90m3[0m[90m MCP servers[0m
+  [2K  
+[?25h[1A[2K^C[?25l
+[32m⣾[0m Interrupting... ctrl+c again to force[2K[1A[2K
+[32m⣽[0m Interrupting... ctrl+c again to force[2K[1A[2K
+[32m⣻[0m Interrupting... ctrl+c again to force[2K[1A[2K
+[32m⢿[0m Interrupting... ctrl+c again to force^C[2K[1A[2K
+[32m⡿[0m Interrupting... ctrl+c again to force
+[?25h[1A[2K[1A[2K
+[33m⚠[0m Agent interrupted
+
+Script done on 2026-01-28 10:42:42+02:00 [COMMAND_EXIT_CODE="0"]
+:::TOOL_END::: id=3d84fb18-4ebf-4534-9382-49f4bd40a34a result=PASS exit=0 duration_ms=12906 ts=2026-01-28T08:42:42Z
+:::VERIFIER_ENV::: iter=1 ts=1769589762 run_id=1769589762-16760
+:::PHASE_END::: iter=1 phase=plan status=ok run_id=run-1769589744-16760 ts=1769589764922
+:::ITER_END::: iter=1 run_id=run-1769589744-16760 ts=1769589765277

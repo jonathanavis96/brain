@@ -1,0 +1,4175 @@
+  [2mLoading project context...[0m
+  [2mTask:[0m         - [ ] Script exists at `workers/ralph/sync_cortex_plan.s...
+
+[96m─────────────────────────────────────────── Cerebras Agent ────────────────────────────────────────────[0m
+  [2mModel:[0m    zai-glm-4.7
+  [2mMax turns:[0m 30
+  [2mWorkdir:[0m  /home/grafe/code/brain
+  [2mContext:[0m  11,441 chars pre-loaded
+[90m───────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+
+[90m─── Turn 1/30 ────────────────────────────────────────────────────────────────────────────────────────[0m
+STATUS | branch=brain-work | runner=rovodev | model=GLM-4.7
+
+PROGRESS | phase=build | step=check-script | tasks=0/1 | file=workers/ralph/sync_cortex_plan.sh
+  [36m⬢[0m Called [1mbash[0m:
+      [2m•[0m command: [2m'ls -la workers/ralph/sync_cortex_plan.sh 2>&1 || echo "File does not exist"'[0m
+
+  [32m-rw-r--r-- 1 grafe grafe 5013 Jan 22 16:17 workers/ralph/sync_cortex_plan.sh[0m
+  [2m[0m
+  [2m[exit: 0][0m
+
+[90m─── Turn 2/30 ────────────────────────────────────────────────────────────────────────────────────────[0m
+
+[36m─────────────────────────────────────────── Tool Calls (1) ────────────────────────────────────────────[0m
+  [36m⬢[0m Called [1mbash[0m:
+      [2m•[0m command: [2m'chmod +x workers/ralph/sync_cortex_plan.sh && ls -la workers/ralph/sync_corte...'[0m
+
+  [32m-rwxr-xr-x 1 grafe grafe 5013 Jan 22 16:17 workers/ralph/sync_cortex_plan.sh[0m
+  [2m[0m
+  [2m[exit: 0][0m
+
+[90m─── Turn 3/30 ────────────────────────────────────────────────────────────────────────────────────────[0m
+
+[36m─────────────────────────────────────────── Tool Calls (1) ────────────────────────────────────────────[0m
+  [36m⬢[0m Called [1mtail_file[0m:
+      [2m•[0m path: [2m'workers/ralph/THUNK.md'[0m
+      [2m•[0m lines: [2m5[0m
+
+  [32m[last 5 of 395 lines][0m
+  [2m| 385 | WARN.SC.17 | LOW | **WARN.SC.17** Fix SC2162 and SC2034 in workers/ralph/pr-batch.sh - A...[0m
+  [2m| 386 | 9.2 | MEDIUM | **9.2** Fix SC2155 in workers/ralph/render_ac_status.sh - Split declarati...[0m
+  [2m| 392 | 9.1 | MEDIUM | **9.1** Fix SC2162 in thunk_ralph_tasks.sh line 379 - Added -r flag to re...[0m
+  [2m| 393 | WARN.Precommit.1 | HIGH | **WARN.Precommit.1** Fix SC2094 in workers/ralph/verifier.sh +...[0m
+  [2m| 394 | 9.2 | MEDIUM | **9.2** Fix SC2094 in verifier.sh lines 395-396 - Verified fix already ap...[0m
+
+[90m─── Turn 4/30 ────────────────────────────────────────────────────────────────────────────────────────[0m
+
+[36m─────────────────────────────────────────── Tool Calls (1) ────────────────────────────────────────────[0m
+  [36m⬢[0m Called [1mappend_file[0m:
+      [2m•[0m path: [2m'workers/ralph/THUNK.md'[0m
+      [2m•[0m content: [2m'| 395 | ScriptPermissions | HIGH | **ScriptPermissions** - Set +x permissions...'[0m
+
+  [32m[appended 216 chars to workers/ralph/THUNK.md][0m
+
+[90m─── Turn 5/30 ────────────────────────────────────────────────────────────────────────────────────────[0m
+
+[36m─────────────────────────────────────────── Tool Calls (1) ────────────────────────────────────────────[0m
+  [36m⬢[0m Called [1mgit_commit[0m:
+      [2m•[0m message: [2m'chore(ralph): set +x permissions on sync_cortex_plan.sh\n\n- Changed file mode ...'[0m
+
+  [31m✗ git_commit failed:[0m git commit failed: shellcheck...............................................................Passed
+shfmt....................................................................Failed
+- hook id: shfmt
+- exit code: 1
+
+--- workers/ralph/loop.sh.orig
++++ workers/ralph/loop.sh
+@@ -274,84 +274,84 @@
+ # Parse args
+ while [[ $# -gt 0 ]]; do
+   case "$1" in
+-  --prompt)
+-    PROMPT_ARG="${2:-}"
+-    shift 2
+-    ;;
+-  --iterations)
+-    ITERATIONS="${2:-}"
+-    shift 2
+-    ;;
+-  --plan-every)
+-    PLAN_EVERY="${2:-}"
+-    shift 2
+-    ;;
+-  --yolo)
+-    YOLO_FLAG="--yolo"
+-    shift
+-    ;;
+-  --no-yolo)
+-    YOLO_FLAG=""
+-    shift
+-    ;;
+-  --runner)
+-    RUNNER="${2:-}"
+-    shift 2
+-    ;;
+-  --opencode-serve)
+-    OPENCODE_SERVE=true
+-    shift
+-    ;;
+-  --opencode-port)
+-    OPENCODE_PORT="${2:-4096}"
+-    shift 2
+-    ;;
+-  --opencode-attach)
+-    OPENCODE_ATTACH="${2:-}"
+-    shift 2
+-    ;;
+-  --opencode-format)
+-    OPENCODE_FORMAT="${2:-default}"
+-    shift 2
+-    ;;
+-  --model)
+-    MODEL_ARG="${2:-}"
+-    shift 2
+-    ;;
+-  --branch)
+-    BRANCH_ARG="${2:-}"
+-    shift 2
+-    ;;
+-  --dry-run)
+-    DRY_RUN=true
+-    shift
+-    ;;
+-  --no-monitors)
+-    NO_MONITORS=true
+-    shift
+-    ;;
+-  --rollback)
+-    ROLLBACK_MODE=true
+-    if [[ -n "${2:-}" && "$2" =~ ^[0-9]+$ ]]; then
+-      ROLLBACK_COUNT="$2"
++    --prompt)
++      PROMPT_ARG="${2:-}"
+       shift 2
+-    else
++      ;;
++    --iterations)
++      ITERATIONS="${2:-}"
++      shift 2
++      ;;
++    --plan-every)
++      PLAN_EVERY="${2:-}"
++      shift 2
++      ;;
++    --yolo)
++      YOLO_FLAG="--yolo"
+       shift
+-    fi
+-    ;;
+-  --resume)
+-    RESUME_MODE=true
+-    shift
+-    ;;
+-  -h | --help)
+-    usage
+-    exit 0
+-    ;;
+-  *)
+-    echo "Unknown arg: $1" >&2
+-    usage
+-    exit 2
+-    ;;
++      ;;
++    --no-yolo)
++      YOLO_FLAG=""
++      shift
++      ;;
++    --runner)
++      RUNNER="${2:-}"
++      shift 2
++      ;;
++    --opencode-serve)
++      OPENCODE_SERVE=true
++      shift
++      ;;
++    --opencode-port)
++      OPENCODE_PORT="${2:-4096}"
++      shift 2
++      ;;
++    --opencode-attach)
++      OPENCODE_ATTACH="${2:-}"
++      shift 2
++      ;;
++    --opencode-format)
++      OPENCODE_FORMAT="${2:-default}"
++      shift 2
++      ;;
++    --model)
++      MODEL_ARG="${2:-}"
++      shift 2
++      ;;
++    --branch)
++      BRANCH_ARG="${2:-}"
++      shift 2
++      ;;
++    --dry-run)
++      DRY_RUN=true
++      shift
++      ;;
++    --no-monitors)
++      NO_MONITORS=true
++      shift
++      ;;
++    --rollback)
++      ROLLBACK_MODE=true
++      if [[ -n "${2:-}" && "$2" =~ ^[0-9]+$ ]]; then
++        ROLLBACK_COUNT="$2"
++        shift 2
++      else
++        shift
++      fi
++      ;;
++    --resume)
++      RESUME_MODE=true
++      shift
++      ;;
++    -h | --help)
++      usage
++      exit 0
++      ;;
++    *)
++      echo "Unknown arg: $1" >&2
++      usage
++      exit 2
++      ;;
+   esac
+ done
+ 
+@@ -366,22 +366,22 @@
+ resolve_model() {
+   local model="$1"
+   case "$model" in
+-  opus | opus4.5 | opus45)
+-    echo "$MODEL_OPUS_45"
+-    ;;
+-  sonnet | sonnet4.5 | sonnet45)
+-    echo "$MODEL_SONNET_45"
+-    ;;
+-  sonnet4)
+-    echo "$MODEL_SONNET_4"
+-    ;;
+-  latest | auto)
+-    # Use system default - don't override config
+-    echo ""
+-    ;;
+-  *)
+-    echo "$model"
+-    ;;
++    opus | opus4.5 | opus45)
++      echo "$MODEL_OPUS_45"
++      ;;
++    sonnet | sonnet4.5 | sonnet45)
++      echo "$MODEL_SONNET_45"
++      ;;
++    sonnet4)
++      echo "$MODEL_SONNET_4"
++      ;;
++    latest | auto)
++      # Use system default - don't override config
++      echo ""
++      ;;
++    *)
++      echo "$model"
++      ;;
+   esac
+ }
+ 
+@@ -390,26 +390,26 @@
+ resolve_model_opencode() {
+   local model="$1"
+   case "$model" in
+-  grok | grokfast | grok-code-fast-1)
+-    # Confirmed via opencode models
+-    echo "opencode/grok-code"
+-    ;;
+-  opus | opus4.5 | opus45)
+-    # Placeholder - anthropic not available in current setup
+-    echo "opencode/gpt-5-nano"
+-    ;; # Fallback to available model
+-  sonnet | sonnet4.5 | sonnet45)
+-    # Placeholder - anthropic not available
+-    echo "opencode/gpt-5-nano"
+-    ;; # Fallback
+-  latest | auto)
+-    # Let OpenCode decide its own default if user explicitly asked for auto/latest
+-    echo ""
+-    ;;
+-  *)
+-    # Pass through (user provided provider/model already, or an OpenCode alias)
+-    echo "$model"
+-    ;;
++    grok | grokfast | grok-code-fast-1)
++      # Confirmed via opencode models
++      echo "opencode/grok-code"
++      ;;
++    opus | opus4.5 | opus45)
++      # Placeholder - anthropic not available in current setup
++      echo "opencode/gpt-5-nano"
++      ;; # Fallback to available model
++    sonnet | sonnet4.5 | sonnet45)
++      # Placeholder - anthropic not available
++      echo "opencode/gpt-5-nano"
++      ;; # Fallback
++    latest | auto)
++      # Let OpenCode decide its own default if user explicitly asked for auto/latest
++      echo ""
++      ;;
++    *)
++      # Pass through (user provided provider/model already, or an OpenCode alias)
++      echo "$model"
++      ;;
+   esac
+ }
+ 
+@@ -418,33 +418,33 @@
+ resolve_model_cerebras() {
+   local model="$1"
+   case "$model" in
+-  llama4 | llama-4 | scout)
+-    echo "llama-4-scout-17b"
+-    ;;
+-  llama4-large | maverick)
+-    echo "llama-4-maverick-17b"
+-    ;;
+-  llama3 | llama-3 | llama3-8b)
+-    echo "llama3.1-8b"
+-    ;;
+-  llama3-large | llama3-70b)
+-    echo "llama3.1-70b"
+-    ;;
+-  qwen | qwen3)
+-    echo "qwen-3-32b"
+-    ;;
+-  qwen-large | qwen-235b)
+-    echo "qwen-3-235b-a22b-instruct-2507"
+-    ;;
+-  glm | glm4 | glm-4.7)
+-    echo "zai-glm-4.7"
+-    ;;
+-  auto | latest | "")
+-    echo "llama-4-scout-17b"
+-    ;;
+-  *)
+-    echo "$model"
+-    ;;
++    llama4 | llama-4 | scout)
++      echo "llama-4-scout-17b"
++      ;;
++    llama4-large | maverick)
++      echo "llama-4-maverick-17b"
++      ;;
++    llama3 | llama-3 | llama3-8b)
++      echo "llama3.1-8b"
++      ;;
++    llama3-large | llama3-70b)
++      echo "llama3.1-70b"
++      ;;
++    qwen | qwen3)
++      echo "qwen-3-32b"
++      ;;
++    qwen-large | qwen-235b)
++      echo "qwen-3-235b-a22b-instruct-2507"
++      ;;
++    glm | glm4 | glm-4.7)
++      echo "zai-glm-4.7"
++      ;;
++    auto | latest | "")
++      echo "llama-4-scout-17b"
++      ;;
++    *)
++      echo "$model"
++      ;;
+   esac
+ }
+ 
+@@ -918,11 +918,11 @@
+     echo "🧠 Running Cerebras Agent with model: ${RESOLVED_MODEL}"
+     # Use the agentic Python runner that supports tool execution
+     if ! python3 "$RALPH/cerebras_agent.py" \
+-        --prompt "$prompt_with_mode" \
+-        --model "$RESOLVED_MODEL" \
+-        --max-turns 30 \
+-        --cwd "$ROOT" \
+-        --output "$log"; then
++      --prompt "$prompt_with_mode" \
++      --model "$RESOLVED_MODEL" \
++      --max-turns 30 \
++      --cwd "$ROOT" \
++      --output "$log"; then
+       echo "❌ Cerebras Agent failed. See: $log"
+       return 1
+     fi
+--- cortex/cortex.bash.orig
++++ cortex/cortex.bash
+@@ -6,9 +6,9 @@
+ # Resolve script directory (follow symlink if needed)
+ SOURCE="${BASH_SOURCE[0]}"
+ while [ -h "$SOURCE" ]; do
+-	DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+-	SOURCE="$(readlink "$SOURCE")"
+-	[[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
++  DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
++  SOURCE="$(readlink "$SOURCE")"
++  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+ done
+ SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+ BRAIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+@@ -28,7 +28,7 @@
+ 
+ # Usage help
+ usage() {
+-	cat <<EOF
++  cat <<EOF
+ Usage: bash cortex/chat.sh [OPTIONS]
+ 
+ Cortex Interactive Chat - Direct conversation with the Brain manager.
+@@ -64,40 +64,40 @@
+ 
+ # Parse arguments
+ while [[ $# -gt 0 ]]; do
+-	case "$1" in
+-		-h | --help)
+-			usage
+-			exit 0
+-			;;
+-		--model)
+-			MODEL_ARG="${2:-}"
+-			shift 2
+-			;;
+-		*)
+-			echo "Unknown argument: $1" >&2
+-			usage
+-			exit 2
+-			;;
+-	esac
++  case "$1" in
++    -h | --help)
++      usage
++      exit 0
++      ;;
++    --model)
++      MODEL_ARG="${2:-}"
++      shift 2
++      ;;
++    *)
++      echo "Unknown argument: $1" >&2
++      usage
++      exit 2
++      ;;
++  esac
+ done
+ 
+ # Model resolution (same logic as one-shot.sh)
+ RESOLVED_MODEL=""
+ if [[ -n "$MODEL_ARG" ]]; then
+-	case "$MODEL_ARG" in
+-		opus)
+-			RESOLVED_MODEL="anthropic.claude-opus-4-5-20251101-v1:0"
+-			;;
+-		sonnet)
+-			RESOLVED_MODEL="anthropic.claude-sonnet-4-20250514-v1:0"
+-			;;
+-		auto)
+-			RESOLVED_MODEL=""
+-			;;
+-		*)
+-			RESOLVED_MODEL="$MODEL_ARG"
+-			;;
+-	esac
++  case "$MODEL_ARG" in
++    opus)
++      RESOLVED_MODEL="anthropic.claude-opus-4-5-20251101-v1:0"
++      ;;
++    sonnet)
++      RESOLVED_MODEL="anthropic.claude-sonnet-4-20250514-v1:0"
++      ;;
++    auto)
++      RESOLVED_MODEL=""
++      ;;
++    *)
++      RESOLVED_MODEL="$MODEL_ARG"
++      ;;
++  esac
+ fi
+ 
+ echo ""
+@@ -109,7 +109,7 @@
+ 
+ # Create Cortex system prompt for config
+ CORTEX_SYSTEM_PROMPT=$(
+-	cat <<EOF
++  cat <<EOF
+ $(cat "${SCRIPT_DIR}/AGENTS.md")
+ 
+ ---
+@@ -169,7 +169,7 @@
+ agent:
+   additionalSystemPrompt: |
+ $(while IFS= read -r line; do
+-	echo "    $line"
++  echo "    $line"
+ done <<<"$CORTEX_SYSTEM_PROMPT")
+   streaming: true
+   temperature: 0.3
+@@ -177,9 +177,9 @@
+ 
+ # Add model if specified
+ if [[ -n "$RESOLVED_MODEL" ]]; then
+-	echo "  modelId: ${RESOLVED_MODEL}" >>"$CONFIG_FILE"
++  echo "  modelId: ${RESOLVED_MODEL}" >>"$CONFIG_FILE"
+ else
+-	echo "  modelId: auto" >>"$CONFIG_FILE"
++  echo "  modelId: auto" >>"$CONFIG_FILE"
+ fi
+ 
+ # Launch interactive chat (NO message argument = interactive mode)
+@@ -192,9 +192,9 @@
+ echo ""
+ echo -e "${CYAN}========================================${NC}"
+ if [[ $EXIT_CODE -eq 0 ]]; then
+-	echo -e "${GREEN}✓ Chat session ended${NC}"
++  echo -e "${GREEN}✓ Chat session ended${NC}"
+ else
+-	echo -e "${YELLOW}⚠ Chat session ended with code ${EXIT_CODE}${NC}"
++  echo -e "${YELLOW}⚠ Chat session ended with code ${EXIT_CODE}${NC}"
+ fi
+ echo -e "${CYAN}========================================${NC}"
+ 
+--- workers/ralph/new-project.sh.orig
++++ workers/ralph/new-project.sh
+@@ -31,92 +31,92 @@
+ warn() { echo -e "${YELLOW}[WARN]${NC} $*"; }
+ error() { echo -e "${RED}[ERROR]${NC} $*"; }
+ die() {
+-	error "$*"
+-	exit 1
++  error "$*"
++  exit 1
+ }
+ 
+ # Check required dependencies
+ check_dependencies() {
+-	if ! command -v git &>/dev/null; then
+-		die "git is not installed. Please install git first."
+-	fi
++  if ! command -v git &>/dev/null; then
++    die "git is not installed. Please install git first."
++  fi
+ }
+ 
+ # Check gh CLI (only when needed for repo creation)
+ check_gh() {
+-	if ! command -v gh &>/dev/null; then
+-		return 1
+-	fi
+-	if ! gh auth status &>/dev/null; then
+-		return 1
+-	fi
+-	return 0
++  if ! command -v gh &>/dev/null; then
++    return 1
++  fi
++  if ! gh auth status &>/dev/null; then
++    return 1
++  fi
++  return 0
+ }
+ 
+ # Get GitHub username from gh CLI or config
+ get_github_username() {
+-	# First check config file
+-	if [[ -f "$RALPH_CONFIG_FILE" ]]; then
+-		local saved_username
+-		saved_username=$(grep "^GITHUB_USERNAME=" "$RALPH_CONFIG_FILE" 2>/dev/null | cut -d= -f2)
+-		if [[ -n "$saved_username" ]]; then
+-			echo "$saved_username"
+-			return 0
+-		fi
+-	fi
++  # First check config file
++  if [[ -f "$RALPH_CONFIG_FILE" ]]; then
++    local saved_username
++    saved_username=$(grep "^GITHUB_USERNAME=" "$RALPH_CONFIG_FILE" 2>/dev/null | cut -d= -f2)
++    if [[ -n "$saved_username" ]]; then
++      echo "$saved_username"
++      return 0
++    fi
++  fi
+ 
+-	# Try to detect from gh CLI
+-	if command -v gh &>/dev/null && gh auth status &>/dev/null; then
+-		gh api user --jq '.login' 2>/dev/null || true
+-	fi
++  # Try to detect from gh CLI
++  if command -v gh &>/dev/null && gh auth status &>/dev/null; then
++    gh api user --jq '.login' 2>/dev/null || true
++  fi
+ }
+ 
+ # Save GitHub username to config
+ save_github_username() {
+-	local username="$1"
+-	mkdir -p "$RALPH_CONFIG_DIR"
+-	if [[ -f "$RALPH_CONFIG_FILE" ]]; then
+-		# Update existing config
+-		if grep -q "^GITHUB_USERNAME=" "$RALPH_CONFIG_FILE"; then
+-			sed -i "s/^GITHUB_USERNAME=.*/GITHUB_USERNAME=$username/" "$RALPH_CONFIG_FILE"
+-		else
+-			echo "GITHUB_USERNAME=$username" >>"$RALPH_CONFIG_FILE"
+-		fi
+-	else
+-		echo "GITHUB_USERNAME=$username" >"$RALPH_CONFIG_FILE"
+-	fi
++  local username="$1"
++  mkdir -p "$RALPH_CONFIG_DIR"
++  if [[ -f "$RALPH_CONFIG_FILE" ]]; then
++    # Update existing config
++    if grep -q "^GITHUB_USERNAME=" "$RALPH_CONFIG_FILE"; then
++      sed -i "s/^GITHUB_USERNAME=.*/GITHUB_USERNAME=$username/" "$RALPH_CONFIG_FILE"
++    else
++      echo "GITHUB_USERNAME=$username" >>"$RALPH_CONFIG_FILE"
++    fi
++  else
++    echo "GITHUB_USERNAME=$username" >"$RALPH_CONFIG_FILE"
++  fi
+ }
+ 
+ # Sanitize project name to repo name (lowercase, underscores to hyphens)
+ sanitize_repo_name() {
+-	local name="$1"
+-	echo "$name" | tr '[:upper:]' '[:lower:]' | tr ' _' '-' | tr -cd 'a-z0-9-'
++  local name="$1"
++  echo "$name" | tr '[:upper:]' '[:lower:]' | tr ' _' '-' | tr -cd 'a-z0-9-'
+ }
+ 
+ # Escape string for sed replacement (handle special chars)
+ escape_sed_replacement() {
+-	local str="$1"
+-	# Escape &, \, and / for sed replacement
+-	printf '%s\n' "$str" | sed -e 's/[&/\]/\\&/g'
++  local str="$1"
++  # Escape &, \, and / for sed replacement
++  printf '%s\n' "$str" | sed -e 's/[&/\]/\\&/g'
+ }
+ 
+ # Substitute placeholders in a file
+ substitute_placeholders() {
+-	local file="$1"
+-	local repo_name="$2"
+-	local work_branch="$3"
++  local file="$1"
++  local repo_name="$2"
++  local work_branch="$3"
+ 
+-	local escaped_repo escaped_branch
+-	escaped_repo=$(escape_sed_replacement "$repo_name")
+-	escaped_branch=$(escape_sed_replacement "$work_branch")
++  local escaped_repo escaped_branch
++  escaped_repo=$(escape_sed_replacement "$repo_name")
++  escaped_branch=$(escape_sed_replacement "$work_branch")
+ 
+-	sed -i "s/__REPO_NAME__/$escaped_repo/g" "$file"
+-	sed -i "s/__WORK_BRANCH__/$escaped_branch/g" "$file"
++  sed -i "s/__REPO_NAME__/$escaped_repo/g" "$file"
++  sed -i "s/__WORK_BRANCH__/$escaped_branch/g" "$file"
+ }
+ 
+ # Usage message
+ usage() {
+-	cat <<EOF
++  cat <<EOF
+ Usage: bash new-project.sh NEW_PROJECT_IDEA.md
+ 
+ Bootstrap a new project with complete Ralph infrastructure and GitHub integration.
+@@ -147,12 +147,12 @@
+   bash new-project.sh my_cool_app_idea.md
+ 
+ EOF
+-	exit 1
++  exit 1
+ }
+ 
+ # Parse command line arguments
+ if [ $# -ne 1 ]; then
+-	usage
++  usage
+ fi
+ 
+ IDEA_FILE="$1"
+@@ -162,7 +162,7 @@
+ 
+ # Validate input file
+ if [ ! -f "$IDEA_FILE" ]; then
+-	die "Project idea file not found: $IDEA_FILE"
++  die "Project idea file not found: $IDEA_FILE"
+ fi
+ 
+ info "Reading project idea from: $IDEA_FILE"
+@@ -176,19 +176,19 @@
+ #   Goals: <objectives>
+ 
+ extract_field() {
+-	local field="$1"
+-	local file="$2"
+-	grep -i "^${field}:" "$file" | head -1 | sed "s/^${field}://i" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
++  local field="$1"
++  local file="$2"
++  grep -i "^${field}:" "$file" | head -1 | sed "s/^${field}://i" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+ }
+ 
+ extract_project_name() {
+-	local file="$1"
+-	# Look for "# Project: NAME" or "Project: NAME"
+-	if grep -q "^# Project:" "$file"; then
+-		grep "^# Project:" "$file" | head -1 | sed 's/^# Project://i' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+-	else
+-		extract_field "Project" "$file"
+-	fi
++  local file="$1"
++  # Look for "# Project: NAME" or "Project: NAME"
++  if grep -q "^# Project:" "$file"; then
++    grep "^# Project:" "$file" | head -1 | sed 's/^# Project://i' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
++  else
++    extract_field "Project" "$file"
++  fi
+ }
+ 
+ PROJECT_NAME=$(extract_project_name "$IDEA_FILE")
+@@ -199,21 +199,21 @@
+ 
+ # Validate extracted information
+ if [ -z "$PROJECT_NAME" ]; then
+-	die "Could not extract project name from $IDEA_FILE. Expected 'Project: <name>' or '# Project: <name>'"
++  die "Could not extract project name from $IDEA_FILE. Expected 'Project: <name>' or '# Project: <name>'"
+ fi
+ 
+ # Handle Location: use from IDEA file, or fallback to sibling of brain
+ if [ -z "$PROJECT_LOCATION" ]; then
+-	# Fallback: create as sibling of brain directory
+-	DEFAULT_REPO_NAME=$(sanitize_repo_name "$PROJECT_NAME")
+-	PROJECT_LOCATION="$BRAIN_ROOT/$DEFAULT_REPO_NAME"
+-	warn "Location not specified in IDEA file"
+-	info "Detected brain root: $BRAIN_ROOT"
+-	info "Project will be created at: $PROJECT_LOCATION"
++  # Fallback: create as sibling of brain directory
++  DEFAULT_REPO_NAME=$(sanitize_repo_name "$PROJECT_NAME")
++  PROJECT_LOCATION="$BRAIN_ROOT/$DEFAULT_REPO_NAME"
++  warn "Location not specified in IDEA file"
++  info "Detected brain root: $BRAIN_ROOT"
++  info "Project will be created at: $PROJECT_LOCATION"
+ elif [[ "$PROJECT_LOCATION" != /* ]]; then
+-	# Relative path: resolve relative to BRAIN_ROOT
+-	PROJECT_LOCATION="$BRAIN_ROOT/$PROJECT_LOCATION"
+-	info "Resolved relative path to: $PROJECT_LOCATION"
++  # Relative path: resolve relative to BRAIN_ROOT
++  PROJECT_LOCATION="$BRAIN_ROOT/$PROJECT_LOCATION"
++  info "Resolved relative path to: $PROJECT_LOCATION"
+ fi
+ 
+ # Suggest repo name (sanitized, shorter)
+@@ -232,7 +232,7 @@
+ 
+ # Validate target location doesn't exist
+ if [ -e "$PROJECT_LOCATION" ]; then
+-	die "Target location already exists: $PROJECT_LOCATION"
++  die "Target location already exists: $PROJECT_LOCATION"
+ fi
+ 
+ # ============================================
+@@ -252,67 +252,67 @@
+ 
+ read -r -p "Create GitHub repository? (y/n): " create_repo_answer
+ if [[ "$create_repo_answer" =~ ^[Yy] ]]; then
+-	CREATE_REPO=true
++  CREATE_REPO=true
+ 
+-	# Check if gh CLI is available
+-	if ! check_gh; then
+-		warn "GitHub CLI (gh) not installed or not authenticated"
+-		echo ""
+-		echo "Options:"
+-		echo "  1. Install gh: https://cli.github.com/"
+-		echo "  2. Run: gh auth login"
+-		echo "  3. Or continue without GitHub (local-only)"
+-		echo ""
+-		read -r -p "Continue local-only? (y/n): " local_only_answer
+-		if [[ "$local_only_answer" =~ ^[Yy] ]]; then
+-			CREATE_REPO=false
+-			LOCAL_ONLY=true
+-		else
+-			die "Please install and authenticate gh CLI first"
+-		fi
+-	fi
++  # Check if gh CLI is available
++  if ! check_gh; then
++    warn "GitHub CLI (gh) not installed or not authenticated"
++    echo ""
++    echo "Options:"
++    echo "  1. Install gh: https://cli.github.com/"
++    echo "  2. Run: gh auth login"
++    echo "  3. Or continue without GitHub (local-only)"
++    echo ""
++    read -r -p "Continue local-only? (y/n): " local_only_answer
++    if [[ "$local_only_answer" =~ ^[Yy] ]]; then
++      CREATE_REPO=false
++      LOCAL_ONLY=true
++    else
++      die "Please install and authenticate gh CLI first"
++    fi
++  fi
+ 
+-	if [[ "$CREATE_REPO" == "true" ]]; then
+-		# Get/confirm GitHub username
+-		detected_username=$(get_github_username)
+-		if [[ -n "$detected_username" ]]; then
+-			echo ""
+-			read -r -p "GitHub username [$detected_username]: " input_username
+-			GITHUB_USERNAME="${input_username:-$detected_username}"
+-		else
+-			echo ""
+-			read -r -p "GitHub username: " GITHUB_USERNAME
+-			if [[ -z "$GITHUB_USERNAME" ]]; then
+-				die "GitHub username is required"
+-			fi
+-		fi
+-		save_github_username "$GITHUB_USERNAME"
++  if [[ "$CREATE_REPO" == "true" ]]; then
++    # Get/confirm GitHub username
++    detected_username=$(get_github_username)
++    if [[ -n "$detected_username" ]]; then
++      echo ""
++      read -r -p "GitHub username [$detected_username]: " input_username
++      GITHUB_USERNAME="${input_username:-$detected_username}"
++    else
++      echo ""
++      read -r -p "GitHub username: " GITHUB_USERNAME
++      if [[ -z "$GITHUB_USERNAME" ]]; then
++        die "GitHub username is required"
++      fi
++    fi
++    save_github_username "$GITHUB_USERNAME"
+ 
+-		# Get repo name
+-		echo ""
+-		read -r -p "Repository name [$SUGGESTED_REPO]: " input_repo
+-		REPO_NAME="${input_repo:-$SUGGESTED_REPO}"
+-		WORK_BRANCH="${REPO_NAME}-work"
++    # Get repo name
++    echo ""
++    read -r -p "Repository name [$SUGGESTED_REPO]: " input_repo
++    REPO_NAME="${input_repo:-$SUGGESTED_REPO}"
++    WORK_BRANCH="${REPO_NAME}-work"
+ 
+-		# Show summary
+-		echo ""
+-		echo -e "${CYAN}----------------------------------------${NC}"
+-		info "Repository: $GITHUB_USERNAME/$REPO_NAME (public)"
+-		info "Work branch: $WORK_BRANCH"
+-		info "Location: $PROJECT_LOCATION"
+-		echo -e "${CYAN}----------------------------------------${NC}"
+-		echo ""
+-		read -r -p "Proceed with this configuration? (y/n): " confirm_answer
+-		if [[ ! "$confirm_answer" =~ ^[Yy] ]]; then
+-			die "Setup cancelled by user"
+-		fi
+-	fi
++    # Show summary
++    echo ""
++    echo -e "${CYAN}----------------------------------------${NC}"
++    info "Repository: $GITHUB_USERNAME/$REPO_NAME (public)"
++    info "Work branch: $WORK_BRANCH"
++    info "Location: $PROJECT_LOCATION"
++    echo -e "${CYAN}----------------------------------------${NC}"
++    echo ""
++    read -r -p "Proceed with this configuration? (y/n): " confirm_answer
++    if [[ ! "$confirm_answer" =~ ^[Yy] ]]; then
++      die "Setup cancelled by user"
++    fi
++  fi
+ else
+-	# No GitHub, local only
+-	LOCAL_ONLY=true
+-	REPO_NAME="$SUGGESTED_REPO"
+-	WORK_BRANCH="${REPO_NAME}-work"
+-	info "Skipping GitHub setup (local-only mode)"
++  # No GitHub, local only
++  LOCAL_ONLY=true
++  REPO_NAME="$SUGGESTED_REPO"
++  WORK_BRANCH="${REPO_NAME}-work"
++  info "Skipping GitHub setup (local-only mode)"
+ fi
+ 
+ # ============================================
+@@ -335,111 +335,111 @@
+ 
+ # Copy AGENTS.md to ralph/ (not project root)
+ if [ -f "$TEMPLATES_DIR/AGENTS.project.md" ]; then
+-	cp "$TEMPLATES_DIR/AGENTS.project.md" "$PROJECT_LOCATION/ralph/AGENTS.md"
+-	substitute_placeholders "$PROJECT_LOCATION/ralph/AGENTS.md" "$REPO_NAME" "$WORK_BRANCH"
+-	success "Copied ralph/AGENTS.md"
++  cp "$TEMPLATES_DIR/AGENTS.project.md" "$PROJECT_LOCATION/ralph/AGENTS.md"
++  substitute_placeholders "$PROJECT_LOCATION/ralph/AGENTS.md" "$REPO_NAME" "$WORK_BRANCH"
++  success "Copied ralph/AGENTS.md"
+ else
+-	warn "Template not found: AGENTS.project.md"
++  warn "Template not found: AGENTS.project.md"
+ fi
+ 
+ # Copy Ralph infrastructure templates
+ if [ -f "$TEMPLATES_DIR/ralph/PROMPT.project.md" ]; then
+-	cp "$TEMPLATES_DIR/ralph/PROMPT.project.md" "$PROJECT_LOCATION/ralph/PROMPT.md"
+-	substitute_placeholders "$PROJECT_LOCATION/ralph/PROMPT.md" "$REPO_NAME" "$WORK_BRANCH"
+-	success "Copied ralph/PROMPT.md"
++  cp "$TEMPLATES_DIR/ralph/PROMPT.project.md" "$PROJECT_LOCATION/ralph/PROMPT.md"
++  substitute_placeholders "$PROJECT_LOCATION/ralph/PROMPT.md" "$REPO_NAME" "$WORK_BRANCH"
++  success "Copied ralph/PROMPT.md"
+ else
+-	warn "Template not found: ralph/PROMPT.project.md"
++  warn "Template not found: ralph/PROMPT.project.md"
+ fi
+ 
+ if [ -f "$TEMPLATES_DIR/ralph/IMPLEMENTATION_PLAN.project.md" ]; then
+-	cp "$TEMPLATES_DIR/ralph/IMPLEMENTATION_PLAN.project.md" "$PROJECT_LOCATION/ralph/IMPLEMENTATION_PLAN.md"
+-	substitute_placeholders "$PROJECT_LOCATION/ralph/IMPLEMENTATION_PLAN.md" "$REPO_NAME" "$WORK_BRANCH"
+-	success "Copied ralph/IMPLEMENTATION_PLAN.md"
++  cp "$TEMPLATES_DIR/ralph/IMPLEMENTATION_PLAN.project.md" "$PROJECT_LOCATION/ralph/IMPLEMENTATION_PLAN.md"
++  substitute_placeholders "$PROJECT_LOCATION/ralph/IMPLEMENTATION_PLAN.md" "$REPO_NAME" "$WORK_BRANCH"
++  success "Copied ralph/IMPLEMENTATION_PLAN.md"
+ else
+-	warn "Template not found: ralph/IMPLEMENTATION_PLAN.project.md"
++  warn "Template not found: ralph/IMPLEMENTATION_PLAN.project.md"
+ fi
+ 
+ if [ -f "$TEMPLATES_DIR/ralph/VALIDATION_CRITERIA.project.md" ]; then
+-	cp "$TEMPLATES_DIR/ralph/VALIDATION_CRITERIA.project.md" "$PROJECT_LOCATION/ralph/VALIDATION_CRITERIA.md"
+-	substitute_placeholders "$PROJECT_LOCATION/ralph/VALIDATION_CRITERIA.md" "$REPO_NAME" "$WORK_BRANCH"
+-	success "Copied ralph/VALIDATION_CRITERIA.md"
++  cp "$TEMPLATES_DIR/ralph/VALIDATION_CRITERIA.project.md" "$PROJECT_LOCATION/ralph/VALIDATION_CRITERIA.md"
++  substitute_placeholders "$PROJECT_LOCATION/ralph/VALIDATION_CRITERIA.md" "$REPO_NAME" "$WORK_BRANCH"
++  success "Copied ralph/VALIDATION_CRITERIA.md"
+ else
+-	warn "Template not found: ralph/VALIDATION_CRITERIA.project.md"
++  warn "Template not found: ralph/VALIDATION_CRITERIA.project.md"
+ fi
+ 
+ if [ -f "$TEMPLATES_DIR/ralph/RALPH.md" ]; then
+-	cp "$TEMPLATES_DIR/ralph/RALPH.md" "$PROJECT_LOCATION/ralph/RALPH.md"
+-	substitute_placeholders "$PROJECT_LOCATION/ralph/RALPH.md" "$REPO_NAME" "$WORK_BRANCH"
+-	success "Copied ralph/RALPH.md"
++  cp "$TEMPLATES_DIR/ralph/RALPH.md" "$PROJECT_LOCATION/ralph/RALPH.md"
++  substitute_placeholders "$PROJECT_LOCATION/ralph/RALPH.md" "$REPO_NAME" "$WORK_BRANCH"
++  success "Copied ralph/RALPH.md"
+ else
+-	warn "Template not found: ralph/RALPH.md"
++  warn "Template not found: ralph/RALPH.md"
+ fi
+ 
+ # Copy loop.sh with placeholder substitution
+ if [ -f "$TEMPLATES_DIR/ralph/loop.sh" ]; then
+-	cp "$TEMPLATES_DIR/ralph/loop.sh" "$PROJECT_LOCATION/ralph/loop.sh"
+-	chmod +x "$PROJECT_LOCATION/ralph/loop.sh"
+-	substitute_placeholders "$PROJECT_LOCATION/ralph/loop.sh" "$REPO_NAME" "$WORK_BRANCH"
+-	success "Copied ralph/loop.sh (executable)"
++  cp "$TEMPLATES_DIR/ralph/loop.sh" "$PROJECT_LOCATION/ralph/loop.sh"
++  chmod +x "$PROJECT_LOCATION/ralph/loop.sh"
++  substitute_placeholders "$PROJECT_LOCATION/ralph/loop.sh" "$REPO_NAME" "$WORK_BRANCH"
++  success "Copied ralph/loop.sh (executable)"
+ else
+-	warn "Template not found: ralph/loop.sh"
++  warn "Template not found: ralph/loop.sh"
+ fi
+ 
+ # Copy pr-batch.sh with placeholder substitution
+ if [ -f "$TEMPLATES_DIR/ralph/pr-batch.sh" ]; then
+-	cp "$TEMPLATES_DIR/ralph/pr-batch.sh" "$PROJECT_LOCATION/ralph/pr-batch.sh"
+-	chmod +x "$PROJECT_LOCATION/ralph/pr-batch.sh"
+-	substitute_placeholders "$PROJECT_LOCATION/ralph/pr-batch.sh" "$REPO_NAME" "$WORK_BRANCH"
+-	success "Copied ralph/pr-batch.sh (executable)"
++  cp "$TEMPLATES_DIR/ralph/pr-batch.sh" "$PROJECT_LOCATION/ralph/pr-batch.sh"
++  chmod +x "$PROJECT_LOCATION/ralph/pr-batch.sh"
++  substitute_placeholders "$PROJECT_LOCATION/ralph/pr-batch.sh" "$REPO_NAME" "$WORK_BRANCH"
++  success "Copied ralph/pr-batch.sh (executable)"
+ else
+-	warn "Template not found: ralph/pr-batch.sh"
++  warn "Template not found: ralph/pr-batch.sh"
+ fi
+ 
+ # Copy monitor scripts (THUNK system)
+ if [ -f "$TEMPLATES_DIR/ralph/current_ralph_tasks.sh" ]; then
+-	cp "$TEMPLATES_DIR/ralph/current_ralph_tasks.sh" "$PROJECT_LOCATION/ralph/current_ralph_tasks.sh"
+-	chmod +x "$PROJECT_LOCATION/ralph/current_ralph_tasks.sh"
+-	success "Copied ralph/current_ralph_tasks.sh (executable)"
++  cp "$TEMPLATES_DIR/ralph/current_ralph_tasks.sh" "$PROJECT_LOCATION/ralph/current_ralph_tasks.sh"
++  chmod +x "$PROJECT_LOCATION/ralph/current_ralph_tasks.sh"
++  success "Copied ralph/current_ralph_tasks.sh (executable)"
+ else
+-	warn "Template not found: ralph/current_ralph_tasks.sh"
++  warn "Template not found: ralph/current_ralph_tasks.sh"
+ fi
+ 
+ if [ -f "$TEMPLATES_DIR/ralph/thunk_ralph_tasks.sh" ]; then
+-	cp "$TEMPLATES_DIR/ralph/thunk_ralph_tasks.sh" "$PROJECT_LOCATION/ralph/thunk_ralph_tasks.sh"
+-	chmod +x "$PROJECT_LOCATION/ralph/thunk_ralph_tasks.sh"
+-	success "Copied ralph/thunk_ralph_tasks.sh (executable)"
++  cp "$TEMPLATES_DIR/ralph/thunk_ralph_tasks.sh" "$PROJECT_LOCATION/ralph/thunk_ralph_tasks.sh"
++  chmod +x "$PROJECT_LOCATION/ralph/thunk_ralph_tasks.sh"
++  success "Copied ralph/thunk_ralph_tasks.sh (executable)"
+ else
+-	warn "Template not found: ralph/thunk_ralph_tasks.sh"
++  warn "Template not found: ralph/thunk_ralph_tasks.sh"
+ fi
+ 
+ # Copy verifier.sh
+ if [ -f "$TEMPLATES_DIR/ralph/verifier.sh" ]; then
+-	cp "$TEMPLATES_DIR/ralph/verifier.sh" "$PROJECT_LOCATION/ralph/verifier.sh"
+-	chmod +x "$PROJECT_LOCATION/ralph/verifier.sh"
+-	success "Copied ralph/verifier.sh (executable)"
++  cp "$TEMPLATES_DIR/ralph/verifier.sh" "$PROJECT_LOCATION/ralph/verifier.sh"
++  chmod +x "$PROJECT_LOCATION/ralph/verifier.sh"
++  success "Copied ralph/verifier.sh (executable)"
+ else
+-	warn "Template not found: ralph/verifier.sh"
++  warn "Template not found: ralph/verifier.sh"
+ fi
+ 
+ # Copy and process THUNK.project.md template
+ if [ -f "$TEMPLATES_DIR/ralph/THUNK.project.md" ]; then
+-	cp "$TEMPLATES_DIR/ralph/THUNK.project.md" "$PROJECT_LOCATION/ralph/THUNK.md"
+-	CREATION_DATE=$(date +"%Y-%m-%d")
+-	INITIAL_ERA_NAME="Initial Setup"
++  cp "$TEMPLATES_DIR/ralph/THUNK.project.md" "$PROJECT_LOCATION/ralph/THUNK.md"
++  CREATION_DATE=$(date +"%Y-%m-%d")
++  INITIAL_ERA_NAME="Initial Setup"
+ 
+-	# Escape variables for sed replacement to prevent corruption from special chars
+-	esc_project_name=$(escape_sed_replacement "$PROJECT_NAME")
+-	esc_creation_date=$(escape_sed_replacement "$CREATION_DATE")
+-	esc_era_name=$(escape_sed_replacement "$INITIAL_ERA_NAME")
++  # Escape variables for sed replacement to prevent corruption from special chars
++  esc_project_name=$(escape_sed_replacement "$PROJECT_NAME")
++  esc_creation_date=$(escape_sed_replacement "$CREATION_DATE")
++  esc_era_name=$(escape_sed_replacement "$INITIAL_ERA_NAME")
+ 
+-	# Process template placeholders
+-	sed -i "s/{{PROJECT_NAME}}/$esc_project_name/g" "$PROJECT_LOCATION/ralph/THUNK.md"
+-	sed -i "s/{{CREATION_DATE}}/$esc_creation_date/g" "$PROJECT_LOCATION/ralph/THUNK.md"
+-	sed -i "s/{{INITIAL_ERA_NAME}}/$esc_era_name/g" "$PROJECT_LOCATION/ralph/THUNK.md"
++  # Process template placeholders
++  sed -i "s/{{PROJECT_NAME}}/$esc_project_name/g" "$PROJECT_LOCATION/ralph/THUNK.md"
++  sed -i "s/{{CREATION_DATE}}/$esc_creation_date/g" "$PROJECT_LOCATION/ralph/THUNK.md"
++  sed -i "s/{{INITIAL_ERA_NAME}}/$esc_era_name/g" "$PROJECT_LOCATION/ralph/THUNK.md"
+ 
+-	success "Copied ralph/THUNK.md (from template)"
++  success "Copied ralph/THUNK.md (from template)"
+ else
+-	warn "Template not found: ralph/THUNK.project.md"
++  warn "Template not found: ralph/THUNK.project.md"
+ fi
+ 
+ # Generate custom files using HIGH INTELLIGENCE generators
+@@ -447,40 +447,40 @@
+ 
+ # THOUGHTS.md goes in ralph/, not project root
+ if [ -f "$BRAIN_DIR/generators/generate-thoughts.sh" ]; then
+-	info "Generating custom THOUGHTS.md..."
+-	bash "$BRAIN_DIR/generators/generate-thoughts.sh" "$IDEA_FILE" "$PROJECT_LOCATION/ralph/THOUGHTS.md"
+-	success "Generated ralph/THOUGHTS.md"
++  info "Generating custom THOUGHTS.md..."
++  bash "$BRAIN_DIR/generators/generate-thoughts.sh" "$IDEA_FILE" "$PROJECT_LOCATION/ralph/THOUGHTS.md"
++  success "Generated ralph/THOUGHTS.md"
+ else
+-	warn "Generator not found: generate-thoughts.sh (using template fallback)"
+-	if [ -f "$TEMPLATES_DIR/THOUGHTS.project.md" ]; then
+-		cp "$TEMPLATES_DIR/THOUGHTS.project.md" "$PROJECT_LOCATION/ralph/THOUGHTS.md"
+-		substitute_placeholders "$PROJECT_LOCATION/ralph/THOUGHTS.md" "$REPO_NAME" "$WORK_BRANCH"
+-		success "Copied ralph/THOUGHTS.md template (needs customization)"
+-	fi
++  warn "Generator not found: generate-thoughts.sh (using template fallback)"
++  if [ -f "$TEMPLATES_DIR/THOUGHTS.project.md" ]; then
++    cp "$TEMPLATES_DIR/THOUGHTS.project.md" "$PROJECT_LOCATION/ralph/THOUGHTS.md"
++    substitute_placeholders "$PROJECT_LOCATION/ralph/THOUGHTS.md" "$REPO_NAME" "$WORK_BRANCH"
++    success "Copied ralph/THOUGHTS.md template (needs customization)"
++  fi
+ fi
+ 
+ # NEURONS.md goes in ralph/, not project root
+ if [ -f "$BRAIN_DIR/generators/generate-neurons.sh" ]; then
+-	info "Generating custom NEURONS.md..."
+-	bash "$BRAIN_DIR/generators/generate-neurons.sh" "$IDEA_FILE" "$PROJECT_LOCATION/ralph/NEURONS.md"
+-	success "Generated ralph/NEURONS.md"
++  info "Generating custom NEURONS.md..."
++  bash "$BRAIN_DIR/generators/generate-neurons.sh" "$IDEA_FILE" "$PROJECT_LOCATION/ralph/NEURONS.md"
++  success "Generated ralph/NEURONS.md"
+ else
+-	warn "Generator not found: generate-neurons.sh (using template fallback)"
+-	if [ -f "$TEMPLATES_DIR/NEURONS.project.md" ]; then
+-		cp "$TEMPLATES_DIR/NEURONS.project.md" "$PROJECT_LOCATION/ralph/NEURONS.md"
+-		substitute_placeholders "$PROJECT_LOCATION/ralph/NEURONS.md" "$REPO_NAME" "$WORK_BRANCH"
+-		success "Copied ralph/NEURONS.md template (needs customization)"
+-	fi
++  warn "Generator not found: generate-neurons.sh (using template fallback)"
++  if [ -f "$TEMPLATES_DIR/NEURONS.project.md" ]; then
++    cp "$TEMPLATES_DIR/NEURONS.project.md" "$PROJECT_LOCATION/ralph/NEURONS.md"
++    substitute_placeholders "$PROJECT_LOCATION/ralph/NEURONS.md" "$REPO_NAME" "$WORK_BRANCH"
++    success "Copied ralph/NEURONS.md template (needs customization)"
++  fi
+ fi
+ 
+ # Generate IMPLEMENTATION_PLAN.md using HIGH INTELLIGENCE generator
+ if [ -f "$BRAIN_DIR/generators/generate-implementation-plan.sh" ]; then
+-	info "Generating custom IMPLEMENTATION_PLAN.md..."
+-	bash "$BRAIN_DIR/generators/generate-implementation-plan.sh" "$IDEA_FILE" "$PROJECT_LOCATION/ralph/IMPLEMENTATION_PLAN.md"
+-	success "Generated custom IMPLEMENTATION_PLAN.md"
++  info "Generating custom IMPLEMENTATION_PLAN.md..."
++  bash "$BRAIN_DIR/generators/generate-implementation-plan.sh" "$IDEA_FILE" "$PROJECT_LOCATION/ralph/IMPLEMENTATION_PLAN.md"
++  success "Generated custom IMPLEMENTATION_PLAN.md"
+ else
+-	warn "Generator not found: generate-implementation-plan.sh (using template)"
+-	# Template already copied above
++  warn "Generator not found: generate-implementation-plan.sh (using template)"
++  # Template already copied above
+ fi
+ 
+ # ============================================
+@@ -488,11 +488,11 @@
+ # ============================================
+ 
+ if [ -f "$TEMPLATES_DIR/.gitignore" ]; then
+-	cp "$TEMPLATES_DIR/.gitignore" "$PROJECT_LOCATION/.gitignore"
+-	success "Copied .gitignore from template"
++  cp "$TEMPLATES_DIR/.gitignore" "$PROJECT_LOCATION/.gitignore"
++  success "Copied .gitignore from template"
+ else
+-	# Create default .gitignore
+-	cat >"$PROJECT_LOCATION/.gitignore" <<'EOF'
++  # Create default .gitignore
++  cat >"$PROJECT_LOCATION/.gitignore" <<'EOF'
+ # Ralph logs
+ ralph/logs/
+ 
+@@ -504,7 +504,7 @@
+ .DS_Store
+ Thumbs.db
+ EOF
+-	success "Created .gitignore"
++  success "Created .gitignore"
+ fi
+ 
+ # ============================================
+@@ -569,72 +569,72 @@
+ git branch -M main
+ 
+ if [[ "$CREATE_REPO" == "true" ]]; then
+-	info "Creating GitHub repository..."
++  info "Creating GitHub repository..."
+ 
+-	# Loop for handling name conflicts
+-	while true; do
+-		create_output=$(gh repo create "$REPO_NAME" --public --source=. --remote=origin 2>&1)
+-		create_exit=$?
++  # Loop for handling name conflicts
++  while true; do
++    create_output=$(gh repo create "$REPO_NAME" --public --source=. --remote=origin 2>&1)
++    create_exit=$?
+ 
+-		if [[ $create_exit -eq 0 ]]; then
+-			success "GitHub repo created: $GITHUB_USERNAME/$REPO_NAME"
+-			break
+-		else
+-			# Classify error
+-			if echo "$create_output" | grep -qiE "already exists|name.*(taken|unavailable)|repository creation failed|could not create repository"; then
+-				# Name conflict
+-				warn "Repository name '$REPO_NAME' is not available"
+-				echo ""
+-				read -r -p "Enter a different repository name (or 'skip' for local-only): " new_repo_name
+-				if [[ "$new_repo_name" == "skip" ]]; then
+-					LOCAL_ONLY=true
+-					warn "Switching to local-only mode"
+-					break
+-				fi
+-				REPO_NAME="$new_repo_name"
+-				WORK_BRANCH="${REPO_NAME}-work"
+-			elif echo "$create_output" | grep -qiE "auth|permission|token|credential|network|could not resolve|rate limit|forbidden|unauthorized"; then
+-				# Auth/network failure
+-				warn "GitHub unavailable: $create_output"
+-				LOCAL_ONLY=true
+-				break
+-			else
+-				# Unknown error - fallback to local-only
+-				warn "Unknown error creating repo: $create_output"
+-				LOCAL_ONLY=true
+-				break
+-			fi
+-		fi
+-	done
++    if [[ $create_exit -eq 0 ]]; then
++      success "GitHub repo created: $GITHUB_USERNAME/$REPO_NAME"
++      break
++    else
++      # Classify error
++      if echo "$create_output" | grep -qiE "already exists|name.*(taken|unavailable)|repository creation failed|could not create repository"; then
++        # Name conflict
++        warn "Repository name '$REPO_NAME' is not available"
++        echo ""
++        read -r -p "Enter a different repository name (or 'skip' for local-only): " new_repo_name
++        if [[ "$new_repo_name" == "skip" ]]; then
++          LOCAL_ONLY=true
++          warn "Switching to local-only mode"
++          break
++        fi
++        REPO_NAME="$new_repo_name"
++        WORK_BRANCH="${REPO_NAME}-work"
++      elif echo "$create_output" | grep -qiE "auth|permission|token|credential|network|could not resolve|rate limit|forbidden|unauthorized"; then
++        # Auth/network failure
++        warn "GitHub unavailable: $create_output"
++        LOCAL_ONLY=true
++        break
++      else
++        # Unknown error - fallback to local-only
++        warn "Unknown error creating repo: $create_output"
++        LOCAL_ONLY=true
++        break
++      fi
++    fi
++  done
+ 
+-	if [[ "$LOCAL_ONLY" != "true" ]]; then
+-		# Push main
+-		info "Pushing main branch..."
+-		git push -u origin main
++  if [[ "$LOCAL_ONLY" != "true" ]]; then
++    # Push main
++    info "Pushing main branch..."
++    git push -u origin main
+ 
+-		# Create and push work branch
+-		info "Creating work branch: $WORK_BRANCH"
+-		git checkout -b "$WORK_BRANCH"
+-		git push -u origin "$WORK_BRANCH"
++    # Create and push work branch
++    info "Creating work branch: $WORK_BRANCH"
++    git checkout -b "$WORK_BRANCH"
++    git push -u origin "$WORK_BRANCH"
+ 
+-		success "Repository setup complete!"
+-	fi
++    success "Repository setup complete!"
++  fi
+ fi
+ 
+ # Handle local-only mode
+ if [[ "$LOCAL_ONLY" == "true" ]]; then
+-	warn "Project created in local-only mode"
+-	echo ""
+-	echo "To connect to GitHub later, run these commands:"
+-	echo ""
+-	echo "  gh repo create $REPO_NAME --public --source=. --remote=origin"
+-	echo "  git push -u origin main"
+-	echo "  git checkout -b $WORK_BRANCH"
+-	echo "  git push -u origin $WORK_BRANCH"
+-	echo ""
++  warn "Project created in local-only mode"
++  echo ""
++  echo "To connect to GitHub later, run these commands:"
++  echo ""
++  echo "  gh repo create $REPO_NAME --public --source=. --remote=origin"
++  echo "  git push -u origin main"
++  echo "  git checkout -b $WORK_BRANCH"
++  echo "  git push -u origin $WORK_BRANCH"
++  echo ""
+ 
+-	# Still create local work branch
+-	git checkout -b "$WORK_BRANCH"
++  # Still create local work branch
++  git checkout -b "$WORK_BRANCH"
+ fi
+ 
+ # Ensure we end on work branch
+@@ -652,7 +652,7 @@
+ info "Project created at: $PROJECT_LOCATION"
+ info "Current branch: $WORK_BRANCH"
+ if [[ "$LOCAL_ONLY" != "true" ]]; then
+-	info "GitHub repo: https://github.com/$GITHUB_USERNAME/$REPO_NAME"
++  info "GitHub repo: https://github.com/$GITHUB_USERNAME/$REPO_NAME"
+ fi
+ echo ""
+ info "Next steps:"
+--- workers/ralph/pr-batch.sh.orig
++++ workers/ralph/pr-batch.sh
+@@ -24,7 +24,7 @@
+ NC='\033[0m' # No Color
+ 
+ usage() {
+-	cat <<'EOF'
++  cat <<'EOF'
+ PR Batch Creator - Promote ralph-work to main via Pull Request
+ 
+ Usage:
+@@ -65,41 +65,41 @@
+ 
+ # Check gh CLI is installed and authenticated
+ check_gh() {
+-	if ! command -v gh &>/dev/null; then
+-		echo -e "${RED}Error: GitHub CLI (gh) not installed${NC}"
+-		echo "Install with: sudo apt install gh"
+-		echo "Then run: gh auth login"
+-		exit 1
+-	fi
++  if ! command -v gh &>/dev/null; then
++    echo -e "${RED}Error: GitHub CLI (gh) not installed${NC}"
++    echo "Install with: sudo apt install gh"
++    echo "Then run: gh auth login"
++    exit 1
++  fi
+ 
+-	if ! gh auth status &>/dev/null; then
+-		echo -e "${RED}Error: GitHub CLI not authenticated${NC}"
+-		echo "Run: gh auth login"
+-		exit 1
+-	fi
++  if ! gh auth status &>/dev/null; then
++    echo -e "${RED}Error: GitHub CLI not authenticated${NC}"
++    echo "Run: gh auth login"
++    exit 1
++  fi
+ }
+ 
+ # Get commit count between branches
+ get_commit_count() {
+-	git rev-list --count "$MAIN_BRANCH".."$WORK_BRANCH" 2>/dev/null || echo "0"
++  git rev-list --count "$MAIN_BRANCH".."$WORK_BRANCH" 2>/dev/null || echo "0"
+ }
+ 
+ # Get file change stats
+ get_file_stats() {
+-	local stats
+-	stats=$(git diff --stat "$MAIN_BRANCH".."$WORK_BRANCH" | tail -1)
+-	echo "$stats"
++  local stats
++  stats=$(git diff --stat "$MAIN_BRANCH".."$WORK_BRANCH" | tail -1)
++  echo "$stats"
+ }
+ 
+ # Generate PR body with change summary
+ generate_pr_body() {
+-	local commit_count
+-	local file_stats
++  local commit_count
++  local file_stats
+ 
+-	commit_count=$(get_commit_count)
+-	file_stats=$(get_file_stats)
++  commit_count=$(get_commit_count)
++  file_stats=$(get_file_stats)
+ 
+-	cat <<EOF
++  cat <<EOF
+ ## Ralph Work Batch - $(date +"%b %d, %Y")
+ 
+ ### Summary
+@@ -110,137 +110,137 @@
+ 
+ EOF
+ 
+-	# Group changes by directory
+-	echo "**Skills (skills/):**"
+-	git diff --name-only "$MAIN_BRANCH".."$WORK_BRANCH" -- "ralph/skills/" 2>/dev/null | sed 's/^/- /' || echo "- No changes"
+-	echo ""
++  # Group changes by directory
++  echo "**Skills (skills/):**"
++  git diff --name-only "$MAIN_BRANCH".."$WORK_BRANCH" -- "ralph/skills/" 2>/dev/null | sed 's/^/- /' || echo "- No changes"
++  echo ""
+ 
+-	echo "**Templates:**"
+-	git diff --name-only "$MAIN_BRANCH".."$WORK_BRANCH" -- "ralph/templates/" 2>/dev/null | sed 's/^/- /' || echo "- No changes"
+-	echo ""
++  echo "**Templates:**"
++  git diff --name-only "$MAIN_BRANCH".."$WORK_BRANCH" -- "ralph/templates/" 2>/dev/null | sed 's/^/- /' || echo "- No changes"
++  echo ""
+ 
+-	echo "**Scripts:**"
+-	git diff --name-only "$MAIN_BRANCH".."$WORK_BRANCH" -- "*.sh" 2>/dev/null | sed 's/^/- /' || echo "- No changes"
+-	echo ""
++  echo "**Scripts:**"
++  git diff --name-only "$MAIN_BRANCH".."$WORK_BRANCH" -- "*.sh" 2>/dev/null | sed 's/^/- /' || echo "- No changes"
++  echo ""
+ 
+-	echo "**References:**"
+-	git diff --name-only "$MAIN_BRANCH".."$WORK_BRANCH" -- "ralph/references/" 2>/dev/null | sed 's/^/- /' || echo "- No changes"
+-	echo ""
++  echo "**References:**"
++  git diff --name-only "$MAIN_BRANCH".."$WORK_BRANCH" -- "ralph/references/" 2>/dev/null | sed 's/^/- /' || echo "- No changes"
++  echo ""
+ 
+-	echo "**Core Docs:**"
+-	git diff --name-only "$MAIN_BRANCH".."$WORK_BRANCH" -- "ralph/*.md" "README.md" 2>/dev/null | sed 's/^/- /' || echo "- No changes"
+-	echo ""
++  echo "**Core Docs:**"
++  git diff --name-only "$MAIN_BRANCH".."$WORK_BRANCH" -- "ralph/*.md" "README.md" 2>/dev/null | sed 's/^/- /' || echo "- No changes"
++  echo ""
+ 
+-	echo "### Commit Log"
+-	echo '```'
+-	git log --oneline "$MAIN_BRANCH".."$WORK_BRANCH" | head -30
+-	local total
+-	total=$(get_commit_count)
+-	if [[ "$total" -gt 30 ]]; then
+-		echo "... and $((total - 30)) more commits"
+-	fi
+-	echo '```'
++  echo "### Commit Log"
++  echo '```'
++  git log --oneline "$MAIN_BRANCH".."$WORK_BRANCH" | head -30
++  local total
++  total=$(get_commit_count)
++  if [[ "$total" -gt 30 ]]; then
++    echo "... and $((total - 30)) more commits"
++  fi
++  echo '```'
+ }
+ 
+ # Show status of pending changes
+ show_status() {
+-	echo -e "${BLUE}========================================${NC}"
+-	echo -e "${BLUE}PR Batch Status${NC}"
+-	echo -e "${BLUE}========================================${NC}"
+-	echo ""
++  echo -e "${BLUE}========================================${NC}"
++  echo -e "${BLUE}PR Batch Status${NC}"
++  echo -e "${BLUE}========================================${NC}"
++  echo ""
+ 
+-	# Check if ralph-work exists
+-	if ! git show-ref --verify --quiet "refs/heads/$WORK_BRANCH"; then
+-		echo -e "${YELLOW}Branch '$WORK_BRANCH' does not exist.${NC}"
+-		echo "Run: pr-batch.sh --setup"
+-		return 1
+-	fi
++  # Check if ralph-work exists
++  if ! git show-ref --verify --quiet "refs/heads/$WORK_BRANCH"; then
++    echo -e "${YELLOW}Branch '$WORK_BRANCH' does not exist.${NC}"
++    echo "Run: pr-batch.sh --setup"
++    return 1
++  fi
+ 
+-	local commit_count
+-	commit_count=$(get_commit_count)
++  local commit_count
++  commit_count=$(get_commit_count)
+ 
+-	if [[ "$commit_count" -eq 0 ]]; then
+-		echo -e "${GREEN}✓ No pending changes${NC}"
+-		echo "ralph-work is up to date with main"
+-		return 0
+-	fi
++  if [[ "$commit_count" -eq 0 ]]; then
++    echo -e "${GREEN}✓ No pending changes${NC}"
++    echo "ralph-work is up to date with main"
++    return 0
++  fi
+ 
+-	echo -e "${YELLOW}Pending changes: $commit_count commits${NC}"
+-	echo ""
++  echo -e "${YELLOW}Pending changes: $commit_count commits${NC}"
++  echo ""
+ 
+-	echo "Files changed:"
+-	git diff --stat "$MAIN_BRANCH".."$WORK_BRANCH" | head -20
+-	echo ""
++  echo "Files changed:"
++  git diff --stat "$MAIN_BRANCH".."$WORK_BRANCH" | head -20
++  echo ""
+ 
+-	echo "Recent commits:"
+-	git log --oneline "$MAIN_BRANCH".."$WORK_BRANCH" | head -10
+-	echo ""
++  echo "Recent commits:"
++  git log --oneline "$MAIN_BRANCH".."$WORK_BRANCH" | head -10
++  echo ""
+ 
+-	echo -e "Run ${GREEN}pr-batch.sh${NC} to create a PR with these changes"
++  echo -e "Run ${GREEN}pr-batch.sh${NC} to create a PR with these changes"
+ }
+ 
+ # Setup ralph-work branch
+ do_setup() {
+-	echo -e "${BLUE}Setting up ralph-work branch...${NC}"
++  echo -e "${BLUE}Setting up ralph-work branch...${NC}"
+ 
+-	if git show-ref --verify --quiet "refs/heads/$WORK_BRANCH"; then
+-		echo -e "${YELLOW}Branch '$WORK_BRANCH' already exists${NC}"
+-		read -r -p "Reset it to current main? (yes/no): " confirm
+-		if [[ "$confirm" != "yes" ]]; then
+-			echo "Setup cancelled"
+-			return 1
+-		fi
+-		git checkout main
+-		git branch -D "$WORK_BRANCH"
+-	fi
++  if git show-ref --verify --quiet "refs/heads/$WORK_BRANCH"; then
++    echo -e "${YELLOW}Branch '$WORK_BRANCH' already exists${NC}"
++    read -r -p "Reset it to current main? (yes/no): " confirm
++    if [[ "$confirm" != "yes" ]]; then
++      echo "Setup cancelled"
++      return 1
++    fi
++    git checkout main
++    git branch -D "$WORK_BRANCH"
++  fi
+ 
+-	git checkout -b "$WORK_BRANCH"
+-	git push -u origin "$WORK_BRANCH"
++  git checkout -b "$WORK_BRANCH"
++  git push -u origin "$WORK_BRANCH"
+ 
+-	echo ""
+-	echo -e "${GREEN}✓ Created and pushed '$WORK_BRANCH' branch${NC}"
+-	echo ""
+-	echo "Next steps:"
+-	echo "1. Update ralph/loop.sh to commit to '$WORK_BRANCH'"
+-	echo "2. Run Ralph iterations as normal"
+-	echo "3. When ready, run: pr-batch.sh"
++  echo ""
++  echo -e "${GREEN}✓ Created and pushed '$WORK_BRANCH' branch${NC}"
++  echo ""
++  echo "Next steps:"
++  echo "1. Update ralph/loop.sh to commit to '$WORK_BRANCH'"
++  echo "2. Run Ralph iterations as normal"
++  echo "3. When ready, run: pr-batch.sh"
+ }
+ 
+ # Create PR from ralph-work to main
+ create_pr() {
+-	local pr_branch="$1"
+-	local pr_title="$2"
++  local pr_branch="$1"
++  local pr_title="$2"
+ 
+-	echo -e "${BLUE}Creating PR: $pr_title${NC}"
+-	echo ""
++  echo -e "${BLUE}Creating PR: $pr_title${NC}"
++  echo ""
+ 
+-	# Generate PR body
+-	local pr_body
+-	pr_body=$(generate_pr_body)
++  # Generate PR body
++  local pr_body
++  pr_body=$(generate_pr_body)
+ 
+-	# If using a snapshot branch, create it first
+-	if [[ "$pr_branch" != "$WORK_BRANCH" ]]; then
+-		echo "Creating snapshot branch: $pr_branch"
+-		git checkout "$WORK_BRANCH"
+-		git checkout -b "$pr_branch"
+-		git push -u origin "$pr_branch"
+-	fi
++  # If using a snapshot branch, create it first
++  if [[ "$pr_branch" != "$WORK_BRANCH" ]]; then
++    echo "Creating snapshot branch: $pr_branch"
++    git checkout "$WORK_BRANCH"
++    git checkout -b "$pr_branch"
++    git push -u origin "$pr_branch"
++  fi
+ 
+-	# Create the PR
+-	local pr_url
+-	pr_url=$(gh pr create \
+-		--base "$MAIN_BRANCH" \
+-		--head "$pr_branch" \
+-		--title "$pr_title" \
+-		--body "$pr_body")
++  # Create the PR
++  local pr_url
++  pr_url=$(gh pr create \
++    --base "$MAIN_BRANCH" \
++    --head "$pr_branch" \
++    --title "$pr_title" \
++    --body "$pr_body")
+ 
+-	echo ""
+-	echo -e "${GREEN}✓ PR created successfully!${NC}"
+-	echo "$pr_url"
+-	echo ""
++  echo ""
++  echo -e "${GREEN}✓ PR created successfully!${NC}"
++  echo "$pr_url"
++  echo ""
+ 
+-	# Return to work branch
+-	git checkout "$WORK_BRANCH"
++  # Return to work branch
++  git checkout "$WORK_BRANCH"
+ }
+ 
+ # Main
+@@ -248,81 +248,81 @@
+ SNAPSHOT_NAME=""
+ 
+ while [[ $# -gt 0 ]]; do
+-	case "$1" in
+-		--weekly)
+-			MODE="weekly"
+-			shift
+-			;;
+-		--snapshot)
+-			MODE="snapshot"
+-			SNAPSHOT_NAME="${2:-}"
+-			if [[ -z "$SNAPSHOT_NAME" ]]; then
+-				echo -e "${RED}Error: --snapshot requires a name${NC}"
+-				exit 1
+-			fi
+-			shift 2
+-			;;
+-		--status)
+-			MODE="status"
+-			shift
+-			;;
+-		--setup)
+-			MODE="setup"
+-			shift
+-			;;
+-		--help | -h)
+-			usage
+-			exit 0
+-			;;
+-		*)
+-			echo -e "${RED}Unknown option: $1${NC}"
+-			usage
+-			exit 1
+-			;;
+-	esac
++  case "$1" in
++    --weekly)
++      MODE="weekly"
++      shift
++      ;;
++    --snapshot)
++      MODE="snapshot"
++      SNAPSHOT_NAME="${2:-}"
++      if [[ -z "$SNAPSHOT_NAME" ]]; then
++        echo -e "${RED}Error: --snapshot requires a name${NC}"
++        exit 1
++      fi
++      shift 2
++      ;;
++    --status)
++      MODE="status"
++      shift
++      ;;
++    --setup)
++      MODE="setup"
++      shift
++      ;;
++    --help | -h)
++      usage
++      exit 0
++      ;;
++    *)
++      echo -e "${RED}Unknown option: $1${NC}"
++      usage
++      exit 1
++      ;;
++  esac
+ done
+ 
+ # Execute based on mode
+ case "$MODE" in
+-	status)
+-		show_status
+-		;;
+-	setup)
+-		do_setup
+-		;;
+-	direct)
+-		check_gh
++  status)
++    show_status
++    ;;
++  setup)
++    do_setup
++    ;;
++  direct)
++    check_gh
+ 
+-		commit_count=$(get_commit_count)
+-		if [[ "$commit_count" -eq 0 ]]; then
+-			echo -e "${GREEN}✓ No pending changes to create PR${NC}"
+-			exit 0
+-		fi
++    commit_count=$(get_commit_count)
++    if [[ "$commit_count" -eq 0 ]]; then
++      echo -e "${GREEN}✓ No pending changes to create PR${NC}"
++      exit 0
++    fi
+ 
+-		create_pr "$WORK_BRANCH" "Ralph batch: $(date +%Y-%m-%d) ($commit_count commits)"
+-		;;
+-	weekly)
+-		check_gh
++    create_pr "$WORK_BRANCH" "Ralph batch: $(date +%Y-%m-%d) ($commit_count commits)"
++    ;;
++  weekly)
++    check_gh
+ 
+-		commit_count=$(get_commit_count)
+-		if [[ "$commit_count" -eq 0 ]]; then
+-			echo -e "${GREEN}✓ No pending changes to create PR${NC}"
+-			exit 0
+-		fi
++    commit_count=$(get_commit_count)
++    if [[ "$commit_count" -eq 0 ]]; then
++      echo -e "${GREEN}✓ No pending changes to create PR${NC}"
++      exit 0
++    fi
+ 
+-		week_branch="ralph/$(date +%Y)-W$(date +%V)"
+-		create_pr "$week_branch" "Ralph weekly: Week $(date +%V), $(date +%Y) ($commit_count commits)"
+-		;;
+-	snapshot)
+-		check_gh
++    week_branch="ralph/$(date +%Y)-W$(date +%V)"
++    create_pr "$week_branch" "Ralph weekly: Week $(date +%V), $(date +%Y) ($commit_count commits)"
++    ;;
++  snapshot)
++    check_gh
+ 
+-		commit_count=$(get_commit_count)
+-		if [[ "$commit_count" -eq 0 ]]; then
+-			echo -e "${GREEN}✓ No pending changes to create PR${NC}"
+-			exit 0
+-		fi
++    commit_count=$(get_commit_count)
++    if [[ "$commit_count" -eq 0 ]]; then
++      echo -e "${GREEN}✓ No pending changes to create PR${NC}"
++      exit 0
++    fi
+ 
+-		snapshot_branch="ralph/$SNAPSHOT_NAME"
+-		create_pr "$snapshot_branch" "Ralph: $SNAPSHOT_NAME ($commit_count commits)"
+-		;;
++    snapshot_branch="ralph/$SNAPSHOT_NAME"
++    create_pr "$snapshot_branch" "Ralph: $SNAPSHOT_NAME ($commit_count commits)"
++    ;;
+ esac
+--- workers/ralph/.maintenance/verify-brain.sh.orig
++++ workers/ralph/.maintenance/verify-brain.sh
+@@ -26,279 +26,279 @@
+ new_maintenance_items=()
+ 
+ log_info() {
+-	[[ "$QUIET" != "--quiet" ]] && echo -e "${GREEN}✓${NC} $1"
++  [[ "$QUIET" != "--quiet" ]] && echo -e "${GREEN}✓${NC} $1"
+ }
+ 
+ log_warn() {
+-	echo -e "${YELLOW}⚠${NC} $1"
+-	((issues_found++)) || true
++  echo -e "${YELLOW}⚠${NC} $1"
++  ((issues_found++)) || true
+ }
+ 
+ log_error() {
+-	echo -e "${RED}✗${NC} $1"
+-	((issues_found++)) || true
++  echo -e "${RED}✗${NC} $1"
++  ((issues_found++)) || true
+ }
+ 
+ add_maintenance_item() {
+-	local item="- [ ] $TODAY: $1"
+-	# Check if similar item already exists in MAINTENANCE.md (ignore date prefix)
+-	local item_text="$1"
+-	if [[ -f "$MAINTENANCE_FILE" ]] && grep -qF "$item_text" "$MAINTENANCE_FILE" 2>/dev/null; then
+-		# Item already exists, skip
+-		return
+-	fi
+-	new_maintenance_items+=("$item")
++  local item="- [ ] $TODAY: $1"
++  # Check if similar item already exists in MAINTENANCE.md (ignore date prefix)
++  local item_text="$1"
++  if [[ -f "$MAINTENANCE_FILE" ]] && grep -qF "$item_text" "$MAINTENANCE_FILE" 2>/dev/null; then
++    # Item already exists, skip
++    return
++  fi
++  new_maintenance_items+=("$item")
+ }
+ 
+ # =============================================================================
+ # CHECK 1: Skills Index Completeness
+ # =============================================================================
+ check_skills_index() {
+-	log_info "Checking skills index completeness..."
++  log_info "Checking skills index completeness..."
+ 
+-	local index_file="$BRAIN_ROOT/skills/index.md"
+-	if [[ ! -f "$index_file" ]]; then
+-		log_error "skills/index.md not found"
+-		add_maintenance_item "Create skills/index.md"
+-		return
+-	fi
++  local index_file="$BRAIN_ROOT/skills/index.md"
++  if [[ ! -f "$index_file" ]]; then
++    log_error "skills/index.md not found"
++    add_maintenance_item "Create skills/index.md"
++    return
++  fi
+ 
+-	# Find all skill files in domains/ and projects/
+-	local missing_from_index=()
+-	while IFS= read -r skill_file; do
+-		local basename
+-		basename=$(basename "$skill_file")
+-		# Skip README files and index files
+-		[[ "$basename" == "README.md" || "$basename" == "index.md" ]] && continue
++  # Find all skill files in domains/ and projects/
++  local missing_from_index=()
++  while IFS= read -r skill_file; do
++    local basename
++    basename=$(basename "$skill_file")
++    # Skip README files and index files
++    [[ "$basename" == "README.md" || "$basename" == "index.md" ]] && continue
+ 
+-		# Check if file is referenced in index.md
+-		if ! grep -q "$basename" "$index_file" 2>/dev/null; then
+-			missing_from_index+=("$skill_file")
+-		fi
+-	done < <(find "$BRAIN_ROOT/skills/domains" "$BRAIN_ROOT/skills/projects" -name "*.md" -type f 2>/dev/null)
++    # Check if file is referenced in index.md
++    if ! grep -q "$basename" "$index_file" 2>/dev/null; then
++      missing_from_index+=("$skill_file")
++    fi
++  done < <(find "$BRAIN_ROOT/skills/domains" "$BRAIN_ROOT/skills/projects" -name "*.md" -type f 2>/dev/null)
+ 
+-	if [[ ${#missing_from_index[@]} -gt 0 ]]; then
+-		log_warn "Skills missing from index.md:"
+-		for f in "${missing_from_index[@]}"; do
+-			echo "       - $f"
+-		done
+-		add_maintenance_item "Add missing skills to index.md: ${missing_from_index[*]}"
+-	else
+-		log_info "All skills listed in index.md"
+-	fi
++  if [[ ${#missing_from_index[@]} -gt 0 ]]; then
++    log_warn "Skills missing from index.md:"
++    for f in "${missing_from_index[@]}"; do
++      echo "       - $f"
++    done
++    add_maintenance_item "Add missing skills to index.md: ${missing_from_index[*]}"
++  else
++    log_info "All skills listed in index.md"
++  fi
+ }
+ 
+ # =============================================================================
+ # CHECK 2: SUMMARY.md Completeness
+ # =============================================================================
+ check_summary_completeness() {
+-	log_info "Checking SUMMARY.md completeness..."
++  log_info "Checking SUMMARY.md completeness..."
+ 
+-	local summary_file="$BRAIN_ROOT/skills/SUMMARY.md"
+-	if [[ ! -f "$summary_file" ]]; then
+-		log_error "skills/SUMMARY.md not found"
+-		add_maintenance_item "Create skills/SUMMARY.md"
+-		return
+-	fi
++  local summary_file="$BRAIN_ROOT/skills/SUMMARY.md"
++  if [[ ! -f "$summary_file" ]]; then
++    log_error "skills/SUMMARY.md not found"
++    add_maintenance_item "Create skills/SUMMARY.md"
++    return
++  fi
+ 
+-	local missing_from_summary=()
+-	while IFS= read -r skill_file; do
+-		local basename
+-		basename=$(basename "$skill_file")
+-		[[ "$basename" == "README.md" || "$basename" == "SUMMARY.md" || "$basename" == "index.md" ]] && continue
++  local missing_from_summary=()
++  while IFS= read -r skill_file; do
++    local basename
++    basename=$(basename "$skill_file")
++    [[ "$basename" == "README.md" || "$basename" == "SUMMARY.md" || "$basename" == "index.md" ]] && continue
+ 
+-		if ! grep -q "$basename" "$summary_file" 2>/dev/null; then
+-			missing_from_summary+=("$skill_file")
+-		fi
+-	done < <(find "$BRAIN_ROOT/skills/domains" "$BRAIN_ROOT/skills/projects" -name "*.md" -type f 2>/dev/null)
++    if ! grep -q "$basename" "$summary_file" 2>/dev/null; then
++      missing_from_summary+=("$skill_file")
++    fi
++  done < <(find "$BRAIN_ROOT/skills/domains" "$BRAIN_ROOT/skills/projects" -name "*.md" -type f 2>/dev/null)
+ 
+-	if [[ ${#missing_from_summary[@]} -gt 0 ]]; then
+-		log_warn "Skills missing from SUMMARY.md:"
+-		for f in "${missing_from_summary[@]}"; do
+-			echo "       - $f"
+-		done
+-		add_maintenance_item "Add missing skills to SUMMARY.md: ${missing_from_summary[*]}"
+-	else
+-		log_info "All skills listed in SUMMARY.md"
+-	fi
++  if [[ ${#missing_from_summary[@]} -gt 0 ]]; then
++    log_warn "Skills missing from SUMMARY.md:"
++    for f in "${missing_from_summary[@]}"; do
++      echo "       - $f"
++    done
++    add_maintenance_item "Add missing skills to SUMMARY.md: ${missing_from_summary[*]}"
++  else
++    log_info "All skills listed in SUMMARY.md"
++  fi
+ }
+ 
+ # =============================================================================
+ # CHECK 3: Template Sync Check
+ # =============================================================================
+ check_template_sync() {
+-	log_info "Checking template synchronization..."
++  log_info "Checking template synchronization..."
+ 
+-	# Define source -> template mappings
+-	# Format: "source_file:template_file:check_type"
+-	# check_type: "hash" = full file match, "structure" = key sections only
+-	local mappings=(
+-		"$BRAIN_ROOT/skills/self-improvement/SKILL_TEMPLATE.md:$BRAIN_ROOT/templates/ralph/SKILL_TEMPLATE.md:hash"
+-		"PROMPT.md:$BRAIN_ROOT/templates/ralph/PROMPT.md:structure"
+-		"IMPLEMENTATION_PLAN.md:$BRAIN_ROOT/templates/ralph/IMPLEMENTATION_PLAN.project.md:structure"
+-	)
++  # Define source -> template mappings
++  # Format: "source_file:template_file:check_type"
++  # check_type: "hash" = full file match, "structure" = key sections only
++  local mappings=(
++    "$BRAIN_ROOT/skills/self-improvement/SKILL_TEMPLATE.md:$BRAIN_ROOT/templates/ralph/SKILL_TEMPLATE.md:hash"
++    "PROMPT.md:$BRAIN_ROOT/templates/ralph/PROMPT.md:structure"
++    "IMPLEMENTATION_PLAN.md:$BRAIN_ROOT/templates/ralph/IMPLEMENTATION_PLAN.project.md:structure"
++  )
+ 
+-	# Required structural sections for templates
+-	local required_sections=(
+-		"## Maintenance Check"
+-		"## MAINTENANCE"
+-	)
++  # Required structural sections for templates
++  local required_sections=(
++    "## Maintenance Check"
++    "## MAINTENANCE"
++  )
+ 
+-	for mapping in "${mappings[@]}"; do
+-		local source="${mapping%%:*}"
+-		local rest="${mapping#*:}"
+-		local template="${rest%%:*}"
+-		local check_type="${rest##*:}"
++  for mapping in "${mappings[@]}"; do
++    local source="${mapping%%:*}"
++    local rest="${mapping#*:}"
++    local template="${rest%%:*}"
++    local check_type="${rest##*:}"
+ 
+-		# Skip if source doesn't exist
+-		[[ ! -f "$source" ]] && continue
++    # Skip if source doesn't exist
++    [[ ! -f "$source" ]] && continue
+ 
+-		# Skip if template doesn't exist (might be intentional)
+-		if [[ ! -f "$template" ]]; then
+-			# Only warn if template directory exists
+-			local template_dir
+-			template_dir=$(dirname "$template")
+-			if [[ -d "$template_dir" ]]; then
+-				log_warn "Template missing: $template (source: $source)"
+-				add_maintenance_item "Create or sync template: $template from $source"
+-			fi
+-			continue
+-		fi
++    # Skip if template doesn't exist (might be intentional)
++    if [[ ! -f "$template" ]]; then
++      # Only warn if template directory exists
++      local template_dir
++      template_dir=$(dirname "$template")
++      if [[ -d "$template_dir" ]]; then
++        log_warn "Template missing: $template (source: $source)"
++        add_maintenance_item "Create or sync template: $template from $source"
++      fi
++      continue
++    fi
+ 
+-		if [[ "$check_type" == "hash" ]]; then
+-			# Full file comparison
+-			local source_hash
+-			source_hash=$(sha256sum "$source" 2>/dev/null | cut -d' ' -f1)
+-			local template_hash
+-			template_hash=$(sha256sum "$template" 2>/dev/null | cut -d' ' -f1)
++    if [[ "$check_type" == "hash" ]]; then
++      # Full file comparison
++      local source_hash
++      source_hash=$(sha256sum "$source" 2>/dev/null | cut -d' ' -f1)
++      local template_hash
++      template_hash=$(sha256sum "$template" 2>/dev/null | cut -d' ' -f1)
+ 
+-			if [[ "$source_hash" != "$template_hash" ]]; then
+-				log_warn "Template out of sync: $template differs from $source"
+-				add_maintenance_item "Sync template $template with source $source"
+-			fi
+-		elif [[ "$check_type" == "structure" ]]; then
+-			# Check only that required sections exist in template
+-			local missing_sections=()
+-			for section in "${required_sections[@]}"; do
+-				if ! grep -qF "$section" "$template" 2>/dev/null; then
+-					missing_sections+=("$section")
+-				fi
+-			done
++      if [[ "$source_hash" != "$template_hash" ]]; then
++        log_warn "Template out of sync: $template differs from $source"
++        add_maintenance_item "Sync template $template with source $source"
++      fi
++    elif [[ "$check_type" == "structure" ]]; then
++      # Check only that required sections exist in template
++      local missing_sections=()
++      for section in "${required_sections[@]}"; do
++        if ! grep -qF "$section" "$template" 2>/dev/null; then
++          missing_sections+=("$section")
++        fi
++      done
+ 
+-			if [[ ${#missing_sections[@]} -gt 0 ]]; then
+-				log_warn "Template $template missing required sections: ${missing_sections[*]}"
+-				add_maintenance_item "Add missing sections to $template: ${missing_sections[*]}"
+-			fi
+-		fi
+-	done
++      if [[ ${#missing_sections[@]} -gt 0 ]]; then
++        log_warn "Template $template missing required sections: ${missing_sections[*]}"
++        add_maintenance_item "Add missing sections to $template: ${missing_sections[*]}"
++      fi
++    fi
++  done
+ 
+-	log_info "Template sync check complete"
++  log_info "Template sync check complete"
+ }
+ 
+ # =============================================================================
+ # CHECK 4: Recently Modified Files (last 7 days)
+ # =============================================================================
+ check_recently_modified() {
+-	log_info "Checking recently modified files..."
++  log_info "Checking recently modified files..."
+ 
+-	local modified_files=()
+-	while IFS= read -r file; do
+-		modified_files+=("$file")
+-	done < <(find . -name "*.md" -type f -mtime -7 ! -path "./.git/*" ! -name "MAINTENANCE.md" 2>/dev/null | head -20)
++  local modified_files=()
++  while IFS= read -r file; do
++    modified_files+=("$file")
++  done < <(find . -name "*.md" -type f -mtime -7 ! -path "./.git/*" ! -name "MAINTENANCE.md" 2>/dev/null | head -20)
+ 
+-	if [[ ${#modified_files[@]} -gt 0 ]]; then
+-		log_info "Recently modified files (last 7 days):"
+-		for f in "${modified_files[@]}"; do
+-			echo "       - $f"
+-		done
+-	fi
++  if [[ ${#modified_files[@]} -gt 0 ]]; then
++    log_info "Recently modified files (last 7 days):"
++    for f in "${modified_files[@]}"; do
++      echo "       - $f"
++    done
++  fi
+ }
+ 
+ # =============================================================================
+ # CHECK 5: Broken Links in Skills
+ # =============================================================================
+ check_broken_links() {
+-	log_info "Checking for broken links in skills..."
++  log_info "Checking for broken links in skills..."
+ 
+-	local broken_links=()
+-	while IFS= read -r skill_file; do
+-		# Extract markdown links: [text](path)
+-		while IFS= read -r link; do
+-			# Skip external links and anchors
+-			[[ "$link" =~ ^https?:// || "$link" =~ ^# || -z "$link" ]] && continue
++  local broken_links=()
++  while IFS= read -r skill_file; do
++    # Extract markdown links: [text](path)
++    while IFS= read -r link; do
++      # Skip external links and anchors
++      [[ "$link" =~ ^https?:// || "$link" =~ ^# || -z "$link" ]] && continue
+ 
+-			# Resolve relative path from skill file location
+-			local skill_dir
+-			skill_dir=$(dirname "$skill_file")
+-			local target="$skill_dir/$link"
++      # Resolve relative path from skill file location
++      local skill_dir
++      skill_dir=$(dirname "$skill_file")
++      local target="$skill_dir/$link"
+ 
+-			# Normalize path
+-			target=$(realpath -m "$target" 2>/dev/null || echo "$target")
++      # Normalize path
++      target=$(realpath -m "$target" 2>/dev/null || echo "$target")
+ 
+-			# Check if target exists (strip any #anchor)
+-			local target_file="${target%%#*}"
+-			if [[ ! -e "$target_file" && ! -e "$SCRIPT_DIR/$link" ]]; then
+-				broken_links+=("$skill_file -> $link")
+-			fi
+-		done < <(grep -oP '\[.*?\]\(\K[^)]+' "$skill_file" 2>/dev/null || true)
+-	done < <(find "$BRAIN_ROOT/skills" -name "*.md" -type f 2>/dev/null)
++      # Check if target exists (strip any #anchor)
++      local target_file="${target%%#*}"
++      if [[ ! -e "$target_file" && ! -e "$SCRIPT_DIR/$link" ]]; then
++        broken_links+=("$skill_file -> $link")
++      fi
++    done < <(grep -oP '\[.*?\]\(\K[^)]+' "$skill_file" 2>/dev/null || true)
++  done < <(find "$BRAIN_ROOT/skills" -name "*.md" -type f 2>/dev/null)
+ 
+-	if [[ ${#broken_links[@]} -gt 0 ]]; then
+-		log_warn "Broken links detected:"
+-		for link in "${broken_links[@]}"; do
+-			echo "       - $link"
+-		done
+-		add_maintenance_item "Fix broken links in skills files"
+-	else
+-		log_info "No broken links detected"
+-	fi
++  if [[ ${#broken_links[@]} -gt 0 ]]; then
++    log_warn "Broken links detected:"
++    for link in "${broken_links[@]}"; do
++      echo "       - $link"
++    done
++    add_maintenance_item "Fix broken links in skills files"
++  else
++    log_info "No broken links detected"
++  fi
+ }
+ 
+ # =============================================================================
+ # CHECK 6: Skills Missing Quick Reference Tables (new convention)
+ # =============================================================================
+ check_quick_reference_tables() {
+-	log_info "Checking skills for Quick Reference tables..."
++  log_info "Checking skills for Quick Reference tables..."
+ 
+-	local missing_tables=()
+-	while IFS= read -r skill_file; do
+-		local basename
+-		basename=$(basename "$skill_file")
+-		# Skip meta files
+-		[[ "$basename" == "README.md" || "$basename" == "SUMMARY.md" || "$basename" == "index.md" || "$basename" == "conventions.md" ]] && continue
++  local missing_tables=()
++  while IFS= read -r skill_file; do
++    local basename
++    basename=$(basename "$skill_file")
++    # Skip meta files
++    [[ "$basename" == "README.md" || "$basename" == "SUMMARY.md" || "$basename" == "index.md" || "$basename" == "conventions.md" ]] && continue
+ 
+-		# Check for Quick Reference section
+-		if ! grep -qi "## Quick Reference\|## At a Glance\|### Common Mistakes" "$skill_file" 2>/dev/null; then
+-			missing_tables+=("$skill_file")
+-		fi
+-	done < <(find "$BRAIN_ROOT/skills/domains" -name "*.md" -type f 2>/dev/null)
++    # Check for Quick Reference section
++    if ! grep -qi "## Quick Reference\|## At a Glance\|### Common Mistakes" "$skill_file" 2>/dev/null; then
++      missing_tables+=("$skill_file")
++    fi
++  done < <(find "$BRAIN_ROOT/skills/domains" -name "*.md" -type f 2>/dev/null)
+ 
+-	if [[ ${#missing_tables[@]} -gt 0 ]]; then
+-		log_warn "Skills missing Quick Reference tables:"
+-		for f in "${missing_tables[@]}"; do
+-			echo "       - $f"
+-		done
+-		add_maintenance_item "Add Quick Reference tables to: ${missing_tables[*]}"
+-	else
+-		log_info "All skills have Quick Reference tables"
+-	fi
++  if [[ ${#missing_tables[@]} -gt 0 ]]; then
++    log_warn "Skills missing Quick Reference tables:"
++    for f in "${missing_tables[@]}"; do
++      echo "       - $f"
++    done
++    add_maintenance_item "Add Quick Reference tables to: ${missing_tables[*]}"
++  else
++    log_info "All skills have Quick Reference tables"
++  fi
+ }
+ 
+ # =============================================================================
+ # UPDATE MAINTENANCE.md
+ # =============================================================================
+ update_maintenance_file() {
+-	if [[ ${#new_maintenance_items[@]} -eq 0 ]]; then
+-		log_info "No new maintenance items to add"
+-		return
+-	fi
++  if [[ ${#new_maintenance_items[@]} -eq 0 ]]; then
++    log_info "No new maintenance items to add"
++    return
++  fi
+ 
+-	echo ""
+-	echo -e "${YELLOW}Adding ${#new_maintenance_items[@]} items to MAINTENANCE.md${NC}"
++  echo ""
++  echo -e "${YELLOW}Adding ${#new_maintenance_items[@]} items to MAINTENANCE.md${NC}"
+ 
+-	# Create MAINTENANCE.md if it doesn't exist
+-	if [[ ! -f "$MAINTENANCE_FILE" ]]; then
+-		cat >"$MAINTENANCE_FILE" <<'EOF'
++  # Create MAINTENANCE.md if it doesn't exist
++  if [[ ! -f "$MAINTENANCE_FILE" ]]; then
++    cat >"$MAINTENANCE_FILE" <<'EOF'
+ # Brain Maintenance
+ 
+ This file tracks maintenance tasks for the brain repository.
+@@ -315,63 +315,63 @@
+ - [ ] Check for broken links
+ - [ ] Verify skills have Quick Reference tables
+ EOF
+-	fi
++  fi
+ 
+-	# Append new items to Triggered Items section
+-	# Find the line number of "## Triggered Items" and insert after the comment
+-	local temp_file
+-	temp_file=$(mktemp)
+-	local inserted=false
++  # Append new items to Triggered Items section
++  # Find the line number of "## Triggered Items" and insert after the comment
++  local temp_file
++  temp_file=$(mktemp)
++  local inserted=false
+ 
+-	while IFS= read -r line; do
+-		echo "$line" >>"$temp_file"
+-		if [[ "$line" == "<!-- Auto-populated by verify-brain.sh -->" && "$inserted" == false ]]; then
+-			for item in "${new_maintenance_items[@]}"; do
+-				echo "$item" >>"$temp_file"
+-			done
+-			inserted=true
+-		fi
+-	done <"$MAINTENANCE_FILE"
++  while IFS= read -r line; do
++    echo "$line" >>"$temp_file"
++    if [[ "$line" == "<!-- Auto-populated by verify-brain.sh -->" && "$inserted" == false ]]; then
++      for item in "${new_maintenance_items[@]}"; do
++        echo "$item" >>"$temp_file"
++      done
++      inserted=true
++    fi
++  done <"$MAINTENANCE_FILE"
+ 
+-	mv "$temp_file" "$MAINTENANCE_FILE"
++  mv "$temp_file" "$MAINTENANCE_FILE"
+ 
+-	echo ""
+-	echo "New maintenance items added:"
+-	for item in "${new_maintenance_items[@]}"; do
+-		echo "  $item"
+-	done
++  echo ""
++  echo "New maintenance items added:"
++  for item in "${new_maintenance_items[@]}"; do
++    echo "  $item"
++  done
+ }
+ 
+ # =============================================================================
+ # MAIN
+ # =============================================================================
+ main() {
+-	echo "=================================="
+-	echo "Brain Consistency Check - $TODAY"
+-	echo "=================================="
+-	echo ""
++  echo "=================================="
++  echo "Brain Consistency Check - $TODAY"
++  echo "=================================="
++  echo ""
+ 
+-	check_skills_index
+-	check_summary_completeness
+-	check_template_sync
+-	check_broken_links
+-	check_quick_reference_tables
+-	check_recently_modified
++  check_skills_index
++  check_summary_completeness
++  check_template_sync
++  check_broken_links
++  check_quick_reference_tables
++  check_recently_modified
+ 
+-	echo ""
+-	echo "=================================="
++  echo ""
++  echo "=================================="
+ 
+-	if [[ $issues_found -eq 0 ]]; then
+-		echo -e "${GREEN}All checks passed!${NC}"
+-	else
+-		echo -e "${YELLOW}Found $issues_found issue(s)${NC}"
+-		update_maintenance_file
+-	fi
++  if [[ $issues_found -eq 0 ]]; then
++    echo -e "${GREEN}All checks passed!${NC}"
++  else
++    echo -e "${YELLOW}Found $issues_found issue(s)${NC}"
++    update_maintenance_file
++  fi
+ 
+-	echo "=================================="
++  echo "=================================="
+ 
+-	# Exit with appropriate code
+-	[[ $issues_found -gt 0 ]] && exit 1 || exit 0
++  # Exit with appropriate code
++  [[ $issues_found -gt 0 ]] && exit 1 || exit 0
+ }
+ 
+ main
+--- workers/ralph/current_ralph_tasks.sh.orig
++++ workers/ralph/current_ralph_tasks.sh
+@@ -35,492 +35,492 @@
+ 
+ # Parse arguments
+ if [[ "$1" == "--hide-completed" ]]; then
+-	HIDE_COMPLETED=true
++  HIDE_COMPLETED=true
+ fi
+ 
+ # Check if IMPLEMENTATION_PLAN.md exists
+ if [[ ! -f "$PLAN_FILE" ]]; then
+-	echo "Error: IMPLEMENTATION_PLAN.md not found in $RALPH_DIR"
+-	exit 1
++  echo "Error: IMPLEMENTATION_PLAN.md not found in $RALPH_DIR"
++  exit 1
+ fi
+ 
+ # Function to get file modification time
+ get_file_mtime() {
+-	stat -c %Y "$PLAN_FILE" 2>/dev/null || stat -f %m "$PLAN_FILE" 2>/dev/null
++  stat -c %Y "$PLAN_FILE" 2>/dev/null || stat -f %m "$PLAN_FILE" 2>/dev/null
+ }
+ 
+ # Function to generate short human-readable title from task description
+ generate_title() {
+-	local desc="$1"
++  local desc="$1"
+ 
+-	# Strip technical IDs (T1.1, P4A.7, 1.1, 2.3, etc.) from the beginning
+-	desc=$(echo "$desc" | sed -E 's/^[[:space:]]*\*\*[T]?[0-9A-Za-z]+(\.[0-9A-Za-z]+)*\*\*[[:space:]]*//')
++  # Strip technical IDs (T1.1, P4A.7, 1.1, 2.3, etc.) from the beginning
++  desc=$(echo "$desc" | sed -E 's/^[[:space:]]*\*\*[T]?[0-9A-Za-z]+(\.[0-9A-Za-z]+)*\*\*[[:space:]]*//')
+ 
+-	# Strip markdown bold markers
+-	desc=$(echo "$desc" | sed -E 's/\*\*//g')
++  # Strip markdown bold markers
++  desc=$(echo "$desc" | sed -E 's/\*\*//g')
+ 
+-	# Extract action verb and main object (look for common action verbs)
+-	if [[ "$desc" =~ ^(Rename|Update|Create|Verify|Delete|Add|Remove|Test|Implement|Fix|Refactor|Document|Migrate|Copy|Set|Run|If)([[:space:]]*:[[:space:]]*|[[:space:]]+)(.+)$ ]]; then
+-		local verb="${BASH_REMATCH[1]}"
+-		local separator="${BASH_REMATCH[2]}"
+-		local rest="${BASH_REMATCH[3]}"
++  # Extract action verb and main object (look for common action verbs)
++  if [[ "$desc" =~ ^(Rename|Update|Create|Verify|Delete|Add|Remove|Test|Implement|Fix|Refactor|Document|Migrate|Copy|Set|Run|If)([[:space:]]*:[[:space:]]*|[[:space:]]+)(.+)$ ]]; then
++    local verb="${BASH_REMATCH[1]}"
++    local separator="${BASH_REMATCH[2]}"
++    local rest="${BASH_REMATCH[3]}"
+ 
+-		# For "Test:" prefix, include the object being tested
+-		if [[ "$verb" == "Test" ]] && [[ "$separator" =~ : ]]; then
+-			# Take up to arrow, period, or first 50 chars
+-			if [[ "$rest" =~ ^([^.→]+)[.→] ]]; then
+-				rest="${BASH_REMATCH[1]}"
+-			else
+-				rest=$(echo "$rest" | cut -c1-50)
+-			fi
+-			# Remove any trailing quotes, backticks, or markdown
+-			rest=$(echo "$rest" | sed -E 's/`[[:space:]]*$//; s/[[:space:]]*$//')
+-			echo "$verb: $rest"
+-		else
+-			# For other verbs, take up to colon with space (title separator) or first 50 chars
+-			if [[ "$rest" =~ ^([^:]+):[[:space:]] ]]; then
+-				rest="${BASH_REMATCH[1]}"
+-			else
+-				rest=$(echo "$rest" | cut -c1-50)
+-			fi
+-			# Remove any trailing quotes, backticks, or markdown
+-			rest=$(echo "$rest" | sed -E 's/`[[:space:]]*$//; s/[[:space:]]*$//')
+-			echo "$verb $rest"
+-		fi
+-	else
+-		# Fallback: take first 60 chars or up to first colon
+-		if [[ "$desc" =~ ^([^:.]+)[:.] ]]; then
+-			echo "${BASH_REMATCH[1]}"
+-		else
+-			echo "$desc" | cut -c1-60 | sed 's/[[:space:]]*$//'
+-		fi
+-	fi
++    # For "Test:" prefix, include the object being tested
++    if [[ "$verb" == "Test" ]] && [[ "$separator" =~ : ]]; then
++      # Take up to arrow, period, or first 50 chars
++      if [[ "$rest" =~ ^([^.→]+)[.→] ]]; then
++        rest="${BASH_REMATCH[1]}"
++      else
++        rest=$(echo "$rest" | cut -c1-50)
++      fi
++      # Remove any trailing quotes, backticks, or markdown
++      rest=$(echo "$rest" | sed -E 's/`[[:space:]]*$//; s/[[:space:]]*$//')
++      echo "$verb: $rest"
++    else
++      # For other verbs, take up to colon with space (title separator) or first 50 chars
++      if [[ "$rest" =~ ^([^:]+):[[:space:]] ]]; then
++        rest="${BASH_REMATCH[1]}"
++      else
++        rest=$(echo "$rest" | cut -c1-50)
++      fi
++      # Remove any trailing quotes, backticks, or markdown
++      rest=$(echo "$rest" | sed -E 's/`[[:space:]]*$//; s/[[:space:]]*$//')
++      echo "$verb $rest"
++    fi
++  else
++    # Fallback: take first 60 chars or up to first colon
++    if [[ "$desc" =~ ^([^:.]+)[:.] ]]; then
++      echo "${BASH_REMATCH[1]}"
++    else
++      echo "$desc" | cut -c1-60 | sed 's/[[:space:]]*$//'
++    fi
++  fi
+ }
+ 
+ # Function to extract tasks from IMPLEMENTATION_PLAN.md
+ extract_tasks() {
+-	local show_completed=$1
+-	local current_section=""
+-	local in_task_section=false
+-	local task_counter=0
+-	local indent_level=0
++  local show_completed=$1
++  local current_section=""
++  local in_task_section=false
++  local task_counter=0
++  local indent_level=0
+ 
+-	while IFS= read -r line; do
+-		# Detect Manual Review section - skip these tasks entirely
+-		local line_upper="${line^^}"
+-		if [[ "$line_upper" =~ ^###[[:space:]]*MANUAL[[:space:]]*REVIEW ]]; then
+-			in_task_section=false
+-			continue
+-		fi
++  while IFS= read -r line; do
++    # Detect Manual Review section - skip these tasks entirely
++    local line_upper="${line^^}"
++    if [[ "$line_upper" =~ ^###[[:space:]]*MANUAL[[:space:]]*REVIEW ]]; then
++      in_task_section=false
++      continue
++    fi
+ 
+-		# Detect Phase sections (## Phase X: Description)
+-		# Match patterns like "## Phase 0-A: ...", "## Phase 1: ...", etc.
+-		if [[ "$line" =~ ^##[[:space:]]+Phase[[:space:]]+([^:]+):[[:space:]]*(.*)$ ]]; then
+-			local phase_num="${BASH_REMATCH[1]}"
+-			local phase_desc="${BASH_REMATCH[2]}"
+-			current_section="Phase $phase_num: $phase_desc"
+-			in_task_section=true
+-			task_counter=0
+-			continue
+-		fi
++    # Detect Phase sections (## Phase X: Description)
++    # Match patterns like "## Phase 0-A: ...", "## Phase 1: ...", etc.
++    if [[ "$line" =~ ^##[[:space:]]+Phase[[:space:]]+([^:]+):[[:space:]]*(.*)$ ]]; then
++      local phase_num="${BASH_REMATCH[1]}"
++      local phase_desc="${BASH_REMATCH[2]}"
++      current_section="Phase $phase_num: $phase_desc"
++      in_task_section=true
++      task_counter=0
++      continue
++    fi
+ 
+-		# Detect High/Medium/Low Priority sections (flexible matching)
+-		# Matches: "### High Priority", "### Phase 1: Desc (High Priority)", "### 🔴 HIGH PRIORITY: Desc"
+-		# Case-insensitive matching via converting to uppercase for comparison
+-		if [[ "$line_upper" =~ HIGH[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
+-			current_section="High Priority"
+-			in_task_section=true
+-			task_counter=0
+-		elif [[ "$line_upper" =~ MEDIUM[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
+-			current_section="Medium Priority"
+-			in_task_section=true
+-			task_counter=0
+-		elif [[ "$line_upper" =~ LOW[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
+-			current_section="Low Priority"
+-			in_task_section=true
+-			task_counter=0
+-		elif [[ "$line" =~ ^##[[:space:]]+ ]] && [[ ! "$line" =~ ^##[[:space:]]+Phase[[:space:]]+ ]]; then
+-			# Exit task section on ## headers that are NOT Phase sections or Priority sections
+-			# This allows ### and #### subsection headers to remain within the current section
+-			in_task_section=false
+-		fi
++    # Detect High/Medium/Low Priority sections (flexible matching)
++    # Matches: "### High Priority", "### Phase 1: Desc (High Priority)", "### 🔴 HIGH PRIORITY: Desc"
++    # Case-insensitive matching via converting to uppercase for comparison
++    if [[ "$line_upper" =~ HIGH[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
++      current_section="High Priority"
++      in_task_section=true
++      task_counter=0
++    elif [[ "$line_upper" =~ MEDIUM[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
++      current_section="Medium Priority"
++      in_task_section=true
++      task_counter=0
++    elif [[ "$line_upper" =~ LOW[[:space:]]*PRIORITY ]] && [[ ! "$line_upper" =~ ARCHIVE ]]; then
++      current_section="Low Priority"
++      in_task_section=true
++      task_counter=0
++    elif [[ "$line" =~ ^##[[:space:]]+ ]] && [[ ! "$line" =~ ^##[[:space:]]+Phase[[:space:]]+ ]]; then
++      # Exit task section on ## headers that are NOT Phase sections or Priority sections
++      # This allows ### and #### subsection headers to remain within the current section
++      in_task_section=false
++    fi
+ 
+-		# Only process tasks in valid sections
+-		if [[ "$in_task_section" == "true" ]]; then
+-			local status="" task_desc="" is_subtask=false
++    # Only process tasks in valid sections
++    if [[ "$in_task_section" == "true" ]]; then
++      local status="" task_desc="" is_subtask=false
+ 
+-			# Detect indentation level (count leading spaces)
+-			if [[ "$line" =~ ^([[:space:]]*)-[[:space:]]\[([ x])\][[:space:]]*(.*)$ ]]; then
+-				local leading_spaces="${BASH_REMATCH[1]}"
+-				status="${BASH_REMATCH[2]}"
+-				task_desc="${BASH_REMATCH[3]}"
++      # Detect indentation level (count leading spaces)
++      if [[ "$line" =~ ^([[:space:]]*)-[[:space:]]\[([ x])\][[:space:]]*(.*)$ ]]; then
++        local leading_spaces="${BASH_REMATCH[1]}"
++        status="${BASH_REMATCH[2]}"
++        task_desc="${BASH_REMATCH[3]}"
+ 
+-				# Skip manual review tasks (only those explicitly in "Manual Review" section)
+-				# WARN tasks are automated and should be included
++        # Skip manual review tasks (only those explicitly in "Manual Review" section)
++        # WARN tasks are automated and should be included
+ 
+-				# Calculate indent level (2 spaces = 1 level, 4 spaces = 2 levels, etc.)
+-				indent_level=$((${#leading_spaces} / 2))
++        # Calculate indent level (2 spaces = 1 level, 4 spaces = 2 levels, etc.)
++        indent_level=$((${#leading_spaces} / 2))
+ 
+-				# Determine if this is a subtask (indented)
+-				if [[ $indent_level -gt 0 ]]; then
+-					is_subtask=true
+-				else
+-					# Main task - increment counter
+-					((task_counter++))
+-				fi
+-			fi
++        # Determine if this is a subtask (indented)
++        if [[ $indent_level -gt 0 ]]; then
++          is_subtask=true
++        else
++          # Main task - increment counter
++          ((task_counter++))
++        fi
++      fi
+ 
+-			# If we found a task, process it
+-			if [[ -n "$status" && -n "$task_desc" ]]; then
+-				# For completed tasks, check cache first
+-				if [[ "$status" == "x" ]]; then
+-					# Generate cache key (hash of full raw line to prevent collisions)
+-					local cache_key
+-					cache_key=$(echo -n "$line" | md5sum | cut -d' ' -f1)
++      # If we found a task, process it
++      if [[ -n "$status" && -n "$task_desc" ]]; then
++        # For completed tasks, check cache first
++        if [[ "$status" == "x" ]]; then
++          # Generate cache key (hash of full raw line to prevent collisions)
++          local cache_key
++          cache_key=$(echo -n "$line" | md5sum | cut -d' ' -f1)
+ 
+-					# If cached, return cached value
+-					if [[ -n "${COMPLETED_CACHE[$cache_key]}" ]]; then
+-						# Skip completed tasks if --hide-completed is set
+-						if [[ "$show_completed" == "false" ]]; then
+-							continue
+-						fi
+-						echo "${COMPLETED_CACHE[$cache_key]}"
+-						continue
+-					fi
++          # If cached, return cached value
++          if [[ -n "${COMPLETED_CACHE[$cache_key]}" ]]; then
++            # Skip completed tasks if --hide-completed is set
++            if [[ "$show_completed" == "false" ]]; then
++              continue
++            fi
++            echo "${COMPLETED_CACHE[$cache_key]}"
++            continue
++          fi
+ 
+-					# Not cached - process and cache it
+-					local short_title
+-					short_title=$(generate_title "$task_desc")
+-					local task_label=""
+-					if [[ "$is_subtask" == "true" ]]; then
+-						task_label="subtask"
+-					else
+-						task_label="Task $task_counter"
+-					fi
++          # Not cached - process and cache it
++          local short_title
++          short_title=$(generate_title "$task_desc")
++          local task_label=""
++          if [[ "$is_subtask" == "true" ]]; then
++            task_label="subtask"
++          else
++            task_label="Task $task_counter"
++          fi
+ 
+-					local output_line="✓|$current_section|$task_label|$short_title|$indent_level|completed|$task_desc"
+-					COMPLETED_CACHE[$cache_key]="$output_line"
++          local output_line="✓|$current_section|$task_label|$short_title|$indent_level|completed|$task_desc"
++          COMPLETED_CACHE[$cache_key]="$output_line"
+ 
+-					# Skip completed tasks if --hide-completed is set
+-					if [[ "$show_completed" == "false" ]]; then
+-						continue
+-					fi
++          # Skip completed tasks if --hide-completed is set
++          if [[ "$show_completed" == "false" ]]; then
++            continue
++          fi
+ 
+-					echo "$output_line"
+-				else
+-					# Pending task - always process (no caching)
+-					local short_title
+-					short_title=$(generate_title "$task_desc")
+-					local task_label=""
+-					if [[ "$is_subtask" == "true" ]]; then
+-						task_label="subtask"
+-					else
+-						task_label="Task $task_counter"
+-					fi
++          echo "$output_line"
++        else
++          # Pending task - always process (no caching)
++          local short_title
++          short_title=$(generate_title "$task_desc")
++          local task_label=""
++          if [[ "$is_subtask" == "true" ]]; then
++            task_label="subtask"
++          else
++            task_label="Task $task_counter"
++          fi
+ 
+-					# Use current indicator (▶) for first pending task, pending indicator (○) for others
+-					echo "pending|$current_section|$task_label|$short_title|$indent_level|pending|$task_desc"
+-				fi
+-			fi
+-		fi
+-	done <"$PLAN_FILE"
++          # Use current indicator (▶) for first pending task, pending indicator (○) for others
++          echo "pending|$current_section|$task_label|$short_title|$indent_level|pending|$task_desc"
++        fi
++      fi
++    fi
++  done <"$PLAN_FILE"
+ }
+ 
+ # Function to show help
+ show_help() {
+-	clear
+-	echo "╔════════════════════════════════════════════════════════════════╗"
+-	echo "║              CURRENT RALPH TASKS - HELP                        ║"
+-	echo "╚════════════════════════════════════════════════════════════════╝"
+-	echo ""
+-	echo "  HOTKEYS:"
+-	echo ""
+-	echo "  [h]  Hide/Show Completed Tasks"
+-	echo "       Toggle visibility of completed tasks without modifying the file"
+-	echo ""
+-	echo "  [r]  Reset/Archive Completed Tasks"
+-	echo "       Move all completed tasks to an Archive section at the bottom"
+-	echo "       Creates: ### Archive - YYYY-MM-DD HH:MM"
+-	echo ""
+-	echo "  [f]  Force Refresh"
+-	echo "       Manually refresh the display (auto-refreshes on file changes)"
+-	echo ""
+-	echo "  [c]  Clear Completed Tasks"
+-	echo "       Permanently remove all completed tasks (with confirmation)"
+-	echo "       WARNING: This action cannot be undone!"
+-	echo ""
+-	echo "  [?]  Show This Help"
+-	echo "       Display this help screen"
+-	echo ""
+-	echo "  [q]  Quit"
+-	echo "       Exit the task monitor cleanly"
+-	echo ""
+-	echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+-	echo ""
+-	echo "  Press any key to return to task monitor..."
+-	read -r -n 1 -s
++  clear
++  echo "╔════════════════════════════════════════════════════════════════╗"
++  echo "║              CURRENT RALPH TASKS - HELP                        ║"
++  echo "╚════════════════════════════════════════════════════════════════╝"
++  echo ""
++  echo "  HOTKEYS:"
++  echo ""
++  echo "  [h]  Hide/Show Completed Tasks"
++  echo "       Toggle visibility of completed tasks without modifying the file"
++  echo ""
++  echo "  [r]  Reset/Archive Completed Tasks"
++  echo "       Move all completed tasks to an Archive section at the bottom"
++  echo "       Creates: ### Archive - YYYY-MM-DD HH:MM"
++  echo ""
++  echo "  [f]  Force Refresh"
++  echo "       Manually refresh the display (auto-refreshes on file changes)"
++  echo ""
++  echo "  [c]  Clear Completed Tasks"
++  echo "       Permanently remove all completed tasks (with confirmation)"
++  echo "       WARNING: This action cannot be undone!"
++  echo ""
++  echo "  [?]  Show This Help"
++  echo "       Display this help screen"
++  echo ""
++  echo "  [q]  Quit"
++  echo "       Exit the task monitor cleanly"
++  echo ""
++  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
++  echo ""
++  echo "  Press any key to return to task monitor..."
++  read -r -n 1 -s
+ }
+ 
+ # Function to archive completed tasks
+ archive_completed_tasks() {
+-	local timestamp
+-	timestamp=$(date "+%Y-%m-%d %H:%M")
+-	local temp_file="${PLAN_FILE}.tmp"
+-	local archive_section="### Archive - $timestamp"
+-	local completed_tasks=""
+-	local in_task_section=false
++  local timestamp
++  timestamp=$(date "+%Y-%m-%d %H:%M")
++  local temp_file="${PLAN_FILE}.tmp"
++  local archive_section="### Archive - $timestamp"
++  local completed_tasks=""
++  local in_task_section=false
+ 
+-	# Extract completed tasks
+-	while IFS= read -r line; do
+-		if [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+-			in_task_section=true
+-		elif [[ "$line" =~ Medium[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+-			in_task_section=true
+-		elif [[ "$line" =~ Low[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+-			in_task_section=true
+-		elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
+-			in_task_section=false
+-		fi
++  # Extract completed tasks
++  while IFS= read -r line; do
++    if [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
++      in_task_section=true
++    elif [[ "$line" =~ Medium[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
++      in_task_section=true
++    elif [[ "$line" =~ Low[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
++      in_task_section=true
++    elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
++      in_task_section=false
++    fi
+ 
+-		if [[ "$in_task_section" == "true" && "$line" =~ ^[[:space:]]*-[[:space:]]\[x\] ]]; then
+-			completed_tasks+="$line"$'\n'
+-		fi
+-	done <"$PLAN_FILE"
++    if [[ "$in_task_section" == "true" && "$line" =~ ^[[:space:]]*-[[:space:]]\[x\] ]]; then
++      completed_tasks+="$line"$'\n'
++    fi
++  done <"$PLAN_FILE"
+ 
+-	if [[ -z "$completed_tasks" ]]; then
+-		echo ""
+-		echo "  No completed tasks to archive."
+-		sleep 2
+-		return
+-	fi
++  if [[ -z "$completed_tasks" ]]; then
++    echo ""
++    echo "  No completed tasks to archive."
++    sleep 2
++    return
++  fi
+ 
+-	# Write new file without completed tasks, add archive at end
+-	{
+-		while IFS= read -r line; do
+-			if [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+-				in_task_section=true
+-			elif [[ "$line" =~ Medium[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+-				in_task_section=true
+-			elif [[ "$line" =~ Low[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+-				in_task_section=true
+-			elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
+-				in_task_section=false
+-			fi
++  # Write new file without completed tasks, add archive at end
++  {
++    while IFS= read -r line; do
++      if [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
++        in_task_section=true
++      elif [[ "$line" =~ Medium[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
++        in_task_section=true
++      elif [[ "$line" =~ Low[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
++        in_task_section=true
++      elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
++        in_task_section=false
++      fi
+ 
+-			# Skip completed tasks in active sections
+-			if [[ "$in_task_section" == "true" && "$line" =~ ^[[:space:]]*-[[:space:]]\[x\] ]]; then
+-				continue
+-			fi
++      # Skip completed tasks in active sections
++      if [[ "$in_task_section" == "true" && "$line" =~ ^[[:space:]]*-[[:space:]]\[x\] ]]; then
++        continue
++      fi
+ 
+-			echo "$line"
+-		done <"$PLAN_FILE"
++      echo "$line"
++    done <"$PLAN_FILE"
+ 
+-		# Add archive section
+-		echo ""
+-		echo "$archive_section"
+-		echo ""
+-		echo "$completed_tasks"
+-	} >"$temp_file"
++    # Add archive section
++    echo ""
++    echo "$archive_section"
++    echo ""
++    echo "$completed_tasks"
++  } >"$temp_file"
+ 
+-	# Atomic replace
+-	mv "$temp_file" "$PLAN_FILE"
+-	echo ""
+-	echo "  ✓ Archived completed tasks to: $archive_section"
+-	sleep 2
++  # Atomic replace
++  mv "$temp_file" "$PLAN_FILE"
++  echo ""
++  echo "  ✓ Archived completed tasks to: $archive_section"
++  sleep 2
+ }
+ 
+ # Function to clear completed tasks
+ clear_completed_tasks() {
+-	echo ""
+-	echo -n "  ⚠️  Clear all completed tasks permanently? [y/N]: "
+-	read -n 1 -r confirm
+-	echo ""
++  echo ""
++  echo -n "  ⚠️  Clear all completed tasks permanently? [y/N]: "
++  read -n 1 -r confirm
++  echo ""
+ 
+-	if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+-		echo "  Cancelled."
+-		sleep 1
+-		return
+-	fi
++  if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
++    echo "  Cancelled."
++    sleep 1
++    return
++  fi
+ 
+-	local temp_file="${PLAN_FILE}.tmp"
+-	local in_task_section=false
++  local temp_file="${PLAN_FILE}.tmp"
++  local in_task_section=false
+ 
+-	# Write new file without completed tasks
+-	{
+-		while IFS= read -r line; do
+-			if [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+-				in_task_section=true
+-			elif [[ "$line" =~ Medium[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+-				in_task_section=true
+-			elif [[ "$line" =~ Low[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
+-				in_task_section=true
+-			elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
+-				in_task_section=false
+-			fi
++  # Write new file without completed tasks
++  {
++    while IFS= read -r line; do
++      if [[ "$line" =~ High[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
++        in_task_section=true
++      elif [[ "$line" =~ Medium[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
++        in_task_section=true
++      elif [[ "$line" =~ Low[[:space:]]+Priority ]] && [[ ! "$line" =~ ARCHIVE|Archive ]]; then
++        in_task_section=true
++      elif [[ "$line" =~ ^###[[:space:]]+ ]]; then
++        in_task_section=false
++      fi
+ 
+-			# Skip completed tasks in active sections
+-			if [[ "$in_task_section" == "true" && "$line" =~ ^[[:space:]]*-[[:space:]]\[x\] ]]; then
+-				continue
+-			fi
++      # Skip completed tasks in active sections
++      if [[ "$in_task_section" == "true" && "$line" =~ ^[[:space:]]*-[[:space:]]\[x\] ]]; then
++        continue
++      fi
+ 
+-			echo "$line"
+-		done <"$PLAN_FILE"
+-	} >"$temp_file"
++      echo "$line"
++    done <"$PLAN_FILE"
++  } >"$temp_file"
+ 
+-	# Atomic replace
+-	mv "$temp_file" "$PLAN_FILE"
+-	echo "  ✓ Cleared all completed tasks."
+-	sleep 2
++  # Atomic replace
++  mv "$temp_file" "$PLAN_FILE"
++  echo "  ✓ Cleared all completed tasks."
++  sleep 2
+ }
+ 
+ # Function to display tasks with formatting
+ display_tasks() {
+-	# Always do full redraw - simple and reliable
+-	clear
++  # Always do full redraw - simple and reliable
++  clear
+ 
+-	# Extract and group tasks by section
+-	local tasks
+-	if [[ "$HIDE_COMPLETED" == "true" ]]; then
+-		tasks=$(extract_tasks "false")
+-	else
+-		tasks=$(extract_tasks "true")
+-	fi
++  # Extract and group tasks by section
++  local tasks
++  if [[ "$HIDE_COMPLETED" == "true" ]]; then
++    tasks=$(extract_tasks "false")
++  else
++    tasks=$(extract_tasks "true")
++  fi
+ 
+-	# Build display content
+-	local pending_count=0
+-	local completed_count=0
+-	local first_pending_seen=false
++  # Build display content
++  local pending_count=0
++  local completed_count=0
++  local first_pending_seen=false
+ 
+-	# Header
+-	echo "╔════════════════════════════════════════════════════════════════╗"
+-	echo "║          CURRENT RALPH TASKS - $(date +%H:%M:%S)                  ║"
+-	echo "╚════════════════════════════════════════════════════════════════╝"
+-	echo ""
++  # Header
++  echo "╔════════════════════════════════════════════════════════════════╗"
++  echo "║          CURRENT RALPH TASKS - $(date +%H:%M:%S)                  ║"
++  echo "╚════════════════════════════════════════════════════════════════╝"
++  echo ""
+ 
+-	if [[ -z "$tasks" ]]; then
+-		echo "  No tasks found in IMPLEMENTATION_PLAN.md"
+-		echo ""
+-	else
+-		local current_section=""
++  if [[ -z "$tasks" ]]; then
++    echo "  No tasks found in IMPLEMENTATION_PLAN.md"
++    echo ""
++  else
++    local current_section=""
+ 
+-		while IFS='|' read -r _ section task_label short_title indent_level status full_desc; do
+-			# Print section header when it changes
+-			if [[ "$section" != "$current_section" ]]; then
+-				if [[ -n "$current_section" ]]; then
+-					echo ""
+-				fi
+-				echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+-				echo "  $section"
+-				echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+-				current_section="$section"
+-			fi
++    while IFS='|' read -r _ section task_label short_title indent_level status full_desc; do
++      # Print section header when it changes
++      if [[ "$section" != "$current_section" ]]; then
++        if [[ -n "$current_section" ]]; then
++          echo ""
++        fi
++        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
++        echo "  $section"
++        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
++        current_section="$section"
++      fi
+ 
+-			# Calculate base indent (2 spaces per level)
+-			local base_indent=""
+-			for ((i = 0; i < indent_level; i++)); do
+-				base_indent="  ${base_indent}"
+-			done
++      # Calculate base indent (2 spaces per level)
++      local base_indent=""
++      for ((i = 0; i < indent_level; i++)); do
++        base_indent="  ${base_indent}"
++      done
+ 
+-			# Determine what to display: use full description for warnings, short title otherwise
+-			local display_text="$short_title"
++      # Determine what to display: use full description for warnings, short title otherwise
++      local display_text="$short_title"
+ 
+-			# Check if this is a warning task (WARN.* in full description)
+-			if [[ "$full_desc" =~ WARN\.[A-Z0-9]+ ]]; then
+-				# For warnings, use the full description for better context
+-				display_text="$full_desc"
+-			fi
++      # Check if this is a warning task (WARN.* in full description)
++      if [[ "$full_desc" =~ WARN\.[A-Z0-9]+ ]]; then
++        # For warnings, use the full description for better context
++        display_text="$full_desc"
++      fi
+ 
+-			# Format task display with human-friendly title
+-			local display_line=""
+-			if [[ "$task_label" == "subtask" ]]; then
+-				# Subtask: just show the display text with bullet
+-				display_line="${base_indent}  • ${display_text}"
+-			else
+-				# Main task: show "Task N — <display text>" with bold
+-				if [[ -t 1 ]]; then
+-					# Terminal supports formatting
+-					display_line="${base_indent}  \033[1m${task_label}\033[0m — ${display_text}"
+-				else
+-					# No terminal formatting
+-					display_line="${base_indent}  ${task_label} — ${display_text}"
+-				fi
+-			fi
++      # Format task display with human-friendly title
++      local display_line=""
++      if [[ "$task_label" == "subtask" ]]; then
++        # Subtask: just show the display text with bullet
++        display_line="${base_indent}  • ${display_text}"
++      else
++        # Main task: show "Task N — <display text>" with bold
++        if [[ -t 1 ]]; then
++          # Terminal supports formatting
++          display_line="${base_indent}  \033[1m${task_label}\033[0m — ${display_text}"
++        else
++          # No terminal formatting
++          display_line="${base_indent}  ${task_label} — ${display_text}"
++        fi
++      fi
+ 
+-			# Build task line with color and appropriate symbol
+-			local task_line=""
+-			if [[ "$status" == "completed" ]]; then
+-				if [[ -t 1 ]]; then
+-					task_line="  \033[32m✓\033[0m ${display_line:2}"
+-				else
+-					task_line="  ✓ ${display_line:2}"
+-				fi
+-				((completed_count++))
+-			else
+-				# Pending task: use ▶ for first pending, ○ for others
+-				local symbol="○"
+-				if [[ "$first_pending_seen" == "false" ]]; then
+-					symbol="▶"
+-					first_pending_seen=true
+-				fi
++      # Build task line with color and appropriate symbol
++      local task_line=""
++      if [[ "$status" == "completed" ]]; then
++        if [[ -t 1 ]]; then
++          task_line="  \033[32m✓\033[0m ${display_line:2}"
++        else
++          task_line="  ✓ ${display_line:2}"
++        fi
++        ((completed_count++))
++      else
++        # Pending task: use ▶ for first pending, ○ for others
++        local symbol="○"
++        if [[ "$first_pending_seen" == "false" ]]; then
++          symbol="▶"
++          first_pending_seen=true
++        fi
+ 
+-				if [[ -t 1 ]]; then
+-					task_line="  \033[33m${symbol}\033[0m ${display_line:2}"
+-				else
+-					task_line="  ${symbol} ${display_line:2}"
+-				fi
+-				((pending_count++))
+-			fi
++        if [[ -t 1 ]]; then
++          task_line="  \033[33m${symbol}\033[0m ${display_line:2}"
++        else
++          task_line="  ${symbol} ${display_line:2}"
++        fi
++        ((pending_count++))
++      fi
+ 
+-			# Display task line
+-			echo -e "$task_line"
++      # Display task line
++      echo -e "$task_line"
+ 
+-			# Add empty line after each task for readability
+-			echo ""
+-		done <<<"$tasks"
+-	fi
++      # Add empty line after each task for readability
++      echo ""
++    done <<<"$tasks"
++  fi
+ 
+-	# Footer with stats and progress bar
+-	echo ""
+-	echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+-	echo "  Completed: $completed_count | Pending: $pending_count | Total: $((completed_count + pending_count))"
+-	echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+-	echo ""
++  # Footer with stats and progress bar
++  echo ""
++  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
++  echo "  Completed: $completed_count | Pending: $pending_count | Total: $((completed_count + pending_count))"
++  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
++  echo ""
+ 
+-	# Calculate progress percentage
+-	local total=$((completed_count + pending_count))
+-	local percentage=0
+-	if [[ $total -gt 0 ]]; then
+-		percentage=$(((completed_count * 100) / total))
+-	fi
++  # Calculate progress percentage
++  local total=$((completed_count + pending_count))
++  local percentage=0
++  if [[ $total -gt 0 ]]; then
++    percentage=$(((completed_count * 100) / total))
++  fi
+ 
+-	# Progress bar (64 chars wide total: "  Progress: XX% [" = 18 chars, "] N/Total" varies)
+-	# Calculate bar width: 64 - 18 - length("] N/Total") = available for bar
+-	local fraction_text="] $completed_count/$total"
+-	local bar_width=$((64 - 18 - ${#fraction_text}))
++  # Progress bar (64 chars wide total: "  Progress: XX% [" = 18 chars, "] N/Total" varies)
++  # Calculate bar width: 64 - 18 - length("] N/Total") = available for bar
++  local fraction_text="] $completed_count/$total"
++  local bar_width=$((64 - 18 - ${#fraction_text}))
+ 
+-	# Calculate filled and empty blocks
+-	local filled=$(((bar_width * completed_count) / (total > 0 ? total : 1)))
+-	local empty=$((bar_width - filled))
++  # Calculate filled and empty blocks
++  local filled=$(((bar_width * completed_count) / (total > 0 ? total : 1)))
++  local empty=$((bar_width - filled))
+ 
+-	# Build the bar
+-	local bar=""
+-	for ((i = 0; i < filled; i++)); do bar="${bar}█"; done
+-	for ((i = 0; i < empty; i++)); do bar="${bar}░"; done
++  # Build the bar
++  local bar=""
++  for ((i = 0; i < filled; i++)); do bar="${bar}█"; done
++  for ((i = 0; i < empty; i++)); do bar="${bar}░"; done
+ 
+-	# Display progress bar
+-	printf "  Progress: %3d%% [%s%s\n" "$percentage" "$bar" "$fraction_text"
+-	echo ""
++  # Display progress bar
++  printf "  Progress: %3d%% [%s%s\n" "$percentage" "$bar" "$fraction_text"
++  echo ""
+ 
+-	# Hotkey legend
+-	echo "╔════════════════════════════════════════════════════════════════╗"
+-	echo "║  HOTKEYS: [h] Hide/Show Done  [r] Reset/Archive  [f] Refresh  ║"
+-	echo "║           [c] Clear Done      [?] Help           [q] Quit     ║"
+-	echo "╚════════════════════════════════════════════════════════════════╝"
+-	echo ""
++  # Hotkey legend
++  echo "╔════════════════════════════════════════════════════════════════╗"
++  echo "║  HOTKEYS: [h] Hide/Show Done  [r] Reset/Archive  [f] Refresh  ║"
++  echo "║           [c] Clear Done      [?] Help           [q] Quit     ║"
++  echo "╚════════════════════════════════════════════════════════════════╝"
++  echo ""
+ 
+-	if [[ "$HIDE_COMPLETED" == "true" ]]; then
+-		echo "  Mode: Hiding completed tasks (press 'h' to show)"
+-	fi
++  if [[ "$HIDE_COMPLETED" == "true" ]]; then
++    echo "  Mode: Hiding completed tasks (press 'h' to show)"
++  fi
+ }
+ 
+ # Main loop - interactive with file watching
+@@ -537,70 +537,70 @@
+ 
+ # Enable non-blocking input
+ if [[ -t 0 ]]; then
+-	stty -echo -icanon time 0 min 0
++  stty -echo -icanon time 0 min 0
+ fi
+ 
+ # Cleanup function
+ cleanup() {
+-	if [[ -t 0 ]]; then
+-		stty sane
+-	fi
+-	echo ""
+-	echo "Exiting Ralph Task Monitor..."
+-	exit 0
++  if [[ -t 0 ]]; then
++    stty sane
++  fi
++  echo ""
++  echo "Exiting Ralph Task Monitor..."
++  exit 0
+ }
+ 
+ trap cleanup EXIT INT TERM
+ 
+ # Monitor for file changes and hotkeys
+ while true; do
+-	# Check for hotkey input (non-blocking)
+-	if read -r -t 0.1 -n 1 -r key 2>/dev/null; then
+-		case "$key" in
+-			h | H)
+-				# Toggle hide completed
+-				if [[ "$HIDE_COMPLETED" == "true" ]]; then
+-					HIDE_COMPLETED=false
+-				else
+-					HIDE_COMPLETED=true
+-				fi
+-				display_tasks
+-				;;
+-			r | R)
+-				# Archive completed tasks
+-				archive_completed_tasks
+-				LAST_MODIFIED=$(get_file_mtime)
+-				display_tasks
+-				;;
+-			f | F)
+-				# Force refresh
+-				display_tasks
+-				;;
+-			c | C)
+-				# Clear completed tasks
+-				clear_completed_tasks
+-				LAST_MODIFIED=$(get_file_mtime)
+-				display_tasks
+-				;;
+-			\?)
+-				# Show help
+-				show_help
+-				display_tasks
+-				;;
+-			q | Q)
+-				# Quit
+-				cleanup
+-				;;
+-		esac
+-	fi
++  # Check for hotkey input (non-blocking)
++  if read -r -t 0.1 -n 1 -r key 2>/dev/null; then
++    case "$key" in
++      h | H)
++        # Toggle hide completed
++        if [[ "$HIDE_COMPLETED" == "true" ]]; then
++          HIDE_COMPLETED=false
++        else
++          HIDE_COMPLETED=true
++        fi
++        display_tasks
++        ;;
++      r | R)
++        # Archive completed tasks
++        archive_completed_tasks
++        LAST_MODIFIED=$(get_file_mtime)
++        display_tasks
++        ;;
++      f | F)
++        # Force refresh
++        display_tasks
++        ;;
++      c | C)
++        # Clear completed tasks
++        clear_completed_tasks
++        LAST_MODIFIED=$(get_file_mtime)
++        display_tasks
++        ;;
++      \?)
++        # Show help
++        show_help
++        display_tasks
++        ;;
++      q | Q)
++        # Quit
++        cleanup
++        ;;
++    esac
++  fi
+ 
+-	# Check for file changes
+-	CURRENT_MODIFIED=$(get_file_mtime)
+-	if [[ "$CURRENT_MODIFIED" != "$LAST_MODIFIED" ]]; then
+-		LAST_MODIFIED="$CURRENT_MODIFIED"
+-		display_tasks
+-	fi
++  # Check for file changes
++  CURRENT_MODIFIED=$(get_file_mtime)
++  if [[ "$CURRENT_MODIFIED" != "$LAST_MODIFIED" ]]; then
++    LAST_MODIFIED="$CURRENT_MODIFIED"
++    display_tasks
++  fi
+ 
+-	# Small sleep to prevent CPU spinning
+-	sleep 0.5
++  # Small sleep to prevent CPU spinning
++  sleep 0.5
+ done
+--- workers/ralph/thunk_ralph_tasks.sh.orig
++++ workers/ralph/thunk_ralph_tasks.sh
+@@ -22,314 +22,314 @@
+ 
+ # Check if required files exist
+ if [[ ! -f "$THUNK_FILE" ]]; then
+-	echo "Error: THUNK.md not found in $RALPH_DIR"
+-	echo "Please create THUNK.md first (see THOUGHTS.md for template)"
+-	exit 1
++  echo "Error: THUNK.md not found in $RALPH_DIR"
++  echo "Please create THUNK.md first (see THOUGHTS.md for template)"
++  exit 1
+ fi
+ 
+ # Function to get file modification time
+ get_file_mtime() {
+-	local file="$1"
+-	stat -c %Y "$file" 2>/dev/null || stat -f %m "$file" 2>/dev/null
++  local file="$1"
++  stat -c %Y "$file" 2>/dev/null || stat -f %m "$file" 2>/dev/null
+ }
+ 
+ # Function to generate short human-readable title from task description
+ generate_title() {
+-	local desc="$1"
++  local desc="$1"
+ 
+-	# Strip technical IDs (T1.1, P4A.7, 1.1, 2.3, etc.) from the beginning - use bash parameter expansion
+-	desc="${desc#"${desc%%[![:space:]]*}"}" # Trim leading whitespace
+-	if [[ "$desc" =~ ^\*\*[T]?[0-9A-Za-z]+(\.[0-9A-Za-z]+)*\*\*[[:space:]]* ]]; then
+-		desc="${desc#*\*\* }" # Remove up to and including "** "
+-	fi
++  # Strip technical IDs (T1.1, P4A.7, 1.1, 2.3, etc.) from the beginning - use bash parameter expansion
++  desc="${desc#"${desc%%[![:space:]]*}"}" # Trim leading whitespace
++  if [[ "$desc" =~ ^\*\*[T]?[0-9A-Za-z]+(\.[0-9A-Za-z]+)*\*\*[[:space:]]* ]]; then
++    desc="${desc#*\*\* }" # Remove up to and including "** "
++  fi
+ 
+-	# Strip markdown bold markers - use bash parameter expansion
+-	desc="${desc//\*\*/}"
++  # Strip markdown bold markers - use bash parameter expansion
++  desc="${desc//\*\*/}"
+ 
+-	# Extract action verb and main object (look for common action verbs)
+-	if [[ "$desc" =~ ^(Rename|Update|Create|Verify|Delete|Add|Remove|Test|Implement|Fix|Refactor|Document|Migrate|Copy|Set|Run|If)([[:space:]]*:[[:space:]]*|[[:space:]]+)(.+)$ ]]; then
+-		local verb="${BASH_REMATCH[1]}"
+-		local separator="${BASH_REMATCH[2]}"
+-		local rest="${BASH_REMATCH[3]}"
++  # Extract action verb and main object (look for common action verbs)
++  if [[ "$desc" =~ ^(Rename|Update|Create|Verify|Delete|Add|Remove|Test|Implement|Fix|Refactor|Document|Migrate|Copy|Set|Run|If)([[:space:]]*:[[:space:]]*|[[:space:]]+)(.+)$ ]]; then
++    local verb="${BASH_REMATCH[1]}"
++    local separator="${BASH_REMATCH[2]}"
++    local rest="${BASH_REMATCH[3]}"
+ 
+-		# For "Test:" prefix, include the object being tested
+-		if [[ "$verb" == "Test" ]] && [[ "$separator" =~ : ]]; then
+-			# Take up to arrow, period, or first 50 chars
+-			if [[ "$rest" =~ ^([^.→]+)[.→] ]]; then
+-				rest="${BASH_REMATCH[1]}"
+-			else
+-				rest="${rest:0:50}" # Use bash substring instead of cut
+-			fi
+-			# Remove trailing whitespace and backticks - use bash parameter expansion
+-			rest="${rest%\`}"
+-			rest="${rest%"${rest##*[![:space:]]}"}" # Trim trailing whitespace
+-			echo "$verb: $rest"
+-		else
+-			# For other verbs, take up to colon with space (title separator) or first 50 chars
+-			if [[ "$rest" =~ ^([^:]+):[[:space:]] ]]; then
+-				rest="${BASH_REMATCH[1]}"
+-			else
+-				rest="${rest:0:50}" # Use bash substring instead of cut
+-			fi
+-			# Remove trailing whitespace and backticks - use bash parameter expansion
+-			rest="${rest%\`}"
+-			rest="${rest%"${rest##*[![:space:]]}"}" # Trim trailing whitespace
+-			echo "$verb $rest"
+-		fi
+-	else
+-		# Fallback: take first 60 chars or up to first colon
+-		if [[ "$desc" =~ ^([^:.]+)[:.] ]]; then
+-			echo "${BASH_REMATCH[1]}"
+-		else
+-			local result="${desc:0:60}"                   # Use bash substring instead of cut
+-			result="${result%"${result##*[![:space:]]}"}" # Trim trailing whitespace
+-			echo "$result"
+-		fi
+-	fi
++    # For "Test:" prefix, include the object being tested
++    if [[ "$verb" == "Test" ]] && [[ "$separator" =~ : ]]; then
++      # Take up to arrow, period, or first 50 chars
++      if [[ "$rest" =~ ^([^.→]+)[.→] ]]; then
++        rest="${BASH_REMATCH[1]}"
++      else
++        rest="${rest:0:50}" # Use bash substring instead of cut
++      fi
++      # Remove trailing whitespace and backticks - use bash parameter expansion
++      rest="${rest%\`}"
++      rest="${rest%"${rest##*[![:space:]]}"}" # Trim trailing whitespace
++      echo "$verb: $rest"
++    else
++      # For other verbs, take up to colon with space (title separator) or first 50 chars
++      if [[ "$rest" =~ ^([^:]+):[[:space:]] ]]; then
++        rest="${BASH_REMATCH[1]}"
++      else
++        rest="${rest:0:50}" # Use bash substring instead of cut
++      fi
++      # Remove trailing whitespace and backticks - use bash parameter expansion
++      rest="${rest%\`}"
++      rest="${rest%"${rest##*[![:space:]]}"}" # Trim trailing whitespace
++      echo "$verb $rest"
++    fi
++  else
++    # Fallback: take first 60 chars or up to first colon
++    if [[ "$desc" =~ ^([^:.]+)[:.] ]]; then
++      echo "${BASH_REMATCH[1]}"
++    else
++      local result="${desc:0:60}"                   # Use bash substring instead of cut
++      result="${result%"${result##*[![:space:]]}"}" # Trim trailing whitespace
++      echo "$result"
++    fi
++  fi
+ }
+ 
+ # Function to get next THUNK number
+ get_next_thunk_number() {
+-	local max_num=0
++  local max_num=0
+ 
+-	# Parse THUNK.md for highest THUNK number using regex
+-	while IFS= read -r line; do
+-		if [[ "$line" =~ ^\|[[:space:]]*([0-9]+)[[:space:]]*\| ]]; then
+-			local thunk_num="${BASH_REMATCH[1]}"
+-			if [[ $thunk_num -gt $max_num ]]; then
+-				max_num=$thunk_num
+-			fi
+-		fi
+-	done < <(grep -E '^\|[[:space:]]*[0-9]+[[:space:]]*\|' "$THUNK_FILE")
++  # Parse THUNK.md for highest THUNK number using regex
++  while IFS= read -r line; do
++    if [[ "$line" =~ ^\|[[:space:]]*([0-9]+)[[:space:]]*\| ]]; then
++      local thunk_num="${BASH_REMATCH[1]}"
++      if [[ $thunk_num -gt $max_num ]]; then
++        max_num=$thunk_num
++      fi
++    fi
++  done < <(grep -E '^\|[[:space:]]*[0-9]+[[:space:]]*\|' "$THUNK_FILE")
+ 
+-	echo $((max_num + 1))
++  echo $((max_num + 1))
+ }
+ 
+ # Function to display THUNK.md contents (full refresh)
+ display_thunks() {
+-	clear
++  clear
+ 
+-	# Header
+-	echo "╔════════════════════════════════════════════════════════════════╗"
+-	echo "║          THUNK RALPH TASKS - $(date +%H:%M:%S)                     ║"
+-	echo "╚════════════════════════════════════════════════════════════════╝"
+-	echo ""
++  # Header
++  echo "╔════════════════════════════════════════════════════════════════╗"
++  echo "║          THUNK RALPH TASKS - $(date +%H:%M:%S)                     ║"
++  echo "╚════════════════════════════════════════════════════════════════╝"
++  echo ""
+ 
+-	local current_era=""
+-	local total_count=0
+-	local display_row=4 # Track row position (starting after header)
++  local current_era=""
++  local total_count=0
++  local display_row=4 # Track row position (starting after header)
+ 
+-	while IFS= read -r line; do
+-		# Detect Era headers
+-		if [[ "$line" =~ ^##[[:space:]]+Era:[[:space:]]+(.+)$ ]]; then
+-			current_era="${BASH_REMATCH[1]}"
+-			echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+-			((display_row++))
+-			echo "  Era: $current_era"
+-			((display_row++))
+-		elif [[ "$line" =~ ^Started:[[:space:]]+(.+)$ ]]; then
+-			echo "  Started: ${BASH_REMATCH[1]}"
+-			((display_row++))
+-			echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+-			((display_row++))
+-		elif [[ "$line" =~ ^\|[[:space:]]*([0-9]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|$ ]]; then
+-			# Parse table row
+-			local thunk_num="${BASH_REMATCH[1]}"
+-			local orig_num="${BASH_REMATCH[2]}"
+-			local priority="${BASH_REMATCH[3]}"
+-			local description="${BASH_REMATCH[4]}"
+-			local completed="${BASH_REMATCH[5]}"
++  while IFS= read -r line; do
++    # Detect Era headers
++    if [[ "$line" =~ ^##[[:space:]]+Era:[[:space:]]+(.+)$ ]]; then
++      current_era="${BASH_REMATCH[1]}"
++      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
++      ((display_row++))
++      echo "  Era: $current_era"
++      ((display_row++))
++    elif [[ "$line" =~ ^Started:[[:space:]]+(.+)$ ]]; then
++      echo "  Started: ${BASH_REMATCH[1]}"
++      ((display_row++))
++      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
++      ((display_row++))
++    elif [[ "$line" =~ ^\|[[:space:]]*([0-9]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|$ ]]; then
++      # Parse table row
++      local thunk_num="${BASH_REMATCH[1]}"
++      local orig_num="${BASH_REMATCH[2]}"
++      local priority="${BASH_REMATCH[3]}"
++      local description="${BASH_REMATCH[4]}"
++      local completed="${BASH_REMATCH[5]}"
+ 
+-			# Strip whitespace using bash parameter expansion (faster than xargs)
+-			thunk_num="${thunk_num#"${thunk_num%%[![:space:]]*}"}" # Trim leading
+-			thunk_num="${thunk_num%"${thunk_num##*[![:space:]]}"}" # Trim trailing
+-			orig_num="${orig_num#"${orig_num%%[![:space:]]*}"}"
+-			orig_num="${orig_num%"${orig_num##*[![:space:]]}"}"
+-			priority="${priority#"${priority%%[![:space:]]*}"}"
+-			priority="${priority%"${priority##*[![:space:]]}"}"
+-			description="${description#"${description%%[![:space:]]*}"}"
+-			description="${description%"${description##*[![:space:]]}"}"
+-			completed="${completed#"${completed%%[![:space:]]*}"}"
+-			completed="${completed%"${completed##*[![:space:]]}"}"
++      # Strip whitespace using bash parameter expansion (faster than xargs)
++      thunk_num="${thunk_num#"${thunk_num%%[![:space:]]*}"}" # Trim leading
++      thunk_num="${thunk_num%"${thunk_num##*[![:space:]]}"}" # Trim trailing
++      orig_num="${orig_num#"${orig_num%%[![:space:]]*}"}"
++      orig_num="${orig_num%"${orig_num##*[![:space:]]}"}"
++      priority="${priority#"${priority%%[![:space:]]*}"}"
++      priority="${priority%"${priority##*[![:space:]]}"}"
++      description="${description#"${description%%[![:space:]]*}"}"
++      description="${description%"${description##*[![:space:]]}"}"
++      completed="${completed#"${completed%%[![:space:]]*}"}"
++      completed="${completed%"${completed##*[![:space:]]}"}"
+ 
+-			# Skip header row
+-			if [[ "$thunk_num" =~ ^[0-9]+$ ]]; then
+-				# Generate human-friendly short title
+-				local short_title
+-				short_title=$(generate_title "$description")
++      # Skip header row
++      if [[ "$thunk_num" =~ ^[0-9]+$ ]]; then
++        # Generate human-friendly short title
++        local short_title
++        short_title=$(generate_title "$description")
+ 
+-				# Format as "THUNK N — <short title>" with bold if terminal supports
+-				if [[ -t 1 ]]; then
+-					echo -e "  \033[32m✓\033[0m \033[1mTHUNK #$thunk_num\033[0m — $short_title"
+-				else
+-					echo "  ✓ THUNK #$thunk_num — $short_title"
+-				fi
+-				((total_count++))
+-				((display_row++))
+-			fi
+-		fi
+-	done <"$THUNK_FILE"
++        # Format as "THUNK N — <short title>" with bold if terminal supports
++        if [[ -t 1 ]]; then
++          echo -e "  \033[32m✓\033[0m \033[1mTHUNK #$thunk_num\033[0m — $short_title"
++        else
++          echo "  ✓ THUNK #$thunk_num — $short_title"
++        fi
++        ((total_count++))
++        ((display_row++))
++      fi
++    fi
++  done <"$THUNK_FILE"
+ 
+-	if [[ $total_count -eq 0 ]]; then
+-		echo "  No completed tasks yet."
+-		((display_row++))
+-		echo ""
+-		((display_row++))
+-	fi
++  if [[ $total_count -eq 0 ]]; then
++    echo "  No completed tasks yet."
++    ((display_row++))
++    echo ""
++    ((display_row++))
++  fi
+ 
+-	# Store content row BEFORE footer (for incremental updates)
+-	LAST_CONTENT_ROW=$display_row
++  # Store content row BEFORE footer (for incremental updates)
++  LAST_CONTENT_ROW=$display_row
+ 
+-	# Footer
+-	echo ""
+-	((display_row++))
+-	echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+-	((display_row++))
+-	echo "  Total Thunked: $total_count"
+-	((display_row++))
+-	echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+-	((display_row++))
+-	echo ""
+-	((display_row++))
++  # Footer
++  echo ""
++  ((display_row++))
++  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
++  ((display_row++))
++  echo "  Total Thunked: $total_count"
++  ((display_row++))
++  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
++  ((display_row++))
++  echo ""
++  ((display_row++))
+ 
+-	# Hotkey legend
+-	echo "╔════════════════════════════════════════════════════════════════╗"
+-	((display_row++))
+-	echo "║  HOTKEYS: [r] Refresh/Clear   [e] New Era   [q] Quit         ║"
+-	((display_row++))
+-	echo "╚════════════════════════════════════════════════════════════════╝"
+-	((display_row++))
+-	echo ""
+-	((display_row++))
++  # Hotkey legend
++  echo "╔════════════════════════════════════════════════════════════════╗"
++  ((display_row++))
++  echo "║  HOTKEYS: [r] Refresh/Clear   [e] New Era   [q] Quit         ║"
++  ((display_row++))
++  echo "╚════════════════════════════════════════════════════════════════╝"
++  ((display_row++))
++  echo ""
++  ((display_row++))
+ 
+-	# Store last display row and total count for incremental updates
+-	LAST_TOTAL_COUNT=$total_count
++  # Store last display row and total count for incremental updates
++  LAST_TOTAL_COUNT=$total_count
+ }
+ 
+ # Function to parse only new entries from THUNK.md (tail-only parsing)
+ # Args: $1 = start_line (line number to start reading from)
+ # Appends new entries to display and updates footer
+ parse_new_thunk_entries() {
+-	local start_line="$1"
+-	local line_num=0
+-	local new_count=0
++  local start_line="$1"
++  local line_num=0
++  local new_count=0
+ 
+-	# LAST_CONTENT_ROW tracks the row after the last THUNK entry (before footer)
+-	# Footer structure is 9 lines:
+-	#   blank (1) + separator (1) + total (1) + separator (1) + blank (1) +
+-	#   hotkey top (1) + hotkey text (1) + hotkey bottom (1) + blank (1)
+-	local append_row=$LAST_CONTENT_ROW
++  # LAST_CONTENT_ROW tracks the row after the last THUNK entry (before footer)
++  # Footer structure is 9 lines:
++  #   blank (1) + separator (1) + total (1) + separator (1) + blank (1) +
++  #   hotkey top (1) + hotkey text (1) + hotkey bottom (1) + blank (1)
++  local append_row=$LAST_CONTENT_ROW
+ 
+-	while IFS= read -r line; do
+-		((line_num++))
++  while IFS= read -r line; do
++    ((line_num++))
+ 
+-		# Skip lines before start_line
+-		if [[ $line_num -le $start_line ]]; then
+-			continue
+-		fi
++    # Skip lines before start_line
++    if [[ $line_num -le $start_line ]]; then
++      continue
++    fi
+ 
+-		# Parse table rows only (skip headers, era markers, etc.)
+-		if [[ "$line" =~ ^\|[[:space:]]*([0-9]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|$ ]]; then
+-			# Parse table row
+-			local thunk_num="${BASH_REMATCH[1]}"
+-			local orig_num="${BASH_REMATCH[2]}"
+-			local priority="${BASH_REMATCH[3]}"
+-			local description="${BASH_REMATCH[4]}"
+-			local completed="${BASH_REMATCH[5]}"
++    # Parse table rows only (skip headers, era markers, etc.)
++    if [[ "$line" =~ ^\|[[:space:]]*([0-9]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|[[:space:]]*([^|]+)[[:space:]]*\|$ ]]; then
++      # Parse table row
++      local thunk_num="${BASH_REMATCH[1]}"
++      local orig_num="${BASH_REMATCH[2]}"
++      local priority="${BASH_REMATCH[3]}"
++      local description="${BASH_REMATCH[4]}"
++      local completed="${BASH_REMATCH[5]}"
+ 
+-			# Strip whitespace using bash parameter expansion (faster than xargs)
+-			thunk_num="${thunk_num#"${thunk_num%%[![:space:]]*}"}" # Trim leading
+-			thunk_num="${thunk_num%"${thunk_num##*[![:space:]]}"}" # Trim trailing
+-			orig_num="${orig_num#"${orig_num%%[![:space:]]*}"}"
+-			orig_num="${orig_num%"${orig_num##*[![:space:]]}"}"
+-			priority="${priority#"${priority%%[![:space:]]*}"}"
+-			priority="${priority%"${priority##*[![:space:]]}"}"
+-			description="${description#"${description%%[![:space:]]*}"}"
+-			description="${description%"${description##*[![:space:]]}"}"
+-			completed="${completed#"${completed%%[![:space:]]*}"}"
+-			completed="${completed%"${completed##*[![:space:]]}"}"
++      # Strip whitespace using bash parameter expansion (faster than xargs)
++      thunk_num="${thunk_num#"${thunk_num%%[![:space:]]*}"}" # Trim leading
++      thunk_num="${thunk_num%"${thunk_num##*[![:space:]]}"}" # Trim trailing
++      orig_num="${orig_num#"${orig_num%%[![:space:]]*}"}"
++      orig_num="${orig_num%"${orig_num##*[![:space:]]}"}"
++      priority="${priority#"${priority%%[![:space:]]*}"}"
++      priority="${priority%"${priority##*[![:space:]]}"}"
++      description="${description#"${description%%[![:space:]]*}"}"
++      description="${description%"${description##*[![:space:]]}"}"
++      completed="${completed#"${completed%%[![:space:]]*}"}"
++      completed="${completed%"${completed##*[![:space:]]}"}"
+ 
+-			# Skip header row
+-			if [[ "$thunk_num" =~ ^[0-9]+$ ]]; then
+-				# Generate human-friendly short title
+-				local short_title
+-				short_title=$(generate_title "$description")
++      # Skip header row
++      if [[ "$thunk_num" =~ ^[0-9]+$ ]]; then
++        # Generate human-friendly short title
++        local short_title
++        short_title=$(generate_title "$description")
+ 
+-				# Position cursor and append new entry (clear line first)
+-				if [[ -t 1 ]]; then
+-					tput cup $append_row 0
+-					tput el # Clear to end of line
+-					echo -e "  \033[32m✓\033[0m \033[1mTHUNK #$thunk_num\033[0m — $short_title"
+-				else
+-					echo "  ✓ THUNK #$thunk_num — $short_title"
+-				fi
++        # Position cursor and append new entry (clear line first)
++        if [[ -t 1 ]]; then
++          tput cup $append_row 0
++          tput el # Clear to end of line
++          echo -e "  \033[32m✓\033[0m \033[1mTHUNK #$thunk_num\033[0m — $short_title"
++        else
++          echo "  ✓ THUNK #$thunk_num — $short_title"
++        fi
+ 
+-				((new_count++))
+-				((append_row++))
+-			fi
+-		fi
+-	done <"$THUNK_FILE"
++        ((new_count++))
++        ((append_row++))
++      fi
++    fi
++  done <"$THUNK_FILE"
+ 
+-	# Only redraw footer if we added new entries
+-	if [[ $new_count -eq 0 ]]; then
+-		return
+-	fi
++  # Only redraw footer if we added new entries
++  if [[ $new_count -eq 0 ]]; then
++    return
++  fi
+ 
+-	# Update the total count
+-	local new_total=$((LAST_TOTAL_COUNT + new_count))
++  # Update the total count
++  local new_total=$((LAST_TOTAL_COUNT + new_count))
+ 
+-	# Redraw complete footer starting at append_row
+-	# Footer row is where we insert the blank line before separator
+-	local footer_start=$append_row
++  # Redraw complete footer starting at append_row
++  # Footer row is where we insert the blank line before separator
++  local footer_start=$append_row
+ 
+-	if [[ -t 1 ]]; then
+-		# Clear everything from footer_start to end of screen to remove old footer
+-		tput cup $footer_start 0
+-		tput ed # Clear from cursor to end of display
++  if [[ -t 1 ]]; then
++    # Clear everything from footer_start to end of screen to remove old footer
++    tput cup $footer_start 0
++    tput ed # Clear from cursor to end of display
+ 
+-		# Now draw the footer cleanly
+-		echo ""
+-		echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+-		echo "  Total Thunked: $new_total"
+-		echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+-		echo ""
+-		echo "╔════════════════════════════════════════════════════════════════╗"
+-		echo "║  HOTKEYS: [r] Refresh/Clear   [e] New Era   [q] Quit         ║"
+-		echo "╚════════════════════════════════════════════════════════════════╝"
+-		echo ""
+-	else
+-		# Non-TTY fallback: DO NOT append footer on incremental updates
+-		# Footer only gets printed during full refresh (display_thunks)
+-		# This prevents duplication in non-TTY environments
+-		: # No-op - skip footer in non-TTY mode for incremental updates
+-	fi
++    # Now draw the footer cleanly
++    echo ""
++    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
++    echo "  Total Thunked: $new_total"
++    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
++    echo ""
++    echo "╔════════════════════════════════════════════════════════════════╗"
++    echo "║  HOTKEYS: [r] Refresh/Clear   [e] New Era   [q] Quit         ║"
++    echo "╚════════════════════════════════════════════════════════════════╝"
++    echo ""
++  else
++    # Non-TTY fallback: DO NOT append footer on incremental updates
++    # Footer only gets printed during full refresh (display_thunks)
++    # This prevents duplication in non-TTY environments
++    : # No-op - skip footer in non-TTY mode for incremental updates
++  fi
+ 
+-	# Update stored state
+-	LAST_CONTENT_ROW=$append_row
+-	LAST_TOTAL_COUNT=$new_total
++  # Update stored state
++  LAST_CONTENT_ROW=$append_row
++  LAST_TOTAL_COUNT=$new_total
+ }
+ 
+ # Function to create new era
+ create_new_era() {
+-	clear
+-	echo "╔════════════════════════════════════════════════════════════════╗"
+-	echo "║                    CREATE NEW ERA                              ║"
+-	echo "╚════════════════════════════════════════════════════════════════╝"
+-	echo ""
+-	echo -n "  Enter new era name: "
+-	read -r era_name
++  clear
++  echo "╔════════════════════════════════════════════════════════════════╗"
++  echo "║                    CREATE NEW ERA                              ║"
++  echo "╚════════════════════════════════════════════════════════════════╝"
++  echo ""
++  echo -n "  Enter new era name: "
++  read -r era_name
+ 
+-	if [[ -z "$era_name" ]]; then
+-		echo "  Cancelled - no name provided."
+-		sleep 2
+-		return
+-	fi
++  if [[ -z "$era_name" ]]; then
++    echo "  Cancelled - no name provided."
++    sleep 2
++    return
++  fi
+ 
+-	local timestamp
+-	timestamp=$(date "+%Y-%m-%d")
++  local timestamp
++  timestamp=$(date "+%Y-%m-%d")
+ 
+-	# Append new era section to THUNK.md
+-	cat >>"$THUNK_FILE" <<EOF # Era: write operation for new era creation
++  # Append new era section to THUNK.md
++  cat >>"$THUNK_FILE" <<EOF # Era: write operation for new era creation
+ 
+ ## Era: $era_name
+ Started: $timestamp
+@@ -339,9 +339,9 @@
+ 
+ EOF
+ 
+-	echo ""
+-	echo "  ✓ Created new era: $era_name"
+-	sleep 2
++  echo ""
++  echo "  ✓ Created new era: $era_name"
++  sleep 2
+ }
+ 
+ # Main loop
+@@ -358,70 +358,70 @@
+ 
+ # Enable non-blocking input
+ if [[ -t 0 ]]; then
+-	stty -echo -icanon time 0 min 0
++  stty -echo -icanon time 0 min 0
+ fi
+ 
+ # Cleanup function
+ cleanup() {
+-	if [[ -t 0 ]]; then
+-		stty sane
+-	fi
+-	echo ""
+-	echo "Exiting Thunk Ralph Tasks Monitor..."
+-	exit 0
++  if [[ -t 0 ]]; then
++    stty sane
++  fi
++  echo ""
++  echo "Exiting Thunk Ralph Tasks Monitor..."
++  exit 0
+ }
+ 
+ trap cleanup EXIT INT TERM
+ 
+ # Monitor loop
+ while true; do
+-	# Check for hotkey input
+-	if read -r -t 0.1 -n 1 key 2>/dev/null; then
+-		case "$key" in
+-			r | R)
+-				# Refresh/Clear
+-				display_thunks
+-				LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
+-				LAST_LINE_COUNT=$(wc -l <"$THUNK_FILE" 2>/dev/null || echo "0")
+-				;;
+-			e | E)
+-				# New era
+-				create_new_era
+-				LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
+-				LAST_LINE_COUNT=$(wc -l <"$THUNK_FILE" 2>/dev/null || echo "0")
+-				display_thunks
+-				;;
+-			q | Q)
+-				# Quit
+-				cleanup
+-				;;
+-		esac
+-	fi
++  # Check for hotkey input
++  if read -r -t 0.1 -n 1 key 2>/dev/null; then
++    case "$key" in
++      r | R)
++        # Refresh/Clear
++        display_thunks
++        LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
++        LAST_LINE_COUNT=$(wc -l <"$THUNK_FILE" 2>/dev/null || echo "0")
++        ;;
++      e | E)
++        # New era
++        create_new_era
++        LAST_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
++        LAST_LINE_COUNT=$(wc -l <"$THUNK_FILE" 2>/dev/null || echo "0")
++        display_thunks
++        ;;
++      q | Q)
++        # Quit
++        cleanup
++        ;;
++    esac
++  fi
+ 
+-	# Check for file changes
+-	CURRENT_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
++  # Check for file changes
++  CURRENT_THUNK_MODIFIED=$(get_file_mtime "$THUNK_FILE")
+ 
+-	if [[ "$CURRENT_THUNK_MODIFIED" != "$LAST_THUNK_MODIFIED" ]]; then
+-		LAST_THUNK_MODIFIED="$CURRENT_THUNK_MODIFIED"
++  if [[ "$CURRENT_THUNK_MODIFIED" != "$LAST_THUNK_MODIFIED" ]]; then
++    LAST_THUNK_MODIFIED="$CURRENT_THUNK_MODIFIED"
+ 
+-		# Check line count to determine update strategy
+-		CURRENT_LINE_COUNT=$(wc -l <"$THUNK_FILE" 2>/dev/null || echo "0")
++    # Check line count to determine update strategy
++    CURRENT_LINE_COUNT=$(wc -l <"$THUNK_FILE" 2>/dev/null || echo "0")
+ 
+-		if [[ "$CURRENT_LINE_COUNT" -lt "$LAST_LINE_COUNT" ]]; then
+-			# Line count decreased - full refresh needed (rare case: deletions)
+-			display_thunks
+-		elif [[ "$CURRENT_LINE_COUNT" -gt "$LAST_LINE_COUNT" ]]; then
+-			# Line count increased - only new lines added (common case: append-only)
+-			# Use tail-only parsing for efficiency
+-			parse_new_thunk_entries "$LAST_LINE_COUNT"
+-		else
+-			# Same line count - content modified (edits)
+-			display_thunks
+-		fi
++    if [[ "$CURRENT_LINE_COUNT" -lt "$LAST_LINE_COUNT" ]]; then
++      # Line count decreased - full refresh needed (rare case: deletions)
++      display_thunks
++    elif [[ "$CURRENT_LINE_COUNT" -gt "$LAST_LINE_COUNT" ]]; then
++      # Line count increased - only new lines added (common case: append-only)
++      # Use tail-only parsing for efficiency
++      parse_new_thunk_entries "$LAST_LINE_COUNT"
++    else
++      # Same line count - content modified (edits)
++      display_thunks
++    fi
+ 
+-		LAST_LINE_COUNT="$CURRENT_LINE_COUNT"
+-	fi
++    LAST_LINE_COUNT="$CURRENT_LINE_COUNT"
++  fi
+ 
+-	# Small sleep to prevent CPU spinning
+-	sleep 0.5
++  # Small sleep to prevent CPU spinning
++  sleep 0.5
+ done
+
+markdownlint.............................................................Failed
+- hook id: markdownlint
+- exit code: 1
+
+templates/cortex/CORTEX_SYSTEM_PROMPT.project.md:11 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Below] [Context: "### Planning"]
+templates/cortex/CORTEX_SYSTEM_PROMPT.project.md:12 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: "- Analyze project goals and re..."]
+templates/cortex/CORTEX_SYSTEM_PROMPT.project.md:17 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Below] [Context: "### Review"]
+templates/cortex/CORTEX_SYSTEM_PROMPT.project.md:18 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: "- Monitor Ralph's progress via..."]
+templates/cortex/CORTEX_SYSTEM_PROMPT.project.md:23 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Below] [Context: "### Delegation"]
+templates/cortex/CORTEX_SYSTEM_PROMPT.project.md:24 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: "- Write clear, atomic Task Con..."]
+templates/cortex/CORTEX_SYSTEM_PROMPT.project.md:52 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Below] [Context: "### ✅ DO: Use Fast, Non-Interactive Commands"]
+templates/cortex/CORTEX_SYSTEM_PROMPT.project.md:53 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: "- Read files directly: `cat`, ..."]
+templates/cortex/CORTEX_SYSTEM_PROMPT.project.md:57 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Below] [Context: "### ❌ DON'T: Call Interactive or Long-Running Scripts"]
+templates/cortex/CORTEX_SYSTEM_PROMPT.project.md:58 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: "- **NEVER** call `loop.sh` (in..."]
+templates/cortex/CORTEX_SYSTEM_PROMPT.project.md:82 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: "- ✅ Correct: `2026-01-21 20:15..."]
+
+ruff.....................................................................Passed
+ruff-format..............................................................Passed
+trailing-whitespace......................................................Passed
+end-of-file-fixer........................................................Failed
+- hook id: end-of-file-fixer
+- exit code: 1
+- files were modified by this hook
+
+Fixing workers/ralph/THUNK.md
+
+check-yaml...........................................(no files to check)Skipped
+check-json...........................................(no files to check)Skipped
+check-merge-conflict.....................................................Passed
+check-added-large-files..................................................Passed
+detect-secrets...........................................................Passed
+
+
+[90m─── Turn 6/30 ────────────────────────────────────────────────────────────────────────────────────────[0m
+
+[36m─────────────────────────────────────────── Tool Calls (1) ────────────────────────────────────────────[0m
+  [36m⬢[0m Called [1mbash[0m:
+      [2m•[0m command: [2m'shfmt -w -i 2 workers/ralph/loop.sh'[0m
+
+  [32m[exit: 0][0m
+
+[90m─── Turn 7/30 ────────────────────────────────────────────────────────────────────────────────────────[0m
+
+  [33m⏳ Rate limited. Waiting 60s (attempt 1/5)[0m
+
+[36m─────────────────────────────────────────── Tool Calls (1) ────────────────────────────────────────────[0m
+  [36m⬢[0m Called [1mread_lines[0m:
+      [2m•[0m path: [2m'templates/cortex/CORTEX_SYSTEM_PROMPT.project.md'[0m
+      [2m•[0m start: [2m55[0m
+      [2m•[0m end: [2m65[0m
+
+  [32m[lines 55-65 of 107][0m
+  [2m- Call non-interactive scripts that exit immediately (e.g., `cortex/snapshot.sh`)[0m
+  [2m[0m
+  [2m### ❌ DON'T: Call Interactive or Long-Running Scripts[0m
+  [2m- **NEVER** call `loop.sh` (infinite loop - Ralph's executor)[0m
+  [2m- **NEVER** call `current_ralph_tasks.sh` (interactive monitor)[0m
+  [2m- **AVOID** scripts that wait for user input[0m
+  [2m[0m
+  [2m### 📊 Getting Ralph's Status[0m
+  [2m[0m
+  [2mInstead of calling interactive scripts, read files directly:[0m
+
+[90m─── Turn 8/30 ────────────────────────────────────────────────────────────────────────────────────────[0m
+
+[36m─────────────────────────────────────────── Tool Calls (1) ────────────────────────────────────────────[0m
+  [36m⬢[0m Called [1mpatch_file[0m:
+      [2m•[0m path: [2m'templates/cortex/CORTEX_SYSTEM_PROMPT.project.md'[0m
+      [2m•[0m find: [2m'- Call non-interactive scripts that exit immediately (e.g., `cortex/snapshot....'[0m
+      [2m•[0m replace: [2m'- Call non-interactive scripts that exit immediately (e.g., `cortex/snapshot....'[0m
+
+  [32m[patched 1 occurrence(s) in templates/cortex/CORTEX_SYSTEM_PROMPT.project.md][0m
+
+[90m─── Turn 9/30 ────────────────────────────────────────────────────────────────────────────────────────[0m
+
+[36m─────────────────────────────────────────── Tool Calls (1) ────────────────────────────────────────────[0m
+  [36m⬢[0m Called [1mread_lines[0m:
+      [2m•[0m path: [2m'templates/cortex/CORTEX_SYSTEM_PROMPT.project.md'[0m
+      [2m•[0m start: [2m56[0m
+      [2m•[0m end: [2m62[0m
+
+  [32m[lines 56-62 of 107][0m
+  [2m[0m
+  [2m### ❌ DON'T: Call Interactive or Long-Running Scripts[0m
+  [2m- **NEVER** call `loop.sh` (infinite loop - Ralph's executor)[0m
+  [2m- **NEVER** call `current_ralph_tasks.sh` (interactive monitor)[0m
+  [2m- **AVOID** scripts that wait for user input[0m
+  [2m[0m
+  [2m### 📊 Getting Ralph's Status[0m
+
+[90m─── Turn 10/30 ────────────────────────────────────────────────────────────────────────────────────────[0m
+
+[36m─────────────────────────────────────────── Tool Calls (1) ────────────────────────────────────────────[0m
+  [36m⬢[0m Called [1mread_lines[0m:
+      [2m•[0m path: [2m'templates/cortex/CORTEX_SYSTEM_PROMPT.project.md'[0m
+      [2m•[0m start: [2m56[0m
+      [2m•[0m end: [2m64[0m
+
+  [32m[lines 56-64 of 107][0m
+  [2m[0m
+  [2m### ❌ DON'T: Call Interactive or Long-Running Scripts[0m
+  [2m- **NEVER** call `loop.sh` (infinite loop - Ralph's executor)[0m
+  [2m- **NEVER** call `current_ralph_tasks.sh` (interactive monitor)[0m
+  [2m- **AVOID** scripts that wait for user input[0m
+  [2m[0m
+  [2m### 📊 Getting Ralph's Status[0m
+  [2m[0m
+  [2mInstead of calling interactive scripts, read files directly:[0m
+
+[90m─── Turn 11/30 ────────────────────────────────────────────────────────────────────────────────────────[0m
+
+[36m─────────────────────────────────────────── Tool Calls (1) ────────────────────────────────────────────[0m
+  [36m⬢[0m Called [1mread_lines[0m:
+      [2m•[0m path: [2m'templates/cortex/CORTEX_SYSTEM_PROMPT.project.md'[0m
+      [2m•[0m start: [2m80[0m
+      [2m•[0m end: [2m86[0m
+
+  [32m[lines 80-86 of 107][0m
+  [2m[0m
+  [2m**Examples:**[0m
+  [2m- ✅ Correct: `2026-01-21 20:15:00`[0m
+  [2m- ❌ Wrong: `2026-01-21 20:15` (missing seconds)[0m
+  [2m- ❌ Wrong: `2026-01-21` (missing time)[0m
+  [2m[0m
+  [2m## Remember[0m
+
+[90m─── Turn 12/30 ────────────────────────────────────────────────────────────────────────────────────────[0m
+
+  [33m⏳ Rate limited. Waiting 60s (attempt 1/5)[0m

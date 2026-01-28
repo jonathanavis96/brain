@@ -1,0 +1,19 @@
+
+🧠 Starting Cerebras Agent
+   Model: zai-glm-4.7
+   Max turns: 30
+   Working dir: /home/grafe/code/brain
+============================================================
+
+--- Turn 1/30 ---
+
+❌ API Error: 429 Client Error: Too Many Requests for url: https://api.cerebras.ai/v1/chat/completions
+
+============================================================
+📊 TOKEN USAGE SUMMARY
+============================================================
+  Prompt tokens:     0
+  Completion tokens: 0
+  Total tokens:      0
+  API requests:      0
+============================================================

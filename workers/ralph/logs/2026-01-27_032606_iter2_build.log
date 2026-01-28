@@ -1,0 +1,739 @@
+Script started on 2026-01-27 03:26:06+02:00 [COMMAND="cat "/tmp/rovodev_prompt_with_mode_3553_2.md" | acli rovodev run --config-file /tmp/rovodev_config_3553_1769477081.yml --yolo 2>&1 | bash /home/grafe/code/brain/workers/shared/filter_acli_errors.sh" TERM="xterm-256color" TTY="/dev/pts/10" COLUMNS="100" LINES="54"]
+Working in /home/grafe/code/brain
+
+[?2004h✔ Loaded memory from AGENTS.md
+✔ Using model: anthropic.claude-sonnet-4-5-20250929-v1:0
+✔ Started 3 MCP servers
+
+─── Response ───────────────────────────────────────────────────────────────────
+I'll start by following the mandatory startup procedure to find my next task
+efficiently.
+────────────────────────────────────────────────────────────────────────────────
+  ⬢ Called bash: 
+      • command: "grep -n \"^- \[ \\]\" workers/IMPLEMENTATION_PLAN.md | head 
+-20"
+                                                                                
+                                                                                
+   29:- [ ] Backend can be started in WSL2 and serves `GET /health`             
+   successfully.                                                                
+   30:- [ ] Markdown-first notes exist under `app/brain-map/notes/` and are     
+   treated as the canonical source of truth.                                    
+   31:- [ ] A deterministic index rebuild can be run that produces a local      
+   SQLite index at `app/brain-map/.local/ind...                                 
+   32:- [ ] Backend exposes MVP API endpoints as specified in                   
+   `docs/brain-map/brain-map-spec.md`:                                          
+   39:- [ ] UI can be started and loaded in a Windows browser and calls the     
+   backend successfully.                                                        
+   40:- [ ] UI renders a graph view (sigma.js) from `GET /graph`.               
+   41:- [ ] UI supports selecting a node and viewing/editing details (via       
+   `GET /node/{id}` + `PUT /node/{id}`).                                        
+   42:- [ ] UI supports fast search (Ctrl+K) via `GET /search`.                 
+   43:- [ ] UI supports basic recency heat overlay (even if simple).            
+   44:- [ ] UI supports generating a plan from selected nodes and shows         
+   returned markdown (via `POST /generate-plan`).                               
+   50:- [ ] **25.1.1** Scaffold Brain Map app workspace (frontend + backend     
+   skeleton)                                                                    
+   76:- [ ] **25.1.2** Define Markdown note discovery + loading (scan notes     
+   root)                                                                        
+   94:- [ ] **25.1.3** Implement canonical frontmatter parser and validator     
+   114:- [ ] **25.1.4** Build SQLite schema and deterministic index rebuild     
+   134:- [ ] **25.1.5** Implement `/search` endpoint using the index (fast      
+   global search)                                                               
+   152:- [ ] **25.1.6** Implement `/graph` endpoint (graph snapshot for UI)     
+   170:- [ ] **25.1.7** Implement `/node/{id}` read endpoint                    
+   186:- [ ] **25.1.8** Implement node create (`POST /node`) with               
+   markdown-first write + reindex                                               
+   206:- [ ] **25.1.9** Implement node update (`PUT /node/{id}`) with atomic    
+   write + reindex                                                              
+   226:- [ ] **25.1.10** Implement `/generate-plan` endpoint (deterministic     
+   markdown + optional write)                                                   
+                                                                                
+                                                                                
+
+─── Response ───────────────────────────────────────────────────────────────────
+I see there are tasks in the plan, but I notice the verifier status shows all
+checks passing. Let me check if there's a "Phase 0-Warn: Verifier Warnings"
+section first, and then get the context around the first unchecked task.
+────────────────────────────────────────────────────────────────────────────────
+  ⬢ Called bash: 
+      • command: "grep -n \"^## Phase 0-Warn:\" workers/IMPLEMENTATION_PLAN.md"
+  ⬢ Called bash: 
+      • command: "sed -n '20,55p' workers/IMPLEMENTATION_PLAN.md"
+  ⬢ Called bash: 
+      • command: "tail -20 workers/ralph/THUNK.md | grep \"^|\" | tail -1"
+                                                                                
+                                                                                
+   ## Phase 25: Brain Map (MVP-first)                                           
+                                                                                
+   **Source:** `docs/brain-map/brain-map-implementation-plan.md`                
+                                                                                
+                                                                                
+   ## MVP cutline checklist                                                     
+                                                                                
+   MVP is considered "done" when all items below are true:                      
+                                                                                
+   - [ ] Backend can be started in WSL2 and serves `GET /health`                
+   successfully.                                                                
+   (16 lines truncated)                                                         
+   ### Phase 25.1: MVP                                                          
+                                                                                
+   > Ordering intent: scaffolding → parsing/indexing → API → UI integration →   
+   UX polish.                                                                   
+                                                                                
+   - [ ] **25.1.1** Scaffold Brain Map app workspace (frontend + backend        
+   skeleton)                                                                    
+     - **Goal:** Create the canonical directory structure under                 
+   `app/brain-map/` and ensure both frontend and backen...                      
+     - **Inputs:**                                                              
+       - Canonical repo layout in `docs/brain-map/brain-map-spec.md`.           
+       - Stack assumptions: Vite+React (frontend), FastAPI (backend).           
+     - **Outputs:**                                                             
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+   | 915 | 22.11.1 | HIGH | Fixed MD024 in workers/PLAN_DONE.md line 49 -       
+   Made all 4 duplicate "Archived on 2026-01-...                                
+                                                                                
+                                                                                
+
+─── Response ───────────────────────────────────────────────────────────────────
+Good! No verifier warnings section exists, and all checks are passing. The
+first unchecked task is 25.1.1 - scaffolding the Brain Map app workspace. Let
+me get more context about this task and check if it's already been done.
+────────────────────────────────────────────────────────────────────────────────
+  ⬢ Called bash: 
+      • command: "sed -n '50,75p' workers/IMPLEMENTATION_PLAN.md"
+  ⬢ Called bash: 
+      • command: "grep \"25.1.1\" workers/ralph/THUNK.md | head -3"
+  ⬢ Called bash: 
+      • command: "ls -la app/ 2>/dev/null || echo \"app/ does not exist\""
+                                                                                
+                                                                                
+   - [ ] **25.1.1** Scaffold Brain Map app workspace (frontend + backend        
+   skeleton)                                                                    
+     - **Goal:** Create the canonical directory structure under                 
+   `app/brain-map/` and ensure both frontend and backen...                      
+     - **Inputs:**                                                              
+       - Canonical repo layout in `docs/brain-map/brain-map-spec.md`.           
+       - Stack assumptions: Vite+React (frontend), FastAPI (backend).           
+     - **Outputs:**                                                             
+       - `app/brain-map/frontend/` (Vite+React project scaffold)                
+       - `app/brain-map/backend/` (FastAPI project scaffold)                    
+       - `app/brain-map/notes/` (empty or sample placeholder)                   
+       - `app/brain-map/generated/` (empty)                                     
+   (5 lines truncated)                                                          
+     - **AC:**                                                                  
+       - [ ] Frontend dev server starts and serves on port 5173 (or             
+   documented override).                                                        
+       - [ ] Backend dev server starts and serves on port 8000 (or documented   
+   override).                                                                   
+       - [ ] `GET /health` returns 200 with expected JSON shape.                
+     - **Verification (once scaffolding exists):**                              
+       - Backend: `cd app/brain-map/backend && python3 -m uvicorn               
+   app.main:app --reload --host 0.0.0.0 --port 8000`                            
+       - `curl -s http://localhost:8000/health | jq .`                          
+       - Frontend: `cd app/brain-map/frontend && npm install && npm run dev     
+   -- --host 0.0.0.0 --port 5173`                                               
+     - **Risk notes:** repo toolchain differences (uv/poetry/pip). Keep         
+   minimal.                                                                     
+     - **If Blocked:** If Python packaging is unclear, start with               
+   `requirements.txt` + `python -m venv` and document.                          
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+   app/ does not exist                                                          
+                                                                                
+                                                                                
+
+─── Response ───────────────────────────────────────────────────────────────────
+Perfect! Task 25.1.1 is not in THUNK and app/ doesn't exist yet. This is a
+scaffolding task. Let me check the spec document to understand the
+requirements, then create a todo list for this multi-step task.
+────────────────────────────────────────────────────────────────────────────────
+  ⬢ Called bash: 
+      • command: "head -100 docs/brain-map/brain-map-spec.md"
+                                                                                
+                                                                                
+   # Brain Map System — Canonical Specification                                 
+                                                                                
+   ## Table of contents                                                         
+                                                                                
+   - [Why this exists](#why-this-exists)                                        
+   - [Scope, assumptions, and                                                   
+   constraints](#scope-assumptions-and-constraints)                             
+   - [Explicit non-goals](#explicit-non-goals)                                  
+   - [Core entities and relationships](#core-entities-and-relationships)        
+     - [Node types](#node-types)                                                
+     - [Node fields](#node-fields)                                              
+   (35 lines truncated)                                                         
+                                                                                
+   ## Scope, assumptions, and constraints                                       
+                                                                                
+   ### Hard assumptions (fixed for this specification)                          
+                                                                                
+   - **UI:** Vite + React                                                       
+   - **Graph rendering:** sigma.js + graphology                                 
+   - **Backend:** FastAPI                                                       
+   - **Runtime:** WSL2 (backend runs in WSL2; UI accessed via browser)          
+   - **Storage:** Markdown-first (source of truth) + SQLite index (derived)     
+                                                                                
+                                                                                
+
+  ⬢ Update Todos
+      ☐ Create directory structure 
+(app/brain-map/{frontend,backend,notes,generated})
+      ☐ Scaffold FastAPI backend with /health endpoint
+      ☐ Scaffold Vite+React frontend
+      ☐ Update .gitignore to exclude app/brain-map/.local/
+      ☐ Test backend health endpoint and frontend dev server
+      ☐ Update THUNK.md and mark task complete in IMPLEMENTATION_PLAN.md
+
+  ⬢ Called bash: 
+      • command: "sed -n '80,150p' docs/brain-map/brain-map-spec.md"
+                                                                                
+                                                                                
+       - [System](#system)                                                      
+       - [Decision (ADR)](#decision-adr)                                        
+       - [TaskContract](#taskcontract)                                          
+       - [Artifact](#artifact)                                                  
+   - [What changed vs previous draft](#what-changed-vs-previous-draft)          
+                                                                                
+   ## Why this exists                                                           
+                                                                                
+   The Brain repository is growing faster than human working memory. The        
+   Brain Map system is a local-first GUI that ...                               
+                                                                                
+   (35 lines truncated)                                                         
+   - **Inbox**: a collection point for incoming items, notes, or tasks          
+   awaiting triage.                                                             
+                                                                                
+   ### Node fields                                                              
+                                                                                
+   All node types share a common required field set.                            
+                                                                                
+   #### Required fields (all nodes)                                             
+                                                                                
+   - `id` (string): immutable stable identifier. See [Node identity &           
+   stability rules (critical)](#node-identity--st...                            
+   - `title` (string): human-readable title.                                    
+                                                                                
+                                                                                
+  ⬢ Called bash: 
+      • command: "mkdir -p app/brain-map/{frontend,backend,notes,generated} && 
+echo \"Directory structure created suc...
+
+  ⬢ Update Todos
+      ◐ Creating directory structure
+      ☐ Scaffold FastAPI backend with /health endpoint
+      ☐ Scaffold Vite+React frontend
+      ☐ Update .gitignore to exclude app/brain-map/.local/
+      ☐ Test backend health endpoint and frontend dev server
+      ☐ Update THUNK.md and mark task complete in IMPLEMENTATION_PLAN.md
+
+                                                                                
+                                                                                
+   Directory structure created successfully                                     
+                                                                                
+                                                                                
+
+  ⬢ Update Todos
+      ☑ Create directory structure 
+(app/brain-map/{frontend,backend,notes,generated})
+      ◐ Scaffolding FastAPI backend
+      ☐ Scaffold Vite+React frontend
+      ☐ Update .gitignore to exclude app/brain-map/.local/
+      ☐ Test backend health endpoint and frontend dev server
+      ☐ Update THUNK.md and mark task complete in IMPLEMENTATION_PLAN.md
+
+  ⬢ Called create_file: 
+      • file_path: "app/brain-map/backend/requirements.txt"
+      • initial_content: "fastapi==0.115.0\nuvicorn==0.30.6\npydantic==2.9.0\n"
+  ⬢ Called create_file: 
+      • file_path: "app/brain-map/backend/app/__init__.py"
+      • initial_content: "# Brain Map Backend\n"
+  ⬢ Called create_file: 
+      • file_path: "app/brain-map/backend/app/main.py"
+      • initial_content: "\"\"\"Brain Map FastAPI Backend.\"\"\"\nfrom fastapi 
+import FastAPI\nfrom fastapi.middlewar...
+  ⬢ Called create_file: 
+      • file_path: "app/brain-map/backend/README.md"
+      • initial_content: "# Brain Map Backend\n\nFastAPI backend for Brain Map 
+system.\n\n## Setup\n\n```bash\ncd app...
+                                                                                
+                                                                                
+   Successfully created app/brain-map/backend/requirements.txt.                 
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+   Successfully created app/brain-map/backend/app/__init__.py.                  
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+   Successfully created app/brain-map/backend/app/main.py.                      
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+   Successfully created app/brain-map/backend/README.md.                        
+                                                                                
+                                                                                
+  ⬢ Called bash: 
+      • command: "cd app/brain-map/frontend && npm create vite@latest . -- 
+--template react 2>&1 | head -30"
+
+  ⬢ Update Todos
+      ☑ Create directory structure 
+(app/brain-map/{frontend,backend,notes,generated})
+      ☑ Scaffold FastAPI backend with /health endpoint
+      ◐ Scaffolding Vite+React frontend
+      ☐ Update .gitignore to exclude app/brain-map/.local/
+      ☐ Test backend health endpoint and frontend dev server
+      ☐ Update THUNK.md and mark task complete in IMPLEMENTATION_PLAN.md
+
+                                                                                
+                                                                                
+   npm warn exec The following package was not found and will be installed:     
+   create-vite@8.2.0                                                            
+                                                                                
+   > npx                                                                        
+   > "create-vite" . --template react                                           
+                                                                                
+   │                                                                            
+   ◇  Scaffolding project in /home/grafe/code/brain/app/brain-map/frontend...   
+   │                                                                            
+   └  Done. Now run:                                                            
+                                                                                
+     npm install                                                                
+     npm run dev                                                                
+                                                                                
+                                                                                
+  ⬢ Called bash: 
+      • command: "ls -la app/brain-map/frontend/ | head -15"
+  ⬢ Called create_file: 
+      • file_path: "app/brain-map/frontend/README.md"
+      • initial_content: "# Brain Map Frontend\n\nVite + React frontend for 
+Brain Map system.\n\n## Setup\n\n```bash\...
+                                                                                
+                                                                                
+   total 40                                                                     
+   drwxr-xr-x 4 grafe grafe 4096 Jan 27 03:27 .                                 
+   drwxr-xr-x 6 grafe grafe 4096 Jan 27 03:27 ..                                
+   -rw-r--r-- 1 grafe grafe  253 Jan 27 03:27 .gitignore                        
+   -rw-r--r-- 1 grafe grafe 1157 Jan 27 03:27 README.md                         
+   -rw-r--r-- 1 grafe grafe  758 Jan 27 03:27 eslint.config.js                  
+   -rw-r--r-- 1 grafe grafe  357 Jan 27 03:27 index.html                        
+   -rw-r--r-- 1 grafe grafe  604 Jan 27 03:27 package.json                      
+   drwxr-xr-x 2 grafe grafe 4096 Jan 27 03:27 public                            
+   drwxr-xr-x 3 grafe grafe 4096 Jan 27 03:27 src                               
+   -rw-r--r-- 1 grafe grafe  161 Jan 27 03:27 vite.config.js                    
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+   Error executing tool create_file: File app/brain-map/frontend/README.md      
+   already exists. To overwrite, use overwri...                                 
+                                                                                
+                                                                                
+
+  ⬢ Update Todos
+      ☑ Create directory structure 
+(app/brain-map/{frontend,backend,notes,generated})
+      ☑ Scaffold FastAPI backend with /health endpoint
+      ☑ Scaffold Vite+React frontend
+      ◐ Updating .gitignore
+      ☐ Test backend health endpoint and frontend dev server
+      ☐ Update THUNK.md and mark task complete in IMPLEMENTATION_PLAN.md
+
+  ⬢ Called bash: 
+      • command: "grep -n \"app/brain-map\" .gitignore"
+  ⬢ Called bash: 
+      • command: "cat .gitignore | tail -20"
+                                                                                
+                                                                                
+   ralph/opencode.json                                                          
+   ralph/ROVODEV_INTEGRATION.md                                                 
+   ralph/test-rovodev-integration.sh                                            
+   .venv/                                                                       
+   .git.new-only-backup/                                                        
+   *.har                                                                        
+   rovodev-config.local.yml                                                     
+   __pycache__/                                                                 
+   *.pyc                                                                        
+   *.egg-info/                                                                  
+                                                                                
+   # Runtime state (not committed)                                              
+   state/                                                                       
+   artifacts/rollflow_reports/*.json                                            
+   artifacts/rollflow_cache/test_cache.sqlite                                   
+                                                                                
+   # Rollflow / loop caches (always regenerate, never commit)                   
+   **/rollflow_cache/cache.sqlite                                               
+   tools/rollflow_analyze/artifacts/rollflow_cache/cache.sqlite                 
+   workers/ralph/artifacts/rollflow_cache/cache.sqlite                          
+                                                                                
+                                                                                
+  ⬢ Called find_and_replace_code: 
+      • file_path: ".gitignore"
+      • find: "# Rollflow / loop caches (always regenerate, never 
+commit)\n**/rollflow_cache/cache.sqlite\ntools/roll...
+      • replace: "# Rollflow / loop caches (always regenerate, never 
+commit)\n**/rollflow_cache/cache.sqlite\ntools/r...
+                                                                                
+                                                                                
+  .gitignore:                                                                   
+                                                                                
+                                                                                
+   --- .gitignore                                                               
+   +++ .gitignore                                                               
+   @@ -49,3 +49,6 @@                                                            
+    **/rollflow_cache/cache.sqlite                                              
+    tools/rollflow_analyze/artifacts/rollflow_cache/cache.sqlite                
+    workers/ralph/artifacts/rollflow_cache/cache.sqlite                         
+   +                                                                            
+   +# Brain Map runtime (derived state, always regenerate)                      
+   +app/brain-map/.local/                                                       
+                                                                                
+                                                                                
+
+  ⬢ Update Todos
+      ☑ Create directory structure 
+(app/brain-map/{frontend,backend,notes,generated})
+      ☑ Scaffold FastAPI backend with /health endpoint
+      ☑ Scaffold Vite+React frontend
+      ☑ Update .gitignore to exclude app/brain-map/.local/
+      ◐ Testing both servers
+      ☐ Update THUNK.md and mark task complete in IMPLEMENTATION_PLAN.md
+
+  ⬢ Called bash: 
+      • command: "cd app/brain-map/backend && python3 -m venv .venv && source 
+.venv/bin/activate && pip install -q -r...
+  ⬢ Called bash: 
+      • command: "sleep 3 && curl -s http://localhost:8000/health"
+                                                                                
+                                                                                
+   Command started with PID: 14662 (running in background)                      
+                                                                                
+   Initial logs (first 5 seconds):                                              
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+   {"status":"ok","service":"brain-map-api","version":"0.1.0"}                  
+                                                                                
+                                                                                
+  ⬢ Called bash: 
+      • command: "cd app/brain-map/frontend && npm install 2>&1 | tail -10"
+  ⬢ Called bash: 
+      • command: "pkill -f \"uvicorn app.main:app\""
+                                                                                
+                                                                                
+                                                                                
+   added 156 packages, and audited 157 packages in 25s                          
+                                                                                
+   33 packages are looking for funding                                          
+     run `npm fund` for details                                                 
+                                                                                
+   found 0 vulnerabilities                                                      
+                                                                                
+                                                                                
+  ⬢ Called bash: 
+      • command: "cd app/brain-map/frontend && timeout 10 npm run dev -- --host 
+0.0.0.0 --port 5173 2>&1 &"
+  ⬢ Called bash: 
+      • command: "sleep 4 && curl -s http://localhost:5173 | head -20"
+                                                                                
+                                                                                
+   Command started with PID: 15506 (running in background)                      
+                                                                                
+   Initial logs (first 5 seconds):                                              
+                                                                                
+   > frontend@0.0.0 dev                                                         
+   > vite --host 0.0.0.0 --port 5173                                            
+                                                                                
+                                                                                
+     VITE v7.3.1  ready in 178 ms                                               
+                                                                                
+     ➜  Local:   http://localhost:5173/                                         
+     ➜  Network: http://10.255.255.254:5173/                                    
+     ➜  Network: http://172.17.87.79:5173/                                      
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+   <!doctype html>                                                              
+   <html lang="en">                                                             
+     <head>                                                                     
+       <script type="module">import { injectIntoGlobalHook } from               
+   "/@react-refresh";                                                           
+   injectIntoGlobalHook(window);                                                
+   window.$RefreshReg$ = () => {};                                              
+   window.$RefreshSig$ = () => (type) => type;</script>                         
+                                                                                
+       <script type="module" src="/@vite/client"></script>                      
+                                                                                
+       <meta charset="UTF-8" />                                                 
+       <link rel="icon" type="image/svg+xml" href="/vite.svg" />                
+       <meta name="viewport" content="width=device-width, initial-scale=1.0"    
+   />                                                                           
+       <title>frontend</title>                                                  
+     </head>                                                                    
+     <body>                                                                     
+       <div id="root"></div>                                                    
+       <script type="module" src="/src/main.jsx"></script>                      
+     </body>                                                                    
+   </html>                                                                      
+                                                                                
+                                                                                
+  ⬢ Called bash: 
+      • command: "pkill -f \"vite --host\""
+  ⬢ Called bash: 
+      • command: "tail -20 workers/ralph/THUNK.md | grep \"^|\" | tail -1 | awk 
+-F'|' '{print $2}' | xargs"
+
+  ⬢ Update Todos
+      ☑ Create directory structure 
+(app/brain-map/{frontend,backend,notes,generated})
+      ☑ Scaffold FastAPI backend with /health endpoint
+      ☑ Scaffold Vite+React frontend
+      ☑ Update .gitignore to exclude app/brain-map/.local/
+      ☑ Test backend health endpoint and frontend dev server
+      ◐ Recording completion
+
+                                                                                
+                                                                                
+   915                                                                          
+                                                                                
+                                                                                
+  ⬢ Called bash: 
+      • command: "cat >> workers/ralph/THUNK.md << 'EOF'\n| 916 | 25.1.1 | HIGH 
+| Scaffolded Brain Map app workspace:...
+  ⬢ Called bash: 
+      • command: "sed -n '50,76p' workers/IMPLEMENTATION_PLAN.md"
+                                                                                
+                                                                                
+   - [ ] **25.1.1** Scaffold Brain Map app workspace (frontend + backend        
+   skeleton)                                                                    
+     - **Goal:** Create the canonical directory structure under                 
+   `app/brain-map/` and ensure both frontend and backen...                      
+     - **Inputs:**                                                              
+       - Canonical repo layout in `docs/brain-map/brain-map-spec.md`.           
+       - Stack assumptions: Vite+React (frontend), FastAPI (backend).           
+     - **Outputs:**                                                             
+       - `app/brain-map/frontend/` (Vite+React project scaffold)                
+       - `app/brain-map/backend/` (FastAPI project scaffold)                    
+       - `app/brain-map/notes/` (empty or sample placeholder)                   
+       - `app/brain-map/generated/` (empty)                                     
+   (7 lines truncated)                                                          
+       - [ ] Backend dev server starts and serves on port 8000 (or documented   
+   override).                                                                   
+       - [ ] `GET /health` returns 200 with expected JSON shape.                
+     - **Verification (once scaffolding exists):**                              
+       - Backend: `cd app/brain-map/backend && python3 -m uvicorn               
+   app.main:app --reload --host 0.0.0.0 --port 8000`                            
+       - `curl -s http://localhost:8000/health | jq .`                          
+       - Frontend: `cd app/brain-map/frontend && npm install && npm run dev     
+   -- --host 0.0.0.0 --port 5173`                                               
+     - **Risk notes:** repo toolchain differences (uv/poetry/pip). Keep         
+   minimal.                                                                     
+     - **If Blocked:** If Python packaging is unclear, start with               
+   `requirements.txt` + `python -m venv` and document.                          
+                                                                                
+   - [ ] **25.1.2** Define Markdown note discovery + loading (scan notes        
+   root)                                                                        
+                                                                                
+                                                                                
+  ⬢ Called find_and_replace_code: 
+      • file_path: "workers/IMPLEMENTATION_PLAN.md"
+      • find: "- [ ] **25.1.1** Scaffold Brain Map app workspace (frontend + 
+backend skeleton)"
+      • replace: "-  **25.1.1** Scaffold Brain Map app workspace (frontend + 
+backend skeleton)"
+  ⬢ Called bash: 
+      • command: "git add -A"
+  ⬢ Called bash: 
+      • command: "git status --short"
+                                                                                
+                                                                                
+  workers/IMPLEMENTATION_PLAN.md:                                               
+                                                                                
+                                                                                
+   --- workers/IMPLEMENTATION_PLAN.md                                           
+   +++ workers/IMPLEMENTATION_PLAN.md                                           
+   @@ -47,7 +47,7 @@                                                            
+                                                                                
+    > Ordering intent: scaffolding → parsing/indexing → API → UI integration    
+   → UX polish.                                                                 
+                                                                                
+   -- [ ] **25.1.1** Scaffold Brain Map app workspace (frontend + backend       
+   skeleton)                                                                    
+   +- [x] **25.1.1** Scaffold Brain Map app workspace (frontend + backend       
+   skeleton)                                                                    
+      - **Goal:** Create the canonical directory structure under                
+   `app/brain-map/` and ensure both frontend and backe...                       
+      - **Inputs:**                                                             
+        - Canonical repo layout in `docs/brain-map/brain-map-spec.md`.          
+                                                                                
+                                                                                
+
+  ⬢ Update Todos
+      ☑ Create directory structure 
+(app/brain-map/{frontend,backend,notes,generated})
+      ☑ Scaffold FastAPI backend with /health endpoint
+      ☑ Scaffold Vite+React frontend
+      ☑ Update .gitignore to exclude app/brain-map/.local/
+      ☑ Test backend health endpoint and frontend dev server
+      ☑ Update THUNK.md and mark task complete in IMPLEMENTATION_PLAN.md
+
+                                                                                
+                                                                                
+   M  .gitignore                                                                
+   M  TEMPLATE_DRIFT_REPORT.md                                                  
+   A  app/brain-map/backend/README.md                                           
+   A  app/brain-map/backend/app/__init__.py                                     
+   A  app/brain-map/backend/app/main.py                                         
+   A  app/brain-map/backend/requirements.txt                                    
+   A  app/brain-map/frontend/.gitignore                                         
+   A  app/brain-map/frontend/README.md                                          
+   A  app/brain-map/frontend/eslint.config.js                                   
+   A  app/brain-map/frontend/index.html                                         
+   (2 lines truncated)                                                          
+   A  app/brain-map/frontend/public/vite.svg                                    
+   A  app/brain-map/frontend/src/App.css                                        
+   A  app/brain-map/frontend/src/App.jsx                                        
+   A  app/brain-map/frontend/src/assets/react.svg                               
+   A  app/brain-map/frontend/src/index.css                                      
+   A  app/brain-map/frontend/src/main.jsx                                       
+   A  app/brain-map/frontend/vite.config.js                                     
+   M  cortex/IMPLEMENTATION_PLAN.md                                             
+   M  workers/IMPLEMENTATION_PLAN.md                                            
+   M  workers/ralph/THUNK.md                                                    
+                                                                                
+                                                                                
+  ⬢ Called bash: 
+      • command: "git diff --cached TEMPLATE_DRIFT_REPORT.md | head -30"
+                                                                                
+                                                                                
+   diff --git a/TEMPLATE_DRIFT_REPORT.md b/TEMPLATE_DRIFT_REPORT.md             
+   index a7f58fe..a501ab4 100644                                                
+   --- a/TEMPLATE_DRIFT_REPORT.md                                               
+   +++ b/TEMPLATE_DRIFT_REPORT.md                                               
+   @@ -108,6 +108,7 @@ This affects ROOT calculation in loop.sh and             
+   verifier.sh.                                                                 
+    ### 4.1 Missing but Should Be Added (templates → current)                   
+                                                                                
+    **None identified.** Template files that are "missing" in current are       
+   either:                                                                      
+   +                                                                            
+    - Placeholder files (`.project.md`) that become instance files              
+   (10 lines truncated)                                                         
+   +                                                                            
+    - `DEFAULT_MAX_TURNS`: 25 → 15 (safer default)                              
+    - Added `MAX_CONTEXT_CHARS = 50000` (context management)                    
+    - Added `MAX_TOOL_RESULT_CHARS = 4000` (truncation)                         
+   @@ -157,6 +159,7 @@ This affects ROOT calculation in loop.sh and             
+   verifier.sh.                                                                 
+    #### D07: `current_ralph_tasks.sh`                                          
+                                                                                
+    **Changes in current:**                                                     
+   +                                                                            
+    - +94 lines of improved parsing logic                                       
+                                                                                
+                                                                                
+
+─── Response ───────────────────────────────────────────────────────────────────
+The TEMPLATE_DRIFT_REPORT.md changes are just formatting (blank lines added).
+This is acceptable. Let me verify the core changes are staged correctly.
+────────────────────────────────────────────────────────────────────────────────
+  ⬢ Called bash: 
+      • command: "git diff --cached workers/ralph/THUNK.md | tail -10"
+  ⬢ Called bash: 
+      • command: "git diff --cached workers/IMPLEMENTATION_PLAN.md | grep 
+\"25.1.1\""
+  ⬢ Called bash: 
+      • command: "git diff --cached .gitignore | tail -10"
+                                                                                
+                                                                                
+   diff --git a/workers/ralph/THUNK.md b/workers/ralph/THUNK.md                 
+   index 7721971..518334e 100644                                                
+   --- a/workers/ralph/THUNK.md                                                 
+   +++ b/workers/ralph/THUNK.md                                                 
+   @@ -849,3 +849,4 @@ Started: 2026-01-18                                      
+    | 913 | 22.9.1 | HIGH | **22.9.1** Fix MD055/MD056 in                       
+   workers/ralph/THUNK.md lines 815-828 - Fixed table pipe st...                
+    | 914 | 22.10.1-22.10.5 | HIGH | Fixed MD012 in                             
+   workers/IMPLEMENTATION_PLAN.md at 5 locations (lines 32, 111, 11...          
+    | 915 | 22.11.1 | HIGH | Fixed MD024 in workers/PLAN_DONE.md line 49 -      
+   Made all 4 duplicate "Archived on 2026-01...                                 
+   +| 916 | 25.1.1 | HIGH | Scaffolded Brain Map app workspace: created         
+   app/brain-map/{frontend,backend,notes,genera...                              
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+   -- [ ] **25.1.1** Scaffold Brain Map app workspace (frontend + backend       
+   skeleton)                                                                    
+   +- [x] **25.1.1** Scaffold Brain Map app workspace (frontend + backend       
+   skeleton)                                                                    
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+   index 33bc8c8..c2f0bce 100644                                                
+   --- a/.gitignore                                                             
+   +++ b/.gitignore                                                             
+   @@ -49,3 +49,6 @@ artifacts/rollflow_cache/test_cache.sqlite                 
+    **/rollflow_cache/cache.sqlite                                              
+    tools/rollflow_analyze/artifacts/rollflow_cache/cache.sqlite                
+    workers/ralph/artifacts/rollflow_cache/cache.sqlite                         
+   +                                                                            
+   +# Brain Map runtime (derived state, always regenerate)                      
+   +app/brain-map/.local/                                                       
+                                                                                
+                                                                                
+
+─── Response ───────────────────────────────────────────────────────────────────
+Perfect! All changes are staged correctly:
+
+ • ✅ THUNK.md entry added (task 916)
+ • ✅ IMPLEMENTATION_PLAN.md task marked complete
+ • ✅ .gitignore updated with app/brain-map/.local/
+ • ✅ Brain Map scaffolding files created
+
+Let me output the completion status.
+
+```
+STATUS | branch=main | runner=rovodev | 
+model=anthropic.claude-sonnet-4-5-20250929-v1:0
+
+PROGRESS | phase=build | step=completed_25.1.1 | tasks=1/1 | 
+file=app/brain-map/
+
+✅ Task 25.1.1 Complete: Scaffolded Brain Map app workspace
+
+Created:
+- app/brain-map/{frontend,backend,notes,generated}/ directories
+- FastAPI backend with /health endpoint (verified returns 200 OK)
+- Vite+React frontend (verified serves on port 5173)
+- Updated .gitignore to exclude app/brain-map/.local/
+
+Verification completed:
+- Backend: http://localhost:8000/health → 
+{"status":"ok","service":"brain-map-api","version":"0.1.0"}
+- Frontend: http://localhost:5173 → Vite dev server running
+
+All changes staged (loop.sh will commit at PLAN phase).
+
+:::BUILD_READY:::
+```
+────────────────────────────────────────────────────────────────────────────────Session context: ▮▮▮▮▮▮▮▮▮▮ 35.3K/200K
+
+
+Script done on 2026-01-27 03:29:36+02:00 [COMMAND_EXIT_CODE="0"]
+:::TOOL_END::: id=cb511282-d80b-4e8c-84c1-1d0984552cf8 result=PASS exit=0 duration_ms=209887 ts=2026-01-27T01:29:36Z
+:::VERIFIER_ENV::: iter=2 ts=1769477376 run_id=1769477376-3553
+:::PHASE_END::: iter=2 phase=build status=ok run_id=run-1769477081-3553 ts=1769477378494
+:::ITER_END::: iter=2 run_id=run-1769477081-3553 ts=1769477378592

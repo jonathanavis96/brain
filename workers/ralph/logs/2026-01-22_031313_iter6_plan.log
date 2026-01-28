@@ -1,0 +1,132 @@
+Script started on 2026-01-22 03:13:13+02:00 [COMMAND="cat "/tmp/rovodev_prompt_with_mode_10320_6.md" | acli rovodev run --config-file /tmp/rovodev_config_10320_1769043276.yml --yolo" TERM="xterm-256color" TTY="/dev/pts/7" COLUMNS="102" LINES="51"]
+]11;?\[6n[?25l[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠸[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠴[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠦[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠧[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠇[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠸[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠴[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠦[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠧[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠇[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠴[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠦[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠧[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠏[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠸[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠴[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠦[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠧[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠇[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠏[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+
+[?25h[1A[2K[1A[2KWorking in [1;32m/home/grafe/code/brain/workers/[0m[1;32mralph[0m
+
+[?2004h[?25l[32m✔[0m [90mLoaded memory from AGENTS.md[0m
+[32m⠋[0m [90mCreating agent...[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m✔[0m [90mUsing model: anthropic.claude-sonnet-[0m[1;90m4[0m[90m-[0m[1;90m5[0m[90m-[0m[1;90m20250929[0m[90m-v[0m[1;90m1:0[0m
+[32m⠋[0m [90mCreating agent...[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠋[0m [90mStarting MCP servers: 0/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠙[0m [90mStarting MCP servers: 0/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠹[0m [90mStarting MCP servers: 0/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠸[0m [90mStarting MCP servers: 0/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠼[0m [90mStarting MCP servers: 0/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠴[0m [90mStarting MCP servers: 0/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠦[0m [90mStarting MCP servers: 0/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠧[0m [90mStarting MCP servers: 0/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠇[0m [90mStarting MCP servers: 0/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠏[0m [90mStarting MCP servers: 0/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠋[0m [90mStarting MCP servers: 0/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠙[0m [90mStarting MCP servers: 0/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠹[0m [90mStarting MCP servers: 0/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠸[0m [90mStarting MCP servers: 0/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠼[0m [90mStarting MCP servers: 0/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠴[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠦[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠧[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠇[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+^C[2K[1A[2K[31m╭─[0m[31m Failed to start built-in MCP server [0m[31m─────────────────────────────────────────────────────────────[0m[31m─╮[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m│[0m Failed to start HTTP MCP server: atlassian (url: https://mcp.atlassian.com/v1/native/mcp)          [31m│[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m│[0m If you continue to see this error, please report it to the Rovo Dev team:                          [31m│[0m
+[31m│[0m [4;34mhttps://customerfeedback.atlassian.net/servicedesk/customer/portal/159/group/220/create/3002[0m       [31m│[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m│[0m Tools from this server will not be available.                                                      [31m│[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m╰────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m
+[32m⠏[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠏[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[31m╭─[0m[31m Failed to start built-in MCP server [0m[31m─────────────────────────────────────────────────────────────[0m[31m─╮[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m│[0m Failed to start HTTP MCP server: bitbucket (url: https://mcp.atlassian.com/v1/native/mcp)          [31m│[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m│[0m If you continue to see this error, please report it to the Rovo Dev team:                          [31m│[0m
+[31m│[0m [4;34mhttps://customerfeedback.atlassian.net/servicedesk/customer/portal/159/group/220/create/3002[0m       [31m│[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m│[0m Tools from this server will not be available.                                                      [31m│[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m╰────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m
+[32m⠏[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠋[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠙[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠹[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠸[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠼[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K
+[32m⠼[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+[33m⚠[0m Agent interrupted
+[2K[1A[2K[32m⠼[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to cancel)[0m
+
+[?25h[1A[2K[1A[2K^C^C[31m╭─[0m[31m Failed to start built-in MCP server [0m[31m─────────────────────────────────────────────────────────────[0m[31m─╮[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m│[0m Failed to start HTTP MCP server: atlassian (url: https://mcp.atlassian.com/v1/native/mcp)          [31m│[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m│[0m If you continue to see this error, please report it to the Rovo Dev team:                          [31m│[0m
+[31m│[0m [4;34mhttps://customerfeedback.atlassian.net/servicedesk/customer/portal/159/group/220/create/3002[0m       [31m│[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m│[0m Tools from this server will not be available.                                                      [31m│[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m╰────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m
+[31m╭─[0m[31m Failed to start built-in MCP server [0m[31m─────────────────────────────────────────────────────────────[0m[31m─╮[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m│[0m Failed to start HTTP MCP server: bitbucket (url: https://mcp.atlassian.com/v1/native/mcp)          [31m│[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m│[0m If you continue to see this error, please report it to the Rovo Dev team:                          [31m│[0m
+[31m│[0m [4;34mhttps://customerfeedback.atlassian.net/servicedesk/customer/portal/159/group/220/create/3002[0m       [31m│[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m│[0m Tools from this server will not be available.                                                      [31m│[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m╰────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m
+[31m╭─[0m[31m Failed to start built-in MCP server [0m[31m─────────────────────────────────────────────────────────────[0m[31m─╮[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m│[0m Failed to start STDIO MCP server: filesystem-tools (command:                                       [31m│[0m
+[31m│[0m /home/grafe/.local/share/acli/1.3.11-stable/plugin/r...                                            [31m│[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m│[0m If you continue to see this error, please report it to the Rovo Dev team:                          [31m│[0m
+[31m│[0m [4;34mhttps://customerfeedback.atlassian.net/servicedesk/customer/portal/159/group/220/create/3002[0m       [31m│[0m
+[31m│[0m                                                                                                    [31m│[0m
+[31m╰────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m
+[32m╭────────────────────────────────────────────────────────────────────────────────────────────────────╮[0m
+[32m│[0m To resume your session, restart Rovo Dev CLI with the --restore flag.                              [32m│[0m
+[32m╰────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m
+^C^C
+Script done on 2026-01-22 03:13:25+02:00 [COMMAND_EXIT_CODE="130"]

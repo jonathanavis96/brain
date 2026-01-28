@@ -1,0 +1,7 @@
+I'll start by checking the verifier status and then proceed with BUILD mode tasks.
+
+STATUS | branch=<branch> | runner=<rovodev|opencode> | model=<model>
+
+Let me check the verifier status and current implementation plan:```bash
+cat /home/grafe/code/brain/.verify/latest.txt
+```

@@ -1,0 +1,4 @@
+:::ITER_START::: iter=11 run_id=run-1769439765-13525 ts=1769441277086
+:::CACHE_CONFIG::: mode=use scope=verify,read exported=1 iter=11 ts=1769441277098
+:::CACHE_EFFECTIVE::: mode=OFF reason=staged_changes phase=plan dirty=staged iter=11 ts=1769441277103
+:::PHASE_START::: iter=11 phase=plan run_id=run-1769439765-13525 ts=1769441289143

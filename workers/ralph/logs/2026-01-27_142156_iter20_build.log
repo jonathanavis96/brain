@@ -1,0 +1,8 @@
+Script started on 2026-01-27 14:21:56+02:00 [COMMAND="cat "/tmp/rovodev_prompt_with_mode_31716_20.md" | acli rovodev run --config-file /tmp/rovodev_config_31716_1769514842.yml --yolo 2> >(bash /home/grafe/code/brain/workers/shared/filter_acli_errors.sh >&2)" TERM="xterm-256color" TTY="/dev/pts/10" COLUMNS="103" LINES="54"]
+]11;?\[6n[31m✗[0m Error: To get started, authenticate your Atlassian account:
+
+Script done on 2026-01-27 14:21:57+02:00 [COMMAND_EXIT_CODE="1"]
+:::TOOL_END::: id=2db722bb-c5a3-41f9-b701-b54a38cbc6e4 result=PASS exit=0 duration_ms=1018 ts=2026-01-27T12:21:57Z
+:::VERIFIER_ENV::: iter=20 ts=1769516517 run_id=1769516517-31716
+:::PHASE_END::: iter=20 phase=build status=ok run_id=run-1769514842-31716 ts=1769516519068
+:::ITER_END::: iter=20 run_id=run-1769514842-31716 ts=1769516519523

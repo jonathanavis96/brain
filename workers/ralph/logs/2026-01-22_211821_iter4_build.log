@@ -1,0 +1,5 @@
+STATUS | branch=<branch> | runner=<rovodev|opencode> | model=<model>
+
+PROGRESS | phase=build | step=check_verifier | tasks=0/0 | file=.verify/latest.txt
+
+Let me check the verifier status and implementation plan.cat .verify/latest.txt</arg_value>grep -n "^\[PASS\]\|\[FAIL\]\|\[WARN\]" .verify/latest.txt | head -20cat IMPLEMENTATION_PLAN.md | head -100tail -50 IMPLEMENTATION_PLAN.mdcat THUNK.md | tail -30git status --short</arg_value>git log --oneline -5git branch --show-currentpwd

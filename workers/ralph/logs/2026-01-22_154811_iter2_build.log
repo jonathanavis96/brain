@@ -1,0 +1,106 @@
+Script started on 2026-01-22 15:48:11+02:00 [COMMAND="cat "/tmp/rovodev_prompt_with_mode_3950_2.md" | acli rovodev run --config-file /tmp/rovodev_config_3950_1769089653.yml --yolo" TERM="xterm-256color" TTY="/dev/pts/1" COLUMNS="103" LINES="56"]
+]11;?\[6n[?25l[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠸[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠴[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠦[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠧[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠏[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠸[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠴[0m Loading Rovo Dev...
+^C[2K[1A[2K[32m⠦[0m Loading Rovo Dev...
+
+[?25h[1A[2K[1A[2KTraceback (most recent call last):
+  File "rovodev/__main__.py", line 3, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "rovodev/rovodev_cli.py", line 50, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "rovodev/commands/run/__init__.py", line 4, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "rovodev/commands/run/changelog.py", line 11, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "rovodev/commands/run/command_registry.py", line 69, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "nemo/agents/__init__.py", line 3, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "nemo/agents/acceptance_criteria_agent/agent.py", line 9, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "nemo/agent.py", line 11, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "nemo/constants.py", line 8, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "nautilus/__init__.py", line 15, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "nautilus/models/__init__.py", line 3, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "nautilus/models/workspace.py", line 7, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "autogen_ext/code_executors/docker/__init__.py", line 1, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "autogen_ext/code_executors/docker/_docker_code_executor.py", line 29, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "docker/__init__.py", line 1, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "docker/api/__init__.py", line 1, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 446, in exec_module
+  File "PyInstaller/loader/pyimod02_importers.py", line 383, in _check_name_wrapper
+  File "PyInstaller/loader/pyimod02_importers.py", line 503, in get_code
+  File "PyInstaller/loader/pyimod01_archive.py", line 131, in extract
+KeyboardInterrupt
+[PYI-5786:ERROR] Failed to execute script '__main__' due to unhandled exception!
+^C
+Script done on 2026-01-22 15:48:14+02:00 [COMMAND_EXIT_CODE="0"]

@@ -1,0 +1,246 @@
+Script started on 2026-01-23 20:46:46+02:00 [COMMAND="cat "/tmp/rovodev_prompt_with_mode_16610_9.md" | acli rovodev run --config-file /tmp/rovodev_config_16610_1769192473.yml --yolo" TERM="xterm-256color" TTY="/dev/pts/4" COLUMNS="45" LINES="56"]
+]11;?\[6n[?25l[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠸[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠴[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠦[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠧[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠏[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠸[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠴[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠦[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠧[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠏[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠴[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠦[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠧[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠇[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠏[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠸[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠴[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠦[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠧[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠇[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠏[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠋[0m Loading Rovo Dev...
+
+[?25h[1A[2K[1A[2KWorking in [1;32m/home/grafe/code/[0m[1;32mbrain[0m
+
+[31m───[0m[31m You've reached your Rovo Dev credit limi[0m[31m─[0m
+
+Your Rovo Dev usage resets in 29d 5h 33m. 
+Extra usage is not available on your 
+Standard trial. ]8;id=600263;https://admin.atlassian.com/billing/o/54af0614-f962-4263-a366-0b840467aaba/41e981e2-4983-4902-951c-ce1d80cb583f/entitlement/363acac8-2823-3c53-9577-56882f949278\[34mUpgrade plan[0m]8;;\
+
+[31m─────────────────────────────────────────────[0m
+[?2004h[?25l[32m✔[0m [90mLoaded memory from AGENTS.md[0m
+[32m⠋[0m [90mCreating agent...[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m✔[0m [90mUsing model: [0m
+[90manthropic.claude-sonnet-[0m[1;90m4[0m[90m-[0m[1;90m5[0m[90m-[0m[1;90m20250929[0m[90m-v[0m[1;90m1:0[0m
+[32m⠋[0m [90mCreating agent...[0m [2m(ctrl+c to cancel)[0m
+[2K[1A[2K[32m⠋[0m [90mStarting MCP servers: 0/3[0m [2m(ctrl+c to [0m
+[2mcancel)[0m
+[2K[1A[2K[1A[2K[32m⠙[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to [0m
+[2mcancel)[0m
+[2K[1A[2K[1A[2K[32m⠹[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to [0m
+[2mcancel)[0m
+[2K[1A[2K[1A[2K[32m⠸[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to [0m
+[2mcancel)[0m
+[2K[1A[2K[1A[2K[32m⠼[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to [0m
+[2mcancel)[0m
+[2K[1A[2K[1A[2K[32m⠴[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to [0m
+[2mcancel)[0m
+[2K[1A[2K[1A[2K[32m⠦[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to [0m
+[2mcancel)[0m
+[2K[1A[2K[1A[2K[32m⠧[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to [0m
+[2mcancel)[0m
+[2K[1A[2K[1A[2K[32m⠇[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to [0m
+[2mcancel)[0m
+[2K[1A[2K[1A[2K[32m⠏[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to [0m
+[2mcancel)[0m
+[2K[1A[2K[1A[2K[32m⠋[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to [0m
+[2mcancel)[0m
+[2K[1A[2K[1A[2K[32m⠙[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to [0m
+[2mcancel)[0m
+[2K[1A[2K[1A[2K[32m⠹[0m [90mStarting MCP servers: 1/3[0m [2m(ctrl+c to [0m
+[2mcancel)[0m
+[2K[1A[2K[1A[2K[32m✔[0m [90mStarted [0m[1;90m3[0m[90m MCP servers[0m
+  [2K  
+[?25h[1A[2KSession termination failed: 404
+[?25l
+[2m─────────────────────────────────────────────[0m
+[32mRovo Dev is working[0m[32m.  [0m  [2mctrl+c to interrupt[0m
+[2m─────────────────────────────────────────────[0m[2K[1A[2K[1A[2K[1A[2K
+[2m─────────────────────────────────────────────[0m
+[32mRovo Dev is thinking[0m[32m.  [0m [2mctrl+c to interrupt[0m
+[2m─────────────────────────────────────────────[0m[2K[1A[2K[1A[2K[1A[2K
+[2m─────────────────────────────────────────────[0m
+[32mRovo Dev is thinking[0m[32m.  [0m [2mctrl+c to interrupt[0m
+[2m─────────────────────────────────────────────[0m[2K[1A[2K[1A[2K[1A[2K
+[2m─────────────────────────────────────────────[0m
+[32mRovo Dev is thinking[0m[32m.. [0m [2mctrl+c to interrupt[0m
+[2m─────────────────────────────────────────────[0m[2K[1A[2K[1A[2K[1A[2K
+[2m─────────────────────────────────────────────[0m
+[32mRovo Dev is thinking[0m[32m...[0m [2mctrl+c to interrupt[0m
+[2m─────────────────────────────────────────────[0m[2K[1A[2K[1A[2K[1A[2K
+[2m─────────────────────────────────────────────[0m
+[32mRovo Dev is thinking[0m[32m   [0m [2mctrl+c to interrupt[0m
+[2m─────────────────────────────────────────────[0m^C[2K[1A[2K[1A[2K[1A[2K
+[?25h[?25l
+[32m⣾[0m Interrupting... ctrl+c again to force[2K[1A[2K
+[32m⣾[0m Interrupting... ctrl+c again to force
+[?25h[1A[2K[1A[2K^C^Cunhandled exception during asyncio.run() shutdown
+task: <Task finished name='Task-113' coro=<MCPServerMixin.__aexit__() done, defined at nemo/utils/mcp.py:145> exception=RuntimeError('Attempted to exit cancel scope in a different task than it was entered in')>
+Traceback (most recent call last):
+  File "asyncio/runners.py", line 195, in run
+  File "asyncio/runners.py", line 118, in run
+  File "asyncio/base_events.py", line 678, in run_until_complete
+  File "asyncio/base_events.py", line 645, in run_forever
+  File "asyncio/base_events.py", line 1961, in _run_once
+  File "selectors.py", line 468, in select
+  File "asyncio/runners.py", line 157, in _on_sigint
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "anyio/_backends/_asyncio.py", line 776, in __aexit__
+  File "mcp/client/stdio/__init__.py", line 184, in stdio_client
+  File "anyio/abc/_resources.py", line 29, in __aexit__
+  File "anyio/_backends/_asyncio.py", line 1074, in aclose
+  File "anyio/_backends/_asyncio.py", line 1082, in wait
+  File "asyncio/subprocess.py", line 137, in wait
+  File "asyncio/base_subprocess.py", line 230, in _wait
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "nemo/utils/mcp.py", line 152, in __aexit__
+  File "pydantic_ai/mcp.py", line 652, in __aexit__
+  File "contextlib.py", line 696, in aclose
+  File "contextlib.py", line 754, in __aexit__
+  File "contextlib.py", line 737, in __aexit__
+  File "contextlib.py", line 231, in __aexit__
+  File "nemo/utils/mcp.py", line 425, in client_streams
+  File "contextlib.py", line 231, in __aexit__
+  File "mcp/client/stdio/__init__.py", line 183, in stdio_client
+  File "anyio/_backends/_asyncio.py", line 778, in __aexit__
+  File "anyio/_backends/_asyncio.py", line 457, in __exit__
+RuntimeError: Attempted to exit cancel scope in a different task than it was entered in
+unhandled exception during asyncio.run() shutdown
+task: <Task finished name='Task-112' coro=<MCPServerMixin.__aexit__() done, defined at nemo/utils/mcp.py:145> exception=RuntimeError('Attempted to exit cancel scope in a different task than it was entered in')>
+Traceback (most recent call last):
+  File "asyncio/runners.py", line 195, in run
+  File "asyncio/runners.py", line 118, in run
+  File "asyncio/base_events.py", line 678, in run_until_complete
+  File "asyncio/base_events.py", line 645, in run_forever
+  File "asyncio/base_events.py", line 1961, in _run_once
+  File "selectors.py", line 468, in select
+  File "asyncio/runners.py", line 157, in _on_sigint
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "anyio/_backends/_asyncio.py", line 776, in __aexit__
+  File "mcp/client/stdio/__init__.py", line 184, in stdio_client
+  File "anyio/abc/_resources.py", line 29, in __aexit__
+  File "anyio/_backends/_asyncio.py", line 1074, in aclose
+  File "anyio/_backends/_asyncio.py", line 1082, in wait
+  File "asyncio/subprocess.py", line 137, in wait
+  File "asyncio/base_subprocess.py", line 230, in _wait
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "nemo/utils/mcp.py", line 152, in __aexit__
+  File "pydantic_ai/mcp.py", line 652, in __aexit__
+  File "contextlib.py", line 696, in aclose
+  File "contextlib.py", line 754, in __aexit__
+  File "contextlib.py", line 737, in __aexit__
+  File "contextlib.py", line 231, in __aexit__
+  File "nemo/utils/mcp.py", line 425, in client_streams
+  File "contextlib.py", line 231, in __aexit__
+  File "mcp/client/stdio/__init__.py", line 183, in stdio_client
+  File "anyio/_backends/_asyncio.py", line 778, in __aexit__
+  File "anyio/_backends/_asyncio.py", line 457, in __exit__
+RuntimeError: Attempted to exit cancel scope in a different task than it was entered in
+
+[33m⚠[0m Agent interrupted
+^C
+[33m⚠[0m Agent interrupted
+^CException ignored in: <function WeakSet.__init__.<locals>._remove at 0x7658c2a45260>
+Traceback (most recent call last):
+  File "_weakrefset.py", line 39, in _remove
+KeyboardInterrupt: 
+^C
+[33m⚠[0m Agent interrupted
+^C
+[33m⚠[0m Agent interrupted
+^C
+[33m⚠[0m Agent interrupted
+^C
+[33m⚠[0m Agent interrupted
+^C
+[33m⚠[0m Agent interrupted
+^C[31m───[0m[31m Failed to start built-in MCP server [0m[31m────[0m[31m─[0m
+
+Failed to start STDIO MCP server: atlassian
+(command: 
+/home/grafe/.local/share/acli/1.3.11-stable
+/plugin/rovodev/...
+
+If you continue to see this error, please 
+report it to the Rovo Dev team: 
+[4;34mhttps://customerfeedback.atlassian.net/serv[0m
+[4;34micedesk/customer/portal/159/group/220/creat[0m
+[4;34me/3002[0m
+
+Tools from this server will not be 
+available.
+
+[31m─────────────────────────────────────────────[0m
+[31m───[0m[31m Failed to start built-in MCP server [0m[31m────[0m[31m─[0m
+
+Failed to start STDIO MCP server: 
+filesystem-tools (command: 
+/home/grafe/.local/share/acli/1.3.11-stable
+/plugin/r...
+
+If you continue to see this error, please 
+report it to the Rovo Dev team: 
+[4;34mhttps://customerfeedback.atlassian.net/serv[0m
+[4;34micedesk/customer/portal/159/group/220/creat[0m
+[4;34me/3002[0m
+
+[31m─────────────────────────────────────────────[0m
+[32m─────────────────────────────────────────────[0m
+To resume your session, restart Rovo Dev 
+CLI with the --restore flag.
+[32m─────────────────────────────────────────────[0m
+^CException ignored in: <module 'threading' from '/home/grafe/.local/share/acli/1.3.11-stable/plugin/rovodev/lib/threading.py'>
+Traceback (most recent call last):
+  File "threading.py", line 1594, in _shutdown
+  File "concurrent/futures/thread.py", line 31, in _python_exit
+  File "threading.py", line 1149, in join
+  File "threading.py", line 1169, in _wait_for_tstate_lock
+KeyboardInterrupt: 
+^C^C
+Script done on 2026-01-23 20:47:04+02:00 [COMMAND_EXIT_CODE="130"]

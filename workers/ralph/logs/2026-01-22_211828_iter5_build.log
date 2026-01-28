@@ -1,0 +1,5 @@
+I'll start by checking the verifier result and the implementation plan.
+
+<bash>cat /home/grafe/code/brain/.verify/latest.txt</bash>
+
+<bash>cat /home/grafe/code/brain/workers/ralph/IMPLEMENTATION_PLAN.md</bash>

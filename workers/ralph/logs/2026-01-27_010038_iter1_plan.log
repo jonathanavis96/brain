@@ -1,0 +1,8 @@
+Script started on 2026-01-27 01:00:38+02:00 [COMMAND="cat "/tmp/rovodev_prompt_with_mode_7595_1.md" | acli rovodev run --config-file /tmp/rovodev_config_7595_1769468434.yml --yolo 2>&1 | bash ../shared/filter_acli_errors.sh" <not executed on terminal>]
+bash: ../shared/filter_acli_errors.sh: No such file or directory
+
+Script done on 2026-01-27 01:00:43+02:00 [COMMAND_EXIT_CODE="127"]
+:::TOOL_END::: id=8be941d1-1df4-4a71-ae11-8350381929a7 result=PASS exit=0 duration_ms=5502 ts=2026-01-26T23:00:43Z
+:::VERIFIER_ENV::: iter=1 ts=1769468443 run_id=1769468443-7595
+:::PHASE_END::: iter=1 phase=plan status=ok run_id=run-1769468434-7595 ts=1769468445637
+:::ITER_END::: iter=1 run_id=run-1769468434-7595 ts=1769468445656

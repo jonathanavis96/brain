@@ -1,0 +1,90 @@
+Script started on 2026-01-25 15:47:55+02:00 [COMMAND="cat "/tmp/rovodev_prompt_with_mode_5140_76.md" | acli rovodev run --config-file /tmp/rovodev_config_5140_1769332227.yml --yolo" TERM="xterm-256color" TTY="/dev/pts/4" COLUMNS="103" LINES="56"]
+]11;?\[6n[?25l[32m⠋[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠙[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠹[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠸[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠼[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠴[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠦[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠧[0m Loading Rovo Dev...
+[2K[1A[2K[32m⠇[0m Loading Rovo Dev...
+^C[2K[1A[2K[32m⠋[0m Loading Rovo Dev...
+
+[?25h[1A[2K[1A[2KTraceback (most recent call last):
+  File "rovodev/__main__.py", line 3, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "rovodev/rovodev_cli.py", line 50, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "rovodev/commands/run/__init__.py", line 4, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "rovodev/commands/run/changelog.py", line 11, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "rovodev/commands/run/command_registry.py", line 69, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "nemo/agents/__init__.py", line 3, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "nemo/agents/acceptance_criteria_agent/agent.py", line 9, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "nemo/agent.py", line 8, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "pydantic_ai/models/google.py", line 55, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "google/genai/__init__.py", line 18, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "PyInstaller/loader/pyimod02_importers.py", line 457, in exec_module
+  File "google/genai/types.py", line 16803, in <module>
+  File "pydantic/_internal/_model_construction.py", line 252, in __new__
+  File "pydantic/_internal/_model_construction.py", line 642, in complete_model_class
+  File "pydantic/_internal/_generate_schema.py", line 724, in generate_schema
+  File "pydantic/_internal/_generate_schema.py", line 1018, in _generate_schema_inner
+  File "pydantic/_internal/_generate_schema.py", line 851, in _model_schema
+  File "pydantic/_internal/_generate_schema.py", line 1222, in _generate_md_field_schema
+  File "pydantic/_internal/_generate_schema.py", line 1273, in _common_field_schema
+  File "pydantic/_internal/_generate_schema.py", line 2202, in _apply_annotations
+  File "pydantic/_internal/_schema_generation_shared.py", line 83, in __call__
+  File "pydantic/_internal/_generate_schema.py", line 2181, in inner_handler
+  File "pydantic/_internal/_generate_schema.py", line 1023, in _generate_schema_inner
+  File "pydantic/_internal/_generate_schema.py", line 1139, in match_type
+  File "pydantic/_internal/_generate_schema.py", line 1162, in _match_generic_type
+  File "pydantic/_internal/_generate_schema.py", line 1330, in _union_schema
+  File "pydantic/_internal/_generate_schema.py", line 724, in generate_schema
+  File "pydantic/_internal/_generate_schema.py", line 1023, in _generate_schema_inner
+  File "pydantic/_internal/_generate_schema.py", line 1139, in match_type
+  File "pydantic/_internal/_generate_schema.py", line 1166, in _match_generic_type
+  File "pydantic/_internal/_generate_schema.py", line 379, in _list_schema
+  File "pydantic/_internal/_generate_schema.py", line 732, in generate_schema
+  File "pydantic/_internal/_generate_schema.py", line 292, in _add_custom_serialization_from_json_encoders
+KeyboardInterrupt
+[PYI-12956:ERROR] Failed to execute script '__main__' due to unhandled exception!
+^C
+Script done on 2026-01-25 15:47:58+02:00 [COMMAND_EXIT_CODE="130"]
+::TOOL_CALL_END:: id=2f4aba58-f26b-4e03-9462-6838bc0efcd8 status=PASS exit=0 duration_ms=2512

@@ -1,0 +1,5 @@
+Script started on 2026-01-28 11:39:15+02:00 [COMMAND="cat "/tmp/rovodev_prompt_with_mode_22365_2.md" | acli rovodev run --config-file /tmp/rovodev_config_22365_1769593121.yml --yolo 2> >(bash /home/grafe/code/brain/workers/shared/filter_acli_errors.sh >&2)" TERM="xterm-256color" TTY="/dev/pts/10" COLUMNS="103" LINES="54"]
+]11;?\[6n^C^C
+Script done on 2026-01-28 11:39:15+02:00 [COMMAND_EXIT_CODE="130"]
+:::TOOL_END::: id=ae925c1e-d05c-4e19-902a-a12dedcee1d6 result=PASS exit=0 duration_ms=506 ts=2026-01-28T09:39:15Z
+:::VERIFIER_ENV::: iter=2 ts=1769593155 run_id=1769593155-22365

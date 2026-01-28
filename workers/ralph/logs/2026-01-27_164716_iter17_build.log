@@ -1,0 +1,9 @@
+:::ITER_START::: iter=17 run_id=run-1769523424-23639 ts=1769525236255
+:::CACHE_CONFIG::: mode=use scope=verify,read exported=1 iter=17 ts=1769525236268
+:::CACHE_EFFECTIVE::: mode=OFF reason=pending_tasks phase=build dirty=staged iter=17 ts=1769525236275
+:::TOOL_START::: id=10e682dc-e697-4f3b-a8dd-1e3ee33d2c6f tool=fix-markdown cache_key=fix-markdown|7a0eac2 git_sha=7a0eac2 ts=2026-01-27T14:47:16Z
+:::TOOL_END::: id=10e682dc-e697-4f3b-a8dd-1e3ee33d2c6f result=PASS exit=0 duration_ms=10591 ts=2026-01-27T14:47:26Z
+:::TOOL_START::: id=fd178ec9-600b-433f-8215-46ef38568271 tool=pre-commit cache_key=pre-commit|7a0eac2 git_sha=7a0eac2 ts=2026-01-27T14:47:26Z
+:::TOOL_END::: id=fd178ec9-600b-433f-8215-46ef38568271 result=PASS exit=0 duration_ms=4249 ts=2026-01-27T14:47:31Z
+:::TOOL_START::: id=31755857-70b1-4dd5-ada8-8be5e7a736c4 tool=verifier cache_key=verifier-pre-build|7a0eac2 git_sha=7a0eac2 ts=2026-01-27T14:47:31Z
+:::TOOL_END::: id=31755857-70b1-4dd5-ada8-8be5e7a736c4 result=FAIL exit=130 duration_ms=278 reason=interrupted ts=2026-01-27T14:47:31Z

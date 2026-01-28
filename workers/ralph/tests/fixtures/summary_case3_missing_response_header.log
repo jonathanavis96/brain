@@ -1,0 +1,6 @@
+STATUS | branch=main | runner=rovodev | model=auto
+PROGRESS | phase=build | step=missing-header | tasks=0/1 | file=workers/ralph/loop.sh
+Summary:
+- Fallback to STATUS header when response header missing
+- Ensured marker extraction still works
+:::BUILD_READY:::

@@ -1,0 +1,5 @@
+:::ITER_START::: iter=3 run_id=run-1769549597-11964 ts=1769549868719
+:::CACHE_CONFIG::: mode=use scope=verify,read exported=1 iter=3 ts=1769549868732
+:::CACHE_EFFECTIVE::: mode=OFF reason=pending_tasks phase=build dirty=staged iter=3 ts=1769549868738
+:::TOOL_START::: id=f9c8b98b-4371-47ce-93f9-62911920aab0 tool=fix-markdown cache_key=fix-markdown|f4769e3 git_sha=f4769e3 ts=2026-01-27T21:37:48Z
+:::TOOL_END::: id=f9c8b98b-4371-47ce-93f9-62911920aab0 result=FAIL exit=130 duration_ms=1959 reason=interrupted ts=2026-01-27T21:37:50Z

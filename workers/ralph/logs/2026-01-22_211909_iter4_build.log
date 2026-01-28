@@ -1,0 +1,9 @@
+STATUS | branch=<unknown> | runner=<unknown> | model=<unknown>
+
+PROGRESS | phase=build | step=check_verifier | tasks=0/0 | file=.verify/latest.txt
+
+Let me check the verifier status and implementation plan.I'll start by checking the verifier status and then look at the implementation plan.
+
+```bash
+cat .verify/latest.txt
+```
