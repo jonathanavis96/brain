@@ -166,13 +166,13 @@ You're succeeding when:
 
 ## Communication with Ralph
 
-Ralph syncs tasks from `cortex/IMPLEMENTATION_PLAN.md` automatically (via `sync_cortex_plan.sh` at loop.sh startup).
+Ralph syncs tasks from `cortex/IMPLEMENTATION_PLAN.md` automatically (via `sync_workers_plan_to_cortex.sh` at loop.sh startup).
 
 **Your tasks → Ralph's working copy:**
 
 ```text
 cortex/IMPLEMENTATION_PLAN.md
-    ↓ (synced by sync_cortex_plan.sh)
+    ↓ (copied by sync_workers_plan_to_cortex.sh)
 IMPLEMENTATION_PLAN.md (Ralph's copy)
     ↓ (Ralph executes)
 THUNK.md (completion log)

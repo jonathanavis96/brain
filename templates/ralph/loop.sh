@@ -2072,9 +2072,9 @@ else
       fi
 
       # Sync tasks from Cortex before PLAN mode
-      if [[ -f "$RALPH/sync_cortex_plan.sh" ]]; then
+      if [[ -f "$RALPH/sync_workers_plan_to_cortex.sh" ]]; then
         echo "Syncing tasks from Cortex..."
-        if (cd "$RALPH" && bash sync_cortex_plan.sh) 2>&1; then
+        if (cd "$RALPH" && bash sync_workers_plan_to_cortex.sh) 2>&1; then
           echo "✓ Cortex sync complete"
         else
           echo "⚠ Cortex sync failed (non-blocking)"
@@ -2186,9 +2186,9 @@ else
       fi
 
       # Sync completions back to Cortex after BUILD iterations
-      if [[ -f "$RALPH/sync_completions_to_cortex.sh" ]]; then
+      if false; then # DEPRECATED: no completions sync in this repo/template
         echo "Syncing completions to Cortex..."
-        if (cd "$RALPH" && bash sync_completions_to_cortex.sh) 2>&1; then
+        if false; then
           echo "✓ Completions synced to Cortex"
         else
           echo "⚠ Completions sync failed (non-blocking)"

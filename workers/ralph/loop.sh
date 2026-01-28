@@ -1902,7 +1902,7 @@ echo ""
 if [[ -x "$ROOT/bin/discord-post" ]]; then
   pending_count=$(grep -c '^\- \[ \]' "$ROOT/workers/IMPLEMENTATION_PLAN.md" 2>/dev/null || echo "0")
   "$ROOT/bin/discord-post" "**Ralph Loop Starting** 🚀
-Iterations: ${MAX_ITERATIONS}
+Iterations: ${ITERATIONS}
 Mode: PLAN → BUILD cycling
 Branch: $(git branch --show-current)
 Pending tasks: ${pending_count}" >/dev/null 2>&1 &
@@ -1932,9 +1932,9 @@ fi
 trap 'cleanup_and_emit' EXIT
 
 # Sync workers plan to cortex (one-time at start)
-if [[ -f "$RALPH/sync_cortex_plan.sh" ]]; then
+if [[ -f "$RALPH/sync_workers_plan_to_cortex.sh" ]]; then
   echo "Syncing plan to cortex..."
-  if (cd "$RALPH" && bash sync_cortex_plan.sh) 2>&1; then
+  if (cd "$RALPH" && bash sync_workers_plan_to_cortex.sh) 2>&1; then
     echo "✓ Plan sync complete"
   else
     echo "⚠ Plan sync failed (non-blocking)"
@@ -2352,16 +2352,8 @@ else
         emit_marker ":::PHASE_END::: iter=$i phase=build status=fail code=$run_result run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts"
       fi
 
-      # Sync completions back to Cortex after BUILD iterations
-      if [[ -f "$RALPH/sync_completions_to_cortex.sh" ]]; then
-        echo "Syncing completions to Cortex..."
-        if (cd "$RALPH" && bash sync_completions_to_cortex.sh) 2>&1; then
-          echo "✓ Completions synced to Cortex"
-        else
-          echo "⚠ Completions sync failed (non-blocking)"
-        fi
-        echo ""
-      fi
+      # NOTE: This repository does not sync completions back into cortex.
+      # Completion tracking is handled under workers/ (workers/PLAN_DONE.md and workers/ralph/THUNK.md).
     fi
 
     # Plan drift detection: compare snapshot vs current plan

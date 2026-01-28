@@ -78,14 +78,14 @@ Add these tasks to `workers/IMPLEMENTATION_PLAN.md` AFTER Phase 0-Sync:
 User should manually:
 
 1. **DELETE Phase 0-Sync** from `../rovo/ralph/IMPLEMENTATION_PLAN.md`
-   - Reason: That's a brain repository task (sync_cortex_plan.sh for brain/workers/ralph)
+   - Reason: That's a brain repository task (sync_workers_plan_to_cortex.sh for brain/workers/ralph)
    - Rovo doesn't need it
 
 2. **KEEP Phase 0-P1** (login retry logic fix) in `../rovo/ralph/IMPLEMENTATION_PLAN.md`
    - Reason: That IS a rovo-specific task (fixes create_account.sh)
 
 3. **ADD Phase 0-Window tasks** from `../rovo/cortex/IMPLEMENTATION_PLAN.md` (after Brain Ralph completes 0-R.3)
-   - These will be synced automatically once sync_cortex_plan.sh exists
+   - These will be synced automatically once sync_workers_plan_to_cortex.sh exists
    - Or manually copy for now
 
 ---

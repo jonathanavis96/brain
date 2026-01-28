@@ -107,65 +107,165 @@ if [[ -n "$orphaned_entries" ]]; then
   echo ""
 fi
 
-# Collect completed tasks for archiving
-archived_tasks=()
-current_date=$(date '+%Y-%m-%d')
-current_time=$(date '+%H:%M:%S')
-current_phase=""
+# Helpers
+is_task_line() {
+  # Matches task IDs like: **1.2**, **34.1.3**, **0.L.1**, etc.
+  echo "$1" | grep -qE '^[[:space:]]*-[[:space:]]*\[[xX \?]\][[:space:]]+\*\*[0-9]+(\.[0-9A-Za-z]+)+'
+}
+
+is_completed_task_line() {
+  echo "$1" | grep -qE '^[[:space:]]*-[[:space:]]*\[[xX]\][[:space:]]+\*\*'
+}
+
+is_heading_line() {
+  echo "$1" | grep -qE '^(#{1,6})[[:space:]]+'
+}
+
+extract_task_id() {
+  echo "$1" | sed -E 's/^[[:space:]]*-[[:space:]]*\[[xX \?]\][[:space:]]*\*\*([^*]+)\*\*.*/\1/'
+}
+
+# Guardrail: enforce task-contract format for pending tasks.
+# Each pending task must have Goal/AC/If Blocked sub-items before the next task/heading.
+missing_contract=""
+current_task_id=""
+need_goal="false"
+need_ac="false"
+need_if_blocked="false"
 
 while IFS= read -r line; do
-  # Track current phase
-  if echo "$line" | grep -qE '^##[[:space:]]+Phase'; then
-    current_phase=$(echo "$line" | sed -E 's/^##[[:space:]]+//')
+  if is_task_line "$line"; then
+    # finalize previous pending task check
+    if [[ -n "$current_task_id" ]]; then
+      if [[ "$need_goal" == "true" || "$need_ac" == "true" || "$need_if_blocked" == "true" ]]; then
+        missing_contract+="$current_task_id\n"
+      fi
+    fi
+
+    if echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\[[[:space:]]\]'; then
+      current_task_id="$(extract_task_id "$line")"
+      need_goal="true"
+      need_ac="true"
+      need_if_blocked="true"
+    else
+      current_task_id="" # completed/[?] tasks not enforced here
+      need_goal="false"
+      need_ac="false"
+      need_if_blocked="false"
+    fi
+    continue
   fi
 
-  # Collect completed tasks
-  if echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\[[xX]\]'; then
-    task_id=$(echo "$line" | sed -E 's/^[[:space:]]*-[[:space:]]*\[[xX]\][[:space:]]*\*\*([^*]+)\*\*.*/\1/' || echo "unknown")
-    archived_tasks+=("| $current_date | $task_id | $line |")
+  if [[ -n "$current_task_id" ]]; then
+    if echo "$line" | grep -qE '^[[:space:]]+-[[:space:]]+\*\*Goal:\*\*'; then
+      need_goal="false"
+    elif echo "$line" | grep -qE '^[[:space:]]+-[[:space:]]+\*\*AC:\*\*'; then
+      need_ac="false"
+    elif echo "$line" | grep -qE '^[[:space:]]+-[[:space:]]+\*\*If Blocked:\*\*'; then
+      need_if_blocked="false"
+    fi
   fi
+
 done <"$PLAN_FILE"
 
-if [[ ${#archived_tasks[@]} -eq 0 ]]; then
+# finalize last pending task check
+if [[ -n "$current_task_id" ]]; then
+  if [[ "$need_goal" == "true" || "$need_ac" == "true" || "$need_if_blocked" == "true" ]]; then
+    missing_contract+="$current_task_id\n"
+  fi
+fi
+
+if [[ -n "$missing_contract" ]]; then
+  echo ""
+  echo "ERROR: Some pending tasks are missing required sub-items (**Goal**, **AC**, **If Blocked**):" >&2
+  echo -e "$missing_contract" | sed '/^$/d' | head -25 | sed 's/^/  - /' >&2
+  echo "" >&2
+  echo "Fix: Reformat tasks to the contract style:" >&2
+  echo "  - [ ] **X.Y** Description" >&2
+  echo "    - **Goal:** ..." >&2
+  echo "    - **AC:** ..." >&2
+  echo "    - **If Blocked:** ..." >&2
+  exit 1
+fi
+
+# Collect completed task blocks for archiving
+archived_task_ids=()
+archived_task_blocks=()
+current_date=$(date '+%Y-%m-%d')
+current_time=$(date '+%H:%M:%S')
+
+# Read whole file so we can capture blocks
+mapfile -t plan_lines <"$PLAN_FILE"
+
+for ((i=0; i<${#plan_lines[@]}; i++)); do
+  line="${plan_lines[$i]}"
+
+  if is_completed_task_line "$line"; then
+    task_id="$(extract_task_id "$line")"
+
+    # Capture the block until the next task line or heading line
+    block="$line"
+    j=$((i+1))
+    while [[ $j -lt ${#plan_lines[@]} ]]; do
+      next="${plan_lines[$j]}"
+      if is_task_line "$next" || is_heading_line "$next"; then
+        break
+      fi
+      block+=$'\n'"$next"
+      j=$((j+1))
+    done
+
+    archived_task_ids+=("$task_id")
+    archived_task_blocks+=("$block")
+  fi
+done
+
+if [[ ${#archived_task_ids[@]} -eq 0 ]]; then
   echo "No completed tasks to archive."
   exit 0
 fi
 
-echo "Found ${#archived_tasks[@]} completed tasks to archive."
+echo "Found ${#archived_task_ids[@]} completed tasks to archive."
 
 if [[ "$DRY_RUN" == "true" ]]; then
   echo ""
-  echo "Would archive:"
-  for task in "${archived_tasks[@]}"; do
-    echo "  $task"
+  echo "Would archive task blocks (IDs):"
+  for task_id in "${archived_task_ids[@]}"; do
+    echo "  - $task_id"
   done
   echo ""
   echo "Run without --dry-run to apply changes."
   exit 0
 fi
 
-# Archive tasks to PLAN_DONE.md (with deduplication)
-# Read existing task IDs into memory before writing
-existing_task_ids=$(grep -o '|[[:space:]]*[^|]*[[:space:]]*|[[:space:]]*[^|]*[[:space:]]*|' "$ARCHIVE_FILE" | awk -F'|' '{print $3}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' || true)
+# Archive task blocks to PLAN_DONE.md (with deduplication on Task ID)
+existing_task_ids=$(grep -oE '\|[[:space:]]*[^|]*[[:space:]]*\|[[:space:]]*[^|]*[[:space:]]*\|' "$ARCHIVE_FILE" | awk -F'|' '{print $3}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' || true)
 
 {
   echo ""
   echo "### Archived on $current_date $current_time"
   echo ""
-  echo "| Date | Task ID | Description |"
-  echo "|------|---------|-------------|"
-  for task in "${archived_tasks[@]}"; do
-    # Extract task ID from the task string (format: | date | task_id | description |)
-    task_id=$(echo "$task" | awk -F'|' '{print $3}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+  for ((k=0; k<${#archived_task_ids[@]}; k++)); do
+    task_id="${archived_task_ids[$k]}"
+    block="${archived_task_blocks[$k]}"
 
-    # Check if task_id already exists in the pre-read list
-    if ! echo "$existing_task_ids" | grep -qFx "$task_id"; then
-      echo "$task"
+    if echo "$existing_task_ids" | grep -qFx "$task_id"; then
+      continue
     fi
+
+    echo "- [x] **$task_id**"
+    echo "  - **Archived From:** workers/IMPLEMENTATION_PLAN.md"
+    echo "  - **Archived At:** $current_date $current_time"
+    echo "  - **Block:**"
+    echo ""
+    echo "```markdown"
+    echo "$block"
+    echo "```"
+    echo ""
   done
 } >>"$ARCHIVE_FILE"
 
-echo "Archived ${#archived_tasks[@]} tasks to PLAN_DONE.md"
+echo "Archived ${#archived_task_ids[@]} tasks to PLAN_DONE.md"
 
 # Now remove completed tasks and empty phases from IMPLEMENTATION_PLAN.md
 temp_file=$(mktemp)
@@ -213,28 +313,29 @@ while IFS= read -r line; do
     continue
   fi
 
-  # Detect new task (pending or completed) - resets sub-item skipping
-  if echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\['; then
+  # Detect new task (pending or completed)
+  if is_task_line "$line"; then
     # Check if this is a completed task
-    if echo "$line" | grep -qE '^[[:space:]]*-[[:space:]]*\[[xX]\]'; then
+    if is_completed_task_line "$line"; then
       removed_count=$((removed_count + 1))
-      skip_task_subitems=true # Skip following indented sub-items
-    else
-      skip_task_subitems=false # Pending task - keep its sub-items
-      echo "$line" >>"$temp_file"
+      skip_task_subitems=true
+      continue
     fi
+
+    # Pending or [?] task - keep it
+    skip_task_subitems=false
+    echo "$line" >>"$temp_file"
     continue
   fi
 
-  # Skip indented sub-items of completed tasks
-  # Sub-items are indented lines starting with "- **" (e.g., "  - **Goal:**")
+  # Skip all lines that belong to a completed task block, but only until we hit a new task/heading.
   if [[ "$skip_task_subitems" == "true" ]]; then
-    if echo "$line" | grep -qE '^[[:space:]]+'; then
-      # Indented line - skip it (belongs to completed task)
-      continue
-    else
-      # Non-indented line - stop skipping (new section or blank line between tasks)
+    if is_heading_line "$line" || is_task_line "$line"; then
+      # This is the start of a new logical section; stop skipping and re-process on next loop.
       skip_task_subitems=false
+      # fall through to normal handling of this line
+    else
+      continue
     fi
   fi
 

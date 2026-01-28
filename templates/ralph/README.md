@@ -10,7 +10,7 @@ This directory contains template files for bootstrapping new Ralph worker instan
 - **verifier.sh** - Acceptance criteria validation
 - **current_ralph_tasks.sh** - Real-time task monitor (pending tasks)
 - **thunk_ralph_tasks.sh** - Real-time task monitor (completed tasks log)
-- **sync_cortex_plan.sh** - Sync tasks from Cortex to Ralph IMPLEMENTATION_PLAN.md
+- **sync_workers_plan_to_cortex.sh** - Copy workers plan to cortex for review/visibility
 - **pr-batch.sh** - Batch PR creation script
 - **init_verifier_baselines.sh** - Initialize verifier baseline hashes
 
@@ -37,7 +37,7 @@ This directory contains template files for bootstrapping new Ralph worker instan
 - `verifier.sh` - Core verification logic
 - `current_ralph_tasks.sh` - Monitor display (Phase detection may differ)
 - `thunk_ralph_tasks.sh` - Monitor display
-- `sync_cortex_plan.sh` - Cortex integration
+- `sync_workers_plan_to_cortex.sh` - Copy workers plan to cortex for review/visibility
 - `pr-batch.sh` - PR automation
 - `init_verifier_baselines.sh` - Baseline initialization
 
@@ -47,7 +47,7 @@ This directory contains template files for bootstrapping new Ralph worker instan
   - Cache library integration (`source ../shared/cache.sh`)
   - Verifier state injection into BUILD mode prompts (lines 881-892)
   - Auto-fix integration (`fix-markdown.sh`, `pre-commit`) (lines 921-930)
-  - Cortex sync triggers (`sync_cortex_plan.sh`) (lines 935-945)
+  - Cortex copy triggers (`sync_workers_plan_to_cortex.sh`) (lines 935-945)
   - Cache configuration flags (`--cache-skip`, `--force-no-cache`, `--cache-mode`, `--cache-scope`)
   - Enhanced cleanup trap handling
   - ITER_START/ITER_END event markers for RollFlow analysis
@@ -62,7 +62,7 @@ This directory contains template files for bootstrapping new Ralph worker instan
 - `fix-markdown.sh` - Markdown auto-fix script (brain-specific tooling)
 - `ralph.sh` - Brain repository convenience wrapper
 - `new-project.sh` - Project bootstrapping (already at repo root)
-- `sync_completions_to_cortex.sh` - Brain-to-Cortex sync (brain-specific)
+- `sync_completions_to_cortex.sh` - Deprecated (no longer used)
 
 ## Why Template Drift Exists
 
