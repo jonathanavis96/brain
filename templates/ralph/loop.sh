@@ -529,6 +529,7 @@ fi
 MODEL_SONNET_45="anthropic.claude-sonnet-4-5-20250929-v1:0"
 MODEL_OPUS_45="anthropic.claude-opus-4-5-20251101-v1:0"
 MODEL_SONNET_4="anthropic.claude-sonnet-4-20250514-v1:0"
+MODEL_GPT52_CODEX="gpt-5.2-codex"
 
 # Resolve model shortcut to full model ID
 resolve_model() {
@@ -542,6 +543,9 @@ resolve_model() {
       ;;
     sonnet4)
       echo "$MODEL_SONNET_4"
+      ;;
+    gpt52 | codex | gpt-5.2 | gpt5.2)
+      echo "$MODEL_GPT52_CODEX"
       ;;
     latest | auto)
       # Use system default - don't override config
@@ -590,7 +594,7 @@ if [[ -z "$MODEL_ARG" ]]; then
   if [[ "$RUNNER" == "opencode" ]]; then
     MODEL_ARG="grok" # Default for OpenCode
   else
-    MODEL_ARG="sonnet" # Default for RovoDev
+    MODEL_ARG="gpt52" # Default for RovoDev (GPT-5.2-Codex)
   fi
 fi
 
@@ -1021,8 +1025,9 @@ EOF
   summary_count=$(echo "$summary_lines" | wc -l)
 
   # Extract from last "Summary" to :::BUILD_READY::: or :::PLAN_READY::: or EOF
+  # Strip ANSI color codes for Discord
   local summary_block
-  summary_block=$(sed -n "${last_summary_line},\$p" "$logfile" | sed '/:::\(BUILD\|PLAN\)_READY:::/q')
+  summary_block=$(sed -n "${last_summary_line},\$p" "$logfile" | sed '/:::\(BUILD\|PLAN\)_READY:::/q' | sed $'s/\x1b\[[0-9;]*m//g')
 
   # Output structured summary with header
   cat <<EOF

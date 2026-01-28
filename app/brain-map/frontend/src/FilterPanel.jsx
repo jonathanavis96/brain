@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 
 const METRIC_OPTIONS = [
   { value: 'recency', label: 'Recency Heat', description: 'Recently modified files' },
@@ -19,6 +19,9 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
     risk: '',
     booleanMode: 'AND' // 'AND' or 'OR'
   })
+  const [savedViews, setSavedViews] = useState([])
+  const [viewName, setViewName] = useState('')
+  const [showSaveDialog, setShowSaveDialog] = useState(false)
 
   // Calculate hotspots based on selected metric
   useEffect(() => {
@@ -45,6 +48,18 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
 
     setHotspots(nodesWithMetric)
   }, [graphData, selectedMetric, topN])
+
+  // Load saved views from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem('brainmap_saved_views')
+    if (stored) {
+      try {
+        setSavedViews(JSON.parse(stored))
+      } catch (e) {
+        console.error('Failed to parse saved views:', e)
+      }
+    }
+  }, [])
 
   // Sync filters with URL query params on mount
   useEffect(() => {
@@ -95,6 +110,36 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
     })
   }
 
+  const handleSaveView = () => {
+    if (!viewName.trim()) {
+      alert('Please enter a view name')
+      return
+    }
+
+    const newView = {
+      id: Date.now().toString(),
+      name: viewName.trim(),
+      filters: { ...filters },
+      createdAt: new Date().toISOString()
+    }
+
+    const updatedViews = [...savedViews, newView]
+    setSavedViews(updatedViews)
+    localStorage.setItem('brainmap_saved_views', JSON.stringify(updatedViews))
+    setViewName('')
+    setShowSaveDialog(false)
+  }
+
+  const handleLoadView = (view) => {
+    setFilters(view.filters)
+  }
+
+  const handleDeleteView = (viewId) => {
+    const updatedViews = savedViews.filter(v => v.id !== viewId)
+    setSavedViews(updatedViews)
+    localStorage.setItem('brainmap_saved_views', JSON.stringify(updatedViews))
+  }
+
   const handleRemoveChip = (field) => {
     setFilters(prev => ({
       ...prev,
@@ -116,6 +161,73 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
 
   const activeChips = getActiveChips()
 
+  // Calculate filter preview count
+  const previewCount = useMemo(() => {
+    if (!graphData?.nodes) return 0
+
+    const booleanMode = filters.booleanMode || 'AND'
+
+    return graphData.nodes.filter(node => {
+      const checks = []
+
+      // Type filter
+      if (filters.type) {
+        checks.push(node.type && node.type.toLowerCase() === filters.type.toLowerCase())
+      }
+
+      // Status filter
+      if (filters.status) {
+        checks.push(node.status && node.status.toLowerCase() === filters.status.toLowerCase())
+      }
+
+      // Tags filter (comma-separated OR logic within tags)
+      if (filters.tags) {
+        const filterTags = filters.tags.split(',').map(t => t.trim().toLowerCase())
+        const nodeTags = (node.tags || []).map(t => t.toLowerCase())
+        const hasAnyTag = filterTags.some(ft => nodeTags.includes(ft))
+        checks.push(hasAnyTag)
+      }
+
+      // Recency filter
+      if (filters.recency && filters.recency !== 'all') {
+        const now = Date.now()
+        const recencyMs = {
+          '7d': 7 * 24 * 60 * 60 * 1000,
+          '30d': 30 * 24 * 60 * 60 * 1000,
+          '90d': 90 * 24 * 60 * 60 * 1000
+        }
+        const threshold = recencyMs[filters.recency]
+        if (threshold && node.updated_at) {
+          const nodeTime = new Date(node.updated_at).getTime()
+          checks.push(now - nodeTime <= threshold)
+        } else {
+          checks.push(false)
+        }
+      }
+
+      // Priority filter
+      if (filters.priority) {
+        checks.push(node.priority && node.priority === filters.priority)
+      }
+
+      // Risk filter
+      if (filters.risk) {
+        checks.push(node.risk && node.risk.toLowerCase() === filters.risk.toLowerCase())
+      }
+
+      // Apply boolean logic
+      if (checks.length === 0) return true // No filters = show all
+
+      if (booleanMode === 'OR') {
+        // OR: at least one check must pass
+        return checks.some(check => check === true)
+      } else {
+        // AND: all checks must pass
+        return checks.every(check => check === true)
+      }
+    }).length
+  }, [graphData, filters])
+
   if (!visible) return null
 
   return (
@@ -128,19 +240,172 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <h3 style={{ margin: 0 }}>Filters</h3>
-        <button
-          onClick={handleReset}
-          style={{
-            padding: '4px 8px',
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            background: '#fff',
-            cursor: 'pointer',
-            fontSize: '12px'
-          }}
-        >
-          Reset
-        </button>
+        <div style={{ display: 'flex', gap: '4px' }}>
+          <button
+            onClick={() => setShowSaveDialog(true)}
+            style={{
+              padding: '4px 8px',
+              border: '1px solid #2196f3',
+              borderRadius: '4px',
+              background: '#2196f3',
+              color: '#fff',
+              cursor: 'pointer',
+              fontSize: '12px'
+            }}
+          >
+            Save View
+          </button>
+          <button
+            onClick={handleReset}
+            style={{
+              padding: '4px 8px',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              background: '#fff',
+              cursor: 'pointer',
+              fontSize: '12px'
+            }}
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+
+      {/* Save View Dialog */}
+      {showSaveDialog && (
+        <div style={{
+          marginBottom: '1rem',
+          padding: '0.75rem',
+          background: '#fff',
+          border: '1px solid #2196f3',
+          borderRadius: '4px'
+        }}>
+          <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '14px' }}>Save Current View</h4>
+          <input
+            type="text"
+            value={viewName}
+            onChange={(e) => setViewName(e.target.value)}
+            placeholder="Enter view name..."
+            style={{
+              width: '100%',
+              padding: '0.5rem',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              fontSize: '14px',
+              marginBottom: '0.5rem'
+            }}
+          />
+          <div style={{ display: 'flex', gap: '4px', justifyContent: 'flex-end' }}>
+            <button
+              onClick={() => {
+                setShowSaveDialog(false)
+                setViewName('')
+              }}
+              style={{
+                padding: '4px 8px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                background: '#fff',
+                cursor: 'pointer',
+                fontSize: '12px'
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSaveView}
+              style={{
+                padding: '4px 8px',
+                border: '1px solid #2196f3',
+                borderRadius: '4px',
+                background: '#2196f3',
+                color: '#fff',
+                cursor: 'pointer',
+                fontSize: '12px'
+              }}
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Saved Views List */}
+      {savedViews.length > 0 && (
+        <div style={{ marginBottom: '1rem' }}>
+          <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '14px', fontWeight: 'bold' }}>Saved Views</h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            {savedViews.map(view => (
+              <div
+                key={view.id}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '0.5rem',
+                  background: '#fff',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px'
+                }}
+              >
+                <button
+                  onClick={() => handleLoadView(view)}
+                  style={{
+                    flex: 1,
+                    textAlign: 'left',
+                    padding: '0',
+                    border: 'none',
+                    background: 'transparent',
+                    cursor: 'pointer',
+                    fontSize: '13px',
+                    color: '#2196f3'
+                  }}
+                >
+                  {view.name}
+                </button>
+                <button
+                  onClick={() => handleDeleteView(view.id)}
+                  style={{
+                    padding: '2px 6px',
+                    border: '1px solid #f44336',
+                    borderRadius: '4px',
+                    background: '#fff',
+                    color: '#f44336',
+                    cursor: 'pointer',
+                    fontSize: '11px'
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Filter Preview Count */}
+      <div style={{
+        marginBottom: '1rem',
+        padding: '0.75rem',
+        background: activeChips.length > 0 ? '#e3f2fd' : '#f5f5f5',
+        border: `1px solid ${activeChips.length > 0 ? '#2196f3' : '#ddd'}`,
+        borderRadius: '4px',
+        textAlign: 'center'
+      }}>
+        <div style={{
+          fontSize: '24px',
+          fontWeight: 'bold',
+          color: activeChips.length > 0 ? '#1976d2' : '#666',
+          marginBottom: '4px'
+        }}>
+          {previewCount}
+        </div>
+        <div style={{
+          fontSize: '12px',
+          color: '#666'
+        }}>
+          {previewCount === 1 ? 'node matches' : 'nodes match'}
+        </div>
       </div>
 
       {/* Boolean Logic Mode Toggle */}

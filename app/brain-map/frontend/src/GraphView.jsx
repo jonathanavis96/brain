@@ -179,6 +179,9 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
   const [contextMenu, setContextMenu] = useState(null) // { nodeId, x, y, nodeData }
   const [pathFinderMode, setPathFinderMode] = useState({ active: false, startNode: null, endNode: null }) // Path finder state
   const [pathHighlight, setPathHighlight] = useState({ active: false, path: [] }) // Path highlighting state
+  const [timelineFilter, setTimelineFilter] = useState({ active: false, selectedDate: null, minDate: null, maxDate: null }) // Timeline scrubber state
+  const [isPlaying, setIsPlaying] = useState(false) // Play animation state
+  const playIntervalRef = useRef(null) // Store interval ID for cleanup
   const longPressTimerRef = useRef(null)
 
   // Derive showClusters from zoomLevel - only changes when threshold is crossed
@@ -206,14 +209,34 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
       })
   }, [onGraphDataLoad])
 
-  // Client-side filtering with AND/OR logic
+  // Calculate timeline date range from graph data
+  useEffect(() => {
+    if (!graphData) return
+
+    const dates = graphData.nodes
+      .map(node => node.created_at ? new Date(node.created_at).getTime() : null)
+      .filter(d => d !== null)
+
+    if (dates.length > 0) {
+      const minDate = Math.min(...dates)
+      const maxDate = Math.max(...dates)
+      setTimelineFilter(prev => ({
+        ...prev,
+        minDate,
+        maxDate,
+        selectedDate: prev.selectedDate || maxDate // Default to latest
+      }))
+    }
+  }, [graphData])
+
+  // Client-side filtering with AND/OR logic + timeline filter
   useEffect(() => {
     if (!graphData) return
 
     // If no filters are active, show all data
     const hasActiveFilters = filters?.type || filters?.status || filters?.tags ||
                              (filters?.recency && filters.recency !== 'all') ||
-                             filters?.priority || filters?.risk
+                             filters?.priority || filters?.risk || timelineFilter.active
 
     if (!hasActiveFilters) {
       setFilteredData(graphData)
@@ -222,9 +245,17 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
 
     const booleanMode = filters?.booleanMode || 'AND'
 
-    // Filter nodes based on boolean logic
+    // Filter nodes based on boolean logic + timeline
     const filteredNodes = graphData.nodes.filter(node => {
       const checks = []
+
+      // Timeline filter (always AND - must be created before selected date)
+      if (timelineFilter.active && timelineFilter.selectedDate && node.created_at) {
+        const nodeDate = new Date(node.created_at).getTime()
+        if (nodeDate > timelineFilter.selectedDate) {
+          return false // Hard filter - node created after selected date
+        }
+      }
 
       // Type filter
       if (filters?.type) {
@@ -291,7 +322,53 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
       nodes: filteredNodes,
       edges: filteredEdges
     })
-  }, [graphData, filters])
+  }, [graphData, filters, timelineFilter.active, timelineFilter.selectedDate])
+
+  // Play animation effect - auto-advance timeline scrubber
+  useEffect(() => {
+    if (isPlaying && timelineFilter.active && timelineFilter.minDate && timelineFilter.maxDate) {
+      const oneWeek = 7 * 24 * 60 * 60 * 1000 // 1 week in milliseconds
+      const totalDuration = timelineFilter.maxDate - timelineFilter.minDate
+      const numWeeks = Math.ceil(totalDuration / oneWeek)
+      const stepDuration = 1000 // 1 second per week
+
+      playIntervalRef.current = setInterval(() => {
+        setTimelineFilter(prev => {
+          const currentDate = prev.selectedDate || prev.minDate
+          const nextDate = currentDate + oneWeek
+
+          if (nextDate >= prev.maxDate) {
+            // Animation complete - stop at maxDate
+            setIsPlaying(false)
+            return { ...prev, selectedDate: prev.maxDate }
+          }
+
+          return { ...prev, selectedDate: nextDate }
+        })
+      }, stepDuration)
+
+      // Cleanup interval on unmount or when playing stops
+      return () => {
+        if (playIntervalRef.current) {
+          clearInterval(playIntervalRef.current)
+          playIntervalRef.current = null
+        }
+      }
+    } else {
+      // Clear interval if playing stops
+      if (playIntervalRef.current) {
+        clearInterval(playIntervalRef.current)
+        playIntervalRef.current = null
+      }
+    }
+  }, [isPlaying, timelineFilter.active, timelineFilter.minDate, timelineFilter.maxDate])
+
+  // Stop playing when timeline is deactivated
+  useEffect(() => {
+    if (!timelineFilter.active && isPlaying) {
+      setIsPlaying(false)
+    }
+  }, [timelineFilter.active, isPlaying])
 
   // Compute clusters when data changes
   useEffect(() => {
@@ -992,7 +1069,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
   }
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '600px' }}>
+    <div style={{ position: 'relative', width: '100%', height: '600px' }} data-graph-container>
       <div ref={containerRef} style={{ width: '100%', height: '100%', background: '#fff' }} />
       {linkMode.active && linkMode.previewLine && sigmaRef.current && (
         <svg
@@ -1247,6 +1324,132 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
           {layoutLocked ? '🔒 Locked' : '🔓 Auto'}
         </button>
       </div>
+
+      {/* Timeline Scrubber */}
+      {timelineFilter.minDate && timelineFilter.maxDate && (
+        <div style={{
+          position: 'absolute',
+          bottom: '50px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: 'rgba(255,255,255,0.95)',
+          padding: '12px 20px',
+          borderRadius: '8px',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+          minWidth: '400px',
+          maxWidth: '600px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px'
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '4px'
+          }}>
+            <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#333' }}>
+              Timeline Filter
+            </span>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <button
+                onClick={() => {
+                  if (timelineFilter.active) {
+                    // Toggle play/pause
+                    if (isPlaying) {
+                      setIsPlaying(false)
+                    } else {
+                      // Reset to start if at end
+                      if (timelineFilter.selectedDate >= timelineFilter.maxDate) {
+                        setTimelineFilter(prev => ({ ...prev, selectedDate: prev.minDate }))
+                      }
+                      setIsPlaying(true)
+                    }
+                  }
+                }}
+                style={{
+                  padding: '4px 12px',
+                  borderRadius: '4px',
+                  border: 'none',
+                  cursor: timelineFilter.active ? 'pointer' : 'not-allowed',
+                  fontSize: '12px',
+                  fontWeight: 'bold',
+                  background: timelineFilter.active ? (isPlaying ? '#FF5722' : '#2196F3') : '#ccc',
+                  color: '#fff',
+                  transition: 'background 0.3s',
+                  opacity: timelineFilter.active ? 1 : 0.5
+                }}
+                disabled={!timelineFilter.active}
+                title={timelineFilter.active ? (isPlaying ? 'Pause animation' : 'Play animation (1 sec/week)') : 'Enable timeline first'}
+              >
+                {isPlaying ? '⏸ Pause' : '▶ Play'}
+              </button>
+              <button
+                onClick={() => {
+                  setTimelineFilter(prev => ({ ...prev, active: !prev.active }))
+                  if (isPlaying) setIsPlaying(false) // Stop playing when disabling
+                }}
+                style={{
+                  background: timelineFilter.active ? '#4CAF50' : '#999',
+                  color: 'white',
+                  border: 'none',
+                  padding: '4px 12px',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold'
+                }}
+                title={timelineFilter.active ? 'Disable timeline filter' : 'Enable timeline filter'}
+              >
+                {timelineFilter.active ? 'ON' : 'OFF'}
+              </button>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <input
+              type="range"
+              min={timelineFilter.minDate}
+              max={timelineFilter.maxDate}
+              value={timelineFilter.selectedDate || timelineFilter.maxDate}
+              onChange={(e) => {
+                const newDate = parseInt(e.target.value)
+                setTimelineFilter(prev => ({ ...prev, selectedDate: newDate }))
+              }}
+              style={{
+                width: '100%',
+                cursor: 'pointer',
+                accentColor: '#2196F3'
+              }}
+              disabled={!timelineFilter.active}
+            />
+
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              fontSize: '11px',
+              color: '#666'
+            }}>
+              <span>{new Date(timelineFilter.minDate).toLocaleDateString()}</span>
+              <span style={{ fontWeight: 'bold', color: timelineFilter.active ? '#2196F3' : '#999' }}>
+                {timelineFilter.selectedDate ? new Date(timelineFilter.selectedDate).toLocaleDateString() : 'All time'}
+              </span>
+              <span>{new Date(timelineFilter.maxDate).toLocaleDateString()}</span>
+            </div>
+          </div>
+
+          <div style={{
+            fontSize: '11px',
+            color: '#666',
+            textAlign: 'center',
+            marginTop: '2px'
+          }}>
+            {timelineFilter.active
+              ? `Showing nodes created on or before ${new Date(timelineFilter.selectedDate || timelineFilter.maxDate).toLocaleDateString()}`
+              : 'Timeline filter disabled - showing all nodes'}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
