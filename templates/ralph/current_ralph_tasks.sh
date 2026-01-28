@@ -133,8 +133,12 @@ extract_tasks() {
     fi
 
     # Detect Archive sections - these terminate the current task section
-    # Matches: "### Archive", "## Archive", or "## Era" (THUNK.md format)
-    if [[ "$line_upper" =~ ARCHIVE ]] || [[ "$line" =~ ^##[[:space:]]+Era[[:space:]]+ ]]; then
+    # IMPORTANT: Only treat *headings* as archive markers.
+    # Do NOT trigger on bullet lines containing words like "Archived on ...".
+    # Matches: "### Archive", "## Archive", "## Archived", or "## Era" (THUNK.md format)
+    if [[ "$line" =~ ^###[[:space:]]*(Archive|Archived) ]] || \
+       [[ "$line" =~ ^##[[:space:]]*(Archive|Archived) ]] || \
+       [[ "$line" =~ ^##[[:space:]]+Era[[:space:]]+ ]]; then
       in_task_section=false
       continue
     fi

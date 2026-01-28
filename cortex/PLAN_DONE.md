@@ -426,31 +426,31 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-28 | 33.4.1 | - [x] **33.4.1** Add "Present" button - Enters full-screen mode, hides UI panels, shows graph + navigation controls only. AC: Presentation mode toggles. Verification: Click Present → full-screen graph. If Blocked: Just hide sidebars (not true full-screen) |
 | 2026-01-28 | 33.4.2 | - [x] **33.4.2** Keyboard navigation - Arrow keys navigate between connected nodes (follow edges), space bar zooms to focused node. AC: Keyboard nav works. Verification: Press Right → moves to connected node. If Blocked: Click-only navigation |
 
-### Archived on 2026-01-28 (Batch 1)
+### Archived on 2026-01-28 (Batch 1 - Empty)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
 
-### Archived on 2026-01-28 (Batch 3)
+### Archived on 2026-01-28 (Batch 3 - MD012 Fixes)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
 | 2026-01-28 | 0.W.MD012.workers/PLAN_DONE.md | - [x] **0.W.MD012.workers/PLAN_DONE.md** Fix MD012 in workers/PLAN_DONE.md |
 
-### Archived on 2026-01-28 (Lint Fixes)
+### Archived on 2026-01-28 (Lint Fixes - MD004)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
 | 2026-01-28 | 0-Lint.1.1 | - [x] **0-Lint.1.1** Fix MD004/ul-style errors in cortex/docs/MindMerge_MindMerge-PR.md |
 | 2026-01-28 | 36.1.2 | - [x] **36.1.2** Remove hover/zoom label duplication by matching default placement and ensuring hover "upgrades" the same label |
 
-### Archived on 2026-01-28 (Ad-hoc 1)
+### Archived on 2026-01-28 (Ad-hoc 1 - MD004 Fix)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
 | 2026-01-28 | 0.1.1 | - [x] **0.1.1** Fix MD004 in cortex/docs/MindMerge_MindMerge-PR.md |
 
-### Archived on 2026-01-28 (Ad-hoc 2)
+### Archived on 2026-01-28 (Ad-hoc 2 - Multiple Warnings)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
@@ -475,7 +475,7 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-28 | 37.4.2 | - [x] **37.4.2** Add/extend a check to catch out-of-workspace brain references in templates |
 | 2026-01-28 | 38.1.1 | - [x] **38.1.1** Inventory duplicated topics and pick canonical docs |
 
-### Archived on 2026-01-28 (Batch 7)
+### Archived on 2026-01-28 (Batch 7 - Documentation Cleanup)
 
 | Date | Task ID | Description |
 |------|---------|-------------|

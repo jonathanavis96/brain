@@ -44,6 +44,28 @@ Ralph uses two complementary monitors for real-time task tracking:
 **Current Ralph Tasks:** `bash current_ralph_tasks.sh` - Shows pending tasks from workers/IMPLEMENTATION_PLAN.md  
 **THUNK Monitor:** `bash thunk_ralph_tasks.sh` - Shows completed task log from workers/ralph/THUNK.md
 
+### Rule: Interactive monitors must not be piped
+
+`current_ralph_tasks.sh` and `thunk_ralph_tasks.sh` are **interactive, continuously-refreshing** monitors.
+
+- **Never run them in a pipeline** (e.g. `... | grep ...` or `... | sed ...`). Doing so can leave background processes running and interfere with the Ralph loop/terminal state.
+- For non-interactive debugging/snapshots, **always wrap with `timeout`**:
+
+```bash
+# Safe snapshot (auto-exits)
+timeout 2s bash current_ralph_tasks.sh --hide-completed
+
+timeout 2s bash thunk_ralph_tasks.sh
+```
+
+- If you suspect you left a monitor running, kill it with:
+
+```bash
+pgrep -af 'current_ralph_tasks\.sh|thunk_ralph_tasks\.sh'
+pkill -f 'bash .*current_ralph_tasks\.sh' || true
+pkill -f 'bash .*thunk_ralph_tasks\.sh' || true
+```
+
 See README.md for detailed monitor features and hotkeys.
 
 ## Loop Stop Sentinel

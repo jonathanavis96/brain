@@ -23,38 +23,30 @@
 
 ---
 
-## Phase 0-Warn: Verifier Warnings
+## Phase 0-Warn: Markdown Lint Errors
 
-- [ ] **0-Warn.MD024.cortex-PLAN_DONE.454** Fix MD024 duplicate heading in cortex/PLAN_DONE.md line 454
-  - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Archived on 2026-01-28"]`
-  - **Fix:** Make duplicate "Archived on 2026-01-28" headings unique (e.g., add time or sequence number)
-  - **AC:** `markdownlint cortex/PLAN_DONE.md` passes (no MD024 errors)
+**Context:** The following markdown errors could NOT be auto-fixed and require manual intervention.
 
----
+**Goal:** Fix all remaining markdown lint errors to maintain documentation quality.
 
-### Task 38.1: Identify duplication + contradictions
-
-### Task 38.2: Simplify entrypoints ("Start Here")
-
-### Task 38.3: Prune or demote historical docs
-
-### Task 38.4: Cross-link consistency + naming conventions
-
-#### Task 38.3 Implementation Details
-
-- [ ] **38.3.2** Merge or remove duplicate runbooks
-  - **Goal:** Ensure there is one operational runbook per role (Cortex vs Ralph) and links point to the right one.
-  - **AC:** `cortex/docs/RUNBOOK.md` and `workers/ralph/README.md` do not contain overlapping “how to run” instructions; one links to the other where appropriate.
-  - **If Blocked:** Add a “Canonical runbook is X” note at the top of the non-canonical file.
+**Success Criteria:** `markdownlint <file>` passes with no errors for each affected file.
 
 ---
 
-#### Task 38.4 Implementation Details
+- [ ] **WARN.MD001.TEMPLATE_DRIFT_REPORT** Fix MD001/heading-increment in artifacts/reports/TEMPLATE_DRIFT_REPORT.md:245
+  - **Issue:** Heading levels should only increment by one level at a time [Expected: h3; Actual: h4]
+  - **Location:** Line 245 - "#### 3.4 `PROMPT.md` Path Adjustments"
+  - **AC:** `markdownlint artifacts/reports/TEMPLATE_DRIFT_REPORT.md` passes (no MD001 errors)
 
-- [ ] **38.4.2** Add/refresh "See also" sections on major docs
-  - **Goal:** Improve navigation without duplicating content.
-  - **AC:** Major docs (`docs/TOOLS.md`, `docs/BOOTSTRAPPING.md`, `skills/SUMMARY.md`, `NEURONS.md`, `cortex/docs/RUNBOOK.md`) include a small “See also” list to related canonical docs.
-  - **If Blocked:** Add “See also” only to `docs/TOOLS.md` and `docs/BOOTSTRAPPING.md` first.
+- [ ] **WARN.MD032.CORTEX_SYSTEM_PROMPT** Fix MD032/blanks-around-lists in cortex/CORTEX_SYSTEM_PROMPT.md:10
+  - **Issue:** Lists should be surrounded by blank lines
+  - **Location:** Line 10 - bullet list not properly separated
+  - **AC:** `markdownlint cortex/CORTEX_SYSTEM_PROMPT.md` passes (no MD032 errors)
+
+- [ ] **WARN.MD022.CORTEX_SYSTEM_PROMPT** Fix MD022/blanks-around-headings in cortex/CORTEX_SYSTEM_PROMPT.md:11
+  - **Issue:** Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above]
+  - **Location:** Line 11 - "## Responsibilities" heading
+  - **AC:** `markdownlint cortex/CORTEX_SYSTEM_PROMPT.md` passes (no MD022 errors)
 
 ---
 
@@ -75,39 +67,7 @@
 
 ### Task 35.1: Skills Review & Updates
 
-- [ ] **35.1.1** Review `skills/self-improvement/GAP_BACKLOG.md` entries
-  - **Goal:** Ensure all P1/P2 backlog items are triaged into a clear state.
-  - **AC:** Every P1/P2 entry has an explicit status (Promoted/Archived/Keep), and there are no undecided entries older than 30 days.
-  - **If Blocked:** Flag ambiguous entries with `[?]` and add a short note describing what decision is needed.
-
-- [ ] **35.1.2** Update code-quality skills
-  - **Goal:** Incorporate recent learnings (semantic review patterns, bulk-edit best practices).
-  - **AC:** `skills/domains/code-quality/*.md` is updated to reflect current practices, and the section reads coherently end-to-end.
-  - **If Blocked:** Add a TODO stub section noting what evidence/examples are needed to finish the update.
-
-- [ ] **35.1.3** Enhance Ralph operational patterns
-  - **Goal:** Document PLAN-mode governance rules, THUNK tracking patterns, and discovery-defer rules.
-  - **AC:** `skills/domains/ralph/*.md` covers all `loop.sh` modes and the missing operational patterns.
-  - **If Blocked:** Capture gaps in `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` and link them from the relevant Ralph skill doc.
-
-- [ ] **35.1.4** Frontend skills expansion
-  - **Goal:** Add practical frontend patterns for web projects (React/Vue component patterns, state management).
-  - **AC:** Frontend domain contains 5+ skill docs, and `ls skills/domains/frontend/*.md` reflects the growth.
-  - **If Blocked:** Start with a single “frontend patterns index” doc listing planned subtopics.
-
----
-
 ### Task 35.2: Template Maintenance
-
-- [ ] **35.2.1** Audit template drift
-  - **Goal:** Identify differences between `templates/ralph/` and `workers/ralph/` that should be reconciled.
-  - **AC:** A drift report is generated and differences are documented in `TEMPLATE_DRIFT_REPORT.md`.
-  - **If Blocked:** Document partial findings and explicitly list paths that could not be compared.
-
-- [ ] **35.2.2** Sync beneficial features
-  - **Goal:** Propagate general-purpose improvements from workers to templates where appropriate.
-  - **AC:** Templates are updated; `git diff` shows relevant `templates/` changes.
-  - **If Blocked:** Split into smaller follow-up tasks grouped by area (scripts/docs/verifier ergonomics).
 
 - [ ] **35.2.3** Update bootstrap scripts
   - **Goal:** Ensure `new-project.sh` and `setup.sh` match the latest recommended patterns.
@@ -139,4 +99,3 @@
   - **If Blocked:** Add a short “needs review” section with the specific missing items.
 
 ### Archive - 2026-01-28 21:21
-

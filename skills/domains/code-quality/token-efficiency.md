@@ -27,11 +27,12 @@ Minimize tool calls per iteration to save tokens and time. Target: <20 tool call
 
 | Trap | Seen | Fix |
 | ------ | ------ | ----- |
-| Reading `.verify/latest.txt` multiple times | 64x | Read ONCE at start, cache result |
+| Reading `.verify/latest.txt` multiple times | 64x | Verifier status injected in header - never read file |
 | Running `pwd`/`git branch` repeatedly | 38x | Known from header - never run |
 | Checking `tail workers/ralph/THUNK.md` multiple times | 22x | Get next number ONCE |
 | Same grep pattern on different calls | 100+ | Combine: `grep pattern file1 file2 file3` |
 | Checking same file repeatedly | 80+ | Read ONCE, remember content |
+| Opening large plan files at startup | 45+ | Use grep then slice, never open full file |
 
 ---
 

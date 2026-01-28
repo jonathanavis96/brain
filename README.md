@@ -84,7 +84,7 @@ Cortex plans → Ralph builds → Brain improves → Your projects benefit.
 - **[docs/TOOLS.md](docs/TOOLS.md)** - Available tools and utilities
 - **[docs/BOOTSTRAPPING.md](docs/BOOTSTRAPPING.md)** - Create new projects from templates
 - **[skills/SUMMARY.md](skills/SUMMARY.md)** - Skills overview and error quick reference
-- **[workers/workers/IMPLEMENTATION_PLAN.md](workers/IMPLEMENTATION_PLAN.md)** - Current work plan and task backlog
+- **[workers/IMPLEMENTATION_PLAN.md](workers/IMPLEMENTATION_PLAN.md)** - Current work plan and task backlog
 
 **Contributing?** See [CONTRIBUTING.md](CONTRIBUTING.md) for workflow and conventions.
 
