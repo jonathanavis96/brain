@@ -777,10 +777,17 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
           return
         }
 
-        // Regular drag in locked mode
+        // Regular drag in locked mode ONLY
+        // AC 36.2.2: In locked mode, dragging is purely positional (no layout forces)
+        // In auto mode, node dragging is disabled entirely
         if (layoutLocked) {
           dragStateRef.current.isDragging = true
           dragStateRef.current.draggedNode = e.node
+
+          // Stop layout/physics during drag to prevent other nodes from moving
+          if (layoutRef.current) {
+            layoutRef.current.stop()
+          }
         }
       })
 
@@ -836,11 +843,12 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
         }
 
         // Handle regular node dragging in locked mode
+        // AC 36.2.2: Dragging guard - only update position, no layout forces applied
         if (layoutLocked && dragStateRef.current.isDragging && dragStateRef.current.draggedNode) {
           // Get mouse position in graph coordinates
           const pos = sigma.viewportToGraph(e)
 
-          // Update node position
+          // Update node position ONLY (purely positional, no simulation)
           graph.setNodeAttribute(dragStateRef.current.draggedNode, 'x', pos.x)
           graph.setNodeAttribute(dragStateRef.current.draggedNode, 'y', pos.y)
 
@@ -1037,6 +1045,10 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
 
           dragStateRef.current.isDragging = false
           dragStateRef.current.draggedNode = null
+
+          // Resume layout if in Auto mode (layoutLocked=false means Auto)
+          // Note: Currently this code only runs when layoutLocked=true, so layout won't resume here
+          // This is correct because in locked mode, layout should stay stopped
         }
       })
 

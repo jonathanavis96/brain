@@ -230,7 +230,7 @@ npx lighthouse http://localhost:3000 --view
 - **[THOUGHTS.md](THOUGHTS.md)** - Project vision and goals
 - **[NEURONS.md](NEURONS.md)** - Project structure map
 - **[VALIDATION_CRITERIA.md](VALIDATION_CRITERIA.md)** - Acceptance criteria
-- **[sitemap.md](sitemap.md)** - Navigation structure
-- **[sections.md](sections.md)** - Page section composition
+- **[sitemap.md](docs/sitemap.md)** - Navigation structure
+- **[sections.md](docs/sections.md)** - Page section composition
 - **brain/skills/domains/websites/** - All website skills
 - **brain/skills/domains/marketing/** - Marketing and CRO skills

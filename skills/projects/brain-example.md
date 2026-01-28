@@ -68,10 +68,10 @@ This is critical to understand:
 
 ```markdown
 <!-- In brain/AGENTS.md (local paths) -->
-Read [conventions](skills/conventions.md)
+Read [conventions](../conventions.md)
 
 <!-- In brain/templates/AGENTS.project.md (relative paths) -->
-Read [conventions](../brain/skills/conventions.md)
+Read [conventions](../conventions.md)
 
 <!-- In brain/PROMPT.md (local paths, brain's own Ralph) -->
 Read `skills/SUMMARY.md`
