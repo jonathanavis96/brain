@@ -6,7 +6,7 @@ This document provides a human-friendly overview of the Brain repository structu
 
 ## Top-Level Folders
 
-### `cortex/` - Manager Layer (GPT-5.2-Codex)
+### `cortex/` - Manager Layer (GPT-5.2)
 
 **Purpose:** High-level planning, task delegation, and strategic oversight.
 

@@ -202,7 +202,7 @@ Reserve verbose format for:
 
 ## Token Budget Recommendations
 
-### Cortex (GPT-5.2-Codex)
+### Cortex (GPT-5.2)
 
 - **Current:** ~4,700 tokens per session start
 - **Target:** ~3,500 tokens (25% reduction)

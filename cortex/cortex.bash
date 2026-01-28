@@ -35,7 +35,7 @@ Cortex Interactive Chat - Direct conversation with the Brain manager.
 
 Options:
   --help, -h           Show this help message
-  --model MODEL        Override model (gpt52, opus, sonnet, auto)
+  --model MODEL        Override model (gpt52, codex, opus, sonnet, auto)
 
 Examples:
   bash cortex/chat.sh                    # Start chat with default model
@@ -60,7 +60,7 @@ EOF
 }
 
 # Defaults
-MODEL_ARG="gpt52" # Default to GPT-5.2 Codex for Cortex
+MODEL_ARG="gpt52" # Default to GPT-5.2 for Cortex
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -93,7 +93,10 @@ if [[ -n "$MODEL_ARG" ]]; then
     opus)
       RESOLVED_MODEL="anthropic.claude-opus-4-5-20251101-v1:0"
       ;;
-    gpt52 | codex | gpt-5.2 | gpt5.2)
+    gpt52 | gpt-5.2 | gpt5.2)
+      RESOLVED_MODEL="gpt-5.2"
+      ;;
+    codex | gpt-5.2-codex)
       RESOLVED_MODEL="gpt-5.2-codex"
       ;;
     sonnet)
