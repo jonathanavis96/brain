@@ -16,9 +16,6 @@
 **Active Focus:**
 
 - Phase 0-Warn: Markdown lint errors (MD032, MD007, MD046)
-- Phase 31: Brain Map V2 Core Interactions (node dragging, drag-to-link, dark mode, mobile)
-- Phase 32: Brain Map V2 Discovery & Intelligence (path finder, AI insights, saved views)
-- Phase 33: Brain Map V2 Polish & Power Features (temporal viz, collaboration, export)
 
 <!-- Cortex adds new Task Contracts below this line -->
 
@@ -53,7 +50,7 @@ At the end of every iteration (PLAN/BUILD), immediately before the marker line, 
 
 ---
 
-- [ ] **1.2** Define and document the strict structured summary block contract (fixed headings, fixed order)
+- [x] **1.2** Define and document the strict structured summary block contract (fixed headings, fixed order)
   - **Goal:** Remove ambiguity by specifying a strict, fixed-shape summary block that the agent must always emit immediately before `:::PLAN_READY:::` / `:::BUILD_READY:::`.
   - **Inputs:** The desired strict contract and current prompt/template guidance.
   - **Outputs:** A clear, enforceable contract wording that can be inserted into prompts/templates.
