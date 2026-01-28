@@ -22,42 +22,6 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
-## Phase 32: Brain Map V2 - Discovery & Intelligence 🧠
-
-**Context:** Power users need advanced navigation, AI insights, and saved views for complex knowledge graphs.
-
-**Goal:** Add intelligence layer - path finding, auto-suggestions, visual query builder.
-
-**Success Criteria:**
-
-- User can find shortest path between any 2 nodes
-- AI suggests tags, detects orphans, identifies bridge nodes
-- User can save/load filtered views
-- Visual query builder for complex filters
-
----
-
-### Task 32.1: Path Finder
-
----
-
-### Task 32.2: AI-Powered Insights
-
----
-
-### Task 32.3: Saved Views & Bookmarks
-
----
-
-### Task 32.4: Visual Query Builder
-
-
-- [ ] **32.4.3** Add filter preview count - Show "X nodes match" before applying filter. AC: Preview count updates as chips change. Verification: Adjust filter → count updates live. If Blocked: Apply-then-count (no preview)
-
-- [ ] **32.4.4** Save filter as named view - "Save as View" button in query builder creates reusable saved view. AC: Query builder state saved. Verification: Build complex query → save → reload → works. If Blocked: Manual JSON export
-
----
-
 ## Phase 33: Brain Map V2 - Polish & Power Features 🚀
 
 **Context:** Advanced users need temporal visualization, collaboration tools, and export options for real-world knowledge management workflows.
@@ -76,45 +40,17 @@
 
 ### Task 33.1: Temporal Visualization
 
-- [ ] **33.1.1** Add timeline scrubber component - Slider at bottom of graph showing date range (earliest to latest `created_at`), drag to filter nodes by date. AC: Scrubber renders with correct date range. Verification: Drag slider → nodes fade in/out. If Blocked: Use discrete buttons (Today, This Week, This Month, All Time)
-
-- [ ] **33.1.2** Implement time-based filtering - As scrubber moves, filter nodes where `created_at <= selected_date`, animate nodes appearing/disappearing. AC: Time travel works. Verification: Scrub to past date → older nodes hidden. If Blocked: Show all nodes, just highlight time-filtered subset
-
-- [ ] **33.1.3** Add "Play" animation - Auto-advance scrubber from start to end (1 second per week), show graph growing over time. AC: Play button animates timeline. Verification: Click Play → graph evolves. If Blocked: Manual scrub only
-
-- [ ] **33.1.4** Activity heatmap calendar - GitHub-style contribution calendar showing days with most creates/updates. AC: Calendar renders with activity data. Verification: Click date → filters graph to that day. If Blocked: Skip calendar, use histogram chart
-
 ---
 
 ### Task 33.2: Collaboration (Comments)
-
-- [ ] **33.2.1** Add Comments tab to InsightsPanel - New tab (next to Details tab) showing threaded comments for selected node. AC: Tab switcher works. Verification: Click Comments → shows comment list. If Blocked: Single comment field (no threading)
-
-- [ ] **33.2.2** Backend: Store comments in frontmatter - `comments: [{author, text, timestamp, replies: [...]}]` array in markdown. POST to `/node/{id}/comments`. AC: Comments persisted. Verification: Add comment → markdown updated. If Blocked: Use separate JSON file per node
-
-- [ ] **33.2.3** Frontend: Render comment threads - Show comments in nested list, reply button adds to thread. AC: Threading works. Verification: Reply to comment → indented reply shown. If Blocked: Flat list (no replies)
-
-- [ ] **33.2.4** Add mentions (@username) - Detect `@username` in comment text, notify mentioned user (if multi-user setup). AC: Mentions highlighted. Verification: Type @alice → suggestion appears. If Blocked: Plain text only
 
 ---
 
 ### Task 33.3: Export & Integration
 
-- [ ] **33.3.1** Export graph as PNG - Button in header "Export → PNG", renders current graph view to canvas, downloads as image file. AC: PNG export works. Verification: Click Export PNG → file downloads. If Blocked: Use screenshot library (html2canvas)
-
-- [ ] **33.3.2** Export graph as SVG - Vector format export for high-quality prints/presentations. AC: SVG export works. Verification: Open SVG in Inkscape → editable vectors. If Blocked: PNG-only for MVP
-
-- [ ] **33.3.3** Export as GraphML/GEXF - Standard graph formats for Gephi/Cytoscape import. AC: GraphML file valid. Verification: Import into Gephi → graph loads. If Blocked: Export JSON only
-
-- [ ] **33.3.4** Markdown table export - Export filtered nodes as markdown table (ID, Title, Type, Status, Tags). AC: Table export works. Verification: Open in markdown editor → table renders. If Blocked: CSV export instead
-
 ---
 
 ### Task 33.4: Presentation Mode
-
-- [ ] **33.4.1** Add "Present" button - Enters full-screen mode, hides UI panels, shows graph + navigation controls only. AC: Presentation mode toggles. Verification: Click Present → full-screen graph. If Blocked: Just hide sidebars (not true full-screen)
-
-- [ ] **33.4.2** Keyboard navigation - Arrow keys navigate between connected nodes (follow edges), space bar zooms to focused node. AC: Keyboard nav works. Verification: Press Right → moves to connected node. If Blocked: Click-only navigation
 
 - [ ] **33.4.3** Slide-style transitions - Smooth camera animations between nodes, optional fade-in for node details. AC: Transitions smooth. Verification: Navigate nodes → camera pans smoothly. If Blocked: Instant jumps
 

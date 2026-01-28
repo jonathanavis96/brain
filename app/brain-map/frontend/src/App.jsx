@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
+import html2canvas from 'html2canvas'
 import GraphView from './GraphView'
 import QuickAddPanel from './QuickAddPanel'
 import FilterPanel from './FilterPanel'
 import RelationshipEditor from './RelationshipEditor'
+import ActivityCalendar from './ActivityCalendar'
 import { getTheme } from './theme'
 
 const API_BASE_URL = import.meta.env.VITE_BRAIN_MAP_API_BASE_URL || 'http://localhost:8000'
@@ -43,6 +45,9 @@ function App() {
   const [mobileQuickAddOpen, setMobileQuickAddOpen] = useState(false)
   const [sigmaInstance, setSigmaInstance] = useState(null)
   const [pathMetadata, setPathMetadata] = useState(null)
+  const [showActivityCalendar, setShowActivityCalendar] = useState(false)
+  const [presentationMode, setPresentationMode] = useState(false)
+  const [focusedNode, setFocusedNode] = useState(null)
   // Default preset views
   const getDefaultViews = () => [
     {
@@ -135,9 +140,10 @@ function App() {
     localStorage.setItem('brainMapTheme', themeMode)
   }, [themeMode])
 
-  // Keyboard shortcut for search (Ctrl+K)
+  // Keyboard shortcuts for search (Ctrl+K) and presentation mode navigation
   useEffect(() => {
     const handleKeyDown = (e) => {
+      // Search palette shortcut
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault()
         setSearchOpen(true)
@@ -147,10 +153,103 @@ function App() {
         setSearchQuery('')
         setSearchResults([])
       }
+
+      // Presentation mode keyboard navigation
+      if (presentationMode && sigmaInstance) {
+        const graph = sigmaInstance.getGraph()
+        const camera = sigmaInstance.getCamera()
+
+        // Space bar: Zoom to focused node
+        if (e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault()
+          if (focusedNode && graph.hasNode(focusedNode)) {
+            const nodeAttrs = graph.getNodeAttributes(focusedNode)
+            camera.animate(
+              { x: nodeAttrs.x, y: nodeAttrs.y, ratio: 0.5 },
+              { duration: 500, easing: 'quadraticInOut' }
+            )
+          }
+          return
+        }
+
+        // Arrow keys: Navigate between connected nodes
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+          e.preventDefault()
+
+          // If no focused node, select first node in graph
+          if (!focusedNode) {
+            const firstNode = graph.nodes()[0]
+            if (firstNode) {
+              setFocusedNode(firstNode)
+              setSelectedNode(graph.getNodeAttribute(firstNode, 'nodeData'))
+              const nodeAttrs = graph.getNodeAttributes(firstNode)
+              camera.animate(
+                { x: nodeAttrs.x, y: nodeAttrs.y, ratio: 0.5 },
+                { duration: 500, easing: 'quadraticInOut' }
+              )
+            }
+            return
+          }
+
+          // Get connected nodes (neighbors)
+          const neighbors = graph.neighbors(focusedNode)
+          if (neighbors.length === 0) return
+
+          // Calculate angle to each neighbor relative to focused node
+          const focusedAttrs = graph.getNodeAttributes(focusedNode)
+          const neighborAngles = neighbors.map(neighborId => {
+            const neighborAttrs = graph.getNodeAttributes(neighborId)
+            const dx = neighborAttrs.x - focusedAttrs.x
+            const dy = neighborAttrs.y - focusedAttrs.y
+            let angle = Math.atan2(dy, dx) * (180 / Math.PI)
+            // Normalize angle to [0, 360)
+            if (angle < 0) angle += 360
+            return { nodeId: neighborId, angle, attrs: neighborAttrs }
+          })
+
+          // Determine target direction based on arrow key
+          let targetAngle
+          switch (e.key) {
+            case 'ArrowRight':
+              targetAngle = 0 // East
+              break
+            case 'ArrowDown':
+              targetAngle = 90 // South
+              break
+            case 'ArrowLeft':
+              targetAngle = 180 // West
+              break
+            case 'ArrowUp':
+              targetAngle = 270 // North
+              break
+          }
+
+          // Find neighbor closest to target direction
+          const closestNeighbor = neighborAngles.reduce((closest, neighbor) => {
+            // Calculate angular distance (shortest path around circle)
+            let diff = Math.abs(neighbor.angle - targetAngle)
+            if (diff > 180) diff = 360 - diff
+
+            if (!closest || diff < closest.diff) {
+              return { ...neighbor, diff }
+            }
+            return closest
+          }, null)
+
+          if (closestNeighbor) {
+            setFocusedNode(closestNeighbor.nodeId)
+            setSelectedNode(graph.getNodeAttribute(closestNeighbor.nodeId, 'nodeData'))
+            camera.animate(
+              { x: closestNeighbor.attrs.x, y: closestNeighbor.attrs.y, ratio: 0.5 },
+              { duration: 500, easing: 'quadraticInOut' }
+            )
+          }
+        }
+      }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [searchOpen])
+  }, [searchOpen, presentationMode, sigmaInstance, focusedNode])
 
   // Swipe gesture for mobile sidebar collapse
   useEffect(() => {
@@ -248,6 +347,10 @@ function App() {
       setSaveError(null)
       setSaveSuccess(false)
       setSelectedNodes([]) // Clear multi-selection
+      // Set focused node for keyboard navigation
+      if (presentationMode && node.id) {
+        setFocusedNode(node.id)
+      }
       // Fetch full node details
       fetch(`${API_BASE_URL}/node/${node.id}`)
         .then(res => res.json())
@@ -507,6 +610,255 @@ function App() {
     })
   }
 
+  const handleExportPNG = async () => {
+    try {
+      // Find the graph container element
+      const graphContainer = document.querySelector('[data-graph-container]')
+      if (!graphContainer) {
+        alert('Graph container not found. Please ensure the graph is loaded.')
+        return
+      }
+
+      // Capture the canvas using html2canvas
+      const canvas = await html2canvas(graphContainer, {
+        backgroundColor: colors.background,
+        scale: 2, // Higher quality (2x resolution)
+        logging: false
+      })
+
+      // Convert canvas to blob and download
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          alert('Failed to generate PNG image.')
+          return
+        }
+
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)
+        link.download = `brain-map-${timestamp}.png`
+        link.href = url
+        link.click()
+        URL.revokeObjectURL(url)
+      }, 'image/png')
+    } catch (err) {
+      console.error('PNG export failed:', err)
+      alert(`Failed to export PNG: ${err.message}`)
+    }
+  }
+
+  const handleExportSVG = async () => {
+    try {
+      if (!sigmaInstance) {
+        alert('Graph not loaded. Please wait for the graph to render.')
+        return
+      }
+
+      // Get graph data from sigma instance
+      const graph = sigmaInstance.getGraph()
+      const camera = sigmaInstance.getCamera()
+
+      // Calculate bounds
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity
+      graph.forEachNode((node, attrs) => {
+        const viewportPos = sigmaInstance.graphToViewport(attrs)
+        minX = Math.min(minX, viewportPos.x)
+        maxX = Math.max(maxX, viewportPos.x)
+        minY = Math.min(minY, viewportPos.y)
+        maxY = Math.max(maxY, viewportPos.y)
+      })
+
+      const padding = 50
+      const width = maxX - minX + padding * 2
+      const height = maxY - minY + padding * 2
+
+      // Build SVG content
+      let svgContent = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${minX - padding} ${minY - padding} ${width} ${height}">
+  <rect width="100%" height="100%" fill="${colors.background}"/>
+  <g id="edges">
+`
+
+      // Draw edges
+      graph.forEachEdge((edge, attrs, source, target) => {
+        const sourceAttrs = graph.getNodeAttributes(source)
+        const targetAttrs = graph.getNodeAttributes(target)
+        const sourcePos = sigmaInstance.graphToViewport(sourceAttrs)
+        const targetPos = sigmaInstance.graphToViewport(targetAttrs)
+
+        svgContent += `    <line x1="${sourcePos.x}" y1="${sourcePos.y}" x2="${targetPos.x}" y2="${targetPos.y}" stroke="${colors.edge || '#666'}" stroke-width="1" opacity="0.5"/>\n`
+      })
+
+      svgContent += `  </g>
+  <g id="nodes">
+`
+
+      // Draw nodes
+      graph.forEachNode((node, attrs) => {
+        const pos = sigmaInstance.graphToViewport(attrs)
+        const size = attrs.size || 5
+        const color = attrs.color || colors.nodeDefault || '#999'
+
+        svgContent += `    <circle cx="${pos.x}" cy="${pos.y}" r="${size}" fill="${color}" stroke="${colors.nodeStroke || '#fff'}" stroke-width="2"/>\n`
+
+        // Add label if present
+        if (attrs.label) {
+          const labelY = pos.y + size + 12
+          svgContent += `    <text x="${pos.x}" y="${labelY}" text-anchor="middle" font-family="sans-serif" font-size="10" fill="${colors.text}">${attrs.label.replace(/[<>&'"]/g, c => ({
+            '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;'
+          }[c]))}</text>\n`
+        }
+      })
+
+      svgContent += `  </g>
+</svg>`
+
+      // Create blob and download
+      const blob = new Blob([svgContent], { type: 'image/svg+xml' })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)
+      link.download = `brain-map-${timestamp}.svg`
+      link.href = url
+      link.click()
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      console.error('SVG export failed:', err)
+      alert(`Failed to export SVG: ${err.message}`)
+    }
+  }
+
+  const handleExportGraphML = async () => {
+    try {
+      if (!sigmaInstance) {
+        alert('Graph not loaded. Please wait for the graph to render.')
+        return
+      }
+
+      // Get graph data from sigma instance
+      const graph = sigmaInstance.getGraph()
+
+      // Build GraphML XML content
+      let graphMLContent = `<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+         http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <!-- Data schema -->
+  <key id="label" for="node" attr.name="label" attr.type="string"/>
+  <key id="type" for="node" attr.name="type" attr.type="string"/>
+  <key id="status" for="node" attr.name="status" attr.type="string"/>
+  <key id="x" for="node" attr.name="x" attr.type="double"/>
+  <key id="y" for="node" attr.name="y" attr.type="double"/>
+  <key id="size" for="node" attr.name="size" attr.type="double"/>
+  <key id="color" for="node" attr.name="color" attr.type="string"/>
+  <key id="relationship_type" for="edge" attr.name="relationship_type" attr.type="string"/>
+
+  <graph id="BrainMap" edgedefault="directed">
+`
+
+      // Add nodes
+      graph.forEachNode((nodeId, attrs) => {
+        const escapedLabel = (attrs.label || nodeId).replace(/[<>&'"]/g, c => ({
+          '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;'
+        }[c]))
+
+        graphMLContent += `    <node id="${nodeId}">\n`
+        graphMLContent += `      <data key="label">${escapedLabel}</data>\n`
+        if (attrs.type) graphMLContent += `      <data key="type">${attrs.type}</data>\n`
+        if (attrs.status) graphMLContent += `      <data key="status">${attrs.status}</data>\n`
+        if (attrs.x !== undefined) graphMLContent += `      <data key="x">${attrs.x}</data>\n`
+        if (attrs.y !== undefined) graphMLContent += `      <data key="y">${attrs.y}</data>\n`
+        if (attrs.size) graphMLContent += `      <data key="size">${attrs.size}</data>\n`
+        if (attrs.color) graphMLContent += `      <data key="color">${attrs.color}</data>\n`
+        graphMLContent += `    </node>\n`
+      })
+
+      // Add edges
+      graph.forEachEdge((edgeId, attrs, source, target) => {
+        graphMLContent += `    <edge id="${edgeId}" source="${source}" target="${target}">\n`
+        if (attrs.relationship_type) {
+          graphMLContent += `      <data key="relationship_type">${attrs.relationship_type}</data>\n`
+        }
+        graphMLContent += `    </edge>\n`
+      })
+
+      graphMLContent += `  </graph>
+</graphml>`
+
+      // Create blob and download
+      const blob = new Blob([graphMLContent], { type: 'application/xml' })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)
+      link.download = `brain-map-${timestamp}.graphml`
+      link.href = url
+      link.click()
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      console.error('GraphML export failed:', err)
+      alert(`Failed to export GraphML: ${err.message}`)
+    }
+  }
+
+  const handleExportMarkdownTable = async () => {
+    try {
+      if (!sigmaInstance) {
+        alert('Graph not loaded. Please wait for the graph to render.')
+        return
+      }
+
+      // Get graph data from sigma instance
+      const graph = sigmaInstance.getGraph()
+
+      // Collect nodes that match current filters
+      const nodes = []
+      graph.forEachNode((nodeId, attrs) => {
+        nodes.push({
+          id: nodeId,
+          title: attrs.label || nodeId,
+          type: attrs.type || 'N/A',
+          status: attrs.status || 'N/A',
+          tags: attrs.tags || []
+        })
+      })
+
+      // Sort by title for consistent output
+      nodes.sort((a, b) => a.title.localeCompare(b.title))
+
+      // Build markdown table
+      let markdownContent = '# Brain Map Export\n\n'
+      markdownContent += `Exported: ${new Date().toISOString()}\n\n`
+      markdownContent += `Total Nodes: ${nodes.length}\n\n`
+      markdownContent += '| ID | Title | Type | Status | Tags |\n'
+      markdownContent += '|---|---|---|---|---|\n'
+
+      nodes.forEach(node => {
+        const tagsStr = Array.isArray(node.tags) && node.tags.length > 0
+          ? node.tags.join(', ')
+          : 'N/A'
+
+        // Escape pipe characters in cell content
+        const escapePipes = (str) => String(str).replace(/\|/g, '\\|')
+
+        markdownContent += `| ${escapePipes(node.id)} | ${escapePipes(node.title)} | ${escapePipes(node.type)} | ${escapePipes(node.status)} | ${escapePipes(tagsStr)} |\n`
+      })
+
+      // Create blob and download
+      const blob = new Blob([markdownContent], { type: 'text/markdown' })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)
+      link.download = `brain-map-${timestamp}.md`
+      link.href = url
+      link.click()
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      console.error('Markdown table export failed:', err)
+      alert(`Failed to export markdown table: ${err.message}`)
+    }
+  }
+
   return (
     <>
       <style>{`
@@ -744,7 +1096,7 @@ function App() {
         </div>
       )}
 
-      <div style={{ padding: '1rem', borderBottom: `1px solid ${colors.panelBorder}` }} className="mobile-no-padding">
+      <div style={{ padding: '1rem', borderBottom: `1px solid ${colors.panelBorder}`, display: presentationMode ? 'none' : 'block' }} className="mobile-no-padding">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             {/* Hamburger Menu for Mobile */}
@@ -884,6 +1236,102 @@ function App() {
               title="Generate shareable link with current view state"
             >
               🔗 Share View
+            </button>
+            <button
+              onClick={handleExportPNG}
+              style={{
+                padding: '8px 16px',
+                border: `1px solid ${colors.buttonBorder}`,
+                borderRadius: '4px',
+                background: colors.buttonBackground,
+                color: colors.buttonText,
+                cursor: 'pointer',
+                fontSize: '14px'
+              }}
+              title="Export current graph view as PNG image"
+            >
+              📸 Export PNG
+            </button>
+            <button
+              onClick={handleExportSVG}
+              style={{
+                padding: '8px 16px',
+                border: `1px solid ${colors.buttonBorder}`,
+                borderRadius: '4px',
+                background: colors.buttonBackground,
+                color: colors.buttonText,
+                cursor: 'pointer',
+                fontSize: '14px'
+              }}
+              title="Export current graph view as SVG (vector format for high-quality prints)"
+            >
+              📐 Export SVG
+            </button>
+            <button
+              onClick={handleExportGraphML}
+              style={{
+                padding: '8px 16px',
+                border: `1px solid ${colors.buttonBorder}`,
+                borderRadius: '4px',
+                background: colors.buttonBackground,
+                color: colors.buttonText,
+                cursor: 'pointer',
+                fontSize: '14px'
+              }}
+              title="Export graph as GraphML for Gephi/Cytoscape"
+            >
+              📊 Export GraphML
+            </button>
+            <button
+              onClick={handleExportMarkdownTable}
+              style={{
+                padding: '8px 16px',
+                border: `1px solid ${colors.buttonBorder}`,
+                borderRadius: '4px',
+                background: colors.buttonBackground,
+                color: colors.buttonText,
+                cursor: 'pointer',
+                fontSize: '14px'
+              }}
+              title="Export filtered nodes as markdown table"
+            >
+              📋 Export Table
+            </button>
+            <button
+              onClick={() => setShowActivityCalendar(!showActivityCalendar)}
+              style={{
+                padding: '8px 16px',
+                border: `1px solid ${colors.buttonBorder}`,
+                borderRadius: '4px',
+                background: showActivityCalendar ? colors.buttonBackgroundActive : colors.buttonBackground,
+                color: showActivityCalendar ? colors.buttonTextActive : colors.buttonText,
+                cursor: 'pointer',
+                fontSize: '14px'
+              }}
+              title="Show activity calendar (GitHub-style contribution graph)"
+            >
+              {showActivityCalendar ? '✓ Activity' : '📅 Activity'}
+            </button>
+            <button
+              onClick={() => {
+                setPresentationMode(!presentationMode)
+                // Clear focused node when exiting presentation mode
+                if (presentationMode) {
+                  setFocusedNode(null)
+                }
+              }}
+              style={{
+                padding: '8px 16px',
+                border: `1px solid ${colors.buttonBorder}`,
+                borderRadius: '4px',
+                background: presentationMode ? colors.buttonBackgroundActive : colors.buttonBackground,
+                color: presentationMode ? colors.buttonTextActive : colors.buttonText,
+                cursor: 'pointer',
+                fontSize: '14px'
+              }}
+              title="Enter presentation mode (full-screen graph, hide sidebars). Use arrow keys to navigate, space to zoom."
+            >
+              {presentationMode ? '✓ Present' : '🎤 Present'}
             </button>
             {savedViews.length > 0 && (
               <div style={{ position: 'relative', display: 'inline-block' }}>
@@ -1116,7 +1564,7 @@ function App() {
             </div>
           </>
         )}
-        <div className="mobile-hide" style={{ display: showFilterPanel ? 'block' : 'none' }}>
+        <div className="mobile-hide" style={{ display: (showFilterPanel && !presentationMode) ? 'block' : 'none' }}>
           <FilterPanel
             onFilterChange={setFilters}
             visible={showFilterPanel}
@@ -1135,6 +1583,23 @@ function App() {
         </div>
 
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          {showActivityCalendar && (
+            <div style={{ padding: '1rem', borderBottom: `1px solid ${colors.panelBorder}` }}>
+              <ActivityCalendar
+                visible={showActivityCalendar}
+                onDateClick={(date) => {
+                  // Filter graph to nodes updated on this date
+                  setFilters(prev => ({
+                    ...prev,
+                    recency: 'custom',
+                    customDate: date
+                  }))
+                  setShowActivityCalendar(false)
+                }}
+                theme={colors}
+              />
+            </div>
+          )}
           {selectedNodes.length > 0 && (
             <div style={{
               padding: '0.75rem 1rem',
@@ -1491,12 +1956,12 @@ function App() {
             data-sidebar="right"
             className="mobile-hide"
             style={{
-              width: rightSidebarCollapsed ? '0' : '320px',
-              display: 'flex',
+              width: (rightSidebarCollapsed || presentationMode) ? '0' : '320px',
+              display: presentationMode ? 'none' : 'flex',
               flexDirection: 'column',
               overflow: 'hidden',
-              padding: rightSidebarCollapsed ? '0' : '20px',
-              borderLeft: rightSidebarCollapsed ? 'none' : `1px solid ${colors.panelBorder}`,
+              padding: (rightSidebarCollapsed || presentationMode) ? '0' : '20px',
+              borderLeft: (rightSidebarCollapsed || presentationMode) ? 'none' : `1px solid ${colors.panelBorder}`,
               transition: 'width 0.3s ease, padding 0.3s ease',
               position: 'relative',
               background: colors.backgroundSecondary

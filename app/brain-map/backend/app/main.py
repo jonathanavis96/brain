@@ -610,6 +610,150 @@ async def update_node(node_id: str, request: dict) -> dict:
     )
 
 
+@app.post("/node/{node_id}/comments")
+async def add_comment(node_id: str, request: dict) -> dict:
+    """Add a comment to a node (stored in frontmatter).
+
+    Args:
+        node_id: Node ID to add comment to.
+        request: JSON body with comment fields {author, text, timestamp?, replies?}.
+
+    Returns:
+        JSON response with comment details and reindex status.
+
+    Status codes:
+        201 CREATED: Comment added successfully.
+        400 BAD REQUEST: Validation error (missing required fields).
+        404 NOT FOUND: Node ID not found.
+        503 SERVICE UNAVAILABLE: Index unavailable or rebuild failed.
+    """
+    from fastapi import HTTPException
+    from datetime import datetime, timezone
+    from pathlib import Path
+    from app.notes import load_note_content
+    from app.frontmatter import parse_and_validate
+    from app.index import rebuild_index, IndexRebuildError
+
+    # Validate required fields
+    if "author" not in request:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "VALIDATION_ERROR",
+                "message": "Missing required field: author",
+            },
+        )
+    if "text" not in request:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "VALIDATION_ERROR",
+                "message": "Missing required field: text",
+            },
+        )
+
+    # Load existing node
+    try:
+        from app.index import get_index_connection
+
+        conn = get_index_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT file_path FROM nodes WHERE id = ?", (node_id,))
+        row = cur.fetchone()
+        if not row:
+            raise HTTPException(
+                status_code=404,
+                detail={"error": "NOT_FOUND", "message": f"Node '{node_id}' not found"},
+            )
+        file_path = Path(row[0])
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "SERVICE_UNAVAILABLE",
+                "message": f"Failed to query index: {str(e)}",
+            },
+        )
+
+    # Load and parse existing frontmatter
+    try:
+        content = load_note_content(file_path)
+        frontmatter, body, warnings = parse_and_validate(content)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "INTERNAL_ERROR",
+                "message": f"Failed to load existing node: {str(e)}",
+            },
+        )
+
+    # Build comment object
+    now = datetime.now(timezone.utc).isoformat()
+    comment = {
+        "author": request["author"],
+        "text": request["text"],
+        "timestamp": request.get("timestamp", now),
+        "replies": request.get("replies", []),
+    }
+
+    # Add to comments array in frontmatter
+    if "comments" not in frontmatter:
+        frontmatter["comments"] = []
+    frontmatter["comments"].append(comment)
+
+    # Update modified timestamp
+    frontmatter["updated_at"] = now
+
+    # Build updated markdown content
+    import yaml
+
+    frontmatter_yaml = yaml.dump(frontmatter, default_flow_style=False, sort_keys=False)
+    new_content = f"---\n{frontmatter_yaml}---\n\n{body}"
+
+    # Atomic write: write to temp file, then rename
+    temp_path = file_path.with_suffix(".tmp")
+    try:
+        temp_path.write_text(new_content, encoding="utf-8")
+        temp_path.replace(file_path)
+    except Exception as e:
+        # Clean up temp file on error
+        try:
+            temp_path.unlink()
+        except Exception:
+            pass
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "WRITE_ERROR",
+                "message": f"Failed to update node file: {str(e)}",
+            },
+        )
+
+    # Trigger reindex
+    try:
+        rebuild_index()
+    except IndexRebuildError as e:
+        logger.error(f"Index rebuild failed after adding comment: {e}")
+        # Comment was written successfully, but index is stale
+        return {
+            "status": "comment_added",
+            "node_id": node_id,
+            "comment": comment,
+            "reindex_status": "failed",
+            "message": "Comment added but index rebuild failed",
+        }
+
+    return {
+        "status": "comment_added",
+        "node_id": node_id,
+        "comment": comment,
+        "reindex_status": "success",
+    }
+
+
 @app.post("/node")
 async def create_node(request: dict) -> dict:
     """Create a new node (markdown-first).
@@ -1197,6 +1341,43 @@ async def get_bridges(top_n: int = 5, use_degree_fallback: bool = False) -> dict
             "algorithm": "degree_centrality"
             if use_degree_fallback
             else "betweenness_centrality",
+        }
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
+@app.get("/insights/activity")
+async def get_activity(days: int = 90) -> dict:
+    """Get daily activity data for activity calendar visualization.
+
+    Aggregates node creation and update events by date over the last N days.
+    Used for GitHub-style contribution calendar showing when nodes were
+    created or modified.
+
+    Args:
+        days: Number of days to look back (default 90).
+
+    Returns:
+        JSON response with daily_activity array.
+
+    Status codes:
+        200 OK: Activity data retrieved successfully.
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from app.index import get_activity_data
+
+    try:
+        activity_data = get_activity_data(days=days)
+        return {
+            "daily_activity": activity_data,
+            "days": days,
         }
     except FileNotFoundError:
         raise HTTPException(

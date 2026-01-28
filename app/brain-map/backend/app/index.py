@@ -1407,6 +1407,72 @@ def get_stale_nodes(threshold_days: int = 90) -> list[dict]:
     return stale_nodes
 
 
+def get_activity_data(days: int = 90) -> list[dict]:
+    """Get daily activity data (creates + updates) for the last N days.
+
+    Aggregates node creation and update events by date to support
+    activity calendar visualization (GitHub-style contribution graph).
+
+    Args:
+        days: Number of days to look back (default 90).
+
+    Returns:
+        List of dicts with date (YYYY-MM-DD) and count (int).
+
+    Raises:
+        FileNotFoundError: If index database doesn't exist.
+    """
+    from datetime import datetime, timezone, timedelta
+
+    conn = get_index_connection()
+    cursor = conn.cursor()
+
+    # Calculate date threshold
+    start_date = datetime.now(timezone.utc) - timedelta(days=days)
+    start_iso = start_date.isoformat()
+
+    # Query for created_at dates
+    cursor.execute(
+        """
+        SELECT DATE(created_at) as date, COUNT(*) as count
+        FROM nodes
+        WHERE created_at >= ?
+        GROUP BY DATE(created_at)
+    """,
+        (start_iso,),
+    )
+
+    creates = {row["date"]: row["count"] for row in cursor.fetchall()}
+
+    # Query for modified_at dates (excluding same-day creates)
+    cursor.execute(
+        """
+        SELECT DATE(modified_at) as date, COUNT(*) as count
+        FROM nodes
+        WHERE modified_at >= ?
+          AND DATE(modified_at) != DATE(created_at)
+        GROUP BY DATE(modified_at)
+    """,
+        (start_iso,),
+    )
+
+    updates = {row["date"]: row["count"] for row in cursor.fetchall()}
+
+    # Merge creates and updates
+    all_dates = set(creates.keys()) | set(updates.keys())
+    activity = []
+    for date in sorted(all_dates):
+        activity.append(
+            {
+                "date": date,
+                "count": creates.get(date, 0) + updates.get(date, 0),
+            }
+        )
+
+    conn.close()
+    return activity
+
+
 def get_orphan_nodes() -> list[dict]:
     """
     Identify orphan nodes (nodes with zero in-degree and out-degree).
