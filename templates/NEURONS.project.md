@@ -73,8 +73,8 @@ This is the **project map** that Ralph and all agents read on-demand when needed
 | **[Common task 1]** | `[location/file.ext]` |
 | **[Common task 2]** | `[location/file.ext]` |
 | **[Common task 3]** | `[location/file.ext]` |
-| **Reference Brain Skills** | `../../brain/skills/SUMMARY.md` (if brain exists) |
-| **Check React patterns** | `../../brain/references/react-best-practices/HOTLIST.md` (if brain exists) |
+| **Reference Brain Skills** | `./brain/skills/SUMMARY.md` (if brain exists) |
+| **Check React patterns** | `./brain/skills/domains/frontend/react-patterns.md` (if brain exists) |
 
 ### "Where do I put..."
 
@@ -163,7 +163,7 @@ Only output when ALL tasks in IMPLEMENTATION_PLAN.md are 100% complete.
 
 ## Brain Repository Integration (Optional)
 
-> **Note:** Brain integration is optional. If `../../brain/` exists, use it for KB lookups. Otherwise, this project works standalone - skip brain references and rely on project-local docs and standard best practices.
+> **Note:** Brain integration is optional. If `./brain/` exists, use it for KB lookups. Otherwise, this project works standalone - skip brain references and rely on project-local docs and standard best practices.
 
 ### Knowledge Base References
 
@@ -173,24 +173,24 @@ Only output when ALL tasks in IMPLEMENTATION_PLAN.md are 100% complete.
 
 **Performance Patterns (if React/Next.js):**
 
-- Path: `../../brain/references/react-best-practices/`
+- Path: `./brain/skills/domains/frontend/`
 - Entry: `HOTLIST.md` → `INDEX.md` → `rules/*.md`
 - Usage: Consult before implementing React components
 
 **Domain Conventions:**
 
-- Path: `../../brain/skills/domains/`
+- Path: `./brain/skills/domains/`
 - Relevant domains: `[domain1.md]`, `[domain2.md]`
 - Usage: Follow established patterns for [specific functionality]
 
 **Project-Specific Knowledge:**
 
-- Path: `../../brain/skills/projects/[project-slug].md`
+- Path: `./brain/skills/projects/[project-slug].md`
 - Usage: Document learnings that might benefit other projects
 
 ### Path Conventions
 
-- Brain references use: `../../brain/skills/` (relative from project root, if brain exists)
+- Brain references use: `./brain/skills/` (relative from project root, if brain exists)
 - Internal references use: `./relative/path` (within project)
 - Absolute paths: Avoid - use relative paths for portability
 
@@ -198,7 +198,7 @@ Only output when ALL tasks in IMPLEMENTATION_PLAN.md are 100% complete.
 
 If brain repository is not present:
 
-- Skip all `../../brain/` references
+- Skip all `./brain/` references
 - Rely on `docs/` for project documentation
 - Use standard best practices for your tech stack
 
@@ -253,7 +253,7 @@ ls -lh AGENTS.md NEURONS.md THOUGHTS.md ralph/PROMPT.md ralph/IMPLEMENTATION_PLA
 
 - **[directory/]** - [Reason - e.g., "Generated files", "External dependencies"]
 - **[directory/]** - [Reason]
-- **Brain references** - `../../brain/references/` (upstream knowledge)
+- **Brain references** - `./brain/skills/` (upstream knowledge)
 
 ### ✅ MODIFIABLE (Active Development)
 
@@ -337,7 +337,7 @@ components/
 
 **Performance Checklist:**
 
-- ✅ Memoization where needed (see brain: `../../brain/references/react-best-practices/HOTLIST.md`)
+- ✅ Memoization where needed (see brain: `./brain/skills/domains/frontend/react-patterns.md`)
 - ✅ Dynamic imports for heavy components
 - ✅ Image optimization
 - ✅ Bundle size monitoring
@@ -374,15 +374,15 @@ This [PROJECT_NAME] repository contains:
 1. Read NEURONS.md (this file) via subagent when needed
 2. Use progressive disclosure (broad → specific)
 3. Search before creating (don't assume missing)
-4. Follow Brain Skills patterns (if brain exists): `../../brain/skills/SUMMARY.md`
-5. Consult React patterns (if applicable and brain exists): `../../brain/references/react-best-practices/HOTLIST.md`
+4. Follow Brain Skills patterns (if brain exists): `./brain/skills/SUMMARY.md`
+5. Consult React patterns (if applicable and brain exists): `./brain/skills/domains/frontend/react-patterns.md`
 
 **For questions about:**
 
 - **How to run Ralph** → See AGENTS.md
 - **What exists where** → You're reading it (NEURONS.md)
 - **Project goals** → See THOUGHTS.md
-- **Brain Skills patterns** → See `../../brain/skills/SUMMARY.md` (if brain exists)
-- **React optimization** → See `../../brain/references/react-best-practices/HOTLIST.md` (if brain exists)
+- **Brain Skills patterns** → See `./brain/skills/SUMMARY.md` (if brain exists)
+- **React optimization** → See `./brain/skills/domains/frontend/react-patterns.md` (if brain exists)
 
-> **Note:** All brain references are optional. If `../../brain/` doesn't exist, skip those references - this project works standalone.
+> **Note:** All brain references are optional. If `./brain/` doesn't exist, skip those references - this project works standalone.

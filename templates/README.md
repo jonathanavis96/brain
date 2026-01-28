@@ -30,13 +30,15 @@ This directory contains templates for bootstrapping new projects with the Ralph 
 
 All templates use **bash-style forward slash paths** for brain repository references to ensure cross-platform compatibility and WSL/Linux support.
 
-### The Standard: `../../brain/`
+### The Standard: `./brain/` (in-workspace snapshot)
+
+RovoDev cannot read files outside its workspace. New projects should vendor a snapshot of Brain knowledge into the repo at `./brain/skills/` during bootstrap.
 
 Templates use **relative paths with forward slashes**:
 
 ```markdown
-1. `../../brain/skills/SUMMARY.md` - Knowledge base overview
-2. `../../brain/references/react-best-practices/HOTLIST.md` - Top 10 rules
+1. `./brain/skills/SUMMARY.md` - Knowledge base overview
+2. `./brain/skills/domains/frontend/react-patterns.md` - Top 10 rules
 ```text
 
 ### Why Forward Slashes?
@@ -51,11 +53,11 @@ Templates use **relative paths with forward slashes**:
 Templates are organized at different depths, requiring different numbers of `..` segments:
 
 - **Project root templates** (e.g., `templates/AGENTS.project.md`):
-  - Use: `../../brain/skills/SUMMARY.md`
+  - Use: `./brain/skills/SUMMARY.md`
   - Depth: One level up from project root to reach brain sibling
 
 - **Ralph subdirectory templates** (e.g., `templates/ralph/PROMPT.md`):
-  - Use: `../../brain/skills/SUMMARY.md`
+  - Use: `./brain/skills/SUMMARY.md`
   - Depth: Two levels up from ralph/ dir (ralph/ is typically at project root level)
 
 ### Examples
@@ -63,8 +65,8 @@ Templates are organized at different depths, requiring different numbers of `..`
 **Correct ✅ (Always use forward slashes)**
 
 ```markdown
-Read `../../brain/skills/SUMMARY.md` first (always)
-Check `../../brain/references/react-best-practices/HOTLIST.md`
+Read `./brain/skills/SUMMARY.md` first (always)
+Check `./brain/skills/domains/frontend/react-patterns.md`
 ```text
 
 **Incorrect ❌ (Anti-patterns to avoid)**
@@ -181,14 +183,14 @@ This checks:
 - Path patterns are correct (depth and format)
 - KB file references are valid
 - No absolute paths
-- Path separator consistency (enforces `../../brain/` standard)
+- Path separator consistency (enforces `./brain/` standard)
 - Markdown syntax
 
 ## Modifying Templates
 
 When updating templates:
 
-1. **Maintain path standard**: Always use `../../brain/` format (bash-style forward slashes)
+1. **Maintain path standard**: Always use `./brain/` format (bash-style forward slashes)
 2. **Test path depth**: Ensure `..` count matches template location
 3. **Run validation**: Execute `.\validate-templates.ps1` before committing
 4. **Update this README**: Document any new conventions or patterns
@@ -197,7 +199,7 @@ When updating templates:
 
 The validation script (`validate-templates.ps1`) enforces:
 
-1. **No mixed styles**: All paths must use `../../brain/` format (no backslashes, no absolute paths)
+1. **No mixed styles**: All paths must use `./brain/` format (no backslashes, no absolute paths)
 2. **Correct depth**: Paths must match expected depth from template location
 3. **Valid KB references**: Referenced files must exist in brain repo
 4. **No absolute paths**: No Windows (`C:\`) or Unix (`/home/`) absolute paths
