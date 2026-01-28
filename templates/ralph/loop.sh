@@ -1982,7 +1982,11 @@ if [[ -n "$PROMPT_ARG" ]]; then
     if [[ -n "${DISCORD_WEBHOOK_URL:-}" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
       echo ""
       echo "Posting iteration summary to Discord..."
-      if generate_iteration_summary "$i" "$current_phase" "$CURRENT_LOG_FILE" | "$ROOT/bin/discord-post" 2>&1 | tee -a "$CURRENT_LOG_FILE"; then
+
+      # Avoid re-printing the full summary to the interactive terminal (too noisy).
+      # Append any discord-post output/errors to a per-iteration completion log.
+      completion_log="${LOGDIR}/iter${i}_completion.log"
+      if generate_iteration_summary "$i" "$current_phase" "$CURRENT_LOG_FILE" | "$ROOT/bin/discord-post" >>"$completion_log" 2>&1; then
         echo "✓ Discord update posted"
       else
         echo "⚠ Discord post failed (non-blocking)"
@@ -2334,7 +2338,11 @@ else
     if [[ -n "${DISCORD_WEBHOOK_URL:-}" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
       echo ""
       echo "Posting iteration summary to Discord..."
-      if generate_iteration_summary "$i" "$current_phase" "$CURRENT_LOG_FILE" | "$ROOT/bin/discord-post" 2>&1 | tee -a "$CURRENT_LOG_FILE"; then
+
+      # Avoid re-printing the full summary to the interactive terminal (too noisy).
+      # Append any discord-post output/errors to a per-iteration completion log.
+      completion_log="${LOGDIR}/iter${i}_completion.log"
+      if generate_iteration_summary "$i" "$current_phase" "$CURRENT_LOG_FILE" | "$ROOT/bin/discord-post" >>"$completion_log" 2>&1; then
         echo "✓ Discord update posted"
       else
         echo "⚠ Discord post failed (non-blocking)"
