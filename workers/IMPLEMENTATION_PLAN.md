@@ -22,6 +22,74 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
+## Phase 36: Brain Map V2 UX + Interaction Fixes
+
+**Context:** Recent Brain Map V2 work improved dark mode, label readability, and timeline performance, but several interaction bugs remain (label hover geometry/duplication, node drag repulsion, Quick Add details panel not reflecting created nodes).
+
+**Goal:** Make core interactions predictable and readable: always-visible labels, hover label upgrade without duplication, stable node dragging (no magnet repulsion), and Quick Add details panel correctly reflecting selected/created nodes.
+
+**Success Criteria:**
+
+- Dark mode consistently applies to all panels and inputs
+- Node labels are readable in dark mode at all zoom levels
+- Hover label uses a pill with black text without duplicating/misaligning labels
+- Dragging a node does not cause nearby nodes to drift/repel
+- Quick Add details panel correctly shows ID/Title/Type for the relevant node (selected/created)
+
+---
+
+### Task 36.1: Label rendering correctness (always-visible + hover upgrade)
+
+- [ ] **36.1.1** Align hover label geometry with Sigma defaults (no clipped first letters)
+  - **Goal:** Fix hover pill positioning so the node circle does not cover the start of the label.
+  - **AC:** Hover label pill never overlaps the first characters of the label at any zoom; label baseline matches Sigma disc-node label placement.
+  - **If Blocked:** Copy Sigma’s `drawDiscNodeHover` geometry from `node_modules/sigma` into the hover draw override and only change fill colors.
+
+- [ ] **36.1.2** Remove hover/zoom label duplication by matching default placement and ensuring hover “upgrades” the same label
+  - **Goal:** Hover should visually upgrade the existing label (pill) rather than showing a second label in a different place.
+  - **AC:** When zoomed-in labels are visible, hovering a node results in exactly one label being readable (the pill version), with no second label visible/offset.
+  - **If Blocked:** Consider temporarily suppressing base label rendering for the hovered node (e.g., during `enterNode`, set node `label` to empty and restore on `leaveNode`) and document tradeoffs.
+
+- [ ] **36.1.3** Ensure label colors are correct in dark mode for both base and hover labels
+  - **Goal:** Base labels render white in dark mode; hover pill renders black text on white pill.
+  - **AC:** Dark mode: base labels are white; hover labels are black-on-white; light mode remains readable.
+  - **If Blocked:** Add a small “label rendering debug” toggle to log active Sigma settings (labelColor, defaultDrawNodeHover) while diagnosing.
+
+---
+
+### Task 36.2: Node dragging stability (stop magnet repulsion)
+
+- [ ] **36.2.0** Fix Locked/Auto toggle UI labeling (currently inverted)
+  - **Goal:** Ensure the toggle label/state matches the actual behavior (Locked means manual/no simulation; Auto means layout running).
+  - **AC:** When the UI shows “Locked”, nodes do not shift due to physics; when the UI shows “Auto”, layout/physics can run (when not dragging).
+  - **If Blocked:** Add a temporary debug label showing the underlying boolean (e.g., `layoutLocked=true/false`) to confirm state-to-label mapping.
+
+- [ ] **36.2.1** Stop layout/physics updates while dragging a node
+  - **Goal:** Prevent other nodes from moving away when dragging a node near them.
+  - **AC:** While dragging, all non-dragged nodes remain visually stable (no repulsion/drift); upon drop, graph remains stable.
+  - **If Blocked:** Ensure ForceAtlas2 worker/supervisor is fully stopped/paused on `downNode` and only resumed (optionally) on `mouseup`.
+
+- [ ] **36.2.2** Confirm locked-mode behavior: dragging should be purely positional (no simulation)
+  - **Goal:** In “Locked” mode, dragging should only update the dragged node’s x/y.
+  - **AC:** Locked mode: no layout forces applied during drag; Auto mode: layout may run when not dragging.
+  - **If Blocked:** Add explicit “dragging” guard that disables any layout start/restart timers.
+
+---
+
+### Task 36.3: Quick Add / details panel correctness
+
+- [ ] **36.3.1** Fix Quick Add details section (ID/Title/Type) so it reflects the correct node
+  - **Goal:** The persistent section showing `ID/Title/Type/...` should update appropriately (selected node and/or newly created node), instead of staying blank.
+  - **AC:** Creating a node updates the UI so the details section shows the new node’s Title/Type/ID as expected; selecting a node updates the same section consistently.
+  - **If Blocked:** Identify the single source of truth (e.g., `selectedNode`, `selectedNodes`, or a dedicated `activeNodeDraft`) and refactor the section to use it.
+
+- [ ] **36.3.2** Ensure Quick Add “Type/Status” defaults and casing map correctly to backend
+  - **Goal:** Avoid mismatches where UI uses `Inbox`/`idea` but backend expects different casing/values.
+  - **AC:** Newly created nodes appear in graph and in details panels with correct type/status; no silent drops.
+  - **If Blocked:** Add backend validation error surfacing to the UI (toast showing response body).
+
+---
+
 ## Phase 35: Skills & Knowledge Base Maintenance
 
 **Context:** Brain repository skills need periodic review and updates based on recent discoveries, tool usage patterns, and emerging best practices.

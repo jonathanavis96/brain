@@ -66,8 +66,8 @@ function ContextMenu({ x, y, nodeId, nodeData, onClose, onEdit, onDelete, onCrea
         position: 'fixed',
         left: `${x}px`,
         top: `${y}px`,
-        backgroundColor: 'white',
-        border: '1px solid #ddd',
+        backgroundColor: 'var(--color-panel-background)',
+        border: '1px solid var(--color-panel-border)',
         borderRadius: '8px',
         boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
         zIndex: 10001,
@@ -83,17 +83,17 @@ function ContextMenu({ x, y, nodeId, nodeData, onClose, onEdit, onDelete, onCrea
             width: '100%',
             padding: '12px 16px',
             border: 'none',
-            background: 'white',
+            background: 'var(--color-button-background)',
             textAlign: 'left',
             fontSize: '16px',
             cursor: 'pointer',
-            color: item.danger ? '#ef4444' : '#333',
+            color: item.danger ? 'var(--color-danger)' : 'var(--color-text)',
             fontWeight: item.danger ? '600' : 'normal',
-            borderBottom: index < menuItems.length - 1 ? '1px solid #f0f0f0' : 'none',
+            borderBottom: index < menuItems.length - 1 ? '1px solid var(--color-panel-border)' : 'none',
             transition: 'background 0.2s'
           }}
-          onMouseOver={(e) => e.target.style.background = '#f5f5f5'}
-          onMouseOut={(e) => e.target.style.background = 'white'}
+          onMouseOver={(e) => e.target.style.background = 'var(--color-button-background-hover)'}
+          onMouseOut={(e) => e.target.style.background = 'var(--color-button-background)'}
         >
           {item.label}
         </button>
@@ -164,6 +164,28 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
   const sigmaRef = useRef(null)
   const dragStateRef = useRef({ isDragging: false, draggedNode: null })
   const layoutRef = useRef(null)
+
+  // Avoid rebuilding Sigma graph when callback props change
+  const onNodeSelectRef = useRef(onNodeSelect)
+  const onGraphClickRef = useRef(onGraphClick)
+  const onGraphDropRef = useRef(onGraphDrop)
+  const selectedNodesRef = useRef(selectedNodes)
+
+  useEffect(() => {
+    onNodeSelectRef.current = onNodeSelect
+  }, [onNodeSelect])
+
+  useEffect(() => {
+    onGraphClickRef.current = onGraphClick
+  }, [onGraphClick])
+
+  useEffect(() => {
+    onGraphDropRef.current = onGraphDrop
+  }, [onGraphDrop])
+
+  useEffect(() => {
+    selectedNodesRef.current = selectedNodes
+  }, [selectedNodes])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [graphData, setGraphData] = useState(null)
@@ -229,14 +251,14 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
     }
   }, [graphData])
 
-  // Client-side filtering with AND/OR logic + timeline filter
+  // Client-side filtering with AND/OR logic (timeline filter handled separately for performance)
   useEffect(() => {
     if (!graphData) return
 
-    // If no filters are active, show all data
+    // If no filters are active (excluding timeline), show all data
     const hasActiveFilters = filters?.type || filters?.status || filters?.tags ||
                              (filters?.recency && filters.recency !== 'all') ||
-                             filters?.priority || filters?.risk || timelineFilter.active
+                             filters?.priority || filters?.risk
 
     if (!hasActiveFilters) {
       setFilteredData(graphData)
@@ -245,17 +267,9 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
 
     const booleanMode = filters?.booleanMode || 'AND'
 
-    // Filter nodes based on boolean logic + timeline
+    // Filter nodes based on boolean logic (timeline handled separately)
     const filteredNodes = graphData.nodes.filter(node => {
       const checks = []
-
-      // Timeline filter (always AND - must be created before selected date)
-      if (timelineFilter.active && timelineFilter.selectedDate && node.created_at) {
-        const nodeDate = new Date(node.created_at).getTime()
-        if (nodeDate > timelineFilter.selectedDate) {
-          return false // Hard filter - node created after selected date
-        }
-      }
 
       // Type filter
       if (filters?.type) {
@@ -322,7 +336,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
       nodes: filteredNodes,
       edges: filteredEdges
     })
-  }, [graphData, filters, timelineFilter.active, timelineFilter.selectedDate])
+  }, [graphData, filters])
 
   // Play animation effect - auto-advance timeline scrubber
   useEffect(() => {
@@ -397,12 +411,12 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
     const handleDrop = (e) => {
       e.preventDefault()
 
-      if (onGraphDrop && sigmaRef.current) {
+      if (onGraphDropRef.current && sigmaRef.current) {
         try {
           const nodeData = JSON.parse(e.dataTransfer.getData('application/json'))
           // Convert viewport coordinates to graph coordinates
           const coords = sigmaRef.current.viewportToGraph({ x: e.offsetX, y: e.offsetY })
-          onGraphDrop(coords, nodeData)
+          onGraphDropRef.current(coords, nodeData)
         } catch (err) {
           console.error('Error handling drop:', err)
         }
@@ -480,7 +494,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
     } else {
       // Full detail mode: show all nodes
       filteredData.nodes.forEach(node => {
-        const isSelected = selectedNodes.some(n => n.id === node.id)
+        const isSelected = (selectedNodesRef.current || []).some(n => n.id === node.id)
         const isInPath = pathHighlight.active && pathHighlight.path.includes(node.id)
 
         // Use saved position if available, otherwise use random position for force layout
@@ -567,23 +581,67 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
       // Create sigma instance
       const sigma = new Sigma(graph, containerRef.current, {
         renderEdgeLabels: false,
-        defaultNodeColor: '#999',
-        defaultEdgeColor: '#ccc',
+        defaultNodeColor: theme?.textSecondary || '#999',
+        defaultEdgeColor: theme?.edgeDefault || '#ccc',
         labelFont: 'system-ui, sans-serif',
         labelSize: Math.max(10, Math.min(16, 12 * zoomLevel)),
         labelRenderedSizeThreshold: 8,
-        // Custom label reducer: only show labels for hovered nodes
-        labelRenderer: (context, data, settings) => {
-          if (!data.hovered && !data.highlighted) return
+        // Sigma v3 uses labelColor settings for default label rendering
+        labelColor: {
+          color: theme?.text || '#fff'
+        },
 
+        // Override Sigma's hover label rendering (defaultDrawNodeHover)
+        // so hover labels are white pill + black text in dark mode.
+        defaultDrawNodeHover: (context, data, settings) => {
+          if (!data.label) return
+
+          const label = String(data.label)
           const size = settings.labelSize
           const font = settings.labelFont
           const weight = settings.labelWeight || 'normal'
 
-          context.fillStyle = '#000'
+          context.save()
+          context.globalAlpha = 1
           context.font = `${weight} ${size}px ${font}`
-          context.fillText(data.label, data.x, data.y + data.size + 3)
-        }
+
+          const metrics = context.measureText(label)
+          const paddingX = 4
+          const paddingY = 2
+          const textWidth = metrics.width
+          const textHeight = size
+
+          const x = data.x
+          const y = data.y + data.size + 3
+
+          // White pill
+          const rx = x - paddingX
+          const ry = y - textHeight - paddingY
+          const rw = textWidth + paddingX * 2
+          const rh = textHeight + paddingY * 2
+          const radius = 3
+
+          context.fillStyle = 'rgba(255,255,255,0.92)'
+          context.beginPath()
+          context.moveTo(rx + radius, ry)
+          context.lineTo(rx + rw - radius, ry)
+          context.quadraticCurveTo(rx + rw, ry, rx + rw, ry + radius)
+          context.lineTo(rx + rw, ry + rh - radius)
+          context.quadraticCurveTo(rx + rw, ry + rh, rx + rw - radius, ry + rh)
+          context.lineTo(rx + radius, ry + rh)
+          context.quadraticCurveTo(rx, ry + rh, rx, ry + rh - radius)
+          context.lineTo(rx, ry + radius)
+          context.quadraticCurveTo(rx, ry, rx + radius, ry)
+          context.closePath()
+          context.fill()
+
+          // Black text
+          context.fillStyle = '#000'
+          context.fillText(label, x, y)
+
+          context.restore()
+        },
+        // Use Sigma default label renderer (color controlled via labelColor)
       })
 
       // Handle node clicks and taps
@@ -658,7 +716,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
           // Regular node click/tap
           setSelectedNodeId(node)
           if (onNodeSelect) {
-            onNodeSelect(attrs.nodeData, isMultiSelect)
+            onNodeSelectRef.current?.(attrs.nodeData, isMultiSelect)
           }
         }
       })
@@ -668,7 +726,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
         if (clickToPlaceActive && onGraphClick) {
           // Get the graph coordinates of the click
           const coords = sigma.viewportToGraph({ x: event.x, y: event.y })
-          onGraphClick({ x: coords.x, y: coords.y })
+          onGraphClickRef.current?.({ x: coords.x, y: coords.y })
         }
       })
 
@@ -1048,7 +1106,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
         containerElement.removeEventListener('touchcancel', handleTouchEnd)
       }
     }
-  }, [filteredData, clusterData, onNodeSelect, expandedClusters, showClusters, selectedNodes, onGraphClick, clickToPlaceActive, onGraphDrop, layoutLocked])
+  }, [filteredData, clusterData, expandedClusters, showClusters, clickToPlaceActive, layoutLocked, theme])
 
   // Update node colors when showRecencyHeat or heatMetric changes
   useEffect(() => {
@@ -1067,6 +1125,45 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
     sigmaRef.current.refresh()
   }, [showRecencyHeat, heatMetric, filteredData, theme])
 
+  // Optimize timeline filtering - only update node visibility/opacity, don't rebuild graph
+  useEffect(() => {
+    if (!sigmaRef.current || !filteredData) return
+
+    const graph = sigmaRef.current.getGraph()
+    
+    // If timeline is inactive, show all nodes
+    if (!timelineFilter.active) {
+      filteredData.nodes.forEach(node => {
+        if (graph.hasNode(node.id)) {
+          graph.setNodeAttribute(node.id, 'hidden', false)
+        }
+      })
+      sigmaRef.current.refresh()
+      return
+    }
+
+    const selectedDate = timelineFilter.selectedDate
+
+    // Update node visibility based on timeline filter
+    filteredData.nodes.forEach(node => {
+      if (graph.hasNode(node.id)) {
+        if (selectedDate && node.created_at) {
+          const nodeDate = new Date(node.created_at).getTime()
+          const isVisible = nodeDate <= selectedDate
+          
+          // Use hidden attribute instead of removing/adding nodes
+          graph.setNodeAttribute(node.id, 'hidden', !isVisible)
+        } else {
+          // No created_at date, show by default
+          graph.setNodeAttribute(node.id, 'hidden', false)
+        }
+      }
+    })
+
+    // Batch the refresh to avoid multiple redraws
+    sigmaRef.current.refresh()
+  }, [timelineFilter.active, timelineFilter.selectedDate, filteredData])
+
   if (loading) {
     return <div style={{ padding: '2rem' }}>Loading graph...</div>
   }
@@ -1077,7 +1174,14 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '600px' }} data-graph-container>
-      <div ref={containerRef} style={{ width: '100%', height: '100%', background: '#fff' }} />
+      <div
+        ref={containerRef}
+        style={{
+          width: '100%',
+          height: '100%',
+          background: 'var(--color-canvas-background)'
+        }}
+      />
       {linkMode.active && linkMode.previewLine && sigmaRef.current && (
         <svg
           style={{
@@ -1123,9 +1227,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
           nodeData={contextMenu.nodeData}
           onClose={() => setContextMenu(null)}
           onEdit={(nodeData) => {
-            if (onNodeSelect) {
-              onNodeSelect(nodeData, false)
-            }
+            onNodeSelectRef.current?.(nodeData, false)
           }}
           onDelete={async (nodeId, nodeData) => {
             try {
@@ -1149,9 +1251,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
             setToast({ message: 'Link mode active - click target node', type: 'success' })
           }}
           onViewDetails={(nodeData) => {
-            if (onNodeSelect) {
-              onNodeSelect(nodeData, false)
-            }
+            onNodeSelectRef.current?.(nodeData, false)
           }}
         />
       )}
@@ -1161,19 +1261,21 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
           position: 'absolute',
           top: '10px',
           left: '10px',
-          background: 'rgba(255,255,255,0.9)',
+          background: 'color-mix(in srgb, var(--color-panel-background) 90%, transparent)',
+          border: '1px solid var(--color-panel-border)',
+          color: 'var(--color-text)',
           padding: '8px 12px',
           borderRadius: '4px',
           fontSize: '14px'
         }}>
           {filteredData.nodes.length} nodes, {filteredData.edges.length} edges
           {zoomLevel < ZOOM_THRESHOLDS.CLUSTER_VIEW && (
-            <div style={{ marginTop: '4px', fontSize: '12px', color: '#666' }}>
+            <div style={{ marginTop: '4px', fontSize: '12px', color: 'var(--color-text-secondary)' }}>
               Cluster view • {expandedClusters.size} expanded
             </div>
           )}
           {selectedNodeId && (
-            <div style={{ marginTop: '4px', fontSize: '12px', color: '#2196F3', fontWeight: '500' }}>
+            <div style={{ marginTop: '4px', fontSize: '12px', color: 'var(--color-status-info-text)', fontWeight: '500' }}>
               Viewing: {filteredData.nodes.find(n => n.id === selectedNodeId)?.title || selectedNodeId}
             </div>
           )}
@@ -1184,11 +1286,12 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
           position: 'absolute',
           bottom: '10px',
           right: '10px',
-          background: 'rgba(255,255,255,0.9)',
+          background: 'color-mix(in srgb, var(--color-panel-background) 90%, transparent)',
+          border: '1px solid var(--color-panel-border)',
           padding: '8px 12px',
           borderRadius: '4px',
           fontSize: '12px',
-          color: '#666'
+          color: 'var(--color-text-secondary)'
         }}>
           Click clusters to expand/collapse
         </div>
@@ -1339,7 +1442,9 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
           bottom: '50px',
           left: '50%',
           transform: 'translateX(-50%)',
-          background: 'rgba(255,255,255,0.95)',
+          background: 'color-mix(in srgb, var(--color-panel-background) 95%, transparent)',
+          border: '1px solid var(--color-panel-border)',
+          color: 'var(--color-text)',
           padding: '12px 20px',
           borderRadius: '8px',
           boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
@@ -1355,7 +1460,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
             alignItems: 'center',
             marginBottom: '4px'
           }}>
-            <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#333' }}>
+            <span style={{ fontSize: '14px', fontWeight: 'bold', color: 'var(--color-text)' }}>
               Timeline Filter
             </span>
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -1435,7 +1540,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
               display: 'flex',
               justifyContent: 'space-between',
               fontSize: '11px',
-              color: '#666'
+              color: 'var(--color-text-secondary)'
             }}>
               <span>{new Date(timelineFilter.minDate).toLocaleDateString()}</span>
               <span style={{ fontWeight: 'bold', color: timelineFilter.active ? '#2196F3' : '#999' }}>
@@ -1447,7 +1552,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
 
           <div style={{
             fontSize: '11px',
-            color: '#666',
+            color: 'var(--color-text-secondary)',
             textAlign: 'center',
             marginTop: '2px'
           }}>

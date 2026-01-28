@@ -234,9 +234,10 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
   return (
     <div style={{
       width: '300px',
-      borderRight: '1px solid #ddd',
+      borderRight: '1px solid var(--color-panel-border)',
       padding: '1rem',
-      background: '#f9f9f9',
+      background: 'var(--color-background-secondary)',
+      color: 'var(--color-text)',
       overflow: 'auto'
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
@@ -260,9 +261,10 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
             onClick={handleReset}
             style={{
               padding: '4px 8px',
-              border: '1px solid #ddd',
+              border: '1px solid var(--color-panel-border)',
               borderRadius: '4px',
-              background: '#fff',
+              background: 'var(--color-panel-background)',
+              color: 'var(--color-text)',
               cursor: 'pointer',
               fontSize: '12px'
             }}
@@ -277,9 +279,10 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
         <div style={{
           marginBottom: '1rem',
           padding: '0.75rem',
-          background: '#fff',
-          border: '1px solid #2196f3',
-          borderRadius: '4px'
+          background: 'var(--color-panel-background)',
+          border: '1px solid var(--color-status-info-border)',
+          borderRadius: '4px',
+          color: 'var(--color-text)'
         }}>
           <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '14px' }}>Save Current View</h4>
           <input
@@ -304,9 +307,10 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
               }}
               style={{
                 padding: '4px 8px',
-                border: '1px solid #ddd',
+                border: '1px solid var(--color-panel-border)',
                 borderRadius: '4px',
-                background: '#fff',
+                background: 'var(--color-panel-background)',
+                color: 'var(--color-text)',
                 cursor: 'pointer',
                 fontSize: '12px'
               }}
@@ -344,8 +348,8 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   padding: '0.5rem',
-                  background: '#fff',
-                  border: '1px solid #ddd',
+                  background: 'var(--color-panel-background)',
+                  border: '1px solid var(--color-panel-border)',
                   borderRadius: '4px'
                 }}
               >
@@ -370,7 +374,7 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
                     padding: '2px 6px',
                     border: '1px solid #f44336',
                     borderRadius: '4px',
-                    background: '#fff',
+                    background: 'var(--color-panel-background)',
                     color: '#f44336',
                     cursor: 'pointer',
                     fontSize: '11px'
@@ -396,14 +400,14 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
         <div style={{
           fontSize: '24px',
           fontWeight: 'bold',
-          color: activeChips.length > 0 ? '#1976d2' : '#666',
+          color: activeChips.length > 0 ? 'var(--color-status-info-text)' : 'var(--color-text-secondary)',
           marginBottom: '4px'
         }}>
           {previewCount}
         </div>
         <div style={{
           fontSize: '12px',
-          color: '#666'
+          color: 'var(--color-text-secondary)'
         }}>
           {previewCount === 1 ? 'node matches' : 'nodes match'}
         </div>
@@ -413,15 +417,16 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
       <div style={{
         marginBottom: '1rem',
         padding: '0.75rem',
-        background: '#fff',
-        border: '1px solid #ddd',
-        borderRadius: '4px'
+        background: 'var(--color-panel-background)',
+        border: '1px solid var(--color-panel-border)',
+        borderRadius: '4px',
+        color: 'var(--color-text)'
       }}>
         <div style={{
           fontSize: '12px',
           fontWeight: 'bold',
           marginBottom: '0.5rem',
-          color: '#666'
+          color: 'var(--color-text-secondary)'
         }}>
           Filter Logic
         </div>
@@ -433,8 +438,8 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
               padding: '8px 12px',
               border: `2px solid ${filters.booleanMode === 'AND' ? '#2196f3' : '#ddd'}`,
               borderRadius: '4px',
-              background: filters.booleanMode === 'AND' ? '#e3f2fd' : '#fff',
-              color: filters.booleanMode === 'AND' ? '#1976d2' : '#333',
+              background: filters.booleanMode === 'AND' ? 'var(--color-status-info)' : 'var(--color-panel-background)',
+              color: filters.booleanMode === 'AND' ? 'var(--color-status-info-text)' : 'var(--color-text)',
               cursor: 'pointer',
               fontSize: '13px',
               fontWeight: filters.booleanMode === 'AND' ? 'bold' : 'normal',
@@ -451,8 +456,8 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
               padding: '8px 12px',
               border: `2px solid ${filters.booleanMode === 'OR' ? '#2196f3' : '#ddd'}`,
               borderRadius: '4px',
-              background: filters.booleanMode === 'OR' ? '#e3f2fd' : '#fff',
-              color: filters.booleanMode === 'OR' ? '#1976d2' : '#333',
+              background: filters.booleanMode === 'OR' ? 'var(--color-status-info)' : 'var(--color-panel-background)',
+              color: filters.booleanMode === 'OR' ? 'var(--color-status-info-text)' : 'var(--color-text)',
               cursor: 'pointer',
               fontSize: '13px',
               fontWeight: filters.booleanMode === 'OR' ? 'bold' : 'normal',
@@ -465,7 +470,7 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
         </div>
         <div style={{
           fontSize: '11px',
-          color: '#666',
+          color: 'var(--color-text-secondary)',
           marginTop: '0.5rem',
           fontStyle: 'italic'
         }}>
@@ -480,15 +485,16 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
         <div style={{
           marginBottom: '1rem',
           padding: '0.75rem',
-          background: '#fff',
-          border: '1px solid #ddd',
-          borderRadius: '4px'
+          background: 'var(--color-panel-background)',
+          border: '1px solid var(--color-panel-border)',
+          borderRadius: '4px',
+          color: 'var(--color-text)'
         }}>
           <div style={{
             fontSize: '12px',
             fontWeight: 'bold',
             marginBottom: '0.5rem',
-            color: '#666'
+            color: 'var(--color-text-secondary)'
           }}>
             Active Filters ({activeChips.length})
           </div>
@@ -548,10 +554,10 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
             onClick={() => handleChange('type', 'Inbox')}
             style={{
               padding: '4px 12px',
-              border: '1px solid #ddd',
+              border: '1px solid var(--color-panel-border)',
               borderRadius: '4px',
-              background: filters.type === 'Inbox' ? '#4CAF50' : '#fff',
-              color: filters.type === 'Inbox' ? '#fff' : '#333',
+              background: filters.type === 'Inbox' ? '#4CAF50' : 'var(--color-panel-background)',
+              color: filters.type === 'Inbox' ? '#fff' : 'var(--color-text)',
               cursor: 'pointer',
               fontSize: '12px'
             }}
@@ -616,7 +622,7 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
             fontSize: '14px'
           }}
         />
-        <div style={{ fontSize: '12px', color: '#666', marginTop: '0.25rem' }}>
+        <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginTop: '0.25rem' }}>
           Comma-separated for multiple tags
         </div>
       </div>
@@ -644,7 +650,7 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
       </div>
 
       {/* Hotspots Section */}
-      <details open style={{ marginBottom: '1rem', border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+      <details open style={{ marginBottom: '1rem', border: '1px solid var(--color-panel-border)', borderRadius: '4px', backgroundColor: 'var(--color-background-secondary)' }}>
         <summary style={{
           padding: '12px',
           cursor: 'pointer',
@@ -652,7 +658,7 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
           listStyle: 'none',
           fontWeight: 'bold',
           fontSize: '14px',
-          borderBottom: '1px solid #ddd'
+          borderBottom: '1px solid var(--color-panel-border)'
         }}>
           🔥 Hotspots
         </summary>
@@ -674,10 +680,10 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
               style={{
                 width: '100%',
                 padding: '6px 8px',
-                border: '1px solid #ddd',
+                border: '1px solid var(--color-panel-border)',
                 borderRadius: '4px',
                 fontSize: '13px',
-                backgroundColor: 'white'
+                backgroundColor: 'var(--color-panel-background)'
               }}
             >
               {METRIC_OPTIONS.map(option => (
@@ -713,23 +719,23 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
                     style={{
                       padding: '8px',
                       marginBottom: '4px',
-                      backgroundColor: index < 3 ? '#fff3cd' : 'white',
-                      border: '1px solid #ddd',
+                      backgroundColor: index < 3 ? 'var(--color-status-warning)' : 'var(--color-panel-background)',
+                      border: '1px solid var(--color-panel-border)',
                       borderRadius: '4px',
                       cursor: 'pointer',
                       fontSize: '12px'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#e3f2fd'
+                      e.currentTarget.style.backgroundColor = 'var(--color-status-info)'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = index < 3 ? '#fff3cd' : 'white'
+                      e.currentTarget.style.backgroundColor = index < 3 ? 'var(--color-status-warning)' : 'var(--color-panel-background)'
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px' }}>
                       <span style={{
                         fontWeight: '700',
-                        color: index < 3 ? '#d97706' : '#666',
+                        color: index < 3 ? '#d97706' : 'var(--color-text-secondary)',
                         minWidth: '16px'
                       }}>
                         {index + 1}.
@@ -745,7 +751,7 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
                         </div>
                         <div style={{
                           fontSize: '10px',
-                          color: '#666',
+                          color: 'var(--color-text-secondary)',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap'
@@ -771,13 +777,13 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
                       width: '100%',
                       padding: '8px',
                       marginTop: '8px',
-                      border: '1px solid #ddd',
+                      border: '1px solid var(--color-panel-border)',
                       borderRadius: '4px',
-                      backgroundColor: 'white',
+                      backgroundColor: 'var(--color-panel-background)',
                       cursor: 'pointer',
                       fontSize: '12px',
                       fontWeight: '500',
-                      color: '#2196f3'
+                      color: 'var(--color-status-info-text)'
                     }}
                   >
                     {showAllHotspots ? `Show less (top 5)` : `Show more (${hotspots.length - 5} more)`}
