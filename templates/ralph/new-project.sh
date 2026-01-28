@@ -430,6 +430,14 @@ else
   warn "Template not found: ralph/fix-markdown.sh"
 fi
 
+# Copy root .pre-commit-config.yaml
+if [ -f "$TEMPLATES_DIR/ralph/.pre-commit-config.yaml" ]; then
+  cp "$TEMPLATES_DIR/ralph/.pre-commit-config.yaml" "$PROJECT_LOCATION/.pre-commit-config.yaml"
+  success "Copied .pre-commit-config.yaml"
+else
+  warn "Template not found: ralph/.pre-commit-config.yaml"
+fi
+
 # Copy .gitignore for workers/ralph/
 if [ -f "$TEMPLATES_DIR/ralph/.gitignore" ]; then
   cp "$TEMPLATES_DIR/ralph/.gitignore" "$PROJECT_LOCATION/workers/ralph/.gitignore"

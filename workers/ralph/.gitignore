@@ -6,3 +6,7 @@ old_md/
 .verify/run_id.txt
 
 # Keep .verify/*.sha256 tracked (baseline hashes)
+
+# Ralph logs (do not track)
+logs/
+logs/*.log
