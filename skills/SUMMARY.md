@@ -239,6 +239,7 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
       - [Pricing Strategy](domains/marketing/strategy/pricing-strategy.md) - Design pricing models and pages
       - [Launch Strategy](domains/marketing/strategy/launch-strategy.md) - Plan product launches
       - [Marketing Ideas](domains/marketing/strategy/marketing-ideas.md) - Generate marketing ideas
+      - [Business Ideas](domains/marketing/strategy/business-ideas.md) - Generate and evaluate business ideas (market gaps, autonomy-first)
       - [Marketing Psychology](domains/marketing/strategy/marketing-psychology.md) - Apply psychology to marketing
       - [Competitor Alternatives](domains/marketing/strategy/competitor-alternatives.md) - Analyze competitors and positioning
     - **Growth**

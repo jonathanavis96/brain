@@ -168,6 +168,7 @@ Catalog of all skill files in the brain system.
 - [pricing-strategy.md](domains/marketing/strategy/pricing-strategy.md) - Design pricing models and pages
 - [launch-strategy.md](domains/marketing/strategy/launch-strategy.md) - Plan product launches
 - [marketing-ideas.md](domains/marketing/strategy/marketing-ideas.md) - Generate marketing ideas
+- [business-ideas.md](domains/marketing/strategy/business-ideas.md) - Generate and evaluate business ideas (market gaps, autonomy-first)
 - [marketing-psychology.md](domains/marketing/strategy/marketing-psychology.md) - Apply psychology to marketing
 - [competitor-alternatives.md](domains/marketing/strategy/competitor-alternatives.md) - Analyze competitors and positioning
 
