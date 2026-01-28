@@ -22,8 +22,8 @@ workers/cerebras/
 ├── cerebras_agent.py            # Python wrapper for Cerebras API
 ├── PROMPT.md                    # Full system prompt (533 lines)
 ├── PROMPT_lean.md               # Lightweight prompt variant (93 lines)
-├── THUNK.md                     # Completed task log
-├── IMPLEMENTATION_PLAN.md       # Task queue (synced from workers/)
+├── workers/ralph/THUNK.md                     # Completed task log
+├── workers/IMPLEMENTATION_PLAN.md       # Task queue (synced from workers/)
 └── ENHANCEMENT_PLAN.md          # This enhancement roadmap
 
 Helper Scripts:
@@ -67,7 +67,7 @@ Infrastructure:
 - **BUILD Mode:** All other iterations
 
 PLAN mode focuses on breaking down work and creating task contracts.
-BUILD mode executes exactly ONE task from IMPLEMENTATION_PLAN.md.
+BUILD mode executes exactly ONE task from workers/IMPLEMENTATION_PLAN.md.
 
 ## Running Cerebras
 
@@ -150,7 +150,7 @@ bash current_cerebras_tasks.sh
 
 ### thunk_cerebras_tasks.sh
 
-View completed task history from THUNK.md.
+View completed task history from workers/ralph/THUNK.md.
 
 ```bash
 # View all completed tasks
@@ -184,7 +184,7 @@ markdownlint file.md
 
 ### cleanup_plan.sh
 
-Archive completed tasks from IMPLEMENTATION_PLAN.md.
+Archive completed tasks from workers/IMPLEMENTATION_PLAN.md.
 
 ```bash
 # Preview what would be archived
@@ -194,7 +194,7 @@ bash cleanup_plan.sh --dry-run
 bash cleanup_plan.sh
 ```
 
-**Use case:** IMPLEMENTATION_PLAN.md has many completed tasks cluttering the view.
+**Use case:** workers/IMPLEMENTATION_PLAN.md has many completed tasks cluttering the view.
 
 ### render_ac_status.sh
 

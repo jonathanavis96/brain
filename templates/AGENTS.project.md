@@ -131,7 +131,7 @@ project-root/           ← Working directory for application files
     ├── THOUGHTS.md     ← Project vision
     ├── NEURONS.md      ← Codebase map
     ├── PROMPT.md       ← Loop prompt
-    ├── IMPLEMENTATION_PLAN.md  ← Task tracking
+    ├── workers/IMPLEMENTATION_PLAN.md  ← Task tracking
     ├── VALIDATION_CRITERIA.md  ← Quality gates
     ├── RALPH.md        ← Loop contract
     ├── loop.sh         ← Loop runner
@@ -143,7 +143,7 @@ project-root/           ← Working directory for application files
 - **Config files**: Always at project root (`package.json`, `tsconfig.json`, etc.)
 - **workers/ralph/ directory**: Contains loop infrastructure AND project context (AGENTS, THOUGHTS, NEURONS, kb/, logs/)
 - Keep project goals and vision in `workers/ralph/THOUGHTS.md`
-- Maintain `workers/ralph/IMPLEMENTATION_PLAN.md` as a prioritized task list
+- Maintain `workers/ralph/workers/IMPLEMENTATION_PLAN.md` as a prioritized task list
 
 ## Environment Prerequisites
 

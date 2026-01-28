@@ -123,18 +123,18 @@
 
 ---
 
-### PI-6: THUNK.md table column count error
+### PI-6: workers/ralph/THUNK.md table column count error
 
 | Field | Value |
 |-------|-------|
-| **File** | `workers/ralph/THUNK.md` |
+| **File** | `workers/ralph/workers/ralph/THUNK.md` |
 | **Line** | 782 |
 | **Severity** | 🟠 Major |
 | **Status** | ⬜ Open |
 
 **Issue:** Table rows have 6 pipe-separated columns instead of 5 (MD056 violation). Rows with CR-4.1, CR-4.2, CR-4.3, CR-3.1 and duplicated entries have extra columns.
 
-**Fix Required:** Edit THUNK.md table entries to ensure each row has exactly 5 columns.
+**Fix Required:** Edit workers/ralph/THUNK.md table entries to ensure each row has exactly 5 columns.
 
 **Prevention System Needed:** markdownlint in pre-commit hooks (already present but may not be running on all files).
 
@@ -198,16 +198,16 @@
 
 ---
 
-### PI-10: THUNK.md additional table formatting
+### PI-10: workers/ralph/THUNK.md additional table formatting
 
 | Field | Value |
 |-------|-------|
-| **File** | `workers/ralph/THUNK.md` |
+| **File** | `workers/ralph/workers/ralph/THUNK.md` |
 | **Line** | 748 |
 | **Severity** | 🟡 Minor |
 | **Status** | ⬜ Open |
 
-**Issue:** Additional table formatting issues in THUNK.md.
+**Issue:** Additional table formatting issues in workers/ralph/THUNK.md.
 
 **Fix Required:** Fix table formatting at line 748.
 
@@ -270,13 +270,13 @@ Based on the issues found, here are the prevention systems we need:
 4. PI-8: Fix `LOGS_DIR` → `LOGDIR` typo
 5. PI-5: Fix code-review-patterns.md example
 6. PI-4: Fix README.md documentation
-7. PI-6: Fix THUNK.md table columns
+7. PI-6: Fix workers/ralph/THUNK.md table columns
 
 ### Phase 3: Minor (Cleanup)
 
 8. PI-7: Fix observability-patterns.md placeholder style
 9. PI-9: Fix current_ralph_tasks.sh issue
-10. PI-10: Fix additional THUNK.md formatting
+10. PI-10: Fix additional workers/ralph/THUNK.md formatting
 
 ### Phase 4: Prevention Systems
 

@@ -12,7 +12,7 @@ Operational instructions for building conversion-focused websites. This template
 
 ## Project Structure
 
-See [NEURONS.md](NEURONS.md) for complete project map.
+See [NEURONS.project.md](NEURONS.project.md) for complete project map.
 
 **Key directories:**
 
@@ -54,7 +54,7 @@ See [NEURONS.md](NEURONS.md) for complete project map.
 
 **Create/update:**
 
-- `IMPLEMENTATION_PLAN.md` - Phased build plan
+- `workers/IMPLEMENTATION_PLAN.md` - Phased build plan
 - `sections.md` - Detailed section content for each page
 - Tech stack decisions documented in `THOUGHTS.md`
 
@@ -227,9 +227,9 @@ npx lighthouse http://localhost:3000 --view
 
 ## See Also
 
-- **[THOUGHTS.md](THOUGHTS.md)** - Project vision and goals
-- **[NEURONS.md](NEURONS.md)** - Project structure map
-- **[VALIDATION_CRITERIA.md](VALIDATION_CRITERIA.md)** - Acceptance criteria
+- **[THOUGHTS.project.md](THOUGHTS.project.md)** - Project vision and goals
+- **[NEURONS.project.md](NEURONS.project.md)** - Project structure map
+- **[VALIDATION_CRITERIA.project.md](VALIDATION_CRITERIA.project.md)** - Acceptance criteria
 - **[sitemap.md](docs/sitemap.md)** - Navigation structure
 - **[sections.md](docs/sections.md)** - Page section composition
 - **brain/skills/domains/websites/** - All website skills

@@ -49,7 +49,7 @@
 
 #### 4. **Cortex: Verbose Task Contracts**
 
-- **Problem:** Task contracts in IMPLEMENTATION_PLAN.md are comprehensive but verbose
+- **Problem:** Task contracts in workers/IMPLEMENTATION_PLAN.md are comprehensive but verbose
 - **Example:** Task 0.0 is 42 lines with full context
 - **Cost:** ~300 tokens per task × 10 tasks = 3,000 tokens
 - **Fix:** Use shorthand format for simple tasks:

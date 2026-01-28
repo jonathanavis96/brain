@@ -49,7 +49,7 @@ Last updated: [TIMESTAMP]
 ├── ralph/                      # Ralph loop infrastructure
 │   ├── loop.sh                 # Loop runner
 │   ├── PROMPT.md               # Ralph instructions
-│   ├── IMPLEMENTATION_PLAN.md  # Task list
+│   ├── workers/IMPLEMENTATION_PLAN.md  # Task list
 │   └── VALIDATION_CRITERIA.md  # Quality gates
 │
 └── skills/                     # Project-specific knowledge base

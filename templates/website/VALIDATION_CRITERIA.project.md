@@ -41,7 +41,7 @@ rg -q "Business Goals" THOUGHTS.md && echo "✓ Goals defined"
 
 **Acceptance Criteria:**
 
-- [ ] `IMPLEMENTATION_PLAN.md` exists with phased tasks
+- [ ] `workers/IMPLEMENTATION_PLAN.md` exists with phased tasks
 - [ ] Tech stack decision documented in `THOUGHTS.md`
 - [ ] All pages have section composition in `docs/sections.md`
 - [ ] Content sources identified (existing vs to-be-created)
@@ -51,7 +51,7 @@ rg -q "Business Goals" THOUGHTS.md && echo "✓ Goals defined"
 
 ```bash
 # Check planning files
-test -f IMPLEMENTATION_PLAN.md && echo "✓ Implementation plan exists"
+test -f workers/IMPLEMENTATION_PLAN.md && echo "✓ Implementation plan exists"
 test -d node_modules && echo "✓ Dependencies installed"
 
 # Verify sections defined for all pages
@@ -292,7 +292,7 @@ Final checks before going live:
 
 ## Related
 
-- **[AGENTS.md](AGENTS.md)** - Workflow and patterns
-- **[THOUGHTS.md](THOUGHTS.md)** - Success criteria and goals
+- **[AGENTS.project.md](AGENTS.project.md)** - Workflow and patterns
+- **[THOUGHTS.project.md](THOUGHTS.project.md)** - Success criteria and goals
 - **brain/skills/domains/websites/qa/** - QA skills and patterns
 - **brain/skills/domains/infrastructure/deployment-patterns.md** - Deployment guidance

@@ -72,7 +72,7 @@ Example documentation checks:
 
 - [ ] THOUGHTS.md reflects current goals and success criteria
 - [ ] NEURONS.md maps current codebase structure
-- [ ] IMPLEMENTATION_PLAN.md has actionable tasks
+- [ ] workers/IMPLEMENTATION_PLAN.md has actionable tasks
 - [ ] AGENTS.md describes how Ralph works in this project
 
 Example specific checks:
@@ -96,13 +96,13 @@ Example specific checks:
 - Reference relevant validation criteria for current task
 - Run validation commands to verify implementation
 - Check that your changes don't violate any criteria
-- Update task in IMPLEMENTATION_PLAN.md with validation results
+- Update task in workers/IMPLEMENTATION_PLAN.md with validation results
 
 **For Manual Verification:**
 
 - Run through checklist after major milestones
 - Mark items [x] as they're verified
-- Document verification results in IMPLEMENTATION_PLAN.md notes
+- Document verification results in workers/IMPLEMENTATION_PLAN.md notes
 - Update criteria if new quality requirements emerge
 
 ## Validation Commands

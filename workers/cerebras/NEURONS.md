@@ -9,15 +9,15 @@ This file maps the brain repository structure from the Cerebras worker's perspec
 - **Worker:** Cerebras (Direct Cerebras API integration)
 - **Location:** `/workers/cerebras/`
 - **Access:** Full brain repository (read/write except protected files)
-- **Scope:** Shared task execution from `workers/IMPLEMENTATION_PLAN.md`
+- **Scope:** Shared task execution from `workers/workers/IMPLEMENTATION_PLAN.md`
 - **Model:** Cerebras Llama 3.3 70B (default)
 
 ## Quick Navigation
 
 | I need to... | Read this |
 |--------------|-----------|
-| See active tasks | `workers/IMPLEMENTATION_PLAN.md` |
-| See completed tasks | `workers/cerebras/THUNK.md` |
+| See active tasks | `workers/workers/IMPLEMENTATION_PLAN.md` |
+| See completed tasks | `workers/cerebras/workers/ralph/THUNK.md` |
 | Fix a verifier error | `skills/SUMMARY.md` → Error table |
 | Understand project goals | `THOUGHTS.md` |
 | Learn a pattern | `skills/domains/<category>/<skill>.md` |
@@ -57,7 +57,7 @@ cortex/
 ├── NEURONS.md                   # Cortex view of repository
 ├── THOUGHTS.md                  # Cortex strategic analysis
 ├── DECISIONS.md                 # Architectural decisions log
-├── IMPLEMENTATION_PLAN.md       # READ-ONLY copy (syncs from workers/)
+├── workers/IMPLEMENTATION_PLAN.md       # READ-ONLY copy (syncs from workers/)
 ├── cortex.bash                  # Cortex wrapper script
 ├── snapshot.sh                  # Fast state snapshot (non-interactive)
 ├── sync_gaps.sh                 # Dedup and merge gaps from projects
@@ -77,7 +77,7 @@ cortex/
 **Cortex Role:**
 
 - Strategic planning (not implementation)
-- Writes tasks to `workers/IMPLEMENTATION_PLAN.md`
+- Writes tasks to `workers/workers/IMPLEMENTATION_PLAN.md`
 - Reviews Ralph/Cerebras progress
 - Never modifies source code directly
 
@@ -85,7 +85,7 @@ cortex/
 
 ```text
 workers/
-├── IMPLEMENTATION_PLAN.md       # SOURCE OF TRUTH - Shared task backlog
+├── workers/IMPLEMENTATION_PLAN.md       # SOURCE OF TRUTH - Shared task backlog
 ├── shared/                      # Shared utilities for all workers
 │   ├── cache.sh                # Cache management
 │   ├── common.sh               # Common functions
@@ -103,7 +103,7 @@ workers/
     ├── AGENTS.md               # Cerebras operational guide
     ├── NEURONS.md              # This file
     ├── THOUGHTS.md             # Cerebras-specific context
-    ├── THUNK.md                # Completed task log
+    ├── workers/ralph/THUNK.md                # Completed task log
     ├── PROMPT.md               # Full system prompt (533 lines)
     ├── PROMPT_lean.md          # Lean prompt variant (93 lines)
     ├── VALIDATION_CRITERIA.md  # Quality gates
@@ -137,8 +137,8 @@ workers/
 
 **Cerebras Worker Key Files:**
 
-- `workers/IMPLEMENTATION_PLAN.md` - Shared task source (cerebras reads from here)
-- `THUNK.md` - Cerebras's completed task log
+- `workers/workers/IMPLEMENTATION_PLAN.md` - Shared task source (cerebras reads from here)
+- `workers/ralph/THUNK.md` - Cerebras's completed task log
 - `loop.sh` - Main loop (simpler than Ralph: 1,356 vs 2,292 lines)
 - `verifier.sh` - Same verifier as Ralph but adapted paths
 - `PROMPT.md` - Full prompt with token efficiency guidance
@@ -244,7 +244,7 @@ skills/
 │   └── brain-example.md
 └── self-improvement/            # Gap capture system
     ├── README.md
-    ├── GAP_BACKLOG.md          # Captured knowledge gaps
+    ├── skills/self-improvement/GAP_BACKLOG.md          # Captured knowledge gaps
     ├── GAP_CAPTURE_RULES.md    # Rules for gap capture
     ├── GAP_LOG_AND_AUTO_SKILL_SPEC.md  # Spec
     ├── SKILL_BACKLOG.md        # Promoted skills
@@ -356,7 +356,7 @@ tools/
 ├── skill_freshness.sh           # Check skill freshness
 ├── test_*.sh                    # Various test scripts
 ├── thunk_dedup.sh               # Deduplicate THUNK entries
-├── thunk_parser.py              # Parse THUNK.md
+├── thunk_parser.py              # Parse workers/ralph/THUNK.md
 ├── validate_*.sh                # Validation scripts
 ├── brain_dashboard/             # Brain metrics dashboard
 │   ├── collect_metrics.sh
@@ -430,17 +430,17 @@ skills/domains/<category>/<skill>.md
 skills/playbooks/<playbook>.md
 
 # Add gap (missing knowledge)
-echo "- Gap description" >> skills/self-improvement/GAP_BACKLOG.md
+echo "- Gap description" >> skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md
 ```
 
 ### Working with Tasks
 
 ```bash
 # View active tasks
-grep "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -10
+grep "^- \[ \]" workers/workers/IMPLEMENTATION_PLAN.md | head -10
 
 # View completed tasks
-tail -50 workers/cerebras/THUNK.md
+tail -50 workers/cerebras/workers/ralph/THUNK.md
 
 # Monitor tasks (real-time)
 bash workers/cerebras/current_cerebras_tasks.sh

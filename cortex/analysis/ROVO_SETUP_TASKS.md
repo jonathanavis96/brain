@@ -7,7 +7,7 @@
 
 ## For Brain Repository Ralph (workers/ralph/)
 
-Add these tasks to `workers/IMPLEMENTATION_PLAN.md` AFTER Phase 0-Sync:
+Add these tasks to `workers/workers/IMPLEMENTATION_PLAN.md` AFTER Phase 0-Sync:
 
 ---
 
@@ -20,7 +20,7 @@ Add these tasks to `workers/IMPLEMENTATION_PLAN.md` AFTER Phase 0-Sync:
     1. Create `../rovo/cortex/` directory
     2. Copy templates from `brain/templates/cortex/` to `../rovo/cortex/`:
        - CORTEX_SYSTEM_PROMPT.project.md → CORTEX_SYSTEM_PROMPT.md
-       - IMPLEMENTATION_PLAN.project.md → IMPLEMENTATION_PLAN.md
+       - IMPLEMENTATION_PLAN.project.md → workers/IMPLEMENTATION_PLAN.md
        - THOUGHTS.project.md → THOUGHTS.md
        - DECISIONS.project.md → DECISIONS.md
        - AGENTS.project.md → AGENTS.md
@@ -44,7 +44,7 @@ Add these tasks to `workers/IMPLEMENTATION_PLAN.md` AFTER Phase 0-Sync:
   - **Context:** Rovo has significant work done already (38+ accounts created, batch system working)
   - **Changes:**
     1. Read `../rovo/ralph/THOUGHTS.md` (if exists) for current project goals
-    2. Read `../rovo/ralph/IMPLEMENTATION_PLAN.md` for task history
+    2. Read `../rovo/ralph/workers/IMPLEMENTATION_PLAN.md` for task history
     3. Update `../rovo/cortex/THOUGHTS.md` with:
        - Current mission: Autonomous account pool management
        - Completed work: Batch creation, Gmail monitoring, browser automation
@@ -57,16 +57,16 @@ Add these tasks to `workers/IMPLEMENTATION_PLAN.md` AFTER Phase 0-Sync:
     - [ ] Documents current progress (Phase 1-2 mostly complete)
   - **If Blocked:** Ask user for rovo project priorities
 
-- [ ] **0-R.3** Create initial Cortex IMPLEMENTATION_PLAN.md for rovo
+- [ ] **0-R.3** Create initial Cortex workers/IMPLEMENTATION_PLAN.md for rovo
   - **Goal:** Give Cortex a starting plan that Ralph can sync from
-  - **Files:** `../rovo/cortex/IMPLEMENTATION_PLAN.md`
+  - **Files:** `../rovo/workers/workers/IMPLEMENTATION_PLAN.md`
   - **Changes:**
     1. Copy window management tasks from `brain/cortex/analysis/ROVO_WINDOW_FIX_PLAN.md`
     2. Create Phase 0-Window section with 4 tasks (0-W.1 through 0-W.4)
     3. Add note: "Synced from brain/cortex analysis (2026-01-21)"
     4. Remove any brain-specific tasks (no Phase 0-Sync for rovo!)
   - **AC:**
-    - [ ] IMPLEMENTATION_PLAN.md has Phase 0-Window tasks
+    - [ ] workers/IMPLEMENTATION_PLAN.md has Phase 0-Window tasks
     - [ ] Tasks are atomic and ready for ralph to execute
     - [ ] No brain-specific tasks included
   - **If Blocked:** Reference ROVO_WINDOW_FIX_PLAN.md for task details
@@ -77,14 +77,14 @@ Add these tasks to `workers/IMPLEMENTATION_PLAN.md` AFTER Phase 0-Sync:
 
 User should manually:
 
-1. **DELETE Phase 0-Sync** from `../rovo/ralph/IMPLEMENTATION_PLAN.md`
+1. **DELETE Phase 0-Sync** from `../rovo/ralph/workers/IMPLEMENTATION_PLAN.md`
    - Reason: That's a brain repository task (sync_workers_plan_to_cortex.sh for brain/workers/ralph)
    - Rovo doesn't need it
 
-2. **KEEP Phase 0-P1** (login retry logic fix) in `../rovo/ralph/IMPLEMENTATION_PLAN.md`
+2. **KEEP Phase 0-P1** (login retry logic fix) in `../rovo/ralph/workers/IMPLEMENTATION_PLAN.md`
    - Reason: That IS a rovo-specific task (fixes create_account.sh)
 
-3. **ADD Phase 0-Window tasks** from `../rovo/cortex/IMPLEMENTATION_PLAN.md` (after Brain Ralph completes 0-R.3)
+3. **ADD Phase 0-Window tasks** from `../rovo/workers/workers/IMPLEMENTATION_PLAN.md` (after Brain Ralph completes 0-R.3)
    - These will be synced automatically once sync_workers_plan_to_cortex.sh exists
    - Or manually copy for now
 

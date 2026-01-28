@@ -1,5 +1,7 @@
 # RollFlow Analysis Report
 
+> **⚠️ HISTORICAL DOCUMENT** - This is a historical analysis from 2026-01-26. For current metrics, run `tools/rollflow_analyze/` or see [artifacts/analysis/](.) for newer reports.
+
 **Generated:** 2026-01-26T12:08:49.274795
 **Run ID:** N/A
 

@@ -44,7 +44,7 @@ These items were raised by CodeRabbit during review (advisory) and were validate
 - **Docs hygiene — typos + table cleanup + SPEC clarity** (✅ Fixed, `dca3ff0`)
   - **What was broken:**
     - Minor typos (`doesnt`) in both plan files.
-    - `workers/PLAN_DONE.md` had duplicated checklist rows in the archive table and a confusing self-referential line-number mention.
+    - `workers/workers/PLAN_DONE.md` had duplicated checklist rows in the archive table and a confusing self-referential line-number mention.
     - `SPEC_CHANGE_REQUEST.md` listed `templates/ralph/loop.sh` as impacted without stating whether the change had been applied.
   - **Fix approach:**
     - Correct spelling (`doesn't`).
@@ -134,7 +134,7 @@ These items were raised by CodeRabbit during review (advisory) and were validate
 
 - **Cortex docs — conflicting task contract guidance + CLI break** (✅ Fixed, `11c40b8`, `8b726b1`)
   - **Fix approach:**
-    - Make the source-of-truth explicit: task contracts live in `workers/IMPLEMENTATION_PLAN.md`.
+    - Make the source-of-truth explicit: task contracts live in `workers/workers/IMPLEMENTATION_PLAN.md`.
     - Avoid non-printable control characters in docs (they can break YAML/JSON parsing in tooling).
 
 - **Protected-file workflow — spec alignment** (✅ Fixed, `11c40b8`)
@@ -328,10 +328,10 @@ CodeRabbit has identified **50+ issues** across PR5 and PR6, with significant ov
 
 ---
 
-### M10: THUNK.md Table Column Mismatch (Recurring)
+### M10: workers/ralph/THUNK.md Table Column Mismatch (Recurring)
 
 **Status:** ⬜ Open  
-**File:** `workers/ralph/THUNK.md` lines 748, 770-782  
+**File:** `workers/ralph/workers/ralph/THUNK.md` lines 748, 770-782  
 **PRs:** #5 (D8), #6 (PI-6, PI-10)
 
 **Issue:** Table rows have wrong column count (6 instead of 5), unescaped pipes.
@@ -418,7 +418,7 @@ CodeRabbit has identified **50+ issues** across PR5 and PR6, with significant ov
 
 | File | Issue |
 |------|-------|
-| `workers/IMPLEMENTATION_PLAN.md` | Future date |
+| `workers/workers/IMPLEMENTATION_PLAN.md` | Future date |
 | `skills/domains/languages/typescript/README.md` | Future date |
 
 **Prevention:** Date validation script (no future dates).
@@ -601,7 +601,7 @@ patterns:
 1. ✅ Create unified issues tracker (this document)
 2. ⬜ Fix all hash mismatches (HUMAN REQUIRED)
 3. ⬜ Fix `LOGS_DIR` → `LOGDIR` typo
-4. ⬜ Fix THUNK.md table formatting
+4. ⬜ Fix workers/ralph/THUNK.md table formatting
 5. ⬜ Add `*.egg-info/` to `.gitignore`
 
 ### Phase 2: Pre-PR Script (Next)

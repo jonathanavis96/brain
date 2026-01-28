@@ -62,7 +62,7 @@ Historical session logs, decisions, and analysis. Moved here to keep THOUGHTS.md
 
 **Current State:**
 
-- Ralph's IMPLEMENTATION_PLAN.md has well-organized phases (0-7)
+- Ralph's workers/IMPLEMENTATION_PLAN.md has well-organized phases (0-7)
 - Phase 0-A and 0-B fully complete (restructure done)
 - Template sync warnings exist (WARN.T1, WARN.T2) - templates lag behind implementation
 - GAP_BACKLOG has 3 items, 1 at P1 priority (bash/shell validation patterns)
@@ -77,7 +77,7 @@ Historical session logs, decisions, and analysis. Moved here to keep THOUGHTS.md
 **Risks:**
 
 - Template drift increasing (monitor scripts differ from templates)
-- Phase 6 D-items may be obsolete after IMPLEMENTATION_PLAN.md rewrite
+- Phase 6 D-items may be obsolete after workers/IMPLEMENTATION_PLAN.md rewrite
 - Some Phase 5 items require modifying protected files (human approval needed)
 
 ---
@@ -88,7 +88,7 @@ Historical session logs, decisions, and analysis. Moved here to keep THOUGHTS.md
 - Verifier warnings are helpful but need better categorization (high/medium/low)
 - Template sync warnings indicate need for better sync automation
 - Skills system working well but underutilized for gap capture
-- THUNK.md logging provides good audit trail of completed work
+- workers/ralph/THUNK.md logging provides good audit trail of completed work
 
 ### Gap Backlog Review (2026-01-21)
 

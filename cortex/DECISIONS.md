@@ -52,7 +52,7 @@ brain/
     REPO_MAP.md                ← Navigation guide
     DECISIONS.md               ← This file
     RUNBOOK.md                 ← Operations guide
-    IMPLEMENTATION_PLAN.md     ← High-level atomic tasks
+    workers/IMPLEMENTATION_PLAN.md     ← High-level atomic tasks
     THOUGHTS.md                ← Cortex's analysis
     run.sh, snapshot.sh        ← Entry points
     
@@ -63,9 +63,9 @@ brain/
 **Workflow:**
 
 1. Human runs `bash cortex/run.sh` → Opus loads as Cortex
-2. Cortex writes `cortex/IMPLEMENTATION_PLAN.md` (atomic tasks)
+2. Cortex writes `workers/workers/IMPLEMENTATION_PLAN.md` (atomic tasks)
 3. Human runs `bash workers/ralph/loop.sh`
-4. Ralph copies Cortex plan at startup, executes tasks, logs to THUNK.md
+4. Ralph copies Cortex plan at startup, executes tasks, logs to workers/ralph/THUNK.md
 5. Cortex can compare both plans to check alignment
 
 ### 2026-01-19: TOTP vs Hardware Key
@@ -175,26 +175,26 @@ brain/
 
 - Review `skills/SUMMARY.md` and `skills/index.md`
 - Run `.maintenance/verify-brain.sh` and incorporate findings
-- Update `IMPLEMENTATION_PLAN.md` with atomic tasks
+- Update `workers/IMPLEMENTATION_PLAN.md` with atomic tasks
 - Commit planning updates and **push all accumulated commits**
 
 ### Build Mode (All other iterations)
 
-- Pick **first unchecked task** from `IMPLEMENTATION_PLAN.md`
-- Implement, validate, log to `THUNK.md`, commit (local only)
-- Check self-improvement: append to `skills/self-improvement/GAP_BACKLOG.md` if needed
+- Pick **first unchecked task** from `workers/IMPLEMENTATION_PLAN.md`
+- Implement, validate, log to `workers/ralph/THUNK.md`, commit (local only)
+- Check self-improvement: append to `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` if needed
 - **Never push** - wait for planning mode to push
 
 ### Verifier Gates
 
 - Run after every build iteration
 - Block on FAIL status - Ralph must fix before continuing
-- Warn on WARN status - track in `IMPLEMENTATION_PLAN.md` "Verifier Warnings" section
+- Warn on WARN status - track in `workers/IMPLEMENTATION_PLAN.md` "Verifier Warnings" section
 - Protected files: `loop.sh`, `verifier.sh`, `PROMPT.md`, `rules/AC.rules`
 
 ### Skills System
 
-- **End of iteration:** Check for undocumented knowledge → append to `GAP_BACKLOG.md`
+- **End of iteration:** Check for undocumented knowledge → append to `skills/self-improvement/GAP_BACKLOG.md`
 - **When gap is clear/specific/recurring:** Promote to `SKILL_BACKLOG.md`
 - **When ready:** Create skill file using `SKILL_TEMPLATE.md`, update `skills/index.md`
 
@@ -228,9 +228,9 @@ brain/
 
 **Allowed:**
 
-- `cortex/IMPLEMENTATION_PLAN.md` - Task contracts for Ralph
+- `workers/workers/IMPLEMENTATION_PLAN.md` - Task contracts for Ralph
 - `cortex/THOUGHTS.md` - Cortex's analysis and decision log
-- `skills/self-improvement/GAP_BACKLOG.md` - Gap capture
+- `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` - Gap capture
 - `skills/self-improvement/SKILL_BACKLOG.md` - Skill promotion queue
 - Any files Cortex creates in `cortex/` (e.g., temp analysis files)
 
@@ -344,7 +344,7 @@ brain/
 **Applies to:**
 
 - `cortex/THOUGHTS.md` - Planning session headers
-- `cortex/IMPLEMENTATION_PLAN.md` - Last Updated timestamps
+- `workers/workers/IMPLEMENTATION_PLAN.md` - Last Updated timestamps
 - `cortex/DECISIONS.md` - Decision dates
 - Any other `.md` files with temporal markers
 
@@ -361,14 +361,14 @@ brain/
 **Approved Write Access:**
 
 - `cortex/*.md` - Cortex's planning and analysis files
-- `skills/self-improvement/GAP_BACKLOG.md` - Knowledge gap tracking
+- `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` - Knowledge gap tracking
 - `skills/self-improvement/SKILL_BACKLOG.md` - Skill promotion queue
 
 **Forbidden Actions:**
 
 - Modifying source code directly (Ralph's responsibility)
 - Modifying protected infrastructure (`PROMPT.md`, `loop.sh`, `verifier.sh`, `rules/AC.rules`)
-- Modifying Ralph's working copy of `IMPLEMENTATION_PLAN.md` (Cortex writes to `cortex/IMPLEMENTATION_PLAN.md` instead)
+- Modifying Ralph's working copy of `workers/IMPLEMENTATION_PLAN.md` (Cortex writes to `workers/workers/IMPLEMENTATION_PLAN.md` instead)
 
 **Enforcement:**
 
@@ -420,7 +420,7 @@ brain/
 
 **Implementation Notes:**
 
-- Use the existing `stage_scoped_changes` denylist (avoids committing `artifacts/**`, `cortex/PLAN_DONE.md`, caches).
+- Use the existing `stage_scoped_changes` denylist (avoids committing `artifacts/**`, `workers/workers/PLAN_DONE.md`, caches).
 - Do not run in `--dry-run` mode.
 - Because `loop.sh` is hash-guarded, humans must regenerate `.verify/*.sha256` after changes.
 

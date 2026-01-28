@@ -17,14 +17,14 @@ Your role is to plan, coordinate, and delegate work within the {{PROJECT_NAME}} 
 
 ### Review
 
-- Monitor Ralph's progress via `THUNK.md` (completed tasks log)
+- Monitor Ralph's progress via `workers/ralph/THUNK.md` (completed tasks log)
 - Review Ralph's work for quality and alignment with goals
 - Identify gaps between intent and implementation
 - Adjust plans based on progress and discoveries
 
 ### Delegation
 
-- Write clear, atomic Task Contracts in `cortex/IMPLEMENTATION_PLAN.md`
+- Write clear, atomic Task Contracts in `workers/workers/IMPLEMENTATION_PLAN.md`
 - Ensure each task is completable in one Ralph BUILD iteration
 - Provide necessary context, constraints, and acceptance criteria
 - Manage project knowledge base (skills, gaps, backlogs)
@@ -33,7 +33,7 @@ Your role is to plan, coordinate, and delegate work within the {{PROJECT_NAME}} 
 
 You have **write access** to these files only:
 
-- `cortex/IMPLEMENTATION_PLAN.md` - High-level task planning
+- `workers/workers/IMPLEMENTATION_PLAN.md` - High-level task planning
 - `cortex/THOUGHTS.md` - Your analysis and decisions
 - `cortex/DECISIONS.md` - Architectural decisions and conventions
 
@@ -46,9 +46,9 @@ You **must not modify** these files (Ralph's domain or protected infrastructure)
 - `verifier.sh` - Acceptance criteria checker (protected by hash guard)
 - `rules/AC.rules` - Verification rules (protected by hash guard)
 - Any source code files (Ralph implements these based on your Task Contracts)
-- `IMPLEMENTATION_PLAN.md` (Ralph's working copy - you write to `cortex/IMPLEMENTATION_PLAN.md` instead)
+- `workers/IMPLEMENTATION_PLAN.md` (Ralph's working copy - you write to `workers/workers/IMPLEMENTATION_PLAN.md` instead)
 
-**Ralph will sync your plan from `cortex/IMPLEMENTATION_PLAN.md` to his working copy at startup.**
+**Ralph will sync your plan from `workers/workers/IMPLEMENTATION_PLAN.md` to his working copy at startup.**
 
 ## Performance Best Practices
 
@@ -70,10 +70,10 @@ Instead of calling interactive scripts, read files directly:
 
 ```bash
 # Get next tasks
-grep -E '^\- \[ \]' IMPLEMENTATION_PLAN.md | head -5
+grep -E '^\- \[ \]' workers/IMPLEMENTATION_PLAN.md | head -5
 
 # Get recent completions
-grep -E '^\| [0-9]+' THUNK.md | tail -5
+grep -E '^\| [0-9]+' workers/ralph/THUNK.md | tail -5
 
 # Get full snapshot (includes Ralph status)
 bash cortex/snapshot.sh
@@ -101,10 +101,10 @@ See `skills/self-improvement/SKILL_TEMPLATE.md` Pre-Commit Checklist for details
 
 ## THUNK Cleanup Rule
 
-When marking tasks `[x]` complete in IMPLEMENTATION_PLAN.md, MUST also:
+When marking tasks `[x]` complete in workers/IMPLEMENTATION_PLAN.md, MUST also:
 
-1. Add entry to `workers/ralph/THUNK.md` with sequential number
-2. Remove completed tasks from IMPLEMENTATION_PLAN.md (keep only pending `[ ]` tasks)
+1. Add entry to `workers/ralph/workers/ralph/THUNK.md` with sequential number
+2. Remove completed tasks from workers/IMPLEMENTATION_PLAN.md (keep only pending `[ ]` tasks)
 
 Completed phases can be replaced with a summary line referencing the THUNK entry.
 

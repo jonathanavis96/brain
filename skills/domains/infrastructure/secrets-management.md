@@ -302,4 +302,4 @@ Is this a personal/local project?
 
 - [12-Factor App: Config](https://12factor.net/config) - Store config in environment
 - [OWASP: Secrets Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html)
-- Brain example: `.env.example`, task 34.1.1 in `workers/IMPLEMENTATION_PLAN.md`
+- Brain example: `.env.example`, task 34.1.1 in `workers/workers/IMPLEMENTATION_PLAN.md`

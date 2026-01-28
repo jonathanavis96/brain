@@ -28,7 +28,7 @@ workers/cerebras/
 ├── AGENTS.md               # This file - operational guide
 ├── NEURONS.md              # Repository structure map (cerebras-specific view)
 ├── THOUGHTS.md             # Strategic goals and context
-├── THUNK.md                # Completed task log
+├── workers/ralph/THUNK.md                # Completed task log
 ├── PROMPT.md               # Agent prompt for cerebras
 ├── VALIDATION_CRITERIA.md  # Quality gates
 ├── loop.sh                 # Main execution loop
@@ -46,7 +46,7 @@ workers/cerebras/
 
 ## Task Execution
 
-See workers/IMPLEMENTATION_PLAN.md for shared task backlog.
+See workers/workers/IMPLEMENTATION_PLAN.md for shared task backlog.
 
 ## Protected Files
 
@@ -64,5 +64,5 @@ If you need to change these files, create a `SPEC_CHANGE_REQUEST.md` and stop.
 - **[../../README.md](../../README.md)** - Brain repository overview
 - **[../../NEURONS.md](../../NEURONS.md)** - Repository structure map
 - **[../../THOUGHTS.md](../../THOUGHTS.md)** - Strategic vision
-- **[../IMPLEMENTATION_PLAN.md](../IMPLEMENTATION_PLAN.md)** - Shared task backlog
+- **[../workers/IMPLEMENTATION_PLAN.md](../IMPLEMENTATION_PLAN.md)** - Shared task backlog
 - **[../../skills/](../../skills/)** - Skills knowledge base

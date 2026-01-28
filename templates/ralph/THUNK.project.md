@@ -1,6 +1,6 @@
 # THUNK - Completed Task Log
 
-Persistent record of all completed tasks across IMPLEMENTATION_PLAN.md iterations.
+Persistent record of all completed tasks across workers/IMPLEMENTATION_PLAN.md iterations.
 
 Project: {{PROJECT_NAME}}
 Created: {{CREATION_DATE}}
@@ -19,18 +19,18 @@ Started: {{CREATION_DATE}}
 
 ## How THUNK Works
 
-**Purpose:** Permanent append-only log of all completed tasks from IMPLEMENTATION_PLAN.md.
+**Purpose:** Permanent append-only log of all completed tasks from workers/IMPLEMENTATION_PLAN.md.
 
 **Key Concepts:**
 
 - **THUNK #** = Globally sequential number (never resets, always increments)
-- **Original #** = Task number from IMPLEMENTATION_PLAN.md (e.g., "1.1", "T5.3")
+- **Original #** = Task number from workers/IMPLEMENTATION_PLAN.md (e.g., "1.1", "T5.3")
 - **Era** = Logical grouping of tasks from a plan phase
 
 **Auto-Append Behavior:**
 
-- When you mark a task `[x]` in IMPLEMENTATION_PLAN.md, `thunk_ralph_tasks.sh` detects it
-- Task is automatically appended to THUNK.md with next sequential THUNK #
+- When you mark a task `[x]` in workers/IMPLEMENTATION_PLAN.md, `thunk_ralph_tasks.sh` detects it
+- Task is automatically appended to workers/ralph/THUNK.md with next sequential THUNK #
 - Duplicate prevention: Tasks are matched by description to avoid re-adding
 
 **Monitor Integration:**
@@ -41,7 +41,7 @@ Started: {{CREATION_DATE}}
 **Hotkeys in thunk_ralph_tasks.sh:**
 
 - `[r]` - Refresh display (clears screen, re-reads THUNK.md)
-- `[f]` - Force sync (scan IMPLEMENTATION_PLAN.md for new completions)
+- `[f]` - Force sync (scan workers/IMPLEMENTATION_PLAN.md for new completions)
 - `[e]` - Start new era (prompts for name)
 - `[q]` - Quit monitor
 

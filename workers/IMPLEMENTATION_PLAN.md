@@ -15,11 +15,72 @@
 
 **Active Focus:**
 
-- Phase 0-Warn: MD012 errors in workers/PLAN_DONE.md
+- Phase 0-Warn: MD012 errors in workers/workers/PLAN_DONE.md
 - Phase 37: Repo Cleanup & Drift Control
 - Phase 38: Documentation Consolidation & Navigation
 
 <!-- Cortex adds new Task Contracts below this line -->
+
+---
+
+## Phase 39: Root Folder Cleanup & Link Integrity
+
+**Context:** The repo root should contain only primary entrypoints (`AGENTS.md`, `CONTRIBUTING.md`, `NEURONS.md`, `README.md`, `THOUGHTS.md`) plus standard dotfiles. Other loose root files should be moved into appropriate subfolders, and all internal references updated.
+
+**Goal:** Thin the repository root while preserving usability, link integrity, and script ergonomics.
+
+**Success Criteria:**
+
+- Root contains only the kept entrypoints plus standard dotfiles/config
+- Moved files are discoverable under `scripts/`, `docs/requests/`, `artifacts/reports/`, and `config/templates/`
+- No stale references to old root paths remain
+- Link validation passes
+
+---
+
+- [x] **39.1** Create destination directories for root-file moves
+  - **Goal:** Prepare the new canonical locations before any move.
+  - **Implementation:** Ensure these directories exist: `scripts/`, `docs/requests/`, `artifacts/reports/`, `config/templates/`.
+  - **AC:** All directories exist; no files moved yet.
+
+- [x] **39.2** Move root scripts into `scripts/`
+  - **Goal:** Remove bootstrap scripts from repo root while keeping them runnable.
+  - **Move:** `setup.sh` → `scripts/setup.sh`; `setup-linters.sh` → `scripts/setup-linters.sh`; `new-project.sh` → `scripts/new-project.sh`.
+  - **AC:** Files are moved (prefer `git mv`) and retain executable bits (if previously executable).
+
+- [x] **39.3** Move root docs/reports to their new locations
+  - **Goal:** Clear non-entrypoint docs from root into appropriate buckets.
+  - **Move:** `SPEC_CHANGE_REQUEST.md` → `docs/requests/SPEC_CHANGE_REQUEST.md`; `TEMPLATE_DRIFT_REPORT.md` → `artifacts/reports/TEMPLATE_DRIFT_REPORT.md`.
+  - **AC:** Both files exist in new locations and no longer exist at root.
+
+- [x] **39.4** Move root config template into `config/templates/`
+  - **Goal:** Group config templates under `config/` instead of root.
+  - **Move:** `rovodev-config.template.yml` → `config/templates/rovodev-config.template.yml`.
+  - **AC:** File exists at new path; no longer exists at root.
+
+- [x] **39.5** Update repo references to new file locations (Markdown + code)
+  - **Goal:** No stale references to old root paths remain.
+  - **Scope:** Update references in `**/*.md`, `**/*.sh`, and configs/templates that mention moved files.
+  - **AC:** Grep for old root filenames returns no unintended references; updated links resolve.
+
+- [x] **39.6** Delete root temporary debris (`tmp_rovodev_*`, `__pycache__/`)
+  - **Goal:** Remove accidental workspace clutter from version control/root listing.
+  - **AC:** Root no longer contains `tmp_rovodev_*` or `__pycache__/`.
+
+- [x] **39.7** Run validations and fix any fallout from the moves
+  - **Goal:** Confirm link integrity and repo checks still pass after restructuring.
+  - **Run:** `bash tools/validate_links.sh` (plus any targeted validation needed based on failures).
+  - **AC:** Link validation passes; no broken-path failures remain.
+
+- [ ] **39.8** Fix broken internal links in website template AGENTS doc
+  - **Goal:** Ensure template docs use valid relative links within `templates/website/`.
+  - **Context:** Link validation currently reports **4 broken link occurrences** in `templates/website/AGENTS.project.md` (with `NEURONS.md` referenced twice) for missing targets: `NEURONS.md`, `THOUGHTS.md`, and `VALIDATION_CRITERIA.md`.
+  - **Implementation:** Update links in `templates/website/AGENTS.project.md` (and any other `templates/website/*.project.md` with the same pattern) to point to the existing files:
+    - `NEURONS.project.md`
+    - `THOUGHTS.project.md`
+    - `VALIDATION_CRITERIA.project.md`
+  - **AC:** `bash tools/validate_links.sh` no longer reports broken links for `templates/website/AGENTS.project.md`.
+  - **If Blocked:** If the intended behavior is to link to generated project files (without `.project`), then add stub files or adjust the link checker configuration, but do not leave broken links.
 
 ---
 
@@ -37,38 +98,59 @@
 
 ---
 
+## Phase 0-Warn: Verifier Warnings
+
+- [x] **0-Warn.MD024.workers-IMPL_PLAN.47** Fix MD024 duplicate heading in workers/IMPLEMENTATION_PLAN.md line 47
+  - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Task 38.2: Simplify entrypoint..."]`
+  - **Fix:** Rename second occurrence to unique heading (e.g., "Task 38.2 (continued)" or merge sections)
+  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD024 errors for Task 38.2)
+
+- [x] **0-Warn.MD024.workers-IMPL_PLAN.53** Fix MD024 duplicate heading in workers/IMPLEMENTATION_PLAN.md line 53
+  - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Task 38.3: Prune or demote his..."]`
+  - **Fix:** Rename second occurrence to unique heading (e.g., "Task 38.3 (continued)" or merge sections)
+  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD024 errors for Task 38.3)
+
+- [x] **0-Warn.MD024.workers-IMPL_PLAN.62** Fix MD024 duplicate heading in workers/IMPLEMENTATION_PLAN.md line 62
+  - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Task 38.4: Cross-link consiste..."]`
+  - **Fix:** Rename second occurrence to unique heading (e.g., "Task 38.4 (continued)" or merge sections)
+  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD024 errors for Task 38.4)
+
+- [x] **0-Warn.MD024.cortex-IMPL_PLAN.57** Fix MD024 duplicate heading in cortex/IMPLEMENTATION_PLAN.md line 57
+  - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Task 38.2: Simplify entrypoint..."]`
+  - **Fix:** Rename second occurrence to unique heading or merge sections
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD024 errors for Task 38.2)
+
+- [ ] **0-Warn.MD024.cortex-IMPL_PLAN.112** Fix MD024 duplicate heading in cortex/IMPLEMENTATION_PLAN.md line 112
+  - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Task 38.3: Prune or demote his..."]`
+  - **Fix:** Rename second occurrence to unique heading or merge sections
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD024 errors for Task 38.3)
+
+- [ ] **0-Warn.MD024.cortex-IMPL_PLAN.126** Fix MD024 duplicate heading in cortex/IMPLEMENTATION_PLAN.md line 126
+  - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Task 38.4: Cross-link consiste..."]`
+  - **Fix:** Rename second occurrence to unique heading or merge sections
+  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD024 errors for Task 38.4)
+
+- [ ] **0-Warn.MD012.workers-PLAN_DONE.941-1005** Fix MD012 multiple consecutive blank lines in workers/PLAN_DONE.md
+  - **Error:** Multiple MD012 errors at lines 941, 948, 955, 962, 969, 976, 983, 990, 997, 1004, 1005
+  - **Fix:** Reduce consecutive blank lines to maximum of 2 (per MD012 rule)
+  - **AC:** `markdownlint workers/PLAN_DONE.md` passes (no MD012 errors)
+
+- [ ] **0-Warn.MD024.cortex-PLAN_DONE.454** Fix MD024 duplicate heading in cortex/PLAN_DONE.md line 454
+  - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Archived on 2026-01-28"]`
+  - **Fix:** Make duplicate "Archived on 2026-01-28" headings unique (e.g., add time or sequence number)
+  - **AC:** `markdownlint cortex/PLAN_DONE.md` passes (no MD024 errors)
+
+---
+
 ### Task 38.1: Identify duplication + contradictions
 
-- [ ] **38.1.2** Resolve the highest-impact contradictions
-  - **Goal:** Remove conflicting instructions that cause incorrect usage.
-  - **AC:** The canonical docs match current behavior for:
-    - bootstrap layout (`workers/ralph/`)
-    - plan authority (`workers/IMPLEMENTATION_PLAN.md` canonical, cortex mirror)
-    - gap capture workflow (`cortex/GAP_CAPTURE.md` + `.gap_pending` + `cortex/sync_gaps.sh`)
-  - **If Blocked:** Add an explicit “Current reality” callout box at the top of the canonical doc.
-
----
-
-### Task 38.2: Simplify entrypoints (“Start Here”)
-
-- [ ] **38.2.1** Create/refresh a single top-level “Start Here” section
-  - **Goal:** Make it obvious where to begin for new contributors and agents.
-  - **AC:** `README.md` includes a concise “Start Here” section linking to: `NEURONS.md`, `docs/TOOLS.md`, `docs/BOOTSTRAPPING.md`, `skills/SUMMARY.md`, and `workers/IMPLEMENTATION_PLAN.md`.
-  - **If Blocked:** Add the section as a TODO skeleton with placeholder bullets.
-
-- [ ] **38.2.2** Reduce redundant onboarding text in `AGENTS.md`/`cortex/docs/*`
-  - **Goal:** Avoid repeating the same onboarding guidance in multiple places.
-  - **AC:** Duplicated onboarding content is replaced with links to the canonical “Start Here” docs.
-  - **If Blocked:** Mark duplicated sections with “DEPRECATED: see <link>”.
-
----
+### Task 38.2: Simplify entrypoints ("Start Here")
 
 ### Task 38.3: Prune or demote historical docs
 
-- [ ] **38.3.1** Mark historical change logs and old analysis as “historical” and de-emphasize in navigation
-  - **Goal:** Reduce noise from older artifacts without deleting history.
-  - **AC:** Old `cortex/docs/CHANGES_*.md` and `artifacts/analysis/*.md` are clearly labeled as historical and are not linked from primary entrypoints unless necessary.
-  - **If Blocked:** Add a single “Historical docs index” section listing them.
+### Task 38.4: Cross-link consistency + naming conventions
+
+#### Task 38.3 Implementation Details
 
 - [ ] **38.3.2** Merge or remove duplicate runbooks
   - **Goal:** Ensure there is one operational runbook per role (Cortex vs Ralph) and links point to the right one.
@@ -77,18 +159,9 @@
 
 ---
 
-### Task 38.4: Cross-link consistency + naming conventions
+#### Task 38.4 Implementation Details
 
-- [ ] **38.4.1** Standardize references to canonical files across the repo
-  - **Goal:** Make cross-links consistent (same terminology, same paths).
-  - **AC:** References to key files use consistent names/paths:
-    - `workers/IMPLEMENTATION_PLAN.md`
-    - `workers/PLAN_DONE.md`
-    - `workers/ralph/THUNK.md`
-    - `skills/self-improvement/GAP_BACKLOG.md`
-  - **If Blocked:** Fix only the most commonly referenced paths first.
-
-- [ ] **38.4.2** Add/refresh “See also” sections on major docs
+- [ ] **38.4.2** Add/refresh "See also" sections on major docs
   - **Goal:** Improve navigation without duplicating content.
   - **AC:** Major docs (`docs/TOOLS.md`, `docs/BOOTSTRAPPING.md`, `skills/SUMMARY.md`, `NEURONS.md`, `cortex/docs/RUNBOOK.md`) include a small “See also” list to related canonical docs.
   - **If Blocked:** Add “See also” only to `docs/TOOLS.md` and `docs/BOOTSTRAPPING.md` first.
@@ -112,7 +185,7 @@
 
 ### Task 35.1: Skills Review & Updates
 
-- [ ] **35.1.1** Review `GAP_BACKLOG.md` entries
+- [ ] **35.1.1** Review `skills/self-improvement/GAP_BACKLOG.md` entries
   - **Goal:** Ensure all P1/P2 backlog items are triaged into a clear state.
   - **AC:** Every P1/P2 entry has an explicit status (Promoted/Archived/Keep), and there are no undecided entries older than 30 days.
   - **If Blocked:** Flag ambiguous entries with `[?]` and add a short note describing what decision is needed.
@@ -125,7 +198,7 @@
 - [ ] **35.1.3** Enhance Ralph operational patterns
   - **Goal:** Document PLAN-mode governance rules, THUNK tracking patterns, and discovery-defer rules.
   - **AC:** `skills/domains/ralph/*.md` covers all `loop.sh` modes and the missing operational patterns.
-  - **If Blocked:** Capture gaps in `skills/self-improvement/GAP_BACKLOG.md` and link them from the relevant Ralph skill doc.
+  - **If Blocked:** Capture gaps in `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` and link them from the relevant Ralph skill doc.
 
 - [ ] **35.1.4** Frontend skills expansion
   - **Goal:** Add practical frontend patterns for web projects (React/Vue component patterns, state management).

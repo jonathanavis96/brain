@@ -214,7 +214,7 @@ modify_file() {  # BUG: Contradicts header!
 #!/usr/bin/env bash
 # task-manager.sh - Display and manage tasks
 #
-# This script displays tasks and can modify THUNK.md via hotkeys.
+# This script displays tasks and can modify workers/ralph/THUNK.md via hotkeys.
 ```text
 
 ### Usage Comments Must Be Current
@@ -296,7 +296,7 @@ markdownlint -d MD013 "**/*.md"  # Ignore line length
 
 ### Cortex Writing Task Contracts
 
-**Context:** When writing task contracts in IMPLEMENTATION_PLAN.md, code fences are used to show example outputs, implementation snippets, and expected formats.
+**Context:** When writing task contracts in workers/IMPLEMENTATION_PLAN.md, code fences are used to show example outputs, implementation snippets, and expected formats.
 
 **Common mistake:** Forgetting language tags when focused on task structure
 
@@ -338,13 +338,13 @@ markdownlint -d MD013 "**/*.md"  # Ignore line length
 3. **Not sure?**
    - Default to `text` (safe choice)
 
-**Pre-commit checklist for IMPLEMENTATION_PLAN.md:**
+**Pre-commit checklist for workers/IMPLEMENTATION_PLAN.md:**
 
 - [ ] Every ` ``` ` has a language tag
 - [ ] Example outputs use `text` tag
 - [ ] Code snippets use appropriate language tag
 - [ ] Blank lines before/after code blocks
-- [ ] Run `markdownlint cortex/IMPLEMENTATION_PLAN.md` before committing
+- [ ] Run `markdownlint workers/workers/IMPLEMENTATION_PLAN.md` before committing
 
 **Prevention strategy:**
 

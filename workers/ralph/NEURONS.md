@@ -13,7 +13,7 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 1. `AGENTS.md` (injected first by loop.sh - operational guide)
 2. `PROMPT.md` (injected second - contains conditional logic for plan/build modes)
 3. `NEURONS.md` (this file - read via subagent when needed, NOT injected)
-4. `IMPLEMENTATION_PLAN.md` (TODO list - read in BUILD mode via subagent)
+4. `workers/IMPLEMENTATION_PLAN.md` (TODO list - read in BUILD mode via subagent)
 5. `THOUGHTS.md` (project goals - read as needed via subagent)
 6. KB files and references as needed
 
@@ -26,14 +26,14 @@ This is the **brain map** that Ralph and all agents read on-demand when needed. 
 ```text
 brain/ (repository root)
 ├── README.md                    # Human-readable overview
-├── IMPLEMENTATION_PLAN.md       # High-level task list (managed by Cortex)
+├── workers/IMPLEMENTATION_PLAN.md       # High-level task list (managed by Cortex)
 │
 ├── cortex/                      # Manager layer (GPT-5.2-Codex)
 │   ├── CORTEX_SYSTEM_PROMPT.md  # Cortex identity and rules
 │   ├── REPO_MAP.md              # Human-friendly repo navigation
 │   ├── DECISIONS.md             # Stability anchor (naming, style, architecture)
 │   ├── RUNBOOK.md               # Operations guide (how to start, troubleshoot)
-│   ├── IMPLEMENTATION_PLAN.md   # Task contracts for workers
+│   ├── workers/IMPLEMENTATION_PLAN.md   # Task contracts for workers
 │   ├── THOUGHTS.md              # Cortex thinking space (mission, decisions)
 │   ├── run.sh                   # Main entry point (concatenates context)
 │   └── snapshot.sh              # Generates current state summary
@@ -43,9 +43,9 @@ brain/ (repository root)
 │       ├── AGENTS.md            # Ralph operational guide
 │       ├── NEURONS.md           # This file (Ralph's codebase map)
 │       ├── PROMPT.md            # Ralph's instructions (protected)
-│       ├── IMPLEMENTATION_PLAN.md  # Ralph's local task list
+│       ├── workers/IMPLEMENTATION_PLAN.md  # Ralph's local task list
 │       ├── THOUGHTS.md          # Ralph's working context
-│       ├── THUNK.md             # Completed task log
+│       ├── workers/ralph/THUNK.md             # Completed task log
 │       ├── VALIDATION_CRITERIA.md  # Quality gates
 │       ├── loop.sh              # Main execution loop (protected)
 │       ├── verifier.sh          # Acceptance criteria validator (protected)
@@ -114,7 +114,7 @@ brain/ (repository root)
 | **Understand what's in the brain** | `NEURONS.md` (this file) or `cortex/REPO_MAP.md` |
 | **Run Ralph loop** | `AGENTS.md` → `bash loop.sh` |
 | **Run Cortex manager** | `cortex/RUNBOOK.md` → `bash cortex/run.sh` |
-| **Find TODO list** | `IMPLEMENTATION_PLAN.md` (Ralph) or `cortex/IMPLEMENTATION_PLAN.md` (Cortex) |
+| **Find TODO list** | `workers/IMPLEMENTATION_PLAN.md` (Ralph) or `workers/workers/IMPLEMENTATION_PLAN.md` (Cortex) |
 | **See commit examples & error recovery** | `docs/EDGE_CASES.md` |
 | **See recent changes** | `docs/CHANGES.md` |
 | **See KB structure** | `skills/SUMMARY.md` |
@@ -136,11 +136,11 @@ brain/ (repository root)
 | **Project-specific knowledge** | `skills/projects/<project>.md` | ✅ Yes |
 | **Ralph operational docs** | `AGENTS.md` | ✅ Yes (Ralph only) |
 | **Brain structure map** | `NEURONS.md` or `cortex/REPO_MAP.md` | ✅ Yes |
-| **Cortex strategic planning** | `cortex/IMPLEMENTATION_PLAN.md`, `cortex/THOUGHTS.md` | ✅ Yes (Cortex only) |
+| **Cortex strategic planning** | `workers/workers/IMPLEMENTATION_PLAN.md`, `cortex/THOUGHTS.md` | ✅ Yes (Cortex only) |
 | **Cortex architecture decisions** | `cortex/DECISIONS.md` | ✅ Yes (Cortex only) |
 | **React performance rules** | `references/react-best-practices/rules/` | ❌ **READ-ONLY** |
 | **Project templates** | `templates/` | ✅ Yes |
-| **TODO backlog** | `IMPLEMENTATION_PLAN.md` | ✅ Yes (Ralph only) |
+| **TODO backlog** | `workers/IMPLEMENTATION_PLAN.md` | ✅ Yes (Ralph only) |
 | **Execution logs** | `logs/` | ✅ Auto-generated |
 
 ---
@@ -280,24 +280,24 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 - `cortex/REPO_MAP.md` - Human-friendly navigation guide for the brain repository
 - `cortex/DECISIONS.md` - Stability anchor for naming, style, architecture decisions
 - `cortex/RUNBOOK.md` - Operations guide (how to start, troubleshoot, verify)
-- `cortex/IMPLEMENTATION_PLAN.md` - Task contract template (high-level tasks for Ralph)
+- `workers/workers/IMPLEMENTATION_PLAN.md` - Task contract template (high-level tasks for Ralph)
 - `cortex/THOUGHTS.md` - Cortex thinking space (current mission, decision log)
 - `cortex/run.sh` - Main entry point (concatenates context and calls RovoDev)
 - `cortex/snapshot.sh` - Generates current state summary (mission, progress, git status)
 
 **Workflow:**
 
-1. Cortex creates/updates high-level tasks in `cortex/IMPLEMENTATION_PLAN.md`
-2. Ralph copies these to `IMPLEMENTATION_PLAN.md` (via sync mechanism - to be implemented)
+1. Cortex creates/updates high-level tasks in `workers/workers/IMPLEMENTATION_PLAN.md`
+2. Ralph copies these to `workers/IMPLEMENTATION_PLAN.md` (via sync mechanism - to be implemented)
 3. Ralph picks ONE atomic task per BUILD iteration and implements it
-4. Ralph logs completion to `THUNK.md`
+4. Ralph logs completion to `workers/ralph/THUNK.md`
 5. Cortex reviews progress via `cortex/snapshot.sh` and adjusts strategy
 
 **What Cortex Can Modify:**
 
-- ✅ `cortex/IMPLEMENTATION_PLAN.md` - Task contracts
+- ✅ `workers/workers/IMPLEMENTATION_PLAN.md` - Task contracts
 - ✅ `cortex/THOUGHTS.md` - Strategic thinking
-- ✅ `skills/self-improvement/GAP_BACKLOG.md` - Knowledge gaps
+- ✅ `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` - Knowledge gaps
 - ✅ `skills/self-improvement/SKILL_BACKLOG.md` - Skill promotion queue
 
 **What Cortex Cannot Modify:**
@@ -353,7 +353,7 @@ bash cortex/run.sh --help       # Show usage
 **Prompts:**
 
 - `PROMPT.md` - Unified prompt with conditional logic (plan mode: gap analysis, NO code changes, updates TODO list; build mode: implement top task, validate, commit)
-- `IMPLEMENTATION_PLAN.md` - Persistent TODO list (updated by planning mode, read by building mode)
+- `workers/IMPLEMENTATION_PLAN.md` - Persistent TODO list (updated by planning mode, read by building mode)
 - `PROMPT_verify.md` - Verification prompt (validation checks)
 
 **Stop Sentinel:**
@@ -367,7 +367,7 @@ bash cortex/run.sh --help       # Show usage
 
 ```text
 
-Only output when ALL tasks in IMPLEMENTATION_PLAN.md are 100% complete.
+Only output when ALL tasks in workers/IMPLEMENTATION_PLAN.md are 100% complete.
 
 ---
 
@@ -413,7 +413,7 @@ Use for:
 - **Parallel subagents for reading** - Up to 100 for discovery, 500 for comparison
 - **Single agent for building** - Exactly 1 for implementation/modification/git ops
 - **AGENTS.md is operational-only** - How to run/build/test, NO progress diaries
-- **Single TODO list** - IMPLEMENTATION_PLAN.md is the only backlog
+- **Single TODO list** - workers/IMPLEMENTATION_PLAN.md is the only backlog
 - **One iteration = one coherent unit** - Implement + verify + update plan + commit
 
 **Context Loading Each Iteration:**
@@ -507,7 +507,7 @@ ls -lh AGENTS.md NEURONS.md
 - **AGENTS.md** - Ralph operational guide
 - **NEURONS.md** - This brain map
 - **PROMPT.md** - Ralph unified prompt
-- **IMPLEMENTATION_PLAN.md** - Ralph TODO list
+- **workers/IMPLEMENTATION_PLAN.md** - Ralph TODO list
 - **loop.sh** - Ralph loop runner
 - **rovodev-config.yml** - Ralph configuration
 - **cortex/** - All Cortex files (CORTEX_SYSTEM_PROMPT, REPO_MAP, DECISIONS, RUNBOOK, IMPLEMENTATION_PLAN, THOUGHTS, run.sh, snapshot.sh)

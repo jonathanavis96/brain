@@ -47,8 +47,8 @@ sleep 2
 pkill -f current_ralph_tasks.sh
 
 # Manual verification
-grep -A 5 "^### Phase" IMPLEMENTATION_PLAN.md
-grep -A 5 "^#### " IMPLEMENTATION_PLAN.md
+grep -A 5 "^### Phase" workers/IMPLEMENTATION_PLAN.md
+grep -A 5 "^#### " workers/IMPLEMENTATION_PLAN.md
 ```text
 
 ## Bug B: Display Rendering Stability
@@ -74,9 +74,9 @@ grep -A 5 "^#### " IMPLEMENTATION_PLAN.md
 bash current_ralph_tasks.sh &
 MONITOR_PID=$!
 
-# Rapidly modify IMPLEMENTATION_PLAN.md 5 times
+# Rapidly modify workers/IMPLEMENTATION_PLAN.md 5 times
 for i in {1..5}; do
-  echo "# Update $i" >> IMPLEMENTATION_PLAN.md
+  echo "# Update $i" >> workers/IMPLEMENTATION_PLAN.md
   sleep 0.3
 done
 
@@ -85,7 +85,7 @@ sleep 2
 pkill -f current_ralph_tasks.sh
 
 # Cleanup
-git restore IMPLEMENTATION_PLAN.md
+git restore workers/IMPLEMENTATION_PLAN.md
 ```text
 
 ### Test Case B4: Terminal Resize
@@ -111,55 +111,55 @@ bash current_ralph_tasks.sh 2>&1 | head -20 | grep -E '\[0;[0-9]+m' && echo "FAI
 
 ## Bug C: THUNK Monitor Display-Only Behavior
 
-### Test Case C1: Display THUNK.md Changes
+### Test Case C1: Display workers/ralph/THUNK.md Changes
 
-- [ ] Monitor displays THUNK.md content on startup
-- [ ] Monitor updates display within 1 second when THUNK.md is modified directly
+- [ ] Monitor displays workers/ralph/THUNK.md content on startup
+- [ ] Monitor updates display within 1 second when workers/ralph/THUNK.md is modified directly
 - [ ] Monitor shows all entries in current era table
 - [ ] Monitor maintains sequential THUNK numbering
 
-### Test Case C2: Ignore IMPLEMENTATION_PLAN.md Changes
+### Test Case C2: Ignore workers/IMPLEMENTATION_PLAN.md Changes
 
-- [ ] Monitor does NOT watch IMPLEMENTATION_PLAN.md
-- [ ] Modifying IMPLEMENTATION_PLAN.md does NOT trigger monitor updates
-- [ ] No "Scanning IMPLEMENTATION_PLAN.md" messages at any time
+- [ ] Monitor does NOT watch workers/IMPLEMENTATION_PLAN.md
+- [ ] Modifying workers/IMPLEMENTATION_PLAN.md does NOT trigger monitor updates
+- [ ] No "Scanning workers/IMPLEMENTATION_PLAN.md" messages at any time
 - [ ] Monitor is display-only (does not modify THUNK.md)
 
 ### Test Case C3: No Force Sync Hotkey
 
 - [ ] Pressing 'f' does nothing (hotkey removed entirely)
-- [ ] Startup shows only "Watching: THUNK.md" message
+- [ ] Startup shows only "Watching: workers/ralph/THUNK.md" message
 - [ ] No "Syncing with" messages in output
 - [ ] Available hotkeys: 'r' (refresh), 'e' (new era), 'q' (quit) only
 
 ### Test Case C4: Ralph Append Workflow
 
-- [ ] Ralph appends to THUNK.md when marking task `[x]` (documented in PROMPT.md)
+- [ ] Ralph appends to workers/ralph/THUNK.md when marking task `[x]` (documented in PROMPT.md)
 - [ ] Append format: `| <thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |`
 - [ ] Monitor displays Ralph's appended entries immediately
-- [ ] No code in monitor that modifies THUNK.md (read-only behavior)
+- [ ] No code in monitor that modifies workers/ralph/THUNK.md (read-only behavior)
 
 ### Validation Commands
 
 ```bash
-# Test THUNK.md watch
+# Test workers/ralph/THUNK.md watch
 bash thunk_ralph_tasks.sh &
 sleep 1
-echo "| 999 | TEST | HIGH | Test entry | 2026-01-18 |" >> THUNK.md
+echo "| 999 | TEST | HIGH | Test entry | 2026-01-18 |" >> workers/ralph/THUNK.md
 sleep 2
 # Should see update within 1 second
 pkill -f thunk_ralph_tasks.sh
-git restore THUNK.md
+git restore workers/ralph/THUNK.md
 
-# Test IMPLEMENTATION_PLAN.md is ignored
+# Test workers/IMPLEMENTATION_PLAN.md is ignored
 bash thunk_ralph_tasks.sh &
 sleep 1
-# Mark a task [x] in IMPLEMENTATION_PLAN.md manually
-echo "- [x] **TEST** Test task" >> IMPLEMENTATION_PLAN.md
+# Mark a task [x] in workers/IMPLEMENTATION_PLAN.md manually
+echo "- [x] **TEST** Test task" >> workers/IMPLEMENTATION_PLAN.md
 sleep 2
 # Monitor should NOT react or show any "Scanning" messages
 pkill -f thunk_ralph_tasks.sh
-git restore IMPLEMENTATION_PLAN.md
+git restore workers/IMPLEMENTATION_PLAN.md
 
 # Verify no PLAN_FILE references
 grep -n "PLAN_FILE" thunk_ralph_tasks.sh && echo "FAIL: PLAN_FILE found" || echo "PASS: No PLAN_FILE"
@@ -180,15 +180,15 @@ bash current_ralph_tasks.sh
 bash thunk_ralph_tasks.sh
 
 # Terminal 3 - Make changes
-# 1. Mark task [x] in IMPLEMENTATION_PLAN.md
+# 1. Mark task [x] in workers/IMPLEMENTATION_PLAN.md
 # 2. Verify current_ralph_tasks.sh removes task from display
 # 3. Verify thunk_ralph_tasks.sh shows new THUNK entry
 ```text
 
 ### Test Case I2: Ralph BUILD Iteration
 
-- [x] Ralph marks task `[x]` in IMPLEMENTATION_PLAN.md
-- [x] Ralph appends entry to THUNK.md (following PROMPT.md instruction)
+- [x] Ralph marks task `[x]` in workers/IMPLEMENTATION_PLAN.md
+- [x] Ralph appends entry to workers/ralph/THUNK.md (following PROMPT.md instruction)
 - [x] Entry format matches: `| <thunk_num> | <task_id> | <priority> | <description> | YYYY-MM-DD |`
 - [x] THUNK numbering is sequential (no gaps, no duplicates)
 - [x] Both monitors update within 1 second
@@ -206,8 +206,8 @@ bash thunk_ralph_tasks.sh
 
 - [x] Current Ralph Tasks Monitor section describes Bug A fix (subsection extraction)
 - [x] THUNK Monitor section describes display-only behavior
-- [x] THUNK Monitor section clarifies: watches THUNK.md only, no auto-sync
-- [x] Ralph workflow documented: append to THUNK.md when marking task complete
+- [x] THUNK Monitor section clarifies: watches workers/ralph/THUNK.md only, no auto-sync
+- [x] Ralph workflow documented: append to workers/ralph/THUNK.md when marking task complete
 
 ### Doc-3: THOUGHTS.md Reflects Current Project
 
@@ -241,7 +241,7 @@ bash thunk_ralph_tasks.sh
 
 - Run through checklist after major milestones
 - Mark items [x] as they're verified
-- Document verification results in IMPLEMENTATION_PLAN.md notes
+- Document verification results in workers/IMPLEMENTATION_PLAN.md notes
 
 ## Quick Validation Commands
 
@@ -264,10 +264,10 @@ pkill -f thunk_ralph_tasks.sh
 echo "✓ thunk_ralph_tasks.sh runs without errors"
 
 # Verify PROMPT.md has THUNK logging instruction
-grep -A 3 "Log completion to THUNK.md" PROMPT.md && echo "✓ PROMPT.md has THUNK logging"
+grep -A 3 "Log completion to workers/ralph/THUNK.md" PROMPT.md && echo "✓ PROMPT.md has THUNK logging"
 
 # Check all documentation files exist
-ls -lh THOUGHTS.md IMPLEMENTATION_PLAN.md VALIDATION_CRITERIA.md AGENTS.md PROMPT.md && echo "✓ All docs present"
+ls -lh THOUGHTS.md workers/IMPLEMENTATION_PLAN.md VALIDATION_CRITERIA.md AGENTS.md PROMPT.md && echo "✓ All docs present"
 ```text
 
 ## Acceptance Summary
@@ -276,6 +276,6 @@ All three bugs are FIXED and validated:
 
 - ✅ **Bug A:** Task extraction works with nested `###` and `####` headers
 - ✅ **Bug B:** Display rendering has no duplicates or corruption
-- ✅ **Bug C:** THUNK monitor is display-only (watches THUNK.md, no auto-sync from IMPLEMENTATION_PLAN.md)
+- ✅ **Bug C:** THUNK monitor is display-only (watches workers/ralph/THUNK.md, no auto-sync from IMPLEMENTATION_PLAN.md)
 
-Ralph workflow updated to append to THUNK.md directly when completing tasks (documented in PROMPT.md).
+Ralph workflow updated to append to workers/ralph/THUNK.md directly when completing tasks (documented in PROMPT.md).

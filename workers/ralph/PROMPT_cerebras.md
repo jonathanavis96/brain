@@ -69,14 +69,14 @@ If header shows `# LAST_VERIFIER_RESULT: FAIL`:
 2. Plan with `think` tool
 3. Execute: `grep` + `read_lines` or `symbols` + `read_lines`
 4. Make changes: `patch_file` → `diff` → `git_commit` (ALL IN ONE TURN)
-5. Update THUNK.md: `append_file` with completion entry
+5. Update workers/ralph/THUNK.md: `append_file` with completion entry
 6. Output `:::BUILD_READY:::` or `:::PLAN_READY:::`
 
 ---
 
-## THUNK.md Format
+## workers/ralph/THUNK.md Format
 
-After completing a task, append to `THUNK.md`:
+After completing a task, append to `workers/ralph/THUNK.md`:
 
 ```markdown
 ### <Task ID> - <Short Description>

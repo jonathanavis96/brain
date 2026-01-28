@@ -84,7 +84,7 @@ When you discover a new convention, architectural decision, or project-specific 
 - Configure ESLint (`.eslintrc.js`) and Prettier (`.prettierrc`)
 - Document setup and usage in `README.md`
 - Keep project goals and vision in `THOUGHTS.md`
-- Maintain `workers/ralph/IMPLEMENTATION_PLAN.md` as a prioritized task list
+- Maintain `workers/ralph/workers/IMPLEMENTATION_PLAN.md` as a prioritized task list
 
 ### JavaScript/TypeScript Best Practices
 

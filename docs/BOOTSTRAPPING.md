@@ -59,7 +59,7 @@ bash generators/generate-thoughts.sh INPUT_IDEA.md OUTPUT_THOUGHTS.md
 
 ### generate-implementation-plan.sh
 
-**Purpose:** Creates IMPLEMENTATION_PLAN.md (task breakdown)
+**Purpose:** Creates workers/IMPLEMENTATION_PLAN.md (task breakdown)
 
 ```bash
 bash generators/generate-implementation-plan.sh INPUT_IDEA.md OUTPUT_IMPLEMENTATION_PLAN.md
@@ -91,7 +91,7 @@ EOF
 # Generate Ralph files
 bash generators/generate-neurons.sh my-api-idea.md NEURONS.md
 bash generators/generate-thoughts.sh my-api-idea.md THOUGHTS.md
-bash generators/generate-implementation-plan.sh my-api-idea.md IMPLEMENTATION_PLAN.md
+bash generators/generate-implementation-plan.sh my-api-idea.md workers/IMPLEMENTATION_PLAN.md
 
 # Or use new-project.sh to do everything
 bash new-project.sh my-api-idea.md
@@ -104,7 +104,7 @@ Located in `templates/`:
 | Template | Purpose | Files Included |
 |----------|---------|----------------|
 | `ralph/` | Full Ralph loop infrastructure | 14 files: loop.sh, monitors, verifier, rules/AC.rules, PROMPT.md, etc. |
-| `cortex/` | Cortex manager infrastructure | 5 files: CORTEX_SYSTEM_PROMPT.md, IMPLEMENTATION_PLAN.md, THOUGHTS.md, DECISIONS.md, snapshot.sh |
+| `cortex/` | Cortex manager infrastructure | 5 files: CORTEX_SYSTEM_PROMPT.md, workers/IMPLEMENTATION_PLAN.md, THOUGHTS.md, DECISIONS.md, snapshot.sh |
 | `backend/` | Backend project baseline | AGENTS.md, NEURONS.md, THOUGHTS.md, VALIDATION_CRITERIA.md |
 | `python/` | Python project baseline | Same as backend with Python-specific guidance |
 
