@@ -17,6 +17,36 @@ BROKEN_LINKS=0
 TOTAL_LINKS=0
 VERBOSE="${VERBOSE:-0}"
 
+# Paths to ignore when scanning for markdown files
+# (vendored deps, virtualenvs, caches)
+IGNORE_FIND_PATHS=(
+  "*/node_modules/*"
+  "*/.venv/*"
+  "*/.git/*"
+  "*/.ruff_cache/*"
+)
+
+# Files that intentionally contain placeholder links.
+# We skip validating links inside these files entirely.
+IGNORE_FILE_BASENAMES=(
+  "PLAYBOOK_TEMPLATE.md"
+  "SKILL_TEMPLATE.md"
+)
+
+should_skip_file() {
+  local file="$1"
+  local base
+  base="$(basename "$file")"
+
+  for ignored in "${IGNORE_FILE_BASENAMES[@]}"; do
+    if [[ "$base" == "$ignored" ]]; then
+      return 0
+    fi
+  done
+
+  return 1
+}
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -71,9 +101,26 @@ log_error() {
 extract_links() {
   local file="$1"
   local line_num=0
+  local in_code_fence=0
 
   while IFS= read -r line; do
     ((line_num++)) || true
+
+    # Toggle code fence state on lines that start a fenced block.
+    # We intentionally skip validating links inside code fences because they are
+    # commonly examples/snippets.
+    if [[ "$line" =~ ^[[:space:]]*\`\`\` ]]; then
+      if [[ "$in_code_fence" -eq 0 ]]; then
+        in_code_fence=1
+      else
+        in_code_fence=0
+      fi
+      continue
+    fi
+
+    if [[ "$in_code_fence" -eq 1 ]]; then
+      continue
+    fi
 
     # Match markdown links: [text](target)
     # Handles: [text](file.md), [text](../file.md), [text](dir/file.md#anchor)
@@ -134,6 +181,13 @@ validate_link() {
 check_file() {
   local file="$1"
   local file_broken=0
+
+  if should_skip_file "$file"; then
+    if [[ "$VERBOSE" == "1" ]]; then
+      log_info "Skipping placeholder file: $file"
+    fi
+    return 0
+  fi
 
   while IFS='|' read -r source_file line_num link_text link_target; do
     ((TOTAL_LINKS++)) || true
@@ -200,7 +254,14 @@ main() {
   if [[ -f "$target_path" ]]; then
     files=("$target_path")
   else
-    mapfile -t files < <(find "$target_path" -name "*.md" -type f)
+    # Exclude vendored/cached directories
+    local find_args=("$target_path")
+    for pat in "${IGNORE_FIND_PATHS[@]}"; do
+      find_args+=( -path "$pat" -prune -o )
+    done
+    find_args+=( -name "*.md" -type f -print )
+
+    mapfile -t files < <(find "${find_args[@]}")
   fi
 
   log_info "Found ${#files[@]} markdown file(s)"

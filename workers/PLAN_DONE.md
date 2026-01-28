@@ -1104,3 +1104,25 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
   - **Archived At:** 2026-01-28 21:57:42
   - **Block:**
 
+### Archived on 2026-01-28 22:40:43
+
+- [x] **WARN.MD001.TEMPLATE_DRIFT_REPORT**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 22:40:43
+  - **Block:**
+
+- [x] **WARN.MD032.CORTEX_SYSTEM_PROMPT**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 22:40:43
+  - **Block:**
+
+- [x] **WARN.MD022.CORTEX_SYSTEM_PROMPT**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 22:40:43
+  - **Block:**
+
+- [x] **35.2.3**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 22:40:43
+  - **Block:**
+
