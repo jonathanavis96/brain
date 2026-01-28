@@ -89,21 +89,31 @@ else
   echo -e "${GREEN}PASS${NC}"
 fi
 
-# Check 2b: THUNK.md read via cat/grep/awk/sed/head (not tail for append)
-echo -n "Check 2b: THUNK.md not read via cat/grep/awk/sed... "
+# Check 2b: THUNK.md read via expensive tools (cat/awk/sed), not allowed for lookups.
+# Allowed patterns:
+#  - grep ... THUNK.md (optionally piped to head) for quick lookups
+#  - tail -N THUNK.md when appending a new entry
+#  - echo/cat >> THUNK.md for append writes
+
+echo -n "Check 2b: THUNK.md not read via cat/awk/sed... "
 THUNK_BAD_READS=$(
   grep -E "command:" "$CLEAN_LOG" |
-    grep -E "THUNK\.md" |
-    grep -E "cat |grep |awk |sed |head " |
-    grep -vE "tail -[0-9]+ .*THUNK\.md" |
-    grep -vE "cat >>.*THUNK\.md" |
-    grep -vE "echo.*>>.*THUNK\.md" |
+    grep -E "THUNK\\.md" |
+    # Flag expensive readers
+    grep -E "cat |awk |sed " |
+    # Allow append patterns
+    grep -vE "cat >>.*THUNK\\.md" |
+    grep -vE "echo.*>>.*THUNK\\.md" |
+    # Allow tail for append
+    grep -vE "tail -[0-9]+ .*THUNK\\.md" |
+    # Allow grep-based lookups (even when piped to head)
+    grep -vE "grep .*THUNK\\.md" |
     head -5 || true
 )
 if [[ -n "$THUNK_BAD_READS" ]]; then
   echo -e "${RED}FAIL${NC}"
-  echo "  Suspicious THUNK.md reads (should use thunk-parse/brain-search):"
-  printf "    %s\n" "$THUNK_BAD_READS"
+  echo "  Suspicious THUNK.md reads (should use grep or tail-for-append only):"
+  printf "    %s\\n" "$THUNK_BAD_READS"
   FAILURES=$((FAILURES + 1))
 else
   echo -e "${GREEN}PASS${NC}"
@@ -122,6 +132,110 @@ if [[ -n "$IMPL_OPENS" ]]; then
   echo "  Found IMPLEMENTATION_PLAN.md open_files (should grep+slice):"
   printf "    %s\n" "$IMPL_OPENS"
   # Not counted as failure - could be legitimate in some cases
+else
+  echo -e "${GREEN}PASS${NC}"
+fi
+
+# Check 3b: IMPLEMENTATION_PLAN.md sed-slice efficiency (dedup + size caps)
+# Goals:
+#  - Ban huge top-of-file reads like sed -n '1,140p' (wastes tokens)
+#  - Cap slice size/count
+#  - Detect overlapping re-reads (e.g., 1,140p then 18,45p)
+#
+# Policy (tunable):
+#  - No slice may start at line 1
+#  - Max slices per run: 3
+#  - Max slice size (lines): 90
+#  - Overlap tolerance: 10 lines (over this => FAIL)
+#  - If a large slice (>=120 lines) was read, later subset reads are FAIL
+
+MAX_SLICES=3
+MAX_SLICE_LINES=90
+MAX_OVERLAP=10
+LARGE_SLICE_FLOOR=120
+
+echo -n "Check 3b: IMPLEMENTATION_PLAN.md sed slices are small + non-overlapping... "
+IMPL_SED_CHECK=$(
+  awk -v max_slices="$MAX_SLICES" \
+      -v max_lines="$MAX_SLICE_LINES" \
+      -v max_overlap="$MAX_OVERLAP" \
+      -v large_floor="$LARGE_SLICE_FLOOR" '
+    function min(a,b){return a<b?a:b}
+    function max(a,b){return a>b?a:b}
+    BEGIN { fail=0; count=0 }
+    {
+      # Match: command: "sed -n '\''A,Bp'\'' workers/IMPLEMENTATION_PLAN.md"
+      if (match($0, /command: \"sed -n '\''([0-9]+),([0-9]+)p'\'' workers\/IMPLEMENTATION_PLAN[.]md\"/, m)) {
+        a=m[1]+0; b=m[2]+0;
+        count++;
+        size=(b-a+1);
+        if (a == 1) {
+          printf("FAIL: slice starts at 1 (%d,%d) at log line %d\n", a, b, NR);
+          fail=1;
+        }
+        if (size > max_lines) {
+          printf("FAIL: slice too large (%d lines) (%d,%d) at log line %d\n", size, a, b, NR);
+          fail=1;
+        }
+        if (count > max_slices) {
+          printf("FAIL: too many sed slices (%d > %d) by log line %d\n", count, max_slices, NR);
+          fail=1;
+        }
+
+        # Compare to prior ranges for overlap/subset checks
+        for (i=1; i<count; i++) {
+          oa = starts[i]; ob = ends[i];
+          overlap = min(b,ob) - max(a,oa) + 1;
+          if (overlap > max_overlap) {
+            printf("FAIL: overlap %d lines between (%d,%d) and (%d,%d) at log line %d\n", overlap, oa, ob, a, b, NR);
+            fail=1;
+          }
+          osize = ob-oa+1;
+          if (osize >= large_floor && a >= oa && b <= ob) {
+            printf("FAIL: redundant subset read (%d,%d) inside large slice (%d,%d) at log line %d\n", a, b, oa, ob, NR);
+            fail=1;
+          }
+        }
+
+        starts[count]=a; ends[count]=b;
+      }
+    }
+    END {
+      if (count==0) {
+        print "PASS: no plan sed slices detected";
+        exit 0;
+      }
+      if (fail==0) {
+        printf("PASS: %d slice(s)\n", count);
+        exit 0;
+      }
+      exit 1;
+    }
+  ' "$CLEAN_LOG" 2>/dev/null
+)
+IMPL_SED_RC=$?
+if [[ $IMPL_SED_RC -eq 0 ]]; then
+  echo -e "${GREEN}PASS${NC}"
+else
+  echo -e "${RED}FAIL${NC}"
+  printf "  %s\n" "$IMPL_SED_CHECK" | sed 's/^/  /'
+  FAILURES=$((FAILURES + 1))
+fi
+
+# Check 3c: THUNK tail size (prefer tail -10; allow larger but warn)
+echo -n "Check 3c: THUNK tail size is small (<=10)... "
+THUNK_BIG_TAIL=$(
+  awk '
+    match($0, /command: "tail -([0-9]+) .*workers\/ralph\/THUNK[.]md"/, m) {
+      n=m[1]+0;
+      if (n > 10) { print NR ":" $0 }
+    }
+  ' "$CLEAN_LOG" | head -3
+)
+if [[ -n "$THUNK_BIG_TAIL" ]]; then
+  echo -e "${YELLOW}WARN${NC}"
+  echo "  Found tail >10 on THUNK.md (consider tail -10 unless needed):"
+  printf "    %s\n" "$THUNK_BIG_TAIL"
 else
   echo -e "${GREEN}PASS${NC}"
 fi
