@@ -6,14 +6,14 @@
 
 **ALWAYS start here:**
 
-1. `../../brain/skills/SUMMARY.md` - Knowledge base overview and usage guide
-2. `../../brain/skills/domains/` - Domain-specific patterns (caching, API design, auth, testing, etc.)
+1. `./brain/skills/SUMMARY.md` - Knowledge base overview and usage guide
+2. `./brain/skills/domains/` - Domain-specific patterns (caching, API design, auth, testing, etc.)
 
 **When working with specific technologies:**
-3. `../../brain/references/` - Technology-specific best practices and patterns
+3. `./brain/skills/` - Technology-specific best practices and patterns
 
 **For project-specific patterns:**
-4. `../../brain/skills/projects/<project-slug>.md` - Project-specific conventions discovered in this codebase
+4. `./brain/skills/projects/<project-slug>.md` - Project-specific conventions discovered in this codebase
 
 ### Why This Order Matters
 
@@ -26,10 +26,10 @@
 When you discover a new convention, architectural decision, or project-specific pattern:
 
 1. **Create a skill file** in the brain repo:
-   - Project-specific: `../../brain/skills/projects/<project-slug>.md`
-   - Domain/cross-project: `../../brain/skills/domains/<domain>.md`
+   - Project-specific: `./brain/skills/projects/<project-slug>.md`
+   - Domain/cross-project: `./brain/skills/domains/<domain>.md`
 
-2. **Update the index**: Add a link in `../../brain/skills/SUMMARY.md`
+2. **Update the index**: Add a link in `./brain/skills/SUMMARY.md`
 
 3. **Structure new skill files** with:
 

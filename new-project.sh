@@ -508,6 +508,22 @@ EOF
 fi
 
 # ============================================
+# Vendor Brain knowledge into the new repo (RovoDev workspace-safe)
+# ============================================
+
+# RovoDev cannot read outside the workspace; vendor a snapshot of Brain skills
+# so agents can reference it locally under ./brain/skills/.
+if [ -d "$BRAIN_ROOT/skills" ]; then
+  info "Vendoring Brain skills into project workspace (brain/skills)..."
+  mkdir -p "$PROJECT_LOCATION/brain"
+  rm -rf "$PROJECT_LOCATION/brain/skills"
+  cp -R "$BRAIN_ROOT/skills" "$PROJECT_LOCATION/brain/skills"
+  success "Vendored brain/skills snapshot"
+else
+  warn "No skills/ directory found at Brain root; skipping brain knowledge snapshot"
+fi
+
+# ============================================
 # Generate README.md
 # ============================================
 

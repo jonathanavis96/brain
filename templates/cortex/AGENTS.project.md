@@ -148,7 +148,7 @@ When patterns emerge or architectural choices are made:
 
 ## Knowledge Base Integration
 
-If `../../brain/` repository exists:
+If `./brain/` repository exists:
 
 - Reference `brain/skills/` for common patterns
 - Suggest skills for Ralph to use in Task Contracts

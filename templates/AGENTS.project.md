@@ -2,20 +2,20 @@
 
 ## Knowledge Base (Optional Integration)
 
-> **Brain Integration:** If `../../brain/` exists, use it for KB lookups. Otherwise, proceed without external brain KB - this project works standalone.
+> **Brain Integration:** If `./brain/` exists, use it for KB lookups. Otherwise, proceed without external brain KB - this project works standalone.
 
 ### Progressive Disclosure: Always Read in This Order
 
 **If brain repository is available, ALWAYS start here:**
 
-1. `../../brain/skills/SUMMARY.md` - Knowledge base overview and usage guide
-2. `../../brain/references/react-best-practices/HOTLIST.md` - Top 10 most applicable performance rules (covers 80% of scenarios)
+1. `./brain/skills/SUMMARY.md` - Knowledge base overview and usage guide
+2. `./brain/skills/domains/frontend/react-patterns.md` - Top 10 most applicable performance rules (covers 80% of scenarios)
 
 **Only if HOTLIST doesn't cover your scenario:**
-3. `../../brain/references/react-best-practices/INDEX.md` - Full categorized rule index (find specific categories)
+3. `./brain/skills/index.md` - Full categorized rule index (find specific categories)
 
 **Only when you need deep knowledge on a specific topic:**
-4. `../../brain/references/react-best-practices/rules/*` - Individual rule files (read ONLY specific rules you need)
+4. `./brain/skills/domains/frontend/react-patterns.md` (see sections within) - Individual rule files (read ONLY specific rules you need)
 
 ❌ **NEVER scan all 45 rules by default** - Token-inefficient and slow  
 ✅ **Use the hierarchy above** - Fast and targeted  
@@ -40,10 +40,10 @@ If the brain repository is not present (e.g., project cloned standalone), skip t
 When you discover a new convention, architectural decision, or project-specific pattern:
 
 1. **Create a KB file** in the brain repo:
-   - Project-specific: `../../brain/skills/projects/<project-slug>.md`
-   - Domain/cross-project: `../../brain/skills/domains/<domain>.md`
+   - Project-specific: `./brain/skills/projects/<project-slug>.md`
+   - Domain/cross-project: `./brain/skills/domains/<domain>.md`
 
-2. **Update the index**: Add a link in `../../brain/skills/SUMMARY.md`
+2. **Update the index**: Add a link in `./brain/skills/SUMMARY.md`
 
 3. **Structure new KB files** with:
 
@@ -62,18 +62,18 @@ When you discover a new convention, architectural decision, or project-specific 
 
 ## Skills + Self-Improvement Protocol
 
-> **Note:** This protocol requires the brain repository at `../../brain/`. If running standalone (brain not present), skip this section.
+> **Note:** This protocol requires the brain repository at `./brain/`. If running standalone (brain not present), skip this section.
 
 **Start of iteration:**
 
-1. Study `../../brain/skills/SUMMARY.md` for overview
-2. Check `../../brain/skills/index.md` for available skills
-3. Review `../../brain/skills/self-improvement/GAP_CAPTURE_RULES.md` for capture protocol
+1. Study `./brain/skills/SUMMARY.md` for overview
+2. Check `./brain/skills/index.md` for available skills
+3. Review `./brain/skills/self-improvement/GAP_CAPTURE_RULES.md` for capture protocol
 
 **End of iteration:**
 
 1. If you used undocumented knowledge/procedure/tooling:
-   - Search `../../brain/skills/` for existing matching skill
+   - Search `./brain/skills/` for existing matching skill
    - Search `cortex/GAP_CAPTURE.md` for existing local gap entry
    - If not found: append new entry to `cortex/GAP_CAPTURE.md`
    - Create marker: `touch cortex/.gap_pending`
