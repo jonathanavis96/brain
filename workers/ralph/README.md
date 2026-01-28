@@ -26,16 +26,16 @@ Goals: MVP in 2 weeks, 1000 users in first month
 EOF
 
 # 2. Run bootstrap
-bash new-project.sh NEW_PROJECT_IDEA.md
+bash workers/ralph/new-project.sh NEW_PROJECT_IDEA.md
 
 # 3. Your project is ready!
 cd /path/to/your-project
-bash ralph/loop.sh --iterations 10
+bash workers/ralph/loop.sh --iterations 10
 ```text
 
 **What gets created:**
 
-- Complete Ralph infrastructure (`ralph/loop.sh`, `ralph/PROMPT.md`, etc.)
+- Complete Ralph infrastructure (`workers/ralph/loop.sh`, `workers/ralph/PROMPT.md`, etc.)
 - Custom `THOUGHTS.md` (generated from your project idea)
 - Custom `NEURONS.md` (codebase map inferred from tech stack)
 - Custom `workers/IMPLEMENTATION_PLAN.md` (prioritized first tasks)
@@ -51,7 +51,12 @@ brain/
 ├── AGENTS.md                      # How to run Ralph
 ├── NEURONS.md                     # Brain repository map
 ├── THOUGHTS.md                    # Vision & Ralph's mission
-├── workers/IMPLEMENTATION_PLAN.md         # Current tasks for brain maintenance
+├── workers/IMPLEMENTATION_PLAN.md         # Canonical task plan (brain maintenance)
+│
+├── workers/ralph/                         # Ralph worker layer (execution infrastructure)
+│   ├── loop.sh                            # Ralph loop runner
+│   ├── PROMPT.md                          # Ralph system prompt
+│   └── ...
 │
 ├── skills/                        # Skills & Knowledge Base (33 files)
 │   ├── SUMMARY.md                 # KB index
@@ -72,7 +77,7 @@ brain/
 │   ├── AGENTS.project.md          # Agent guidance
 │   ├── THOUGHTS.project.md        # Vision template
 │   ├── NEURONS.project.md         # Codebase map template
-│   └── ralph/                     # Ralph infrastructure
+│   └── ralph/                     # Ralph infrastructure templates
 │       ├── loop.sh                # Ralph runner
 │       ├── PROMPT.project.md      # Unified prompt
 │       └── IMPLEMENTATION_PLAN.project.md
@@ -82,9 +87,8 @@ brain/
 │   ├── generate-neurons.sh        # Tech-stack-aware map
 │   └── generate-implementation-plan.sh
 │
-├── new-project.sh                 # Bootstrap orchestration
-├── loop.sh                        # Ralph loop (brain self-improvement)
-└── watch_ralph_tasks.sh           # Interactive task monitor
+├── scripts/new-project.sh         # Bootstrap orchestration (wrapper)
+└── workers/ralph/watch_ralph_tasks.sh   # Interactive task monitor
 ```text
 
 ## Knowledge Base Usage
@@ -124,7 +128,7 @@ Ralph maintains the brain repository through iterative PLAN/BUILD cycles.
 ### Run Ralph
 
 ```bash
-cd /path/to/brain/ralph/
+cd /path/to/brain/workers/ralph/
 
 # Single iteration (auto-detects PLAN or BUILD mode)
 bash loop.sh
@@ -354,7 +358,7 @@ All templates use **bash-style forward slash paths**:
 Brain can improve itself:
 
 ```bash
-cd /path/to/brain/ralph/
+cd /path/to/brain/workers/ralph/
 
 # Add tasks to workers/IMPLEMENTATION_PLAN.md
 echo "- [ ] **My improvement task**" >> workers/IMPLEMENTATION_PLAN.md
@@ -487,4 +491,4 @@ The brain repository is successful when:
 
 ---
 
-**Get Started:** Run `bash new-project.sh NEW_PROJECT_IDEA.md` to bootstrap your first project!
+**Get Started:** Run `bash workers/ralph/new-project.sh NEW_PROJECT_IDEA.md` to bootstrap your first project!

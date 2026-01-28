@@ -112,7 +112,7 @@ pkg/          → Public libraries (reusable)
 - **NEURONS.md** - Project structure map
 - **VALIDATION_CRITERIA.md** - Quality gates and testing
 - **README.md** - Setup and usage instructions
-- **workers/ralph/workers/IMPLEMENTATION_PLAN.md** - Current work plan
+- **workers/IMPLEMENTATION_PLAN.md** - Current work plan
 
 ## Questions for Stakeholders
 

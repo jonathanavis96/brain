@@ -68,7 +68,7 @@ This is the **project map** that Ralph and all agents read on-demand when needed
 |------|------------|
 | **Understand project structure** | `NEURONS.md` (this file) |
 | **Run Ralph loop** | `AGENTS.md` → `bash ralph/loop.sh` |
-| **Find TODO list** | `ralph/workers/IMPLEMENTATION_PLAN.md` |
+| **Find TODO list** | `workers/IMPLEMENTATION_PLAN.md` |
 | **Check project goals** | `THOUGHTS.md` |
 | **[Common task 1]** | `[location/file.ext]` |
 | **[Common task 2]** | `[location/file.ext]` |
@@ -240,7 +240,7 @@ ls -la [src/] [tests/] [config/]
 bash -n [script.sh]
 
 # Check critical files exist
-ls -lh AGENTS.md NEURONS.md THOUGHTS.md ralph/PROMPT.md ralph/workers/IMPLEMENTATION_PLAN.md
+ls -lh AGENTS.md NEURONS.md THOUGHTS.md ralph/PROMPT.md workers/IMPLEMENTATION_PLAN.md
 ```text
 
 ---

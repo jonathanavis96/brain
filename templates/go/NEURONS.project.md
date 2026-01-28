@@ -210,4 +210,4 @@ GOOS=linux GOARCH=amd64 go build -o bin/app-linux cmd/app/main.go
 - **AGENTS.md** - Operational guide for AI agents
 - **THOUGHTS.md** - Project vision and goals
 - **README.md** - Setup and usage instructions
-- **workers/ralph/workers/IMPLEMENTATION_PLAN.md** - Current task backlog
+- **workers/IMPLEMENTATION_PLAN.md** - Current task backlog

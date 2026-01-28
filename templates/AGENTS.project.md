@@ -143,7 +143,7 @@ project-root/           ← Working directory for application files
 - **Config files**: Always at project root (`package.json`, `tsconfig.json`, etc.)
 - **workers/ralph/ directory**: Contains loop infrastructure AND project context (AGENTS, THOUGHTS, NEURONS, kb/, logs/)
 - Keep project goals and vision in `workers/ralph/THOUGHTS.md`
-- Maintain `workers/ralph/workers/IMPLEMENTATION_PLAN.md` as a prioritized task list
+- Maintain `workers/IMPLEMENTATION_PLAN.md` as a prioritized task list
 
 ## Environment Prerequisites
 

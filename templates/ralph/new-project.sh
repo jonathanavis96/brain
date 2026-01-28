@@ -273,9 +273,10 @@ else
 fi
 
 if [ -f "$TEMPLATES_DIR/ralph/IMPLEMENTATION_PLAN.project.md" ]; then
-  cp "$TEMPLATES_DIR/ralph/IMPLEMENTATION_PLAN.project.md" "$PROJECT_LOCATION/workers/ralph/IMPLEMENTATION_PLAN.md"
-  substitute_placeholders "$PROJECT_LOCATION/workers/ralph/IMPLEMENTATION_PLAN.md" "$REPO_NAME" "$WORK_BRANCH"
-  success "Copied workers/ralph/IMPLEMENTATION_PLAN.md"
+  mkdir -p "$PROJECT_LOCATION/workers"
+  cp "$TEMPLATES_DIR/ralph/IMPLEMENTATION_PLAN.project.md" "$PROJECT_LOCATION/workers/IMPLEMENTATION_PLAN.md"
+  substitute_placeholders "$PROJECT_LOCATION/workers/IMPLEMENTATION_PLAN.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied workers/IMPLEMENTATION_PLAN.md"
 else
   warn "Template not found: ralph/IMPLEMENTATION_PLAN.project.md"
 fi
@@ -554,7 +555,7 @@ $PROJECT_NAME/
 - **[workers/ralph/AGENTS.md](workers/ralph/AGENTS.md)** - Operational guide for agents
 - **[workers/ralph/THOUGHTS.md](workers/ralph/THOUGHTS.md)** - Strategic vision
 - **[workers/ralph/NEURONS.md](workers/ralph/NEURONS.md)** - Project structure map
-- **[workers/ralph/IMPLEMENTATION_PLAN.md](workers/ralph/IMPLEMENTATION_PLAN.md)** - Task backlog
+- **[workers/IMPLEMENTATION_PLAN.md](workers/IMPLEMENTATION_PLAN.md)** - Task backlog
 
 ## Development
 
@@ -638,7 +639,7 @@ echo ""
 echo -e "${YELLOW}Next Steps:${NC}"
 echo -e "  1. ${CYAN}cd $PROJECT_LOCATION${NC}"
 echo -e "  2. Review and customize workers/ralph/THOUGHTS.md"
-echo -e "  3. Review and customize workers/ralph/IMPLEMENTATION_PLAN.md"
+echo -e "  3. Review and customize workers/IMPLEMENTATION_PLAN.md"
 echo -e "  4. Run Ralph: ${CYAN}cd workers/ralph && bash loop.sh${NC}"
 echo ""
 echo -e "${YELLOW}Task Monitors:${NC}"

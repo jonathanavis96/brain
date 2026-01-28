@@ -375,7 +375,7 @@ The brain repository follows Option B structure (worker-in-repo):
 
 - **Location:** `/` (root)
 - **Role:** Overall repository vision and structure
-- **Files:** THOUGHTS.md, NEURONS.md, AGENTS.md (planned), README.md
+- **Files:** THOUGHTS.md, NEURONS.md, AGENTS.md, README.md
 - **Scope:** Repository-wide mission, goals, templates
 
 ## Validation Commands
@@ -411,7 +411,7 @@ grep -c "^- \[" skills/index.md
 1. **Start with SUMMARY.md** - Get overview before diving into specific skills
 2. **Use index.md** - Catalog of all skills with descriptions
 3. **Check THOUGHTS.md** - Understand context and current phase
-4. **Read AGENTS.md** - Get operational guidance (once created)
+4. **Read AGENTS.md** - Get operational guidance
 5. **Follow hotlist** - `skills/SUMMARY.md` links most-used patterns
 
 ## Common Workflows
@@ -429,7 +429,7 @@ grep -c "^- \[" skills/index.md
 1. Read `docs/BOOTSTRAPPING.md`
 2. Choose template from `templates/` (ralph, backend, python, etc.)
 3. Copy template to new project location
-4. Run `new-project.sh` (planned at root level)
+4. Run `new-project.sh` (see `workers/ralph/new-project.sh` and templates in `templates/`)
 5. Customize AGENTS.md, NEURONS.md, THOUGHTS.md for project
 
 ### Running Ralph Loop on Brain
