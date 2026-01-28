@@ -1,6 +1,6 @@
 # NEURONS.md - Brain Repository Map
 
-**Last Updated:** 2026-01-22
+**Last Updated:** 2026-01-28
 
 ## Quick Reference
 
@@ -8,12 +8,13 @@
 |----------------------------|------------------------------|-----------------------------------------------|
 | **Strategic Vision** | `THOUGHTS.md` | Mission, goals, success criteria |
 | **Repository Map** | `NEURONS.md` (this file) | Codebase structure and navigation |
-| **Agent Guide** | `AGENTS.md` (planned) | Operational guidance for agents |
+| **Agent Guide** | `AGENTS.md` | Operational guidance for agents |
 | **Human Onboarding** | `README.md` | Getting started guide |
-| **Implementation Plan** | `IMPLEMENTATION_PLAN.md` | Current tasks and roadmap |
 | **Skills Knowledge Base** | `skills/` | Domain patterns and best practices |
 | **Project Templates** | `templates/` | Bootstrapping for new projects |
+| **CLI Tools** | `bin/`, `tools/` | Command-line utilities and analysis tools |
 | **Ralph Worker** | `workers/ralph/` | Self-improvement loop for brain |
+| **Cerebras Worker** | `workers/cerebras/` | Alternative LLM worker |
 | **Cortex Manager** | `cortex/` | Strategic planning and coordination |
 | **Acceptance Criteria** | `rules/AC.rules` | Automated quality gates (protected) |
 | **Verifier** | `.verify/` | Hash guards and verification system |
@@ -25,46 +26,155 @@ brain/                           # Root of brain repository
 ├── README.md                    # Human onboarding and overview
 ├── THOUGHTS.md                  # Strategic vision and goals
 ├── NEURONS.md                   # This file - codebase map
-├── AGENTS.md                    # (planned) Agent operational guide
-├── IMPLEMENTATION_PLAN.md       # Current tasks and roadmap
+├── AGENTS.md                    # Agent operational guide
+├── CONTRIBUTING.md              # Contribution guidelines
+├── SPEC_CHANGE_REQUEST.md       # Specification change requests
+├── STAGING_COPY_REPORT.md       # Staging environment reports
+├── TEMPLATE_DRIFT_REPORT.md     # Template drift analysis
+├── new-project.sh               # Project bootstrapping script
+├── setup.sh                     # Repository setup script
+├── setup-linters.sh             # Linter configuration script
+├── rovodev-config.template.yml  # RovoDev configuration template
+├── .editorconfig                # Editor configuration
+├── .env.example                 # Environment variables template
+├── .gitignore                   # Git ignore rules
+├── .markdownlint.yaml           # Markdown linting configuration
+├── .markdownlintignore          # Markdown linting exclusions
+├── .pre-commit-config.yaml      # Pre-commit hook configuration
+│
+├── app/                         # Applications
+│   └── brain-map/              # Brain mapping visualization tool
+│       ├── START.md            # Getting started guide
+│       ├── backend/            # Python FastAPI backend
+│       │   ├── app/            # Application code
+│       │   ├── tests/          # Test suite
+│       │   ├── requirements.txt # Python dependencies
+│       │   └── README.md       # Backend documentation
+│       ├── frontend/           # React/Vite frontend
+│       │   ├── src/            # Source code
+│       │   ├── public/         # Static assets
+│       │   ├── index.html      # Entry point
+│       │   ├── package.json    # NPM dependencies
+│       │   └── vite.config.js  # Vite configuration
+│       ├── notes/              # Sample notes for testing
+│       └── generated/          # Generated artifacts
+│
+├── artifacts/                   # Build artifacts and reports
+│   ├── brain_metrics.json      # Brain repository metrics
+│   ├── dashboard.html          # Metrics dashboard
+│   ├── optimization_hints.md   # Optimization suggestions
+│   ├── analysis/               # Analysis reports
+│   ├── review_packs/           # Code review packages
+│   ├── rollflow_cache/         # Rollflow cache data
+│   └── rollflow_reports/       # Rollflow analysis reports
+│
+├── bin/                         # Command-line utilities
+│   ├── brain-event             # Event logging utility
+│   ├── brain-search            # Search THUNK/git history
+│   ├── discord-post            # Discord webhook utility
+│   ├── gap-radar               # Gap detection tool
+│   ├── ralph-stats             # Ralph statistics viewer
+│   ├── ralph-summary           # Ralph summary generator
+│   └── thunk-parse             # THUNK.md parser
+│
+├── config/                      # Configuration files
+│   └── tool-registry.yaml      # Tool registry
 │
 ├── skills/                      # Skills knowledge base (domain patterns)
 │   ├── SUMMARY.md              # Skills overview and hotlist
 │   ├── index.md                # Skill catalog and navigation
 │   ├── conventions.md          # Cross-cutting conventions
 │   ├── domains/                # Domain-specific patterns
+│   │   ├── anti-patterns/      # Common anti-patterns to avoid
 │   │   ├── backend/            # API, auth, caching, database patterns
 │   │   ├── code-quality/       # Testing, hygiene, token efficiency
+│   │   ├── frontend/           # React, accessibility patterns
 │   │   ├── infrastructure/     # Deployment, security, state management
-│   │   ├── languages/          # Python, shell scripting patterns
+│   │   ├── languages/          # Go, JavaScript, Python, Shell, TypeScript
+│   │   ├── marketing/          # Content, CRO, growth, SEO strategies
 │   │   ├── ralph/              # Ralph loop architecture patterns
 │   │   └── websites/           # Web design and development patterns
+│   ├── playbooks/              # Step-by-step operational guides
 │   ├── projects/               # Project-specific conventions
-│   └── self-improvement/       # GAP_BACKLOG, SKILL_BACKLOG
+│   └── self-improvement/       # GAP_BACKLOG, SKILL_BACKLOG, SKILL_TEMPLATE
 │
 ├── templates/                   # Project bootstrapping templates
 │   ├── ralph/                  # Ralph loop template (core files)
 │   ├── backend/                # Backend project templates
+│   ├── cortex/                 # Cortex manager templates
+│   ├── go/                     # Go project templates
+│   ├── javascript/             # JavaScript project templates
 │   ├── python/                 # Python project templates
-│   └── cortex/                 # Cortex manager templates
+│   └── website/                # Website project templates
 │
 ├── workers/                     # Worker agents (executors)
-│   └── ralph/                  # Ralph self-improvement worker
-│       ├── AGENTS.md           # Ralph operational guide
-│       ├── NEURONS.md          # Ralph codebase map
-│       ├── THOUGHTS.md         # Ralph tactical notes
-│       ├── IMPLEMENTATION_PLAN.md  # Ralph work queue
-│       ├── THUNK.md            # Ralph completion log
-│       ├── PROMPT.md           # Ralph agent instructions
-│       ├── loop.sh             # Ralph execution loop
+│   ├── IMPLEMENTATION_PLAN.md  # Shared worker tasks
+│   ├── PLAN_DONE.md            # Completed planning phases
+│   ├── .verify/                # Worker-level verification
+│   ├── shared/                 # Shared worker utilities
+│   │   ├── cache.sh            # Caching utilities
+│   │   ├── common.sh           # Common functions
+│   │   ├── filter_acli_errors.sh # Error filtering
+│   │   └── verifier_common.sh  # Verification utilities
+│   ├── ralph/                  # Ralph self-improvement worker
+│   │   ├── AGENTS.md           # Ralph operational guide
+│   │   ├── NEURONS.md          # Ralph codebase map
+│   │   ├── THOUGHTS.md         # Ralph tactical notes
+│   │   ├── THUNK.md            # Ralph completion log
+│   │   ├── PROMPT.md           # Ralph agent instructions (protected)
+│   │   ├── VALIDATION_CRITERIA.md # Quality gates
+│   │   ├── loop.sh             # Ralph execution loop (protected)
+│   │   ├── verifier.sh         # Acceptance criteria checker (protected)
+│   │   ├── ralph.sh            # Ralph CLI wrapper
+│   │   ├── current_ralph_tasks.sh # Task monitor
+│   │   ├── thunk_ralph_tasks.sh # THUNK monitor
+│   │   ├── fix-markdown.sh     # Markdown auto-fixer
+│   │   ├── init_verifier_baselines.sh # Baseline initializer
+│   │   ├── cleanup_plan.sh     # Plan cleanup utility
+│   │   ├── update_thunk_from_plan.sh # Plan-THUNK sync
+│   │   ├── render_ac_status.sh # AC status renderer
+│   │   ├── new-project.sh      # Project bootstrapper
+│   │   ├── pr-batch.sh         # Batch PR creator
+│   │   ├── sync_workers_plan_to_cortex.sh # Cortex sync
+│   │   ├── artifacts/          # Ralph artifacts
+│   │   ├── config/             # Ralph configuration
+│   │   ├── docs/               # Ralph documentation
+│   │   ├── logs/               # Ralph execution logs
+│   │   ├── tests/              # Ralph test suite
+│   │   ├── .maintenance/       # Maintenance utilities
+│   │   └── .verify/            # Ralph verification
+│   └── cerebras/               # Cerebras worker (alternative LLM)
+│       ├── AGENTS.md           # Cerebras operational guide
+│       ├── NEURONS.md          # Cerebras codebase map
+│       ├── THOUGHTS.md         # Cerebras tactical notes
+│       ├── THUNK.md            # Cerebras completion log
+│       ├── PROMPT.md           # Cerebras instructions (protected)
+│       ├── VALIDATION_CRITERIA.md # Quality gates
+│       ├── ENHANCEMENT_PLAN.md # Cerebras enhancements
+│       ├── loop.sh             # Cerebras execution loop
 │       ├── verifier.sh         # Acceptance criteria checker
-│       └── docs/               # Ralph-specific documentation
+│       ├── cerebras_agent.py   # Cerebras Python agent
+│       ├── current_cerebras_tasks.sh # Task monitor
+│       ├── thunk_cerebras_tasks.sh # THUNK monitor
+│       ├── config/             # Cerebras configuration
+│       ├── docs/               # Cerebras documentation
+│       ├── logs/               # Cerebras execution logs
+│       └── .verify/            # Cerebras verification
 │
 ├── cortex/                      # Manager agent (strategic planning)
 │   ├── AGENTS.md               # Cortex operational guide
 │   ├── NEURONS.md              # Cortex codebase map
 │   ├── THOUGHTS.md             # Cortex strategic notes
+│   ├── DECISIONS.md            # Strategic decisions log
 │   ├── IMPLEMENTATION_PLAN.md  # Cortex planning queue
+│   ├── PLAN_DONE.md            # Completed cortex plans
+│   ├── cortex.bash             # Cortex execution script
+│   ├── ralph.sh                # Ralph delegation script
+│   ├── one-shot.sh             # One-shot task executor
+│   ├── snapshot.sh             # Repository snapshot utility
+│   ├── sync_gaps.sh            # Gap synchronization
+│   ├── cleanup_cortex_plan.sh  # Plan cleanup utility
+│   ├── CORTEX_SYSTEM_PROMPT.md # Cortex system prompt
 │   ├── analysis/               # Analysis and planning documents
 │   ├── docs/                   # Cortex-specific documentation
 │   └── projects/               # Project-specific planning
@@ -72,31 +182,72 @@ brain/                           # Root of brain repository
 ├── docs/                        # Repository-wide documentation
 │   ├── BOOTSTRAPPING.md        # New project setup guide
 │   ├── CHANGES.md              # Change log and history
-│   ├── EDGE_CASES.md           # (planned) Error recovery procedures
 │   ├── HISTORY.md              # Historical context and decisions
-│   └── REFERENCE_SUMMARY.md    # Quick reference guide
+│   ├── REFERENCE_SUMMARY.md    # Quick reference guide
+│   ├── TOOLS.md                # CLI tools documentation
+│   ├── events.md               # Event system documentation
+│   ├── CACHE_DESIGN.md         # Cache system design
+│   ├── EDGE_CASES.md           # Edge cases and recovery
+│   ├── HASH_VALIDATION.md      # Hash validation system
+│   ├── MARKER_SCHEMA.md        # Marker schema documentation
+│   ├── QUALITY_GATES.md        # Quality gate definitions
+│   ├── TEST_SCENARIOS.md       # Test scenario catalog
+│   ├── CODERABBIT_*.md         # CodeRabbit analysis reports
+│   └── brain-map/              # Brain-map specific docs
+│       ├── brain-map-spec.md
+│       ├── brain-map-implementation-plan.md
+│       └── brain-map-v2-enhancements.md
 │
 ├── rules/                       # Quality gates and acceptance criteria
 │   ├── AC.rules                # Automated acceptance criteria (protected)
 │   ├── AC-hygiene-additions.rules  # Additional hygiene rules
 │   └── MANUAL_APPROVALS.rules  # Manual review gates
 │
+├── tests/                       # Repository-level tests
+│   └── unit/                   # Unit test suite
+│       ├── brain-event.bats    # Brain event tests
+│       └── README.md           # Test documentation
+│
+├── tools/                       # Development and analysis tools
+│   ├── check_startup_rules.sh  # Startup validation
+│   ├── skill_freshness.sh      # Skill freshness checker
+│   ├── thunk_dedup.sh          # THUNK deduplication
+│   ├── thunk_parser.py         # THUNK parser (Python)
+│   ├── validate_doc_sync.sh    # Documentation sync validator
+│   ├── validate_examples.py    # Code example validator
+│   ├── validate_links.sh       # Link validation
+│   ├── validate_protected_hashes.sh # Hash guard validator
+│   ├── test_*.sh               # Various test utilities
+│   ├── thread_storage_schema.sql # Thread storage schema
+│   ├── brain_dashboard/        # Brain metrics dashboard
+│   ├── gap_radar/              # Gap detection system
+│   ├── pattern_miner/          # Pattern mining tools
+│   ├── rollflow_analyze/       # Rollflow analysis framework
+│   ├── skill_graph/            # Skill dependency graph
+│   └── skill_quiz/             # Skill quiz generator
+│
 └── .verify/                     # Verification and hash guards
     ├── ac.sha256               # AC.rules hash baseline (protected)
+    ├── agents.sha256           # AGENTS.md hash baseline (protected)
     ├── loop.sha256             # loop.sh hash baseline (protected)
     ├── prompt.sha256           # PROMPT.md hash baseline (protected)
     ├── verifier.sha256         # verifier.sh hash baseline (protected)
     ├── latest.txt              # Last verifier run output
-    ├── waiver_requests/        # Pending waiver requests
-    └── waivers/                # Approved waivers (OTP-protected)
+    ├── run_id.txt              # Current run identifier
+    ├── approve_waiver_totp.py  # Waiver approval utility
+    ├── check_waiver.sh         # Waiver checker
+    ├── launch_approve_waiver.sh # Waiver launcher
+    ├── request_waiver.sh       # Waiver request utility
+    ├── notify_human.sh         # Human notification script
+    └── waiver_requests/        # Pending waiver requests
 ```
 
 ## File Counts
 
-- **Markdown files:** 129
-- **Shell scripts:** 27
-- **Python files:** 1
-- **Total directories:** 19+
+- **Markdown files:** 150+
+- **Shell scripts:** 35+
+- **Python files:** 25+
+- **Total directories:** 50+
 
 ## Key Files by Purpose
 
@@ -152,6 +303,8 @@ brain/                           # Root of brain repository
 
 ### Languages
 
+- Go patterns
+- JavaScript/TypeScript patterns
 - Python patterns
 - Shell scripting (cleanup, strict mode, variable patterns)
 
@@ -160,6 +313,14 @@ brain/                           # Root of brain repository
 - Bootstrap patterns
 - Change propagation
 - Ralph architecture patterns
+
+### Marketing
+
+- Content strategy (copywriting, email, social)
+- CRO (A/B testing, forms, signup flows, paywalls)
+- Growth (analytics, referrals, paid ads, free tools)
+- SEO (programmatic SEO, schema markup, audits)
+- Strategy (competitor analysis, launches, pricing, psychology)
 
 ### Websites
 

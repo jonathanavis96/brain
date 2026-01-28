@@ -6,19 +6,19 @@ This document provides a human-friendly overview of the Brain repository structu
 
 ## Top-Level Folders
 
-### `cortex/` - Manager Layer (GPT-5.2)
+### `cortex/` - Manager Layer
 
 **Purpose:** High-level planning, task delegation, and strategic oversight.
 
 **Key Files:**
 
 - `CORTEX_SYSTEM_PROMPT.md` - Cortex's identity, role, and operational rules
-- `REPO_MAP.md` - This file - navigation guide for the repository
+- `docs/REPO_MAP.md` - This file - navigation guide for the repository
 - `DECISIONS.md` - Architectural decisions and conventions (stability anchor)
-- `RUNBOOK.md` - Operations guide (how to start Cortex, troubleshooting)
+- `docs/RUNBOOK.md` - Operations guide (how to start Cortex, troubleshooting)
 - `IMPLEMENTATION_PLAN.md` - Task contracts for workers (delegation format)
 - `THOUGHTS.md` - Cortex's analysis and decision log
-- `run.sh` - Main entry point to start Cortex
+- `cortex.bash` - Main entry point to start Cortex
 - `snapshot.sh` - Generates current state summary for Cortex context
 
 **What Cortex Can Modify:**
@@ -43,7 +43,7 @@ This document provides a human-friendly overview of the Brain repository structu
 
 **Current Workers:**
 
-- `ralph/` - Shell-based loop executor (GPT-5.2-Codex)
+- `ralph/` - Shell-based loop executor
   - `loop.sh` - Main execution loop (PLAN/BUILD cycles)
   - `PROMPT.md` - Ralph's instructions and operational rules
   - `verifier.sh` - Acceptance criteria validation
@@ -53,6 +53,7 @@ This document provides a human-friendly overview of the Brain repository structu
   - `THUNK.md` - Completed task log
   - `NEURONS.md` - Ralph's codebase map
   - `THOUGHTS.md` - Ralph's working context
+  - `.maintenance/` - Repository health checks and maintenance tracking
 
 **Workflow:** Cortex writes task contracts → Ralph executes → Ralph reports progress → Cortex reviews
 
@@ -88,8 +89,8 @@ This document provides a human-friendly overview of the Brain repository structu
 
 **Structure:**
 
-- Template files for different project types (backend, python, ralph)
-- Generator scripts located in `workers/ralph/generators/` folder (if present)
+- Template files for different project types (backend, python, ralph, website, go, javascript)
+- Bootstrap script at root: `new-project.sh`
 
 **Common Templates:**
 
@@ -141,7 +142,7 @@ This document provides a human-friendly overview of the Brain repository structu
 - `HISTORY.md` - Project evolution
 - `TEST_SCENARIOS.md` - Validation scenarios
 
-### `.maintenance/` - Repository Health
+### `workers/ralph/.maintenance/` - Repository Health
 
 **Purpose:** Maintenance tracking and verification.
 
@@ -150,8 +151,7 @@ This document provides a human-friendly overview of the Brain repository structu
 - `MAINTENANCE.md` - Current maintenance items
 - `MAINTENANCE_LOG.md` - Historical maintenance log
 - `verify-brain.sh` - Repository health check script
-
-**Note:** Analysis files are located in `workers/ralph/analysis/` if present.
+- `REORGANIZATION_PROPOSAL.md` - Structural improvement proposals
 
 ## Key Root Files
 
@@ -185,6 +185,9 @@ This document provides a human-friendly overview of the Brain repository structu
 - **Verifier status:** `.verify/latest.txt`
 - **Git state:** `.git/` (local commits before push)
 - **Maintenance items:** `workers/ralph/.maintenance/MAINTENANCE.md`
+- **Cortex analysis:** `cortex/analysis/` (strategic analysis and planning documents)
+- **Cortex logs:** `cortex/logs/` (archived thoughts and execution logs)
+- **Cortex projects:** `cortex/projects/` (project-specific planning)
 
 ## Navigation Tips
 
@@ -245,7 +248,7 @@ This document provides a human-friendly overview of the Brain repository structu
 │  ┌──────────────┐         ┌─────────────────────┐          │
 │  │   Cortex     │────────>│  IMPLEMENTATION_    │          │
 │  │  (Manager)   │  writes │  PLAN.md            │          │
-│  │  Opus 4.5    │         │  (task contracts)   │          │
+│  │              │         │  (task contracts)   │          │
 │  └──────────────┘         └──────────┬──────────┘          │
 │         │                            │                      │
 │         │ reads status               │ reads tasks          │
@@ -254,7 +257,7 @@ This document provides a human-friendly overview of the Brain repository structu
 │  ┌──────────────┐         ┌─────────────────────┐          │
 │  │   THUNK.md   │<────────│      Ralph          │          │
 │  │  (completed) │  writes │    (Worker)         │          │
-│  └──────────────┘         │   Sonnet 4.5        │          │
+│  └──────────────┘         │                     │          │
 │                           └─────────────────────┘          │
 │                                     │                       │
 │                                     │ reads                 │

@@ -79,7 +79,7 @@
 
 **Cluster Evidence:**
 
-- THUNK #486: sync `sync_cortex_plan.sh` workers → templates
+- THUNK #486: sync task sync script workers → templates
 - THUNK #534: sync `current_ralph_tasks.sh` workers → templates
 - Pending: 6.2.1, 6.2.2 template updates
 

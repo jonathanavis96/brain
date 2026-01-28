@@ -10,7 +10,7 @@ Cortex is the high-level planning and management layer for the Brain repository.
 
 ```bash
 cd /path/to/brain/cortex/
-bash run.sh
+bash cortex.bash
 ```text
 
 **What Cortex does:**
@@ -116,7 +116,7 @@ bash verifier.sh
 ### Maintenance Check
 
 ```bash
-cd /path/to/brain/
+cd /path/to/brain/workers/ralph/
 bash .maintenance/verify-brain.sh
 ```text
 
@@ -173,11 +173,11 @@ Checks for:
 
 #### Issue: "acli not found"
 
-**Fix:** Add Atlassian CLI to PATH in `~/.bashrc`:
+**Fix:** Authenticate with RovoDev:
 
 ```bash
-export PATH="$PATH:/path/to/atlassian-cli/bin"
-source ~/.bashrc
+acli rovodev auth
+acli rovodev usage site
 ```text
 
 ### Cortex Issues
@@ -229,18 +229,9 @@ git commit                          # If merging
 
 #### Issue: Bootstrap generator fails
 
-**Symptom:** `new-project.sh` or `generate-*.sh` fails  
+**Symptom:** `new-project.sh` fails  
 **Check:** Required fields in idea file (Project, Tech Stack, Purpose)  
 **Fix:** Ensure idea template has all required fields populated
-
-#### Issue: GitHub CLI not authenticated
-
-**Symptom:** `new-project.sh` fails with GitHub API errors  
-**Fix:**
-
-```bash
-gh auth login
-```text
 
 ## What to Do If Blocked
 

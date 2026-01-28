@@ -2,6 +2,25 @@
 
 Quick reference for all CLI tools in the Brain repository. **Use these instead of manual grep/sed for common tasks.**
 
+## Regeneration Procedure
+
+**To keep this document in sync with actual tools:**
+
+1. Run the validator to check for drift:
+
+   ```bash
+   bash tools/validate_tool_inventory.sh
+   ```
+
+2. If the validator reports missing tools:
+   - Add documentation for each missing tool in the appropriate section below
+   - Follow the existing format (### `path/to/tool` - Purpose)
+   - Include: Purpose, Usage examples, Output description, Prerequisites
+
+3. Re-run validator to confirm all tools are documented
+
+**Note:** The validator checks `bin/`, `tools/`, and `workers/ralph/` for executables and scripts.
+
 ## Quick Lookup
 
 | Task | Command | Notes |
@@ -28,6 +47,10 @@ Quick reference for all CLI tools in the Brain repository. **Use these instead o
 
 Search across THUNK.md, git history, and cache database.
 
+**Purpose:** Fast multi-source search for task history and code changes.
+
+**Usage:**
+
 ```bash
 # Search all sources (THUNK + git)
 bin/brain-search "shellcheck"
@@ -45,7 +68,9 @@ bin/brain-search --all "markdown"
 bin/brain-search --limit 5 "cache"
 ```
 
-**Use for:** Quick lookups, finding if something was done before, pattern discovery.
+**Output:** Formatted results from THUNK entries, git commits, and optionally cache DB.
+
+**Prerequisites:** None (uses grep and git).
 
 **Token savings:** Use this instead of `grep + git log` separately.
 
@@ -54,6 +79,10 @@ bin/brain-search --limit 5 "cache"
 ### `bin/thunk-parse` - THUNK.md Parser & Exporter
 
 Extract structured data from THUNK.md markdown tables.
+
+**Purpose:** Parse THUNK.md into structured formats for analysis and querying.
+
+**Usage:**
 
 ```bash
 # Show statistics (fast overview)
@@ -69,12 +98,9 @@ bin/thunk-parse --format json -o thunk.json
 bin/thunk-parse --format sqlite -o thunk.db
 ```
 
-**Output formats:**
+**Output:** JSON array or SQLite database with fields: `thunk_num`, `original_id`, `priority`, `description`, `completed`, `era`.
 
-- **JSON:** Array of entries with `thunk_num`, `original_id`, `priority`, `description`, `completed`, `era`
-- **SQLite:** Table with same fields, enables SQL queries
-
-**Use for:** Statistics, bulk analysis, complex queries against history.
+**Prerequisites:** Python 3, SQLite (for database export).
 
 **Token savings:** Use `--stats` instead of opening THUNK.md to count entries.
 
@@ -83,6 +109,10 @@ bin/thunk-parse --format sqlite -o thunk.db
 ### `bin/ralph-stats` - Ralph Performance Statistics
 
 Quick performance metrics from Ralph loop and RovoDev logs.
+
+**Purpose:** Analyze Ralph loop performance metrics for optimization.
+
+**Usage:**
 
 ```bash
 # Last 24 hours (default)
@@ -95,7 +125,9 @@ bin/ralph-stats --since 4h
 bin/ralph-stats --full
 ```
 
-**Shows:** Tool call counts, durations, cache hit rates, iteration success.
+**Output:** Summary showing tool call counts, durations, cache hit rates, iteration success printed to stdout.
+
+**Prerequisites:** Access to `workers/ralph/logs/` directory.
 
 **Use for:** Performance monitoring, identifying slow operations.
 
@@ -104,6 +136,10 @@ bin/ralph-stats --full
 ### `bin/gap-radar` - Knowledge Gap Suggester
 
 Analyze errors and suggest entries for GAP_BACKLOG.md.
+
+**Purpose:** Discover missing skills from error patterns and verifier failures.
+
+**Usage:**
 
 ```bash
 # Analyze verifier output (default, dry-run)
@@ -116,6 +152,10 @@ bin/gap-radar --from-log path/to/log.txt
 bin/gap-radar --append
 ```
 
+**Output:** Gap suggestions printed to stdout, optionally appended to `skills/self-improvement/GAP_BACKLOG.md`.
+
+**Prerequisites:** Python 3, `tools/gap_radar/patterns.yaml` for error matching.
+
 **Use for:** Discovering undocumented patterns from recurring errors.
 
 ---
@@ -124,6 +164,10 @@ bin/gap-radar --append
 
 Emit structured events to `state/events.jsonl` for observability.
 
+**Purpose:** Provider-neutral event logging for Ralph loop monitoring and debugging.
+
+**Usage:**
+
 ```bash
 # Iteration markers
 bin/brain-event --event iteration_start --iter 5 --phase BUILD
@@ -131,7 +175,14 @@ bin/brain-event --event iteration_end --iter 5 --status ok
 
 # Error events
 bin/brain-event --event error --msg "Verifier failed" --code 1
+
+# Watch mode
+bin/brain-event --watch --filter "error"
 ```
+
+**Output:** JSON lines appended to `state/events.jsonl`.
+
+**Prerequisites:** Bash 4+, jq (for watch mode filtering).
 
 **Use for:** Observability pipelines, log correlation.
 
@@ -140,6 +191,10 @@ bin/brain-event --event error --msg "Verifier failed" --code 1
 ### `bin/ralph-summary` - Log Summary Extractor
 
 Extract clean task completion summaries from Ralph logs, stripping terminal noise (ANSI codes, streaming artifacts, spinner lines).
+
+**Purpose:** Extract human-readable summaries from Ralph logs without terminal artifacts.
+
+**Usage:**
 
 ```bash
 # Latest log summary
@@ -155,9 +210,39 @@ bin/ralph-summary --all
 bin/ralph-summary --list
 ```
 
-**Output:** The final summary block before `:::BUILD_READY:::` or `:::PLAN_READY:::` markers.
+**Output:** Clean summary block (before `:::BUILD_READY:::` or `:::PLAN_READY:::` markers) printed to stdout.
 
-**Use for:** Quick review of what Ralph accomplished, sharing summaries without terminal garbage.
+**Prerequisites:** Access to `workers/ralph/logs/` directory.
+
+---
+
+### `bin/discord-post` - Discord Webhook Poster
+
+Post messages to Discord webhooks for notifications and observability.
+
+**Purpose:** Send formatted messages to Discord channels via webhooks. Used for agent notifications, build status, and event tracking. Automatically chunks long messages at newline boundaries.
+
+**Usage:**
+
+```bash
+# Post a simple message
+echo "Build completed successfully" | bin/discord-post
+
+# Post from file
+bin/discord-post --file /path/to/message.txt
+
+# Dry run (preview without sending)
+echo "Test message" | bin/discord-post --dry-run
+
+# Custom max length
+echo "Long message..." | bin/discord-post --max-length 1500
+```
+
+**Output:** HTTP response from Discord API (200 OK on success). Non-blocking: exits 0 even if webhook fails or is missing.
+
+**Prerequisites:** `curl`, `DISCORD_WEBHOOK_URL` environment variable (unless `--dry-run`).
+
+**See also:** [skills/domains/infrastructure/discord-webhook-patterns.md](../skills/domains/infrastructure/discord-webhook-patterns.md)
 
 **Token savings:** Use this instead of opening raw log files and manually filtering noise.
 
@@ -165,9 +250,40 @@ bin/ralph-summary --list
 
 ## Python Tools (`tools/`)
 
+### `tools/thunk_parser.py` - THUNK.md Parser
+
+Extract structured data from THUNK.md markdown tables.
+
+**Purpose:** Parse THUNK.md and export to JSON or SQLite for complex queries. Provides statistics on task completion.
+
+**Usage:**
+
+```bash
+# Parse and display stats
+python3 tools/thunk_parser.py workers/ralph/THUNK.md --stats
+
+# Export to JSON
+python3 tools/thunk_parser.py workers/ralph/THUNK.md --format json --output thunk.json
+
+# Export to SQLite
+python3 tools/thunk_parser.py workers/ralph/THUNK.md --format sqlite --output thunk.db
+```
+
+**Output:** JSON array or SQLite database with fields: `thunk_num`, `original_id`, `priority`, `description`, `completed`, `era`.
+
+**Prerequisites:** Python 3, SQLite3 (for database export).
+
+**Note:** This is the underlying library for `bin/thunk-parse` wrapper.
+
+---
+
 ### `tools/rollflow_analyze` - Log Analyzer
 
 Detailed analysis of Ralph loop logs and RovoDev tool calls.
+
+**Purpose:** Extract structured metrics from Ralph loop execution logs for performance analysis.
+
+**Usage:**
 
 ```bash
 # Basic analysis
@@ -186,13 +302,11 @@ python3 -m tools.rollflow_analyze --log-dir workers/ralph/logs/ --review-pack
 python3 -m tools.rollflow_analyze --log-dir workers/ralph/logs/ --since 24h
 ```
 
-**Parsers available:**
-
-- `marker` - Parse `:::MARKER:::` format
-- `heuristic` - Regex patterns for unstructured logs
-- `auto` - Try marker first, fall back to heuristic
-
 **Output:** JSON report + optional markdown summary in `artifacts/analysis/`.
+
+**Prerequisites:** Python 3, PyYAML (for config parsing).
+
+**Parsers:** `marker` (structured), `heuristic` (regex fallback), `auto` (tries both).
 
 ---
 
@@ -216,6 +330,10 @@ Components for detecting knowledge gaps from errors.
 
 Remove duplicate entries from THUNK.md (one-time cleanup utility).
 
+**Purpose:** Remove duplicate THUNK entries while preserving first occurrence.
+
+**Usage:**
+
 ```bash
 # Preview what would be removed
 bash tools/thunk_dedup.sh --dry-run
@@ -224,13 +342,19 @@ bash tools/thunk_dedup.sh --dry-run
 bash tools/thunk_dedup.sh
 ```
 
-**Output:** Statistics showing original/after/removed counts.
+**Output:** Updates `workers/ralph/THUNK.md` in-place, prints statistics to stdout.
+
+**Prerequisites:** Bash, standard Unix tools (awk, sort).
 
 ---
 
 ### `tools/skill_freshness.sh` - Skill Age Checker
 
 List skills with age and flag stale ones (default: >90 days).
+
+**Purpose:** Identify outdated skills that may need review or updates.
+
+**Usage:**
 
 ```bash
 # List all skills with age
@@ -243,11 +367,19 @@ bash tools/skill_freshness.sh --days 60
 bash tools/skill_freshness.sh --exit-on-stale
 ```
 
+**Output:** List of skills with last modification date, flags stale entries.
+
+**Prerequisites:** Git (uses `git log` to determine file age).
+
 ---
 
 ### `tools/brain_dashboard/` - Metrics Dashboard
 
 Generate HTML dashboard with brain repository metrics.
+
+**Purpose:** Visualize brain repository health metrics (skills, tasks, coverage).
+
+**Usage:**
 
 ```bash
 # Collect metrics and generate dashboard
@@ -255,13 +387,19 @@ bash tools/brain_dashboard/collect_metrics.sh
 python3 tools/brain_dashboard/generate_dashboard.py
 ```
 
-**Output:** `artifacts/dashboard.html` with skill counts, task stats, coverage.
+**Output:** `artifacts/dashboard.html` (open in browser), `artifacts/brain_metrics.json`.
+
+**Prerequisites:** Python 3, Bash, write access to `artifacts/` directory.
 
 ---
 
 ### `tools/skill_graph/` - Skill Dependency Graph
 
 Generate DOT graph of skill dependencies and cross-references.
+
+**Purpose:** Visualize relationships between skill documents.
+
+**Usage:**
 
 ```bash
 # Generate graph to stdout
@@ -274,6 +412,10 @@ bash tools/skill_graph/skill_graph.sh --output skills.dot
 bash tools/skill_graph/skill_graph.sh | dot -Tpng -o skills.png
 ```
 
+**Output:** DOT format graph printed to stdout or file.
+
+**Prerequisites:** Python 3, Graphviz (optional, for rendering).
+
 **Components:** `extract_links.py` (parse refs), `generate_graph.py` (DOT output).
 
 ---
@@ -281,6 +423,10 @@ bash tools/skill_graph/skill_graph.sh | dot -Tpng -o skills.png
 ### `tools/pattern_miner/` - Commit Pattern Discovery
 
 Discover recurring patterns in sibling project git logs to identify potential new skills.
+
+**Purpose:** Mine commit messages from other projects to discover skill gaps.
+
+**Usage:**
 
 ```bash
 # Analyze commits from ~/code/ projects
@@ -290,6 +436,10 @@ bash tools/pattern_miner/mine_patterns.sh
 python3 tools/pattern_miner/analyze_commits.py
 ```
 
+**Output:** Suggested patterns printed to stdout, identifies common fixes/changes.
+
+**Prerequisites:** Python 3, Git, access to sibling repositories in `~/code/`.
+
 **Use case:** Find gaps in brain's skills by analyzing what you repeatedly fix in other projects.
 
 ---
@@ -297,6 +447,10 @@ python3 tools/pattern_miner/analyze_commits.py
 ### `tools/skill_quiz/` - Interactive Knowledge Quiz
 
 Terminal-based quiz for testing knowledge retention from skill docs.
+
+**Purpose:** Test knowledge retention through interactive scenarios from skill documents.
+
+**Usage:**
 
 ```bash
 # Start quiz with random skill
@@ -306,20 +460,55 @@ bash tools/skill_quiz/quiz.sh
 bash tools/skill_quiz/quiz.sh skills/domains/shell/variable-patterns.md
 ```
 
+**Output:** Interactive terminal prompts with scenarios and solutions.
+
+**Prerequisites:** Bash, Python 3 (for `extract_scenarios.py`).
+
 **Format:** Presents scenarios, waits for your answer, reveals solution.
 
 ---
 
 ## Validation Tools (`tools/validate_*.sh`)
 
+### `tools/validate_examples.py` - Code Example Validator
+
+Validate code examples in markdown documentation.
+
+**Purpose:** Lint code blocks in markdown files for syntax errors, undefined variables, and missing imports.
+
+**Usage:**
+
+```bash
+# Validate all skills
+python3 tools/validate_examples.py skills/**/*.md
+
+# Validate specific file
+python3 tools/validate_examples.py skills/domains/python/python-patterns.md
+
+# Used by pre-commit hook
+pre-commit run validate-examples --all-files
+```
+
+**Checks:**
+
+- Python: syntax errors, undefined variables, missing imports
+- JavaScript/TypeScript: syntax errors, undefined variables  
+- Shell: shellcheck validation
+
+**Output:** List of validation errors with line numbers and descriptions. Exits 0 if all examples are valid.
+
+**Prerequisites:** Python 3, shellcheck (for shell example validation).
+
+---
+
 Pre-commit hooks and CI validators.
 
-| Tool | Purpose | Runs In |
-|------|---------|---------|
-| `validate_links.sh` | Check markdown links exist | pre-commit |
-| `validate_examples.py` | Validate code examples in docs | pre-commit |
-| `validate_doc_sync.sh` | Check doc/code sync | pre-commit |
-| `validate_protected_hashes.sh` | Verify protected file hashes | pre-commit |
+| Tool | Purpose | Output | Prerequisites |
+|------|---------|--------|---------------|
+| `validate_links.sh` | Check markdown links exist | Exit 0/1, prints broken links | Bash, grep |
+| `validate_examples.py` | Validate code examples in docs | Exit 0/1, prints errors | Python 3 |
+| `validate_doc_sync.sh` | Check doc/code sync | Exit 0/1, prints mismatches | Bash, diff |
+| `validate_protected_hashes.sh` | Verify protected file hashes | Exit 0/1, prints hash failures | Bash, sha256sum |
 
 **Note:** These run automatically via pre-commit. Manual runs for debugging only.
 
@@ -329,13 +518,261 @@ Pre-commit hooks and CI validators.
 
 Cache and plan testing utilities.
 
-| Tool | Purpose |
-|------|---------|
-| `test_cache_smoke.sh` | Basic cache functionality test |
-| `test_cache_guard_marker.sh` | Test cache guard markers |
-| `test_cache_inheritance.sh` | Test cache inheritance |
-| `test_plan_cleanup.sh` | Test plan cleanup script |
-| `test_plan_only_guard.sh` | Test PLAN-ONLY mode guardrails (15 test cases) |
+| Tool | Purpose | Output | Prerequisites |
+|------|---------|--------|---------------|
+| `test_cache_smoke.sh` | Basic cache functionality test | Exit 0/1, test results | Bash |
+| `test_cache_guard_marker.sh` | Test cache guard markers | Exit 0/1, test results | Bash |
+| `test_cache_inheritance.sh` | Test cache inheritance | Exit 0/1, test results | Bash |
+| `test_plan_cleanup.sh` | Test plan cleanup script | Exit 0/1, test results | Bash |
+| `test_plan_only_guard.sh` | Test PLAN-ONLY mode guardrails | Exit 0/1, 15 test cases | Bash |
+
+**Usage:** Run directly (e.g., `bash tools/test_cache_smoke.sh`). Exit 0 = pass, exit 1 = fail.
+
+---
+
+## Worker Scripts (`workers/ralph/`)
+
+Key scripts that humans and agents run to operate the Ralph loop.
+
+### `workers/ralph/loop.sh` - Ralph Loop Controller
+
+Main loop controller that runs PLAN/BUILD cycles.
+
+**Purpose:** Execute Ralph loop iterations with PLAN/BUILD cycle management.
+
+**Usage:**
+
+```bash
+# Single iteration
+bash workers/ralph/loop.sh
+
+# Multiple iterations
+bash workers/ralph/loop.sh --iterations 10
+
+# Preview changes without committing
+bash workers/ralph/loop.sh --dry-run
+
+# Undo last N commits
+bash workers/ralph/loop.sh --rollback 2
+
+# Resume from interruption
+bash workers/ralph/loop.sh --resume
+```
+
+**Output:** Executes agent, commits changes, prints `:::COMPLETE:::` when all tasks done.
+
+**Prerequisites:** RovoDev CLI (`acli rovodev`), Git, verifier.sh, PROMPT.md.
+
+**Mode:** Iteration 1 or every 3rd = PLAN, others = BUILD.
+
+---
+
+### `workers/ralph/current_ralph_tasks.sh` - Task Monitor
+
+Real-time display of pending tasks from IMPLEMENTATION_PLAN.md.
+
+**Purpose:** Monitor pending tasks from workers/IMPLEMENTATION_PLAN.md in real-time.
+
+**Usage:**
+
+```bash
+# Interactive monitor with hotkeys
+bash workers/ralph/current_ralph_tasks.sh
+
+# One-shot display
+bash workers/ralph/current_ralph_tasks.sh --once
+```
+
+**Output:** Terminal display with pending tasks grouped by phase, updates on file change.
+
+**Prerequisites:** Bash, access to `workers/IMPLEMENTATION_PLAN.md`.
+
+---
+
+### `workers/ralph/thunk_ralph_tasks.sh` - Completion Log Monitor
+
+Display completed task log from THUNK.md.
+
+**Purpose:** View completed tasks from THUNK.md grouped by era.
+
+**Usage:**
+
+```bash
+# Interactive monitor
+bash workers/ralph/thunk_ralph_tasks.sh
+
+# One-shot display
+bash workers/ralph/thunk_ralph_tasks.sh --once
+```
+
+**Output:** Terminal display of completed tasks with timestamps and descriptions.
+
+**Prerequisites:** Bash, access to `workers/ralph/THUNK.md`.
+
+---
+
+### `workers/ralph/verifier.sh` - Acceptance Criteria Checker
+
+Runs all acceptance criteria checks from `rules/AC.rules`.
+
+**Purpose:** Validate all acceptance criteria before continuing Ralph loop.
+
+**Usage:**
+
+```bash
+# Run all checks
+bash workers/ralph/verifier.sh
+
+# Quick check (skip slow tests)
+bash workers/ralph/verifier.sh --quick
+```
+
+**Output:** `.verify/latest.txt` with PASS/FAIL/WARN results (injected into agent prompt header).
+
+**Prerequisites:** Bash, shellcheck, markdownlint, protected file hashes.
+
+---
+
+### `workers/ralph/fix-markdown.sh` - Markdown Auto-Fixer
+
+Auto-fixes common markdown lint issues before BUILD iterations.
+
+**Purpose:** Auto-fix ~40-60% of common markdown issues before verifier runs.
+
+**Usage:**
+
+```bash
+# Fix all markdown files
+bash workers/ralph/fix-markdown.sh
+
+# Dry-run mode
+bash workers/ralph/fix-markdown.sh --dry-run
+```
+
+**Output:** Modifies markdown files in-place, prints fixed issues to stdout.
+
+**Prerequisites:** Bash, sed, grep.
+
+**Fixes:** Missing blank lines, code fence language tags, list formatting.
+
+---
+
+### `workers/ralph/render_ac_status.sh` - AC Status Renderer
+
+Render acceptance criteria status as markdown report.
+
+**Purpose:** Generate human-readable verifier status from `.verify/latest.txt`.
+
+**Usage:**
+
+```bash
+# Render latest verifier results
+bash workers/ralph/render_ac_status.sh
+```
+
+**Output:** Formatted summary printed to stdout showing PASS/FAIL/WARN counts and details.
+
+**Prerequisites:** Bash, access to `../.verify/latest.txt`.
+
+---
+
+### `workers/ralph/sync_workers_plan_to_cortex.sh` - Plan Sync
+
+Sync workers/IMPLEMENTATION_PLAN.md to cortex/IMPLEMENTATION_PLAN.md.
+
+**Purpose:** Propagate Ralph's plan updates to Cortex manager layer.
+
+**Usage:**
+
+```bash
+# Sync plan to cortex
+bash workers/ralph/sync_workers_plan_to_cortex.sh
+```
+
+**Output:** Copies `workers/IMPLEMENTATION_PLAN.md` to `cortex/IMPLEMENTATION_PLAN.md`.
+
+**Prerequisites:** Bash, write access to `cortex/` directory.
+
+---
+
+### `workers/ralph/init_verifier_baselines.sh` - Verifier Baseline Init
+
+Initialize verifier baseline hashes for protected files.
+
+**Purpose:** Generate baseline SHA256 hashes for protected files (PROMPT.md, verifier.sh, etc.).
+
+**Usage:**
+
+```bash
+# Initialize all baselines
+bash workers/ralph/init_verifier_baselines.sh
+```
+
+**Output:** Creates/updates `.verify/*.sha256` hash files.
+
+**Prerequisites:** Bash, sha256sum.
+
+**Use case:** First-time setup or regenerating hashes after approved changes.
+
+---
+
+### `workers/ralph/cleanup_plan.sh` - Plan Cleanup
+
+Archive completed plan sections and reset for new work.
+
+**Purpose:** Archive completed sections from IMPLEMENTATION_PLAN.md.
+
+**Usage:**
+
+```bash
+# Clean up completed tasks
+bash workers/ralph/cleanup_plan.sh
+```
+
+**Use case:** Periodic maintenance to prevent IMPLEMENTATION_PLAN.md from growing too large.
+
+---
+
+### `workers/ralph/new-project.sh` - Project Bootstrapper
+
+Bootstrap a new project from templates.
+
+```bash
+# Create new project
+bash workers/ralph/new-project.sh my-project
+
+# Specify template
+bash workers/ralph/new-project.sh my-project --template python
+```
+
+**Templates:** python, go, javascript, website, backend, ralph.
+
+---
+
+### `workers/ralph/pr-batch.sh` - PR Batch Creator
+
+Create pull requests for batched commits.
+
+```bash
+# Create PR for last N commits
+bash workers/ralph/pr-batch.sh --commits 5
+
+# Interactive mode
+bash workers/ralph/pr-batch.sh
+```
+
+---
+
+### `workers/ralph/update_thunk_from_plan.sh` - THUNK Sync
+
+Sync completed tasks from IMPLEMENTATION_PLAN.md to THUNK.md (utility for recovery).
+
+```bash
+# Sync completed tasks
+bash workers/ralph/update_thunk_from_plan.sh
+```
+
+**Use case:** Recovery when THUNK.md and IMPLEMENTATION_PLAN.md get out of sync.
 
 ---
 
@@ -425,4 +862,4 @@ Checks: no forbidden file opens at startup, no THUNK lookups via open_files, no 
 
 ---
 
-**Last Updated:** 2026-01-26
+**Last Updated:** 2026-01-28
