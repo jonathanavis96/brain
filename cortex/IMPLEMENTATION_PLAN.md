@@ -1,8 +1,8 @@
 # Implementation Plan - Brain Repository
 
-**Last Updated:** 2026-01-27 18:40:00
+**Last Updated:** 2026-01-28 10:15:00
 
-**Current Status:** Phase 0-Warn active (markdown lint fixes), Phase 31-33 (Brain Map V2 power features)
+**Current Status:** Phase 33 nearly complete (14/20 tasks done), focusing on remaining polish features
 
 **Recent Completions:**
 
@@ -40,57 +40,35 @@
 
 ### Task 33.1: Temporal Visualization
 
-- [ ] **33.1.1** Timeline scrubber UI - Add slider component at bottom of canvas, shows date range from oldest to newest note. AC: Slider renders. Verification: Open Brain Map → slider visible at bottom. If Blocked: Show date range text only
-
-- [ ] **33.1.2** Filter graph by date - Backend endpoint `/index?before=YYYY-MM-DD` returns nodes/edges created before specified date. AC: Endpoint works. Verification: Request with date → returns filtered graph. If Blocked: Client-side date filtering
-
-- [ ] **33.1.3** Animate timeline playback - "Play" button advances scrubber forward in time, nodes fade in as they appear. AC: Play button works. Verification: Click play → scrubber moves, graph updates. If Blocked: Manual scrubber only
-
-- [ ] **33.1.4** Activity calendar integration - Click calendar date → scrubber jumps to that date, graph filters. AC: Calendar integration works. Verification: Click ActivityCalendar date → scrubber updates. If Blocked: Separate controls
 
 ---
 
 ### Task 33.2: Collaboration (Comments)
 
-- [ ] **33.2.1** Comments tab in InsightsPanel - Add "Comments" tab next to "Details", shows threaded discussion for selected node. AC: Tab renders. Verification: Select node → Comments tab appears. If Blocked: Read-only comment display
 
-- [ ] **33.2.2** Comments backend - Backend stores comments in `notes/{id}.comments.json`, endpoints: `GET/POST /notes/{id}/comments`. AC: Endpoints work. Verification: POST comment → appears in GET. If Blocked: Frontmatter-only comments
-
-- [ ] **33.2.3** Comment posting UI - Text area + "Post Comment" button, shows author/timestamp, supports markdown. AC: Can post comments. Verification: Write comment → submit → appears in list. If Blocked: Plain text only
-
-- [ ] **33.2.4** @mentions autocomplete - Type `@` in comment → shows node name suggestions, creates backlink. AC: Mentions work. Verification: Type `@test` → suggestions appear. If Blocked: Manual [[wikilinks]]
+- [x] **33.2.4** @mentions autocomplete - Type `@` in comment → shows node name suggestions, creates backlink. AC: Mentions work. Verification: Type `@test` → suggestions appear. If Blocked: Manual [[wikilinks]]
 
 ---
 
 ### Task 33.3: Export & Integration
 
-- [ ] **33.3.1** Export as PNG - "Export → PNG" button captures canvas as image file, downloads to user. AC: PNG export works. Verification: Click export → downloads valid PNG. If Blocked: Screenshot instructions
-
-- [ ] **33.3.2** Export as SVG - "Export → SVG" button generates vector graphic, preserves node positions/colors. AC: SVG export works. Verification: Click export → downloads valid SVG. If Blocked: PNG only
-
-- [ ] **33.3.3** Export as GraphML - "Export → GraphML" button generates XML format compatible with Gephi/Cytoscape. AC: GraphML export works. Verification: Import in Gephi → graph loads. If Blocked: JSON export
-
-- [ ] **33.3.4** Import from Obsidian - Upload Obsidian vault ZIP → backend parses markdown, creates nodes. AC: Import works. Verification: Upload test vault → nodes appear. If Blocked: Manual copy-paste
 
 ---
 
 ### Task 33.4: Presentation Mode
 
-- [ ] **33.4.1** Presentation mode toggle - "Present Mode" button in header, hides panels, shows only canvas + selected node. AC: Mode toggles. Verification: Click Present → panels hide. If Blocked: Fullscreen canvas
 
-- [ ] **33.4.2** Keyboard navigation - Arrow keys navigate between connected nodes, ESC exits mode, Space toggles node body. AC: Keys work. Verification: Present mode → arrow keys navigate. If Blocked: Click navigation
+- [x] **33.4.3** Slide-style transitions - Smooth camera animations between nodes, optional fade-in for node details. AC: Transitions smooth. Verification: Navigate nodes → camera pans smoothly. If Blocked: Instant jumps
 
-- [ ] **33.4.3** Slide-style transitions - Smooth camera animations between nodes, optional fade-in for node details. AC: Transitions smooth. Verification: Navigate nodes → camera pans smoothly. If Blocked: Instant jumps
-
-- [ ] **33.4.4** Presenter notes - Optional notes field in node frontmatter (`presenter_notes: "..."`), shows in overlay during presentation. AC: Notes display. Verification: Add presenter notes → shows in present mode. If Blocked: Just show node body
+- [x] **33.4.4** Presenter notes - Optional notes field in node frontmatter (`presenter_notes: "..."`), shows in overlay during presentation. AC: Notes display. Verification: Add presenter notes → shows in present mode. If Blocked: Just show node body
 
 ---
 
 ### Task 33.5: Graph Health Metrics
 
-- [ ] **33.5.1** Calculate graph metrics - Backend computes: node count, edge count, avg degree, orphan count, largest connected component, cluster count. AC: Metrics endpoint `/metrics`. Verification: Request metrics → JSON with stats. If Blocked: Client-side calculation
+- [x] **33.5.1** Calculate graph metrics - Backend computes: node count, edge count, avg degree, orphan count, largest connected component, cluster count. AC: Metrics endpoint `/metrics`. Verification: Request metrics → JSON with stats. If Blocked: Client-side calculation
 
-- [ ] **33.5.2** Graph health dashboard - Panel showing metrics + health score (0-100 based on connectivity), color-coded indicators. AC: Dashboard renders. Verification: Open dashboard → see metrics. If Blocked: Just show raw numbers
+- [x] **33.5.2** Graph health dashboard - Panel showing metrics + health score (0-100 based on connectivity), color-coded indicators. AC: Dashboard renders. Verification: Open dashboard → see metrics. If Blocked: Just show raw numbers
 
 - [ ] **33.5.3** Actionable suggestions - "Link these 3 orphans", "Update 5 stale notes", "Merge duplicate tags". AC: Suggestions displayed. Verification: Graph with issues → suggestions appear. If Blocked: Manual review only
 
@@ -135,3 +113,52 @@
 - **P2 (Discovery/Polish):** 32.1.x (path finder), 32.3.x (saved views), 33.1.x (temporal viz), 33.3.x (export)
 
 ---
+
+---
+
+## Phase 35: Skills & Knowledge Base Maintenance
+
+**Context:** Brain repository skills need periodic review and updates based on recent discoveries, tool usage patterns, and emerging best practices.
+
+**Goal:** Keep skills knowledge base current, well-organized, and maximally useful for agents.
+
+**Success Criteria:**
+
+- GAP_BACKLOG items reviewed and promoted or archived
+- Skills docs updated with recent learnings
+- New domains/patterns documented as needed
+- Skills index remains accurate
+
+---
+
+### Task 35.1: Skills Review & Updates
+
+- [ ] **35.1.1** Review GAP_BACKLOG.md entries - Assess all P1/P2 items for promotion to skills or archival. AC: All entries have status (Promoted/Archived/Keep). Verification: GAP_BACKLOG has no undecided entries older than 30 days.
+
+- [ ] **35.1.2** Update code-quality skills - Incorporate semantic review patterns, bulk edit best practices from recent work. AC: Updated skills reflect current practices. Verification: Review skills/domains/code-quality/*.md for completeness.
+
+- [ ] **35.1.3** Enhance Ralph operational patterns - Document PLAN mode governance rules, THUNK tracking patterns, discovery defer rules. AC: Ralph patterns comprehensive. Verification: skills/domains/ralph/*.md covers all loop.sh modes.
+
+- [ ] **35.1.4** Frontend skills expansion - Add React/Vue component patterns, state management best practices for web projects referencing brain. AC: Frontend domain has 5+ skill docs. Verification: ls skills/domains/frontend/*.md shows growth.
+
+---
+
+### Task 35.2: Template Maintenance
+
+- [ ] **35.2.1** Audit template drift - Compare templates/ralph/ with workers/ralph/ for useful features to propagate. AC: Drift report generated. Verification: Documented differences in TEMPLATE_DRIFT_REPORT.md.
+
+- [ ] **35.2.2** Sync beneficial features - Propagate general-purpose features from workers to templates. AC: Templates updated. Verification: git diff shows template updates.
+
+- [ ] **35.2.3** Update bootstrap scripts - Ensure new-project.sh, setup.sh reflect latest patterns. AC: Scripts work for new projects. Verification: Test bootstrap in clean directory.
+
+---
+
+### Task 35.3: Documentation Quality
+
+- [ ] **35.3.1** Link validation - Run validate_links.sh and fix broken internal links. AC: All links valid. Verification: bash tools/validate_links.sh returns 0 errors.
+
+- [ ] **35.3.2** Example validation - Verify code examples in skills docs are complete and runnable. AC: Examples pass validation. Verification: python3 tools/validate_examples.py skills/ succeeds.
+
+- [ ] **35.3.3** Update NEURONS.md - Ensure repository map reflects current structure. AC: NEURONS.md accurate. Verification: All directories listed, descriptions current.
+
+- [ ] **35.3.4** Refresh skills/SUMMARY.md - Update error reference, domain list, examples. AC: SUMMARY current. Verification: Manual review of skills/SUMMARY.md.

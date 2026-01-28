@@ -1389,6 +1389,42 @@ async def get_activity(days: int = 90) -> dict:
         )
 
 
+@app.get("/insights/suggestions")
+async def get_suggestions(threshold_days: int = 90) -> dict:
+    """Get actionable suggestions for improving the knowledge graph.
+
+    Analyzes orphan nodes, stale notes, and tag patterns to generate
+    user-friendly suggestions like "Link these 3 orphans", "Update 5 stale notes".
+
+    Args:
+        threshold_days: Days threshold for stale node detection (default 90).
+
+    Returns:
+        JSON response with suggestions array.
+
+    Status codes:
+        200 OK: Suggestions generated successfully.
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from app.suggestions import generate_suggestions
+
+    try:
+        suggestions = generate_suggestions(threshold_days=threshold_days)
+        return {
+            "suggestions": suggestions,
+            "count": len(suggestions),
+        }
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
 @app.get("/insights/stale")
 async def get_stale_nodes(threshold_days: int = 90) -> dict:
     """Get list of stale nodes (not updated recently).
@@ -1416,6 +1452,42 @@ async def get_stale_nodes(threshold_days: int = 90) -> dict:
             "count": len(stale_nodes),
             "threshold_days": threshold_days,
         }
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
+@app.get("/metrics")
+async def get_metrics() -> dict:
+    """Get graph health metrics.
+
+    Computes comprehensive graph statistics including node/edge counts,
+    connectivity metrics, and component analysis.
+
+    Returns:
+        JSON response with graph metrics:
+        - node_count: Total number of nodes
+        - edge_count: Total number of edges
+        - avg_degree: Average edges per node
+        - orphan_count: Nodes with zero edges
+        - num_components: Number of connected components
+        - largest_component_size: Size of largest connected component
+
+    Status codes:
+        200 OK: Metrics computed successfully.
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from app.index import get_graph_metrics
+
+    try:
+        metrics = get_graph_metrics()
+        return metrics
     except FileNotFoundError:
         raise HTTPException(
             status_code=503,
