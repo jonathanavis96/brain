@@ -553,3 +553,12 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 
 | Date | Task ID | Description |
 |------|---------|-------------|
+
+### Archived on 2026-01-28 10:42:25
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-28 | 33.4.3 | - [x] **33.4.3** Slide-style transitions - Smooth camera animations between nodes, optional fade-in for node details. AC: Transitions smooth. Verification: Navigate nodes → camera pans smoothly. If Blocked: Instant jumps |
+| 2026-01-28 | 33.4.4 | - [x] **33.4.4** Presenter notes - Optional notes field in node frontmatter (`presenter_notes: "..."`), shows in overlay during presentation. AC: Notes display. Verification: Add presenter notes → shows in present mode. If Blocked: Just show node body |
+| 2026-01-28 | 33.5.1 | - [x] **33.5.1** Calculate graph metrics - Backend computes: node count, edge count, avg degree, orphan count, largest connected component, cluster count. AC: Metrics endpoint `/metrics`. Verification: Request metrics → JSON with stats. If Blocked: Client-side calculation |
+| 2026-01-28 | 33.5.2 | - [x] **33.5.2** Graph health dashboard - Panel showing metrics + health score (0-100 based on connectivity), color-coded indicators. AC: Dashboard renders. Verification: Open dashboard → see metrics. If Blocked: Just show raw numbers |

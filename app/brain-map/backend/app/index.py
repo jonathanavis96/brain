@@ -1473,6 +1473,38 @@ def get_activity_data(days: int = 90) -> list[dict]:
     return activity
 
 
+def calculate_connected_components(adjacency: dict[str, set[str]]) -> tuple[int, int]:
+    """Calculate number and size of connected components using DFS.
+
+    Args:
+        adjacency: Graph as {node_id: {neighbor_ids}}.
+
+    Returns:
+        Tuple of (num_components, largest_component_size).
+    """
+    visited = set()
+    num_components = 0
+    largest_size = 0
+
+    def dfs(node: str, component: set[str]) -> None:
+        """Depth-first search to find connected component."""
+        if node in visited:
+            return
+        visited.add(node)
+        component.add(node)
+        for neighbor in adjacency.get(node, set()):
+            dfs(neighbor, component)
+
+    for node in adjacency:
+        if node not in visited:
+            component = set()
+            dfs(node, component)
+            num_components += 1
+            largest_size = max(largest_size, len(component))
+
+    return num_components, largest_size
+
+
 def get_orphan_nodes() -> list[dict]:
     """
     Identify orphan nodes (nodes with zero in-degree and out-degree).
@@ -1520,6 +1552,76 @@ def get_orphan_nodes() -> list[dict]:
 
     conn.close()
     return orphans
+
+
+def get_graph_metrics() -> dict:
+    """Calculate comprehensive graph health metrics.
+
+    Computes:
+    - node_count: Total number of nodes
+    - edge_count: Total number of edges
+    - avg_degree: Average edges per node
+    - orphan_count: Nodes with zero edges
+    - num_components: Number of connected components
+    - largest_component_size: Size of largest connected component
+
+    Returns:
+        Dictionary with graph metrics.
+
+    Raises:
+        FileNotFoundError: If index database doesn't exist.
+    """
+    conn = get_index_connection()
+    cursor = conn.cursor()
+
+    # Count total nodes
+    cursor.execute("SELECT COUNT(*) as count FROM nodes")
+    node_count = cursor.fetchone()["count"]
+
+    # Count total edges
+    cursor.execute("SELECT COUNT(*) as count FROM edges")
+    edge_count = cursor.fetchone()["count"]
+
+    # Build adjacency list for component analysis (undirected)
+    cursor.execute("SELECT source_id, target_id FROM edges")
+    edge_rows = cursor.fetchall()
+
+    adjacency = {}
+    degree_sum = 0
+
+    # Initialize all nodes with empty adjacency
+    cursor.execute("SELECT id FROM nodes")
+    for row in cursor.fetchall():
+        adjacency[row["id"]] = set()
+
+    # Populate adjacency and count degrees
+    for row in edge_rows:
+        src, tgt = row["source_id"], row["target_id"]
+        if src in adjacency:
+            adjacency[src].add(tgt)
+        if tgt in adjacency:
+            adjacency[tgt].add(src)
+
+    # Calculate average degree
+    degree_sum = sum(len(neighbors) for neighbors in adjacency.values())
+    avg_degree = degree_sum / node_count if node_count > 0 else 0.0
+
+    # Count orphans (nodes with degree 0)
+    orphan_count = sum(1 for neighbors in adjacency.values() if len(neighbors) == 0)
+
+    # Calculate connected components
+    num_components, largest_component_size = calculate_connected_components(adjacency)
+
+    conn.close()
+
+    return {
+        "node_count": node_count,
+        "edge_count": edge_count,
+        "avg_degree": round(avg_degree, 2),
+        "orphan_count": orphan_count,
+        "num_components": num_components,
+        "largest_component_size": largest_component_size,
+    }
 
 
 def generate_plan_markdown(
