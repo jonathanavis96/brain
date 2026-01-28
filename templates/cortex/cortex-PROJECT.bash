@@ -87,13 +87,24 @@ echo ""
 SNAPSHOT_OUTPUT=$(bash "${SCRIPT_DIR}/snapshot.sh")
 
 # Build system prompt with project context
+NEURONS_CONTENT=""
+if [[ -f "${PROJECT_ROOT}/NEURONS.md" ]]; then
+  NEURONS_CONTENT=$(cat "${PROJECT_ROOT}/NEURONS.md")
+elif [[ -f "${PROJECT_ROOT}/workers/ralph/NEURONS.md" ]]; then
+  NEURONS_CONTENT=$(cat "${PROJECT_ROOT}/workers/ralph/NEURONS.md")
+elif [[ -f "${PROJECT_ROOT}/workers/NEURONS.md" ]]; then
+  NEURONS_CONTENT=$(cat "${PROJECT_ROOT}/workers/NEURONS.md")
+else
+  NEURONS_CONTENT="# NEURONS.md not found\n\nCreate it (or generate it) to give Cortex a repo map."
+fi
+
 CORTEX_SYSTEM_PROMPT=$(
   cat <<EOF
 $(cat "${SCRIPT_DIR}/AGENTS.md")
 
 ---
 
-$(cat "${PROJECT_ROOT}/NEURONS.md")
+${NEURONS_CONTENT}
 
 ---
 
@@ -161,7 +172,7 @@ else
   echo "  modelId: auto" >>"$CONFIG_FILE"
 fi
 
-acli rovodev run --config-file "$CONFIG_FILE" --yolo
+LOGFIRE_DISABLE=1 acli rovodev run --config-file "$CONFIG_FILE" --yolo
 EXIT_CODE=$?
 
 rm -f "$CONFIG_FILE"
