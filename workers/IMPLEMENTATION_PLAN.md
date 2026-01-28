@@ -90,6 +90,82 @@
 
 ---
 
+## Phase 37: Repo Cleanup & Drift Control
+
+**Context:** The Brain repo has accumulated drift over time: broken links, outdated references, and missing tool documentation.
+
+**Goal:** Restore correctness and prevent future drift by (1) fixing link + reference integrity, (2) making `docs/TOOLS.md` authoritative, (3) refreshing repo maps, and (4) adding lightweight guardrails.
+
+**Success Criteria:**
+
+- `bash tools/validate_links.sh` returns 0 errors
+- `python3 tools/validate_examples.py skills/` succeeds
+- `docs/TOOLS.md` lists all key runnable entrypoints (bin + core tools) with correct usage
+- Repo maps (`NEURONS.md`, `cortex/docs/REPO_MAP.md` as applicable) match actual structure
+
+---
+
+### Task 37.1: Link + reference integrity
+
+- [ ] **37.1.1** Run link validation and fix broken internal links
+  - **Goal:** Eliminate broken internal links across the repository.
+  - **AC:** `bash tools/validate_links.sh` returns 0 errors.
+  - **If Blocked:** Fix the highest-impact links first and list remaining failures in `docs/CHANGES.md`.
+
+- [ ] **37.1.2** Remove references to renamed/deleted scripts and paths
+  - **Goal:** Ensure docs/templates don’t reference removed scripts (e.g., old sync names) or obsolete paths.
+  - **AC:** `grep -R "sync_cortex_plan.sh" -n .` and `grep -R "sync_completions_to_cortex.sh" -n .` return no matches outside historical changelogs.
+  - **If Blocked:** Add a small “Deprecated names” section to the relevant doc with the correct replacements.
+
+---
+
+### Task 37.2: Tools documentation correctness (`docs/TOOLS.md`)
+
+- [ ] **37.2.1** Inventory runnable tools and reconcile with `docs/TOOLS.md`
+  - **Goal:** Make `docs/TOOLS.md` match what’s actually runnable in this repo.
+  - **AC:** `docs/TOOLS.md` includes:
+    - `bin/*` entrypoints
+    - key scripts under `tools/` (validators, dashboard, gap_radar, rollflow)
+    - key worker scripts under `workers/ralph/` that humans run
+  - **If Blocked:** Generate an inventory list via `find bin tools -maxdepth 2 -type f` and paste into the task notes.
+
+- [ ] **37.2.2** Add missing usage/outputs/prereqs for each documented tool
+  - **Goal:** Make each tool entry actionable.
+  - **AC:** Each tool in `docs/TOOLS.md` has: purpose, command example, where outputs go, and prerequisites.
+  - **If Blocked:** Start with top 10 most-used tools and mark remaining entries as TODO.
+
+---
+
+### Task 37.3: Repo maps + docs drift cleanup
+
+- [ ] **37.3.1** Refresh `NEURONS.md` to match current repo structure
+  - **Goal:** Ensure the repo map reflects actual directories/files.
+  - **AC:** `NEURONS.md` matches current structure and contains no dead links.
+  - **If Blocked:** Add a “Delta to fix” checklist at the bottom and stop.
+
+- [ ] **37.3.2** Reconcile `cortex/docs/REPO_MAP.md` and other high-level docs with current structure
+  - **Goal:** Reduce contradictions between maps/runbooks and the actual repo.
+  - **AC:** `cortex/docs/REPO_MAP.md` and `cortex/docs/RUNBOOK.md` have no stale path references.
+  - **If Blocked:** Prioritize updating the runbook first.
+
+---
+
+### Task 37.4: Drift guardrails (prevent recurrence)
+
+- [ ] **37.4.1** Add a lightweight “tool inventory” validator (optional) or documented procedure
+  - **Goal:** Prevent `docs/TOOLS.md` from drifting.
+  - **AC:** Either:
+    - A script exists under `tools/` that compares `docs/TOOLS.md` entries to actual files, or
+    - A documented procedure exists in `docs/TOOLS.md` describing how to regenerate the inventory.
+  - **If Blocked:** Add a TODO checklist to `docs/TOOLS.md` describing the intended validator.
+
+- [ ] **37.4.2** Add/extend a check to catch out-of-workspace brain references in templates
+  - **Goal:** Prevent regressions to `../../brain/...` in templates.
+  - **AC:** `grep -R "\.\./\.\./brain/" templates/` returns 0 matches.
+  - **If Blocked:** Document the rule in `templates/README.md` and add it to pre-commit later.
+
+---
+
 ## Phase 35: Skills & Knowledge Base Maintenance
 
 **Context:** Brain repository skills need periodic review and updates based on recent discoveries, tool usage patterns, and emerging best practices.
