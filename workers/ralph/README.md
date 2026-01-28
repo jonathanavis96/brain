@@ -251,7 +251,7 @@ Ralph can post build updates to Discord channels via webhooks. This provides rea
 | "webhook not found" error | Regenerate webhook in Discord settings |
 | Messages truncated | Normal - discord-post chunks at 1900 chars automatically |
 | bin/discord-post not found | Ensure you're in correct directory: `cd workers/ralph` |
-| Ralph uses wrong model (shows old Sonnet in session context) | **Root cause:** Default was using `"auto"` which reads from base config instead of explicitly setting model like Cortex does. **Fix:** Ensure `loop.sh` line ~604 sets `MODEL_ARG="gpt52"` (not empty/auto), and that `resolve_model()` returns the full model ID `"gpt-5.2-codex"`. This creates temp config with explicit `modelId` like Cortex pattern. Verify with `echo "Using model:"` output shows `gpt-5.2-codex`. |
+| Ralph uses wrong model (shows Sonnet 200K instead of GPT-5.2-Codex 400K) | **Root cause:** RovoDev CLI ignores `--config-file` parameter and always reads from `~/.rovodev/config.yml`. Temp config approach doesn't work because RovoDev rewrites temp configs. **Fix:** Ensure `~/.rovodev/config.yml` has `modelId: gpt-5.2-codex`. Loop.sh no longer creates temp configs. Verify with session context showing `400K` (not `200K`). **Note:** `gpt-5.2-codex` is the correct model ID for RovoDev, not `anthropic.claude-*` format. |
 
 ### Technical Details
 
