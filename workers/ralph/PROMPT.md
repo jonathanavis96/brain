@@ -226,6 +226,8 @@ See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
 
 **STRICT SUMMARY BLOCK (required; immediately before the marker):**
 
+At the end of every iteration (PLAN/BUILD), immediately before the marker line (`:::PLAN_READY:::` or `:::BUILD_READY:::`), output EXACTLY this block shape:
+
 ```text
 **Summary**
 - ...
@@ -240,7 +242,14 @@ See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
 - ...
 ```
 
-Rules: fixed order; bullets/short paragraphs; no code fences/boxes; exclude STATUS; marker on its own line after.
+**Enforcement rules:**
+
+- **Fixed order:** Summary → Changes Made → Next Steps → Completed (optional)
+- **Format:** Bullets or short paragraphs only
+- **Forbidden:** Do NOT wrap the block in code fences (` ``` `), ASCII boxes, or ANSI decorations
+- **Forbidden:** Do NOT include STATUS lines inside the summary block
+- **Required:** Marker line (`:::PLAN_READY:::` or `:::BUILD_READY:::`) must be on its own line immediately after the block
+- **No gaps:** Do not insert blank lines between the summary block and the marker line
 
 ---
 

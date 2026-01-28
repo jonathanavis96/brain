@@ -427,7 +427,13 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-28 | 33.4.1 | - [x] **33.4.1** Add "Present" button - Enters full-screen mode, hides UI panels, shows graph + navigation controls only. AC: Presentation mode toggles. Verification: Click Present → full-screen graph. If Blocked: Just hide sidebars (not true full-screen) |
 | 2026-01-28 | 33.4.2 | - [x] **33.4.2** Keyboard navigation - Arrow keys navigate between connected nodes (follow edges), space bar zooms to focused node. AC: Keyboard nav works. Verification: Press Right → moves to connected node. If Blocked: Click-only navigation |
 
-### Archived on 2026-01-28 (Batch 2)
+### Archived on 2026-01-28 (Batch 1)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
+
+### Archived on 2026-01-28 (Batch 3)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-28 | 0.W.MD012.workers/PLAN_DONE.md | - [x] **0.W.MD012.workers/PLAN_DONE.md** Fix MD012 in workers/PLAN_DONE.md |

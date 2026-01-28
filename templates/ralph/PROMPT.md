@@ -13,7 +13,7 @@ Look for the `# VERIFIER STATUS` section at the top of this prompt. It contains:
 
 If the header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
-1. **STOP** - Do not pick a new task from IMPLEMENTATION_PLAN.md
+1. **STOP** - Do not pick a new task from workers/IMPLEMENTATION_PLAN.md
 2. **CHECK** the `# VERIFIER STATUS` section above for failure details
 3. **FIX** the failing acceptance criteria listed in `# FAILED_RULES:`
 4. **COMMIT** your fix with message: `fix(ralph): resolve AC failure <RULE_ID>`
@@ -21,7 +21,7 @@ If the header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
 If the `# VERIFIER STATUS` section shows `[WARN]` lines:
 
-1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of IMPLEMENTATION_PLAN.md (after header, before other phases)
+1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of workers/IMPLEMENTATION_PLAN.md (after header, before other phases)
 2. **⚠️ DO NOT create "## Verifier Warnings" without the "Phase 0-Warn:" prefix** - This breaks the task monitor!
 3. **LIST** each as: `- [ ] WARN.<RULE_ID>.<filename> - <description>` (include filename to prevent duplicate IDs)
 4. **NEVER use numbered lists (1. 2. 3.)** - ALWAYS use checkbox format `- [ ]`
@@ -78,18 +78,18 @@ Then output `:::BUILD_READY:::` to end the iteration.
 - `NEURONS.md` - use `ls` to explore structure
 - `THOUGHTS.md` - slice with `head -30` if needed
 - `cortex/*.md` - Cortex files are NOT needed for BUILD tasks
-- `IMPLEMENTATION_PLAN.md` (full file) - use grep to find tasks
-- `THUNK.md` (full file) - use tail to append only
+- `workers/IMPLEMENTATION_PLAN.md` (full file) - use grep to find tasks
+- `workers/ralph/THUNK.md` (full file) - use tail to append only
 
 ### Required Startup Sequence (STRICT)
 
 ```bash
 # 1) Pick ONE task
-LINE=$(grep -n "^- \[ \]" IMPLEMENTATION_PLAN.md | head -1 | cut -d: -f1)
+LINE=$(grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -1 | cut -d: -f1)
 
 # 2) Read ONE non-overlapping slice around it
 #    BAN: sed starting at 1; BAN: >90 lines; CAP: 2 plan slices max/iteration
-sed -n "$((LINE-5)),$((LINE+35))p" IMPLEMENTATION_PLAN.md
+sed -n "$((LINE-5)),$((LINE+35))p" workers/IMPLEMENTATION_PLAN.md
 
 # 3) Search before creating tools
 find bin/ -maxdepth 1 -type f | head -20
@@ -98,9 +98,9 @@ find tools/ -maxdepth 1 -name "*.py" -o -name "*.sh" 2>/dev/null | head -10
 
 ### THUNK.md Access Rules (STRICT)
 
-- Lookups: `grep ... THUNK.md | head -3`
+- Lookups: `grep ... workers/ralph/THUNK.md | head -3`
 - Append: get next id ONCE right before append:
-  - `tail -10 THUNK.md | grep "^|" | tail -1`
+  - `tail -10 workers/ralph/THUNK.md | grep "^|" | tail -1`
 
 ### Search Before Creating
 
@@ -224,6 +224,8 @@ See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
 
 **STRICT SUMMARY BLOCK (required; immediately before the marker):**
 
+At the end of every iteration (PLAN/BUILD), immediately before the marker line (`:::PLAN_READY:::` or `:::BUILD_READY:::`), output EXACTLY this block shape:
+
 ```text
 **Summary**
 - ...
@@ -238,7 +240,14 @@ See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
 - ...
 ```
 
-Rules: fixed order; bullets/short paragraphs; no code fences/boxes; exclude STATUS; marker on its own line after.
+**Enforcement rules:**
+
+- **Fixed order:** Summary → Changes Made → Next Steps → Completed (optional)
+- **Format:** Bullets or short paragraphs only
+- **Forbidden:** Do NOT wrap the block in code fences (` ``` `), ASCII boxes, or ANSI decorations
+- **Forbidden:** Do NOT include STATUS lines inside the summary block
+- **Required:** Marker line (`:::PLAN_READY:::` or `:::BUILD_READY:::`) must be on its own line immediately after the block
+- **No gaps:** Do not insert blank lines between the summary block and the marker line
 
 ---
 

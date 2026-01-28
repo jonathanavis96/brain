@@ -93,9 +93,9 @@ for i in "${!CHUNKS[@]}"; do
 
   # Add chunk header if multiple chunks
   if [[ $CHUNK_COUNT -gt 1 ]]; then
-    CONTENT="[Part $((i + 1))/$CHUNK_COUNT]\n\`\`\`\n${CHUNK}\n\`\`\`"
+    CONTENT="[Part $((i + 1))/$CHUNK_COUNT]\\n\\n${CHUNK}"
   else
-    CONTENT="\`\`\`\n${CHUNK}\n\`\`\`"
+    CONTENT="${CHUNK}"
   fi
 
   # Escape JSON special characters

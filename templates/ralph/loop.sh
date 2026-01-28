@@ -986,6 +986,13 @@ generate_iteration_summary() {
   timestamp="$(date '+%Y-%m-%d %H:%M:%S')"
   run_id="${ROLLFLOW_RUN_ID:-unknown}"
 
+  # Helper: strip ANSI/CSI sequences (colors AND cursor movement like ESC[2K ESC[1A)
+  # - CSI: ESC [ ... <final byte>
+  # - OSC: ESC ] ... BEL or ST
+  strip_ansi_csi() {
+    sed -E $'s/\x1B\[[0-?]*[ -/]*[@-~]//g; s/\x1B\][^\x07]*(\x07|\x1B\\\\)//g'
+  }
+
   # Check if logfile exists
   if [[ ! -f "$logfile" ]]; then
     cat <<EOF
@@ -999,16 +1006,15 @@ EOF
     return
   fi
 
-  # Find all "Summary" headers in the log (strip ANSI codes first, then match)
-  # Pattern matches "Summary:" with or without colon, with optional whitespace and ANSI codes
-  local summary_lines
-  summary_lines=$(sed 's/\x1b\[[0-9;]*m//g' "$logfile" | grep -n "^Summary" || true)
+  # 1) Find the LAST occurrence of :::PLAN_READY::: or :::BUILD_READY:::
+  local marker_line
+  marker_line=$(grep -n ":::\(PLAN\|BUILD\)_READY:::" "$logfile" 2>/dev/null | tail -1 | cut -d: -f1 || echo "")
 
-  if [[ -z "$summary_lines" ]]; then
+  if [[ -z "$marker_line" ]]; then
     cat <<EOF
 **Ralph Iteration ${iter_num} (${mode})** — ${timestamp}
 
-No summary found in log.
+No marker found (:::PLAN_READY::: or :::BUILD_READY:::)
 
 Run ID: ${run_id}
 Log: ${logfile}
@@ -1016,31 +1022,48 @@ EOF
     return
   fi
 
-  # Get the line number of the last "Summary" occurrence
-  local last_summary_line
-  last_summary_line=$(echo "$summary_lines" | tail -1 | cut -d: -f1)
+  # 2) Find the nearest preceding "─── Response" separator BEFORE marker_line.
+  #    We strip ANSI/CSI FIRST for searching so it matches even when "Response" is colorized.
+  local search_prefix response_line
+  search_prefix=$(sed -n "1,${marker_line}p" "$logfile" | strip_ansi_csi)
+  response_line=$(echo "$search_prefix" | grep -n "─── Response" | tail -1 | cut -d: -f1 || echo "")
 
-  # Count number of summaries (warn if multiple)
-  local summary_count
-  summary_count=$(echo "$summary_lines" | wc -l)
-
-  # Extract from last "Summary" to :::BUILD_READY::: or :::PLAN_READY::: or EOF
-  # Strip ANSI color codes for Discord
-  local summary_block
-  summary_block=$(sed -n "${last_summary_line},\$p" "$logfile" | sed '/:::\(BUILD\|PLAN\)_READY:::/q' | sed $'s/\x1b\[[0-9;]*m//g')
-
-  # Output structured summary with header
-  cat <<EOF
-**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}
-EOF
-
-  if [[ $summary_count -gt 1 ]]; then
-    echo ""
-    echo "⚠️ Multiple summaries detected ($summary_count), using last one"
+  local start_line
+  if [[ -n "$response_line" ]]; then
+    # Extract AFTER the response separator line
+    start_line=$((response_line + 1))
+  else
+    # Fallback: extract from beginning (still between start and marker)
+    start_line=1
   fi
 
-  echo ""
-  echo "$summary_block"
+  # 3) Extract everything between Response separator and marker (marker excluded)
+  local summary_block
+  summary_block=$(sed -n "${start_line},$((marker_line - 1))p" "$logfile" | strip_ansi_csi)
+
+  # Trim leading/trailing empty lines
+  summary_block=$(echo "$summary_block" | sed '/^[[:space:]]*$/d')
+
+  # 4) Build message and truncate if needed (Discord 2000 char limit; leave room for footer)
+  local header message
+  header="**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}"
+  message="${header}
+
+${summary_block}"
+
+  if [[ ${#message} -gt 1800 ]]; then
+    message="${message:0:1750}
+
+*(truncated — see full log for details)*"
+  fi
+
+  cat <<EOF
+${message}
+
+---
+**Run ID:** ${run_id}
+**Log:** ${logfile}
+EOF
 }
 
 # Emit structured TOOL_START marker

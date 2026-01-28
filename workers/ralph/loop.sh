@@ -1065,6 +1065,13 @@ generate_iteration_summary() {
   timestamp="$(date '+%Y-%m-%d %H:%M:%S')"
   run_id="${ROLLFLOW_RUN_ID:-unknown}"
 
+  # Helper: strip ANSI/CSI sequences (colors AND cursor movement like ESC[2K ESC[1A)
+  # - CSI: ESC [ ... <final byte>
+  # - OSC: ESC ] ... BEL or ST
+  strip_ansi_csi() {
+    sed -E $'s/\x1B\[[0-?]*[ -/]*[@-~]//g; s/\x1B\][^\x07]*(\x07|\x1B\\\\)//g'
+  }
+
   # Check if logfile exists
   if [[ ! -f "$logfile" ]]; then
     cat <<EOF
@@ -1078,16 +1085,15 @@ EOF
     return
   fi
 
-  # Step 1: Find the LAST occurrence of :::PLAN_READY::: or :::BUILD_READY:::
+  # 1) Find the LAST occurrence of :::PLAN_READY::: or :::BUILD_READY:::
   local marker_line
   marker_line=$(grep -n ":::\(PLAN\|BUILD\)_READY:::" "$logfile" 2>/dev/null | tail -1 | cut -d: -f1 || echo "")
 
   if [[ -z "$marker_line" ]]; then
-    # No marker found - output fallback
     cat <<EOF
 **Ralph Iteration ${iter_num} (${mode})** — ${timestamp}
 
-No completion marker found in logs.
+No marker found (:::PLAN_READY::: or :::BUILD_READY:::)
 
 Run ID: ${run_id}
 Log: ${logfile}
@@ -1095,46 +1101,47 @@ EOF
     return
   fi
 
-  # Step 2: Find start boundary - prefer nearest preceding "─── Response" separator
-  # Fallback to nearest preceding STATUS header
-  local start_line=""
-  local response_line
-  response_line=$(sed -n "1,${marker_line}p" "$logfile" | grep -n "─── Response" | tail -1 | cut -d: -f1 || echo "")
+  # 2) Find the nearest preceding "─── Response" separator BEFORE marker_line.
+  #    We strip ANSI/CSI FIRST for searching so it matches even when "Response" is colorized.
+  local search_prefix response_line
+  search_prefix=$(sed -n "1,${marker_line}p" "$logfile" | strip_ansi_csi)
+  response_line=$(echo "$search_prefix" | grep -n "─── Response" | tail -1 | cut -d: -f1 || echo "")
 
+  local start_line
   if [[ -n "$response_line" ]]; then
-    start_line="$response_line"
+    # Extract AFTER the response separator line
+    start_line=$((response_line + 1))
   else
-    # Fallback: find last STATUS header before marker
-    local status_line
-    status_line=$(sed -n "1,${marker_line}p" "$logfile" | grep -n "^STATUS |" | tail -1 | cut -d: -f1 || echo "")
-    if [[ -n "$status_line" ]]; then
-      start_line="$status_line"
-    else
-      # No valid start boundary - extract from beginning
-      start_line="1"
-    fi
+    # Fallback: extract from beginning (still between start and marker)
+    start_line=1
   fi
 
-  # Step 3: Extract block between start and marker (marker excluded)
-  # Strip ANSI color codes for Discord
+  # 3) Extract everything between Response separator and marker (marker excluded)
   local summary_block
-  summary_block=$(sed -n "${start_line},$((marker_line - 1))p" "$logfile" | sed $'s/\x1b\[[0-9;]*m//g')
+  summary_block=$(sed -n "${start_line},$((marker_line - 1))p" "$logfile" | strip_ansi_csi)
 
-  # Step 4: Remove STATUS header portion (multi-line STATUS continuations)
-  # Remove lines starting with "STATUS |" or "PROGRESS |"
-  summary_block=$(echo "$summary_block" | sed '/^STATUS |/d; /^PROGRESS |/d')
+  # Trim leading/trailing empty lines
+  summary_block=$(echo "$summary_block" | sed '/^[[:space:]]*$/d')
 
-  # Step 5: Remove decorative framing (response separator lines)
-  summary_block=$(echo "$summary_block" | sed '/^─── Response/d')
+  # 4) Build message and truncate if needed (Discord 2000 char limit; leave room for footer)
+  local header message
+  header="**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}"
+  message="${header}
 
-  # Step 6: Trim leading/trailing whitespace
-  summary_block=$(echo "$summary_block" | sed '/^[[:space:]]*$/d' | sed -e :a -e '/^\n*$/{$d;N;ba' -e '}')
+${summary_block}"
 
-  # Output structured summary with header
+  if [[ ${#message} -gt 1800 ]]; then
+    message="${message:0:1750}
+
+*(truncated — see full log for details)*"
+  fi
+
   cat <<EOF
-**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}
+${message}
 
-$summary_block
+---
+**Run ID:** ${run_id}
+**Log:** ${logfile}
 EOF
 }
 
@@ -2454,6 +2461,9 @@ else
       fi
 
       # Post the full summary with additional stats
+      # NOTE: Avoid re-printing the full summary to the interactive terminal (too noisy).
+      # We still append Discord-post output to a per-iteration completion log.
+      completion_log="${LOGDIR}/iter${i}_completion.log"
       {
         echo "$summary_content"
         echo ""
@@ -2462,9 +2472,10 @@ else
         [[ -n "$time_saved_display" ]] && echo "**Performance:** ${time_saved_display}"
         echo "**Verifier:** ${verifier_status}"
         echo "**Run ID:** ${ROLLFLOW_RUN_ID:-unknown}"
-      } | "$ROOT/bin/discord-post" 2>&1 | tee -a "${LOGDIR}/iter${i}_completion.log"
+      } | "$ROOT/bin/discord-post" >>"$completion_log" 2>&1
+      discord_rc=$?
 
-      if [[ ${PIPESTATUS[1]} -eq 0 ]]; then
+      if [[ $discord_rc -eq 0 ]]; then
         echo "✓ Discord update posted"
       else
         echo "⚠ Discord post failed (non-blocking)"
