@@ -613,66 +613,25 @@ else
   RESOLVED_MODEL="$(resolve_model "$MODEL_ARG")"
 fi
 
-# RovoDev ignores --config-file and always uses ~/.rovodev/config.yml
-# So we skip temp config creation and just use the base config
+# Only create RovoDev temp config when runner=rovodev and we have a model to set.
+# acli rovodev run supports --config-file (see: acli rovodev run --help)
 if [[ "$RUNNER" == "rovodev" ]]; then
   if [[ -n "$RESOLVED_MODEL" ]]; then
-    # Note: RovoDev does not actually honor --config-file parameter
-    # It always reads from ~/.rovodev/config.yml regardless
-    # The temp config approach was abandoned because RovoDev rewrites any temp config
-    # and falls back to the base config anyway
-    # Silent - no need to print anything, user will see model in RovoDev output
-    
-    # Temp config creation code disabled - RovoDev ignores --config-file
-    # Keeping this commented out for reference in case RovoDev behavior changes
-    : <<'DISABLED_TEMP_CONFIG'
-      TEMP_CONFIG="/tmp/rovodev_config_$$_$(date +%s).yml"
-      python3 - "$HOME/.rovodev/config.yml" "$TEMP_CONFIG" "$RESOLVED_MODEL" <<'PY'
-import sys
-from pathlib import Path
+    TEMP_CONFIG="/tmp/rovodev_config_$$_$(date +%s).yml"
 
-source_path, target_path, model_id = sys.argv[1:4]
-lines = Path(source_path).read_text().splitlines()
+    # Copy base config and override modelId
+    if [[ -f "$HOME/.rovodev/config.yml" ]]; then
+      sed "s|^  modelId:.*|  modelId: $RESOLVED_MODEL|" "$HOME/.rovodev/config.yml" >"$TEMP_CONFIG"
+    else
+      cat >"$TEMP_CONFIG" <<EOFCONFIG
+version: 1
+agent:
+  modelId: $RESOLVED_MODEL
+EOFCONFIG
+    fi
 
-new_lines = []
-replaced = False
-inserted = False
-in_agent = False
-agent_indent = ""
-child_indent = "  "
-
-for line in lines:
-    stripped = line.lstrip()
-    indent = line[: len(line) - len(stripped)]
-    if stripped.startswith("agent:"):
-        in_agent = True
-        agent_indent = indent
-        child_indent = agent_indent + "  "
-        new_lines.append(line)
-        continue
-
-    if in_agent and stripped.startswith("modelId:"):
-        new_lines.append(f"{child_indent}modelId: {model_id}")
-        replaced = True
-        continue
-
-    if in_agent and stripped and not line.startswith(child_indent):
-        if not replaced and not inserted:
-            new_lines.append(f"{child_indent}modelId: {model_id}")
-            inserted = True
-        in_agent = False
-
-    new_lines.append(line)
-
-if in_agent and not replaced and not inserted:
-    new_lines.append(f"{child_indent}modelId: {model_id}")
-
-Path(target_path).write_text("\n".join(new_lines) + "\n")
-PY
-DISABLED_TEMP_CONFIG
-    
-    # Don't set CONFIG_FLAG since RovoDev ignores it anyway
-    CONFIG_FLAG=""
+    CONFIG_FLAG="--config-file $TEMP_CONFIG"
+    echo "Using model: $RESOLVED_MODEL"
   fi
 else
   # OpenCode runner uses provider/model directly; no temp config needed.
@@ -696,11 +655,7 @@ else
 fi
 
 # Debug output for derived values
-# Note: For RovoDev, actual model comes from ~/.rovodev/config.yml
-MODEL_DISPLAY="${RESOLVED_MODEL:-<base config>}"
-if [[ "$RUNNER" == "rovodev" ]]; then
-  MODEL_DISPLAY="<from ~/.rovodev/config.yml>"
-fi
+MODEL_DISPLAY="${RESOLVED_MODEL:-${MODEL_ARG:-auto}}"
 echo "Repo: $REPO_NAME | Branch: $TARGET_BRANCH | Lock: $LOCK_FILE"
 echo "Runner=$RUNNER Model=$MODEL_DISPLAY Format=${OPENCODE_FORMAT:-default} Attach=${OPENCODE_ATTACH:-<none>} Serve=${OPENCODE_SERVE:-false}"
 
