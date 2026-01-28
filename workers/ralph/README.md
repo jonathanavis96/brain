@@ -251,7 +251,7 @@ Ralph can post build updates to Discord channels via webhooks. This provides rea
 | "webhook not found" error | Regenerate webhook in Discord settings |
 | Messages truncated | Normal - discord-post chunks at 1900 chars automatically |
 | bin/discord-post not found | Ensure you're in correct directory: `cd workers/ralph` |
-| Ralph uses wrong model (shows Sonnet 200K instead of GPT-5.2-Codex 400K) | **Root cause:** RovoDev CLI ignores `--config-file` parameter and always reads from `~/.rovodev/config.yml`. Temp config approach doesn't work because RovoDev rewrites temp configs. **Fix:** Ensure `~/.rovodev/config.yml` has `modelId: gpt-5.2-codex`. Loop.sh no longer creates temp configs. Verify with session context showing `400K` (not `200K`). **Note:** `gpt-5.2-codex` is the correct model ID for RovoDev, not `anthropic.claude-*` format. |
+| Ralph uses wrong model | **How it works:** `workers/ralph/loop.sh` resolves `--model` (e.g. `sonnet`, `gpt52`) to a full `modelId`, generates a temp RovoDev config under `/tmp/rovodev_config_<pid>_<ts>.yml` with `agent.modelId` overridden, and runs `acli rovodev run --config-file <temp>` to force the model. **Swap models:** run `ralph --model sonnet` or `ralph --model gpt52`. **Default:** set in `workers/ralph/loop.sh` (and template in `templates/ralph/loop.sh`). **Verify:** the loop banner prints `Model=<resolved>` and RovoDev output should show `Using model:` accordingly. If you still see the wrong model, check you’re running the updated `workers/ralph/loop.sh` from this repo checkout. |
 
 ### Technical Details
 
