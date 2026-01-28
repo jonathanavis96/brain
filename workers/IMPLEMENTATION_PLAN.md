@@ -50,22 +50,7 @@ At the end of every iteration (PLAN/BUILD), immediately before the marker line, 
 
 ---
 
-- [x] **1.2** Define and document the strict structured summary block contract (fixed headings, fixed order)
-  - **Goal:** Remove ambiguity by specifying a strict, fixed-shape summary block that the agent must always emit immediately before `:::PLAN_READY:::` / `:::BUILD_READY:::`.
-  - **Inputs:** The desired strict contract and current prompt/template guidance.
-  - **Outputs:** A clear, enforceable contract wording that can be inserted into prompts/templates.
-  - **Files likely to touch:** `workers/ralph/PROMPT.md`, `templates/ralph/PROMPT.md`, `templates/ralph/PROMPT.project.md` (and any related prompt references)
-  - **AC:**
-    - Contract requires headings in this exact order: Summary, Changes Made, Next Steps, optional Completed.
-    - Each section must be bullets (or short paragraphs) and must not include box-drawing / ASCII framing.
-    - Explicitly states: always emit the block every iteration even if the agent would otherwise output something else.
-    - Explicitly states: marker is on its own line after the block.
-  - **Verification:**
-    - `rg -n "\\*\\*Summary\\*\\*|\\*\\*Changes Made\\*\\*|\\*\\*Next Steps\\*\\*|\\*\\*Completed\\*\\*" workers/ralph/PROMPT.md templates/ralph/PROMPT.md templates/ralph/PROMPT.project.md`
-  - **Risk notes:** `workers/ralph/PROMPT.md` may be hash-guarded; updating may require hash baseline updates.
-  - **If Blocked:** If protected-file rules prevent edits, create/update `SPEC_CHANGE_REQUEST.md` and stop.
-
-- [ ] **1.3** Add extraction fixtures and a quick local verification command
+- [?] **1.3** Add extraction fixtures and a quick local verification command
   - **Goal:** Prevent regressions by adding small saved log fixtures capturing real failure cases and a repeatable local command to validate extraction output.
   - **Inputs:** Representative log snippets (response header + multi-line STATUS + strict summary block + marker; plus failure/fallback cases).
   - **Outputs:** Fixture files and a lightweight verification command/script to run extraction against them.

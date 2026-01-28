@@ -603,7 +603,7 @@ if [[ -z "$MODEL_ARG" ]]; then
   if [[ "$RUNNER" == "opencode" ]]; then
     MODEL_ARG="grok" # Default for OpenCode
   else
-    MODEL_ARG="gpt52" # Default for RovoDev (GPT-5.2-Codex) - explicit shortcut like Cortex
+    MODEL_ARG="sonnet" # Default for RovoDev (Sonnet 4.5) - explicit shortcut like Cortex
   fi
 fi
 

@@ -1,0 +1,37 @@
+# Sample log WITHOUT explicit markers - for heuristic parser testing
+# This simulates legacy logs before markers were added
+
+=== Ralph Loop Iteration 1 ===
+Mode: BUILD
+Timestamp: 2026-01-24 09:00:00
+
+Running tool: shellcheck
+Checking workers/ralph/loop.sh...
+All checks passed!
+[PASS]
+
+Running tool: markdownlint
+Checking docs/*.md...
+docs/README.md:15 MD040 Fenced code blocks should have a language specified
+[FAIL]
+exit code: 1
+
+Running tool: pytest
+============================= test session starts ==============================
+collected 8 items
+tests/test_core.py ........                                              [100%]
+============================= 8 passed in 2.34s ================================
+[PASS]
+
+=== Ralph Loop Iteration 2 ===
+Mode: BUILD
+Timestamp: 2026-01-24 09:05:00
+
+Executing: build
+Compiling assets...
+Error: Module not found: 'missing_dep'
+FAILED
+exit code: 1
+
+>>> deploy
+Skipped: previous step failed

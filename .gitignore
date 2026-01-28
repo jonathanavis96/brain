@@ -1,6 +1,7 @@
 # Logs
 ralph/logs/
-*.log
+# *.log
+!workers/ralph/tests/fixtures/*.log
 
 # Backup files
 *.bak

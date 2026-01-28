@@ -1,0 +1,7 @@
+─── Response (iteration 2) ───────────────────────────────────────────────────────
+STATUS | branch=main | runner=rovodev | model=auto
+PROGRESS | phase=build | step=verify | tasks=2/3 | file=bin/ralph-summary
+Summary:
+- Fixed extraction fallback
+- Added build fixture
+:::BUILD_READY:::
