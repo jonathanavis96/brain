@@ -533,11 +533,12 @@ fi
 
 # Model version configuration - SINGLE SOURCE OF TRUTH
 # Update these when new model versions are released
-# Last updated: 2026-01-18 (Sonnet 4.5 September 2025 release)
+# Last updated: 2026-01-28 (RovoDev only supports Anthropic models)
 MODEL_SONNET_45="anthropic.claude-sonnet-4-5-20250929-v1:0"
 MODEL_OPUS_45="anthropic.claude-opus-4-5-20251101-v1:0"
 MODEL_SONNET_4="anthropic.claude-sonnet-4-20250514-v1:0"
-MODEL_GPT52_CODEX="gpt-5.2-codex"
+# Note: gpt-5.2-codex is not a valid RovoDev model - RovoDev only supports Anthropic Claude models
+MODEL_GPT52_CODEX="$MODEL_OPUS_45"  # Default to Opus 4.5 (most powerful available)
 
 # Resolve model shortcut to full model ID
 resolve_model() {
@@ -613,13 +614,19 @@ else
   RESOLVED_MODEL="$(resolve_model "$MODEL_ARG")"
 fi
 
-# Only create RovoDev temp config when runner=rovodev and we have a model to set
+# RovoDev ignores --config-file and always uses ~/.rovodev/config.yml
+# So we skip temp config creation and just use the base config
 if [[ "$RUNNER" == "rovodev" ]]; then
   if [[ -n "$RESOLVED_MODEL" ]]; then
-    TEMP_CONFIG="/tmp/rovodev_config_$$_$(date +%s).yml"
-
-    # Copy base config and override modelId
-    if [[ -f "$HOME/.rovodev/config.yml" ]]; then
+    # Note: RovoDev does not actually honor --config-file parameter
+    # It always reads from ~/.rovodev/config.yml regardless
+    # The temp config approach was abandoned because RovoDev rewrites any temp config
+    # and falls back to the base config anyway
+    echo "Using model from base config: ~/.rovodev/config.yml"
+    
+    # Skip temp config creation entirely - it doesn't work
+    if false; then
+      TEMP_CONFIG="/tmp/rovodev_config_$$_$(date +%s).yml"
       echo "DEBUG: Running Python script with model_id=$RESOLVED_MODEL" >&2
       python3 - "$HOME/.rovodev/config.yml" "$TEMP_CONFIG" "$RESOLVED_MODEL" <<'PY'
 import sys
@@ -665,17 +672,10 @@ if in_agent and not replaced and not inserted:
 Path(target_path).write_text("\n".join(new_lines) + "\n")
 print(f"DEBUG PYTHON: Wrote {len(new_lines)} lines. replaced={replaced}, inserted={inserted}", file=sys.stderr)
 PY
-    else
-      cat >"$TEMP_CONFIG" <<EOFCONFIG
-version: 1
-agent:
-  modelId: $RESOLVED_MODEL
-EOFCONFIG
-    fi
-    CONFIG_FLAG="--config-file $TEMP_CONFIG"
-    echo "Using model: $RESOLVED_MODEL"
-    echo "DEBUG: Temp config created at: $TEMP_CONFIG"
-    echo "DEBUG: Config contains modelId: $(grep 'modelId:' "$TEMP_CONFIG" || echo 'NOT FOUND')"
+    fi  # End of disabled temp config block
+    
+    # Don't set CONFIG_FLAG since RovoDev ignores it anyway
+    CONFIG_FLAG=""
   fi
 else
   # OpenCode runner uses provider/model directly; no temp config needed.

@@ -382,6 +382,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
     if (!filteredData || !clusterData || !containerRef.current) return
 
     let timeoutId = null
+    let containerElement = null
 
     // Setup drop zone handlers on container
     const container = containerRef.current
@@ -876,10 +877,12 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
       sigma.getMouseCaptor().on('mousemove', handleMouseMove)
 
       // Add touch event listeners to container
-      const containerElement = containerRef.current
-      containerElement.addEventListener('touchmove', handleTouchMove, { passive: false })
-      containerElement.addEventListener('touchend', handleTouchEnd, { passive: false })
-      containerElement.addEventListener('touchcancel', handleTouchEnd, { passive: false })
+      containerElement = containerRef.current
+      if (containerElement) {
+        containerElement.addEventListener('touchmove', handleTouchMove, { passive: false })
+        containerElement.addEventListener('touchend', handleTouchEnd, { passive: false })
+        containerElement.addEventListener('touchcancel', handleTouchEnd, { passive: false })
+      }
 
       // Handle mouse up to end drag/link mode and persist position
       sigma.getMouseCaptor().on('mouseup', async () => {
@@ -1037,9 +1040,11 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
       container.removeEventListener('dragover', handleDragOver)
       container.removeEventListener('drop', handleDrop)
       // Remove touch listeners
-      containerElement.removeEventListener('touchmove', handleTouchMove)
-      containerElement.removeEventListener('touchend', handleTouchEnd)
-      containerElement.removeEventListener('touchcancel', handleTouchEnd)
+      if (containerElement) {
+        containerElement.removeEventListener('touchmove', handleTouchMove)
+        containerElement.removeEventListener('touchend', handleTouchEnd)
+        containerElement.removeEventListener('touchcancel', handleTouchEnd)
+      }
     }
   }, [filteredData, clusterData, onNodeSelect, expandedClusters, showClusters, selectedNodes, onGraphClick, clickToPlaceActive, onGraphDrop, layoutLocked])
 
