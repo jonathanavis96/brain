@@ -166,6 +166,83 @@
 
 ---
 
+## Phase 38: Documentation Consolidation & Navigation
+
+**Context:** Over time, documentation tends to drift: duplicated guidance, conflicting instructions, and unclear entrypoints. This phase focuses on consolidation and navigability (not functional changes).
+
+**Goal:** Make the documentation set coherent: one canonical place per topic, clear “start here” paths, and minimal duplication.
+
+**Success Criteria:**
+
+- No conflicting guidance between `README.md`, `AGENTS.md`, `docs/*`, `cortex/docs/*`, and `workers/*` for core workflows
+- Clear “Start Here” pointers for humans and agents
+- Deprecated/duplicate docs are either removed or clearly marked as historical
+
+---
+
+### Task 38.1: Identify duplication + contradictions
+
+- [ ] **38.1.1** Inventory duplicated topics and pick canonical docs
+  - **Goal:** Identify where the same topic is documented in multiple places (e.g., bootstrapping, task sync, running Ralph/Cortex, gap capture) and pick one canonical location per topic.
+  - **AC:** A short “canonical map” table is added to `docs/REFERENCE_SUMMARY.md` (or `docs/CHANGES.md` if preferred) listing topic → canonical file, plus “deprecated copies” list.
+  - **If Blocked:** Start with the top 5 topics and leave the rest as a TODO list.
+
+- [ ] **38.1.2** Resolve the highest-impact contradictions
+  - **Goal:** Remove conflicting instructions that cause incorrect usage.
+  - **AC:** The canonical docs match current behavior for:
+    - bootstrap layout (`workers/ralph/`)
+    - plan authority (`workers/IMPLEMENTATION_PLAN.md` canonical, cortex mirror)
+    - gap capture workflow (`cortex/GAP_CAPTURE.md` + `.gap_pending` + `cortex/sync_gaps.sh`)
+  - **If Blocked:** Add an explicit “Current reality” callout box at the top of the canonical doc.
+
+---
+
+### Task 38.2: Simplify entrypoints (“Start Here”)
+
+- [ ] **38.2.1** Create/refresh a single top-level “Start Here” section
+  - **Goal:** Make it obvious where to begin for new contributors and agents.
+  - **AC:** `README.md` includes a concise “Start Here” section linking to: `NEURONS.md`, `docs/TOOLS.md`, `docs/BOOTSTRAPPING.md`, `skills/SUMMARY.md`, and `workers/IMPLEMENTATION_PLAN.md`.
+  - **If Blocked:** Add the section as a TODO skeleton with placeholder bullets.
+
+- [ ] **38.2.2** Reduce redundant onboarding text in `AGENTS.md`/`cortex/docs/*`
+  - **Goal:** Avoid repeating the same onboarding guidance in multiple places.
+  - **AC:** Duplicated onboarding content is replaced with links to the canonical “Start Here” docs.
+  - **If Blocked:** Mark duplicated sections with “DEPRECATED: see <link>”.
+
+---
+
+### Task 38.3: Prune or demote historical docs
+
+- [ ] **38.3.1** Mark historical change logs and old analysis as “historical” and de-emphasize in navigation
+  - **Goal:** Reduce noise from older artifacts without deleting history.
+  - **AC:** Old `cortex/docs/CHANGES_*.md` and `artifacts/analysis/*.md` are clearly labeled as historical and are not linked from primary entrypoints unless necessary.
+  - **If Blocked:** Add a single “Historical docs index” section listing them.
+
+- [ ] **38.3.2** Merge or remove duplicate runbooks
+  - **Goal:** Ensure there is one operational runbook per role (Cortex vs Ralph) and links point to the right one.
+  - **AC:** `cortex/docs/RUNBOOK.md` and `workers/ralph/README.md` do not contain overlapping “how to run” instructions; one links to the other where appropriate.
+  - **If Blocked:** Add a “Canonical runbook is X” note at the top of the non-canonical file.
+
+---
+
+### Task 38.4: Cross-link consistency + naming conventions
+
+- [ ] **38.4.1** Standardize references to canonical files across the repo
+  - **Goal:** Make cross-links consistent (same terminology, same paths).
+  - **AC:** References to key files use consistent names/paths:
+    - `workers/IMPLEMENTATION_PLAN.md`
+    - `workers/PLAN_DONE.md`
+    - `workers/ralph/THUNK.md`
+    - `skills/self-improvement/GAP_BACKLOG.md`
+  - **If Blocked:** Fix only the most commonly referenced paths first.
+
+- [ ] **38.4.2** Add/refresh “See also” sections on major docs
+  - **Goal:** Improve navigation without duplicating content.
+  - **AC:** Major docs (`docs/TOOLS.md`, `docs/BOOTSTRAPPING.md`, `skills/SUMMARY.md`, `NEURONS.md`, `cortex/docs/RUNBOOK.md`) include a small “See also” list to related canonical docs.
+  - **If Blocked:** Add “See also” only to `docs/TOOLS.md` and `docs/BOOTSTRAPPING.md` first.
+
+---
+
 ## Phase 35: Skills & Knowledge Base Maintenance
 
 **Context:** Brain repository skills need periodic review and updates based on recent discoveries, tool usage patterns, and emerging best practices.
