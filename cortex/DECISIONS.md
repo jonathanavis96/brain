@@ -39,7 +39,7 @@ This file documents **architectural decisions, naming conventions, style prefere
 **Rationale:**
 
 - Ensures all planning sessions produce **atomic, actionable, testable** subtasks
-- Separates planning (Cortex/GPT-5.2-Codex) from execution (Ralph/GPT-5.2-Codex)
+- Separates planning (Cortex/GPT-5.2) from execution (Ralph/GPT-5.2-Codex)
 - Provides consistent context bootstrapping for Opus sessions
 - Prepares architecture for future parallel workers (e.g., Rust specialist, Python specialist)
 
