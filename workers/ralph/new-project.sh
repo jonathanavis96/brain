@@ -323,7 +323,24 @@ info "Creating project directory structure..."
 mkdir -p "$PROJECT_LOCATION"
 mkdir -p "$PROJECT_LOCATION/workers/ralph"
 mkdir -p "$PROJECT_LOCATION/workers/ralph/logs"
+mkdir -p "$PROJECT_LOCATION/workers/shared"
 mkdir -p "$PROJECT_LOCATION/skills"
+
+# Link brain/skills to the Brain repo (preferred), with a copy fallback.
+# Rationale: projects should see Brain skills *live* when Brain is present.
+if [[ -d "$BRAIN_ROOT/skills" ]]; then
+  info "Linking Brain skills into project workspace (brain/skills)..."
+  mkdir -p "$PROJECT_LOCATION/brain"
+  rm -rf "$PROJECT_LOCATION/brain/skills"
+
+  if ln -s "$BRAIN_ROOT/skills" "$PROJECT_LOCATION/brain/skills" 2>/dev/null; then
+    success "Linked brain/skills -> $BRAIN_ROOT/skills"
+  else
+    warn "Symlink failed; falling back to vendoring a snapshot of brain/skills"
+    cp -R "$BRAIN_ROOT/skills" "$PROJECT_LOCATION/brain/skills"
+    success "Vendored brain/skills snapshot"
+  fi
+fi
 mkdir -p "$PROJECT_LOCATION/src"
 mkdir -p "$PROJECT_LOCATION/docs"
 
@@ -332,6 +349,19 @@ mkdir -p "$PROJECT_LOCATION/docs"
 # ============================================
 
 info "Copying template files..."
+
+# Copy workers/shared utilities (required by workers/ralph/loop.sh)
+if [[ -d "$TEMPLATES_DIR/workers/shared" ]]; then
+  cp -r "$TEMPLATES_DIR/workers/shared"/* "$PROJECT_LOCATION/workers/shared/"
+  chmod +x "$PROJECT_LOCATION/workers/shared/"*.sh 2>/dev/null || true
+  success "Copied workers/shared/ utilities (from templates)"
+elif [[ -d "$BRAIN_ROOT/workers/shared" ]]; then
+  cp -r "$BRAIN_ROOT/workers/shared"/* "$PROJECT_LOCATION/workers/shared/"
+  chmod +x "$PROJECT_LOCATION/workers/shared/"*.sh 2>/dev/null || true
+  success "Copied workers/shared/ utilities (from Brain repo)"
+else
+  warn "workers/shared not found (templates or Brain root); loop.sh may fail"
+fi
 
 # Copy AGENTS.md to ralph/ (not project root)
 if [ -f "$TEMPLATES_DIR/AGENTS.project.md" ]; then
@@ -375,6 +405,48 @@ if [ -f "$TEMPLATES_DIR/ralph/RALPH.md" ]; then
 else
   warn "Template not found: ralph/RALPH.md"
 fi
+
+# Copy Cortex helper pack
+mkdir -p "$PROJECT_LOCATION/cortex"
+
+for template_path in "$TEMPLATES_DIR/cortex"/*; do
+  template_file=$(basename "$template_path")
+
+  # cortex-PROJECT.bash is used to generate the per-project entrypoint below
+  if [[ "$template_file" == "cortex-PROJECT.bash" ]]; then
+    continue
+  fi
+
+  if [[ "$template_file" == *.project.md ]]; then
+    out_file="${template_file%.project.md}.md"
+  else
+    out_file="$template_file"
+  fi
+
+  cp "$template_path" "$PROJECT_LOCATION/cortex/$out_file"
+
+  if [[ "$out_file" == *.md ]]; then
+    substitute_placeholders "$PROJECT_LOCATION/cortex/$out_file" "$REPO_NAME" "$WORK_BRANCH"
+  fi
+done
+
+# Generate project-specific Cortex entrypoint (standalone; does not depend on Brain repo)
+if [[ -f "$TEMPLATES_DIR/cortex/cortex-PROJECT.bash" ]]; then
+  repo_prefix=${REPO_NAME%%-*}
+  cortex_entrypoint="cortex-${repo_prefix}.bash"
+  cp "$TEMPLATES_DIR/cortex/cortex-PROJECT.bash" "$PROJECT_LOCATION/cortex/${cortex_entrypoint}"
+
+  sed -i "s/{{PROJECT_SLUG}}/${repo_prefix}/g" "$PROJECT_LOCATION/cortex/${cortex_entrypoint}"
+  sed -i "s/{{PROJECT_NAME}}/${PROJECT_NAME}/g" "$PROJECT_LOCATION/cortex/${cortex_entrypoint}"
+
+  chmod +x "$PROJECT_LOCATION/cortex/${cortex_entrypoint}" 2>/dev/null || true
+  success "Generated cortex/${cortex_entrypoint}"
+else
+  warn "Template not found: cortex/cortex-PROJECT.bash (skipping Cortex entrypoint generation)"
+fi
+
+chmod +x "$PROJECT_LOCATION/cortex/"*.sh "$PROJECT_LOCATION/cortex/"*.bash 2>/dev/null || true
+success "Copied cortex/ helper pack"
 
 # Copy loop.sh with placeholder substitution
 if [ -f "$TEMPLATES_DIR/ralph/loop.sh" ]; then
@@ -460,17 +532,25 @@ else
   fi
 fi
 
-# NEURONS.md goes in ralph/, not project root
+# NEURONS.md goes in project root AND ralph/ (root is used by Cortex entrypoints)
 if [ -f "$BRAIN_DIR/generators/generate-neurons.sh" ]; then
   info "Generating custom NEURONS.md..."
   bash "$BRAIN_DIR/generators/generate-neurons.sh" "$IDEA_FILE" "$PROJECT_LOCATION/workers/ralph/NEURONS.md"
   success "Generated workers/ralph/NEURONS.md"
+
+  cp "$PROJECT_LOCATION/workers/ralph/NEURONS.md" "$PROJECT_LOCATION/NEURONS.md"
+  substitute_placeholders "$PROJECT_LOCATION/NEURONS.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Created NEURONS.md (root)"
 else
   warn "Generator not found: generate-neurons.sh (using template fallback)"
   if [ -f "$TEMPLATES_DIR/NEURONS.project.md" ]; then
     cp "$TEMPLATES_DIR/NEURONS.project.md" "$PROJECT_LOCATION/workers/ralph/NEURONS.md"
     substitute_placeholders "$PROJECT_LOCATION/workers/ralph/NEURONS.md" "$REPO_NAME" "$WORK_BRANCH"
     success "Copied workers/ralph/NEURONS.md template (needs customization)"
+
+    cp "$PROJECT_LOCATION/workers/ralph/NEURONS.md" "$PROJECT_LOCATION/NEURONS.md"
+    substitute_placeholders "$PROJECT_LOCATION/NEURONS.md" "$REPO_NAME" "$WORK_BRANCH"
+    success "Created NEURONS.md (root)"
   fi
 fi
 
