@@ -52,6 +52,20 @@
 - [ ] **WARN.MD031.cortex-impl-224** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 224 - Add blank line after code fence
 - [ ] **WARN.MD032.cortex-impl-260** Fix MD032/blanks-around-lists in cortex/IMPLEMENTATION_PLAN.md line 260 - Add blank line before list
 - [ ] **WARN.MD032.cortex-impl-265** Fix MD032/blanks-around-lists in cortex/IMPLEMENTATION_PLAN.md line 265 - Add blank line before list
+- [ ] **WARN.MD022.workers-impl-101** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 101 - Add blank line after "## DRY-RUN ANALYSIS"
+- [ ] **WARN.MD022.workers-impl-105** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 105 - Add blank line after "### Summary"
+- [ ] **WARN.MD032.workers-impl-111** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 111 - Add blank line before numbered list
+- [ ] **WARN.MD032.workers-impl-121** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 121 - Add blank line before bullet list
+- [ ] **WARN.MD022.workers-impl-137** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 137 - Add blank line after "### Files to Modify"
+- [ ] **WARN.MD032.workers-impl-138** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 138 - Add blank line before list
+- [ ] **WARN.MD022.workers-impl-142** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 142 - Add blank line after "### Verification Commands"
+- [ ] **WARN.MD031.workers-impl-143** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 143 - Add blank line before code fence
+- [ ] **WARN.MD022.workers-impl-148** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 148 - Add blank line after "### Risks & Dependencies"
+- [ ] **WARN.MD032.workers-impl-149** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 149 - Add blank line before list
+- [ ] **WARN.MD022.workers-impl-154** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 154 - Add blank line after "### Time Estimate"
+- [ ] **WARN.MD032.workers-impl-155** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 155 - Add blank line before list
+- [ ] **WARN.MD022.workers-impl-160** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 160 - Add blank line after "### Next Steps"
+- [ ] **WARN.MD032.workers-impl-161** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 161 - Add blank line before numbered list
 
 ## Phase 33: Brain Map V2 - Polish & Power Features 🚀
 
