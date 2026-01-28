@@ -592,54 +592,48 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
         },
 
         // Override Sigma's hover label rendering (defaultDrawNodeHover)
-        // so hover labels are white pill + black text in dark mode.
+        // Using Sigma's geometry to prevent label clipping by node circle
         defaultDrawNodeHover: (context, data, settings) => {
-          if (!data.label) return
-
-          const label = String(data.label)
           const size = settings.labelSize
           const font = settings.labelFont
-          const weight = settings.labelWeight || 'normal'
-
-          context.save()
-          context.globalAlpha = 1
+          const weight = settings.labelWeight
           context.font = `${weight} ${size}px ${font}`
 
-          const metrics = context.measureText(label)
-          const paddingX = 4
-          const paddingY = 2
-          const textWidth = metrics.width
-          const textHeight = size
+          // Draw the label background (copied from Sigma's drawDiscNodeHover)
+          context.fillStyle = '#FFF'
+          context.shadowOffsetX = 0
+          context.shadowOffsetY = 0
+          context.shadowBlur = 8
+          context.shadowColor = '#000'
+          const PADDING = 2
+          if (typeof data.label === 'string') {
+            const textWidth = context.measureText(data.label).width
+            const boxWidth = Math.round(textWidth + 5)
+            const boxHeight = Math.round(size + 2 * PADDING)
+            const radius = Math.max(data.size, size / 2) + PADDING
+            const angleRadian = Math.asin(boxHeight / 2 / radius)
+            const xDeltaCoord = Math.sqrt(Math.abs(Math.pow(radius, 2) - Math.pow(boxHeight / 2, 2)))
+            context.beginPath()
+            context.moveTo(data.x + xDeltaCoord, data.y + boxHeight / 2)
+            context.lineTo(data.x + radius + boxWidth, data.y + boxHeight / 2)
+            context.lineTo(data.x + radius + boxWidth, data.y - boxHeight / 2)
+            context.lineTo(data.x + xDeltaCoord, data.y - boxHeight / 2)
+            context.arc(data.x, data.y, radius, angleRadian, -angleRadian)
+            context.closePath()
+            context.fill()
+          } else {
+            context.beginPath()
+            context.arc(data.x, data.y, data.size + PADDING, 0, Math.PI * 2)
+            context.closePath()
+            context.fill()
+          }
+          context.shadowOffsetX = 0
+          context.shadowOffsetY = 0
+          context.shadowBlur = 0
 
-          const x = data.x
-          const y = data.y + data.size + 3
-
-          // White pill
-          const rx = x - paddingX
-          const ry = y - textHeight - paddingY
-          const rw = textWidth + paddingX * 2
-          const rh = textHeight + paddingY * 2
-          const radius = 3
-
-          context.fillStyle = 'rgba(255,255,255,0.92)'
-          context.beginPath()
-          context.moveTo(rx + radius, ry)
-          context.lineTo(rx + rw - radius, ry)
-          context.quadraticCurveTo(rx + rw, ry, rx + rw, ry + radius)
-          context.lineTo(rx + rw, ry + rh - radius)
-          context.quadraticCurveTo(rx + rw, ry + rh, rx + rw - radius, ry + rh)
-          context.lineTo(rx + radius, ry + rh)
-          context.quadraticCurveTo(rx, ry + rh, rx, ry + rh - radius)
-          context.lineTo(rx, ry + radius)
-          context.quadraticCurveTo(rx, ry, rx + radius, ry)
-          context.closePath()
-          context.fill()
-
-          // Black text
+          // Draw the label with black text (dark mode: black text on white pill)
           context.fillStyle = '#000'
-          context.fillText(label, x, y)
-
-          context.restore()
+          context.fillText(data.label, data.x + radius + 3, data.y + size / 3)
         },
         // Use Sigma default label renderer (color controlled via labelColor)
       })
@@ -1130,7 +1124,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
     if (!sigmaRef.current || !filteredData) return
 
     const graph = sigmaRef.current.getGraph()
-    
+
     // If timeline is inactive, show all nodes
     if (!timelineFilter.active) {
       filteredData.nodes.forEach(node => {
@@ -1150,7 +1144,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
         if (selectedDate && node.created_at) {
           const nodeDate = new Date(node.created_at).getTime()
           const isVisible = nodeDate <= selectedDate
-          
+
           // Use hidden attribute instead of removing/adding nodes
           graph.setNodeAttribute(node.id, 'hidden', !isVisible)
         } else {

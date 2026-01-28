@@ -628,11 +628,116 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
   - **Archived At:** 2026-01-28 16:09:27
   - **Block:**
 
-
-
 - [x] **1.4**
   - **Archived From:** workers/IMPLEMENTATION_PLAN.md
   - **Archived At:** 2026-01-28 16:09:27
+  - **Block:**
+
+### Archived on 2026-01-28 16:33:36
+
+- [x] **1.5**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 16:33:36
+  - **Block:**
+
+### Archived on 2026-01-28 16:39:08
+
+- [x] **WARN.MD012.workers/PLAN_DONE.md**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 16:39:08
+  - **Block:**
+
+### Archived on 2026-01-28 16:49:05
+
+- [x] **0.W.MD012.workers/PLAN_DONE.md**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 16:49:05
+  - **Block:**
+
+- [x] **1.6**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 16:49:05
+  - **Block:**
+
+- [x] **1.7**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 16:49:05
+  - **Block:**
+
+- [x] **1.8**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 16:49:05
+  - **Block:**
+
+### Archived on 2026-01-28 16:49:18
+
+- [x] **0.W.MD012.workers/PLAN_DONE.md**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 16:49:18
+  - **Block:**
+
+- [x] **1.6**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 16:49:18
+  - **Block:**
+
+- [x] **1.7**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 16:49:18
+  - **Block:**
+
+- [x] **1.8**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 16:49:18
+  - **Block:**
+
+### Archived on 2026-01-28 16:53:52
+
+- [x] **0.W.MD012.workers/PLAN_DONE.md**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 16:53:52
+  - **Block:**
+
+### Archived on 2026-01-28 17:19:52
+
+- [x] **1.9**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 17:19:52
+  - **Block:**
+
+
+
+- [x] **1.10**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 17:19:52
+  - **Block:**
+
+
+
+- [x] **1.11**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 17:19:52
+  - **Block:**
+
+
+
+- [x] **1.10**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 17:19:52
+  - **Block:**
+
+
+
+- [x] **1.11**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 17:19:52
+  - **Block:**
+
+
+
+- [x] **36.1.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 17:19:52
   - **Block:**
 
 
