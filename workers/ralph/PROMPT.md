@@ -83,26 +83,26 @@ Then output `:::BUILD_READY:::` to end the iteration.
 
 **⚠️ Ralph's tasks are in `workers/IMPLEMENTATION_PLAN.md`, NOT `cortex/IMPLEMENTATION_PLAN.md`**
 
-### Required Startup Sequence
+### Required Startup Sequence (STRICT)
 
 ```bash
-# 1. Find next unchecked task (DO THIS FIRST)
-grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -20
+# 1) Pick ONE task
+LINE=$(grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -1 | cut -d: -f1)
 
-# 2. If you need context for a specific task, slice by line number
-# Example: task found around line 236
-sed -n '220,280p' workers/IMPLEMENTATION_PLAN.md
+# 2) Read ONE non-overlapping slice around it
+#    BAN: sed starting at 1; BAN: >90 lines; CAP: 2 plan slices max/iteration
+sed -n "$((LINE-5)),$((LINE+35))p" workers/IMPLEMENTATION_PLAN.md
 
-# 3. Check for existing tools before creating new ones
+# 3) Search before creating tools
 find bin/ -maxdepth 1 -type f | head -20
 find tools/ -maxdepth 1 -name "*.py" -o -name "*.sh" 2>/dev/null | head -10
 ```
 
-### THUNK.md Access Rules
+### THUNK.md Access Rules (STRICT)
 
-- **NEVER** open THUNK.md to "check what's done" - use `grep` or `bin/brain-search`
-- **ONLY** open THUNK.md when appending a new completion entry
-- For last THUNK number: `tail -20 workers/ralph/THUNK.md | grep "^|" | tail -1`
+- Lookups: `grep ... workers/ralph/THUNK.md | head -3`
+- Append: get next id ONCE right before append:
+  - `tail -10 workers/ralph/THUNK.md | grep "^|" | tail -1`
 
 ### Search Before Creating
 
@@ -321,19 +321,26 @@ Awaiting approval before adding to IMPLEMENTATION_PLAN.md.
 
 ## BUILDING Mode (All other iterations)
 
-### Context Gathering (Cheap First - Follow Startup Procedure)
+### Context Gathering (Cheap First - STRICT)
 
 **Step 1: Find your ONE task (mandatory first step)**
 
 ```bash
-grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -10
+# Find the FIRST unchecked task only
+grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -1
 ```
 
-**Step 2: Slice only the task block you need**
+**Step 2: Slice only the task block you need (STRICT RULES)**
 
 ```bash
+# RULES:
+#  - BAN: sed -n '1,XXp' workers/IMPLEMENTATION_PLAN.md
+#  - Max 90 lines per slice
+#  - Max 2 total plan slices in BUILD mode
+#  - No overlapping slices
+#
 # Example: task at line 236
-sed -n '230,260p' workers/IMPLEMENTATION_PLAN.md
+sed -n '231,270p' workers/IMPLEMENTATION_PLAN.md
 ```
 
 **Step 3: Search before assuming things are missing**
@@ -588,12 +595,10 @@ If you need THUNK info (task history, completions):
 
 **ALWAYS batch:** `grep pattern file1 file2 file3` not 3 separate calls.
 
-### Read Deduplication
+### Read Deduplication (HARD)
 
-Track files read this iteration. Before re-reading:
-
-- If already read → use `sed -n 'start,endp'` for a different slice
-- If same content needed → reference your earlier output, don't re-read
+- Plan reads: max 2 non-overlapping `sed` slices per iteration; ban `sed -n '1,*p'`; ban >90 lines.
+- This is enforced by `tools/check_startup_rules.sh`.
 
 ---
 
