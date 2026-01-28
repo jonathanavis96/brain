@@ -7,7 +7,7 @@
 Two improvements to Ralph loop reliability and model consistency:
 
 1. **Stale Lock Detection**: Automatically detects and removes stale lock files from crashed/killed processes
-2. **Default Model Override**: Ralph always uses Sonnet 4.5 by default, regardless of global rovodev config
+2. **Default Model Override**: Ralph always uses GPT-5.2-Codex by default, regardless of global rovodev config
 
 ### Stale Lock Detection
 
@@ -18,7 +18,7 @@ Two improvements to Ralph loop reliability and model consistency:
 
 ### Default Model Override
 
-- Ralph now defaults to `anthropic.claude-sonnet-4-5-20250929-v1:0` when no `--model` is specified
+- Ralph now defaults to `gpt-5.2-codex` when no `--model` is specified
 - Creates a temp config file that overrides the model, so global config changes don't affect Ralph
 - Added model version constants as single source of truth for easy updates
 - Can still override with `--model opus` or `--model auto` (to use global setting)

@@ -28,7 +28,7 @@ brain/ (repository root)
 ├── README.md                    # Human-readable overview
 ├── IMPLEMENTATION_PLAN.md       # High-level task list (managed by Cortex)
 │
-├── cortex/                      # Manager layer (Opus 4.5)
+├── cortex/                      # Manager layer (GPT-5.2-Codex)
 │   ├── CORTEX_SYSTEM_PROMPT.md  # Cortex identity and rules
 │   ├── REPO_MAP.md              # Human-friendly repo navigation
 │   ├── DECISIONS.md             # Stability anchor (naming, style, architecture)
@@ -39,7 +39,7 @@ brain/ (repository root)
 │   └── snapshot.sh              # Generates current state summary
 │
 ├── workers/                     # Execution layer
-│   └── ralph/                   # Ralph worker (Sonnet 4.5)
+│   └── ralph/                   # Ralph worker (GPT-5.2-Codex)
 │       ├── AGENTS.md            # Ralph operational guide
 │       ├── NEURONS.md           # This file (Ralph's codebase map)
 │       ├── PROMPT.md            # Ralph's instructions (protected)

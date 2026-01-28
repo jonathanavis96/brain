@@ -202,7 +202,7 @@ Reserve verbose format for:
 
 ## Token Budget Recommendations
 
-### Cortex (Opus 4.5)
+### Cortex (GPT-5.2-Codex)
 
 - **Current:** ~4,700 tokens per session start
 - **Target:** ~3,500 tokens (25% reduction)
@@ -211,7 +211,7 @@ Reserve verbose format for:
   - Snapshot: 1,000 tokens (cached)
   - Dynamic context: Variable
 
-### Ralph (Sonnet 4.5)
+### Ralph (GPT-5.2-Codex)
 
 - **Current:** ~4,800 tokens per iteration × 20 = 96,000 tokens
 - **Target:** ~2,000 tokens per iteration × 20 = 40,000 tokens (58% reduction)
