@@ -568,3 +568,48 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | Date | Task ID | Description |
 |------|---------|-------------|
 | 2026-01-28 | 33.5.3 | - [x] **33.5.3** Actionable suggestions - "Link these 3 orphans", "Update 5 stale notes", "Merge duplicate tags". AC: Suggestions displayed. Verification: Graph with issues → suggestions appear. If Blocked: Manual review only |
+
+### Archived on 2026-01-28 12:13:25
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-28 | WARN.MD032.workers-impl-69 | - [x] **WARN.MD032.workers-impl-69** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 69 - Add blank line before list |
+| 2026-01-28 | WARN.MD031.workers-impl-81 | - [x] **WARN.MD031.workers-impl-81** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 81 - Add blank line before code fence |
+| 2026-01-28 | WARN.MD031.workers-impl-92 | - [x] **WARN.MD031.workers-impl-92** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 92 - Add blank line after code fence |
+| 2026-01-28 | WARN.MD031.workers-impl-97 | - [x] **WARN.MD031.workers-impl-97** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 97 - Add blank line before code fence |
+| 2026-01-28 | WARN.MD031.workers-impl-126 | - [x] **WARN.MD031.workers-impl-126** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 126 - Add blank line before code fence |
+| 2026-01-28 | WARN.MD031.workers-impl-156 | - [x] **WARN.MD031.workers-impl-156** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 156 - Add blank line before code fence |
+| 2026-01-28 | WARN.MD031.workers-impl-186 | - [x] **WARN.MD031.workers-impl-186** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 186 - Add blank line before code fence |
+| 2026-01-28 | WARN.MD031.workers-impl-188 | - [x] **WARN.MD031.workers-impl-188** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 188 - Add blank line after code fence |
+| 2026-01-28 | WARN.MD031.workers-impl-192 | - [x] **WARN.MD031.workers-impl-192** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 192 - Add blank line before code fence |
+| 2026-01-28 | WARN.MD031.workers-impl-220 | - [x] **WARN.MD031.workers-impl-220** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 220 - Add blank line before code fence |
+| 2026-01-28 | WARN.MD031.workers-impl-224 | - [x] **WARN.MD031.workers-impl-224** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 224 - Add blank line after code fence |
+| 2026-01-28 | WARN.MD032.workers-impl-260 | - [x] **WARN.MD032.workers-impl-260** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 260 - Add blank line before list |
+| 2026-01-28 | WARN.MD032.workers-impl-265 | - [x] **WARN.MD032.workers-impl-265** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 265 - Add blank line before list |
+| 2026-01-28 | WARN.MD032.cortex-impl-69 | - [x] **WARN.MD032.cortex-impl-69** Fix MD032/blanks-around-lists in cortex/IMPLEMENTATION_PLAN.md line 69 - Add blank line before list |
+| 2026-01-28 | WARN.MD031.cortex-impl-81 | - [x] **WARN.MD031.cortex-impl-81** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 81 - Add blank line before code fence |
+| 2026-01-28 | WARN.MD031.cortex-impl-92 | - [x] **WARN.MD031.cortex-impl-92** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 92 - Add blank line after code fence |
+| 2026-01-28 | WARN.MD031.cortex-impl-97 | - [x] **WARN.MD031.cortex-impl-97** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 97 - Add blank line before code fence |
+| 2026-01-28 | WARN.MD031.cortex-impl-126 | - [x] **WARN.MD031.cortex-impl-126** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 126 - Add blank line before code fence |
+| 2026-01-28 | WARN.MD031.cortex-impl-156 | - [x] **WARN.MD031.cortex-impl-156** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 156 - Add blank line before code fence |
+| 2026-01-28 | WARN.MD031.cortex-impl-186 | - [x] **WARN.MD031.cortex-impl-186** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 186 - Add blank line before code fence |
+| 2026-01-28 | WARN.MD031.cortex-impl-188 | - [x] **WARN.MD031.cortex-impl-188** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 188 - Add blank line after code fence |
+| 2026-01-28 | WARN.MD031.cortex-impl-192 | - [x] **WARN.MD031.cortex-impl-192** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 192 - Add blank line before code fence |
+| 2026-01-28 | WARN.MD031.cortex-impl-220 | - [x] **WARN.MD031.cortex-impl-220** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 220 - Add blank line before code fence |
+| 2026-01-28 | WARN.MD031.cortex-impl-224 | - [x] **WARN.MD031.cortex-impl-224** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 224 - Add blank line after code fence |
+| 2026-01-28 | WARN.MD032.cortex-impl-260 | - [x] **WARN.MD032.cortex-impl-260** Fix MD032/blanks-around-lists in cortex/IMPLEMENTATION_PLAN.md line 260 - Add blank line before list |
+| 2026-01-28 | WARN.MD032.cortex-impl-265 | - [x] **WARN.MD032.cortex-impl-265** Fix MD032/blanks-around-lists in cortex/IMPLEMENTATION_PLAN.md line 265 - Add blank line before list |
+| 2026-01-28 | WARN.MD022.workers-impl-101 | - [x] **WARN.MD022.workers-impl-101** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 101 - Add blank line after "## DRY-RUN ANALYSIS" |
+| 2026-01-28 | WARN.MD022.workers-impl-105 | - [x] **WARN.MD022.workers-impl-105** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 105 - Add blank line after "### Summary" |
+| 2026-01-28 | WARN.MD032.workers-impl-111 | - [x] **WARN.MD032.workers-impl-111** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 111 - Add blank line before numbered list |
+| 2026-01-28 | WARN.MD032.workers-impl-121 | - [x] **WARN.MD032.workers-impl-121** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 121 - Add blank line before bullet list |
+| 2026-01-28 | WARN.MD022.workers-impl-137 | - [x] **WARN.MD022.workers-impl-137** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 137 - Add blank line after "### Files to Modify" |
+| 2026-01-28 | WARN.MD032.workers-impl-138 | - [x] **WARN.MD032.workers-impl-138** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 138 - Add blank line before list |
+| 2026-01-28 | WARN.MD022.workers-impl-142 | - [x] **WARN.MD022.workers-impl-142** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 142 - Add blank line after "### Verification Commands" |
+| 2026-01-28 | WARN.MD031.workers-impl-143 | - [x] **WARN.MD031.workers-impl-143** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 143 - Add blank line before code fence |
+| 2026-01-28 | WARN.MD022.workers-impl-148 | - [x] **WARN.MD022.workers-impl-148** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 148 - Add blank line after "### Risks & Dependencies" |
+| 2026-01-28 | WARN.MD032.workers-impl-149 | - [x] **WARN.MD032.workers-impl-149** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 149 - Add blank line before list |
+| 2026-01-28 | WARN.MD022.workers-impl-154 | - [x] **WARN.MD022.workers-impl-154** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 154 - Add blank line after "### Time Estimate" |
+| 2026-01-28 | WARN.MD032.workers-impl-155 | - [x] **WARN.MD032.workers-impl-155** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 155 - Add blank line before list |
+| 2026-01-28 | WARN.MD022.workers-impl-160 | - [x] **WARN.MD022.workers-impl-160** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 160 - Add blank line after "### Next Steps" |
+| 2026-01-28 | WARN.MD032.workers-impl-161 | - [x] **WARN.MD032.workers-impl-161** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 161 - Add blank line before numbered list |

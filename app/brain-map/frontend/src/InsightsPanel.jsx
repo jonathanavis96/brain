@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 
+const API_BASE_URL = import.meta.env.VITE_BRAIN_MAP_API_BASE_URL || 'http://localhost:8000'
+
 function InsightsPanel({
   selectedNode,
   editedNode,
@@ -48,7 +50,7 @@ function InsightsPanel({
   useEffect(() => {
     const fetchNodes = async () => {
       try {
-        const response = await fetch('http://localhost:8001/nodes')
+        const response = await fetch(`${API_BASE_URL}/nodes`)
         if (response.ok) {
           const data = await response.json()
           setAvailableNodes(data.nodes || [])
@@ -65,7 +67,7 @@ function InsightsPanel({
     const fetchMetrics = async () => {
       setLoadingMetrics(true)
       try {
-        const response = await fetch('http://localhost:8001/metrics')
+        const response = await fetch(`${API_BASE_URL}/metrics`)
         if (response.ok) {
           const data = await response.json()
           setMetrics(data)
@@ -84,7 +86,7 @@ function InsightsPanel({
     const fetchSuggestions = async () => {
       setLoadingSuggestions(true)
       try {
-        const response = await fetch('http://localhost:8001/insights/suggestions?threshold_days=90')
+        const response = await fetch(`${API_BASE_URL}/insights/suggestions?threshold_days=90`)
         if (response.ok) {
           const data = await response.json()
           setSuggestions(data.suggestions || [])
