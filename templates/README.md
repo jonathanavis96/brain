@@ -34,6 +34,12 @@ All templates use **bash-style forward slash paths** for brain repository refere
 
 RovoDev cannot read files outside its workspace. New projects should vendor a snapshot of Brain knowledge into the repo at `./brain/skills/` during bootstrap.
 
+To refresh that snapshot later, run:
+
+```bash
+bash workers/ralph/sync_brain_skills.sh --from-sibling
+```text
+
 Templates use **relative paths with forward slashes**:
 
 ```markdown

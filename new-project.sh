@@ -376,6 +376,16 @@ else
 fi
 
 # Copy loop.sh with placeholder substitution
+
+# Copy brain skills sync helper into ralph/ (workspace-safe brain snapshot refresh)
+if [ -f "$TEMPLATES_DIR/ralph/sync_brain_skills.sh" ]; then
+  mkdir -p "$PROJECT_LOCATION/ralph"
+  cp "$TEMPLATES_DIR/ralph/sync_brain_skills.sh" "$PROJECT_LOCATION/ralph/sync_brain_skills.sh"
+  chmod +x "$PROJECT_LOCATION/ralph/sync_brain_skills.sh" || true
+  success "Copied ralph/sync_brain_skills.sh"
+else
+  warn "Template not found: ralph/sync_brain_skills.sh"
+fi
 if [ -f "$TEMPLATES_DIR/ralph/loop.sh" ]; then
   cp "$TEMPLATES_DIR/ralph/loop.sh" "$PROJECT_LOCATION/ralph/loop.sh"
   chmod +x "$PROJECT_LOCATION/ralph/loop.sh"
