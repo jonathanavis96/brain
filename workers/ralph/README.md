@@ -251,6 +251,7 @@ Ralph can post build updates to Discord channels via webhooks. This provides rea
 | "webhook not found" error | Regenerate webhook in Discord settings |
 | Messages truncated | Normal - discord-post chunks at 1900 chars automatically |
 | bin/discord-post not found | Ensure you're in correct directory: `cd workers/ralph` |
+| Ralph uses wrong model (shows old Sonnet in session context) | **Root cause:** Default was using `"auto"` which reads from base config instead of explicitly setting model like Cortex does. **Fix:** Ensure `loop.sh` line ~604 sets `MODEL_ARG="gpt52"` (not empty/auto), and that `resolve_model()` returns the full model ID `"gpt-5.2-codex"`. This creates temp config with explicit `modelId` like Cortex pattern. Verify with `echo "Using model:"` output shows `gpt-5.2-codex`. |
 
 ### Technical Details
 

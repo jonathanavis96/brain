@@ -22,6 +22,37 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
+## Phase 0-Warn: Verifier Warnings
+
+**Purpose:** Auto-detected markdown lint issues requiring manual fixes.
+
+- [ ] **WARN.MD032.workers-impl-69** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 69 - Add blank line before list
+- [ ] **WARN.MD031.workers-impl-81** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 81 - Add blank line before code fence
+- [ ] **WARN.MD031.workers-impl-92** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 92 - Add blank line after code fence
+- [ ] **WARN.MD031.workers-impl-97** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 97 - Add blank line before code fence
+- [ ] **WARN.MD031.workers-impl-126** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 126 - Add blank line before code fence
+- [ ] **WARN.MD031.workers-impl-156** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 156 - Add blank line before code fence
+- [ ] **WARN.MD031.workers-impl-186** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 186 - Add blank line before code fence
+- [ ] **WARN.MD031.workers-impl-188** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 188 - Add blank line after code fence
+- [ ] **WARN.MD031.workers-impl-192** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 192 - Add blank line before code fence
+- [ ] **WARN.MD031.workers-impl-220** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 220 - Add blank line before code fence
+- [ ] **WARN.MD031.workers-impl-224** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 224 - Add blank line after code fence
+- [ ] **WARN.MD032.workers-impl-260** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 260 - Add blank line before list
+- [ ] **WARN.MD032.workers-impl-265** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 265 - Add blank line before list
+- [ ] **WARN.MD032.cortex-impl-69** Fix MD032/blanks-around-lists in cortex/IMPLEMENTATION_PLAN.md line 69 - Add blank line before list
+- [ ] **WARN.MD031.cortex-impl-81** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 81 - Add blank line before code fence
+- [ ] **WARN.MD031.cortex-impl-92** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 92 - Add blank line after code fence
+- [ ] **WARN.MD031.cortex-impl-97** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 97 - Add blank line before code fence
+- [ ] **WARN.MD031.cortex-impl-126** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 126 - Add blank line before code fence
+- [ ] **WARN.MD031.cortex-impl-156** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 156 - Add blank line before code fence
+- [ ] **WARN.MD031.cortex-impl-186** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 186 - Add blank line before code fence
+- [ ] **WARN.MD031.cortex-impl-188** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 188 - Add blank line after code fence
+- [ ] **WARN.MD031.cortex-impl-192** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 192 - Add blank line before code fence
+- [ ] **WARN.MD031.cortex-impl-220** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 220 - Add blank line before code fence
+- [ ] **WARN.MD031.cortex-impl-224** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 224 - Add blank line after code fence
+- [ ] **WARN.MD032.cortex-impl-260** Fix MD032/blanks-around-lists in cortex/IMPLEMENTATION_PLAN.md line 260 - Add blank line before list
+- [ ] **WARN.MD032.cortex-impl-265** Fix MD032/blanks-around-lists in cortex/IMPLEMENTATION_PLAN.md line 265 - Add blank line before list
+
 ## Phase 33: Brain Map V2 - Polish & Power Features 🚀
 
 **Context:** Advanced users need temporal visualization, collaboration tools, and export options for real-world knowledge management workflows.
@@ -61,9 +92,292 @@
 ### Task 33.5: Graph Health Metrics
 
 
-- [x] **33.5.3** Actionable suggestions - "Link these 3 orphans", "Update 5 stale notes", "Merge duplicate tags". AC: Suggestions displayed. Verification: Graph with issues → suggestions appear. If Blocked: Manual review only
-
 - [ ] **33.5.4** Trend tracking - Store metrics snapshots daily, show chart of graph growth over time. AC: Trend chart renders. Verification: View trend → line chart shows growth. If Blocked: Current metrics only (no history)
+
+**Discoveries & Notes (DRY-RUN Analysis - 2026-01-28):**
+
+---
+
+## DRY-RUN ANALYSIS: Markdown Lint Fixes (First Unchecked Task)
+**Analysis Date:** 2026-01-28  
+**Task Analyzed:** WARN.MD032.workers-impl-69 (and batch of 13 similar warnings)
+
+### Summary
+First unchecked task in Phase 0-Warn is fixing MD032/blanks-around-lists at line 69. Analysis reveals this is part of a batch of **13 markdown lint warnings** in workers/IMPLEMENTATION_PLAN.md that should be fixed together in ONE iteration per the CROSS-FILE BATCHING rule.
+
+### Pattern Analysis
+
+**Issue Types Found:**
+1. **MD032/blanks-around-lists** (3 instances): Missing blank line before lists at lines 69, 260, 265
+2. **MD031/blanks-around-fences** (10 instances): Missing blank lines around code fences
+   - Before fence: lines 81, 97, 126, 156, 186, 192, 220
+   - After fence: lines 92, 188, 224
+
+**Root Cause:** Code blocks and lists lack proper spacing per markdown best practices.
+
+### Implementation Strategy
+
+**Approach:** Bottom-to-top line insertion using find_and_replace_code
+- Fix order: line 265 → 260 → 224 → 220 → 192 → 188 → 186 → 156 → 126 → 97 → 92 → 81 → 69
+- Bottom-to-top prevents line number shifts during sequential fixes
+
+**Example Fix Pattern:**
+
+```markdown
+# BEFORE (line 69):
+---
+- [ ] **33.5.4** Trend tracking...
+
+# AFTER:
+---
+
+- [ ] **33.5.4** Trend tracking...
+```
+
+### Files to Modify
+- `workers/IMPLEMENTATION_PLAN.md` - Add blank lines at 13 locations
+- `workers/ralph/THUNK.md` - Append completion entry
+- `workers/IMPLEMENTATION_PLAN.md` Phase 0-Warn section - Mark 13 warnings `[x]`
+
+### Verification Commands
+```bash
+markdownlint workers/IMPLEMENTATION_PLAN.md
+# Expected: No MD031 or MD032 errors remain
+```
+
+### Risks & Dependencies
+- **Risk:** Context matching fails if surrounding text is non-unique (mitigate with specific context)
+- **Risk:** Line numbers shift after first fix (mitigated by bottom-to-top order)
+- **Dependency:** All 13 warnings in same file = ONE iteration per BATCHING rule
+- **Note:** Similar issues exist in cortex/IMPLEMENTATION_PLAN.md but "Cortex.* warnings are Cortex's responsibility, not Ralph's" - IGNORE per AGENTS.md
+
+### Time Estimate
+- Analysis: ✅ Complete (this document)
+- Implementation: ~8-10 find_and_replace_code calls
+- Verification: 1 markdownlint call
+- **Total: 1 BUILD iteration**
+
+### Next Steps (when not in dry-run)
+1. Apply 13 fixes bottom-to-top
+2. Verify: `markdownlint workers/IMPLEMENTATION_PLAN.md`
+3. Stage: `git add -A` (includes IMPLEMENTATION_PLAN.md + THUNK.md + this file)
+4. Mark all 13 warnings `[x]` in Phase 0-Warn section
+5. Output: `:::BUILD_READY:::`
+
+---
+
+**Current State:**
+
+- Backend has `get_graph_metrics()` in `app/brain-map/backend/app/index.py` (lines 1557-1651)
+- Returns: node_count, edge_count, avg_degree, orphan_count, num_components, largest_component_size
+- Frontend `InsightsPanel.jsx` fetches from `/metrics` endpoint and displays current snapshot only
+- No historical data storage exists - metrics are computed on-demand from current graph state
+- Database: SQLite index at `app/brain-map/.local/index.db` (nodes, edges tables)
+- Frontend uses graphology for graph layout, no chart library currently installed
+
+**Implementation Approach:**
+
+**Backend Changes (app/brain-map/backend/app/):**
+
+1. **Create new table for metrics history** (`index.py` schema update):
+
+   ```sql
+   CREATE TABLE IF NOT EXISTS metrics_snapshots (
+       snapshot_date TEXT PRIMARY KEY,
+       node_count INTEGER NOT NULL,
+       edge_count INTEGER NOT NULL,
+       avg_degree REAL NOT NULL,
+       orphan_count INTEGER NOT NULL,
+       num_components INTEGER NOT NULL,
+       largest_component_size INTEGER NOT NULL,
+       created_at TEXT NOT NULL
+   )
+   ```
+
+   - Add to `_create_schema()` function
+   - Index on `snapshot_date` for efficient queries
+
+2. **New function: `save_metrics_snapshot()`** (index.py):
+
+   ```python
+   def save_metrics_snapshot() -> dict:
+       """Save current graph metrics as daily snapshot.
+       
+       Returns snapshot with date key. Idempotent - overwrites existing
+       snapshot for same date (YYYY-MM-DD).
+       """
+       metrics = get_graph_metrics()
+       conn = get_index_connection()
+       cursor = conn.cursor()
+       
+       snapshot_date = datetime.now(timezone.utc).date().isoformat()
+       cursor.execute("""
+           INSERT OR REPLACE INTO metrics_snapshots
+           (snapshot_date, node_count, edge_count, avg_degree, 
+            orphan_count, num_components, largest_component_size, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+       """, (snapshot_date, metrics['node_count'], metrics['edge_count'],
+             metrics['avg_degree'], metrics['orphan_count'],
+             metrics['num_components'], metrics['largest_component_size'],
+             datetime.now(timezone.utc).isoformat()))
+       
+       conn.commit()
+       conn.close()
+       
+       return {**metrics, 'snapshot_date': snapshot_date}
+   ```
+
+3. **New function: `get_metrics_trend(days=30)`** (index.py):
+
+   ```python
+   def get_metrics_trend(days: int = 30) -> list[dict]:
+       """Get historical metrics snapshots for trend analysis.
+       
+       Args:
+           days: Number of days to retrieve (default 30)
+           
+       Returns:
+           List of snapshot dicts ordered by date ascending
+       """
+       conn = get_index_connection()
+       cursor = conn.cursor()
+       
+       cutoff_date = (datetime.now(timezone.utc) - timedelta(days=days)).date().isoformat()
+       
+       cursor.execute("""
+           SELECT snapshot_date, node_count, edge_count, avg_degree,
+                  orphan_count, num_components, largest_component_size
+           FROM metrics_snapshots
+           WHERE snapshot_date >= ?
+           ORDER BY snapshot_date ASC
+       """, (cutoff_date,))
+       
+       rows = cursor.fetchall()
+       conn.close()
+       
+       return [dict(row) for row in rows]
+   ```
+
+4. **New API endpoint** (main.py):
+
+   ```python
+   @app.get("/metrics/trend")
+   async def get_metrics_trend_endpoint(days: int = 30) -> dict:
+       """Get historical metrics trend.
+       
+       Query params:
+           days: Number of days of history (default 30, max 365)
+       
+       Returns:
+           {"snapshots": [...], "count": N}
+       """
+       from app.index import get_metrics_trend
+       
+       # Clamp days to reasonable range
+       days = max(1, min(days, 365))
+       
+       try:
+           snapshots = get_metrics_trend(days)
+           return {"snapshots": snapshots, "count": len(snapshots)}
+       except FileNotFoundError:
+           raise HTTPException(status_code=503, detail="Index not available")
+   ```
+
+5. **Automatic snapshot on rebuild** (index.py `rebuild_index()`):
+   - Add call to `save_metrics_snapshot()` at end of successful rebuild
+   - Ensures daily snapshot when index rebuilds (watcher triggers this)
+
+**Frontend Changes (app/brain-map/frontend/):**
+
+1. **Install chart library** (package.json):
+
+   ```bash
+   npm install recharts
+   ```
+
+   - Recharts: React charting library, good for line charts, responsive
+
+2. **New component: `TrendChart.jsx`**:
+
+   ```jsx
+   import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+   
+   export default function TrendChart({ trendData }) {
+     if (!trendData || trendData.length === 0) {
+       return <div>No trend data available. Snapshots accumulate daily.</div>
+     }
+     
+     return (
+       <ResponsiveContainer width="100%" height={300}>
+         <LineChart data={trendData}>
+           <CartesianGrid strokeDasharray="3 3" />
+           <XAxis dataKey="snapshot_date" />
+           <YAxis />
+           <Tooltip />
+           <Legend />
+           <Line type="monotone" dataKey="node_count" stroke="#8884d8" name="Nodes" />
+           <Line type="monotone" dataKey="edge_count" stroke="#82ca9d" name="Edges" />
+           <Line type="monotone" dataKey="orphan_count" stroke="#ff7300" name="Orphans" />
+         </LineChart>
+       </ResponsiveContainer>
+     )
+   }
+   ```
+
+3. **Update InsightsPanel.jsx**:
+   - Add state: `const [trendData, setTrendData] = useState([])`
+   - Add fetch in useEffect:
+
+     ```jsx
+     const trendResponse = await fetch('http://localhost:8001/metrics/trend?days=30')
+     const trendJson = await trendResponse.json()
+     setTrendData(trendJson.snapshots)
+     ```
+
+   - Add tab or section for "Trend" chart
+   - Render `<TrendChart trendData={trendData} />`
+
+**Risks & Dependencies:**
+
+1. **Schema migration**: Adding table to existing index.db requires rebuild
+   - Solution: Schema changes in `_create_schema()` use `CREATE TABLE IF NOT EXISTS`
+   - First rebuild after change will create table automatically
+
+2. **Empty trend data initially**: No historical data until snapshots accumulate
+   - Mitigation: Frontend shows "No trend data" message, graceful degradation
+   - Alternative: Seed with current snapshot immediately
+
+3. **Snapshot frequency**: Spec says "daily" but no automatic trigger exists
+   - Option A: Call `save_metrics_snapshot()` at end of `rebuild_index()` (chosen)
+   - Option B: Add cron job or background task (more complex)
+   - Option C: Manual trigger via API endpoint (requires human action)
+
+4. **Chart library choice**: Recharts vs alternatives (Chart.js, Victory)
+   - Recharts: React-first, declarative, good for this use case
+   - Already using React, minimal bundle size impact
+
+5. **Data retention**: No automatic cleanup of old snapshots
+   - Could add later: DELETE snapshots older than 1 year
+   - Low priority - disk usage is minimal
+
+**Files to Modify:**
+
+- `app/brain-map/backend/app/index.py` (schema, 2 new functions, snapshot call in rebuild)
+- `app/brain-map/backend/app/main.py` (new `/metrics/trend` endpoint)
+- `app/brain-map/frontend/package.json` (add recharts dependency)
+- `app/brain-map/frontend/src/TrendChart.jsx` (NEW FILE - chart component)
+- `app/brain-map/frontend/src/InsightsPanel.jsx` (fetch trend data, render chart)
+
+**Estimated Complexity:**
+
+- Backend: ~80 lines (schema + 2 functions + endpoint)
+- Frontend: ~60 lines (new component + integration)
+- Total: Medium complexity, straightforward implementation
+
+**Acceptance Criteria Verification:**
+
+- AC: "Trend chart renders" → Test by opening metrics tab, verify chart displays
+- Verification: "View trend → line chart shows growth" → Add nodes, rebuild, check next day's snapshot shows increased count
 
 ---
 
