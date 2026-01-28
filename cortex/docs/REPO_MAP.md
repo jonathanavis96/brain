@@ -6,7 +6,7 @@ This document provides a human-friendly overview of the Brain repository structu
 
 ## Top-Level Folders
 
-### `cortex/` - Manager Layer (Opus 4.5)
+### `cortex/` - Manager Layer (GPT-5.2-Codex)
 
 **Purpose:** High-level planning, task delegation, and strategic oversight.
 
@@ -43,7 +43,7 @@ This document provides a human-friendly overview of the Brain repository structu
 
 **Current Workers:**
 
-- `ralph/` - Shell-based loop executor (Sonnet 4.5)
+- `ralph/` - Shell-based loop executor (GPT-5.2-Codex)
   - `loop.sh` - Main execution loop (PLAN/BUILD cycles)
   - `PROMPT.md` - Ralph's instructions and operational rules
   - `verifier.sh` - Acceptance criteria validation

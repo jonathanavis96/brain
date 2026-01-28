@@ -39,7 +39,7 @@ This file documents **architectural decisions, naming conventions, style prefere
 **Rationale:**
 
 - Ensures all planning sessions produce **atomic, actionable, testable** subtasks
-- Separates planning (Cortex/Opus) from execution (Ralph/Sonnet)
+- Separates planning (Cortex/GPT-5.2-Codex) from execution (Ralph/GPT-5.2-Codex)
 - Provides consistent context bootstrapping for Opus sessions
 - Prepares architecture for future parallel workers (e.g., Rust specialist, Python specialist)
 
@@ -106,7 +106,7 @@ brain/
 - Predictable behavior across environments
 - `rovodev-config.yml` is for user overrides, not defaults
 - Usage text updated to reflect this choice
-- Opus (Claude Opus 4.5) reserved for Cortex planning mode
+- GPT-5.2-Codex (`gpt-5.2-codex`) reserved for Cortex planning mode
 
 ### 2026-01-17: Maintenance System
 
