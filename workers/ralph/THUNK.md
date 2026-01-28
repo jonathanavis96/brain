@@ -1162,3 +1162,7 @@ Started: 2026-01-18
 | 1157 | WARN.MD032.CORTEX_SYSTEM_PROMPT | BUILD | Verified auto-fix resolved MD032/blanks-around-lists in cortex/CORTEX_SYSTEM_PROMPT.md - markdownlint passes | 2026-01-28 |
 | 1158 | WARN.MD022.CORTEX_SYSTEM_PROMPT | BUILD | Verified auto-fix resolved MD022/blanks-around-headings in cortex/CORTEX_SYSTEM_PROMPT.md - markdownlint passes | 2026-01-28 |
 | 1159 | 35.2.3 | BUILD | Fixed bootstrap script path detection bugs - setup.sh and new-project.sh now correctly resolve BRAIN_ROOT; added --local-only flag for non-interactive testing | 2026-01-28 |
+| 1160 | 35.3.1 | BUILD | Fixed MD034 bare URLs in business-ideas.md - converted parenthetical URL format to dash-separated format for markdown compliance | 2026-01-28 |
+| 1161 | 35.3.2 | BUILD | Validated code examples in skills/ - all examples passed validation without errors | 2026-01-28 |
+| 1162 | 35.3.3 | BUILD | Updated NEURONS.md - added scripts/ and state/ directories to structure map, refreshed file counts (387 MD, 77 shell, 6589 total files, 449 directories) | 2026-01-28 |
+| 1163 | 35.3.4 | BUILD | Refreshed skills/SUMMARY.md - added 9 missing skill references: code-review-patterns, semantic-code-review, thread-search-patterns, tool-wrapper-patterns, discord-webhook-patterns, secrets-management, component-architecture, vue-patterns, go-patterns, javascript-patterns | 2026-01-28 |
