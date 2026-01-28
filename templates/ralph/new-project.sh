@@ -244,6 +244,16 @@ success "Created workers/ralph/ directory"
 
 info "Copying Ralph templates..."
 
+# Create Cortex gap capture file (cross-project pattern mining)
+if [ -f "$TEMPLATES_DIR/cortex/GAP_CAPTURE.project.md" ]; then
+  mkdir -p "$PROJECT_LOCATION/cortex"
+  cp "$TEMPLATES_DIR/cortex/GAP_CAPTURE.project.md" "$PROJECT_LOCATION/cortex/GAP_CAPTURE.md"
+  substitute_placeholders "$PROJECT_LOCATION/cortex/GAP_CAPTURE.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Created cortex/GAP_CAPTURE.md"
+else
+  warn "Template not found: cortex/GAP_CAPTURE.project.md"
+fi
+
 # Copy AGENTS.md
 if [ -f "$TEMPLATES_DIR/AGENTS.project.md" ]; then
   cp "$TEMPLATES_DIR/AGENTS.project.md" "$PROJECT_LOCATION/workers/ralph/AGENTS.md"
@@ -342,6 +352,15 @@ else
 fi
 
 # Copy verifier and rules
+
+# Copy gap capture helper (cross-project pattern mining)
+if [ -f "$TEMPLATES_DIR/ralph/capture_gap.sh" ]; then
+  cp "$TEMPLATES_DIR/ralph/capture_gap.sh" "$PROJECT_LOCATION/workers/ralph/capture_gap.sh"
+  chmod +x "$PROJECT_LOCATION/workers/ralph/capture_gap.sh" || true
+  success "Copied workers/ralph/capture_gap.sh"
+else
+  warn "Template not found: ralph/capture_gap.sh"
+fi
 
 # Copy brain skills sync helper
 if [ -f "$TEMPLATES_DIR/ralph/sync_brain_skills.sh" ]; then

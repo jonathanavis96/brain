@@ -75,8 +75,19 @@ When you discover a new convention, architectural decision, or project-specific 
 1. If you used undocumented knowledge/procedure/tooling:
    - Search `./brain/skills/` for existing matching skill
    - Search `cortex/GAP_CAPTURE.md` for existing local gap entry
-   - If not found: append new entry to `cortex/GAP_CAPTURE.md`
+   - If not found: append new entry to `cortex/GAP_CAPTURE.md` (or use the helper below)
    - Create marker: `touch cortex/.gap_pending`
+
+**Helper (recommended):**
+
+```bash
+bash workers/ralph/capture_gap.sh "Suggested Skill Name" \
+  --type "Pattern" \
+  --priority "P1" \
+  --why "1-2 lines" \
+  --trigger "what you were doing" \
+  --evidence "paths/notes"
+```text
 2. Brain's Cortex will sync gaps on next session (see Rule 6: Marker Protocol)
 
 ## Parallelism Rule
