@@ -64,7 +64,7 @@ Open `templates/ralph/README.md` and check the **Template Sync Policy** section.
 - `verifier.sh` - Core verification logic
 - `current_ralph_tasks.sh` - Monitor display (minor differences allowed)
 - `thunk_ralph_tasks.sh` - Monitor display
-- `sync_cortex_plan.sh` - Cortex integration
+- `sync_workers_plan_to_cortex.sh` - Plan copy (workers → cortex)
 - `pr-batch.sh` - PR automation
 - `init_verifier_baselines.sh` - Baseline initialization
 

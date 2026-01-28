@@ -1,5 +1,9 @@
 # Cortex-Ralph Task Synchronization Protocol
 
+> **Reality check (2026-01-28):** In this repository, the canonical execution plan is `workers/IMPLEMENTATION_PLAN.md`.
+> `cortex/IMPLEMENTATION_PLAN.md` is a read-only mirror copied from workers for review/visibility.
+> There is no "sync completions back to cortex" step; completion tracking lives in `workers/` (`PLAN_DONE.md`, `THUNK.md`).
+
 ## Overview
 
 This document defines how tasks flow from Cortex (strategic manager) to Ralph (execution worker) through an automated synchronization system.
@@ -20,143 +24,63 @@ Cortex (Manager)                    Ralph (Worker)
 
 ### When Sync Occurs
 
-- **Trigger**: Before every `bash workers/ralph/loop.sh` execution
-- **Location**: Line ~937 in `loop.sh` (after monitors launch, before iteration loop starts)
-- **Script**: `bash cortex/sync_cortex_plan.sh` (called automatically by loop.sh)
+- **Trigger**: At the start of `bash workers/ralph/loop.sh`
+- **Location**: `workers/ralph/loop.sh` invokes the sync script before iterations begin
+- **Script**: `bash workers/ralph/sync_workers_plan_to_cortex.sh` (called automatically by `workers/ralph/loop.sh`)
+- **Behavior**: Copies `workers/IMPLEMENTATION_PLAN.md` → `cortex/IMPLEMENTATION_PLAN.md` for review/visibility
 
 ### Sync Logic Flow
 
 ```bash
-# Pseudocode for sync_cortex_plan.sh
+# Pseudocode for sync (current implementation)
 
-cortex_plan = "cortex/IMPLEMENTATION_PLAN.md"
-ralph_plan = "workers/IMPLEMENTATION_PLAN.md"
+workers_plan = "workers/IMPLEMENTATION_PLAN.md"   # canonical
+cortex_plan  = "cortex/IMPLEMENTATION_PLAN.md"    # mirror for review
 
-# CASE A: First Time (Bootstrap)
-if ralph_plan does not exist:
-    copy cortex_plan → ralph_plan
-    add marker "<!-- SYNCED_FROM_CORTEX: YYYY-MM-DD -->" to each task
-    exit
-
-# CASE B: Cortex Has Updates
-if cortex_plan is newer than ralph_plan:
-    for each task in cortex_plan:
-        if task not in ralph_plan:
-            append task to ralph_plan
-            add marker "<!-- SYNCED_FROM_CORTEX: YYYY-MM-DD -->"
-    exit
-
-# CASE C: No Updates Needed
-else:
-    log "Ralph's plan is current"
-    exit
+# Behavior
+# - Copy the canonical plan for visibility
+cp "$workers_plan" "$cortex_plan"
+exit 0
 ```text
 
-## Task Markers
+## Task Markers (Deprecated)
 
-### Synced Task Format
+This repository previously experimented with `<!-- SYNCED_FROM_CORTEX: ... -->` markers. The current implementation does **not** use task markers; it simply copies the full workers plan into cortex for review.
 
-When a task is synced from Cortex to Ralph, it receives a marker:
+### Deprecated Marker Examples
+
+Older plan formats included marker lines like `<!-- SYNCED_FROM_CORTEX: ... -->`. These are not used in the current implementation and can be ignored if encountered in historical artifacts.
+
+**Important**: Task status and history are tracked via:
+- `workers/PLAN_DONE.md` (archived task blocks)
+- `workers/ralph/THUNK.md` (completion log)
+
+## Workflow Example (Current Reality)
+
+### Step 1: Write tasks in the canonical plan
+
+Add tasks directly to `workers/IMPLEMENTATION_PLAN.md`.
+
+### Step 2: Start Ralph
+
+When you run `bash workers/ralph/loop.sh`, it will copy the workers plan into `cortex/IMPLEMENTATION_PLAN.md` for visibility at loop start.
+
+### Step 3: Ralph executes tasks
+
+Ralph executes tasks from `workers/IMPLEMENTATION_PLAN.md` and logs completions in `workers/ralph/THUNK.md`. Completed tasks are archived from the plan into `workers/PLAN_DONE.md` by `workers/ralph/cleanup_plan.sh`.
+
+## Task Contract Format (Required)
+
+All tasks in `workers/IMPLEMENTATION_PLAN.md` must use this contract format:
 
 ```markdown
-- [ ] **1.3** Fix broken links in skills files
-  <!-- SYNCED_FROM_CORTEX: 2026-01-21 -->
+- [ ] **X.Y** Short description
+  - **Goal:** What to achieve
+  - **AC:** How to verify
+  - **If Blocked:** Fallback guidance
 ```text
 
-### Detection Logic
-
-The sync script identifies already-synced tasks by:
-
-1. Matching task ID pattern: `**X.Y**`
-2. Checking for marker: `<!-- SYNCED_FROM_CORTEX: YYYY-MM-DD -->`
-
-### Ralph's Extensions
-
-Ralph may add subtasks to synced tasks:
-
-```markdown
-- [ ] **1.3** Fix broken links in skills files
-  <!-- SYNCED_FROM_CORTEX: 2026-01-21 -->
-  - [ ] **1.3.1** Scan all .md files for broken links
-  - [ ] **1.3.2** Update link references
-  - [x] **1.3.3** Verify all links resolve
-```text
-
-**Important**: Ralph NEVER modifies Cortex's original task text. Only adds subtasks below.
-
-## Workflow Example
-
-### Step 1: Cortex Creates Tasks
-
-You (Cortex) update `cortex/IMPLEMENTATION_PLAN.md`:
-
-```markdown
-## Phase 1: Quick Fixes
-
-- [x] **1.1** Review repository structure
-- [ ] **1.2** Copy SKILL_TEMPLATE to templates/
-- [ ] **1.3** Fix broken links in skills files
-```text
-
-### Step 2: Ralph Receives Tasks (First Sync)
-
-When Ralph runs `loop.sh`, sync creates `workers/IMPLEMENTATION_PLAN.md`:
-
-```markdown
-## Phase 1: Quick Fixes
-
-- [x] **1.1** Review repository structure
-  <!-- SYNCED_FROM_CORTEX: 2026-01-21 -->
-  
-- [ ] **1.2** Copy SKILL_TEMPLATE to templates/
-  <!-- SYNCED_FROM_CORTEX: 2026-01-21 -->
-  
-- [ ] **1.3** Fix broken links in skills files
-  <!-- SYNCED_FROM_CORTEX: 2026-01-21 -->
-```text
-
-### Step 3: Ralph Adds Execution Details
-
-Ralph expands task 1.2 with subtasks:
-
-```markdown
-- [ ] **1.2** Copy SKILL_TEMPLATE to templates/
-  <!-- SYNCED_FROM_CORTEX: 2026-01-21 -->
-  - [ ] **1.2.1** Verify source file exists
-  - [ ] **1.2.2** Create templates/ directory if missing
-  - [x] **1.2.3** Copy file with proper permissions
-```text
-
-### Step 4: Cortex Adds New Task
-
-You add task 1.4 to Cortex's plan:
-
-```markdown
-- [ ] **1.4** Update terminology in templates
-```text
-
-### Step 5: Next Ralph Sync (Incremental)
-
-On next `loop.sh` run, sync detects:
-
-- Tasks 1.1, 1.2, 1.3 already have `SYNCED_FROM_CORTEX` markers → skip
-- Task 1.4 is new → append to Ralph's plan
-
-Result in `workers/IMPLEMENTATION_PLAN.md`:
-
-```markdown
-- [ ] **1.2** Copy SKILL_TEMPLATE to templates/
-  <!-- SYNCED_FROM_CORTEX: 2026-01-21 -->
-  - [ ] **1.2.1** Verify source file exists
-  - [ ] **1.2.2** Create templates/ directory if missing
-  - [x] **1.2.3** Copy file with proper permissions
-  
-- [ ] **1.3** Fix broken links in skills files
-  <!-- SYNCED_FROM_CORTEX: 2026-01-21 -->
-  
-- [ ] **1.4** Update terminology in templates
-  <!-- SYNCED_FROM_CORTEX: 2026-01-21 -->  ← newly synced
-```text
+**Enforcement:** `workers/ralph/cleanup_plan.sh` will fail with an error if it detects a pending task missing any of **Goal**, **AC**, or **If Blocked**.
 
 ## Cortex's Responsibilities
 
@@ -216,7 +140,7 @@ Check these indicators in your snapshot:
 **Next Ralph Tasks:** None pending
 ```text
 
-**Action**: Create new task contracts in `cortex/IMPLEMENTATION_PLAN.md`. They'll sync automatically on Ralph's next loop.
+**Action**: Add new tasks directly to `workers/IMPLEMENTATION_PLAN.md` (canonical), using the Task Contract Format below. On the next loop start, the plan will be copied into `cortex/IMPLEMENTATION_PLAN.md` for review.
 
 ### How Ralph Knows Tasks Are Stale
 
@@ -348,29 +272,15 @@ When reviewing Ralph's progress, check:
 - ✅ Git history shows all changes
 - ✅ Manual intervention points clearly marked
 
-## Implementation Status
-
-**Current**: Planning complete, ready for implementation
-**Next Step**: Create `cortex/sync_cortex_plan.sh` script
-**Estimated Effort**: 2-3 hours for Ralph to implement and test
-
----
-
 ## Quick Reference
 
 ```bash
-# Sync script location
-brain/cortex/sync_cortex_plan.sh
+# Copy canonical plan to cortex for review
+bash workers/ralph/sync_workers_plan_to_cortex.sh
 
-# Called by
-brain/workers/ralph/loop.sh (line ~937)
+# Canonical plan
+$EDITOR workers/IMPLEMENTATION_PLAN.md
 
-# Task marker format
-<!-- SYNCED_FROM_CORTEX: YYYY-MM-DD -->
-
-# Check if sync needed
-[[ "cortex/IMPLEMENTATION_PLAN.md" -nt "workers/IMPLEMENTATION_PLAN.md" ]]
-
-# View synced tasks
-grep -B 1 "SYNCED_FROM_CORTEX" workers/IMPLEMENTATION_PLAN.md
+# Cleanup/archival (enforces task contract format; archives full completed blocks)
+bash workers/ralph/cleanup_plan.sh
 ```text

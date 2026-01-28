@@ -112,7 +112,7 @@ Proposed:
 - [ ] **9C.2.B1** BATCH: ...
 ```
 
-**Never add tasks above the marker** - this breaks `sync_cortex_plan.sh`.
+**Never add tasks above the marker** - this breaks the plan-copy step (workers → cortex).
 
 ---
 

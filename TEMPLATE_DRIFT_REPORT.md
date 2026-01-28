@@ -32,7 +32,7 @@ These exist only in `workers/ralph/` and should NOT be templated:
 | `VALIDATION_CRITERIA.md` | Brain validation rules | ❌ No (project-specific) |
 | `PROMPT_cerebras.md` | Cerebras agent variant | ❌ No (experimental) |
 | `ralph.sh` | Brain convenience wrapper | ❌ No (local tooling) |
-| `sync_completions_to_cortex.sh` | Brain-Cortex sync | ❌ No (Brain-specific workflow) |
+| `sync_completions_to_cortex.sh` | Brain-Cortex sync | ❌ Deprecated (not used) |
 
 ### 2. Template-Only Files (Expected - Scaffolding)
 
@@ -146,7 +146,7 @@ All core scripts verified identical in functionality:
 | `init_verifier_baselines.sh` | ✅ | ✅ | Identical |
 | `pr-batch.sh` | ✅ | ✅ | Path context only |
 | `render_ac_status.sh` | ✅ | ✅ | Identical |
-| `sync_cortex_plan.sh` | ✅ | ✅ | Identical |
+| `sync_workers_plan_to_cortex.sh` | ✅ | ✅ | Copied/renamed |
 | `new-project.sh` | ✅ | ✅ | Path context only |
 | `cerebras_agent.py` | ✅ | ✅ | Minor version differences |
 
