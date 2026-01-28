@@ -8,26 +8,28 @@ set -euo pipefail
 #   discord-post --file FILE [OPTIONS]
 #
 # Options:
-#   --file FILE       Read input from file instead of stdin
-#   --dry-run        Print payload without sending
-#   --help           Show this help message
+#   --file FILE         Read input from file instead of stdin
+#   --max-length N      Override max message length (default: 1900, or DISCORD_MAX_LENGTH)
+#   --dry-run           Print payload(s) without sending
+#   --help              Show this help message
 #
 # Environment:
-#   DISCORD_WEBHOOK_URL   Discord webhook URL (required unless --dry-run)
+#   DISCORD_WEBHOOK_URL    Discord webhook URL (required unless --dry-run)
+#   DISCORD_MAX_LENGTH     Max chars per message (optional; default: 1900)
 #
 # Features:
-#   - Chunks messages at 1900 chars (safety margin from 2000 limit)
-#   - Sends as JSON with code block formatting
-#   - Non-blocking: exits 0 even if webhook fails
+#   - Chunks messages at <= max length (default 1900; safety margin from 2000 limit)
+#   - Prefers splitting on newline boundaries for readability
+#   - Non-blocking: exits 0 if webhook fails OR webhook is missing
 
 usage() {
-  sed -n '3,17p' "$0" | sed 's/^# //' | sed 's/^#//'
+  sed -n '3,22p' "$0" | sed 's/^# //' | sed 's/^#//'
   exit 0
 }
 
-# Parse arguments
 DRY_RUN=false
 INPUT_FILE=""
+MAX_LENGTH="${DISCORD_MAX_LENGTH:-1900}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -37,6 +39,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --file)
       INPUT_FILE="$2"
+      shift 2
+      ;;
+    --max-length)
+      MAX_LENGTH="$2"
       shift 2
       ;;
     --help)
@@ -50,6 +56,11 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if ! [[ "$MAX_LENGTH" =~ ^[0-9]+$ ]] || [[ "$MAX_LENGTH" -lt 1 ]]; then
+  echo "Error: --max-length must be a positive integer" >&2
+  exit 1
+fi
+
 # Read input
 if [[ -n "$INPUT_FILE" ]]; then
   if [[ ! -f "$INPUT_FILE" ]]; then
@@ -61,65 +72,89 @@ else
   MESSAGE=$(cat)
 fi
 
-# Check webhook URL (unless dry-run)
+# Missing webhook is non-fatal (observability helper should never break callers)
 if [[ "$DRY_RUN" == "false" ]] && [[ -z "${DISCORD_WEBHOOK_URL:-}" ]]; then
-  echo "Error: DISCORD_WEBHOOK_URL not set" >&2
-  echo "Set the environment variable or use --dry-run for testing" >&2
-  exit 1
+  echo "Warning: DISCORD_WEBHOOK_URL not set; skipping Discord post" >&2
+  exit 0
 fi
 
-# Chunk message at 1900 chars (safety margin from 2000 Discord limit)
-CHUNK_SIZE=1900
-MESSAGE_LEN=${#MESSAGE}
+# Split MESSAGE into CHUNKS, preferring newline boundaries.
+# If an individual line exceeds MAX_LENGTH, it is hard-split.
+readarray -d '' -t CHUNKS < <(
+  printf '%s' "$MESSAGE" | awk -v max="$MAX_LENGTH" '
+  function flush() {
+    if (buf_len > 0) {
+      printf "%s\0", buf
+      buf = ""
+      buf_len = 0
+    }
+  }
+  function emit_hard_split(line,    part) {
+    while (length(line) > max) {
+      part = substr(line, 1, max)
+      printf "%s\0", part
+      line = substr(line, max + 1)
+    }
+    return line
+  }
+  BEGIN {
+    buf = ""
+    buf_len = 0
+  }
+  {
+    line = $0
 
-if [[ $MESSAGE_LEN -le $CHUNK_SIZE ]]; then
-  # Single message
-  CHUNKS=("$MESSAGE")
-else
-  # Split into chunks
-  CHUNKS=()
-  OFFSET=0
-  while [[ $OFFSET -lt $MESSAGE_LEN ]]; do
-    CHUNK="${MESSAGE:$OFFSET:$CHUNK_SIZE}"
-    CHUNKS+=("$CHUNK")
-    OFFSET=$((OFFSET + CHUNK_SIZE))
-  done
-fi
+    # Hard split very long single lines.
+    if (length(line) > max) {
+      flush()
+      line = emit_hard_split(line)
+      if (length(line) == 0) next
+    }
 
-# Send each chunk
+    add_len = length(line) + 1  # + newline
+
+    if (buf_len > 0 && (buf_len + add_len) > max) {
+      flush()
+    }
+
+    buf = buf line "\n"
+    buf_len += add_len
+  }
+  END { flush() }
+  '
+)
+
 CHUNK_COUNT=${#CHUNKS[@]}
 for i in "${!CHUNKS[@]}"; do
   CHUNK="${CHUNKS[$i]}"
 
-  # Add chunk header if multiple chunks
   if [[ $CHUNK_COUNT -gt 1 ]]; then
-    CONTENT="[Part $((i + 1))/$CHUNK_COUNT]\\n\\n${CHUNK}"
+    CONTENT="[Part $((i + 1))/$CHUNK_COUNT]\n\n${CHUNK}"
   else
     CONTENT="${CHUNK}"
   fi
 
-  # Escape JSON special characters
-  CONTENT=$(echo -e "$CONTENT" | jq -Rs .)
-
-  # Build JSON payload
+  # Escape JSON safely
+  CONTENT=$(printf "%b" "$CONTENT" | jq -Rs .)
   PAYLOAD="{\"content\": ${CONTENT}}"
 
   if [[ "$DRY_RUN" == "true" ]]; then
     echo "=== DRY RUN: Chunk $((i + 1))/$CHUNK_COUNT ==="
     echo "$PAYLOAD" | jq .
-  else
-    # Send to Discord (non-blocking - errors logged but don't fail)
-    if ! curl -s -X POST \
-      -H "Content-Type: application/json" \
-      -d "$PAYLOAD" \
-      "${DISCORD_WEBHOOK_URL}" >/dev/null 2>&1; then
-      echo "Warning: Failed to send chunk $((i + 1))/$CHUNK_COUNT to Discord" >&2
-    fi
+    continue
+  fi
 
-    # Rate limit protection: 50ms delay between chunks
-    if [[ $((i + 1)) -lt $CHUNK_COUNT ]]; then
-      sleep 0.05
-    fi
+  # Send to Discord (non-blocking)
+  if ! curl -s -X POST \
+    -H "Content-Type: application/json" \
+    -d "$PAYLOAD" \
+    "${DISCORD_WEBHOOK_URL}" >/dev/null 2>&1; then
+    echo "Warning: Failed to send chunk $((i + 1))/$CHUNK_COUNT to Discord" >&2
+  fi
+
+  # Rate limit protection: small delay between chunks
+  if [[ $((i + 1)) -lt $CHUNK_COUNT ]]; then
+    sleep 0.05
   fi
 done
 

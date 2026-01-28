@@ -406,7 +406,7 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-27 | 32.3.3 | - [x] **32.3.3** Implement view sharing - "Share View" generates URL with encoded filter params (e.g., `/graph?view=base64encodedstate`). AC: Copy link, open in new tab → same view. Verification: Share link to another user → they see same filtered graph. If Blocked: Copy filter JSON to clipboard |
 | 2026-01-27 | 32.3.4 | - [x] **32.3.4** Add default views - Preset views: "All Tasks", "Blocked Items", "Recent Activity (7d)", "Orphans". AC: Default views available on first load. Verification: Fresh session → 4 default views shown. If Blocked: Just document filter examples in help |
 
-### Archived on 2026-01-28
+### Archived on 2026-01-28 (Phase 32-33 Tasks)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
@@ -437,3 +437,16 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | Date | Task ID | Description |
 |------|---------|-------------|
 | 2026-01-28 | 0.W.MD012.workers/PLAN_DONE.md | - [x] **0.W.MD012.workers/PLAN_DONE.md** Fix MD012 in workers/PLAN_DONE.md |
+
+### Archived on 2026-01-28 (Lint Fixes)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-28 | 0-Lint.1.1 | - [x] **0-Lint.1.1** Fix MD004/ul-style errors in cortex/docs/MindMerge_MindMerge-PR.md |
+| 2026-01-28 | 36.1.2 | - [x] **36.1.2** Remove hover/zoom label duplication by matching default placement and ensuring hover "upgrades" the same label |
+
+### Archived on 2026-01-28
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-28 | 0.1.1 | - [x] **0.1.1** Fix MD004 in cortex/docs/MindMerge_MindMerge-PR.md |

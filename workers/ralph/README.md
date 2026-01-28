@@ -245,6 +245,18 @@ Ralph can post build updates to Discord channels via webhooks. This provides rea
 
 ### Troubleshooting
 
+**Discord sanity check (recommended first):** If iteration summaries aren’t appearing, start by posting *known-good* content via stdin:
+
+```bash
+cat /path/to/known_good_summary.txt | bin/discord-post
+```
+
+Avoid constructing Discord Markdown with backticks in bash strings (backticks trigger command substitution). Use a quoted heredoc (`<<'EOF'`) or pipe content from a file.
+
+
+**Python:** If you see `bash: python: command not found`, use `python3` (this repo’s scripts assume `python3`).
+
+
 | Issue | Solution |
 | ----- | -------- |
 | No messages appearing | Check `DISCORD_WEBHOOK_URL` is set: `echo $DISCORD_WEBHOOK_URL` |

@@ -599,12 +599,17 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
 
           // Draw label background pill (same geometry as hover)
           const isHovered = data.hovered
+
+          // Dark mode check: if theme.background is dark (#1a1a1a), use white text for base labels
+          const isDarkMode = theme?.background === '#1a1a1a'
+
+          // Background: white on hover, dark semi-transparent otherwise
           context.fillStyle = isHovered ? '#FFF' : 'rgba(0, 0, 0, 0.7)'
           context.shadowOffsetX = 0
           context.shadowOffsetY = 0
           context.shadowBlur = isHovered ? 8 : 4
           context.shadowColor = isHovered ? '#000' : 'rgba(0, 0, 0, 0.5)'
-          
+
           const PADDING = 2
           if (typeof data.label === 'string') {
             const textWidth = context.measureText(data.label).width
@@ -613,7 +618,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
             const radius = Math.max(data.size, size / 2) + PADDING
             const angleRadian = Math.asin(boxHeight / 2 / radius)
             const xDeltaCoord = Math.sqrt(Math.abs(Math.pow(radius, 2) - Math.pow(boxHeight / 2, 2)))
-            
+
             context.beginPath()
             context.moveTo(data.x + xDeltaCoord, data.y + boxHeight / 2)
             context.lineTo(data.x + radius + boxWidth, data.y + boxHeight / 2)
@@ -622,13 +627,16 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
             context.arc(data.x, data.y, radius, angleRadian, -angleRadian)
             context.closePath()
             context.fill()
-            
+
             context.shadowOffsetX = 0
             context.shadowOffsetY = 0
             context.shadowBlur = 0
 
-            // Draw label text (color adapts to background)
-            context.fillStyle = isHovered ? '#000' : (theme?.text || '#fff')
+            // Draw label text (color adapts to mode and hover state)
+            // Hover: black text on white pill (both modes)
+            // Base dark mode: white text on dark pill
+            // Base light mode: use theme text color on dark pill
+            context.fillStyle = isHovered ? '#000' : (isDarkMode ? '#fff' : (theme?.text || '#333'))
             context.fillText(data.label, data.x + radius + 3, data.y + size / 3)
           }
         }
@@ -1422,6 +1430,9 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
           title={layoutLocked ? 'Layout Locked (Manual Mode) - Click to enable auto-layout' : 'Auto-Layout Active - Click to lock for manual positioning'}
         >
           {layoutLocked ? '🔒 Locked' : '🔓 Auto'}
+          <span style={{ fontSize: '10px', opacity: 0.7, marginLeft: '4px' }}>
+            (layoutLocked={layoutLocked.toString()})
+          </span>
         </button>
       </div>
 

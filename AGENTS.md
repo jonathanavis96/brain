@@ -229,6 +229,9 @@ See `skills/SUMMARY.md` → Error Quick Reference for common errors and fixes.
 
 **WSL/Windows 11 Specifics:**
 
+**Python in WSL:** Use `python3` (not `python`). Many WSL distros do not provide a `python` shim by default. When writing commands/scripts, prefer `python3` explicitly and use `python -m ...` only if you’ve verified the environment provides it.
+
+
 - Working directory: `/mnt/c/...` or `/home/...` depending on where repository is cloned
 - Git line endings: Use `core.autocrlf=input` to avoid CRLF issues
 - File permissions: WSL handles Unix permissions on Windows filesystem
