@@ -321,8 +321,8 @@ fi
 
 info "Creating project directory structure..."
 mkdir -p "$PROJECT_LOCATION"
-mkdir -p "$PROJECT_LOCATION/ralph"
-mkdir -p "$PROJECT_LOCATION/ralph/logs"
+mkdir -p "$PROJECT_LOCATION/workers/ralph"
+mkdir -p "$PROJECT_LOCATION/workers/ralph/logs"
 mkdir -p "$PROJECT_LOCATION/skills"
 mkdir -p "$PROJECT_LOCATION/src"
 mkdir -p "$PROJECT_LOCATION/docs"
@@ -335,95 +335,95 @@ info "Copying template files..."
 
 # Copy AGENTS.md to ralph/ (not project root)
 if [ -f "$TEMPLATES_DIR/AGENTS.project.md" ]; then
-  cp "$TEMPLATES_DIR/AGENTS.project.md" "$PROJECT_LOCATION/ralph/AGENTS.md"
-  substitute_placeholders "$PROJECT_LOCATION/ralph/AGENTS.md" "$REPO_NAME" "$WORK_BRANCH"
-  success "Copied ralph/AGENTS.md"
+  cp "$TEMPLATES_DIR/AGENTS.project.md" "$PROJECT_LOCATION/workers/ralph/AGENTS.md"
+  substitute_placeholders "$PROJECT_LOCATION/workers/ralph/AGENTS.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied workers/ralph/AGENTS.md"
 else
   warn "Template not found: AGENTS.project.md"
 fi
 
 # Copy Ralph infrastructure templates
 if [ -f "$TEMPLATES_DIR/ralph/PROMPT.project.md" ]; then
-  cp "$TEMPLATES_DIR/ralph/PROMPT.project.md" "$PROJECT_LOCATION/ralph/PROMPT.md"
-  substitute_placeholders "$PROJECT_LOCATION/ralph/PROMPT.md" "$REPO_NAME" "$WORK_BRANCH"
-  success "Copied ralph/PROMPT.md"
+  cp "$TEMPLATES_DIR/ralph/PROMPT.project.md" "$PROJECT_LOCATION/workers/ralph/PROMPT.md"
+  substitute_placeholders "$PROJECT_LOCATION/workers/ralph/PROMPT.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied workers/ralph/PROMPT.md"
 else
   warn "Template not found: ralph/PROMPT.project.md"
 fi
 
 if [ -f "$TEMPLATES_DIR/ralph/IMPLEMENTATION_PLAN.project.md" ]; then
-  cp "$TEMPLATES_DIR/ralph/IMPLEMENTATION_PLAN.project.md" "$PROJECT_LOCATION/ralph/IMPLEMENTATION_PLAN.md"
-  substitute_placeholders "$PROJECT_LOCATION/ralph/IMPLEMENTATION_PLAN.md" "$REPO_NAME" "$WORK_BRANCH"
-  success "Copied ralph/IMPLEMENTATION_PLAN.md"
+  cp "$TEMPLATES_DIR/ralph/IMPLEMENTATION_PLAN.project.md" "$PROJECT_LOCATION/workers/ralph/IMPLEMENTATION_PLAN.md"
+  substitute_placeholders "$PROJECT_LOCATION/workers/ralph/IMPLEMENTATION_PLAN.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied workers/ralph/IMPLEMENTATION_PLAN.md"
 else
   warn "Template not found: ralph/IMPLEMENTATION_PLAN.project.md"
 fi
 
 if [ -f "$TEMPLATES_DIR/ralph/VALIDATION_CRITERIA.project.md" ]; then
-  cp "$TEMPLATES_DIR/ralph/VALIDATION_CRITERIA.project.md" "$PROJECT_LOCATION/ralph/VALIDATION_CRITERIA.md"
-  substitute_placeholders "$PROJECT_LOCATION/ralph/VALIDATION_CRITERIA.md" "$REPO_NAME" "$WORK_BRANCH"
-  success "Copied ralph/VALIDATION_CRITERIA.md"
+  cp "$TEMPLATES_DIR/ralph/VALIDATION_CRITERIA.project.md" "$PROJECT_LOCATION/workers/ralph/VALIDATION_CRITERIA.md"
+  substitute_placeholders "$PROJECT_LOCATION/workers/ralph/VALIDATION_CRITERIA.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied workers/ralph/VALIDATION_CRITERIA.md"
 else
   warn "Template not found: ralph/VALIDATION_CRITERIA.project.md"
 fi
 
 if [ -f "$TEMPLATES_DIR/ralph/RALPH.md" ]; then
-  cp "$TEMPLATES_DIR/ralph/RALPH.md" "$PROJECT_LOCATION/ralph/RALPH.md"
-  substitute_placeholders "$PROJECT_LOCATION/ralph/RALPH.md" "$REPO_NAME" "$WORK_BRANCH"
-  success "Copied ralph/RALPH.md"
+  cp "$TEMPLATES_DIR/ralph/RALPH.md" "$PROJECT_LOCATION/workers/ralph/RALPH.md"
+  substitute_placeholders "$PROJECT_LOCATION/workers/ralph/RALPH.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied workers/ralph/RALPH.md"
 else
   warn "Template not found: ralph/RALPH.md"
 fi
 
 # Copy loop.sh with placeholder substitution
 if [ -f "$TEMPLATES_DIR/ralph/loop.sh" ]; then
-  cp "$TEMPLATES_DIR/ralph/loop.sh" "$PROJECT_LOCATION/ralph/loop.sh"
-  chmod +x "$PROJECT_LOCATION/ralph/loop.sh"
-  substitute_placeholders "$PROJECT_LOCATION/ralph/loop.sh" "$REPO_NAME" "$WORK_BRANCH"
-  success "Copied ralph/loop.sh (executable)"
+  cp "$TEMPLATES_DIR/ralph/loop.sh" "$PROJECT_LOCATION/workers/ralph/loop.sh"
+  chmod +x "$PROJECT_LOCATION/workers/ralph/loop.sh"
+  substitute_placeholders "$PROJECT_LOCATION/workers/ralph/loop.sh" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied workers/ralph/loop.sh (executable)"
 else
   warn "Template not found: ralph/loop.sh"
 fi
 
 # Copy pr-batch.sh with placeholder substitution
 if [ -f "$TEMPLATES_DIR/ralph/pr-batch.sh" ]; then
-  cp "$TEMPLATES_DIR/ralph/pr-batch.sh" "$PROJECT_LOCATION/ralph/pr-batch.sh"
-  chmod +x "$PROJECT_LOCATION/ralph/pr-batch.sh"
-  substitute_placeholders "$PROJECT_LOCATION/ralph/pr-batch.sh" "$REPO_NAME" "$WORK_BRANCH"
-  success "Copied ralph/pr-batch.sh (executable)"
+  cp "$TEMPLATES_DIR/ralph/pr-batch.sh" "$PROJECT_LOCATION/workers/ralph/pr-batch.sh"
+  chmod +x "$PROJECT_LOCATION/workers/ralph/pr-batch.sh"
+  substitute_placeholders "$PROJECT_LOCATION/workers/ralph/pr-batch.sh" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied workers/ralph/pr-batch.sh (executable)"
 else
   warn "Template not found: ralph/pr-batch.sh"
 fi
 
 # Copy monitor scripts (THUNK system)
 if [ -f "$TEMPLATES_DIR/ralph/current_ralph_tasks.sh" ]; then
-  cp "$TEMPLATES_DIR/ralph/current_ralph_tasks.sh" "$PROJECT_LOCATION/ralph/current_ralph_tasks.sh"
-  chmod +x "$PROJECT_LOCATION/ralph/current_ralph_tasks.sh"
-  success "Copied ralph/current_ralph_tasks.sh (executable)"
+  cp "$TEMPLATES_DIR/ralph/current_ralph_tasks.sh" "$PROJECT_LOCATION/workers/ralph/current_ralph_tasks.sh"
+  chmod +x "$PROJECT_LOCATION/workers/ralph/current_ralph_tasks.sh"
+  success "Copied workers/ralph/current_ralph_tasks.sh (executable)"
 else
   warn "Template not found: ralph/current_ralph_tasks.sh"
 fi
 
 if [ -f "$TEMPLATES_DIR/ralph/thunk_ralph_tasks.sh" ]; then
-  cp "$TEMPLATES_DIR/ralph/thunk_ralph_tasks.sh" "$PROJECT_LOCATION/ralph/thunk_ralph_tasks.sh"
-  chmod +x "$PROJECT_LOCATION/ralph/thunk_ralph_tasks.sh"
-  success "Copied ralph/thunk_ralph_tasks.sh (executable)"
+  cp "$TEMPLATES_DIR/ralph/thunk_ralph_tasks.sh" "$PROJECT_LOCATION/workers/ralph/thunk_ralph_tasks.sh"
+  chmod +x "$PROJECT_LOCATION/workers/ralph/thunk_ralph_tasks.sh"
+  success "Copied workers/ralph/thunk_ralph_tasks.sh (executable)"
 else
   warn "Template not found: ralph/thunk_ralph_tasks.sh"
 fi
 
 # Copy verifier.sh
 if [ -f "$TEMPLATES_DIR/ralph/verifier.sh" ]; then
-  cp "$TEMPLATES_DIR/ralph/verifier.sh" "$PROJECT_LOCATION/ralph/verifier.sh"
-  chmod +x "$PROJECT_LOCATION/ralph/verifier.sh"
-  success "Copied ralph/verifier.sh (executable)"
+  cp "$TEMPLATES_DIR/ralph/verifier.sh" "$PROJECT_LOCATION/workers/ralph/verifier.sh"
+  chmod +x "$PROJECT_LOCATION/workers/ralph/verifier.sh"
+  success "Copied workers/ralph/verifier.sh (executable)"
 else
   warn "Template not found: ralph/verifier.sh"
 fi
 
 # Copy and process THUNK.project.md template
 if [ -f "$TEMPLATES_DIR/ralph/THUNK.project.md" ]; then
-  cp "$TEMPLATES_DIR/ralph/THUNK.project.md" "$PROJECT_LOCATION/ralph/THUNK.md"
+  cp "$TEMPLATES_DIR/ralph/THUNK.project.md" "$PROJECT_LOCATION/workers/ralph/THUNK.md"
   CREATION_DATE=$(date +"%Y-%m-%d")
   INITIAL_ERA_NAME="Initial Setup"
 
@@ -433,11 +433,11 @@ if [ -f "$TEMPLATES_DIR/ralph/THUNK.project.md" ]; then
   esc_era_name=$(escape_sed_replacement "$INITIAL_ERA_NAME")
 
   # Process template placeholders
-  sed -i "s/{{PROJECT_NAME}}/$esc_project_name/g" "$PROJECT_LOCATION/ralph/THUNK.md"
-  sed -i "s/{{CREATION_DATE}}/$esc_creation_date/g" "$PROJECT_LOCATION/ralph/THUNK.md"
-  sed -i "s/{{INITIAL_ERA_NAME}}/$esc_era_name/g" "$PROJECT_LOCATION/ralph/THUNK.md"
+  sed -i "s/{{PROJECT_NAME}}/$esc_project_name/g" "$PROJECT_LOCATION/workers/ralph/THUNK.md"
+  sed -i "s/{{CREATION_DATE}}/$esc_creation_date/g" "$PROJECT_LOCATION/workers/ralph/THUNK.md"
+  sed -i "s/{{INITIAL_ERA_NAME}}/$esc_era_name/g" "$PROJECT_LOCATION/workers/ralph/THUNK.md"
 
-  success "Copied ralph/THUNK.md (from template)"
+  success "Copied workers/ralph/THUNK.md (from template)"
 else
   warn "Template not found: ralph/THUNK.project.md"
 fi
@@ -448,35 +448,35 @@ info "Generating custom project files..."
 # THOUGHTS.md goes in ralph/, not project root
 if [ -f "$BRAIN_DIR/generators/generate-thoughts.sh" ]; then
   info "Generating custom THOUGHTS.md..."
-  bash "$BRAIN_DIR/generators/generate-thoughts.sh" "$IDEA_FILE" "$PROJECT_LOCATION/ralph/THOUGHTS.md"
-  success "Generated ralph/THOUGHTS.md"
+  bash "$BRAIN_DIR/generators/generate-thoughts.sh" "$IDEA_FILE" "$PROJECT_LOCATION/workers/ralph/THOUGHTS.md"
+  success "Generated workers/ralph/THOUGHTS.md"
 else
   warn "Generator not found: generate-thoughts.sh (using template fallback)"
   if [ -f "$TEMPLATES_DIR/THOUGHTS.project.md" ]; then
-    cp "$TEMPLATES_DIR/THOUGHTS.project.md" "$PROJECT_LOCATION/ralph/THOUGHTS.md"
-    substitute_placeholders "$PROJECT_LOCATION/ralph/THOUGHTS.md" "$REPO_NAME" "$WORK_BRANCH"
-    success "Copied ralph/THOUGHTS.md template (needs customization)"
+    cp "$TEMPLATES_DIR/THOUGHTS.project.md" "$PROJECT_LOCATION/workers/ralph/THOUGHTS.md"
+    substitute_placeholders "$PROJECT_LOCATION/workers/ralph/THOUGHTS.md" "$REPO_NAME" "$WORK_BRANCH"
+    success "Copied workers/ralph/THOUGHTS.md template (needs customization)"
   fi
 fi
 
 # NEURONS.md goes in ralph/, not project root
 if [ -f "$BRAIN_DIR/generators/generate-neurons.sh" ]; then
   info "Generating custom NEURONS.md..."
-  bash "$BRAIN_DIR/generators/generate-neurons.sh" "$IDEA_FILE" "$PROJECT_LOCATION/ralph/NEURONS.md"
-  success "Generated ralph/NEURONS.md"
+  bash "$BRAIN_DIR/generators/generate-neurons.sh" "$IDEA_FILE" "$PROJECT_LOCATION/workers/ralph/NEURONS.md"
+  success "Generated workers/ralph/NEURONS.md"
 else
   warn "Generator not found: generate-neurons.sh (using template fallback)"
   if [ -f "$TEMPLATES_DIR/NEURONS.project.md" ]; then
-    cp "$TEMPLATES_DIR/NEURONS.project.md" "$PROJECT_LOCATION/ralph/NEURONS.md"
-    substitute_placeholders "$PROJECT_LOCATION/ralph/NEURONS.md" "$REPO_NAME" "$WORK_BRANCH"
-    success "Copied ralph/NEURONS.md template (needs customization)"
+    cp "$TEMPLATES_DIR/NEURONS.project.md" "$PROJECT_LOCATION/workers/ralph/NEURONS.md"
+    substitute_placeholders "$PROJECT_LOCATION/workers/ralph/NEURONS.md" "$REPO_NAME" "$WORK_BRANCH"
+    success "Copied workers/ralph/NEURONS.md template (needs customization)"
   fi
 fi
 
 # Generate IMPLEMENTATION_PLAN.md using HIGH INTELLIGENCE generator
 if [ -f "$BRAIN_DIR/generators/generate-implementation-plan.sh" ]; then
   info "Generating custom IMPLEMENTATION_PLAN.md..."
-  bash "$BRAIN_DIR/generators/generate-implementation-plan.sh" "$IDEA_FILE" "$PROJECT_LOCATION/ralph/IMPLEMENTATION_PLAN.md"
+  bash "$BRAIN_DIR/generators/generate-implementation-plan.sh" "$IDEA_FILE" "$PROJECT_LOCATION/workers/ralph/IMPLEMENTATION_PLAN.md"
   success "Generated custom IMPLEMENTATION_PLAN.md"
 else
   warn "Generator not found: generate-implementation-plan.sh (using template)"
@@ -494,7 +494,7 @@ else
   # Create default .gitignore
   cat >"$PROJECT_LOCATION/.gitignore" <<'EOF'
 # Ralph logs
-ralph/logs/
+workers/workers/ralph/logs/
 
 # Local environment
 .env.local
@@ -535,7 +535,7 @@ ${PROJECT_GOALS:-To be defined.}
 ### Getting Started
 
 \`\`\`bash
-cd ralph
+cd workers/ralph
 bash loop.sh --iterations 5
 \`\`\`
 
@@ -658,7 +658,7 @@ echo ""
 info "Next steps:"
 echo "  1. cd $PROJECT_LOCATION"
 echo "  2. Review and customize THOUGHTS.md, NEURONS.md if needed"
-echo "  3. cd ralph && bash loop.sh --iterations 5"
+echo "  3. cd workers/ralph && bash loop.sh --iterations 5"
 echo ""
 info "The project is on '$WORK_BRANCH' branch - ready for development!"
-info "Use 'ralph/pr-batch.sh' to create PRs when ready to merge to main."
+info "Use 'workers/ralph/pr-batch.sh' to create PRs when ready to merge to main."
