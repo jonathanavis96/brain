@@ -586,25 +586,25 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
         labelFont: 'system-ui, sans-serif',
         labelSize: Math.max(10, Math.min(16, 12 * zoomLevel)),
         labelRenderedSizeThreshold: 8,
-        // Sigma v3 uses labelColor settings for default label rendering
+        // Unified label renderer: same geometry for both default and hover states
+        // This prevents label duplication by ensuring hover "upgrades" the same label
         labelColor: {
           color: theme?.text || '#fff'
         },
-
-        // Override Sigma's hover label rendering (defaultDrawNodeHover)
-        // Using Sigma's geometry to prevent label clipping by node circle
-        defaultDrawNodeHover: (context, data, settings) => {
+        defaultDrawNodeLabel: (context, data, settings) => {
           const size = settings.labelSize
           const font = settings.labelFont
           const weight = settings.labelWeight
           context.font = `${weight} ${size}px ${font}`
 
-          // Draw the label background (copied from Sigma's drawDiscNodeHover)
-          context.fillStyle = '#FFF'
+          // Draw label background pill (same geometry as hover)
+          const isHovered = data.hovered
+          context.fillStyle = isHovered ? '#FFF' : 'rgba(0, 0, 0, 0.7)'
           context.shadowOffsetX = 0
           context.shadowOffsetY = 0
-          context.shadowBlur = 8
-          context.shadowColor = '#000'
+          context.shadowBlur = isHovered ? 8 : 4
+          context.shadowColor = isHovered ? '#000' : 'rgba(0, 0, 0, 0.5)'
+          
           const PADDING = 2
           if (typeof data.label === 'string') {
             const textWidth = context.measureText(data.label).width
@@ -613,6 +613,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
             const radius = Math.max(data.size, size / 2) + PADDING
             const angleRadian = Math.asin(boxHeight / 2 / radius)
             const xDeltaCoord = Math.sqrt(Math.abs(Math.pow(radius, 2) - Math.pow(boxHeight / 2, 2)))
+            
             context.beginPath()
             context.moveTo(data.x + xDeltaCoord, data.y + boxHeight / 2)
             context.lineTo(data.x + radius + boxWidth, data.y + boxHeight / 2)
@@ -621,21 +622,16 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
             context.arc(data.x, data.y, radius, angleRadian, -angleRadian)
             context.closePath()
             context.fill()
-          } else {
-            context.beginPath()
-            context.arc(data.x, data.y, data.size + PADDING, 0, Math.PI * 2)
-            context.closePath()
-            context.fill()
-          }
-          context.shadowOffsetX = 0
-          context.shadowOffsetY = 0
-          context.shadowBlur = 0
+            
+            context.shadowOffsetX = 0
+            context.shadowOffsetY = 0
+            context.shadowBlur = 0
 
-          // Draw the label with black text (dark mode: black text on white pill)
-          context.fillStyle = '#000'
-          context.fillText(data.label, data.x + radius + 3, data.y + size / 3)
-        },
-        // Use Sigma default label renderer (color controlled via labelColor)
+            // Draw label text (color adapts to background)
+            context.fillStyle = isHovered ? '#000' : (theme?.text || '#fff')
+            context.fillText(data.label, data.x + radius + 3, data.y + size / 3)
+          }
+        }
       })
 
       // Handle node clicks and taps
