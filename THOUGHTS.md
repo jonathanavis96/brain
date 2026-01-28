@@ -260,7 +260,7 @@ Why keep skills/ and templates/ at root instead of workers/ralph/?
 ## References
 
 - [README.md](README.md) - Getting started guide
-- [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) - Current task queue
+- [IMPLEMENTATION_PLAN.md](workers/IMPLEMENTATION_PLAN.md) - Current task queue
 - [skills/SUMMARY.md](skills/SUMMARY.md) - Skills knowledge base entry point
 - [cortex/THOUGHTS.md](cortex/THOUGHTS.md) - Cortex manager planning
 - [workers/ralph/THOUGHTS.md](workers/ralph/THOUGHTS.md) - Ralph worker execution log

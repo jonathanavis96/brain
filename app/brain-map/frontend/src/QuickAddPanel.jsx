@@ -1,10 +1,10 @@
 import { useState, useRef } from 'react'
 
-function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActive = false, onStartDragToPlace }) {
+function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActive = false, onStartDragToPlace, selectedNode = null }) {
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
-  const [type, setType] = useState('note')
-  const [status, setStatus] = useState('active')
+  const [type, setType] = useState('Inbox')
+  const [status, setStatus] = useState('idea')
   const [tags, setTags] = useState('')
   const [isDragging, setIsDragging] = useState(false)
   const [dragPreview, setDragPreview] = useState({ x: 0, y: 0, visible: false })
@@ -35,8 +35,8 @@ function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActiv
     setTitle('')
     setBody('')
     setTags('')
-    setType('note')
-    setStatus('active')
+    setType('Inbox')
+    setStatus('idea')
 
     // Show success toast
     setShowToast(true)
@@ -152,6 +152,30 @@ function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActiv
       </div>
 
       <div style={{ padding: '1rem', flex: 1 }}>
+        {/* Node Details Section */}
+        {selectedNode && (
+          <div style={{
+            marginBottom: '1rem',
+            padding: '0.75rem',
+            background: 'var(--color-panel-background-alt)',
+            border: '1px solid var(--color-panel-border)',
+            borderRadius: '4px'
+          }}>
+            <div style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '0.5rem', color: 'var(--color-text-secondary)' }}>
+              Selected Node
+            </div>
+            <div style={{ fontSize: '13px', marginBottom: '0.25rem' }}>
+              <strong>ID:</strong> {selectedNode.id || 'N/A'}
+            </div>
+            <div style={{ fontSize: '13px', marginBottom: '0.25rem' }}>
+              <strong>Title:</strong> {selectedNode.title || 'N/A'}
+            </div>
+            <div style={{ fontSize: '13px' }}>
+              <strong>Type:</strong> {selectedNode.type || 'N/A'}
+            </div>
+          </div>
+        )}
+
         <form onSubmit={(e) => e.preventDefault()}>
           {/* Title Input */}
           <div style={{ marginBottom: '1rem' }}>
@@ -239,7 +263,6 @@ function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActiv
                 boxSizing: 'border-box'
               }}
             >
-              <option value="note">Note</option>
               <option value="Inbox">Inbox</option>
               <option value="Concept">Concept</option>
               <option value="System">System</option>
@@ -273,9 +296,9 @@ function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActiv
                 boxSizing: 'border-box'
               }}
             >
-              <option value="active">Active</option>
               <option value="idea">Idea</option>
               <option value="planned">Planned</option>
+              <option value="active">Active</option>
               <option value="blocked">Blocked</option>
               <option value="done">Done</option>
               <option value="archived">Archived</option>

@@ -353,7 +353,7 @@ Core skills referenced by this playbook:
 
 - [Ralph Patterns](../domains/ralph/ralph-patterns.md) - Architecture, troubleshooting, and common patterns
 - [Cache Debugging](../domains/ralph/cache-debugging.md) - Cache-specific issues and solutions
-- [Token Efficiency](../code-quality/token-efficiency.md) - Performance optimization to prevent slowness
+- [Token Efficiency](../domains/code-quality/token-efficiency.md) - Performance optimization to prevent slowness
 
 ## Related Playbooks
 

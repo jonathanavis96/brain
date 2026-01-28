@@ -1951,6 +1951,7 @@ function App() {
                 onClickToPlaceToggle={handleClickToPlaceToggle}
                 clickToPlaceActive={clickToPlaceActive}
                 onStartDragToPlace={handleStartDragToPlace}
+                selectedNode={selectedNode}
                 theme={colors}
               />
             </div>
@@ -1979,6 +1980,7 @@ function App() {
                 onClickToPlaceToggle={handleClickToPlaceToggle}
                 clickToPlaceActive={clickToPlaceActive}
                 onStartDragToPlace={handleStartDragToPlace}
+                selectedNode={selectedNode}
                 theme={colors}
               />
             )}
