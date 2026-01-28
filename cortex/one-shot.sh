@@ -28,7 +28,7 @@ Cortex Manager - High-level orchestration for the Brain repository.
 Options:
   --help, -h           Show this help message
   --interactive, -i    Enable interactive chat mode (ask questions)
-  --model MODEL        Override model (opus, sonnet, auto)
+  --model MODEL        Override model (gpt52, opus, sonnet, auto)
   --runner RUNNER      Use specific runner (rovodev, opencode) [default: rovodev]
 
 Examples:
@@ -90,6 +90,7 @@ done
 MODEL_SONNET_45="anthropic.claude-sonnet-4-5-20250929-v1:0"
 MODEL_OPUS_45="anthropic.claude-opus-4-5-20251101-v1:0"
 MODEL_SONNET_4="anthropic.claude-sonnet-4-20250514-v1:0"
+MODEL_GPT52_CODEX="gpt-5.2-codex"  # Valid RovoDev model ID (400K context)
 
 # Resolve model shortcut to full model ID
 resolve_model() {
@@ -103,6 +104,9 @@ resolve_model() {
       ;;
     sonnet4)
       echo "$MODEL_SONNET_4"
+      ;;
+    gpt52 | codex | gpt-5.2 | gpt5.2)
+      echo "$MODEL_GPT52_CODEX"
       ;;
     latest | auto)
       echo ""
@@ -135,12 +139,12 @@ resolve_model_opencode() {
   esac
 }
 
-# Default to Sonnet 4.5 for Cortex (fast, capable, cost-effective)
+# Default to GPT-5.2 for Cortex (RovoDev) / grok for OpenCode
 if [[ -z "$MODEL_ARG" ]]; then
   if [[ "$RUNNER" == "opencode" ]]; then
     MODEL_ARG="grok"
   else
-    MODEL_ARG="sonnet" # Cortex uses Sonnet 4.5 by default
+    MODEL_ARG="gpt52" # Cortex uses GPT-5.2 Codex by default
   fi
 fi
 
