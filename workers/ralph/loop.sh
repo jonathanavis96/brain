@@ -624,16 +624,15 @@ if [[ "$RUNNER" == "rovodev" ]]; then
     # and falls back to the base config anyway
     echo "Using model from base config: ~/.rovodev/config.yml"
     
-    # Skip temp config creation entirely - it doesn't work
-    if false; then
+    # Temp config creation code disabled - RovoDev ignores --config-file
+    # Keeping this commented out for reference in case RovoDev behavior changes
+    : <<'DISABLED_TEMP_CONFIG'
       TEMP_CONFIG="/tmp/rovodev_config_$$_$(date +%s).yml"
-      echo "DEBUG: Running Python script with model_id=$RESOLVED_MODEL" >&2
       python3 - "$HOME/.rovodev/config.yml" "$TEMP_CONFIG" "$RESOLVED_MODEL" <<'PY'
 import sys
 from pathlib import Path
 
 source_path, target_path, model_id = sys.argv[1:4]
-print(f"DEBUG PYTHON: source={source_path}, target={target_path}, model_id={model_id}", file=sys.stderr)
 lines = Path(source_path).read_text().splitlines()
 
 new_lines = []
@@ -670,9 +669,8 @@ if in_agent and not replaced and not inserted:
     new_lines.append(f"{child_indent}modelId: {model_id}")
 
 Path(target_path).write_text("\n".join(new_lines) + "\n")
-print(f"DEBUG PYTHON: Wrote {len(new_lines)} lines. replaced={replaced}, inserted={inserted}", file=sys.stderr)
 PY
-    fi  # End of disabled temp config block
+DISABLED_TEMP_CONFIG
     
     # Don't set CONFIG_FLAG since RovoDev ignores it anyway
     CONFIG_FLAG=""

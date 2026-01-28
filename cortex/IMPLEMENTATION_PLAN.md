@@ -22,51 +22,6 @@
 
 <!-- Cortex adds new Task Contracts below this line -->
 
-## Phase 0-Warn: Verifier Warnings
-
-**Purpose:** Auto-detected markdown lint issues requiring manual fixes.
-
-- [x] **WARN.MD032.workers-impl-69** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 69 - Add blank line before list
-- [x] **WARN.MD031.workers-impl-81** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 81 - Add blank line before code fence
-- [x] **WARN.MD031.workers-impl-92** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 92 - Add blank line after code fence
-- [x] **WARN.MD031.workers-impl-97** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 97 - Add blank line before code fence
-- [x] **WARN.MD031.workers-impl-126** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 126 - Add blank line before code fence
-- [x] **WARN.MD031.workers-impl-156** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 156 - Add blank line before code fence
-- [x] **WARN.MD031.workers-impl-186** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 186 - Add blank line before code fence
-- [x] **WARN.MD031.workers-impl-188** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 188 - Add blank line after code fence
-- [x] **WARN.MD031.workers-impl-192** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 192 - Add blank line before code fence
-- [x] **WARN.MD031.workers-impl-220** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 220 - Add blank line before code fence
-- [x] **WARN.MD031.workers-impl-224** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 224 - Add blank line after code fence
-- [x] **WARN.MD032.workers-impl-260** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 260 - Add blank line before list
-- [x] **WARN.MD032.workers-impl-265** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 265 - Add blank line before list
-- [x] **WARN.MD032.cortex-impl-69** Fix MD032/blanks-around-lists in cortex/IMPLEMENTATION_PLAN.md line 69 - Add blank line before list
-- [x] **WARN.MD031.cortex-impl-81** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 81 - Add blank line before code fence
-- [x] **WARN.MD031.cortex-impl-92** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 92 - Add blank line after code fence
-- [x] **WARN.MD031.cortex-impl-97** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 97 - Add blank line before code fence
-- [x] **WARN.MD031.cortex-impl-126** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 126 - Add blank line before code fence
-- [x] **WARN.MD031.cortex-impl-156** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 156 - Add blank line before code fence
-- [x] **WARN.MD031.cortex-impl-186** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 186 - Add blank line before code fence
-- [x] **WARN.MD031.cortex-impl-188** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 188 - Add blank line after code fence
-- [x] **WARN.MD031.cortex-impl-192** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 192 - Add blank line before code fence
-- [x] **WARN.MD031.cortex-impl-220** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 220 - Add blank line before code fence
-- [x] **WARN.MD031.cortex-impl-224** Fix MD031/blanks-around-fences in cortex/IMPLEMENTATION_PLAN.md line 224 - Add blank line after code fence
-- [x] **WARN.MD032.cortex-impl-260** Fix MD032/blanks-around-lists in cortex/IMPLEMENTATION_PLAN.md line 260 - Add blank line before list
-- [x] **WARN.MD032.cortex-impl-265** Fix MD032/blanks-around-lists in cortex/IMPLEMENTATION_PLAN.md line 265 - Add blank line before list
-- [x] **WARN.MD022.workers-impl-101** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 101 - Add blank line after "## DRY-RUN ANALYSIS"
-- [x] **WARN.MD022.workers-impl-105** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 105 - Add blank line after "### Summary"
-- [x] **WARN.MD032.workers-impl-111** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 111 - Add blank line before numbered list
-- [x] **WARN.MD032.workers-impl-121** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 121 - Add blank line before bullet list
-- [x] **WARN.MD022.workers-impl-137** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 137 - Add blank line after "### Files to Modify"
-- [x] **WARN.MD032.workers-impl-138** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 138 - Add blank line before list
-- [x] **WARN.MD022.workers-impl-142** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 142 - Add blank line after "### Verification Commands"
-- [x] **WARN.MD031.workers-impl-143** Fix MD031/blanks-around-fences in workers/IMPLEMENTATION_PLAN.md line 143 - Add blank line before code fence
-- [x] **WARN.MD022.workers-impl-148** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 148 - Add blank line after "### Risks & Dependencies"
-- [x] **WARN.MD032.workers-impl-149** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 149 - Add blank line before list
-- [x] **WARN.MD022.workers-impl-154** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 154 - Add blank line after "### Time Estimate"
-- [x] **WARN.MD032.workers-impl-155** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 155 - Add blank line before list
-- [x] **WARN.MD022.workers-impl-160** Fix MD022/blanks-around-headings in workers/IMPLEMENTATION_PLAN.md line 160 - Add blank line after "### Next Steps"
-- [x] **WARN.MD032.workers-impl-161** Fix MD032/blanks-around-lists in workers/IMPLEMENTATION_PLAN.md line 161 - Add blank line before numbered list
-
 ## Phase 33: Brain Map V2 - Polish & Power Features 🚀
 
 **Context:** Advanced users need temporal visualization, collaboration tools, and export options for real-world knowledge management workflows.

@@ -10,6 +10,7 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
   const [selectedMetric, setSelectedMetric] = useState('task')
   const [showAllHotspots, setShowAllHotspots] = useState(false)
   const [hotspots, setHotspots] = useState([])
+  const topN = 10
   const [filters, setFilters] = useState({
     type: '',
     status: '',

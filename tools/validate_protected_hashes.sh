@@ -66,9 +66,9 @@ check_protected_file() {
     return 1
   fi
 
-  # Get baseline hash
+  # Get baseline hash (first field only, sha256sum format: "hash  filename")
   local baseline_hash
-  baseline_hash="$(head -n 1 "$hash_file" 2>/dev/null | tr -d '[:space:]')"
+  baseline_hash="$(head -n 1 "$hash_file" 2>/dev/null | awk '{print $1}')"
 
   if [[ -z "$baseline_hash" ]]; then
     echo -e "${RED}[FAIL]${NC} $file (hash file empty: $hash_file)"
