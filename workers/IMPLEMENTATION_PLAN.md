@@ -37,7 +37,7 @@
 
 ### Task 36.1: Label rendering correctness (always-visible + hover upgrade)
 
-- [ ] **36.1.2** Remove hover/zoom label duplication by matching default placement and ensuring hover “upgrades” the same label
+- [x] **36.1.2** Remove hover/zoom label duplication by matching default placement and ensuring hover "upgrades" the same label
   - **Goal:** Hover should visually upgrade the existing label (pill) rather than showing a second label in a different place.
   - **AC:** When zoomed-in labels are visible, hovering a node results in exactly one label being readable (the pill version), with no second label visible/offset.
   - **If Blocked:** Consider temporarily suppressing base label rendering for the hovered node (e.g., during `enterNode`, set node `label` to empty and restore on `leaveNode`) and document tradeoffs.
