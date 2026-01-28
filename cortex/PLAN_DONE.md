@@ -505,3 +505,12 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-28 | 0-Warn.MD024.workers-IMPL_PLAN.53 | - [x] **0-Warn.MD024.workers-IMPL_PLAN.53** Fix MD024 duplicate heading in workers/IMPLEMENTATION_PLAN.md line 53 |
 | 2026-01-28 | 0-Warn.MD024.workers-IMPL_PLAN.62 | - [x] **0-Warn.MD024.workers-IMPL_PLAN.62** Fix MD024 duplicate heading in workers/IMPLEMENTATION_PLAN.md line 62 |
 | 2026-01-28 | 0-Warn.MD024.cortex-IMPL_PLAN.57 | - [x] **0-Warn.MD024.cortex-IMPL_PLAN.57** Fix MD024 duplicate heading in cortex/IMPLEMENTATION_PLAN.md line 57 |
+
+### Archived on 2026-01-29 00:16:04
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-29 | WARN.MD001.TEMPLATE_DRIFT_REPORT | - [x] **WARN.MD001.TEMPLATE_DRIFT_REPORT** Fix MD001/heading-increment in artifacts/reports/TEMPLATE_DRIFT_REPORT.md:245 |
+| 2026-01-29 | WARN.MD032.CORTEX_SYSTEM_PROMPT | - [x] **WARN.MD032.CORTEX_SYSTEM_PROMPT** Fix MD032/blanks-around-lists in cortex/CORTEX_SYSTEM_PROMPT.md:10 |
+| 2026-01-29 | WARN.MD022.CORTEX_SYSTEM_PROMPT | - [x] **WARN.MD022.CORTEX_SYSTEM_PROMPT** Fix MD022/blanks-around-headings in cortex/CORTEX_SYSTEM_PROMPT.md:11 |
+| 2026-01-29 | 35.2.3 | - [x] **35.2.3** Update bootstrap scripts |
