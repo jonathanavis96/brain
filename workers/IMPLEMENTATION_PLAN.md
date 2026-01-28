@@ -16,8 +16,29 @@
 **Active Focus:**
 
 - Phase 0-Warn: Markdown lint errors (MD032, MD007, MD046, MD012)
+- Phase 0-Lint: MD004 list style errors in cortex docs
 
 <!-- Cortex adds new Task Contracts below this line -->
+
+## Phase 0-Lint: Markdown Lint Fixes
+
+**Context:** Automated markdown linting detected MD004 (unordered list style) errors in `cortex/docs/MindMerge_MindMerge-PR.md` that could not be auto-fixed.
+
+**Goal:** Fix all remaining markdown lint errors to achieve clean `markdownlint` runs across the repository.
+
+**Success Criteria:**
+
+- `markdownlint cortex/docs/MindMerge_MindMerge-PR.md` passes with no MD004 errors
+- All unordered lists use consistent dash (`-`) style instead of asterisk (`*`)
+
+---
+
+### Task 0-Lint.1: Fix MD004 errors in MindMerge_MindMerge-PR.md
+
+- [x] **0-Lint.1.1** Fix MD004/ul-style errors in cortex/docs/MindMerge_MindMerge-PR.md
+  - **AC:** `markdownlint cortex/docs/MindMerge_MindMerge-PR.md` passes (no MD004 errors)
+
+---
 
 ## Phase 36: Brain Map V2 UX + Interaction Fixes
 
