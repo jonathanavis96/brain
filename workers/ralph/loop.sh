@@ -1078,68 +1078,64 @@ EOF
     return
   fi
 
-  # Find all "Summary" headers in the log (strip ANSI codes first, then match)
-  # Pattern matches "Summary:" with or without colon, with optional whitespace and ANSI codes
-  local summary_lines
-  summary_lines=$(grep -n "Summary:" "$logfile" 2>/dev/null | grep -v "iteration summary" || true)
+  # Step 1: Find the LAST occurrence of :::PLAN_READY::: or :::BUILD_READY:::
+  local marker_line
+  marker_line=$(grep -n ":::\(PLAN\|BUILD\)_READY:::" "$logfile" 2>/dev/null | tail -1 | cut -d: -f1 || echo "")
 
-  if [[ -z "$summary_lines" ]]; then
-    # No "Summary:" header found - try to extract from STATUS/PROGRESS markers
-    local status_line
-    status_line=$(grep -n "^STATUS |" "$logfile" 2>/dev/null | tail -1 | cut -d: -f1 || echo "")
-
-    if [[ -n "$status_line" ]]; then
-      # Extract from STATUS to :::BUILD_READY::: or :::PLAN_READY::: or EOF
-      # Strip ANSI color codes for Discord
-      local summary_block
-      summary_block=$(sed -n "${status_line},\$p" "$logfile" | sed '/:::\(BUILD\|PLAN\)_READY:::/q' | sed $'s/\x1b\[[0-9;]*m//g')
-
-      # Output with header
-      cat <<EOF
+  if [[ -z "$marker_line" ]]; then
+    # No marker found - output fallback
+    cat <<EOF
 **Ralph Iteration ${iter_num} (${mode})** — ${timestamp}
 
-$summary_block
-EOF
-      return
-    else
-      # No summary markers found at all - output fallback
-      cat <<EOF
-**Ralph Iteration ${iter_num} (${mode})** — ${timestamp}
-
-No structured summary found in logs.
+No completion marker found in logs.
 
 Run ID: ${run_id}
 Log: ${logfile}
 EOF
-      return
+    return
+  fi
+
+  # Step 2: Find start boundary - prefer nearest preceding "─── Response" separator
+  # Fallback to nearest preceding STATUS header
+  local start_line=""
+  local response_line
+  response_line=$(sed -n "1,${marker_line}p" "$logfile" | grep -n "─── Response" | tail -1 | cut -d: -f1 || echo "")
+
+  if [[ -n "$response_line" ]]; then
+    start_line="$response_line"
+  else
+    # Fallback: find last STATUS header before marker
+    local status_line
+    status_line=$(sed -n "1,${marker_line}p" "$logfile" | grep -n "^STATUS |" | tail -1 | cut -d: -f1 || echo "")
+    if [[ -n "$status_line" ]]; then
+      start_line="$status_line"
+    else
+      # No valid start boundary - extract from beginning
+      start_line="1"
     fi
   fi
 
-  # Get the last summary line number
-  local last_summary_line
-  last_summary_line=$(echo "$summary_lines" | tail -1 | cut -d: -f1)
-
-  # Count number of summaries (warn if multiple)
-  local summary_count
-  summary_count=$(echo "$summary_lines" | wc -l)
-
-  # Extract from last "Summary" to :::BUILD_READY::: or :::PLAN_READY::: or EOF
+  # Step 3: Extract block between start and marker (marker excluded)
   # Strip ANSI color codes for Discord
   local summary_block
-  summary_block=$(sed -n "${last_summary_line},\$p" "$logfile" | sed '/:::\(BUILD\|PLAN\)_READY:::/q' | sed $'s/\x1b\[[0-9;]*m//g')
+  summary_block=$(sed -n "${start_line},$((marker_line - 1))p" "$logfile" | sed $'s/\x1b\[[0-9;]*m//g')
+
+  # Step 4: Remove STATUS header portion (multi-line STATUS continuations)
+  # Remove lines starting with "STATUS |" or "PROGRESS |"
+  summary_block=$(echo "$summary_block" | sed '/^STATUS |/d; /^PROGRESS |/d')
+
+  # Step 5: Remove decorative framing (response separator lines)
+  summary_block=$(echo "$summary_block" | sed '/^─── Response/d')
+
+  # Step 6: Trim leading/trailing whitespace
+  summary_block=$(echo "$summary_block" | sed '/^[[:space:]]*$/d' | sed -e :a -e '/^\n*$/{$d;N;ba' -e '}')
 
   # Output structured summary with header
   cat <<EOF
 **Ralph Iteration ${iter_num} (${mode})** — ${timestamp}
+
+$summary_block
 EOF
-
-  if [[ $summary_count -gt 1 ]]; then
-    echo ""
-    echo "⚠️ Multiple summaries detected ($summary_count), using last one"
-  fi
-
-  echo ""
-  echo "$summary_block"
 }
 
 # Emit structured TOOL_START marker
