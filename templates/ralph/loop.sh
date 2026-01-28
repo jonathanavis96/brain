@@ -27,6 +27,14 @@ LOGDIR="$RALPH/logs"
 VERIFY_REPORT="$RALPH/.verify/latest.txt"
 mkdir -p "$LOGDIR"
 
+# Load environment variables from .env file (if exists)
+if [[ -f "$ROOT/.env" ]]; then
+  # shellcheck source=../../.env
+  set -a  # Auto-export all variables
+  source "$ROOT/.env"
+  set +a
+fi
+
 # Source shared utilities (includes RollFlow tracking functions)
 # shellcheck source=../shared/common.sh
 source "$(dirname "$RALPH")/shared/common.sh"
@@ -590,11 +598,12 @@ CONFIG_FLAG=""
 TEMP_CONFIG=""
 
 # Use provided model or default based on runner
+# Match Cortex pattern: explicit model shortcut (not "auto")
 if [[ -z "$MODEL_ARG" ]]; then
   if [[ "$RUNNER" == "opencode" ]]; then
     MODEL_ARG="grok" # Default for OpenCode
   else
-    MODEL_ARG="sonnet" # Default for RovoDev (Sonnet 4.5)
+    MODEL_ARG="sonnet" # Default for RovoDev (Sonnet 4.5) - explicit shortcut like Cortex
   fi
 fi
 
@@ -604,7 +613,8 @@ else
   RESOLVED_MODEL="$(resolve_model "$MODEL_ARG")"
 fi
 
-# Only create RovoDev temp config when runner=rovodev and we have a model to set
+# Only create RovoDev temp config when runner=rovodev and we have a model to set.
+# acli rovodev run supports --config-file (see: acli rovodev run --help)
 if [[ "$RUNNER" == "rovodev" ]]; then
   if [[ -n "$RESOLVED_MODEL" ]]; then
     TEMP_CONFIG="/tmp/rovodev_config_$$_$(date +%s).yml"

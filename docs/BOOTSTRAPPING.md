@@ -165,5 +165,7 @@ project/
 
 - **[new-project.sh](../new-project.sh)** - Main bootstrap script
 - **[templates/](../templates/)** - Template files
-- **[generators/](../generators/)** - Generator scripts
+- **[skills/playbooks/bootstrap-new-project.md](../skills/playbooks/bootstrap-new-project.md)** - Bootstrap playbook
+- **[workers/ralph/README.md](../workers/ralph/README.md)** - Ralph loop design philosophy
+- **[NEURONS.md](../NEURONS.md)** - Repository structure map
 - **[AGENTS.md](../AGENTS.md)** - Brain repository agent guidance

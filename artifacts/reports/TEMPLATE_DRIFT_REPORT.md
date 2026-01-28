@@ -1,33 +1,138 @@
-# Template Drift Report - Post Phase 24
+# Template Drift Report - Task 35.2.1 Audit
 
-**Date:** 2026-01-27  
-**Task:** Phase 28.1 - Audit templates for post-Phase-24 drift  
-**Baseline:** Phase 24 completed major template alignment on 2026-01-19
+**Date:** 2026-01-28  
+**Task:** 35.2.1 - Audit template drift for Phase 35.2.2 sync planning  
+**Previous Audit:** 2026-01-27 (Phase 28.1) - found no critical drift
 
 ## Executive Summary
 
-**Verdict:** ✅ **No critical drift detected**
+**Verdict:** ⚠️ **Significant improvements found in workers/ralph/**
 
-- **3,179 diff lines** analyzed between `templates/ralph/` and `workers/ralph/`
-- All differences are either:
-  - Brain-specific files (not meant to be templated)
-  - Legitimate enhancements already propagated to templates
-  - Minor path adjustments for Brain context
+Since the last audit (2026-01-27), several beneficial enhancements have been made to `workers/ralph/` that should be propagated to `templates/ralph/`:
 
-**Action Required:** None. Templates remain properly synchronized.
+1. **loop.sh:** `.env` file loading support, improved model selection comments
+2. **verifier.sh:** Empty stdout regex handling fix, simplified ROOT logic
+3. **current_ralph_tasks.sh:** Phase section detection, improved archive marker logic
+4. **PROMPT.md:** Path corrections (workers/workers/ references), removed outdated batch task template
+5. **Documentation maturity:** workers/ralph/ has comprehensive README.md, AGENTS.md, NEURONS.md
+
+**Action Required:** Phase 35.2.2 should selectively sync these improvements to templates.
+
+**Status:** ✅ **AUDIT COMPLETE** - Ready for Phase 35.2.2 implementation
 
 ---
 
-## Drift Analysis
+---
 
-### 1. Brain-Specific Files (Expected - Not Drift)
+## Detailed Drift Analysis (2026-01-28 Audit)
 
-These exist only in `workers/ralph/` and should NOT be templated:
+### 1. Critical Improvements to Sync (High Priority)
 
-| File | Purpose | Template? |
-|------|---------|-----------|
-| `AGENTS.md` | Brain-specific operational guide | ❌ No (project-specific) |
-| `NEURONS.md` | Brain repository structure map | ❌ No (project-specific) |
+#### 1.1 loop.sh - Environment Variable Loading
+
+**Location:** `loop.sh` lines 30-37  
+**Impact:** HIGH - enables per-project configuration via `.env` files
+
+```bash
+# workers/ralph/loop.sh HAS this feature (templates/ralph/loop.sh MISSING):
+# Load environment variables from .env file (if exists)
+if [[ -f "$ROOT/.env" ]]; then
+  # shellcheck source=../../.env
+  set -a  # Auto-export all variables
+  source "$ROOT/.env"
+  set +a
+fi
+```
+
+**Recommendation:** Add to `templates/ralph/loop.sh` - enables projects to set `RALPH_PROJECT_ROOT`, `MODEL_ARG`, etc. via `.env`
+
+#### 1.2 verifier.sh - Empty Stdout Regex Fix
+
+**Location:** `verifier.sh` lines 450-462  
+**Impact:** MEDIUM - fixes false negatives when commands produce no output
+
+```bash
+# workers/ralph/verifier.sh has robust empty stdout handling:
+if [[ -z "$stdout_norm" ]]; then
+  if ! echo "" | grep -Eq "$expect_stdout_regex"; then
+    pass_check=0
+    reasons+=("stdout regex mismatch expected=/$expect_stdout_regex/ got='${stdout_norm}'")
+  fi
+else
+  if ! printf "%s" "$stdout_norm" | grep -Eq "$expect_stdout_regex"; then
+    pass_check=0
+    reasons+=("stdout regex mismatch expected=/$expect_stdout_regex/ got='${stdout_norm}'")
+  fi
+fi
+```
+
+**Recommendation:** Sync to `templates/ralph/verifier.sh` - prevents grep failures on empty output
+
+#### 1.3 current_ralph_tasks.sh - Phase Section Detection
+
+**Location:** `current_ralph_tasks.sh` lines 136-141, 318-325  
+**Impact:** HIGH - correctly parses Phase-based task structure
+
+```bash
+# workers/ralph/ has improved Phase detection:
+# Matches: "## Phase X: Description" sections
+if [[ "$line" =~ ^##[[:space:]]+Phase[[:space:]]+[^:]+:[[:space:]]* ]]; then
+  in_task_section=true
+fi
+```
+
+**Recommendation:** Sync to `templates/ralph/current_ralph_tasks.sh` - essential for Phase-based plans
+
+#### 1.4 PROMPT.md - Path Corrections
+
+**Location:** `PROMPT.md` multiple locations  
+**Impact:** MEDIUM - fixes incorrect path references
+
+```markdown
+# workers/ralph/PROMPT.md has correct paths:
+⚠️ Ralph's tasks are in `workers/IMPLEMENTATION_PLAN.md`, NOT `workers/workers/IMPLEMENTATION_PLAN.md`
+2. ✅ workers/ralph/THUNK.md entry (append to current era table)
+3. ✅ workers/IMPLEMENTATION_PLAN.md update (mark task `[x]`)
+```
+
+**Recommendation:** Sync path corrections to `templates/ralph/PROMPT.md` - prevents confusion
+
+---
+
+### 2. Documentation Files - Special Case
+
+**workers/ralph/ has mature documentation that templates/ lacks:**
+
+| File | workers/ralph/ | templates/ralph/ | Should Template? |
+|------|----------------|------------------|------------------|
+| `README.md` | 490 lines - Brain-specific overview | 119 lines - Generic template intro | ⚠️ Partial - update template README with better bootstrap examples |
+| `AGENTS.md` | Brain-specific operational guide | ❌ Missing | ❌ No - project-specific |
+| `NEURONS.md` | Brain repository structure map | ❌ Missing | ❌ No - project-specific |
+| `THOUGHTS.md` | Brain strategic vision | ❌ Missing | ❌ No - project-specific |
+| `THUNK.md` | Brain task completion log | `.project` template exists | ✅ Template exists |
+| `VALIDATION_CRITERIA.md` | Brain-specific criteria | `.project` template exists | ✅ Template exists |
+
+**Recommendation:** Update `templates/ralph/README.md` with clearer bootstrap instructions and monitor examples
+
+---
+
+### 3. Low-Priority Differences (Optional Sync)
+
+#### 3.1 cerebras_agent.py - System Prompt Refactor
+
+**Impact:** LOW - workers/ralph/ loads from external `PROMPT_cerebras.md` file instead of inline prompt
+
+**Recommendation:** DEFER - cerebras agent is experimental, not critical for templates
+
+#### 3.2 README.md - Documentation Completeness
+
+**Impact:** MEDIUM - templates/ralph/README.md is generic, workers/ralph/README.md has rich examples
+
+**Recommendation:** Enhance `templates/ralph/README.md` with:
+
+- Better monitor examples (hotkeys, timeout usage)
+- Clearer `.env` configuration examples
+- Bootstrap troubleshooting section
 | `THOUGHTS.md` | Brain strategic vision | ❌ No (project-specific) |
 | `VALIDATION_CRITERIA.md` | Brain validation rules | ❌ No (project-specific) |
 | `PROMPT_cerebras.md` | Cerebras agent variant | ❌ No (experimental) |
@@ -111,7 +216,33 @@ BEFORE=$(echo "$BEFORE_OUTPUT" | grep -c "error" || true)
 
 **Recommendation:** ✅ Template already has the improved version
 
-#### 3.4 `PROMPT.md` Path Adjustments
+---
+
+## Recommendations Summary
+
+### Immediate Sync (Phase 35.2.2)
+
+1. **loop.sh:** Add `.env` file loading block (lines 30-37 from workers/ralph/)
+2. **verifier.sh:** Add empty stdout regex handling (lines 450-462 from workers/ralph/)
+3. **current_ralph_tasks.sh:** Update Phase section detection logic (lines 136-141, 318-325 from workers/ralph/)
+4. **PROMPT.md:** Fix path references (workers/IMPLEMENTATION_PLAN.md → workers/IMPLEMENTATION_PLAN.md)
+
+### Optional Enhancements
+
+5. **templates/ralph/README.md:** Add monitor examples, `.env` configuration guidance
+6. **loop.sh comments:** Improve model selection documentation
+
+### Do NOT Sync
+
+- `AGENTS.md`, `NEURONS.md`, `THOUGHTS.md`, `THUNK.md`, `VALIDATION_CRITERIA.md` - These are project-specific
+- `cerebras_agent.py` changes - experimental, not yet stable
+- `ralph.sh` - Brain-specific wrapper script
+
+---
+
+## Appendix: Previous Audit Results (2026-01-27)
+
+#### 3.4 `PROMPT.md` Path Adjustments (From Previous Audit)
 
 **Status:** ✅ Context-appropriate (not drift)
 

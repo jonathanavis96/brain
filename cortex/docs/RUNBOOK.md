@@ -283,10 +283,12 @@ Example:
 
 ## See Also
 
-- **CORTEX_SYSTEM_PROMPT.md** - Cortex identity and rules
-- **REPO_MAP.md** - Brain repository navigation guide
-- **DECISIONS.md** - Architectural decisions and stability anchor
-- **../ralph/AGENTS.md** - Ralph operational guide and validation commands
-- **../ralph/PROMPT.md** - Ralph's instructions (PLAN/BUILD protocols)
-- **../skills/SUMMARY.md** - Skills knowledge base overview
-- **../skills/domains/ralph/ralph-patterns.md** - Ralph loop architecture
+- **[CORTEX_SYSTEM_PROMPT.md](../CORTEX_SYSTEM_PROMPT.md)** - Cortex identity and rules
+- **[REPO_MAP.md](REPO_MAP.md)** - Brain repository navigation guide
+- **[DECISIONS.md](../DECISIONS.md)** - Architectural decisions and stability anchor
+- **[workers/ralph/AGENTS.md](../../workers/ralph/AGENTS.md)** - Ralph operational guide and validation commands
+- **[workers/ralph/PROMPT.md](../../workers/ralph/PROMPT.md)** - Ralph's instructions (PLAN/BUILD protocols)
+- **[workers/ralph/README.md](../../workers/ralph/README.md)** - Ralph loop design philosophy
+- **[skills/SUMMARY.md](../../skills/SUMMARY.md)** - Skills knowledge base overview
+- **[skills/domains/ralph/ralph-patterns.md](../../skills/domains/ralph/ralph-patterns.md)** - Ralph loop architecture
+- **[NEURONS.md](../../NEURONS.md)** - Repository structure map

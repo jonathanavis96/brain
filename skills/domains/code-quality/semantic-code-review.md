@@ -126,6 +126,26 @@ issues = validate_python_example(example)
 # Returns: ["Missing: import time"]
 ```
 
+### When Validators Fail on Valid Code
+
+**Critical Pattern:** If validator reports errors on obviously valid code (kwargs, comprehensions, loop variables), assume **validator bug** first.
+
+**Debugging sequence:**
+
+1. Reproduce once: `python3 tools/validate_examples.py <file>`
+2. Inspect validator logic: `rg -n "error message" tools/validate_examples.py`
+3. If code is valid (check language spec), fix the validator
+4. **DO NOT** rewrite valid examples into awkward forms to satisfy broken validators
+
+**Common validator bugs:**
+
+- Not tracking loop variables (`for x in items:` then using `x`)
+- Not tracking comprehension variables (`[x for x in items]`)
+- Not recognizing `**kwargs` unpacking
+- Not handling context managers (`with` statement scope)
+
+**Anti-pattern:** Rewriting valid examples 3 times hoping validator passes.
+
 #### Pattern 2: Regex Capture Group Analyzer
 
 **Goal:** Detect when regex capture groups include delimiters unintentionally.

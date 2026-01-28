@@ -11,6 +11,7 @@ Manual verification tasks that cannot be automated. Complete these and update `r
 **Steps:**
 
 1. Open a terminal and run: `bash workers/ralph/current_ralph_tasks.sh`
+   - **Rule:** This is an interactive, continuously-refreshing monitor. **Do not pipe it** (no `| grep`, `| sed`, etc.). For a safe snapshot use: `timeout 2s bash workers/ralph/current_ralph_tasks.sh --hide-completed`
 2. Resize the terminal window (drag edges, maximize/restore)
 3. Verify the display updates correctly without corruption
 

@@ -454,13 +454,16 @@ Ralph has **full access** to entire brain repository from root (`/home/grafe/cod
 | **Protected** | `.verify/*.sha256` | Baseline hashes - human updates |
 | **Forbidden** | `.verify/waivers/*.approved` | OTP-protected - cannot read/write |
 
-## Related Documentation
+## See Also
 
-- `workers/ralph/NEURONS.md` - Ralph worker codebase map (tactical view)
-- `cortex/NEURONS.md` - Cortex manager codebase map (strategic view)
-- `README.md` - Human-readable onboarding guide
-- `THOUGHTS.md` - Strategic vision and goals
-- `skills/domains/ralph/ralph-patterns.md` - Ralph loop architecture
+- **[workers/ralph/NEURONS.md](workers/ralph/NEURONS.md)** - Ralph worker codebase map (tactical view)
+- **[cortex/NEURONS.md](cortex/NEURONS.md)** - Cortex manager codebase map (strategic view)
+- **[README.md](README.md)** - Human-readable onboarding guide
+- **[AGENTS.md](AGENTS.md)** - Agent operational guide
+- **[THOUGHTS.md](THOUGHTS.md)** - Strategic vision and goals
+- **[skills/SUMMARY.md](skills/SUMMARY.md)** - Skills knowledge base overview
+- **[skills/domains/ralph/ralph-patterns.md](skills/domains/ralph/ralph-patterns.md)** - Ralph loop architecture
+- **[docs/TOOLS.md](docs/TOOLS.md)** - CLI tools and utilities reference
 
 ## Version History
 

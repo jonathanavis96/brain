@@ -207,8 +207,6 @@ Full details: `cortex/docs/PLAN_ONLY_MODE.md`.
 - ✅ Read files directly (`cat`, `grep`), use `bash cortex/snapshot.sh`
 - ❌ Don't call `loop.sh` (infinite loop), `current_ralph_tasks.sh`, or `thunk_ralph_tasks.sh` (interactive tools)
 
----
-
 ## When You Make Mistakes
 
 - Acknowledge immediately

@@ -9,6 +9,7 @@ This directory contains template files for bootstrapping new Ralph worker instan
 - **loop.sh** - Main Ralph execution loop (PLAN/BUILD cycles)
 - **verifier.sh** - Acceptance criteria validation
 - **current_ralph_tasks.sh** - Real-time task monitor (pending tasks)
+  - **Rule:** This is an interactive, continuously-refreshing monitor. **Do not pipe it** (no `| grep`, `| sed`, etc.). For snapshots/debugging use `timeout 2s bash current_ralph_tasks.sh --hide-completed`.
 - **thunk_ralph_tasks.sh** - Real-time task monitor (completed tasks log)
 - **sync_workers_plan_to_cortex.sh** - Copy workers plan to cortex for review/visibility
 - **sync_brain_skills.sh** - Refresh vendored Brain knowledge at `./brain/skills/` (workspace-safe)
