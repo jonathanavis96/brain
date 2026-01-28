@@ -23,69 +23,7 @@
 
 ---
 
-## Phase 39: Root Folder Cleanup & Link Integrity
-
-**Context:** The repo root should contain only primary entrypoints (`AGENTS.md`, `CONTRIBUTING.md`, `NEURONS.md`, `README.md`, `THOUGHTS.md`) plus standard dotfiles. Other loose root files should be moved into appropriate subfolders, and all internal references updated.
-
-**Goal:** Thin the repository root while preserving usability, link integrity, and script ergonomics.
-
-**Success Criteria:**
-
-- Root contains only the kept entrypoints plus standard dotfiles/config
-- Moved files are discoverable under `scripts/`, `docs/requests/`, `artifacts/reports/`, and `config/templates/`
-- No stale references to old root paths remain
-- Link validation passes
-
----
-
-- [ ] **39.8** Fix broken internal links in website template AGENTS doc
-  - **Goal:** Ensure template docs use valid relative links within `templates/website/`.
-  - **Context:** Link validation currently reports **4 broken link occurrences** in `templates/website/AGENTS.project.md` (with `NEURONS.md` referenced twice) for missing targets: `NEURONS.md`, `THOUGHTS.md`, and `VALIDATION_CRITERIA.md`.
-  - **Implementation:** Update links in `templates/website/AGENTS.project.md` (and any other `templates/website/*.project.md` with the same pattern) to point to the existing files:
-    - `NEURONS.project.md`
-    - `THOUGHTS.project.md`
-    - `VALIDATION_CRITERIA.project.md`
-  - **AC:** `bash tools/validate_links.sh` no longer reports broken links for `templates/website/AGENTS.project.md`.
-  - **If Blocked:** If the intended behavior is to link to generated project files (without `.project`), then add stub files or adjust the link checker configuration, but do not leave broken links.
-
----
-
 ## Phase 0-Warn: Verifier Warnings
-
-- [x] **0-Warn.MD024.workers-IMPL_PLAN.47** Fix MD024 duplicate heading in workers/IMPLEMENTATION_PLAN.md line 47
-  - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Task 38.2: Simplify entrypoint..."]`
-  - **Fix:** Rename second occurrence to unique heading (e.g., "Task 38.2 (continued)" or merge sections)
-  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD024 errors for Task 38.2)
-
-- [x] **0-Warn.MD024.workers-IMPL_PLAN.53** Fix MD024 duplicate heading in workers/IMPLEMENTATION_PLAN.md line 53
-  - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Task 38.3: Prune or demote his..."]`
-  - **Fix:** Rename second occurrence to unique heading (e.g., "Task 38.3 (continued)" or merge sections)
-  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD024 errors for Task 38.3)
-
-- [x] **0-Warn.MD024.workers-IMPL_PLAN.62** Fix MD024 duplicate heading in workers/IMPLEMENTATION_PLAN.md line 62
-  - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Task 38.4: Cross-link consiste..."]`
-  - **Fix:** Rename second occurrence to unique heading (e.g., "Task 38.4 (continued)" or merge sections)
-  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD024 errors for Task 38.4)
-
-- [x] **0-Warn.MD024.cortex-IMPL_PLAN.57** Fix MD024 duplicate heading in cortex/IMPLEMENTATION_PLAN.md line 57
-  - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Task 38.2: Simplify entrypoint..."]`
-  - **Fix:** Rename second occurrence to unique heading or merge sections
-  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD024 errors for Task 38.2)
-
-- [ ] **0-Warn.MD024.cortex-IMPL_PLAN.112** Fix MD024 duplicate heading in cortex/IMPLEMENTATION_PLAN.md line 112
-  - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Task 38.3: Prune or demote his..."]`
-  - **Fix:** Rename second occurrence to unique heading or merge sections
-  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD024 errors for Task 38.3)
-
-- [ ] **0-Warn.MD024.cortex-IMPL_PLAN.126** Fix MD024 duplicate heading in cortex/IMPLEMENTATION_PLAN.md line 126
-  - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Task 38.4: Cross-link consiste..."]`
-  - **Fix:** Rename second occurrence to unique heading or merge sections
-  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD024 errors for Task 38.4)
-
-- [ ] **0-Warn.MD012.workers-PLAN_DONE.941-1005** Fix MD012 multiple consecutive blank lines in workers/PLAN_DONE.md
-  - **Error:** Multiple MD012 errors at lines 941, 948, 955, 962, 969, 976, 983, 990, 997, 1004, 1005
-  - **Fix:** Reduce consecutive blank lines to maximum of 2 (per MD012 rule)
-  - **AC:** `markdownlint workers/PLAN_DONE.md` passes (no MD012 errors)
 
 - [ ] **0-Warn.MD024.cortex-PLAN_DONE.454** Fix MD024 duplicate heading in cortex/PLAN_DONE.md line 454
   - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Archived on 2026-01-28"]`
@@ -199,3 +137,6 @@
   - **Goal:** Keep the error reference and domain list accurate.
   - **AC:** `skills/SUMMARY.md` reflects current domains and error guidance; manual review confirms consistency.
   - **If Blocked:** Add a short “needs review” section with the specific missing items.
+
+### Archive - 2026-01-28 21:21
+
