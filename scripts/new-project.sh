@@ -11,8 +11,8 @@ set -euo pipefail
 #   - Graceful offline/auth failure handling
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BRAIN_DIR="$SCRIPT_DIR"
-BRAIN_ROOT="$SCRIPT_DIR"
+BRAIN_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+BRAIN_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 TEMPLATES_DIR="$BRAIN_DIR/templates"
 RALPH_CONFIG_DIR="$HOME/.ralph"
 RALPH_CONFIG_FILE="$RALPH_CONFIG_DIR/config"
@@ -117,12 +117,13 @@ substitute_placeholders() {
 # Usage message
 usage() {
   cat <<EOF
-Usage: bash new-project.sh NEW_PROJECT_IDEA.md
+Usage: bash new-project.sh NEW_PROJECT_IDEA.md [--local-only]
 
 Bootstrap a new project with complete Ralph infrastructure and GitHub integration.
 
 Arguments:
   NEW_PROJECT_IDEA.md    Path to project idea file (required)
+  --local-only           Skip GitHub setup (non-interactive mode)
 
 The NEW_PROJECT_IDEA.md file should contain:
   - Project name (# Project: <name>)
@@ -145,17 +146,27 @@ After successful bootstrap:
 
 Example:
   bash new-project.sh my_cool_app_idea.md
+  bash new-project.sh my_cool_app_idea.md --local-only
 
 EOF
   exit 1
 }
 
 # Parse command line arguments
-if [ $# -ne 1 ]; then
+if [ $# -lt 1 ] || [ $# -gt 2 ]; then
   usage
 fi
 
 IDEA_FILE="$1"
+FORCE_LOCAL_ONLY=false
+
+if [ $# -eq 2 ]; then
+  if [ "$2" == "--local-only" ]; then
+    FORCE_LOCAL_ONLY=true
+  else
+    usage
+  fi
+fi
 
 # Check dependencies first
 check_dependencies
@@ -250,9 +261,15 @@ echo -e "${CYAN}GitHub Repository Setup${NC}"
 echo -e "${CYAN}========================================${NC}"
 echo ""
 
-read -r -p "Create GitHub repository? (y/n): " create_repo_answer
-if [[ "$create_repo_answer" =~ ^[Yy] ]]; then
-  CREATE_REPO=true
+if [[ "$FORCE_LOCAL_ONLY" == "true" ]]; then
+  info "Running in local-only mode (--local-only flag)"
+  LOCAL_ONLY=true
+  REPO_NAME="$SUGGESTED_REPO"
+  WORK_BRANCH="${REPO_NAME}-work"
+else
+  read -r -p "Create GitHub repository? (y/n): " create_repo_answer
+  if [[ "$create_repo_answer" =~ ^[Yy] ]]; then
+    CREATE_REPO=true
 
   # Check if gh CLI is available
   if ! check_gh; then
@@ -307,12 +324,13 @@ if [[ "$create_repo_answer" =~ ^[Yy] ]]; then
       die "Setup cancelled by user"
     fi
   fi
-else
-  # No GitHub, local only
-  LOCAL_ONLY=true
-  REPO_NAME="$SUGGESTED_REPO"
-  WORK_BRANCH="${REPO_NAME}-work"
-  info "Skipping GitHub setup (local-only mode)"
+  else
+    # No GitHub, local only
+    LOCAL_ONLY=true
+    REPO_NAME="$SUGGESTED_REPO"
+    WORK_BRANCH="${REPO_NAME}-work"
+    info "Skipping GitHub setup (local-only mode)"
+  fi
 fi
 
 # ============================================

@@ -15,9 +15,9 @@ echo -e "${CYAN}🧠 Brain Setup${NC}"
 echo -e "${CYAN}========================================${NC}"
 echo ""
 
-# Detect brain location (where this script is)
+# Detect brain location (parent of where this script is)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BRAIN_ROOT="$SCRIPT_DIR"
+BRAIN_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 echo -e "${GREEN}✓ Brain location: ${BRAIN_ROOT}${NC}"
 

@@ -23,33 +23,6 @@
 
 ---
 
-## Phase 0-Warn: Markdown Lint Errors
-
-**Context:** The following markdown errors could NOT be auto-fixed and require manual intervention.
-
-**Goal:** Fix all remaining markdown lint errors to maintain documentation quality.
-
-**Success Criteria:** `markdownlint <file>` passes with no errors for each affected file.
-
----
-
-- [ ] **WARN.MD001.TEMPLATE_DRIFT_REPORT** Fix MD001/heading-increment in artifacts/reports/TEMPLATE_DRIFT_REPORT.md:245
-  - **Issue:** Heading levels should only increment by one level at a time [Expected: h3; Actual: h4]
-  - **Location:** Line 245 - "#### 3.4 `PROMPT.md` Path Adjustments"
-  - **AC:** `markdownlint artifacts/reports/TEMPLATE_DRIFT_REPORT.md` passes (no MD001 errors)
-
-- [ ] **WARN.MD032.CORTEX_SYSTEM_PROMPT** Fix MD032/blanks-around-lists in cortex/CORTEX_SYSTEM_PROMPT.md:10
-  - **Issue:** Lists should be surrounded by blank lines
-  - **Location:** Line 10 - bullet list not properly separated
-  - **AC:** `markdownlint cortex/CORTEX_SYSTEM_PROMPT.md` passes (no MD032 errors)
-
-- [ ] **WARN.MD022.CORTEX_SYSTEM_PROMPT** Fix MD022/blanks-around-headings in cortex/CORTEX_SYSTEM_PROMPT.md:11
-  - **Issue:** Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above]
-  - **Location:** Line 11 - "## Responsibilities" heading
-  - **AC:** `markdownlint cortex/CORTEX_SYSTEM_PROMPT.md` passes (no MD022 errors)
-
----
-
 ## Phase 35: Skills & Knowledge Base Maintenance
 
 **Context:** Brain repository skills need periodic review and updates based on recent discoveries, tool usage patterns, and emerging best practices.
@@ -69,19 +42,7 @@
 
 ### Task 35.2: Template Maintenance
 
-- [ ] **35.2.3** Update bootstrap scripts
-  - **Goal:** Ensure `new-project.sh` and `setup.sh` match the latest recommended patterns.
-  - **AC:** Scripts work for new projects (basic smoke bootstrap in a clean directory succeeds).
-  - **If Blocked:** Add a reproducible “bootstrap test recipe” section to the plan and stop after documenting.
-
----
-
 ### Task 35.3: Documentation Quality
-
-- [ ] **35.3.1** Link validation
-  - **Goal:** Remove broken internal links across docs.
-  - **AC:** `bash tools/validate_links.sh` returns 0 errors.
-  - **If Blocked:** Fix the highest-impact links first and list remaining broken links in the task notes.
 
 - [ ] **35.3.2** Example validation
   - **Goal:** Ensure code examples in skills docs are complete and runnable.
