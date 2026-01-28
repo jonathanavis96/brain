@@ -38,39 +38,12 @@
 
 ---
 
-- [x] **39.1** Create destination directories for root-file moves
-  - **Goal:** Prepare the new canonical locations before any move.
-  - **Implementation:** Ensure these directories exist: `scripts/`, `docs/requests/`, `artifacts/reports/`, `config/templates/`.
-  - **AC:** All directories exist; no files moved yet.
 
-- [x] **39.2** Move root scripts into `scripts/`
-  - **Goal:** Remove bootstrap scripts from repo root while keeping them runnable.
-  - **Move:** `setup.sh` → `scripts/setup.sh`; `setup-linters.sh` → `scripts/setup-linters.sh`; `new-project.sh` → `scripts/new-project.sh`.
-  - **AC:** Files are moved (prefer `git mv`) and retain executable bits (if previously executable).
 
-- [x] **39.3** Move root docs/reports to their new locations
-  - **Goal:** Clear non-entrypoint docs from root into appropriate buckets.
-  - **Move:** `SPEC_CHANGE_REQUEST.md` → `docs/requests/SPEC_CHANGE_REQUEST.md`; `TEMPLATE_DRIFT_REPORT.md` → `artifacts/reports/TEMPLATE_DRIFT_REPORT.md`.
-  - **AC:** Both files exist in new locations and no longer exist at root.
 
-- [x] **39.4** Move root config template into `config/templates/`
-  - **Goal:** Group config templates under `config/` instead of root.
-  - **Move:** `rovodev-config.template.yml` → `config/templates/rovodev-config.template.yml`.
-  - **AC:** File exists at new path; no longer exists at root.
 
-- [x] **39.5** Update repo references to new file locations (Markdown + code)
-  - **Goal:** No stale references to old root paths remain.
-  - **Scope:** Update references in `**/*.md`, `**/*.sh`, and configs/templates that mention moved files.
-  - **AC:** Grep for old root filenames returns no unintended references; updated links resolve.
 
-- [x] **39.6** Delete root temporary debris (`tmp_rovodev_*`, `__pycache__/`)
-  - **Goal:** Remove accidental workspace clutter from version control/root listing.
-  - **AC:** Root no longer contains `tmp_rovodev_*` or `__pycache__/`.
 
-- [x] **39.7** Run validations and fix any fallout from the moves
-  - **Goal:** Confirm link integrity and repo checks still pass after restructuring.
-  - **Run:** `bash tools/validate_links.sh` (plus any targeted validation needed based on failures).
-  - **AC:** Link validation passes; no broken-path failures remain.
 
 - [ ] **39.8** Fix broken internal links in website template AGENTS doc
   - **Goal:** Ensure template docs use valid relative links within `templates/website/`.
@@ -84,41 +57,11 @@
 
 ---
 
-## Phase 38: Documentation Consolidation & Navigation
-
-**Context:** Over time, documentation tends to drift: duplicated guidance, conflicting instructions, and unclear entrypoints. This phase focuses on consolidation and navigability (not functional changes).
-
-**Goal:** Make the documentation set coherent: one canonical place per topic, clear “start here” paths, and minimal duplication.
-
-**Success Criteria:**
-
-- No conflicting guidance between `README.md`, `AGENTS.md`, `docs/*`, `cortex/docs/*`, and `workers/*` for core workflows
-- Clear “Start Here” pointers for humans and agents
-- Deprecated/duplicate docs are either removed or clearly marked as historical
-
----
-
 ## Phase 0-Warn: Verifier Warnings
 
-- [x] **0-Warn.MD024.workers-IMPL_PLAN.47** Fix MD024 duplicate heading in workers/IMPLEMENTATION_PLAN.md line 47
-  - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Task 38.2: Simplify entrypoint..."]`
-  - **Fix:** Rename second occurrence to unique heading (e.g., "Task 38.2 (continued)" or merge sections)
-  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD024 errors for Task 38.2)
 
-- [x] **0-Warn.MD024.workers-IMPL_PLAN.53** Fix MD024 duplicate heading in workers/IMPLEMENTATION_PLAN.md line 53
-  - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Task 38.3: Prune or demote his..."]`
-  - **Fix:** Rename second occurrence to unique heading (e.g., "Task 38.3 (continued)" or merge sections)
-  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD024 errors for Task 38.3)
 
-- [x] **0-Warn.MD024.workers-IMPL_PLAN.62** Fix MD024 duplicate heading in workers/IMPLEMENTATION_PLAN.md line 62
-  - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Task 38.4: Cross-link consiste..."]`
-  - **Fix:** Rename second occurrence to unique heading (e.g., "Task 38.4 (continued)" or merge sections)
-  - **AC:** `markdownlint workers/IMPLEMENTATION_PLAN.md` passes (no MD024 errors for Task 38.4)
 
-- [x] **0-Warn.MD024.cortex-IMPL_PLAN.57** Fix MD024 duplicate heading in cortex/IMPLEMENTATION_PLAN.md line 57
-  - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Task 38.2: Simplify entrypoint..."]`
-  - **Fix:** Rename second occurrence to unique heading or merge sections
-  - **AC:** `markdownlint cortex/IMPLEMENTATION_PLAN.md` passes (no MD024 errors for Task 38.2)
 
 - [ ] **0-Warn.MD024.cortex-IMPL_PLAN.112** Fix MD024 duplicate heading in cortex/IMPLEMENTATION_PLAN.md line 112
   - **Error:** `error MD024/no-duplicate-heading Multiple headings with the same content [Context: "Task 38.3: Prune or demote his..."]`

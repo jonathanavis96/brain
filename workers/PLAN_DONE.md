@@ -1010,3 +1010,50 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
   - **Archived At:** 2026-01-28 21:14:21
   - **Block:**
 
+### Archived on 2026-01-28 21:31:57
+
+- [x] **39.9**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 21:31:57
+  - **Block:**
+
+- [x] **39.8**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 21:31:57
+  - **Block:**
+
+- [x] **0-Warn.MD024.workers-IMPL_PLAN.47**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 21:31:57
+  - **Block:**
+
+- [x] **0-Warn.MD024.workers-IMPL_PLAN.53**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 21:31:57
+  - **Block:**
+
+- [x] **0-Warn.MD024.workers-IMPL_PLAN.62**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 21:31:57
+  - **Block:**
+
+- [x] **0-Warn.MD024.cortex-IMPL_PLAN.57**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 21:31:57
+  - **Block:**
+
+- [x] **0-Warn.MD024.cortex-IMPL_PLAN.112**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 21:31:57
+  - **Block:**
+
+- [x] **0-Warn.MD024.cortex-IMPL_PLAN.126**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 21:31:57
+  - **Block:**
+
+- [x] **0-Warn.MD012.workers-PLAN_DONE.941-1005**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-28 21:31:57
+  - **Block:**
+

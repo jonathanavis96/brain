@@ -489,3 +489,19 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-28 | 38.2.2 | - [x] **38.2.2** Reduce redundant onboarding text in `AGENTS.md`/`cortex/docs/*` |
 | 2026-01-28 | 38.3.1 | - [x] **38.3.1** Mark historical change logs and old analysis as "historical" and de-emphasize in navigation |
 | 2026-01-28 | 38.4.1 | - [x] **38.4.1** Standardize references to canonical files across the repo |
+
+### Archived on 2026-01-28 21:23:51
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-28 | 39.1 | - [x] **39.1** Create destination directories for root-file moves |
+| 2026-01-28 | 39.2 | - [x] **39.2** Move root scripts into `scripts/` |
+| 2026-01-28 | 39.3 | - [x] **39.3** Move root docs/reports to their new locations |
+| 2026-01-28 | 39.4 | - [x] **39.4** Move root config template into `config/templates/` |
+| 2026-01-28 | 39.5 | - [x] **39.5** Update repo references to new file locations (Markdown + code) |
+| 2026-01-28 | 39.6 | - [x] **39.6** Delete root temporary debris (`tmp_rovodev_*`, `__pycache__/`) |
+| 2026-01-28 | 39.7 | - [x] **39.7** Run validations and fix any fallout from the moves |
+| 2026-01-28 | 0-Warn.MD024.workers-IMPL_PLAN.47 | - [x] **0-Warn.MD024.workers-IMPL_PLAN.47** Fix MD024 duplicate heading in workers/IMPLEMENTATION_PLAN.md line 47 |
+| 2026-01-28 | 0-Warn.MD024.workers-IMPL_PLAN.53 | - [x] **0-Warn.MD024.workers-IMPL_PLAN.53** Fix MD024 duplicate heading in workers/IMPLEMENTATION_PLAN.md line 53 |
+| 2026-01-28 | 0-Warn.MD024.workers-IMPL_PLAN.62 | - [x] **0-Warn.MD024.workers-IMPL_PLAN.62** Fix MD024 duplicate heading in workers/IMPLEMENTATION_PLAN.md line 62 |
+| 2026-01-28 | 0-Warn.MD024.cortex-IMPL_PLAN.57 | - [x] **0-Warn.MD024.cortex-IMPL_PLAN.57** Fix MD024 duplicate heading in cortex/IMPLEMENTATION_PLAN.md line 57 |
