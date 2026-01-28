@@ -2460,19 +2460,10 @@ else
         verifier_status=$(grep "^SUMMARY" .verify/latest.txt | head -1 || echo "Unknown")
       fi
 
-      # Post the full summary with additional stats
-      # NOTE: Avoid re-printing the full summary to the interactive terminal (too noisy).
-      # We still append Discord-post output to a per-iteration completion log.
+      # Post iteration summary to Discord (summary already contains Run info)
+      # Avoid re-printing the full summary to the interactive terminal (too noisy).
       completion_log="${LOGDIR}/iter${i}_completion.log"
-      {
-        echo "$summary_content"
-        echo ""
-        echo "---"
-        echo "**Stats:** Cache hits: ${CACHE_HITS} | Misses: ${CACHE_MISSES}"
-        [[ -n "$time_saved_display" ]] && echo "**Performance:** ${time_saved_display}"
-        echo "**Verifier:** ${verifier_status}"
-        echo "**Run ID:** ${ROLLFLOW_RUN_ID:-unknown}"
-      } | "$ROOT/bin/discord-post" >>"$completion_log" 2>&1
+      echo "$summary_content" | "$ROOT/bin/discord-post" >>"$completion_log" 2>&1
       discord_rc=$?
 
       if [[ $discord_rc -eq 0 ]]; then
