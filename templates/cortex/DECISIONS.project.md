@@ -49,7 +49,7 @@ When adding decisions, use this format:
 
 **Don't add:**
 
-- Temporary decisions (use `cortex/THOUGHTS.md` instead)
+- Temporary decisions (use `brain/cortex/THOUGHTS.md` instead)
 - Implementation details (use inline comments instead)
 - Bug fixes (use commit messages instead)
 - Personal preferences without rationale

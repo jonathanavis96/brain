@@ -30,14 +30,14 @@ This directory contains templates for bootstrapping new projects with the Ralph 
 
 All templates use **bash-style forward slash paths** for brain repository references to ensure cross-platform compatibility and WSL/Linux support.
 
-### The Standard: `./brain/` (in-workspace snapshot)
+### The Standard: `./brain/` (in-workspace brain pack)
 
-RovoDev cannot read files outside its workspace. New projects should vendor a snapshot of Brain knowledge into the repo at `./skills/` during bootstrap.
+RovoDev cannot read files outside its workspace. New projects should vendor Brain runtime + knowledge into the repo under `./brain/` during bootstrap.
 
-To refresh that snapshot later, run:
+To refresh the **skills snapshot** later, run:
 
 ```bash
-bash workers/ralph/sync_brain_skills.sh --from-sibling
+bash brain/workers/ralph/sync_brain_skills.sh --from-sibling
 ```text
 
 ## Cross-Project Pattern Mining (Gap Capture)
@@ -48,7 +48,7 @@ To flag gaps for ingestion into Brain, touch `cortex/.gap_pending`.
 **Helper (recommended):**
 
 ```bash
-bash workers/ralph/capture_gap.sh "Suggested Skill Name" \
+bash brain/workers/ralph/capture_gap.sh "Suggested Skill Name" \
   --type "Pattern" \
   --priority "P1" \
   --why "1-2 lines" \
@@ -62,8 +62,8 @@ bash workers/ralph/capture_gap.sh "Suggested Skill Name" \
 Templates use **relative paths with forward slashes**:
 
 ```markdown
-1. `./skills/SUMMARY.md` - Knowledge base overview
-2. `./skills/domains/frontend/react-patterns.md` - Top 10 rules
+1. `./brain/skills/SUMMARY.md` - Knowledge base overview
+2. `./brain/skills/domains/frontend/react-patterns.md` - Top 10 rules
 ```text
 
 ### Why Forward Slashes?
@@ -78,20 +78,20 @@ Templates use **relative paths with forward slashes**:
 Templates are organized at different depths, requiring different numbers of `..` segments:
 
 - **Project root templates** (e.g., `templates/AGENTS.project.md`):
-  - Use: `./skills/SUMMARY.md`
-  - Depth: One level up from project root to reach brain sibling
+  - Use: `./brain/skills/SUMMARY.md`
+  - Depth: Same root-relative path from project root
 
 - **Ralph subdirectory templates** (e.g., `templates/ralph/PROMPT.md`):
-  - Use: `./skills/SUMMARY.md`
-  - Depth: Two levels up from ralph/ dir (ralph/ is typically at project root level)
+  - Use: `./brain/skills/SUMMARY.md`
+  - Depth: Same root-relative path from project root
 
 ### Examples
 
 **Correct ✅ (Always use forward slashes)**
 
 ```markdown
-Read `./skills/SUMMARY.md` first (always)
-Check `./skills/domains/frontend/react-patterns.md`
+Read `./brain/skills/SUMMARY.md` first (always)
+Check `./brain/skills/domains/frontend/react-patterns.md`
 ```text
 
 **Incorrect ❌ (Anti-patterns to avoid)**

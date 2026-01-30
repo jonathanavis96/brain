@@ -6,14 +6,14 @@
 
 **ALWAYS start here:**
 
-1. `./skills/SUMMARY.md` - Knowledge base overview and usage guide
-2. `./skills/domains/` - Domain-specific patterns (caching, API design, auth, testing, etc.)
+1. `./brain/skills/SUMMARY.md` - Knowledge base overview and usage guide
+2. `./brain/skills/domains/` - Domain-specific patterns (caching, API design, auth, testing, etc.)
 
 **When working with specific technologies:**
-3. `./skills/` - Technology-specific best practices and patterns
+3. `./brain/skills/` - Technology-specific best practices and patterns
 
 **For project-specific patterns:**
-4. `./skills/projects/<project-slug>.md` - Project-specific conventions discovered in this codebase
+4. `./brain/skills/projects/<project-slug>.md` - Project-specific conventions discovered in this codebase
 
 ### Why This Order Matters
 
@@ -26,10 +26,10 @@
 When you discover a new convention, architectural decision, or project-specific pattern:
 
 1. **Create a skill file** in the brain repo:
-   - Project-specific: `./skills/projects/<project-slug>.md`
-   - Domain/cross-project: `./skills/domains/<domain>.md`
+   - Project-specific: `./brain/skills/projects/<project-slug>.md`
+   - Domain/cross-project: `./brain/skills/domains/<domain>.md`
 
-2. **Update the index**: Add a link in `./skills/SUMMARY.md`
+2. **Update the index**: Add a link in `./brain/skills/SUMMARY.md`
 
 3. **Structure new skill files** with:
 
@@ -82,7 +82,7 @@ When you discover a new convention, architectural decision, or project-specific 
 - Use `requirements.txt` or `pyproject.toml` for dependencies
 - Document setup and usage in README.md
 - Keep project goals and vision in `THOUGHTS.md`
-- Maintain `workers/IMPLEMENTATION_PLAN.md` as a prioritized task list
+- Maintain `brain/workers/IMPLEMENTATION_PLAN.md` as a prioritized task list
 
 ### Python Best Practices
 
@@ -111,8 +111,8 @@ When you discover a new convention, architectural decision, or project-specific 
 
 This project uses the Ralph Wiggum iterative loop for systematic development:
 
-- **Single unified prompt**: See `workers/ralph/PROMPT.md` (determines mode from iteration number)
-- **Progress tracking**: All work logged in `workers/ralph/progress.txt`
+- **Single unified prompt**: See `brain/workers/ralph/PROMPT.md` (determines mode from iteration number)
+- **Progress tracking**: All work logged in `brain/workers/ralph/progress.txt`
 - **Completion**: Look for `:::COMPLETE:::` sentinel
 
 ## RovoDev + CLI Guardrails

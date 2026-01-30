@@ -59,7 +59,11 @@ bash generators/generate-thoughts.sh INPUT_IDEA.md OUTPUT_THOUGHTS.md
 
 ### generate-implementation-plan.sh
 
-**Purpose:** Creates workers/IMPLEMENTATION_PLAN.md (task breakdown)
+**Purpose:** Creates a project implementation plan (task breakdown)
+
+In downstream projects, the canonical plan location is:
+
+- `brain/workers/IMPLEMENTATION_PLAN.md`
 
 ```bash
 bash generators/generate-implementation-plan.sh INPUT_IDEA.md OUTPUT_IMPLEMENTATION_PLAN.md
@@ -91,10 +95,13 @@ EOF
 # Generate Ralph files
 bash generators/generate-neurons.sh my-api-idea.md NEURONS.md
 bash generators/generate-thoughts.sh my-api-idea.md THOUGHTS.md
-bash generators/generate-implementation-plan.sh my-api-idea.md workers/IMPLEMENTATION_PLAN.md
+bash generators/generate-implementation-plan.sh my-api-idea.md brain/workers/IMPLEMENTATION_PLAN.md
 
 # Or use new-project.sh to do everything
 bash scripts/new-project.sh my-api-idea.md
+
+# In the new project, Ralph is run from:
+#   cd brain/workers/ralph && bash loop.sh
 ```text
 
 ## Template Types
@@ -104,7 +111,7 @@ Located in `templates/`:
 | Template | Purpose | Files Included |
 |----------|---------|----------------|
 | `ralph/` | Full Ralph loop infrastructure | 14 files: loop.sh, monitors, verifier, rules/AC.rules, PROMPT.md, etc. |
-| `cortex/` | Cortex manager infrastructure | 5 files: CORTEX_SYSTEM_PROMPT.md, workers/IMPLEMENTATION_PLAN.md, THOUGHTS.md, DECISIONS.md, snapshot.sh |
+| `brain/cortex/` | Cortex manager infrastructure | 5+ files: CORTEX_SYSTEM_PROMPT.md, THOUGHTS.md, DECISIONS.md, snapshot.sh, etc. |
 | `backend/` | Backend project baseline | AGENTS.md, NEURONS.md, THOUGHTS.md, VALIDATION_CRITERIA.md |
 | `python/` | Python project baseline | Same as backend with Python-specific guidance |
 
@@ -130,34 +137,34 @@ All generators validate required fields and exit with clear error messages:
 
 ## Known Issues
 
-### Don't Copy `workers/` Directory
+### Brain pack location in downstream projects
 
-**Issue:** The `workers/ralph/` directory from the Brain repo should NOT be copied to bootstrapped projects. It contains Brain-specific Ralph infrastructure for self-improvement, not project-specific worker files.
+**Key rule:** In downstream projects, all Brain-provided runtime + knowledge lives under `./brain/`.
 
-**What went wrong:** The Jacqui website bootstrap accidentally included `workers/ralph/` which created confusion about where Ralph was supposed to work.
+That means projects should not have top-level `workers/` or top-level `cortex/` folders created by bootstrap.
 
-**Fix:** Ensure `new-project.sh` and manual bootstrapping exclude:
-
-- `workers/` (Brain's internal worker configs)
-- Any Brain-specific directories not meant for project scaffolding
-
-**Project structure should be:**
+**Correct downstream project structure:**
 
 ```text
 project/
-├── cortex/          # Manager layer (planning)
-├── ralph/           # Worker layer (execution) ← project-specific
-├── src/             # Source code
+├── brain/
+│   ├── skills/                 # Brain skills snapshot (updated via sync_brain_skills.sh)
+│   ├── cortex/                 # Cortex manager layer (planning)
+│   └── workers/
+│       ├── IMPLEMENTATION_PLAN.md
+│       └── ralph/              # Ralph worker runtime
+├── src/                         # Application source code
+├── docs/
 └── ...
 ```text
 
-NOT:
+**Incorrect (old convention):**
 
 ```text
 project/
-├── cortex/
-├── ralph/
-├── workers/ralph/   # ❌ Brain-specific, don't copy
+├── skills/                      # ❌ old convention
+├── workers/                      # ❌ old convention
+├── cortex/                       # ❌ old convention
 └── ...
 ```text
 
@@ -166,6 +173,6 @@ project/
 - **[`scripts/new-project.sh`](../scripts/new-project.sh)** - Main bootstrap script
 - **[templates/](../templates/)** - Template files
 - **[skills/playbooks/bootstrap-new-project.md](../skills/playbooks/bootstrap-new-project.md)** - Bootstrap playbook
-- **[workers/ralph/README.md](../workers/ralph/README.md)** - Ralph loop design philosophy
+- **[workers/ralph/README.md](../workers/ralph/README.md)** - Ralph loop design philosophy (Brain repo internal reference)
 - **[NEURONS.md](../NEURONS.md)** - Repository structure map
 - **[AGENTS.md](../AGENTS.md)** - Brain repository agent guidance

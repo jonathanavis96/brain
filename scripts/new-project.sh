@@ -339,10 +339,10 @@ fi
 
 info "Creating project directory structure..."
 mkdir -p "$PROJECT_LOCATION"
-mkdir -p "$PROJECT_LOCATION/workers/ralph"
-mkdir -p "$PROJECT_LOCATION/workers/ralph/logs"
-mkdir -p "$PROJECT_LOCATION/workers/shared"
-mkdir -p "$PROJECT_LOCATION/skills"
+mkdir -p "$PROJECT_LOCATION/brain/workers/ralph"
+mkdir -p "$PROJECT_LOCATION/brain/workers/ralph/logs"
+mkdir -p "$PROJECT_LOCATION/brain/workers/shared"
+mkdir -p "$PROJECT_LOCATION/brain/skills"
 mkdir -p "$PROJECT_LOCATION/src"
 mkdir -p "$PROJECT_LOCATION/docs"
 
@@ -352,65 +352,65 @@ mkdir -p "$PROJECT_LOCATION/docs"
 
 info "Copying template files..."
 
-# Copy workers/shared utilities (required by workers/ralph/loop.sh)
+# Copy workers/shared utilities (required by brain/workers/ralph/loop.sh)
 if [[ -d "$TEMPLATES_DIR/workers/shared" ]]; then
-  cp -r "$TEMPLATES_DIR/workers/shared"/* "$PROJECT_LOCATION/workers/shared/"
-  chmod +x "$PROJECT_LOCATION/workers/shared/"*.sh 2>/dev/null || true
-  success "Copied workers/shared/ utilities (from templates)"
+  cp -r "$TEMPLATES_DIR/workers/shared"/* "$PROJECT_LOCATION/brain/workers/shared/"
+  chmod +x "$PROJECT_LOCATION/brain/workers/shared/"*.sh 2>/dev/null || true
+  success "Copied brain/workers/shared/ utilities (from templates)"
 elif [[ -d "$BRAIN_ROOT/workers/shared" ]]; then
-  cp -r "$BRAIN_ROOT/workers/shared"/* "$PROJECT_LOCATION/workers/shared/"
-  chmod +x "$PROJECT_LOCATION/workers/shared/"*.sh 2>/dev/null || true
-  success "Copied workers/shared/ utilities (from Brain repo)"
+  cp -r "$BRAIN_ROOT/workers/shared"/* "$PROJECT_LOCATION/brain/workers/shared/"
+  chmod +x "$PROJECT_LOCATION/brain/workers/shared/"*.sh 2>/dev/null || true
+  success "Copied brain/workers/shared/ utilities (from Brain repo)"
 else
-  warn "workers/shared not found (templates or Brain root); loop.sh may fail"
+  warn "brain/workers/shared not found (templates or Brain root); loop.sh may fail"
 fi
 
 # Copy AGENTS.md to ralph/ (not project root)
 if [ -f "$TEMPLATES_DIR/AGENTS.project.md" ]; then
-  cp "$TEMPLATES_DIR/AGENTS.project.md" "$PROJECT_LOCATION/workers/ralph/AGENTS.md"
-  substitute_placeholders "$PROJECT_LOCATION/workers/ralph/AGENTS.md" "$REPO_NAME" "$WORK_BRANCH"
-  success "Copied workers/ralph/AGENTS.md"
+  cp "$TEMPLATES_DIR/AGENTS.project.md" "$PROJECT_LOCATION/brain/workers/ralph/AGENTS.md"
+  substitute_placeholders "$PROJECT_LOCATION/brain/workers/ralph/AGENTS.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied brain/workers/ralph/AGENTS.md"
 else
   warn "Template not found: AGENTS.project.md"
 fi
 
 # Copy Ralph infrastructure templates
 if [ -f "$TEMPLATES_DIR/ralph/PROMPT.project.md" ]; then
-  cp "$TEMPLATES_DIR/ralph/PROMPT.project.md" "$PROJECT_LOCATION/workers/ralph/PROMPT.md"
-  substitute_placeholders "$PROJECT_LOCATION/workers/ralph/PROMPT.md" "$REPO_NAME" "$WORK_BRANCH"
-  success "Copied workers/ralph/PROMPT.md"
+  cp "$TEMPLATES_DIR/ralph/PROMPT.project.md" "$PROJECT_LOCATION/brain/workers/ralph/PROMPT.md"
+  substitute_placeholders "$PROJECT_LOCATION/brain/workers/ralph/PROMPT.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied brain/workers/ralph/PROMPT.md"
 else
   warn "Template not found: ralph/PROMPT.project.md"
 fi
 
 if [ -f "$TEMPLATES_DIR/ralph/IMPLEMENTATION_PLAN.project.md" ]; then
-  mkdir -p "$PROJECT_LOCATION/workers"
-  cp "$TEMPLATES_DIR/ralph/IMPLEMENTATION_PLAN.project.md" "$PROJECT_LOCATION/workers/IMPLEMENTATION_PLAN.md"
-  substitute_placeholders "$PROJECT_LOCATION/workers/IMPLEMENTATION_PLAN.md" "$REPO_NAME" "$WORK_BRANCH"
-  success "Copied workers/IMPLEMENTATION_PLAN.md"
+  mkdir -p "$PROJECT_LOCATION/brain/workers"
+  cp "$TEMPLATES_DIR/ralph/IMPLEMENTATION_PLAN.project.md" "$PROJECT_LOCATION/brain/workers/IMPLEMENTATION_PLAN.md"
+  substitute_placeholders "$PROJECT_LOCATION/brain/workers/IMPLEMENTATION_PLAN.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied brain/workers/IMPLEMENTATION_PLAN.md"
 else
   warn "Template not found: ralph/IMPLEMENTATION_PLAN.project.md"
 fi
 
 if [ -f "$TEMPLATES_DIR/ralph/VALIDATION_CRITERIA.project.md" ]; then
-  cp "$TEMPLATES_DIR/ralph/VALIDATION_CRITERIA.project.md" "$PROJECT_LOCATION/workers/ralph/VALIDATION_CRITERIA.md"
-  substitute_placeholders "$PROJECT_LOCATION/workers/ralph/VALIDATION_CRITERIA.md" "$REPO_NAME" "$WORK_BRANCH"
-  success "Copied workers/ralph/VALIDATION_CRITERIA.md"
+  cp "$TEMPLATES_DIR/ralph/VALIDATION_CRITERIA.project.md" "$PROJECT_LOCATION/brain/workers/ralph/VALIDATION_CRITERIA.md"
+  substitute_placeholders "$PROJECT_LOCATION/brain/workers/ralph/VALIDATION_CRITERIA.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied brain/workers/ralph/VALIDATION_CRITERIA.md"
 else
   warn "Template not found: ralph/VALIDATION_CRITERIA.project.md"
 fi
 
 if [ -f "$TEMPLATES_DIR/ralph/RALPH.md" ]; then
-  cp "$TEMPLATES_DIR/ralph/RALPH.md" "$PROJECT_LOCATION/workers/ralph/RALPH.md"
-  substitute_placeholders "$PROJECT_LOCATION/workers/ralph/RALPH.md" "$REPO_NAME" "$WORK_BRANCH"
-  success "Copied workers/ralph/RALPH.md"
+  cp "$TEMPLATES_DIR/ralph/RALPH.md" "$PROJECT_LOCATION/brain/workers/ralph/RALPH.md"
+  substitute_placeholders "$PROJECT_LOCATION/brain/workers/ralph/RALPH.md" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied brain/workers/ralph/RALPH.md"
 else
   warn "Template not found: ralph/RALPH.md"
 fi
 
-# Copy Cortex helper pack
+# Copy Cortex helper pack (vendored under ./brain/cortex)
 # This makes the project runnable in "Cortex/Ralph" mode as a standalone repo.
-mkdir -p "$PROJECT_LOCATION/cortex"
+mkdir -p "$PROJECT_LOCATION/brain/cortex"
 
 # Copy Cortex markdown templates + helper scripts (excluding Brain-specific entrypoints)
 for template_path in "$TEMPLATES_DIR/cortex"/*; do
@@ -428,11 +428,11 @@ for template_path in "$TEMPLATES_DIR/cortex"/*; do
     out_file="$template_file"
   fi
 
-  cp "$template_path" "$PROJECT_LOCATION/cortex/$out_file"
+  cp "$template_path" "$PROJECT_LOCATION/brain/cortex/$out_file"
 
   # Placeholder substitution for markdown files only
   if [[ "$out_file" == *.md ]]; then
-    substitute_placeholders "$PROJECT_LOCATION/cortex/$out_file" "$REPO_NAME" "$WORK_BRANCH"
+    substitute_placeholders "$PROJECT_LOCATION/brain/cortex/$out_file" "$REPO_NAME" "$WORK_BRANCH"
   fi
 
 done
@@ -441,91 +441,91 @@ done
 if [[ -f "$TEMPLATES_DIR/cortex/cortex-PROJECT.bash" ]]; then
   repo_prefix=${REPO_NAME%%-*}
   cortex_entrypoint="cortex-${repo_prefix}.bash"
-  cp "$TEMPLATES_DIR/cortex/cortex-PROJECT.bash" "$PROJECT_LOCATION/cortex/${cortex_entrypoint}"
+  cp "$TEMPLATES_DIR/cortex/cortex-PROJECT.bash" "$PROJECT_LOCATION/brain/cortex/${cortex_entrypoint}"
 
-  sed -i "s/{{PROJECT_SLUG}}/${repo_prefix}/g" "$PROJECT_LOCATION/cortex/${cortex_entrypoint}"
-  sed -i "s/{{PROJECT_NAME}}/${PROJECT_NAME}/g" "$PROJECT_LOCATION/cortex/${cortex_entrypoint}"
+  sed -i "s/{{PROJECT_SLUG}}/${repo_prefix}/g" "$PROJECT_LOCATION/brain/cortex/${cortex_entrypoint}"
+  sed -i "s/{{PROJECT_NAME}}/${PROJECT_NAME}/g" "$PROJECT_LOCATION/brain/cortex/${cortex_entrypoint}"
 
-  chmod +x "$PROJECT_LOCATION/cortex/${cortex_entrypoint}" 2>/dev/null || true
-  success "Generated cortex/${cortex_entrypoint}"
+  chmod +x "$PROJECT_LOCATION/brain/cortex/${cortex_entrypoint}" 2>/dev/null || true
+  success "Generated brain/cortex/${cortex_entrypoint}"
 else
   warn "Template not found: cortex/cortex-PROJECT.bash (skipping Cortex entrypoint generation)"
 fi
 
 # Ensure Cortex helper scripts are executable (best-effort)
-chmod +x "$PROJECT_LOCATION/cortex/"*.sh "$PROJECT_LOCATION/cortex/"*.bash 2>/dev/null || true
+chmod +x "$PROJECT_LOCATION/brain/cortex/"*.sh "$PROJECT_LOCATION/brain/cortex/"*.bash 2>/dev/null || true
 
-success "Copied cortex/ helper pack"
+success "Copied brain/cortex/ helper pack"
 
 # Copy loop.sh with placeholder substitution
 
 # Copy gap capture helper (cross-project pattern mining)
 if [ -f "$TEMPLATES_DIR/ralph/capture_gap.sh" ]; then
-  mkdir -p "$PROJECT_LOCATION/workers/ralph"
-  cp "$TEMPLATES_DIR/ralph/capture_gap.sh" "$PROJECT_LOCATION/workers/ralph/capture_gap.sh"
-  chmod +x "$PROJECT_LOCATION/workers/ralph/capture_gap.sh" || true
-  success "Copied workers/ralph/capture_gap.sh"
+  mkdir -p "$PROJECT_LOCATION/brain/workers/ralph"
+  cp "$TEMPLATES_DIR/ralph/capture_gap.sh" "$PROJECT_LOCATION/brain/workers/ralph/capture_gap.sh"
+  chmod +x "$PROJECT_LOCATION/brain/workers/ralph/capture_gap.sh" || true
+  success "Copied brain/workers/ralph/capture_gap.sh"
 else
   warn "Template not found: ralph/capture_gap.sh"
 fi
 
 # Copy brain skills sync helper into ralph/ (workspace-safe brain snapshot refresh)
 if [ -f "$TEMPLATES_DIR/ralph/sync_brain_skills.sh" ]; then
-  mkdir -p "$PROJECT_LOCATION/workers/ralph"
-  cp "$TEMPLATES_DIR/ralph/sync_brain_skills.sh" "$PROJECT_LOCATION/workers/ralph/sync_brain_skills.sh"
-  chmod +x "$PROJECT_LOCATION/workers/ralph/sync_brain_skills.sh" || true
-  success "Copied workers/ralph/sync_brain_skills.sh"
+  mkdir -p "$PROJECT_LOCATION/brain/workers/ralph"
+  cp "$TEMPLATES_DIR/ralph/sync_brain_skills.sh" "$PROJECT_LOCATION/brain/workers/ralph/sync_brain_skills.sh"
+  chmod +x "$PROJECT_LOCATION/brain/workers/ralph/sync_brain_skills.sh" || true
+  success "Copied brain/workers/ralph/sync_brain_skills.sh"
 else
   warn "Template not found: ralph/sync_brain_skills.sh"
 fi
 if [ -f "$TEMPLATES_DIR/ralph/loop.sh" ]; then
-  cp "$TEMPLATES_DIR/ralph/loop.sh" "$PROJECT_LOCATION/workers/ralph/loop.sh"
-  chmod +x "$PROJECT_LOCATION/workers/ralph/loop.sh"
-  substitute_placeholders "$PROJECT_LOCATION/workers/ralph/loop.sh" "$REPO_NAME" "$WORK_BRANCH"
-  success "Copied workers/ralph/loop.sh (executable)"
+  cp "$TEMPLATES_DIR/ralph/loop.sh" "$PROJECT_LOCATION/brain/workers/ralph/loop.sh"
+  chmod +x "$PROJECT_LOCATION/brain/workers/ralph/loop.sh"
+  substitute_placeholders "$PROJECT_LOCATION/brain/workers/ralph/loop.sh" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied brain/workers/ralph/loop.sh (executable)"
 else
   warn "Template not found: ralph/loop.sh"
 fi
 
 # Copy pr-batch.sh with placeholder substitution
 if [ -f "$TEMPLATES_DIR/ralph/pr-batch.sh" ]; then
-  cp "$TEMPLATES_DIR/ralph/pr-batch.sh" "$PROJECT_LOCATION/workers/ralph/pr-batch.sh"
-  chmod +x "$PROJECT_LOCATION/workers/ralph/pr-batch.sh"
-  substitute_placeholders "$PROJECT_LOCATION/workers/ralph/pr-batch.sh" "$REPO_NAME" "$WORK_BRANCH"
-  success "Copied workers/ralph/pr-batch.sh (executable)"
+  cp "$TEMPLATES_DIR/ralph/pr-batch.sh" "$PROJECT_LOCATION/brain/workers/ralph/pr-batch.sh"
+  chmod +x "$PROJECT_LOCATION/brain/workers/ralph/pr-batch.sh"
+  substitute_placeholders "$PROJECT_LOCATION/brain/workers/ralph/pr-batch.sh" "$REPO_NAME" "$WORK_BRANCH"
+  success "Copied brain/workers/ralph/pr-batch.sh (executable)"
 else
   warn "Template not found: ralph/pr-batch.sh"
 fi
 
 # Copy monitor scripts (THUNK system)
 if [ -f "$TEMPLATES_DIR/ralph/current_ralph_tasks.sh" ]; then
-  cp "$TEMPLATES_DIR/ralph/current_ralph_tasks.sh" "$PROJECT_LOCATION/workers/ralph/current_ralph_tasks.sh"
-  chmod +x "$PROJECT_LOCATION/workers/ralph/current_ralph_tasks.sh"
-  success "Copied workers/ralph/current_ralph_tasks.sh (executable)"
+  cp "$TEMPLATES_DIR/ralph/current_ralph_tasks.sh" "$PROJECT_LOCATION/brain/workers/ralph/current_ralph_tasks.sh"
+  chmod +x "$PROJECT_LOCATION/brain/workers/ralph/current_ralph_tasks.sh"
+  success "Copied brain/workers/ralph/current_ralph_tasks.sh (executable)"
 else
   warn "Template not found: ralph/current_ralph_tasks.sh"
 fi
 
 if [ -f "$TEMPLATES_DIR/ralph/thunk_ralph_tasks.sh" ]; then
-  cp "$TEMPLATES_DIR/ralph/thunk_ralph_tasks.sh" "$PROJECT_LOCATION/workers/ralph/thunk_ralph_tasks.sh"
-  chmod +x "$PROJECT_LOCATION/workers/ralph/thunk_ralph_tasks.sh"
-  success "Copied workers/ralph/thunk_ralph_tasks.sh (executable)"
+  cp "$TEMPLATES_DIR/ralph/thunk_ralph_tasks.sh" "$PROJECT_LOCATION/brain/workers/ralph/thunk_ralph_tasks.sh"
+  chmod +x "$PROJECT_LOCATION/brain/workers/ralph/thunk_ralph_tasks.sh"
+  success "Copied brain/workers/ralph/thunk_ralph_tasks.sh (executable)"
 else
   warn "Template not found: ralph/thunk_ralph_tasks.sh"
 fi
 
 # Copy verifier.sh
 if [ -f "$TEMPLATES_DIR/ralph/verifier.sh" ]; then
-  cp "$TEMPLATES_DIR/ralph/verifier.sh" "$PROJECT_LOCATION/workers/ralph/verifier.sh"
-  chmod +x "$PROJECT_LOCATION/workers/ralph/verifier.sh"
-  success "Copied workers/ralph/verifier.sh (executable)"
+  cp "$TEMPLATES_DIR/ralph/verifier.sh" "$PROJECT_LOCATION/brain/workers/ralph/verifier.sh"
+  chmod +x "$PROJECT_LOCATION/brain/workers/ralph/verifier.sh"
+  success "Copied brain/workers/ralph/verifier.sh (executable)"
 else
   warn "Template not found: ralph/verifier.sh"
 fi
 
 # Copy and process THUNK.project.md template
 if [ -f "$TEMPLATES_DIR/ralph/THUNK.project.md" ]; then
-  cp "$TEMPLATES_DIR/ralph/THUNK.project.md" "$PROJECT_LOCATION/workers/ralph/THUNK.md"
+  cp "$TEMPLATES_DIR/ralph/THUNK.project.md" "$PROJECT_LOCATION/brain/workers/ralph/THUNK.md"
   CREATION_DATE=$(date +"%Y-%m-%d")
   INITIAL_ERA_NAME="Initial Setup"
 
@@ -535,11 +535,11 @@ if [ -f "$TEMPLATES_DIR/ralph/THUNK.project.md" ]; then
   esc_era_name=$(escape_sed_replacement "$INITIAL_ERA_NAME")
 
   # Process template placeholders
-  sed -i "s/{{PROJECT_NAME}}/$esc_project_name/g" "$PROJECT_LOCATION/workers/ralph/THUNK.md"
-  sed -i "s/{{CREATION_DATE}}/$esc_creation_date/g" "$PROJECT_LOCATION/workers/ralph/THUNK.md"
-  sed -i "s/{{INITIAL_ERA_NAME}}/$esc_era_name/g" "$PROJECT_LOCATION/workers/ralph/THUNK.md"
+  sed -i "s/{{PROJECT_NAME}}/$esc_project_name/g" "$PROJECT_LOCATION/brain/workers/ralph/THUNK.md"
+  sed -i "s/{{CREATION_DATE}}/$esc_creation_date/g" "$PROJECT_LOCATION/brain/workers/ralph/THUNK.md"
+  sed -i "s/{{INITIAL_ERA_NAME}}/$esc_era_name/g" "$PROJECT_LOCATION/brain/workers/ralph/THUNK.md"
 
-  success "Copied workers/ralph/THUNK.md (from template)"
+  success "Copied brain/workers/ralph/THUNK.md (from template)"
 else
   warn "Template not found: ralph/THUNK.project.md"
 fi
@@ -550,44 +550,36 @@ info "Generating custom project files..."
 # THOUGHTS.md goes in ralph/, not project root
 if [ -f "$BRAIN_DIR/generators/generate-thoughts.sh" ]; then
   info "Generating custom THOUGHTS.md..."
-  bash "$BRAIN_DIR/generators/generate-thoughts.sh" "$IDEA_FILE" "$PROJECT_LOCATION/workers/ralph/THOUGHTS.md"
-  success "Generated workers/ralph/THOUGHTS.md"
+  bash "$BRAIN_DIR/generators/generate-thoughts.sh" "$IDEA_FILE" "$PROJECT_LOCATION/brain/workers/ralph/THOUGHTS.md"
+  success "Generated brain/workers/ralph/THOUGHTS.md"
 else
   warn "Generator not found: generate-thoughts.sh (using template fallback)"
   if [ -f "$TEMPLATES_DIR/THOUGHTS.project.md" ]; then
-    cp "$TEMPLATES_DIR/THOUGHTS.project.md" "$PROJECT_LOCATION/workers/ralph/THOUGHTS.md"
-    substitute_placeholders "$PROJECT_LOCATION/workers/ralph/THOUGHTS.md" "$REPO_NAME" "$WORK_BRANCH"
-    success "Copied workers/ralph/THOUGHTS.md template (needs customization)"
+    cp "$TEMPLATES_DIR/THOUGHTS.project.md" "$PROJECT_LOCATION/brain/workers/ralph/THOUGHTS.md"
+    substitute_placeholders "$PROJECT_LOCATION/brain/workers/ralph/THOUGHTS.md" "$REPO_NAME" "$WORK_BRANCH"
+    success "Copied brain/workers/ralph/THOUGHTS.md template (needs customization)"
   fi
 fi
 
-# NEURONS.md goes in project root AND ralph/ (root is used by Cortex entrypoints)
+# NEURONS.md goes in brain/workers/ralph/ (project root stays product-focused)
 if [ -f "$BRAIN_DIR/generators/generate-neurons.sh" ]; then
   info "Generating custom NEURONS.md..."
-  bash "$BRAIN_DIR/generators/generate-neurons.sh" "$IDEA_FILE" "$PROJECT_LOCATION/workers/ralph/NEURONS.md"
-  success "Generated workers/ralph/NEURONS.md"
-
-  cp "$PROJECT_LOCATION/workers/ralph/NEURONS.md" "$PROJECT_LOCATION/NEURONS.md"
-  substitute_placeholders "$PROJECT_LOCATION/NEURONS.md" "$REPO_NAME" "$WORK_BRANCH"
-  success "Created NEURONS.md (root)"
+  bash "$BRAIN_DIR/generators/generate-neurons.sh" "$IDEA_FILE" "$PROJECT_LOCATION/brain/workers/ralph/NEURONS.md"
+  success "Generated brain/workers/ralph/NEURONS.md"
 else
   warn "Generator not found: generate-neurons.sh (using template fallback)"
   if [ -f "$TEMPLATES_DIR/NEURONS.project.md" ]; then
-    cp "$TEMPLATES_DIR/NEURONS.project.md" "$PROJECT_LOCATION/workers/ralph/NEURONS.md"
-    substitute_placeholders "$PROJECT_LOCATION/workers/ralph/NEURONS.md" "$REPO_NAME" "$WORK_BRANCH"
-    success "Copied workers/ralph/NEURONS.md template (needs customization)"
-
-    cp "$PROJECT_LOCATION/workers/ralph/NEURONS.md" "$PROJECT_LOCATION/NEURONS.md"
-    substitute_placeholders "$PROJECT_LOCATION/NEURONS.md" "$REPO_NAME" "$WORK_BRANCH"
-    success "Created NEURONS.md (root)"
+    cp "$TEMPLATES_DIR/NEURONS.project.md" "$PROJECT_LOCATION/brain/workers/ralph/NEURONS.md"
+    substitute_placeholders "$PROJECT_LOCATION/brain/workers/ralph/NEURONS.md" "$REPO_NAME" "$WORK_BRANCH"
+    success "Copied brain/workers/ralph/NEURONS.md template (needs customization)"
   fi
 fi
 
 # Generate IMPLEMENTATION_PLAN.md using HIGH INTELLIGENCE generator
 if [ -f "$BRAIN_DIR/generators/generate-implementation-plan.sh" ]; then
   info "Generating custom IMPLEMENTATION_PLAN.md..."
-  bash "$BRAIN_DIR/generators/generate-implementation-plan.sh" "$IDEA_FILE" "$PROJECT_LOCATION/workers/IMPLEMENTATION_PLAN.md"
-  success "Generated custom IMPLEMENTATION_PLAN.md"
+  bash "$BRAIN_DIR/generators/generate-implementation-plan.sh" "$IDEA_FILE" "$PROJECT_LOCATION/brain/workers/IMPLEMENTATION_PLAN.md"
+  success "Generated custom brain/workers/IMPLEMENTATION_PLAN.md"
 else
   warn "Generator not found: generate-implementation-plan.sh (using template)"
   # Template already copied above
@@ -604,7 +596,7 @@ else
   # Create default .gitignore
   cat >"$PROJECT_LOCATION/.gitignore" <<'EOF'
 # Ralph logs
-workers/workers/ralph/logs/
+brain/workers/ralph/logs/
 
 # Local environment
 .env.local
@@ -621,23 +613,18 @@ fi
 # Vendor Brain knowledge into the new repo (RovoDev workspace-safe)
 # ============================================
 
-# Link brain/skills to the Brain repo (preferred), with a copy fallback.
-# This keeps skills *live* when Brain is present, while still working if symlinks are unsupported.
+# Vendor Brain skills into the project at ./brain/skills.
+#
+# Notes:
+# - RovoDev cannot read files outside the workspace, so downstream projects must vendor Brain knowledge.
+# - We intentionally avoid symlinks here (they are often unsupported in Windows/WSL setups).
 if [ -d "$BRAIN_ROOT/skills" ]; then
-  info "Linking Brain skills into project workspace (brain/skills)..."
-  mkdir -p "$PROJECT_LOCATION/brain"
+  info "Vendoring Brain skills into project workspace (brain/skills/)..."
   rm -rf "$PROJECT_LOCATION/brain/skills"
-
-  # Prefer symlink for live updates
-  if ln -s "$BRAIN_ROOT/skills" "$PROJECT_LOCATION/brain/skills" 2>/dev/null; then
-    success "Linked brain/skills -> $BRAIN_ROOT/skills"
-  else
-    warn "Symlink failed; falling back to vendoring a snapshot of brain/skills"
-    cp -R "$BRAIN_ROOT/skills" "$PROJECT_LOCATION/brain/skills"
-    success "Vendored brain/skills snapshot"
-  fi
+  cp -R "$BRAIN_ROOT/skills" "$PROJECT_LOCATION/brain/skills"
+  success "Vendored brain/skills/ snapshot from Brain"
 else
-  warn "No skills/ directory found at Brain root; skipping brain knowledge link/snapshot"
+  warn "No skills/ directory found at Brain root; skipping brain knowledge snapshot"
 fi
 
 # ============================================
@@ -662,13 +649,13 @@ ${PROJECT_GOALS:-To be defined.}
 
 **Default workflow:**
 - Work happens on the \`$WORK_BRANCH\` branch (never directly on main)
-- Use \`ralph/pr-batch.sh\` to create PRs back to main
-- Run \`ralph/loop.sh\` to start AI-assisted development
+- Use `brain/workers/ralph/pr-batch.sh` to create PRs back to main
+- Run `brain/workers/ralph/loop.sh` to start AI-assisted development
 
 ### Getting Started
 
 \`\`\`bash
-cd workers/ralph
+cd brain/workers/ralph
 bash loop.sh --iterations 5
 \`\`\`
 

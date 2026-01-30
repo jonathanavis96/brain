@@ -3,14 +3,14 @@
 #
 # Why:
 # - RovoDev cannot read files outside the workspace.
-# - This project vendors Brain knowledge at ./skills/.
-# - This script refreshes that snapshot.
+# - This project vendors Brain knowledge under ./brain/skills/.
+# - This script refreshes that snapshot from the Brain repo.
 #
 # Usage:
-#   bash workers/ralph/sync_brain_skills.sh --from-local /path/to/brain
-#   bash workers/ralph/sync_brain_skills.sh --from-sibling    # uses ../brain if present
-#   bash workers/ralph/sync_brain_skills.sh --from-repo        # clones/pulls BRAIN_REPO into ./brain_upstream
-#   bash workers/ralph/sync_brain_skills.sh --dry-run
+#   bash brain/workers/ralph/sync_brain_skills.sh --from-local /path/to/brain
+#   bash brain/workers/ralph/sync_brain_skills.sh --from-sibling    # uses ../brain/skills if present
+#   bash brain/workers/ralph/sync_brain_skills.sh --from-repo        # clones/pulls BRAIN_REPO into ./brain_upstream
+#   bash brain/workers/ralph/sync_brain_skills.sh --dry-run
 #
 # Env:
 #   BRAIN_REPO  (default: https://github.com/jonathanavis96/brain.git)
@@ -63,11 +63,12 @@ if [[ -z "$MODE" ]]; then
   die "Choose one: --from-local PATH | --from-sibling | --from-repo"
 fi
 
-# Resolve repo root (script lives at workers/ralph/ in target projects)
+# Resolve project root.
+# Script lives at ./brain/workers/ralph/ in target projects.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 
-DEST="$ROOT/skills"
+DEST="$ROOT/brain/skills"
 
 source_skills=""
 upstream_dir="$ROOT/brain_upstream"
@@ -78,6 +79,7 @@ case "$MODE" in
     source_skills="$LOCAL_PATH/skills"
     ;;
   sibling)
+    # Expected layout: project repo is a sibling of the Brain repo (../brain).
     source_skills="$ROOT/../brain/skills"
     ;;
   repo)

@@ -35,7 +35,7 @@
 ├── docs/                  # API documentation
 └── ralph/                 # Ralph loop infrastructure
     ├── PROMPT.md
-    ├── workers/IMPLEMENTATION_PLAN.md
+    ├── brain/workers/IMPLEMENTATION_PLAN.md
     └── progress.txt
 ```text
 

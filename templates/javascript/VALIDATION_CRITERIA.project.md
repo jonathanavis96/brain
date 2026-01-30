@@ -186,4 +186,4 @@ When creating new features/fixes, define acceptance criteria:
 
 - **AGENTS.md** - AI agent operational guide
 - **THOUGHTS.md** - Project goals and success criteria
-- **workers/ralph/PROMPT.md** - Ralph loop automation
+- **brain/workers/ralph/PROMPT.md** - Ralph loop automation
