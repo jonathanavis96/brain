@@ -10,7 +10,7 @@ cp templates/NEW_PROJECT_IDEA.template.md my-project-idea.md
 # Edit with: Project name, Purpose, Tech Stack, Goals
 
 # 2. Bootstrap complete project structure
-bash new-project.sh my-project-idea.md
+bash scripts/new-project.sh my-project-idea.md
 # Creates GitHub repo, clones locally, generates all Ralph files
 ```text
 
@@ -94,7 +94,7 @@ bash generators/generate-thoughts.sh my-api-idea.md THOUGHTS.md
 bash generators/generate-implementation-plan.sh my-api-idea.md workers/IMPLEMENTATION_PLAN.md
 
 # Or use new-project.sh to do everything
-bash new-project.sh my-api-idea.md
+bash scripts/new-project.sh my-api-idea.md
 ```text
 
 ## Template Types
@@ -163,7 +163,7 @@ project/
 
 ## See Also
 
-- **[new-project.sh](../new-project.sh)** - Main bootstrap script
+- **[`scripts/new-project.sh`](../scripts/new-project.sh)** - Main bootstrap script
 - **[templates/](../templates/)** - Template files
 - **[skills/playbooks/bootstrap-new-project.md](../skills/playbooks/bootstrap-new-project.md)** - Bootstrap playbook
 - **[workers/ralph/README.md](../workers/ralph/README.md)** - Ralph loop design philosophy

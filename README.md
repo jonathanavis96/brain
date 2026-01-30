@@ -111,7 +111,7 @@ Goals: User auth, Dashboard, API integration
 EOF
 
 # 3. Bootstrap (creates GitHub repo + local clone with full AI infrastructure)
-bash new-project.sh MY_PROJECT.md
+bash scripts/new-project.sh MY_PROJECT.md
 
 # 4. Start building!
 cd ~/code/my-app
@@ -474,6 +474,6 @@ MIT
 
 <div align="center">
 
-**Get Started:** `bash setup.sh` then `bash workers/ralph/new-project.sh MY_PROJECT.md`
+**Get Started:** `bash setup.sh` then `bash scripts/new-project.sh MY_PROJECT.md`
 
 </div>
