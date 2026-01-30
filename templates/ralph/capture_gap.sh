@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# capture_gap.sh - Append a new gap entry to cortex/GAP_CAPTURE.md and mark it pending.
+# capture_gap.sh - Append a new gap entry to brain/cortex/GAP_CAPTURE.md and mark it pending.
 #
 # This implements the cross-project gap capture marker protocol:
-# - Write gap entry to ./cortex/GAP_CAPTURE.md
-# - Touch ./cortex/.gap_pending
+# - Write gap entry to ./brain/cortex/GAP_CAPTURE.md
+# - Touch ./brain/cortex/.gap_pending
 # Brain repo later runs: bash cortex/sync_gaps.sh
 # which imports gaps into brain's skills/self-improvement/GAP_BACKLOG.md
 #
@@ -66,7 +66,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 PROJECT_NAME="$(basename "$ROOT")"
 
-CORTEX_DIR="$ROOT/cortex"
+CORTEX_DIR="$ROOT/brain/cortex"
 GAP_FILE="$CORTEX_DIR/GAP_CAPTURE.md"
 MARKER="$CORTEX_DIR/.gap_pending"
 
