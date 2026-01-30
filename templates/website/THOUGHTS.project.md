@@ -16,7 +16,7 @@ Example: "A conversion-optimized landing page that establishes trust and drives 
 
 ## Target Audience
 
-<!-- From brain/skills/domains/websites/discovery/audience-mapping.md -->
+<!-- From skills/domains/websites/discovery/audience-mapping.md -->
 
 **Primary audience:**
 
@@ -66,7 +66,7 @@ Example: "A conversion-optimized landing page that establishes trust and drives 
 
 ## Value Proposition
 
-<!-- From brain/skills/domains/websites/copywriting/value-proposition.md -->
+<!-- From skills/domains/websites/copywriting/value-proposition.md -->
 
 **Headline (8-12 words):**
 
@@ -116,7 +116,7 @@ Example: "A conversion-optimized landing page that establishes trust and drives 
 
 ## Design Direction
 
-<!-- From brain/skills/domains/websites/design/design-direction.md -->
+<!-- From skills/domains/websites/design/design-direction.md -->
 
 ### Visual Style
 

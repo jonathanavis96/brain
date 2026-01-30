@@ -1558,6 +1558,26 @@ run_once() {
       echo ""
     fi
 
+    # PLAN Ralph should see broken links too
+    if [[ "$phase" == "plan" ]] && [[ -n "${BROKEN_LINKS:-}" ]]; then
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo "# BROKEN INTERNAL LINKS (add tasks to IMPLEMENTATION_PLAN.md)"
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo "#"
+      echo "# The following markdown files have broken internal links."
+      echo "# Add tasks to IMPLEMENTATION_PLAN.md using this format:"
+      echo "#"
+      echo "#   - [ ] **X.Y** Fix broken links in <filename>"
+      echo "#     - **AC:** \`bash tools/validate_links.sh <file>\` passes"
+      echo "#"
+      echo "# Broken links:"
+      echo "#"
+      echo "$BROKEN_LINKS"
+      echo ""
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo ""
+    fi
+
     # Inject AGENTS.md (standard Ralph pattern: PROMPT.md + AGENTS.md)
     # NEURONS.md and THOUGHTS.md are read via subagent when needed (too large for base context)
     echo "# AGENTS.md - Operational Guide"
@@ -2317,6 +2337,20 @@ else
           echo "No markdown lint errors found"
         fi
         unset lint_output
+      fi
+
+      # Validate internal markdown links
+      BROKEN_LINKS=""
+      if [[ -f "$ROOT/tools/validate_links.sh" ]]; then
+        echo "Validating internal markdown links..."
+        link_output=$(bash "$ROOT/tools/validate_links.sh" "$ROOT" 2>&1 | grep -E "BROKEN|ERROR" | head -40) || true
+        if [[ -n "$link_output" ]]; then
+          BROKEN_LINKS="$link_output"
+          echo "Found broken links for PLAN review"
+        else
+          echo "All internal links valid"
+        fi
+        unset link_output
       fi
 
       emit_event --event phase_start --iter "$i" --phase "plan"

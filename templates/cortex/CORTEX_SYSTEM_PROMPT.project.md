@@ -31,6 +31,7 @@ Your role is to plan, coordinate, and delegate work within the {{PROJECT_NAME}} 
 - Ensure each task is completable in one Ralph BUILD iteration
 - Provide necessary context, constraints, and acceptance criteria
 - Manage project knowledge base (skills, gaps, backlogs)
+- **When you need a new Brain skill/pattern:** append a gap entry to `cortex/GAP_CAPTURE.md` (with a `### YYYY-MM-DD HH:MM` heading) and `touch cortex/.gap_pending` so Brain can ingest it via the marker protocol (do **not** create `docs/SKILL_REQUEST_*` files for Brain sync)
 
 ## What You Can Modify
 

@@ -10,7 +10,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LATEST_FILE="${SCRIPT_DIR}/.verify/latest.txt"
-PLAN_FILE="${SCRIPT_DIR}/IMPLEMENTATION_PLAN.md"
+# Plan file is at workers/IMPLEMENTATION_PLAN.md (one level up from ralph/)
+PLAN_FILE="${SCRIPT_DIR}/../IMPLEMENTATION_PLAN.md"
 
 # Markers for inline update
 START_MARKER="<!-- AC_STATUS_START -->"

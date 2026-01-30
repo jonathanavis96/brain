@@ -213,4 +213,4 @@ npm run format
 - **[AGENTS.project.md](AGENTS.project.md)** - How to work on this project
 - **[docs/sitemap.md](docs/sitemap.md)** - Navigation structure
 - **[docs/sections.md](docs/sections.md)** - Page section composition
-- **brain/skills/domains/websites/** - Website development patterns
+- **skills/domains/websites/** - Website development patterns
