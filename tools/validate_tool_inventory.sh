@@ -98,7 +98,9 @@ worker_scripts=(
     "sync_workers_plan_to_cortex.sh"
     "init_verifier_baselines.sh"
     "cleanup_plan.sh"
-    "new-project.sh"
+    # new-project.sh is a brain-only operator tool under scripts/
+    # (intentionally not a workers/ralph/ script)
+
 )
 
 for script in "${worker_scripts[@]}"; do
