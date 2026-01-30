@@ -880,7 +880,7 @@ emit_marker() {
 # =============================================================================
 # Scoped Staging - Stage only intended files, exclude noise
 # =============================================================================
-# Always stages: IMPLEMENTATION_PLAN.md, workers/ralph/THUNK.md (canonical layout)
+# Always stages: workers/IMPLEMENTATION_PLAN.md, workers/ralph/THUNK.md (canonical layout)
 # Never stages: artifacts/**, */rollflow_cache/**, *.sqlite
 # Conditionally stages: Other changed files not in denylist
 #
@@ -890,7 +890,7 @@ stage_scoped_changes() {
   local staged_count=0
 
   # Detect canonical paths based on ADR-0001
-  local plan_file="IMPLEMENTATION_PLAN.md"
+  local plan_file="workers/IMPLEMENTATION_PLAN.md"
   local thunk_file="workers/ralph/THUNK.md"
 
   # Always stage core Ralph files if they have changes
@@ -1547,7 +1547,7 @@ run_once() {
   if [[ ("$CACHE_SKIP" == "true" || "$CACHE_MODE" == "use") && "$FORCE_NO_CACHE" != "true" && "$FORCE_FRESH" != "true" ]]; then
     # Safety check: If BUILD phase has pending tasks, force fresh run (task 1.4.1)
     if [[ "$phase" == "build" ]]; then
-      local plan_file="${ROOT}/IMPLEMENTATION_PLAN.md"
+      local plan_file="${ROOT}/workers/IMPLEMENTATION_PLAN.md"
       if [[ -f "$plan_file" ]] && grep -q "^- \[ \]" "$plan_file"; then
         local guard_ts=$(($(date +%s%N) / 1000000))
         emit_marker ":::CACHE_GUARD::: iter=${iter} allowed=0 reason=pending_tasks phase=BUILD ts=${guard_ts}"
@@ -1734,10 +1734,10 @@ except Exception:
   fi
 
   # Check if all tasks are done (for true completion)
-  if [[ -f "$ROOT/IMPLEMENTATION_PLAN.md" ]]; then
+  if [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
     local unchecked_count
     # Note: grep -c returns exit 1 when count is 0, so we capture output first then default
-    unchecked_count=$(grep -cE '^\s*-\s*\[ \]' "$ROOT/IMPLEMENTATION_PLAN.md" 2>/dev/null) || unchecked_count=0
+    unchecked_count=$(grep -cE '^\s*-\s*\[ \]' "$ROOT/workers/IMPLEMENTATION_PLAN.md" 2>/dev/null) || unchecked_count=0
     if [[ "$unchecked_count" -eq 0 ]]; then
       # All tasks done - run final verification
       if run_verifier "$iter"; then
@@ -2196,9 +2196,10 @@ else
       fi
 
       # Snapshot plan BEFORE sync for drift detection (prevents direct-edit bypass)
+      mkdir -p "$ROOT/.verify"
       PLAN_SNAPSHOT="$ROOT/.verify/plan_snapshot.md"
-      if [[ -f "$ROOT/IMPLEMENTATION_PLAN.md" ]]; then
-        cp "$ROOT/IMPLEMENTATION_PLAN.md" "$PLAN_SNAPSHOT"
+      if [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
+        cp "$ROOT/workers/IMPLEMENTATION_PLAN.md" "$PLAN_SNAPSHOT"
       fi
 
       # Sync tasks from Cortex before PLAN mode
@@ -2213,10 +2214,15 @@ else
       fi
 
       # Capture remaining markdown lint errors for PLAN phase
-      # PLAN Ralph should see these so he can add tasks to fix them
+      # Auto-fix markdown issues before checking for remaining errors
       MARKDOWN_LINT_ERRORS=""
       if command -v markdownlint &>/dev/null; then
-        echo "Checking for markdown lint errors..."
+        echo "Running auto-fix for markdown lint errors..."
+        if [[ -f "$RALPH/fix-markdown.sh" ]]; then
+          bash "$RALPH/fix-markdown.sh" "$ROOT" 2>&1 | tail -10 || true
+        fi
+        
+        echo "Checking for remaining markdown lint errors..."
         lint_output=$(markdownlint "$ROOT" 2>&1 | grep -E "error MD" | head -40) || true
         if [[ -n "$lint_output" ]]; then
           MARKDOWN_LINT_ERRORS="$lint_output"
@@ -2329,10 +2335,10 @@ else
 
     # Plan drift detection: compare snapshot vs current plan
     PLAN_SNAPSHOT="$ROOT/.verify/plan_snapshot.md"
-    if [[ -f "$PLAN_SNAPSHOT" ]] && [[ -f "$ROOT/IMPLEMENTATION_PLAN.md" ]]; then
+    if [[ -f "$PLAN_SNAPSHOT" ]] && [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
       # Check for unexpected changes (tasks added directly, not via cortex sync)
       snapshot_tasks=$(grep -c "^- \[ \]" "$PLAN_SNAPSHOT" 2>/dev/null || echo "0")
-      current_tasks=$(grep -c "^- \[ \]" "$ROOT/IMPLEMENTATION_PLAN.md" 2>/dev/null || echo "0")
+      current_tasks=$(grep -c "^- \[ \]" "$ROOT/workers/IMPLEMENTATION_PLAN.md" 2>/dev/null || echo "0")
       if [[ "$current_tasks" -gt "$snapshot_tasks" ]]; then
         new_task_count=$((current_tasks - snapshot_tasks))
         echo ""
