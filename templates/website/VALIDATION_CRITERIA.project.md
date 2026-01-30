@@ -294,5 +294,5 @@ Final checks before going live:
 
 - **[AGENTS.project.md](AGENTS.project.md)** - Workflow and patterns
 - **[THOUGHTS.project.md](THOUGHTS.project.md)** - Success criteria and goals
-- **brain/skills/domains/websites/qa/** - QA skills and patterns
-- **brain/skills/domains/infrastructure/deployment-patterns.md** - Deployment guidance
+- **skills/domains/websites/qa/** - QA skills and patterns
+- **skills/domains/infrastructure/deployment-patterns.md** - Deployment guidance

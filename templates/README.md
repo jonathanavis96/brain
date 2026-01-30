@@ -32,7 +32,7 @@ All templates use **bash-style forward slash paths** for brain repository refere
 
 ### The Standard: `./brain/` (in-workspace snapshot)
 
-RovoDev cannot read files outside its workspace. New projects should vendor a snapshot of Brain knowledge into the repo at `./brain/skills/` during bootstrap.
+RovoDev cannot read files outside its workspace. New projects should vendor a snapshot of Brain knowledge into the repo at `./skills/` during bootstrap.
 
 To refresh that snapshot later, run:
 
@@ -62,8 +62,8 @@ bash workers/ralph/capture_gap.sh "Suggested Skill Name" \
 Templates use **relative paths with forward slashes**:
 
 ```markdown
-1. `./brain/skills/SUMMARY.md` - Knowledge base overview
-2. `./brain/skills/domains/frontend/react-patterns.md` - Top 10 rules
+1. `./skills/SUMMARY.md` - Knowledge base overview
+2. `./skills/domains/frontend/react-patterns.md` - Top 10 rules
 ```text
 
 ### Why Forward Slashes?
@@ -78,11 +78,11 @@ Templates use **relative paths with forward slashes**:
 Templates are organized at different depths, requiring different numbers of `..` segments:
 
 - **Project root templates** (e.g., `templates/AGENTS.project.md`):
-  - Use: `./brain/skills/SUMMARY.md`
+  - Use: `./skills/SUMMARY.md`
   - Depth: One level up from project root to reach brain sibling
 
 - **Ralph subdirectory templates** (e.g., `templates/ralph/PROMPT.md`):
-  - Use: `./brain/skills/SUMMARY.md`
+  - Use: `./skills/SUMMARY.md`
   - Depth: Two levels up from ralph/ dir (ralph/ is typically at project root level)
 
 ### Examples
@@ -90,8 +90,8 @@ Templates are organized at different depths, requiring different numbers of `..`
 **Correct ✅ (Always use forward slashes)**
 
 ```markdown
-Read `./brain/skills/SUMMARY.md` first (always)
-Check `./brain/skills/domains/frontend/react-patterns.md`
+Read `./skills/SUMMARY.md` first (always)
+Check `./skills/domains/frontend/react-patterns.md`
 ```text
 
 **Incorrect ❌ (Anti-patterns to avoid)**
@@ -101,7 +101,7 @@ Check `./brain/skills/domains/frontend/react-patterns.md`
 Read `..\\brain\\kb\\SUMMARY.md`
 
 # DO NOT USE - Absolute paths are not portable across systems
-Check `/path/to/brain/skills/SUMMARY.md`
+Check `/path/to/skills/SUMMARY.md`
 ```text
 
 ## NEW_PROJECT_IDEA.md Format
@@ -150,7 +150,7 @@ cp templates/NEW_PROJECT_IDEA.template.md rovo_project_idea.md
 vim rovo_project_idea.md
 
 # Bootstrap the project
-bash new-project.sh rovo_project_idea.md
+bash scripts/new-project.sh rovo_project_idea.md
 ```text
 
 **What Happens:**
@@ -169,6 +169,8 @@ bash new-project.sh rovo_project_idea.md
 
 ### Bootstrap New Project
 
+**Policy note:** `new-project.sh` is an **operator workflow** that lives in the Brain repository. Templates consume it, but downstream projects should **not** copy or ship `new-project.sh` as part of their own template scaffolding.
+
 From the brain repository root:
 
 ```bash
@@ -177,7 +179,7 @@ cp templates/NEW_PROJECT_IDEA.template.md my_project_idea.md
 # Edit my_project_idea.md with your project details
 
 # Bootstrap the project
-bash new-project.sh my_project_idea.md
+bash scripts/new-project.sh my_project_idea.md
 ```text
 
 This creates a complete project structure at the specified location with:

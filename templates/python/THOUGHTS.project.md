@@ -105,8 +105,8 @@ For this project, "source code" means:
 
 This project references brain repository knowledge:
 
-- **Domain Conventions:** `./brain/skills/domains/` - Caching, API design, auth, testing patterns
-- **Project Learnings:** `./brain/skills/projects/[this-project-slug].md` - Project-specific patterns that might benefit other projects
+- **Domain Conventions:** `./skills/domains/` - Caching, API design, auth, testing patterns
+- **Project Learnings:** `./skills/projects/[this-project-slug].md` - Project-specific patterns that might benefit other projects
 
 ## Technical Context
 

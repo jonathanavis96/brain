@@ -12,7 +12,7 @@ This directory contains template files for bootstrapping new Ralph worker instan
   - **Rule:** This is an interactive, continuously-refreshing monitor. **Do not pipe it** (no `| grep`, `| sed`, etc.). For snapshots/debugging use `timeout 2s bash current_ralph_tasks.sh --hide-completed`.
 - **thunk_ralph_tasks.sh** - Real-time task monitor (completed tasks log)
 - **sync_workers_plan_to_cortex.sh** - Copy workers plan to cortex for review/visibility
-- **sync_brain_skills.sh** - Refresh vendored Brain knowledge at `./brain/skills/` (workspace-safe)
+- **sync_brain_skills.sh** - Refresh vendored Brain knowledge at `./skills/` (workspace-safe)
 - **pr-batch.sh** - Batch PR creation script
 - **init_verifier_baselines.sh** - Initialize verifier baseline hashes
 
@@ -59,11 +59,11 @@ This directory contains template files for bootstrapping new Ralph worker instan
   - Archive section detection to terminate task parsing
   - Enhanced priority section matching (excludes archived sections)
 
-**Files unique to workers/ralph/** (not in templates):
+**Files unique to Brain (not shipped in templates):**
 
 - `fix-markdown.sh` - Markdown auto-fix script (brain-specific tooling)
 - `ralph.sh` - Brain repository convenience wrapper
-- `new-project.sh` - Project bootstrapping (already at repo root)
+- `new-project.sh` - Brain-only operator bootstrap tool (intentionally not shipped in downstream templates)
 - `sync_completions_to_cortex.sh` - Deprecated (no longer used)
 
 ## Why Template Drift Exists

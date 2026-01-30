@@ -229,8 +229,8 @@ sphinx-build -b html docs/ docs/_build/
 
 This project leverages brain repository knowledge:
 
-- **Domain Patterns**: `./brain/skills/domains/` - Caching, API design, testing patterns
-- **Project Learnings**: `./brain/skills/projects/[project-slug].md` - Project-specific discoveries
+- **Domain Patterns**: `./skills/domains/` - Caching, API design, testing patterns
+- **Project Learnings**: `./skills/projects/[project-slug].md` - Project-specific discoveries
 
 ## Framework-Specific Notes
 

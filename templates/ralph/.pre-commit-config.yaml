@@ -173,7 +173,10 @@ repos:
       - id: validate-protected-hashes
         name: validate-protected-hashes
         description: Validate SHA256 hashes for protected files
-        entry: bash tools/validate_protected_hashes.sh
+        # NOTE: This hook only applies to repos that include tools/validate_protected_hashes.sh.
+        # Many generated projects do not include Brain's full tools/ directory.
+        # In that case, make this hook a no-op to avoid breaking pre-commit runs.
+        entry: bash -lc 'if [[ -f tools/validate_protected_hashes.sh ]]; then bash tools/validate_protected_hashes.sh; else echo "skip (no tools/validate_protected_hashes.sh)"; fi'
         language: system
         pass_filenames: false
         always_run: true

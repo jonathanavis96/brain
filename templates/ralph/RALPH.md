@@ -12,7 +12,7 @@ Use parallel subagents (max 100) to read project vision, goals, and success crit
 **0b. Identify source code location**  
 Prefer `src/` directory. If different, document the actual location.
 
-**0c. Study fix_plan.md**  
+**0c. Study workers/IMPLEMENTATION_PLAN.md**  
 Read the current plan. If it doesn't exist or is empty, the first iteration must create it.
 
 ### The Loop
@@ -23,11 +23,11 @@ Ralph operates in two alternating phases:
 
 See `PROMPT.md` (planning mode section) for full instructions.
 
-**Goal**: Create or update `fix_plan.md` with a prioritized Top 10 checklist
+**Goal**: Create or update `workers/IMPLEMENTATION_PLAN.md` with clear, atomic tasks
 
 **Frequency**:
 
-- First iteration (if fix_plan.md missing/empty)
+- First iteration (if workers/IMPLEMENTATION_PLAN.md missing/empty)
 - Every N iterations (configurable, default: every 3)
 - When explicitly requested
 
@@ -35,16 +35,16 @@ See `PROMPT.md` (planning mode section) for full instructions.
 
 See `PROMPT.md` (building mode section) for full instructions.
 
-**Goal**: Implement the top item from `fix_plan.md`
+**Goal**: Implement the top item from `workers/IMPLEMENTATION_PLAN.md`
 
 **Process**:
 
-1. Take top incomplete item from fix_plan.md
+1. Take top incomplete item from workers/IMPLEMENTATION_PLAN.md
 2. Implement the change
 3. Run build/tests
-4. Update fix_plan.md (mark completed ✅)
-5. Append progress to progress.txt
-6. **DO NOT COMMIT** - PLAN phase handles commits
+4. Update workers/IMPLEMENTATION_PLAN.md (mark completed `[x]`)
+5. Append progress to workers/ralph/THUNK.md
+6. Stage changes with `git add -A` (NO commit - loop.sh batches commits at PLAN phase)
 
 ### Parallelism Contract
 
@@ -59,7 +59,7 @@ See `PROMPT.md` (building mode section) for full instructions.
 - Running build commands
 - Executing tests and benchmarks
 - Making file modifications
-- Git operations (PLAN phase only)
+- Git operations (staging in BUILD, commits batched at PLAN phase)
 
 ### Completion Sentinel
 
@@ -73,28 +73,29 @@ The loop runner detects this sentinel and stops iteration.
 
 ## Progress Tracking
 
-All Ralph iterations are logged to `progress.txt` with:
+All Ralph task completions are logged to `workers/ralph/THUNK.md` with:
 
+- Task ID
 - Timestamp
-- Iteration number
 - Phase (PLAN or BUILD)
 - Actions taken
 - Results and outcomes
 
+Organized into "eras" for major project phases.
+
 ## Git Commits
 
-**Commits happen in PLAN phase only**, not after each BUILD iteration.
+**Commits are batched at PLAN phase** for efficiency (~13 seconds saved per BUILD iteration).
 
-PLAN phase commits all accumulated changes from BUILD iterations:
+**BUILD phase:** Stage changes only (`git add -A`, no commit)  
+**PLAN phase:** loop.sh commits all accumulated BUILD changes at PLAN start, then stages/commits plan updates
 
-```text
-git add -A
-git commit -m "Ralph Plan: [comprehensive summary of all changes]"
-```text
+**Exception:** Verifier failures get immediate commits in BUILD mode with message: `fix(ralph): resolve AC failure <RULE_ID>`
 
 This ensures:
 
 - Fewer, more meaningful commits
+- Faster BUILD iterations (no commit overhead)
 - Comprehensive commit messages (Ralph has full context during PLAN)
 - All related changes grouped together
 
@@ -133,15 +134,15 @@ project-root/               ← Application code and config files
     └── ralph/                  # ALL Ralph-related files
         ├── RALPH.md            # This file - Ralph contract
         ├── PROMPT.md           # Unified prompt (mode detection)
-        ├── workers/IMPLEMENTATION_PLAN.md  # Task tracking
         ├── VALIDATION_CRITERIA.md  # Quality gates
         ├── AGENTS.md           # Agent guidance for this project
         ├── THOUGHTS.md         # Project vision, goals, success criteria
         ├── NEURONS.md          # Codebase map (auto-generated)
+        ├── THUNK.md            # Task completion log (append-only)
         ├── loop.sh             # Loop runner script
         ├── logs/               # Iteration logs
-        ├── skills/             # Project-specific knowledge base
-        └── progress.txt        # Iteration log (appended)
+        └── skills/             # Project-specific knowledge base
+    ├── IMPLEMENTATION_PLAN.md  # Task tracking (at workers/ level)
 ```text
 
 ### ⚠️ CRITICAL: Source code goes in PROJECT ROOT, not Ralph directory
@@ -151,7 +152,8 @@ project-root/               ← Application code and config files
 - Source code → `src/` (project root)
 - Config files → project root (`package.json`, `tsconfig.json`, etc.)
 - Entry points → project root (`index.html`, `main.py`, etc.)
-- Ralph files → Ralph directory (PROMPT.md, workers/IMPLEMENTATION_PLAN.md, AGENTS.md, THOUGHTS.md, NEURONS.md, skills/, logs/, etc.)
+- Ralph files → Ralph directory (PROMPT.md, AGENTS.md, THOUGHTS.md, NEURONS.md, THUNK.md, skills/, logs/, etc.)
+- Task tracking → workers/IMPLEMENTATION_PLAN.md (one level up from ralph/)
 
 **NEVER put application code inside the Ralph directory.**
 

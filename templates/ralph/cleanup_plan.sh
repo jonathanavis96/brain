@@ -24,8 +24,8 @@ else
   REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 fi
 
-# Use explicit paths from repo root
-PLAN_FILE="${REPO_ROOT}/IMPLEMENTATION_PLAN.md"
+# Use explicit paths from repo root (canonical location: workers/IMPLEMENTATION_PLAN.md)
+PLAN_FILE="${REPO_ROOT}/workers/IMPLEMENTATION_PLAN.md"
 ARCHIVE_FILE="${REPO_ROOT}/workers/PLAN_DONE.md"
 
 normalize_markdown_blank_lines() {
