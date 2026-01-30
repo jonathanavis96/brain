@@ -934,12 +934,13 @@ except Exception:
   echo "🧠 Running Cerebras Agent with model: ${RESOLVED_MODEL}"
   # Use the agentic Python runner that supports tool execution
   local rc=0
+  # Filter known-harmless acli stderr noise (safe even if no such messages occur)
   if ! python3 "$CEREBRAS/cerebras_agent.py" \
     --prompt "$prompt_with_mode" \
     --model "$RESOLVED_MODEL" \
     --max-turns "${CEREBRAS_MAX_TURNS:-24}" \
     --cwd "$ROOT" \
-    --output "$log"; then
+    --output "$log" 2> >(bash "$ROOT/workers/shared/filter_acli_errors.sh" >&2); then
     rc=$?
     end_ms="$(($(date +%s%N) / 1000000))"
     duration_ms="$((end_ms - start_ms))"
@@ -956,6 +957,22 @@ except Exception:
   # Clean up temporary prompt
   rm -f "$prompt_with_mode"
 
+  # Auto-fix markdown only if markdown files changed (keeps iteration fast when no md changes)
+  # Skip in PLAN-ONLY mode to avoid write actions.
+  local changed_files md_changed
+  changed_files=$(git diff --name-only 2>/dev/null || true)
+  md_changed=$(echo "$changed_files" | grep -c '\.md$' || true)
+  if [[ -f "$CEREBRAS/fix-markdown.sh" ]] && [[ "$md_changed" -gt 0 ]]; then
+    if guard_plan_only_mode "markdownlint --fix"; then
+      echo "Running auto-fix for markdown ($md_changed .md file(s) changed)..."
+      (cd "$ROOT" && bash "$CEREBRAS/fix-markdown.sh" . 2>/dev/null) || true
+    else
+      echo "Skipping fix-markdown (PLAN-ONLY mode)"
+    fi
+  elif [[ "$md_changed" -eq 0 ]]; then
+    echo "Skipping fix-markdown (no .md files changed)"
+  fi
+
   echo
   echo "Run complete."
   echo "Transcript: $log"
@@ -971,7 +988,12 @@ except Exception:
   fi
 
   # Run verifier after both PLAN and BUILD iterations
+  # Skip in PLAN-ONLY mode.
   if [[ $phase == "plan" ]] || [[ $phase == "build" ]]; then
+    if ! guard_plan_only_mode "verifier.sh"; then
+      echo "Skipping verifier (PLAN-ONLY mode)"
+      return 0
+    fi
     if run_verifier; then
       echo ""
       echo "========================================"
@@ -1241,6 +1263,22 @@ if [[ -n $PROMPT_ARG ]]; then
       # Reset counter on successful iteration
       CONSECUTIVE_VERIFIER_FAILURES=0
     fi
+
+    # Update THUNK.md from completed tasks in workers/IMPLEMENTATION_PLAN.md
+    # This makes THUNK append deterministic and prevents markdown table corruption.
+    if [[ -x "$CEREBRAS/update_thunk_from_plan.sh" ]]; then
+      if guard_plan_only_mode "update_thunk_from_plan.sh"; then
+        echo "Updating THUNK from plan completions..."
+        if (cd "$CEREBRAS" && bash update_thunk_from_plan.sh) 2>&1; then
+          echo "✓ THUNK update complete"
+        else
+          echo "⚠ THUNK update failed (non-blocking)"
+        fi
+        echo ""
+      else
+        echo "Skipping THUNK update (PLAN-ONLY mode)"
+      fi
+    fi
   done
 else
   # Alternating plan/build
@@ -1351,6 +1389,22 @@ else
     else
       # Reset counter on successful iteration
       CONSECUTIVE_VERIFIER_FAILURES=0
+    fi
+
+    # Update THUNK.md from completed tasks in workers/IMPLEMENTATION_PLAN.md
+    # This makes THUNK append deterministic and prevents markdown table corruption.
+    if [[ -x "$CEREBRAS/update_thunk_from_plan.sh" ]]; then
+      if guard_plan_only_mode "update_thunk_from_plan.sh"; then
+        echo "Updating THUNK from plan completions..."
+        if (cd "$CEREBRAS" && bash update_thunk_from_plan.sh) 2>&1; then
+          echo "✓ THUNK update complete"
+        else
+          echo "⚠ THUNK update failed (non-blocking)"
+        fi
+        echo ""
+      else
+        echo "Skipping THUNK update (PLAN-ONLY mode)"
+      fi
     fi
   done
 fi

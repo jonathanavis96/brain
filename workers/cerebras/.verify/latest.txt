@@ -1,6 +1,6 @@
 Ralph Verifier Report
-Time: 2026-01-27 15:01:02
-Git:  b1e59f2
+Time: 2026-01-29 15:25:46
+Git:  fcf27b93
 AC:   /home/grafe/code/brain/rules/AC.rules
 Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
 ------------------------------------------------------------
@@ -8,7 +8,7 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
   desc: Parser uses in_task_section state tracking
   cmd:  grep -c 'in_task_section=false' current_ralph_tasks.sh
   exit: 2
-  stdout:
+  stdout: 
   stderr: grep: current_ralph_tasks.sh: No such file or directory
   reasons:
     - exit=2 expected=0
@@ -25,7 +25,7 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
   desc: Display function uses clear for full redraw
   cmd:  grep -c 'clear' current_ralph_tasks.sh
   exit: 2
-  stdout:
+  stdout: 
   stderr: grep: current_ralph_tasks.sh: No such file or directory
   reasons:
     - exit=2 expected=0
@@ -34,7 +34,7 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
   desc: No differential update logic (LAST_RENDERED)
   cmd:  grep -c 'LAST_RENDERED' current_ralph_tasks.sh
   exit: 2
-  stdout:
+  stdout: 
   stderr: grep: current_ralph_tasks.sh: No such file or directory
   reasons:
     - exit=2 expected=0
@@ -46,7 +46,7 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
   desc: No scan_for_new_completions function
   cmd:  grep -c 'scan_for_new_completions' thunk_ralph_tasks.sh
   exit: 2
-  stdout:
+  stdout: 
   stderr: grep: thunk_ralph_tasks.sh: No such file or directory
   reasons:
     - exit=2 expected=0
@@ -55,7 +55,7 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
   desc: No PLAN_FILE variable
   cmd:  grep -c '^PLAN_FILE=' thunk_ralph_tasks.sh
   exit: 2
-  stdout:
+  stdout: 
   stderr: grep: thunk_ralph_tasks.sh: No such file or directory
   reasons:
     - exit=2 expected=0
@@ -64,7 +64,7 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
   desc: No "Scanning IMPLEMENTATION_PLAN" message
   cmd:  grep -c 'Scanning IMPLEMENTATION_PLAN' thunk_ralph_tasks.sh
   exit: 2
-  stdout:
+  stdout: 
   stderr: grep: thunk_ralph_tasks.sh: No such file or directory
   reasons:
     - exit=2 expected=0
@@ -73,7 +73,7 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
   desc: Monitor references THUNK.md
   cmd:  grep -c 'THUNK\.md' thunk_ralph_tasks.sh
   exit: 2
-  stdout:
+  stdout: 
   stderr: grep: thunk_ralph_tasks.sh: No such file or directory
   reasons:
     - exit=2 expected=0
@@ -88,7 +88,7 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
   desc: No task_exists_in_thunk function
   cmd:  grep -c 'task_exists_in_thunk' thunk_ralph_tasks.sh
   exit: 2
-  stdout:
+  stdout: 
   stderr: grep: thunk_ralph_tasks.sh: No such file or directory
   reasons:
     - exit=2 expected=0
@@ -97,7 +97,7 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
   desc: No extract_task_id function
   cmd:  grep -c 'extract_task_id' thunk_ralph_tasks.sh
   exit: 2
-  stdout:
+  stdout: 
   stderr: grep: thunk_ralph_tasks.sh: No such file or directory
   reasons:
     - exit=2 expected=0
@@ -130,26 +130,26 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
   cmd:  grep -RIn --include='*.sh' --include='*.md' --exclude-dir=.git --exclude-dir=.verify --exclude-dir=logs --exclude-dir=old_md --exclude='AC.rules' --exclude='IMPLEMENTATION_PLAN.md' "verified: this is" . 2>/dev/null | wc -l | tr -d ' '
   exit: 0
   stdout: 0
-[PASS] Protected.1
+[WARN] Protected.1 (protected file changed - human review required)
   desc: loop.sh unchanged from baseline
-  cmd:  sha256sum loop.sh | cut -d' ' -f1 | diff -q - .verify/loop.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
-  exit: 0
-  stdout: match
+  file: loop.sh
+  changes:  1 file changed, 55 insertions(+), 1 deletion(-)
+  logged: /home/grafe/code/brain/workers/cerebras/.verify/protected_changes.log
 [PASS] Protected.2
   desc: verifier.sh unchanged from baseline
   cmd:  sha256sum verifier.sh | cut -d' ' -f1 | diff -q - .verify/verifier.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
   exit: 0
   stdout: match
-[PASS] Protected.3
+[WARN] Protected.3 (protected file changed - human review required)
   desc: PROMPT.md unchanged from baseline
-  cmd:  sha256sum PROMPT.md | cut -d' ' -f1 | diff -q - .verify/prompt.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
-  exit: 0
-  stdout: match
-[PASS] Protected.4
+  file: PROMPT.md
+  changes: (no git diff available)
+  logged: /home/grafe/code/brain/workers/cerebras/.verify/protected_changes.log
+[WARN] Protected.4 (protected file changed - human review required)
   desc: AGENTS.md unchanged from baseline
-  cmd:  sha256sum AGENTS.md | cut -d' ' -f1 | diff -q - .verify/agents.sha256 >/dev/null 2>&1 && echo "match" || echo "mismatch"
-  exit: 0
-  stdout: match
+  file: AGENTS.md
+  changes: (no git diff available)
+  logged: /home/grafe/code/brain/workers/cerebras/.verify/protected_changes.log
 [FAIL] VerifyMeta.1
   desc: Verifier run_id.txt exists and is non-empty
   cmd:  test -s .verify/run_id.txt && echo "OK" || echo "FAIL"
@@ -161,7 +161,7 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
   desc: Display uses terminal-safe cursor positioning (tput)
   cmd:  grep -c 'tput\|printf.*\\033' current_ralph_tasks.sh
   exit: 2
-  stdout:
+  stdout: 
   reasons:
     - exit=2 expected=0
     - stdout regex mismatch expected=/^[1-9][0-9]*$/ got=''
@@ -169,7 +169,7 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
   desc: Display has stty handling for terminal state
   cmd:  grep -c 'stty' current_ralph_tasks.sh
   exit: 2
-  stdout:
+  stdout: 
   reasons:
     - exit=2 expected=0
     - stdout regex mismatch expected=/^[1-9][0-9]*$/ got=''
@@ -177,7 +177,7 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
   desc: THUNK monitor has no auto-sync from IMPLEMENTATION_PLAN
   cmd:  grep -c 'IMPLEMENTATION_PLAN\|PLAN_FILE' thunk_ralph_tasks.sh
   exit: 2
-  stdout:
+  stdout: 
   stderr: grep: thunk_ralph_tasks.sh: No such file or directory
   reasons:
     - exit=2 expected=0
@@ -234,18 +234,27 @@ Approvals: /home/grafe/code/brain/rules/MANUAL_APPROVALS.rules
   cmd:  bash -c 'command -v markdownlint &>/dev/null && markdownlint AGENTS.md 2>&1 | head -10 || echo "ok (markdownlint not installed)"'
   exit: 0
   stdout: AGENTS.md:5:81 error MD013/line-length Line length [Expected: 80; Actual: 170]
+AGENTS.md:67:81 error MD013/line-length Line length [Expected: 80; Actual: 90]
 [PASS] Lint.Markdownlint.NEURONS
   desc: NEURONS.md passes markdownlint (if installed)
   cmd:  bash -c 'command -v markdownlint &>/dev/null && markdownlint NEURONS.md 2>&1 | head -10 || echo "ok (markdownlint not installed)"'
   exit: 0
-  stdout: NEURONS.md:57:81 error MD013/line-length Line length [Expected: 80; Actual: 107]
-NEURONS.md:58:81 error MD013/line-length Line length [Expected: 80; Actual: 102]
-NEURONS.md:60:81 error MD013/line-length Line length [Expected: 80; Actual: 84]
+  stdout: NEURONS.md:5:81 error MD013/line-length Line length [Expected: 80; Actual: 195]
+NEURONS.md:18:16 error MD060/table-column-style Table column style [Table pipe is missing space to the left for style "compact"]
+NEURONS.md:18:28 error MD060/table-column-style Table column style [Table pipe is missing space to the left for style "compact"]
+NEURONS.md:18:1 error MD060/table-column-style Table column style [Table pipe is missing space to the right for style "compact"]
+NEURONS.md:18:16 error MD060/table-column-style Table column style [Table pipe is missing space to the right for style "compact"]
+NEURONS.md:140:81 error MD013/line-length Line length [Expected: 80; Actual: 90]
+NEURONS.md:257:14 error MD060/table-column-style Table column style [Table pipe is missing space to the left for style "compact"]
+NEURONS.md:257:33 error MD060/table-column-style Table column style [Table pipe is missing space to the left for style "compact"]
+NEURONS.md:257:1 error MD060/table-column-style Table column style [Table pipe is missing space to the right for style "compact"]
+NEURONS.md:257:14 error MD060/table-column-style Table column style [Table pipe is missing space to the right for style "compact"]
 [PASS] Lint.Markdownlint.THOUGHTS
   desc: THOUGHTS.md passes markdownlint (if installed)
   cmd:  bash -c 'command -v markdownlint &>/dev/null && markdownlint THOUGHTS.md 2>&1 | head -10 || echo "ok (markdownlint not installed)"'
   exit: 0
-  stdout:
+  stdout: THOUGHTS.md:36:81 error MD013/line-length Line length [Expected: 80; Actual: 89]
+THOUGHTS.md:48:81 error MD013/line-length Line length [Expected: 80; Actual: 90]
 [PASS] Hygiene.DocSync.1
   desc: AGENTS.md THUNK monitor docs don't reference removed 'f' hotkey
   cmd:  grep -A5 'THUNK Monitor' AGENTS.md | grep -c 'force sync\|f.*sync' 2>/dev/null || true
@@ -300,22 +309,22 @@ NEURONS.md:60:81 error MD013/line-length Line length [Expected: 80; Actual: 84]
   desc: cortex/CORTEX_SYSTEM_PROMPT.md max 250 lines
   cmd:  bash -c 'lines=$(wc -l < ../../cortex/CORTEX_SYSTEM_PROMPT.md 2>/dev/null || echo 0); [[ $lines -le 250 ]] && echo "ok ($lines lines)" || echo "OVER: $lines lines (max 250)"'
   exit: 0
-  stdout: ok (159 lines)
+  stdout: ok (184 lines)
 [PASS] Cortex.FileSizeLimit.AGENTS
   desc: cortex/AGENTS.md max 250 lines
   cmd:  bash -c 'lines=$(wc -l < ../../cortex/AGENTS.md 2>/dev/null || echo 0); [[ $lines -le 250 ]] && echo "ok ($lines lines)" || echo "OVER: $lines lines (max 250)"'
   exit: 0
-  stdout: ok (218 lines)
+  stdout: ok (228 lines)
 [PASS] Lint.Shellcheck.LoopSh
   desc: loop.sh passes shellcheck (if installed)
   cmd:  bash -c 'command -v shellcheck &>/dev/null && shellcheck -e SC1091 loop.sh 2>&1 | head -20 || echo "ok (shellcheck not installed)"'
   exit: 0
-  stdout:
+  stdout: 
 [PASS] Lint.Shellcheck.VerifierSh
   desc: verifier.sh passes shellcheck (if installed)
   cmd:  bash -c 'command -v shellcheck &>/dev/null && shellcheck -e SC1091 verifier.sh 2>&1 | head -20 || echo "ok (shellcheck not installed)"'
   exit: 0
-  stdout:
+  stdout: 
 [WARN] Lint.Shellcheck.CurrentRalphTasks (auto check failed but warn gate)
   desc: current_ralph_tasks.sh passes shellcheck (if installed)
   cmd:  bash -c 'command -v shellcheck &>/dev/null && shellcheck -e SC1091 current_ralph_tasks.sh 2>&1 | head -20 || echo "ok (shellcheck not installed)"'
@@ -334,7 +343,7 @@ NEURONS.md:60:81 error MD013/line-length Line length [Expected: 80; Actual: 84]
   desc: NEURONS.md has balanced code fences (equal opens/closes)
   cmd:  bash -c $'BT=\'```\'; opens=$(grep -cE "^${BT}[a-z]" NEURONS.md 2>/dev/null || echo 0); closes=$(grep -cE "^${BT}$" NEURONS.md 2>/dev/null || echo 0); [[ "$opens" -eq "$closes" ]] && echo "ok ($opens pairs)" || echo "UNBALANCED: $opens opens, $closes closes"'
   exit: 0
-  stdout: ok (1 pairs)
+  stdout: ok (13 pairs)
 [PASS] Lint.Markdown.AgentsBalancedFences
   desc: AGENTS.md has balanced code fences (equal opens/closes)
   cmd:  bash -c $'BT=\'```\'; opens=$(grep -cE "^${BT}[a-z]" AGENTS.md 2>/dev/null || echo 0); closes=$(grep -cE "^${BT}$" AGENTS.md 2>/dev/null || echo 0); [[ "$opens" -eq "$closes" ]] && echo "ok ($opens pairs)" || echo "UNBALANCED: $opens opens, $closes closes"'
@@ -358,9 +367,9 @@ NEURONS.md:60:81 error MD013/line-length Line length [Expected: 80; Actual: 84]
   stdout: ok
 ------------------------------------------------------------
 SUMMARY
-  PASS: 41
+  PASS: 38
   FAIL: 12
-  WARN: 5 (manual_warn=0)
+  WARN: 8 (manual_warn=0)
   SKIP: 0
   Manual gate=block failures: 0
   Hash guard: OK
