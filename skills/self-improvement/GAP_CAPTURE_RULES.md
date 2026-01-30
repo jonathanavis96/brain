@@ -67,16 +67,20 @@ Projects capture gaps locally, then sync to brain. This avoids token cost of sca
 
 ### For Project Agents
 
-1. **Capture gap** in `cortex/GAP_CAPTURE.md` (local to project)
-2. **Create marker**: `touch cortex/.gap_pending`
+1. **Capture gap** in `brain/cortex/GAP_CAPTURE.md` (local to project)
+2. **Create marker**: `touch brain/cortex/.gap_pending`
 3. Brain's Cortex will detect and sync on next session
+
+**Legacy support:** Brain also supports the old layout (`cortex/GAP_CAPTURE.md` + `cortex/.gap_pending`) for existing repos.
 
 ### For Brain Cortex
 
-1. `snapshot.sh` checks for `../**/cortex/.gap_pending` markers
+1. `snapshot.sh` checks for markers in sibling projects:
+   - New: `../*/brain/cortex/.gap_pending`
+   - Legacy: `../*/cortex/.gap_pending`
 2. If found, reports pending gaps count
 3. Run `bash cortex/sync_gaps.sh` to:
-   - Read each project's `cortex/GAP_CAPTURE.md`
+   - Read each project's `brain/cortex/GAP_CAPTURE.md` (or legacy `cortex/GAP_CAPTURE.md`)
    - Deduplicate by title (skip if already in `skills/self-improvement/GAP_BACKLOG.md`)
    - Append new gaps to `skills/self-improvement/GAP_BACKLOG.md`
    - Clear project's `GAP_CAPTURE.md` and remove marker

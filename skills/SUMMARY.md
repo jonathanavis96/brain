@@ -294,7 +294,7 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
   - [Brain Repository](projects/brain-example.md) - Brain-specific conventions and Ralph usage
 - **[Self-Improvement](self-improvement/README.md)** - Gap capture and skill promotion system
   - [Gap Capture Rules](self-improvement/GAP_CAPTURE_RULES.md) - Mandatory rules for capturing knowledge gaps
-    - **Rule 6: Cross-Project Gap Sync** - Projects capture gaps locally in `cortex/GAP_CAPTURE.md`, create `.gap_pending` marker, and brain syncs via `cortex/sync_gaps.sh`
+    - **Rule 6: Cross-Project Gap Sync** - Projects capture gaps locally in `brain/cortex/GAP_CAPTURE.md`, create `brain/cortex/.gap_pending`, and Brain syncs via `cortex/sync_gaps.sh` (legacy `cortex/*` also supported)
   - [Gap Backlog](self-improvement/GAP_BACKLOG.md) - Raw log of discovered gaps
   - [Skill Backlog](self-improvement/SKILL_BACKLOG.md) - Promotion queue for gaps ready to become skills
   - [Skill Template](self-improvement/SKILL_TEMPLATE.md) - Template for creating new skill files

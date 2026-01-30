@@ -25,7 +25,7 @@ This table identifies the single source of truth for each major topic to avoid c
 
 - **Plan authority**: `workers/IMPLEMENTATION_PLAN.md` is the single source of truth; `cortex/IMPLEMENTATION_PLAN.md` is a read-only mirror for Cortex's strategic planning context
 - **Bootstrap layout**: Current reality is `workers/ralph/` (per ADR-0001), NOT `ralph/` at project root
-- **Gap capture**: Use `skills/self-improvement/GAP_CAPTURE_RULES.md` for the process; gaps flow to `.gap_pending` then `cortex/sync_gaps.sh` merges to `GAP_BACKLOG.md`
+- **Gap capture**: Use `skills/self-improvement/GAP_CAPTURE_RULES.md` for the process; gaps flow to `brain/cortex/.gap_pending` (legacy `cortex/.gap_pending` supported) then `cortex/sync_gaps.sh` merges to `GAP_BACKLOG.md`
 
 ## Key References
 
