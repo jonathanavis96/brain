@@ -42,8 +42,8 @@ bash brain/workers/ralph/sync_brain_skills.sh --from-sibling
 
 ## Cross-Project Pattern Mining (Gap Capture)
 
-Bootstrapped projects can capture missing knowledge locally in `cortex/GAP_CAPTURE.md`.
-To flag gaps for ingestion into Brain, touch `cortex/.gap_pending`.
+Bootstrapped projects can capture missing knowledge locally in `brain/cortex/GAP_CAPTURE.md`.
+To flag gaps for ingestion into Brain, touch `brain/cortex/.gap_pending`.
 
 **Helper (recommended):**
 
