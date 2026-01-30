@@ -13,7 +13,10 @@ cd "${BRAIN_ROOT}"
 # Find all pending gap markers
 pending_gaps=()
 shopt -s nullglob
-for marker in "${BRAIN_ROOT}"/../*/cortex/.gap_pending; do
+# Support both legacy and new downstream layouts:
+# - legacy:   <project>/cortex/.gap_pending
+# - new:      <project>/brain/cortex/.gap_pending
+for marker in "${BRAIN_ROOT}"/../*/cortex/.gap_pending "${BRAIN_ROOT}"/../*/brain/cortex/.gap_pending; do
   [[ -f "$marker" ]] && pending_gaps+=("$marker")
 done
 shopt -u nullglob
@@ -30,9 +33,18 @@ synced=0
 skipped=0
 
 for marker in "${pending_gaps[@]}"; do
-  project_dir=$(dirname "$(dirname "$marker")")
+  # marker path examples:
+  # - legacy: /path/to/<project>/cortex/.gap_pending
+  # - new:    /path/to/<project>/brain/cortex/.gap_pending
+  marker_dir=$(dirname "$marker")
+  if [[ "$marker_dir" == */brain/cortex ]]; then
+    project_dir=$(cd "$marker_dir/../.." && pwd)
+  else
+    project_dir=$(cd "$marker_dir/.." && pwd)
+  fi
+
   project_name=$(basename "$project_dir")
-  gap_file="$(dirname "$marker")/GAP_CAPTURE.md"
+  gap_file="$marker_dir/GAP_CAPTURE.md"
 
   if [[ ! -f "$gap_file" ]]; then
     echo "⚠️  $project_name: GAP_CAPTURE.md not found, removing stale marker"
@@ -62,7 +74,8 @@ for marker in "${pending_gaps[@]}"; do
   done < <(awk '/^### [0-9]{4}-[0-9]{2}-[0-9]{2}/{if(entry)print entry; entry=$0; next} entry{entry=entry"\n"$0} END{if(entry)print entry}' "$gap_file")
 
   # Clear the project's GAP_CAPTURE.md (keep header) and remove marker
-  echo "  🧹 Clearing $project_name/cortex/GAP_CAPTURE.md"
+  # Clear the project's GAP_CAPTURE.md (keep header) and remove marker
+  echo "  🧹 Clearing $gap_file"
   awk '/^## Captured Gaps$/{found=1; print; print ""; next} !found{print}' "$gap_file" >"${gap_file}.tmp" && mv "${gap_file}.tmp" "$gap_file"
   rm -f "$marker"
 done

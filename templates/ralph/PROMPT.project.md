@@ -27,6 +27,19 @@ If the `# VERIFIER STATUS` section shows `[WARN]` lines:
 
 ---
 
+## ROOT RULE (CRITICAL)
+
+You are running from `./brain/workers/ralph/`, but **the project root is the repository root**.
+
+- Project/app code lives at repo root (e.g., `src/`, `public/`, config files)
+- Brain pack lives under `./brain/`
+- Ralph task plan lives at `brain/workers/IMPLEMENTATION_PLAN.md`
+- Ralph completion log lives at `brain/workers/ralph/THUNK.md`
+
+**Do not treat `./brain/` as the repo root.** Only work inside `./brain/` when updating the Brain pack itself (plans, THUNK, or syncing skills).
+
+---
+
 ## MANDATORY: Startup Procedure (Cheap First)
 
 **Do NOT open large files at startup.** Use targeted commands instead.
