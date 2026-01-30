@@ -8,6 +8,8 @@
 
 **Verdict:** ⚠️ **Significant improvements found in workers/ralph/**
 
+**Note:** `new-project.sh` is a **brain-only tool; intentionally not templated** (operator workflow). Do not ship it into downstream project templates.
+
 Since the last audit (2026-01-27), several beneficial enhancements have been made to `workers/ralph/` that should be propagated to `templates/ralph/`:
 
 1. **loop.sh:** `.env` file loading support, improved model selection comments
@@ -20,7 +22,34 @@ Since the last audit (2026-01-27), several beneficial enhancements have been mad
 
 **Status:** ✅ **AUDIT COMPLETE** - Ready for Phase 35.2.2 implementation
 
+### Drift Policy Note: `new-project.sh` (Intentional / Brain-only)
+
+`new-project.sh` is a **brain-only tool; intentionally not templated**. It is part of Brain's operator workflow for bootstrapping new repos and should not be shipped into downstream project templates.
+
+## Findings Table
+
+| ID | Item | Intended? | Action | Notes |
+|----|------|-----------|--------|-------|
+| W08 | `new-project.sh` | Intended | Keep brain-only | Project bootstrapping is an operator workflow; do not ship `new-project.sh` into downstream project templates. |
+
 ---
+
+## Added and Should Be Templated
+
+**Policy:** Project bootstrapping is an operator workflow; don't ship `new-project.sh` into downstream project templates.
+
+(Everything listed below is limited to reusable worker/template infrastructure; exclude operator tools.)
+
+---
+
+## Template Update Plan
+
+### Phase 1 (High Priority)
+
+- Sync `loop.sh` `.env` loading support
+- Sync `verifier.sh` empty stdout regex handling fix
+- Sync `current_ralph_tasks.sh` Phase section detection
+- Sync `PROMPT.md` path corrections
 
 ---
 
