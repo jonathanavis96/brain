@@ -315,6 +315,11 @@ Use this format for tasks that fix the SAME issue type across multiple files:
 
 - ✅ **SAME fix type** across multiple files (e.g., SC2162 in 5+ shell scripts)
 - ✅ **SAME directory** warnings (e.g., 4 MD040 errors in `skills/domains/backend/`)
+- ✅ **MARKDOWN errors** - Efficiently batch by error type:
+  - Group by rule ID (e.g., all MD040 errors together, all MD024 errors together)
+  - Run `fix-markdown.sh` first to auto-fix common issues (MD009, MD010, MD012, MD031, MD032, MD047)
+  - Only create manual tasks for remaining errors that need human judgment (MD040, MD024, MD036)
+  - Example: "Fix MD040 (missing code fence languages) across 12 files in skills/"
 - ❌ **NOT** different fix types even if same file (e.g., SC2034 + SC2162 in one file = separate tasks)
 
 **Verification pattern for batched tasks:**

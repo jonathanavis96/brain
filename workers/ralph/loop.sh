@@ -2293,16 +2293,22 @@ else
       fi
 
       # Snapshot plan BEFORE sync for drift detection (prevents direct-edit bypass)
+      mkdir -p "$ROOT/.verify"
       PLAN_SNAPSHOT="$ROOT/.verify/plan_snapshot.md"
       if [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
         cp "$ROOT/workers/IMPLEMENTATION_PLAN.md" "$PLAN_SNAPSHOT"
       fi
 
       # Capture remaining markdown lint errors for PLAN phase
-      # PLAN Ralph should see these so he can add tasks to fix them
+      # Auto-fix markdown issues before checking for remaining errors
       MARKDOWN_LINT_ERRORS=""
       if command -v markdownlint &>/dev/null; then
-        echo "Checking for markdown lint errors..."
+        echo "Running auto-fix for markdown lint errors..."
+        if [[ -f "$RALPH/fix-markdown.sh" ]]; then
+          bash "$RALPH/fix-markdown.sh" "$ROOT" 2>&1 | tail -10 || true
+        fi
+        
+        echo "Checking for remaining markdown lint errors..."
         lint_output=$(markdownlint "$ROOT" 2>&1 | grep -E "error MD" | head -40) || true
         if [[ -n "$lint_output" ]]; then
           MARKDOWN_LINT_ERRORS="$lint_output"
