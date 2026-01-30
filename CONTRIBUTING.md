@@ -111,7 +111,7 @@ rg "topic" docs/ README.md NEURONS.md
 1. Identify template to improve (ralph/, cortex/, backend/, python/, go/, javascript/, website/)
 2. Make changes to template file
 3. Consider if change should propagate to `workers/ralph/` (Brain-specific infrastructure)
-4. Test template with new project bootstrap: `bash new-project.sh test-idea.md`
+4. Test template with new project bootstrap: `bash scripts/new-project.sh test-idea.md`
 5. Document change in commit message
 
 **Important:**

@@ -429,7 +429,7 @@ grep -c "^- \[" skills/index.md
 1. Read `docs/BOOTSTRAPPING.md`
 2. Choose template from `templates/` (ralph, backend, python, etc.)
 3. Copy template to new project location
-4. Run `new-project.sh` (see `workers/ralph/new-project.sh` and templates in `templates/`)
+4. Run `scripts/new-project.sh` (Brain operator workflow)
 5. Customize AGENTS.md, NEURONS.md, THOUGHTS.md for project
 
 ### Running Ralph Loop on Brain

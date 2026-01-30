@@ -733,16 +733,16 @@ bash workers/ralph/cleanup_plan.sh
 
 ---
 
-### `workers/ralph/new-project.sh` - Project Bootstrapper
+### `scripts/new-project.sh` - Project Bootstrapper
 
 Bootstrap a new project from templates.
 
 ```bash
 # Create new project
-bash workers/ralph/new-project.sh my-project
+bash scripts/new-project.sh my-project
 
 # Specify template
-bash workers/ralph/new-project.sh my-project --template python
+bash scripts/new-project.sh my-project --template python
 ```
 
 **Templates:** python, go, javascript, website, backend, ralph.
@@ -824,7 +824,7 @@ bin/thunk-parse --format sqlite -o threads.db
 
 ## Validation Tools
 
-### check_startup_rules.sh
+### `tools/check_startup_rules.sh`
 
 Tripwire script to verify Ralph follows token efficiency rules after each run.
 
@@ -834,6 +834,106 @@ tools/check_startup_rules.sh path/to/log.log   # Check specific log
 ```
 
 Checks: no forbidden file opens at startup, no THUNK lookups via open_files, no full IMPL_PLAN reads, no grep explosions, first tool call is cheap.
+
+---
+
+### `tools/test_cache_smoke.sh`
+
+Smoke-test the cache subsystem.
+
+```bash
+bash tools/test_cache_smoke.sh
+```
+
+---
+
+### `tools/test_cache_guard_marker.sh`
+
+Verify cache guard marker enforcement.
+
+```bash
+bash tools/test_cache_guard_marker.sh
+```
+
+---
+
+### `tools/test_cache_inheritance.sh`
+
+Verify cache inheritance behavior.
+
+```bash
+bash tools/test_cache_inheritance.sh
+```
+
+---
+
+### `tools/test_plan_cleanup.sh`
+
+Test plan cleanup behaviors.
+
+```bash
+bash tools/test_plan_cleanup.sh
+```
+
+---
+
+### `tools/test_plan_only_guard.sh`
+
+Test PLAN-ONLY mode guardrails.
+
+```bash
+bash tools/test_plan_only_guard.sh
+```
+
+---
+
+### `tools/thunk_dedup.sh`
+
+Deduplicate THUNK entries.
+
+```bash
+bash tools/thunk_dedup.sh --help
+```
+
+---
+
+### `tools/validate_links.sh`
+
+Validate that markdown links resolve.
+
+```bash
+bash tools/validate_links.sh
+```
+
+---
+
+### `tools/validate_doc_sync.sh`
+
+Validate that documentation and code stay in sync.
+
+```bash
+bash tools/validate_doc_sync.sh
+```
+
+---
+
+### `tools/validate_protected_hashes.sh`
+
+Verify protected-file hash baselines.
+
+```bash
+bash tools/validate_protected_hashes.sh
+```
+
+---
+
+### `tools/validate_tool_inventory.sh`
+
+Ensure `docs/TOOLS.md` documents all tools.
+
+```bash
+bash tools/validate_tool_inventory.sh
+```
 
 ---
 

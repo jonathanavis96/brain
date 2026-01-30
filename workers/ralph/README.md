@@ -26,7 +26,7 @@ Goals: MVP in 2 weeks, 1000 users in first month
 EOF
 
 # 2. Run bootstrap
-bash workers/ralph/new-project.sh NEW_PROJECT_IDEA.md
+bash scripts/new-project.sh NEW_PROJECT_IDEA.md
 
 # 3. Your project is ready!
 cd /path/to/your-project
@@ -491,4 +491,4 @@ The brain repository is successful when:
 
 ---
 
-**Get Started:** Run `bash workers/ralph/new-project.sh NEW_PROJECT_IDEA.md` to bootstrap your first project!
+**Get Started:** Run `bash scripts/new-project.sh NEW_PROJECT_IDEA.md` to bootstrap your first project!
