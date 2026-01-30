@@ -60,9 +60,9 @@ This is critical to understand:
 
 **When in templates (for NEW projects):**
 
-- Skill references use **relative paths from project root**: `../brain/skills/SUMMARY.md`
-- Templates assume project is sibling to brain: `../brain/`
-- Template prompts use **relative paths**: `../../brain/skills/SUMMARY.md`
+- Skill references use **paths from project root**: `./skills/SUMMARY.md`
+- Templates assume the project vendors Brain skills into `./skills/`
+- Template prompts use **paths from project root**: `./skills/SUMMARY.md`
 
 **Example:**
 
@@ -76,8 +76,8 @@ Read [conventions](../conventions.md)
 <!-- In brain/PROMPT.md (local paths, brain's own Ralph) -->
 Read `skills/SUMMARY.md`
 
-<!-- In brain/templates/ralph/PROMPT.md (relative paths, for projects) -->
-Read `../../brain/skills/SUMMARY.md`
+<!-- In brain/templates/ralph/PROMPT.md (project vendored paths) -->
+Read `./skills/SUMMARY.md`
 ```text
 
 ### Brain Self-Improvement with Ralph
@@ -169,7 +169,7 @@ When updating templates, ensure consistency:
 
 **Progressive disclosure order:**
 
-1. `../brain/skills/SUMMARY.md`
+1. `./skills/SUMMARY.md`
 2. `../brain/references/react-best-practices/HOTLIST.md`
 3. `../brain/references/react-best-practices/INDEX.md` (only if needed)
 4. `../brain/references/react-best-practices/rules/*` (only specific rules)

@@ -12,7 +12,7 @@ Use parallel subagents (max 100) to read project vision, goals, and success crit
 **0b. Identify source code location**  
 Prefer `src/` directory. If different, document the actual location.
 
-**0c. Study workers/IMPLEMENTATION_PLAN.md**  
+**0c. Study brain/workers/IMPLEMENTATION_PLAN.md**  
 Read the current plan. If it doesn't exist or is empty, the first iteration must create it.
 
 ### The Loop
@@ -23,11 +23,11 @@ Ralph operates in two alternating phases:
 
 See `PROMPT.md` (planning mode section) for full instructions.
 
-**Goal**: Create or update `workers/IMPLEMENTATION_PLAN.md` with clear, atomic tasks
+**Goal**: Create or update `brain/workers/IMPLEMENTATION_PLAN.md` with clear, atomic tasks
 
 **Frequency**:
 
-- First iteration (if workers/IMPLEMENTATION_PLAN.md missing/empty)
+- First iteration (if brain/workers/IMPLEMENTATION_PLAN.md missing/empty)
 - Every N iterations (configurable, default: every 3)
 - When explicitly requested
 
@@ -35,15 +35,15 @@ See `PROMPT.md` (planning mode section) for full instructions.
 
 See `PROMPT.md` (building mode section) for full instructions.
 
-**Goal**: Implement the top item from `workers/IMPLEMENTATION_PLAN.md`
+**Goal**: Implement the top item from `brain/workers/IMPLEMENTATION_PLAN.md`
 
 **Process**:
 
-1. Take top incomplete item from workers/IMPLEMENTATION_PLAN.md
+1. Take top incomplete item from brain/workers/IMPLEMENTATION_PLAN.md
 2. Implement the change
 3. Run build/tests
-4. Update workers/IMPLEMENTATION_PLAN.md (mark completed `[x]`)
-5. Append progress to workers/ralph/THUNK.md
+4. Update brain/workers/IMPLEMENTATION_PLAN.md (mark completed `[x]`)
+5. Append progress to brain/workers/ralph/THUNK.md
 6. Stage changes with `git add -A` (NO commit - loop.sh batches commits at PLAN phase)
 
 ### Parallelism Contract
@@ -73,7 +73,7 @@ The loop runner detects this sentinel and stops iteration.
 
 ## Progress Tracking
 
-All Ralph task completions are logged to `workers/ralph/THUNK.md` with:
+All Ralph task completions are logged to `brain/workers/ralph/THUNK.md` with:
 
 - Task ID
 - Timestamp
@@ -153,7 +153,7 @@ project-root/               ← Application code and config files
 - Config files → project root (`package.json`, `tsconfig.json`, etc.)
 - Entry points → project root (`index.html`, `main.py`, etc.)
 - Ralph files → Ralph directory (PROMPT.md, AGENTS.md, THOUGHTS.md, NEURONS.md, THUNK.md, skills/, logs/, etc.)
-- Task tracking → workers/IMPLEMENTATION_PLAN.md (one level up from ralph/)
+- Task tracking → brain/workers/IMPLEMENTATION_PLAN.md
 
 **NEVER put application code inside the Ralph directory.**
 

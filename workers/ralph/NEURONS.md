@@ -249,7 +249,7 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 
 **Path Conventions:**
 
-- Templates use relative paths: `../brain/skills/SUMMARY.md` (from project root)
+- Templates use project-local paths: `./skills/SUMMARY.md` (from project root)
 - Brain's own prompts use local paths: `../../skills/SUMMARY.md` (relative to workers/ralph/)
 - All paths in templates must be validated before use
 

@@ -31,9 +31,9 @@ From `THOUGHTS.md`: {{PROJECT_PURPOSE}}
   - **Goal:** Ensure Ralph can execute basic tasks
   - **Context:** Fresh project setup, need to validate infrastructure
   - **AC:**
-    - [ ] Run `bash loop.sh` completes without errors
+    - [ ] Run `bash brain/workers/ralph/loop.sh` completes without errors
     - [ ] Verifier runs and produces `.verify/latest.txt`
-    - [ ] workers/ralph/THUNK.md created with first entry
+    - [ ] brain/workers/ralph/THUNK.md created with first entry
   - **If Blocked:** Check loop.sh syntax, verifier rules, file permissions
 
 - [ ] **0.2** Document project structure in NEURONS.md
@@ -56,8 +56,8 @@ From `THOUGHTS.md`: {{PROJECT_PURPOSE}}
 ## Notes for Ralph
 
 - This is your first project with Cortex management
-- Check `cortex/THOUGHTS.md` for strategic context
-- Tasks will be synced from `workers/workers/IMPLEMENTATION_PLAN.md` automatically
+- Check `brain/cortex/THOUGHTS.md` for strategic context
+- Tasks live in `brain/workers/IMPLEMENTATION_PLAN.md`
 - Focus on one task per iteration (atomic completion)
 
 ---

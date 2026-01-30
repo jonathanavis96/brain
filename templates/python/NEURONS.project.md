@@ -49,7 +49,7 @@ Last updated: [TIMESTAMP]
 ├── ralph/                      # Ralph loop infrastructure
 │   ├── loop.sh                 # Loop runner
 │   ├── PROMPT.md               # Ralph instructions
-│   ├── workers/IMPLEMENTATION_PLAN.md  # Task list
+│   ├── brain/workers/IMPLEMENTATION_PLAN.md  # Task list
 │   └── VALIDATION_CRITERIA.md  # Quality gates
 │
 └── skills/                     # Project-specific knowledge base
@@ -229,8 +229,8 @@ sphinx-build -b html docs/ docs/_build/
 
 This project leverages brain repository knowledge:
 
-- **Domain Patterns**: `./skills/domains/` - Caching, API design, testing patterns
-- **Project Learnings**: `./skills/projects/[project-slug].md` - Project-specific discoveries
+- **Domain Patterns**: `./brain/skills/domains/` - Caching, API design, testing patterns
+- **Project Learnings**: `./brain/skills/projects/[project-slug].md` - Project-specific discoveries
 
 ## Framework-Specific Notes
 

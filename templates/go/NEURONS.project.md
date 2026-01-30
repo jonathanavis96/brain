@@ -35,8 +35,8 @@ This file provides a structural overview of the project for AI agents and develo
 └── workers/               # Ralph loop infrastructure
     └── ralph/
         ├── PROMPT.md      # Ralph agent prompt
-        ├── workers/IMPLEMENTATION_PLAN.md  # Task backlog
-        └── workers/ralph/THUNK.md       # Completed task log
+        ├── brain/workers/IMPLEMENTATION_PLAN.md  # Task backlog
+        └── brain/workers/ralph/THUNK.md       # Completed task log
 ```
 
 ## Key Directories
@@ -210,4 +210,4 @@ GOOS=linux GOARCH=amd64 go build -o bin/app-linux cmd/app/main.go
 - **AGENTS.md** - Operational guide for AI agents
 - **THOUGHTS.md** - Project vision and goals
 - **README.md** - Setup and usage instructions
-- **workers/IMPLEMENTATION_PLAN.md** - Current task backlog
+- **brain/workers/IMPLEMENTATION_PLAN.md** - Current task backlog

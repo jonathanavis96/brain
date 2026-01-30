@@ -41,7 +41,7 @@ rg -q "Business Goals" THOUGHTS.md && echo "✓ Goals defined"
 
 **Acceptance Criteria:**
 
-- [ ] `workers/IMPLEMENTATION_PLAN.md` exists with phased tasks
+- [ ] `brain/workers/IMPLEMENTATION_PLAN.md` exists with phased tasks
 - [ ] Tech stack decision documented in `THOUGHTS.md`
 - [ ] All pages have section composition in `docs/sections.md`
 - [ ] Content sources identified (existing vs to-be-created)
@@ -51,7 +51,7 @@ rg -q "Business Goals" THOUGHTS.md && echo "✓ Goals defined"
 
 ```bash
 # Check planning files
-test -f workers/IMPLEMENTATION_PLAN.md && echo "✓ Implementation plan exists"
+test -f brain/workers/IMPLEMENTATION_PLAN.md && echo "✓ Implementation plan exists"
 test -d node_modules && echo "✓ Dependencies installed"
 
 # Verify sections defined for all pages

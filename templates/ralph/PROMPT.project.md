@@ -13,7 +13,7 @@ Look for the `# VERIFIER STATUS` section at the top of this prompt. It contains:
 
 If the header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
-1. **STOP** - Do not pick a new task from `workers/IMPLEMENTATION_PLAN.md`
+1. **STOP** - Do not pick a new task from `brain/workers/IMPLEMENTATION_PLAN.md`
 2. **CHECK** the `# VERIFIER STATUS` section above for failure details
 3. **FIX** the failing acceptance criteria listed in `# FAILED_RULES:`
 4. **COMMIT** your fix with message: `fix(ralph): resolve AC failure <RULE_ID>`
@@ -21,7 +21,7 @@ If the header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
 If the `# VERIFIER STATUS` section shows `[WARN]` lines:
 
-1. **ADD** `## Phase 0-Warn: Verifier Warnings` section at TOP of `workers/IMPLEMENTATION_PLAN.md` (after header, before other phases)
+1. **ADD** `## Phase 0-Warn: Verifier Warnings` section at TOP of `brain/workers/IMPLEMENTATION_PLAN.md` (after header, before other phases)
 2. Create ONE task per (RULE_ID + file), not per line/occurrence (batch within a file)
 3. **NEVER** mark `[x]` until verifier confirms fix (re-run shows `[PASS]`)
 
@@ -37,42 +37,42 @@ Avoid opening entire files; slice instead:
 
 - `NEURONS.md` (use grep/head/sed slices)
 - `THOUGHTS.md` (slice with `head -50` if needed)
-- `workers/IMPLEMENTATION_PLAN.md` (NEVER open full; grep then slice)
-- `workers/ralph/THUNK.md` (append-only; use `tail` only when adding a new entry)
+- `brain/workers/IMPLEMENTATION_PLAN.md` (NEVER open full; grep then slice)
+- `brain/workers/ralph/THUNK.md` (append-only; use `tail` only when adding a new entry)
 
 ### Required Startup Sequence (STRICT)
 
 ```bash
 # 1) Pick ONE task (the first unchecked task in file order)
-LINE=$(grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -1 | cut -d: -f1)
+LINE=$(grep -n "^- \[ \]" brain/workers/IMPLEMENTATION_PLAN.md | head -1 | cut -d: -f1)
 
 # 2) Read ONE non-overlapping slice around it
 #    BAN: sed starting at 1; BAN: >90 lines; CAP: 2 plan slices max/iteration
-sed -n "$((LINE-5)),$((LINE+35))p" workers/IMPLEMENTATION_PLAN.md
+sed -n "$((LINE-5)),$((LINE+35))p" brain/workers/IMPLEMENTATION_PLAN.md
 ```
 
-**Rule:** The task you pick MUST be the first unchecked `- [ ]` in `workers/IMPLEMENTATION_PLAN.md` (top-to-bottom). Do not skip ahead to later IDs.
+**Rule:** The task you pick MUST be the first unchecked `- [ ]` in `brain/workers/IMPLEMENTATION_PLAN.md` (top-to-bottom). Do not skip ahead to later IDs.
 
 ---
 
 ## BUILD Mode (Most iterations)
 
 1. If `# LAST_VERIFIER_RESULT: FAIL` is present: fix verifier failures first; do not pick a plan task.
-2. Otherwise, pick the **first unchecked** task in `workers/IMPLEMENTATION_PLAN.md`.
+2. Otherwise, pick the **first unchecked** task in `brain/workers/IMPLEMENTATION_PLAN.md`.
    - This is your **ONLY** task this iteration.
    - If it is genuinely blocked, mark it `[?]` with a clear **If Blocked** note and then pick the next unchecked task.
 
 When you complete the task, you MUST:
 
-1. Mark the task `[x]` in `workers/IMPLEMENTATION_PLAN.md`
-2. Append a row to `workers/ralph/THUNK.md`
+1. Mark the task `[x]` in `brain/workers/IMPLEMENTATION_PLAN.md`
+2. Append a row to `brain/workers/ralph/THUNK.md`
 3. Commit your changes
 
 ---
 
 ## PLANNING Mode
 
-- Update `workers/IMPLEMENTATION_PLAN.md` with clear, atomic tasks.
+- Update `brain/workers/IMPLEMENTATION_PLAN.md` with clear, atomic tasks.
 - Keep tasks completable in one BUILD iteration.
 
 ---
@@ -125,7 +125,7 @@ Batch searches and edits:
 ### Read Deduplication (HARD)
 
 - Plan reads: max 2 non-overlapping `sed` slices per iteration.
-- BAN: `sed -n '1,XXp' workers/IMPLEMENTATION_PLAN.md`
+- BAN: `sed -n '1,XXp' brain/workers/IMPLEMENTATION_PLAN.md`
 - BAN: slices > 90 lines.
 
 ### Constrain Searches (Avoid Grep Explosion)

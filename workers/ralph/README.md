@@ -288,7 +288,7 @@ All templates use **bash-style forward slash paths**:
 
 ```markdown
 # Correct ✅
-../../brain/skills/SUMMARY.md
+./skills/SUMMARY.md
 ../../brain/references/react-best-practices/HOTLIST.md
 
 # Incorrect ❌

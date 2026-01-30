@@ -30,10 +30,10 @@ project-root/           ← Working directory for application files
     ├── THOUGHTS.md     ← Project vision
     ├── NEURONS.md      ← Codebase map
     ├── PROMPT.md       ← Loop prompt
-    ├── workers/IMPLEMENTATION_PLAN.md  ← Task tracking
+    ├── brain/workers/IMPLEMENTATION_PLAN.md  ← Task tracking
     ├── VALIDATION_CRITERIA.md  ← Quality gates
     ├── RALPH.md        ← Loop contract
-    ├── workers/ralph/THUNK.md        ← Thunk mode config
+    ├── brain/workers/ralph/THUNK.md        ← Thunk mode config
     ├── loop.sh         ← Loop runner
     ├── verifier.sh     ← Verification script
     ├── current_ralph_tasks.sh  ← Task runner
@@ -163,7 +163,7 @@ After cleanup, verify:
 ```bash
 ls <project>/ralph/
 # Should show: .gitignore, AGENTS.md, THOUGHTS.md, NEURONS.md, PROMPT.md,
-#              workers/IMPLEMENTATION_PLAN.md, VALIDATION_CRITERIA.md, RALPH.md, workers/ralph/THUNK.md,
+#              brain/workers/IMPLEMENTATION_PLAN.md, VALIDATION_CRITERIA.md, RALPH.md, brain/workers/ralph/THUNK.md,
 #              loop.sh, verifier.sh, current_ralph_tasks.sh, thunk_ralph_tasks.sh, pr-batch.sh
 ```text
 

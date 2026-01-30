@@ -19,8 +19,8 @@ Example structure checks:
 - [ ] Configuration files present and valid
 - [ ] Required dependencies installed
 - [ ] Entry points properly configured
-- [ ] Source code in project root src/, NOT workers/ralph/src/
-- [ ] Scripts in project root bin/, NOT workers/ralph/bin/
+- [ ] Source code in project root src/, NOT brain/workers/ralph/src/
+- [ ] Scripts in project root bin/, NOT brain/workers/ralph/bin/
 
 Example specific checks:
 
@@ -72,7 +72,7 @@ Example documentation checks:
 
 - [ ] THOUGHTS.md reflects current goals and success criteria
 - [ ] NEURONS.md maps current codebase structure
-- [ ] workers/IMPLEMENTATION_PLAN.md has actionable tasks
+- [ ] brain/workers/IMPLEMENTATION_PLAN.md has actionable tasks
 - [ ] AGENTS.md describes how Ralph works in this project
 
 Example specific checks:
@@ -96,13 +96,13 @@ Example specific checks:
 - Reference relevant validation criteria for current task
 - Run validation commands to verify implementation
 - Check that your changes don't violate any criteria
-- Update task in workers/IMPLEMENTATION_PLAN.md with validation results
+- Update task in brain/workers/IMPLEMENTATION_PLAN.md with validation results
 
 **For Manual Verification:**
 
 - Run through checklist after major milestones
 - Mark items [x] as they're verified
-- Document verification results in workers/IMPLEMENTATION_PLAN.md notes
+- Document verification results in brain/workers/IMPLEMENTATION_PLAN.md notes
 - Update criteria if new quality requirements emerge
 
 ## Validation Commands

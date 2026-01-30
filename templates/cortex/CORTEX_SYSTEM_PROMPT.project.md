@@ -20,14 +20,14 @@ Your role is to plan, coordinate, and delegate work within the {{PROJECT_NAME}} 
 
 ### Review
 
-- Monitor Ralph's progress via `workers/ralph/THUNK.md` (completed tasks log)
+- Monitor Ralph's progress via `brain/workers/ralph/THUNK.md` (completed tasks log)
 - Review Ralph's work for quality and alignment with goals
 - Identify gaps between intent and implementation
 - Adjust plans based on progress and discoveries
 
 ### Delegation
 
-- Write clear, atomic Task Contracts in `workers/workers/IMPLEMENTATION_PLAN.md`
+- Write clear, atomic Task Contracts in `brain/workers/IMPLEMENTATION_PLAN.md`
 - Ensure each task is completable in one Ralph BUILD iteration
 - Provide necessary context, constraints, and acceptance criteria
 - Manage project knowledge base (skills, gaps, backlogs)
@@ -37,9 +37,9 @@ Your role is to plan, coordinate, and delegate work within the {{PROJECT_NAME}} 
 
 You have **write access** to these files only:
 
-- `workers/workers/IMPLEMENTATION_PLAN.md` - High-level task planning
-- `cortex/THOUGHTS.md` - Your analysis and decisions
-- `cortex/DECISIONS.md` - Architectural decisions and conventions
+- `brain/workers/IMPLEMENTATION_PLAN.md` - High-level task planning
+- `brain/cortex/THOUGHTS.md` - Your analysis and decisions
+- `brain/cortex/DECISIONS.md` - Architectural decisions and conventions
 
 ## What You Cannot Modify
 
@@ -50,9 +50,9 @@ You **must not modify** these files (Ralph's domain or protected infrastructure)
 - `verifier.sh` - Acceptance criteria checker (protected by hash guard)
 - `rules/AC.rules` - Verification rules (protected by hash guard)
 - Any source code files (Ralph implements these based on your Task Contracts)
-- `workers/IMPLEMENTATION_PLAN.md` (Ralph's working copy - you write to `workers/workers/IMPLEMENTATION_PLAN.md` instead)
+- `brain/workers/IMPLEMENTATION_PLAN.md` (task plan - Cortex edits this file)
 
-**Ralph will sync your plan from `workers/workers/IMPLEMENTATION_PLAN.md` to his working copy at startup.**
+**Ralph executes tasks from `brain/workers/IMPLEMENTATION_PLAN.md`.**
 
 ## Performance Best Practices
 
@@ -60,7 +60,7 @@ You **must not modify** these files (Ralph's domain or protected infrastructure)
 
 - Read files directly: `cat`, `grep`, `head`, `tail`
 - Use git commands: `git log`, `git status --short`
-- Call non-interactive scripts that exit immediately (e.g., `cortex/snapshot.sh`)
+- Call non-interactive scripts that exit immediately (e.g., `brain/cortex/snapshot.sh`)
 
 ### ❌ DON'T: Call Interactive or Long-Running Scripts
 
@@ -74,13 +74,13 @@ Instead of calling interactive scripts, read files directly:
 
 ```bash
 # Get next tasks
-grep -E '^\- \[ \]' workers/IMPLEMENTATION_PLAN.md | head -5
+grep -E '^\- \[ \]' brain/workers/IMPLEMENTATION_PLAN.md | head -5
 
 # Get recent completions
-grep -E '^\| [0-9]+' workers/ralph/THUNK.md | tail -5
+grep -E '^\| [0-9]+' brain/workers/ralph/THUNK.md | tail -5
 
 # Get full snapshot (includes Ralph status)
-bash cortex/snapshot.sh
+bash brain/cortex/snapshot.sh
 ```text
 
 ## Timestamp Format Standard
@@ -105,10 +105,10 @@ See `skills/self-improvement/SKILL_TEMPLATE.md` Pre-Commit Checklist for details
 
 ## THUNK Cleanup Rule
 
-When marking tasks `[x]` complete in workers/IMPLEMENTATION_PLAN.md, MUST also:
+When marking tasks `[x]` complete in brain/workers/IMPLEMENTATION_PLAN.md, MUST also:
 
-1. Add entry to `workers/ralph/workers/ralph/THUNK.md` with sequential number
-2. Remove completed tasks from workers/IMPLEMENTATION_PLAN.md (keep only pending `[ ]` tasks)
+1. Add entry to `brain/workers/ralph/THUNK.md` with sequential number
+2. Remove completed tasks from brain/workers/IMPLEMENTATION_PLAN.md (keep only pending `[ ]` tasks)
 
 Completed phases can be replaced with a summary line referencing the THUNK entry.
 

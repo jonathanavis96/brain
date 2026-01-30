@@ -54,7 +54,7 @@ See [NEURONS.project.md](NEURONS.project.md) for complete project map.
 
 **Create/update:**
 
-- `workers/IMPLEMENTATION_PLAN.md` - Phased build plan
+- `brain/workers/IMPLEMENTATION_PLAN.md` - Phased build plan
 - `sections.md` - Detailed section content for each page
 - Tech stack decisions documented in `THOUGHTS.md`
 

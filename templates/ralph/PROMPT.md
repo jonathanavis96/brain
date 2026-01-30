@@ -13,7 +13,7 @@ Look for the `# VERIFIER STATUS` section at the top of this prompt. It contains:
 
 If the header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
-1. **STOP** - Do not pick a new task from workers/workers/IMPLEMENTATION_PLAN.md
+1. **STOP** - Do not pick a new task from brain/workers/IMPLEMENTATION_PLAN.md
 2. **CHECK** the `# VERIFIER STATUS` section above for failure details
 3. **FIX** the failing acceptance criteria listed in `# FAILED_RULES:`
 4. **COMMIT** your fix with message: `fix(ralph): resolve AC failure <RULE_ID>`
@@ -21,7 +21,7 @@ If the header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
 If the `# VERIFIER STATUS` section shows `[WARN]` lines:
 
-1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of workers/workers/IMPLEMENTATION_PLAN.md (after header, before other phases)
+1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of brain/workers/IMPLEMENTATION_PLAN.md (after header, before other phases)
 2. **⚠️ DO NOT create "## Verifier Warnings" without the "Phase 0-Warn:" prefix** - This breaks the task monitor!
 3. **LIST (BATCHED):** Create **ONE task per (RULE_ID + file)**, not per line/occurrence. Use: `- [ ] WARN.<RULE_ID>.<filename> - <description>`
 4. **NEVER use numbered lists (1. 2. 3.)** - ALWAYS use checkbox format `- [ ]`
@@ -78,29 +78,29 @@ Then output `:::BUILD_READY:::` to end the iteration.
 - `NEURONS.md` - use `ls` to explore structure
 - `THOUGHTS.md` - slice with `head -30` if needed
 - `cortex/*.md` - Cortex files are NOT needed for BUILD tasks
-- `workers/workers/IMPLEMENTATION_PLAN.md` (full file) - use grep to find tasks
-- `workers/ralph/workers/ralph/THUNK.md` (full file) - use tail to append only
+- `brain/workers/IMPLEMENTATION_PLAN.md` (full file) - use grep to find tasks
+- `brain/workers/ralph/THUNK.md` (full file) - use tail to append only
 
 ### Required Startup Sequence (STRICT)
 
 ```bash
 # 1) Pick ONE task
-LINE=$(grep -n "^- \[ \]" workers/workers/IMPLEMENTATION_PLAN.md | head -1 | cut -d: -f1)
+LINE=$(grep -n "^- \[ \]" brain/workers/IMPLEMENTATION_PLAN.md | head -1 | cut -d: -f1)
 
 # 2) Read ONE non-overlapping slice around it
 #    BAN: sed starting at 1; BAN: >90 lines; CAP: 2 plan slices max/iteration
-sed -n "$((LINE-5)),$((LINE+35))p" workers/workers/IMPLEMENTATION_PLAN.md
+sed -n "$((LINE-5)),$((LINE+35))p" brain/workers/IMPLEMENTATION_PLAN.md
 
 # 3) Search before creating tools
 find bin/ -maxdepth 1 -type f | head -20
 find tools/ -maxdepth 1 -name "*.py" -o -name "*.sh" 2>/dev/null | head -10
 ```
 
-### workers/ralph/THUNK.md Access Rules (STRICT)
+### brain/workers/ralph/THUNK.md Access Rules (STRICT)
 
-- Lookups: `grep ... workers/ralph/workers/ralph/THUNK.md | head -3`
+- Lookups: `grep ... brain/workers/ralph/THUNK.md | head -3`
 - Append: get next id ONCE right before append:
-  - `tail -10 workers/ralph/workers/ralph/THUNK.md | grep "^|" | tail -1`
+  - `tail -10 brain/workers/ralph/THUNK.md | grep "^|" | tail -1`
 
 ### Search Before Creating
 
@@ -121,8 +121,8 @@ rg -l "def main\|usage:" tools/*.py bin/* 2>/dev/null | head -10
 **Every completed task MUST include ALL THREE staged together:**
 
 1. ✅ The code/doc fix itself
-2. ✅ workers/ralph/THUNK.md entry (append to current era table)
-3. ✅ workers/IMPLEMENTATION_PLAN.md update (mark task `[x]`)
+2. ✅ brain/workers/ralph/THUNK.md entry (append to current era table)
+3. ✅ brain/workers/IMPLEMENTATION_PLAN.md update (mark task `[x]`)
 
 ```bash
 # CORRECT: Stage all changes together (loop.sh commits at PLAN phase)
@@ -131,7 +131,7 @@ git add -A
 
 **DO NOT commit during BUILD mode** - loop.sh batches commits at the start of each PLAN phase for efficiency (~13 sec saved per iteration).
 
-**If you don't stage workers/ralph/THUNK.md and workers/IMPLEMENTATION_PLAN.md with your fix, you have NOT completed the task.**
+**If you don't stage brain/workers/ralph/THUNK.md and brain/workers/IMPLEMENTATION_PLAN.md with your fix, you have NOT completed the task.**
 
 ---
 
@@ -140,7 +140,7 @@ git add -A
 If a command/tool fails (traceback, syntax error, non-zero exit):
 
 1. Stop and fix first.
-2. Open `skills/SUMMARY.md` → Error Quick Reference.
+2. Open `brain/skills/SUMMARY.md` → Error Quick Reference.
 3. Read the single best-matching skill doc.
 4. Apply the minimum fix and re-run the failing command.
 
@@ -259,7 +259,7 @@ At the end of every iteration (PLAN/BUILD), immediately before the marker line (
 
 ```bash
 # What tasks exist?
-grep -n "^## Phase\|^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -40
+grep -n "^## Phase\|^- \[ \]" brain/workers/IMPLEMENTATION_PLAN.md | head -40
 
 # What skills exist? (don't open index.md)
 ls skills/domains/*/
@@ -269,7 +269,7 @@ ls skills/domains/*/
 
 ```bash
 # Example: need Phase 21 details (found at line 518)
-sed -n '515,580p' workers/IMPLEMENTATION_PLAN.md
+sed -n '515,580p' brain/workers/IMPLEMENTATION_PLAN.md
 ```
 
 **Step 3: Search for existing tools before proposing new ones**
@@ -280,9 +280,9 @@ ls bin/ tools/*.py tools/*.sh 2>/dev/null | head -20
 
 **Legacy guidance (use sparingly, slice don't open):**
 
-- `skills/SUMMARY.md` - OK to open (small file)
+- `brain/skills/SUMMARY.md` - OK to open (small file)
 - `THOUGHTS.md` - slice with `head -50` if needed
-- `workers/IMPLEMENTATION_PLAN.md` - NEVER open full, always grep then slice
+- `brain/workers/IMPLEMENTATION_PLAN.md` - NEVER open full, always grep then slice
 
 ### Pre-Planning State Check
 
@@ -347,7 +347,7 @@ git add -A && git commit -m "fix(scope): resolve SC2162 across 8 shell scripts
 
 ### Actions
 
-1. Create/update workers/IMPLEMENTATION_PLAN.md:
+1. Create/update brain/workers/IMPLEMENTATION_PLAN.md:
    - **⚠️ CRITICAL:** ALL task sections MUST be "## Phase X:" format (e.g., "## Phase 0-Quick: Quick Wins", "## Phase 1: Maintenance")
    - **⚠️ NEVER create these non-phase sections:** "## Overview", "## Quick Wins" (without Phase prefix), "## Verifier Warnings" (without Phase prefix), "## Maintenance Check", "## TODO Items"
    - **⚠️ CORRECT format:** "## Phase 0-Warn: Verifier Warnings", "## Phase 0-Quick: Quick Wins", "## Phase 1: Core Features"
@@ -378,7 +378,7 @@ git add -A && git commit -m "fix(scope): resolve SC2162 across 8 shell scripts
 
 If you identify knowledge gaps or improvements that need **new Phase sections** (not just new tasks within existing phases):
 
-1. **PROPOSE, don't commit** - Describe the new phases in your response but DO NOT write them to workers/IMPLEMENTATION_PLAN.md yet
+1. **PROPOSE, don't commit** - Describe the new phases in your response but DO NOT write them to brain/workers/IMPLEMENTATION_PLAN.md yet
 2. **Explain the rationale** - Why is this needed? What gaps does it fill?
 3. **Wait for approval** - Human or Cortex must approve before you add new phases
 4. **Exception:** `## Phase 0-Warn: Verifier Warnings` can be added immediately (urgent fixes)
@@ -391,7 +391,7 @@ PROPOSED NEW PHASES:
   - Rationale: Brain is referenced by web projects, needs React/Vue patterns
   - Tasks: 8.1.1 Create frontend README, 8.1.2 Add component patterns...
 
-Awaiting approval before adding to workers/IMPLEMENTATION_PLAN.md.
+Awaiting approval before adding to brain/workers/IMPLEMENTATION_PLAN.md.
 ```
 
 **Why this rule exists:** New phases represent significant scope expansion. Cortex owns strategic planning; Ralph executes. Proposing allows review before commitment.
@@ -404,20 +404,20 @@ Awaiting approval before adding to workers/IMPLEMENTATION_PLAN.md.
 
 ```bash
 # Find the FIRST unchecked task only
-grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -1
+grep -n "^- \[ \]" brain/workers/IMPLEMENTATION_PLAN.md | head -1
 ```
 
 **Step 2: Slice only the task block you need (STRICT RULES)**
 
 ```bash
 # RULES:
-#  - BAN: sed -n '1,XXp' workers/IMPLEMENTATION_PLAN.md
+#  - BAN: sed -n '1,XXp' brain/workers/IMPLEMENTATION_PLAN.md
 #  - Max 90 lines per slice
 #  - Max 2 total plan slices in BUILD mode
 #  - No overlapping slices
 #
 # Example: task at line 236
-sed -n '231,270p' workers/IMPLEMENTATION_PLAN.md
+sed -n '231,270p' brain/workers/IMPLEMENTATION_PLAN.md
 ```
 
 **Step 3: Search before assuming things are missing**
@@ -432,13 +432,13 @@ rg -l "keyword" tools/ skills/domains/ | head -10
 
 - `NEURONS.md` - use `ls` and `find` instead
 - `THOUGHTS.md` - not needed for BUILD mode
-- `workers/IMPLEMENTATION_PLAN.md` (full) - always grep then slice
-- `workers/ralph/THUNK.md` - only `tail` when appending
+- `brain/workers/IMPLEMENTATION_PLAN.md` (full) - always grep then slice
+- `brain/workers/ralph/THUNK.md` - only `tail` when appending
 
 ### Actions
 
 1. **CHECK FOR VERIFIER WARNINGS FIRST:**
-   - If `workers/IMPLEMENTATION_PLAN.md` has a "## Verifier Warnings" section with unchecked `- [ ]` tasks:
+   - If `brain/workers/IMPLEMENTATION_PLAN.md` has a "## Verifier Warnings" section with unchecked `- [ ]` tasks:
      - Pick ONE warning task (prioritize High > Medium > Low)
      - Fix that warning
      - Mark it complete `- [x]` in the Verifier Warnings section
@@ -454,8 +454,8 @@ rg -l "keyword" tools/ skills/domains/ | head -10
 4. Validate per AGENTS.md commands
 
 5. **STAGE ALL CHANGES:** Stage all changes together (loop.sh commits at PLAN phase):
-   - Log completion to workers/ralph/THUNK.md (append to current era table)
-   - Mark task `[x]` in workers/IMPLEMENTATION_PLAN.md
+   - Log completion to brain/workers/ralph/THUNK.md (append to current era table)
+   - Mark task `[x]` in brain/workers/IMPLEMENTATION_PLAN.md
    - **DO NOT commit** - loop.sh batches commits at PLAN phase for efficiency
 
    ```bash
@@ -464,9 +464,9 @@ rg -l "keyword" tools/ skills/domains/ | head -10
    ```
 
 6. **DISCOVERY DEFER RULE:** If you discover new issues while fixing:
-   - **DO NOT** update workers/IMPLEMENTATION_PLAN.md with new tasks during BUILD mode
+   - **DO NOT** update brain/workers/IMPLEMENTATION_PLAN.md with new tasks during BUILD mode
    - **DO** note them in your commit message body (e.g., "Note: also found SC2034 in foo.sh")
-   - **WAIT** until PLAN mode to add new tasks to workers/IMPLEMENTATION_PLAN.md
+   - **WAIT** until PLAN mode to add new tasks to brain/workers/IMPLEMENTATION_PLAN.md
    - This prevents "docs(plan): add new task" spam commits
 
 7. **Self-Improvement Check:** If you used undocumented knowledge/procedure/tooling:
@@ -543,7 +543,7 @@ If the work is **small, homogeneous markdown/doc fixes** (e.g., markdownlint war
 - Combine up to **5–10** related markdown issues per iteration (or until changes stop being “small”).
 - Prefer one cohesive patch over many tiny patches.
 - Split into separate iterations only if changes become risky, cross-cutting, or require separate verification.
-- **Never remove uncompleted items** - NEVER delete `[ ]` tasks from workers/IMPLEMENTATION_PLAN.md
+- **Never remove uncompleted items** - NEVER delete `[ ]` tasks from brain/workers/IMPLEMENTATION_PLAN.md
 - **Never delete completed tasks** - Mark tasks `[x]` complete but NEVER delete them (they stay forever as history)
 - **Never delete sections** - NEVER remove entire sections (## Phase X:, ## Verifier Warnings, etc.) even if all tasks are complete
 - **Never use numbered lists** - ALL tasks must use checkbox format `- [ ]` or `- [x]`, NEVER `1. 2. 3.`
@@ -568,8 +568,8 @@ Target: <20 tool calls per iteration.
 **Anti-patterns (NEVER do these):**
 
 - Trying to read `.verify/latest.txt` (it's already in the header!)
-- Reading `workers/ralph/THUNK.md` to check if a task was done (use `grep` or `bin/brain-search`)
-- Opening `NEURONS.md`, `THOUGHTS.md`, or full `workers/IMPLEMENTATION_PLAN.md` at startup
+- Reading `brain/workers/ralph/THUNK.md` to check if a task was done (use `grep` or `bin/brain-search`)
+- Opening `NEURONS.md`, `THOUGHTS.md`, or full `brain/workers/IMPLEMENTATION_PLAN.md` at startup
 - Running `git status` before AND after `git add`
 - Running `shellcheck file.sh`, then `shellcheck -e SC1091 file.sh`, then `shellcheck -x file.sh`
 
@@ -598,7 +598,7 @@ Before ending BUILD iteration, verify all files are staged:
 
 ```bash
 git status --short
-# Should show workers/IMPLEMENTATION_PLAN.md and workers/ralph/THUNK.md staged (along with your fix)
+# Should show brain/workers/IMPLEMENTATION_PLAN.md and brain/workers/ralph/THUNK.md staged (along with your fix)
 git add -A
 # NO commit - loop.sh handles this at PLAN phase
 ```
@@ -631,7 +631,7 @@ When a validation tool fails on code examples:
 
 - `pwd`, `git branch` - known from header
 - Verifier status - already injected in header (NEVER read the file)
-- `tail workers/ralph/THUNK.md` - get next number ONCE
+- `tail brain/workers/ralph/THUNK.md` - get next number ONCE
 - Same file content - read ONCE, remember it
 
 **ALWAYS batch:** `grep pattern file1 file2 file3` not 3 separate calls.

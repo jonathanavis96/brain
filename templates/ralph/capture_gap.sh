@@ -5,7 +5,7 @@
 # - Write gap entry to ./cortex/GAP_CAPTURE.md
 # - Touch ./cortex/.gap_pending
 # Brain repo later runs: bash cortex/sync_gaps.sh
-# which imports gaps into brain/skills/self-improvement/GAP_BACKLOG.md
+# which imports gaps into brain's skills/self-improvement/GAP_BACKLOG.md
 #
 # Usage:
 #   bash workers/ralph/capture_gap.sh "Suggested Skill Name" \
