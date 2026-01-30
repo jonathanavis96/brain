@@ -262,7 +262,7 @@ At the end of every iteration (PLAN/BUILD), immediately before the marker line (
 grep -n "^## Phase\|^- \[ \]" brain/workers/IMPLEMENTATION_PLAN.md | head -40
 
 # What skills exist? (don't open index.md)
-ls skills/domains/*/
+ls brain/skills/domains/*/
 ```
 
 **Step 2: Only slice specific sections if needed**
