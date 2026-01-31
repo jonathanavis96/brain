@@ -947,8 +947,11 @@ stage_scoped_changes() {
 # =============================================================================
 # End-of-Run Flush Commit - Ensure no changes are left uncommitted
 # =============================================================================
-# Commits any pending changes using scoped staging so that runs ending on BUILD
+# Stages any pending changes using scoped staging so that runs ending on BUILD
 # do not leave a dirty worktree.
+#
+# IMPORTANT: Commit policy is PLAN-only by default. This function will *not*
+# commit unless explicitly allowed.
 #
 # Usage: flush_scoped_commit_if_needed <reason>
 flush_scoped_commit_if_needed() {
@@ -959,6 +962,11 @@ flush_scoped_commit_if_needed() {
     return 0
   fi
 
+  # Default commit policy: plan-only
+  # Values: plan-only | always
+  local commit_policy
+  commit_policy="${COMMIT_POLICY:-plan-only}"
+
   # Nothing to do if clean
   if git diff --quiet && git diff --cached --quiet; then
     return 0
@@ -967,11 +975,18 @@ flush_scoped_commit_if_needed() {
   echo "Flushing pending changes (${reason})..."
   stage_scoped_changes || true
 
-  if ! git diff --cached --quiet; then
+  if git diff --cached --quiet; then
+    echo "No files to commit after scoped staging"
+    echo ""
+    return 0
+  fi
+
+  # Only commit when explicitly allowed
+  if [[ "$commit_policy" == "always" ]]; then
     git commit -m "build: flush pending changes (${reason})" || true
     echo "✓ Changes flushed"
   else
-    echo "No files to commit after scoped staging"
+    echo "Skipping commit (COMMIT_POLICY=$commit_policy). Changes are staged."
   fi
   echo ""
 }
@@ -2299,15 +2314,16 @@ else
         echo ""
       fi
 
-      # Commit any accumulated changes from BUILD iterations (scoped staging)
+      # Stage any accumulated changes from BUILD iterations (scoped staging)
+      # Commit policy is PLAN-only (default). We stage here so PLAN phase can decide
+      # whether to commit, but we avoid noisy commits triggered purely by reaching PLAN.
       if ! git diff --quiet || ! git diff --cached --quiet; then
-        echo "Committing accumulated BUILD changes..."
+        echo "Staging accumulated BUILD changes (no commit)..."
         stage_scoped_changes || true # May return 1 if nothing staged (denylist)
         if ! git diff --cached --quiet; then
-          git commit -m "build: accumulated changes from BUILD iterations" || true
-          echo "✓ BUILD changes committed"
+          echo "✓ BUILD changes staged"
         else
-          echo "No files to commit after scoped staging"
+          echo "No files to stage after scoped staging"
         fi
         echo ""
       fi
@@ -2610,7 +2626,50 @@ else
 fi
 
 # Ensure no pending changes are left uncommitted when the loop ends
-flush_scoped_commit_if_needed "end_of_run"
+# End-of-run is special: we ALWAYS commit (unless DRY_RUN=true) so the worktree
+# is not left in a staged/dirty state.
+#
+# Also run final "common bug" catchers before committing:
+#   - fix-markdown.sh (only if markdown changed)
+#   - pre-commit (if installed)
+#   - verifier.sh (non-blocking)
+if [[ "${DRY_RUN:-false}" != "true" ]]; then
+  # Detect changed files (staged + unstaged)
+  end_changed_files="$(
+    git diff --name-only HEAD 2>/dev/null
+    git diff --name-only --cached 2>/dev/null
+  )"
+  end_md_changed=$(echo "$end_changed_files" | grep -c '\.md$' || true)
+
+  if [[ -f "$RALPH/fix-markdown.sh" ]] && [[ "$end_md_changed" -gt 0 ]]; then
+    echo "Running end-of-run markdown auto-fix ($end_md_changed .md file(s) changed)..."
+    (cd "$ROOT" && bash "$RALPH/fix-markdown.sh" . 2>/dev/null) || true
+  fi
+
+  # Stage changes after auto-fix so pre-commit/verifier see latest state
+  stage_scoped_changes || true
+
+  # Run pre-commit on the staged set (if available)
+  if command -v pre-commit &>/dev/null; then
+    if ! git diff --cached --quiet; then
+      echo "Running end-of-run pre-commit on staged files..."
+      (cd "$ROOT" && pre-commit run 2>/dev/null) || true
+    else
+      echo "Skipping end-of-run pre-commit (nothing staged)"
+    fi
+  fi
+
+  # Run verifier (non-blocking) for visibility
+  if [[ -x "$VERIFY_SCRIPT" ]]; then
+    echo "Running end-of-run verifier (non-blocking)..."
+    (cd "$RALPH" && bash verifier.sh 2>/dev/null) || true
+  fi
+
+  # Force commit at end-of-run (policy override)
+  COMMIT_POLICY=always flush_scoped_commit_if_needed "end_of_run"
+else
+  flush_scoped_commit_if_needed "end_of_run"
+fi
 
 # Print cache statistics summary at end of run
 if [[ "$CACHE_SKIP" == "true" ]]; then
