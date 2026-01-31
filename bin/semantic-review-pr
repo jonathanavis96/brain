@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+# semantic-review-pr - Run semantic code review on current branch vs main
+#
+# Usage:
+#   semantic-review-pr [OPTIONS]
+#
+# Options:
+#   --help              Show this help message
+#   --base BRANCH       Base branch to compare against (default: main)
+#   --verbose           Show detailed output
+#
+# Environment:
+#   ANTHROPIC_API_KEY   Required for semantic review (unless --dry-run)
+#
+# Exit codes:
+#   0 - Review passed or no changes to review
+#   1 - Review found issues or configuration error
+
+set -euo pipefail
+
+# Default options
+BASE_BRANCH="main"
+VERBOSE=false
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --help)
+      sed -n '2,/^$/p' "$0" | sed 's/^# \?//'
+      exit 0
+      ;;
+    --base)
+      BASE_BRANCH="$2"
+      shift 2
+      ;;
+    --verbose)
+      VERBOSE=true
+      shift
+      ;;
+    *)
+      echo -e "${RED}Error: Unknown option: $1${NC}" >&2
+      echo "Run with --help for usage." >&2
+      exit 1
+      ;;
+  esac
+done
+
+# Validate we're in a git repository
+if ! git rev-parse --git-dir >/dev/null 2>&1; then
+  echo -e "${RED}Error: Not in a git repository${NC}" >&2
+  exit 1
+fi
+
+# Get current branch
+CURRENT_BRANCH=$(git branch --show-current)
+
+if [[ -z "$CURRENT_BRANCH" ]]; then
+  echo -e "${RED}Error: Not on a branch (detached HEAD?)${NC}" >&2
+  exit 1
+fi
+
+# Check if base branch exists
+if ! git rev-parse --verify "$BASE_BRANCH" >/dev/null 2>&1; then
+  echo -e "${RED}Error: Base branch '$BASE_BRANCH' does not exist${NC}" >&2
+  exit 1
+fi
+
+# Check if we're on the base branch
+if [[ "$CURRENT_BRANCH" == "$BASE_BRANCH" ]]; then
+  echo -e "${GREEN}✓ On base branch '$BASE_BRANCH' - no changes to review${NC}"
+  exit 0
+fi
+
+# Get the diff
+DIFF=$(git diff "$BASE_BRANCH"..."$CURRENT_BRANCH")
+
+if [[ -z "$DIFF" ]]; then
+  echo -e "${GREEN}✓ No changes between '$CURRENT_BRANCH' and '$BASE_BRANCH'${NC}"
+  exit 0
+fi
+
+# Check if semantic_reviewer.py exists
+REVIEWER_SCRIPT="$(git rev-parse --show-toplevel)/tools/semantic_reviewer.py"
+
+if [[ ! -f "$REVIEWER_SCRIPT" ]]; then
+  echo -e "${RED}Error: semantic_reviewer.py not found at $REVIEWER_SCRIPT${NC}" >&2
+  exit 1
+fi
+
+# Run semantic review
+echo -e "${BLUE}Running semantic review: $CURRENT_BRANCH vs $BASE_BRANCH${NC}"
+
+if [[ "$VERBOSE" == "true" ]]; then
+  echo "Diff stats:"
+  git diff --stat "$BASE_BRANCH"..."$CURRENT_BRANCH"
+  echo ""
+fi
+
+# Create temp file for diff
+TEMP_DIFF=$(mktemp)
+trap 'rm -f "$TEMP_DIFF"' EXIT
+
+git diff "$BASE_BRANCH"..."$CURRENT_BRANCH" > "$TEMP_DIFF"
+
+# Run the semantic reviewer
+if python3 "$REVIEWER_SCRIPT" < "$TEMP_DIFF"; then
+  echo -e "${GREEN}✓ Semantic review passed${NC}"
+  exit 0
+else
+  EXIT_CODE=$?
+  echo -e "${YELLOW}⚠ Semantic review found issues (exit code: $EXIT_CODE)${NC}"
+  exit "$EXIT_CODE"
+fi

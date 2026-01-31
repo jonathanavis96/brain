@@ -2335,6 +2335,27 @@ else
         cp "$ROOT/workers/IMPLEMENTATION_PLAN.md" "$PLAN_SNAPSHOT"
       fi
 
+      # Run semantic review during PLAN phase only (task 39.5.1)
+      echo ""
+      echo "========================================"
+      echo "🔍 Running semantic review (PLAN phase only)..."
+      echo "========================================"
+      if [[ -x "$ROOT/bin/semantic-review-pr" ]]; then
+        if "$ROOT/bin/semantic-review-pr" --base main 2>&1 | tee -a "$LOGDIR/iter${i}_semantic_review.log"; then
+          echo "✓ Semantic review passed"
+        else
+          review_rc=$?
+          if [[ $review_rc -eq 0 ]]; then
+            echo "✓ No changes to review (clean branch)"
+          else
+            echo "⚠️  Semantic review found issues (non-blocking)"
+          fi
+        fi
+      else
+        echo "⚠️  Semantic review script not found: $ROOT/bin/semantic-review-pr"
+      fi
+      echo ""
+
       # Capture remaining markdown lint errors for PLAN phase
       # Auto-fix markdown issues before checking for remaining errors
       MARKDOWN_LINT_ERRORS=""
@@ -2343,7 +2364,7 @@ else
         if [[ -f "$RALPH/fix-markdown.sh" ]]; then
           bash "$RALPH/fix-markdown.sh" "$ROOT" 2>&1 | tail -10 || true
         fi
-        
+
         echo "Checking for remaining markdown lint errors..."
         lint_output=$(markdownlint "$ROOT" 2>&1 | grep -E "error MD" | head -40) || true
         if [[ -n "$lint_output" ]]; then

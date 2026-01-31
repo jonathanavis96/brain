@@ -1126,3 +1126,73 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
   - **Archived At:** 2026-01-28 22:40:43
   - **Block:**
 
+### Archived on 2026-01-31 21:50:24
+
+- [x] **39.1.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-31 21:50:24
+  - **Block:**
+
+- [x] **39.1.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-31 21:50:24
+  - **Block:**
+
+- [x] **39.2.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-31 21:50:24
+  - **Block:**
+
+- [x] **39.2.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-31 21:50:24
+  - **Block:**
+
+### Archived on 2026-01-31 22:02:42
+
+- [x] **39.3.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-31 22:02:42
+  - **Block:**
+
+- [x] **39.4.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-31 22:02:42
+  - **Block:**
+
+- [x] **39.4.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-31 22:02:42
+  - **Block:**
+
+### Archived on 2026-01-31 22:20:54
+
+- [x] **WARN.MD040.test_md040.md**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-31 22:20:54
+  - **Block:**
+
+- [x] **39.5.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-31 22:20:54
+  - **Block:**
+
+- [x] **39.6.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-01-31 22:20:54
+  - **Block:**
+
+
+### Archived on 2026-01-31 (Phase 39 Complete)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-31 | 39.1.1 | - [x] **39.1.1** Create `tools/semantic_reviewer.py` CLI skeleton + deterministic output format |
+| 2026-01-31 | 39.1.2 | - [x] **39.1.2** Implement changed-file discovery for PR review (`--against` / `--git-diff`) |
+| 2026-01-31 | 39.2.1 | - [x] **39.2.1** Add `rovodev` provider that shells out to `acli rovodev run` |
+| 2026-01-31 | 39.2.2 | - [x] **39.2.2** Add canonical prompt template and strict output schema for the LLM |
+| 2026-01-31 | 39.3.1 | - [x] **39.3.1** Implement 1-2 high-signal non-LLM checks with fixtures |
+| 2026-01-31 | 39.4.1 | - [x] **39.4.1** Add optional pre-commit hook `semantic-code-review` |
+| 2026-01-31 | 39.4.2 | - [x] **39.4.2** Add `bin/semantic-review-pr` (diff vs main) |
+| 2026-01-31 | 39.5.1 | - [x] **39.5.1** Run semantic review during PLAN only (not BUILD) |
+| 2026-01-31 | 39.6.1 | - [x] **39.6.1** Verify BUILD never commits; PLAN commits still occur; end-of-run always commits |

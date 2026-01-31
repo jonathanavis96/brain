@@ -44,12 +44,14 @@ This document records critical corrections made to the Brain template system and
 #### File: `brain/templates/ralph/RALPH.md`
 
 **File Reference Updates:**
+
 ```diff
 - fix_plan.md → workers/IMPLEMENTATION_PLAN.md
 - progress.txt → workers/ralph/THUNK.md
 ```
 
 **Commit Workflow Correction:**
+
 ```diff
 - **Goal**: Implement the top item from `fix_plan.md`
 + **Goal**: Implement the top item from `workers/IMPLEMENTATION_PLAN.md`
@@ -66,6 +68,7 @@ This document records critical corrections made to the Brain template system and
 ```
 
 **Git Commits Section Rewritten:**
+
 ```markdown
 ## Git Commits
 
@@ -84,6 +87,7 @@ This ensures:
 ```
 
 **File Structure Diagram Updated:**
+
 ```diff
         ├── RALPH.md            # This file - Ralph contract
         ├── PROMPT.md           # Unified prompt (mode detection)
@@ -110,17 +114,20 @@ This ensures:
 #### A) Path Alignment (Cortex Documentation)
 
 **Files Fixed:**
+
 - `deene-social/cortex/AGENTS.md` - 5 references corrected
 - `deene-social/cortex/CORTEX_SYSTEM_PROMPT.md` - 4 references corrected
 - `deene-social/cortex/IMPLEMENTATION_PLAN.md` - 1 reference corrected
 
 **Pattern:**
+
 ```diff
 - workers/workers/IMPLEMENTATION_PLAN.md
 + workers/IMPLEMENTATION_PLAN.md
 ```
 
 **Workflow Clarification Added:**
+
 ```markdown
 Ralph works on `workers/IMPLEMENTATION_PLAN.md` and syncs it to Cortex for review 
 (via `sync_workers_plan_to_cortex.sh` at loop.sh startup).
@@ -133,6 +140,7 @@ cortex/IMPLEMENTATION_PLAN.md (Cortex review copy)
 ```
 
 **File Removed:**
+
 - ✅ `deene-social/workers/ralph/IMPLEMENTATION_PLAN.md` (obsolete template placeholder)
 
 #### B) Workflow Alignment
@@ -149,6 +157,7 @@ When you complete the task, you MUST:
 ```
 
 **File:** `deene-social/workers/ralph/RALPH.md`
+
 - ✅ Replaced entire file with corrected template from `brain/templates/ralph/RALPH.md`
 
 #### C) Documentation Clarity
@@ -169,16 +178,19 @@ When you complete the task, you MUST:
   bash current_ralph_tasks.sh
   ```
   
-  ### Completed Tasks
+### Completed Tasks
+
   ```bash
   cd workers/ralph
   bash thunk_ralph_tasks.sh
   ```
   
-+ **🤖 Note for AI Agents:**  
-+ DO NOT run `current_ralph_tasks.sh` or `thunk_ralph_tasks.sh` - they are 
-+ interactive/blocking tools. AI agents should read `workers/IMPLEMENTATION_PLAN.md` 
-+ and `workers/ralph/THUNK.md` directly using grep/sed/tail.
+- **🤖 Note for AI Agents:**  
+- DO NOT run `current_ralph_tasks.sh` or `thunk_ralph_tasks.sh` - they are
+- interactive/blocking tools. AI agents should read `workers/IMPLEMENTATION_PLAN.md`
+- and `workers/ralph/THUNK.md` directly using grep/sed/tail.
+
+```text
 ```
 
 **File:** `deene-social/docs/SETUP_COMPLETE.md`
@@ -196,6 +208,7 @@ Added missing linting configuration files to enable auto-fix features:
 ```
 
 These files enable:
+
 - `fix-markdown.sh` to run with proper linting rules
 - `pre-commit` hooks to validate commits
 - Automatic integration in loop.sh BUILD iterations
@@ -254,16 +267,19 @@ pre-commit 4.5.1 ✅
 The corrected workflow matches the actual loop.sh implementation:
 
 **BUILD Mode:**
+
 - Stage changes: `git add -A`
 - NO commit (saves ~13 seconds per iteration)
 - Exception: Verifier failures commit immediately with: `fix(ralph): resolve AC failure <RULE_ID>`
 
 **PLAN Mode:**
+
 - loop.sh commits all accumulated BUILD changes at PLAN start
 - Then stages/commits plan file updates
 - Comprehensive commit message with full context
 
 **Benefits:**
+
 - Faster BUILD iterations (no commit overhead)
 - Fewer, more meaningful commits
 - All related changes grouped together
@@ -271,7 +287,7 @@ The corrected workflow matches the actual loop.sh implementation:
 
 ### File Structure (Canonical)
 
-```
+```text
 project-root/
 ├── workers/
 │   ├── IMPLEMENTATION_PLAN.md          # Task tracking (CANONICAL location)
@@ -302,11 +318,13 @@ project-root/
 ### Interactive vs Automated Tools
 
 **For Humans (Interactive):**
+
 - `current_ralph_tasks.sh` - Display active tasks with formatting
 - `thunk_ralph_tasks.sh` - Display completed tasks with formatting
 - These use `less`, interactive prompts, colorized output
 
 **For AI Agents (Automated):**
+
 - Direct file reading: `grep`, `sed`, `tail`, `awk`
 - Files: `workers/IMPLEMENTATION_PLAN.md`, `workers/ralph/THUNK.md`
 - Non-blocking, parseable, no user interaction required
@@ -382,6 +400,7 @@ project-root/
 ## Changelog
 
 ### 2026-01-30 - Initial Creation
+
 - Documented template corrections for RALPH.md
 - Documented deene-social alignment fixes
 - Added verification results
@@ -392,9 +411,11 @@ project-root/
 ## Appendix: Files Modified
 
 ### Brain Templates
+
 1. `brain/templates/ralph/RALPH.md` - 6 sections corrected
 
 ### Deene-Social Project
+
 1. `deene-social/cortex/AGENTS.md` - 5 path corrections
 2. `deene-social/cortex/CORTEX_SYSTEM_PROMPT.md` - 4 path corrections
 3. `deene-social/cortex/IMPLEMENTATION_PLAN.md` - 1 path correction
@@ -407,6 +428,7 @@ project-root/
 10. `deene-social/.pre-commit-config.yaml` - Added (6,818 bytes)
 
 ### Files Removed
+
 1. `deene-social/workers/ralph/IMPLEMENTATION_PLAN.md` - Obsolete template placeholder
 
 ---
