@@ -166,6 +166,27 @@ repos:
           )$
 
 
+  # ==========================================================================
+  # Semantic Code Review (Manual/CI only)
+  # ==========================================================================
+  - repo: local
+    hooks:
+      - id: semantic-code-review
+        name: semantic-code-review
+        description: AI-assisted semantic code review (manual stage only)
+        entry: python3 tools/semantic_reviewer.py --paths
+        language: system
+        stages: [manual]
+        pass_filenames: true
+        files: \.(md|py|sh|bash|yaml|yml|js|jsx|ts|tsx)$
+        exclude: |
+          (?x)^(
+            .*THUNK\.md$|
+            .*IMPLEMENTATION_PLAN\.md$|
+            .*/node_modules/.*|
+            .*\.min\..*
+          )$
+
   # Protected File Hash Validation
   # ==========================================================================
   - repo: local
