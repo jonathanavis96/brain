@@ -519,9 +519,38 @@ function App() {
     setClickToPlaceActive(!clickToPlaceActive)
   }
 
-  const handleGraphClick = (position) => {
+  const handleGraphClick = async (position) => {
     if (clickToPlaceActive && clickToPlaceData) {
-      // TODO: Implement POST to /node endpoint with position
+      try {
+        const response = await fetch(`${API_BASE_URL}/node`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: clickToPlaceData.title,
+            type: clickToPlaceData.type || 'Inbox',
+            status: clickToPlaceData.status || 'idea',
+            tags: clickToPlaceData.tags || [],
+            body_md: clickToPlaceData.body || ''
+          })
+        })
+        
+        if (response.ok) {
+          const data = await response.json()
+          // Update position after node is created
+          await fetch(`${API_BASE_URL}/node/${data.node.id}/position`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ x: position.x, y: position.y })
+          })
+          showToast('Node created successfully', 'success')
+          // Refresh graph
+          window.location.reload()
+        } else {
+          showToast('Failed to create node')
+        }
+      } catch (err) {
+        showToast('Error creating node: ' + err.message)
+      }
       setClickToPlaceActive(false)
     }
   }
@@ -530,8 +559,37 @@ function App() {
     setClickToPlaceData(nodeData)
   }
 
-  const handleGraphDrop = (position, nodeData) => {
-    // TODO: Implement POST to /node endpoint with position
+  const handleGraphDrop = async (position, nodeData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/node`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: nodeData.title,
+          type: nodeData.type || 'Inbox',
+          status: nodeData.status || 'idea',
+          tags: nodeData.tags || [],
+          body_md: nodeData.body || ''
+        })
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        // Update position after node is created
+        await fetch(`${API_BASE_URL}/node/${data.node.id}/position`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ x: position.x, y: position.y })
+        })
+        showToast('Node created successfully', 'success')
+        // Refresh graph
+        window.location.reload()
+      } else {
+        showToast('Failed to create node via drag-drop')
+      }
+    } catch (err) {
+      showToast('Error creating node: ' + err.message)
+    }
     // Clear the form data after successful drop
     setClickToPlaceData(null)
   }
@@ -1961,6 +2019,7 @@ function App() {
                 onStartDragToPlace={handleStartDragToPlace}
                 selectedNode={selectedNode}
                 theme={colors}
+                onError={showToast}
               />
             </div>
           </>
@@ -1990,6 +2049,7 @@ function App() {
                 onStartDragToPlace={handleStartDragToPlace}
                 selectedNode={selectedNode}
                 theme={colors}
+                onError={showToast}
               />
             )}
             <button

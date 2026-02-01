@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 
-function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActive = false, onStartDragToPlace, selectedNode = null }) {
+function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActive = false, onStartDragToPlace, selectedNode = null, onError }) {
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
   const [type, setType] = useState('Inbox')
@@ -27,22 +27,45 @@ function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActiv
     }
   }
 
-  const handleCreateNode = () => {
-    // TODO: Implement API call to create node
+  const handleCreateNode = async () => {
+    const API_BASE_URL = import.meta.env.VITE_BRAIN_MAP_API_BASE_URL || 'http://localhost:8000'
+    
+    try {
+      const response = await fetch(`${API_BASE_URL}/node`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          type,
+          status,
+          tags: tags.split(',').map(t => t.trim()).filter(t => t),
+          body_md: body
+        })
+      })
+      
+      if (response.ok) {
+        // Show success toast
+        setShowToast(true)
+        setTimeout(() => setShowToast(false), 3000)
+        
+        // Clear form after successful creation
+        setTitle('')
+        setBody('')
+        setTags('')
+        setType('Inbox')
+        setStatus('idea')
 
-    // Clear form after successful creation
-    setTitle('')
-    setBody('')
-    setTags('')
-    setType('Inbox')
-    setStatus('idea')
-
-    // Show success toast
-    setShowToast(true)
-    setTimeout(() => setShowToast(false), 3000)
-
-    // Focus title input for next note
-    titleRef.current?.focus()
+        // Focus title input for next note
+        titleRef.current?.focus()
+        
+        // Reload page to show new node in graph
+        setTimeout(() => window.location.reload(), 1000)
+      } else {
+        if (onError) onError('Failed to create node')
+      }
+    } catch (err) {
+      if (onError) onError('Error creating node: ' + err.message)
+    }
   }
 
   const handleClickToPlaceToggle = () => {
