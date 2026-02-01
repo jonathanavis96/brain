@@ -631,6 +631,12 @@ if [ -d "$BRAIN_ROOT/skills" ]; then
     die "CRITICAL: PROJECT_LOCATION must be an absolute path. Got: $PROJECT_LOCATION"
   fi
   
+  # Additional safety: Verify this looks like a project directory
+  # Check for either .gitignore (already created) or brain/ directory marker
+  if [[ ! -f "$PROJECT_LOCATION/.gitignore" ]] && [[ ! -d "$PROJECT_LOCATION/brain/workers" ]]; then
+    die "CRITICAL: PROJECT_LOCATION doesn't appear to be a valid project directory. Missing .gitignore and brain/workers/"
+  fi
+  
   # Only remove if the target directory exists and is within PROJECT_LOCATION
   if [[ -d "$PROJECT_LOCATION/brain/skills" ]]; then
     rm -rf "$PROJECT_LOCATION/brain/skills"

@@ -298,3 +298,207 @@ app = FastAPI(
 - Plan deprecation policy before v2 (how long to support v1)
 
 ---
+
+## BUG-2026-02-01-001: SQL Injection in Cache Search (False Alarm - Already Fixed)
+
+**Date**: 2026-02-01  
+**Category**: Security  
+**Severity**: Critical (if not fixed)  
+**Files**: `bin/brain-search`
+
+### Symptoms
+Initial review identified potential SQL injection in cache search where `$QUERY` appeared to be directly interpolated into SQL without escaping.
+
+### Root Cause
+False alarm - the variable was named `QUERY_SQL_ESCAPED` but appeared unused in initial scan. Closer inspection revealed proper escaping was already implemented at line 126.
+
+### Fix Applied
+No fix needed - code already correctly escapes single quotes:
+```bash
+# Line 126: Pre-escape query for safe interpolation into SQLite string literals
+# SQLite escapes single quotes by doubling them: ' -> ''
+QUERY_SQL_ESCAPED=${QUERY//\'/\'\'}
+
+# Line 211: Used safely in SQL query
+local query_sql="SELECT tool_name, timestamp, status, duration_ms
+                   FROM tool_calls
+                   WHERE tool_name LIKE '%$QUERY_SQL_ESCAPED%'
+                      OR arguments LIKE '%$QUERY_SQL_ESCAPED%'"
+```
+
+### Prevention
+- **Always** name SQL-escaped variables clearly (e.g., `QUERY_SQL_ESCAPED`)
+- Add comments explaining the escaping mechanism
+- Use parameterized queries where possible (not available in sqlite3 CLI)
+- Test with malicious input: `brain-search "'; DROP TABLE tool_calls; --"`
+
+---
+
+## BUG-2026-02-01-002: Path Injection Risk in Project Bootstrap
+
+**Date**: 2026-02-01  
+**Category**: Security  
+**Severity**: High  
+**Files**: `scripts/new-project.sh`
+
+### Symptoms
+The `rm -rf` operation at line 636 could potentially delete unintended directories if `PROJECT_LOCATION` is manipulated or contains special characters.
+
+### Root Cause
+While absolute path validation existed, there was no verification that the path actually points to a valid project directory before running destructive operations.
+
+### Fix Applied
+Added additional safety check before rm -rf:
+```bash
+# Additional safety: Verify this looks like a project directory
+# Check for either .gitignore (already created) or brain/ directory marker
+if [[ ! -f "$PROJECT_LOCATION/.gitignore" ]] && [[ ! -d "$PROJECT_LOCATION/brain/workers" ]]; then
+  die "CRITICAL: PROJECT_LOCATION doesn't appear to be a valid project directory. Missing .gitignore and brain/workers/"
+fi
+```
+
+### Prevention
+- **Never** run `rm -rf` without multiple safety checks
+- Validate paths contain expected markers before destructive operations
+- Consider using safer alternatives (e.g., `rm -rf "$dir"/{known,list,of,subdirs}`)
+- Log the full path being deleted for audit trail
+- Use `set -x` during testing to trace actual commands
+
+---
+
+## BUG-2026-02-01-003: Missing useEffect Dependency Comment
+
+**Date**: 2026-02-01  
+**Category**: Code Quality  
+**Severity**: Medium  
+**Files**: `app/brain-map/frontend/src/GraphView.jsx`
+
+### Symptoms
+The timeline animation useEffect (line 341) was missing `timelineFilter.selectedDate` from its dependency array, which could be flagged as a bug by linters or confuse future developers.
+
+### Root Cause
+The effect intentionally excludes `selectedDate` because it updates that value internally via `setInterval`. Including it in deps would cause the interval to restart on every tick, breaking the animation. This is correct behavior but wasn't documented.
+
+### Fix Applied
+Added clarifying comment:
+```javascript
+}, [isPlaying, timelineFilter.active, timelineFilter.minDate, timelineFilter.maxDate])
+// Note: timelineFilter.selectedDate intentionally excluded from deps - it's updated
+// internally by setInterval. Including it would cause the interval to restart on every
+// tick, breaking the animation. The effect only needs to re-run when play state or
+// min/max bounds change.
+```
+
+### Prevention
+- **Always** document intentional dependency omissions in useEffect
+- Add eslint-disable comments if necessary: `// eslint-disable-next-line react-hooks/exhaustive-deps`
+- Consider refactoring to avoid confusing patterns (use refs for interval state)
+- Write unit tests that verify animation doesn't restart unexpectedly
+
+---
+
+## BUG-2026-02-01-004: Race Condition in Index Rebuild
+
+**Date**: 2026-02-01  
+**Category**: Concurrency  
+**Severity**: High  
+**Files**: `app/brain-map/backend/app/index.py`
+
+### Symptoms
+If two processes call `rebuild_index()` simultaneously (e.g., file watcher + manual rebuild), they could both succeed in building temp databases but race on the final `Path(temp_db_path).replace(index_path)`, potentially publishing a partially-built or corrupted index.
+
+### Root Cause
+No locking mechanism prevented concurrent rebuilds. The atomic `replace()` operation is atomic per-file but doesn't prevent two processes from racing to publish different versions.
+
+### Fix Applied
+Added file-based exclusive locking using fcntl:
+```python
+import fcntl
+import os
+
+def rebuild_index() -> RebuildDiagnostics:
+    # Acquire exclusive lock to prevent concurrent rebuilds
+    index_path = get_index_path()
+    lock_path = index_path.parent / ".index_rebuild.lock"
+    index_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    lock_fd = None
+    try:
+        lock_fd = open(lock_path, 'w')
+        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except IOError:
+        if lock_fd:
+            lock_fd.close()
+        raise IndexRebuildError("Another index rebuild is already in progress")
+    
+    try:
+        # ... existing rebuild logic ...
+    finally:
+        # Release lock
+        if lock_fd:
+            try:
+                fcntl.flock(lock_fd, fcntl.LOCK_UN)
+                lock_fd.close()
+            except Exception:
+                pass
+```
+
+### Prevention
+- **Always** use locking for expensive operations that modify shared resources
+- Use `LOCK_NB` (non-blocking) to fail fast rather than queue
+- Document lock files in .gitignore
+- Consider TTL-based stale lock detection for crashed processes
+- Test with concurrent process simulation: `for i in {1..5}; do python -c "rebuild_index()" & done`
+- Use distributed locks (Redis, etcd) for multi-server deployments
+
+---
+
+## BUG-2026-02-01-005: Large Frontend Bundle Size
+
+**Date**: 2026-02-01  
+**Category**: Performance  
+**Severity**: Medium  
+**Files**: `app/brain-map/frontend/src/App.jsx`
+
+### Symptoms
+Build output showed bundle size of 643KB (165KB gzipped), causing slow initial page load. Vite warned: "Some chunks are larger than 500 kB after minification."
+
+### Root Cause
+GraphView component and its dependencies (sigma.js, graph algorithms) were included in the main bundle, forcing users to download all graph visualization code before seeing any UI.
+
+### Fix Applied
+Implemented React code splitting with lazy loading:
+```javascript
+import { lazy, Suspense } from 'react'
+
+// Code splitting: lazy load GraphView (largest component with sigma.js + graph algorithms)
+// This reduces initial bundle size from 643KB to ~300KB, improving load time
+const GraphView = lazy(() => import('./GraphView'))
+
+// In render:
+<Suspense fallback={
+  <div style={{ 
+    display: 'flex', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    height: '100%', 
+    color: colors.textSecondary,
+    fontSize: '14px'
+  }}>
+    Loading graph visualization...
+  </div>
+}>
+  <GraphView {...props} />
+</Suspense>
+```
+
+### Prevention
+- **Always** implement code splitting for large third-party libraries
+- Use `lazy()` for route-level and feature-level components
+- Monitor bundle size in CI: `npm run build -- --json > build-stats.json`
+- Use webpack-bundle-analyzer or vite-bundle-visualizer
+- Set bundle size budgets in vite.config.js: `build.rollupOptions.output.manualChunks`
+- Consider CDN imports for large stable libraries
+- Profile with Chrome DevTools Lighthouse for real load time impact
+
+---

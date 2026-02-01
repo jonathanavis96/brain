@@ -374,6 +374,10 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
         playIntervalRef.current = null
       }
     }
+    // Note: timelineFilter.selectedDate intentionally excluded from deps - it's updated
+    // internally by setInterval. Including it would cause the interval to restart on every
+    // tick, breaking the animation. The effect only needs to re-run when play state or
+    // min/max bounds change.
   }, [isPlaying, timelineFilter.active, timelineFilter.minDate, timelineFilter.maxDate])
 
   // Stop playing when timeline is deactivated

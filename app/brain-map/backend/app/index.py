@@ -10,6 +10,8 @@ from pathlib import Path
 from typing import Dict, List, Tuple, Set
 import json
 from datetime import datetime
+import fcntl
+import os
 
 from app.frontmatter import parse_and_validate, ValidationError
 from app.notes import discover_notes, get_notes_root, load_note_content
@@ -142,18 +144,33 @@ def rebuild_index() -> RebuildDiagnostics:
     """Rebuild the SQLite index from markdown notes with atomic publish.
 
     This function:
-    1. Discovers all markdown notes
-    2. Parses frontmatter and validates against schema
-    3. Builds a temporary index database
-    4. Detects duplicate IDs (hard error)
-    5. Atomically swaps temp index to published location on success
+    1. Acquires exclusive lock to prevent concurrent rebuilds
+    2. Discovers all markdown notes
+    3. Parses frontmatter and validates against schema
+    4. Builds a temporary index database
+    5. Detects duplicate IDs (hard error)
+    6. Atomically swaps temp index to published location on success
 
     Returns:
         RebuildDiagnostics with rebuild statistics and any errors/warnings.
 
     Raises:
-        IndexRebuildError: If rebuild fails (duplicate IDs or fatal errors).
+        IndexRebuildError: If rebuild fails (duplicate IDs, fatal errors, or lock conflict).
     """
+    # Acquire exclusive lock to prevent concurrent rebuilds
+    index_path = get_index_path()
+    lock_path = index_path.parent / ".index_rebuild.lock"
+    index_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    lock_fd = None
+    try:
+        lock_fd = open(lock_path, 'w')
+        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except IOError:
+        if lock_fd:
+            lock_fd.close()
+        raise IndexRebuildError("Another index rebuild is already in progress")
+    
     diagnostics = RebuildDiagnostics()
 
     # Discover all notes
@@ -303,6 +320,14 @@ def rebuild_index() -> RebuildDiagnostics:
             Path(temp_db_path).unlink(missing_ok=True)
         except Exception:
             pass
+        
+        # Release lock
+        if lock_fd:
+            try:
+                fcntl.flock(lock_fd, fcntl.LOCK_UN)
+                lock_fd.close()
+            except Exception:
+                pass
 
     return diagnostics
 
