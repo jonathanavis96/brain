@@ -14,6 +14,7 @@
 set -euo pipefail
 
 BASE_BRANCH="main"
+NO_CHAT=0
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -21,8 +22,16 @@ while [[ $# -gt 0 ]]; do
       BASE_BRANCH="$2"
       shift 2
       ;;
+    --no-chat)
+      NO_CHAT=1
+      shift
+      ;;
     --help)
       sed -n '2,/^$/p' "$0" | sed 's/^# \?//'
+      echo ""
+      echo "Options:"
+      echo "  --base BRANCH   Compare current branch against BRANCH (default: main)"
+      echo "  --no-chat       Only regenerate the prompt file and exit"
       exit 0
       ;;
     *)
@@ -40,6 +49,10 @@ fi
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 cd "$REPO_ROOT"
 
+BASE_SHA=$(git rev-parse "$BASE_BRANCH")
+HEAD_SHA=$(git rev-parse HEAD)
+MERGE_BASE_SHA=$(git merge-base "$BASE_BRANCH" HEAD)
+
 CURRENT_BRANCH=$(git branch --show-current)
 if [[ -z "$CURRENT_BRANCH" ]]; then
   echo "Error: detached HEAD" >&2
@@ -55,8 +68,20 @@ if [[ ! -f "$DIRECTIVES_FILE" ]]; then
 fi
 
 # Store generated prompts inside the repo workspace so the agent can open them via `open_files`.
-# You can override with: SEMANTIC_REVIEW_PROMPT_DIR=/path
-PROMPT_DIR="${SEMANTIC_REVIEW_PROMPT_DIR:-$REPO_ROOT/tools/agents}"
+# NOTE: We intentionally keep this inside the repo. If you set SEMANTIC_REVIEW_PROMPT_DIR to a path
+# outside the workspace (e.g. /tmp), the agent will not be able to `open_files` it.
+PROMPT_DIR_DEFAULT="$REPO_ROOT/tools/agents"
+PROMPT_DIR="${SEMANTIC_REVIEW_PROMPT_DIR:-$PROMPT_DIR_DEFAULT}"
+
+# If an override is outside the repo root, ignore it (prevents "outside workspace" failures).
+case "$PROMPT_DIR" in
+  "$REPO_ROOT"/*) ;;
+  *)
+    echo "Warning: SEMANTIC_REVIEW_PROMPT_DIR points outside repo; ignoring: $PROMPT_DIR" >&2
+    PROMPT_DIR="$PROMPT_DIR_DEFAULT"
+    ;;
+esac
+
 mkdir -p "$PROMPT_DIR"
 PROMPT_FILE="$PROMPT_DIR/semantic_review_prompt_latest.txt"
 
@@ -65,7 +90,8 @@ PROMPT_FILE="$PROMPT_DIR/semantic_review_prompt_latest.txt"
 KEEP_PROMPT=1
 # trap is set later after CONFIG_FILE is created
 
-# Generate prompt file for the PR
+# Generate prompt file for the PR (overwrite the stable path each run)
+rm -f "$PROMPT_FILE"
 python3 "$REVIEWER_SCRIPT" \
   --directives "$DIRECTIVES_FILE" \
   --dump-prompt "$PROMPT_FILE" \
@@ -84,9 +110,16 @@ if ! grep -qE "^[[:space:]]*diff --git" "$PROMPT_FILE"; then
 fi
 
 echo "Prompt written to: $PROMPT_FILE"
+echo "Prompt mtime: $(date -r "$PROMPT_FILE" '+%Y-%m-%d %H:%M:%S')"
+echo "Prompt sha256: $(sha256sum "$PROMPT_FILE" | awk '{print $1}')"
 echo "Prompt stats: $(wc -l <"$PROMPT_FILE") lines, $(wc -c <"$PROMPT_FILE") bytes"
+echo "Compare: $BASE_BRANCH=$BASE_SHA .. HEAD=$HEAD_SHA (merge-base=$MERGE_BASE_SHA)"
 echo "First diff header:"
 grep -m 1 "^diff --git" "$PROMPT_FILE" || true
+
+if [[ "$NO_CHAT" == "1" ]]; then
+  exit 0
+fi
 
 echo "Launching interactive RovoDev chat (base=$BASE_BRANCH, branch=$CURRENT_BRANCH)"
 echo ""
