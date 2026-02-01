@@ -54,16 +54,16 @@ if [[ ! -f "$DIRECTIVES_FILE" ]]; then
   exit 1
 fi
 
-# Store generated prompts outside the repo by default.
+# Store generated prompts inside the repo workspace so the agent can open them via `open_files`.
 # You can override with: SEMANTIC_REVIEW_PROMPT_DIR=/path
-PROMPT_DIR="${SEMANTIC_REVIEW_PROMPT_DIR:-${TMPDIR:-/tmp}/brain-semantic-review}"
+PROMPT_DIR="${SEMANTIC_REVIEW_PROMPT_DIR:-$REPO_ROOT/tools/agents}"
 mkdir -p "$PROMPT_DIR"
-PROMPT_FILE=$(mktemp -p "$PROMPT_DIR" semantic_review_prompt_XXXXXX.txt)
+PROMPT_FILE="$PROMPT_DIR/semantic_review_prompt_latest.txt"
 
 # Always keep the generated prompt file.
 # This makes it easy to inspect/reuse and avoids confusion if the interactive run fails later.
 KEEP_PROMPT=1
-trap 'echo "Keeping prompt: $PROMPT_FILE" >&2' EXIT
+# trap is set later after CONFIG_FILE is created
 
 # Generate prompt file for the PR
 python3 "$REVIEWER_SCRIPT" \
@@ -91,9 +91,26 @@ grep -m 1 "^diff --git" "$PROMPT_FILE" || true
 echo "Launching interactive RovoDev chat (base=$BASE_BRANCH, branch=$CURRENT_BRANCH)"
 echo ""
 
-# Start an interactive session. We pass a small message that tells the agent to
-# read the prompt file for full context.
-MESSAGE="Interactive semantic review chat. Read the PR review prompt from: $PROMPT_FILE and start by listing P0/P1/P2 issues. Ask clarifying questions if needed."
+# Launch interactive chat with a temporary config that preloads directives and the prompt path.
+# This avoids requiring you to paste an initial message (and keeps the session interactive).
+CONFIG_FILE="${TMPDIR:-/tmp}/semantic_review_chat_config_$$_$(date +%s).yml"
+trap 'echo "Keeping prompt: $PROMPT_FILE" >&2; rm -f "$CONFIG_FILE"' EXIT
 
-aCliMsg=("acli" "rovodev" "run" "$MESSAGE")
-"${aCliMsg[@]}"
+cat >"$CONFIG_FILE" <<EOF
+version: 1
+agent:
+  additionalSystemPrompt: |
+$(while IFS= read -r line; do
+  echo "    $line"
+done <"$DIRECTIVES_FILE")
+
+    Read the PR review prompt from: $PROMPT_FILE
+  streaming: true
+  temperature: 0.3
+  modelId: auto
+EOF
+
+echo "Using config: $CONFIG_FILE"
+
+echo ""
+acli rovodev run --config-file "$CONFIG_FILE" --yolo

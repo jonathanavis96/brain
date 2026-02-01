@@ -179,7 +179,7 @@ repos:
         entry: bash -lc 'if [[ -f tools/validate_protected_hashes.sh ]]; then bash tools/validate_protected_hashes.sh; else echo "skip (no tools/validate_protected_hashes.sh)"; fi'
         language: system
         pass_filenames: false
-        always_run: true
+        files: ^(workers/ralph/(loop\.sh|verifier\.sh|PROMPT\.md|AGENTS\.md)|rules/AC\.rules|\.verify/.*\.sha256|workers/ralph/\.verify/.*\.sha256)$
 
       - id: validate-doc-sync
         name: validate-doc-sync

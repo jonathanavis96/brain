@@ -1,13 +1,70 @@
 """Brain Map FastAPI Backend - Main Application Entry Point."""
 
 import logging
+import os
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
 import yaml
 
 from app.watcher import FileWatcher
+
+
+class PositionUpdate(BaseModel):
+    x: float
+    y: float
+
+
+class CommentCreate(BaseModel):
+    author: str = Field(min_length=1)
+    text: str = Field(min_length=1)
+    timestamp: str | None = None
+    replies: list[dict] = Field(default_factory=list)
+
+
+class NodeCreate(BaseModel):
+    id: str | None = None
+    title: str = Field(min_length=1)
+    type: str = "Inbox"
+    status: str = "idea"
+    tags: list[str] = Field(default_factory=list)
+    priority: str | None = None
+    risk: str | None = None
+    owner: str | None = None
+    source_links: list[str] = Field(default_factory=list)
+    acceptance_criteria: list[str] = Field(default_factory=list)
+    links: list[dict] = Field(default_factory=list)
+    body_md: str = ""
+
+
+class NodeUpdate(BaseModel):
+    id: str | None = None
+    title: str | None = None
+    type: str | None = None
+    status: str | None = None
+    tags: list[str] | None = None
+    priority: str | None = None
+    risk: str | None = None
+    owner: str | None = None
+    source_links: list[str] | None = None
+    acceptance_criteria: list[str] | None = None
+    links: list[dict] | None = None
+    body_md: str | None = None
+
+
+class GeneratePlanOutput(BaseModel):
+    write: bool = False
+    path: str = "app/brain-map/generated/IMPLEMENTATION_PLAN.generated.md"
+
+
+class GeneratePlanRequest(BaseModel):
+    selection: list[str] = Field(min_length=1)
+    depth: int = Field(default=2, ge=0)
+    include_rel_types: list[str] = Field(default_factory=list)
+    exclude_rel_types: list[str] = Field(default_factory=list)
+    output: GeneratePlanOutput = Field(default_factory=GeneratePlanOutput)
 
 # Configure logging
 logging.basicConfig(
@@ -72,12 +129,16 @@ async def health_check() -> dict[str, str]:
 
 
 @app.get("/debug/notes")
-async def debug_notes() -> dict[str, list[str]]:
-    """Temporary debug endpoint to verify note discovery.
+async def debug_notes() -> dict[str, list[str] | int]:
+    """Debug endpoint to verify note discovery.
 
-    Returns discovered notes in deterministic order.
-    TODO: Remove before MVP release.
+    This is intentionally gated to reduce accidental exposure.
+
+    Enable with: BRAINMAP_ENABLE_DEBUG_ENDPOINTS=1
     """
+    if os.getenv("BRAINMAP_ENABLE_DEBUG_ENDPOINTS") != "1":
+        raise HTTPException(status_code=404, detail={"error": "NOT_FOUND"})
+
     from app.notes import discover_notes
 
     discovered = discover_notes()
@@ -277,7 +338,7 @@ async def get_node(node_id: str) -> dict:
 
 
 @app.put("/node/{node_id}/position")
-async def update_node_position(node_id: str, request: dict) -> dict:
+async def update_node_position(node_id: str, request: PositionUpdate) -> dict:
     """Update node position in frontmatter.
 
     Args:
@@ -292,33 +353,13 @@ async def update_node_position(node_id: str, request: dict) -> dict:
         400 BAD REQUEST: Invalid position data.
         404 NOT FOUND: Node ID not found.
     """
-    from fastapi import HTTPException
     from datetime import datetime, timezone
     from app.notes import load_note_content, _find_repo_root
     from app.frontmatter import parse_and_validate
     import yaml
 
-    # Validate request
-    if "x" not in request or "y" not in request:
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "error": "VALIDATION_ERROR",
-                "message": "Request must include 'x' and 'y' coordinates",
-            },
-        )
-
-    try:
-        x = float(request["x"])
-        y = float(request["y"])
-    except (ValueError, TypeError):
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "error": "VALIDATION_ERROR",
-                "message": "Coordinates must be numeric",
-            },
-        )
+    x = request.x
+    y = request.y
 
     # Find node file
     repo_root = _find_repo_root()
@@ -389,7 +430,7 @@ async def update_node_position(node_id: str, request: dict) -> dict:
 
 
 @app.put("/node/{node_id}")
-async def update_node(node_id: str, request: dict) -> dict:
+async def update_node(node_id: str, request: NodeUpdate) -> dict:
     """Update an existing node (markdown-first).
 
     Args:
@@ -405,16 +446,14 @@ async def update_node(node_id: str, request: dict) -> dict:
         404 NOT FOUND: Node ID not found.
         503 SERVICE UNAVAILABLE: Index unavailable or rebuild failed.
     """
-    from fastapi import HTTPException, Response
     from datetime import datetime, timezone
-    import json
     from pathlib import Path
     from app.notes import load_note_content, _find_repo_root
     from app.frontmatter import parse_and_validate
     from app.index import rebuild_index, IndexRebuildError
 
     # Reject attempts to change id
-    if "id" in request and request["id"] != node_id:
+    if request.id is not None and request.id != node_id:
         raise HTTPException(
             status_code=400,
             detail={
@@ -470,9 +509,10 @@ async def update_node(node_id: str, request: dict) -> dict:
     frontmatter["updated_at"] = now
 
     # Update allowed fields
-    if "title" in request:
-        frontmatter["title"] = request["title"]
-    if "type" in request:
+    if request.title is not None:
+        frontmatter["title"] = request.title
+
+    if request.type is not None:
         # Validate type enum
         valid_types = {
             "Inbox",
@@ -482,43 +522,50 @@ async def update_node(node_id: str, request: dict) -> dict:
             "TaskContract",
             "Artifact",
         }
-        if request["type"] not in valid_types:
+        if request.type not in valid_types:
             raise HTTPException(
                 status_code=400,
                 detail={
                     "error": "VALIDATION_ERROR",
-                    "message": f"Invalid type '{request['type']}'. Allowed values: {sorted(valid_types)}",
+                    "message": f"Invalid type '{request.type}'. Allowed values: {sorted(valid_types)}",
                 },
             )
-        frontmatter["type"] = request["type"]
-    if "status" in request:
+        frontmatter["type"] = request.type
+
+    if request.status is not None:
         # Validate status enum
         valid_statuses = {"idea", "planned", "active", "blocked", "done", "archived"}
-        if request["status"] not in valid_statuses:
+        if request.status not in valid_statuses:
             raise HTTPException(
                 status_code=400,
                 detail={
                     "error": "VALIDATION_ERROR",
-                    "message": f"Invalid status '{request['status']}'. Allowed values: {sorted(valid_statuses)}",
+                    "message": f"Invalid status '{request.status}'. Allowed values: {sorted(valid_statuses)}",
                 },
             )
-        frontmatter["status"] = request["status"]
-    if "tags" in request:
-        frontmatter["tags"] = request["tags"]
-    if "priority" in request:
-        frontmatter["priority"] = request["priority"]
-    if "risk" in request:
-        frontmatter["risk"] = request["risk"]
-    if "owner" in request:
-        frontmatter["owner"] = request["owner"]
-    if "source_links" in request:
-        frontmatter["source_links"] = request["source_links"]
-    if "acceptance_criteria" in request:
-        frontmatter["acceptance_criteria"] = request["acceptance_criteria"]
+        frontmatter["status"] = request.status
+
+    if request.tags is not None:
+        frontmatter["tags"] = request.tags
+
+    if request.priority is not None:
+        frontmatter["priority"] = request.priority
+
+    if request.risk is not None:
+        frontmatter["risk"] = request.risk
+
+    if request.owner is not None:
+        frontmatter["owner"] = request.owner
+
+    if request.source_links is not None:
+        frontmatter["source_links"] = request.source_links
+
+    if request.acceptance_criteria is not None:
+        frontmatter["acceptance_criteria"] = request.acceptance_criteria
 
     # Handle links (convert to relationships format)
-    if "links" in request:
-        links = request["links"]
+    if request.links is not None:
+        links = request.links
         if links:
             relationships = []
             for link in links:
@@ -536,8 +583,8 @@ async def update_node(node_id: str, request: dict) -> dict:
             frontmatter.pop("relationships", None)
 
     # Update body if provided
-    if "body_md" in request:
-        body = request["body_md"]
+    if request.body_md is not None:
+        body = request.body_md
 
     # Build updated markdown content
     import yaml
@@ -603,15 +650,11 @@ async def update_node(node_id: str, request: dict) -> dict:
         "reindexed": reindexed,
     }
 
-    return Response(
-        content=json.dumps(response_data),
-        status_code=200,
-        media_type="application/json",
-    )
+    return response_data
 
 
-@app.post("/node/{node_id}/comments")
-async def add_comment(node_id: str, request: dict) -> dict:
+@app.post("/node/{node_id}/comments", status_code=201)
+async def add_comment(node_id: str, request: CommentCreate) -> dict:
     """Add a comment to a node (stored in frontmatter).
 
     Args:
@@ -627,30 +670,11 @@ async def add_comment(node_id: str, request: dict) -> dict:
         404 NOT FOUND: Node ID not found.
         503 SERVICE UNAVAILABLE: Index unavailable or rebuild failed.
     """
-    from fastapi import HTTPException
     from datetime import datetime, timezone
     from pathlib import Path
     from app.notes import load_note_content
     from app.frontmatter import parse_and_validate
     from app.index import rebuild_index, IndexRebuildError
-
-    # Validate required fields
-    if "author" not in request:
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "error": "VALIDATION_ERROR",
-                "message": "Missing required field: author",
-            },
-        )
-    if "text" not in request:
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "error": "VALIDATION_ERROR",
-                "message": "Missing required field: text",
-            },
-        )
 
     # Load existing node
     try:
@@ -693,10 +717,10 @@ async def add_comment(node_id: str, request: dict) -> dict:
     # Build comment object
     now = datetime.now(timezone.utc).isoformat()
     comment = {
-        "author": request["author"],
-        "text": request["text"],
-        "timestamp": request.get("timestamp", now),
-        "replies": request.get("replies", []),
+        "author": request.author,
+        "text": request.text,
+        "timestamp": request.timestamp or now,
+        "replies": request.replies,
     }
 
     # Add to comments array in frontmatter
@@ -754,8 +778,8 @@ async def add_comment(node_id: str, request: dict) -> dict:
     }
 
 
-@app.post("/node")
-async def create_node(request: dict) -> dict:
+@app.post("/node", status_code=201)
+async def create_node(request: NodeCreate) -> dict:
     """Create a new node (markdown-first).
 
     Args:
@@ -770,36 +794,24 @@ async def create_node(request: dict) -> dict:
         409 CONFLICT: Duplicate ID detected.
         503 SERVICE UNAVAILABLE: Index unavailable and rebuild failed.
     """
-    from fastapi import HTTPException, Response
     from datetime import datetime, timezone
     import uuid
-    import json
     from app.notes import get_notes_root, _find_repo_root
     from app.index import rebuild_index, get_index_connection, IndexRebuildError
 
     # Extract fields from request
-    node_id = request.get("id")
-    title = request.get("title")
-    node_type = request.get("type", "Inbox")
-    status = request.get("status", "idea")
-    tags = request.get("tags", [])
-    priority = request.get("priority")
-    risk = request.get("risk")
-    owner = request.get("owner")
-    source_links = request.get("source_links", [])
-    acceptance_criteria = request.get("acceptance_criteria", [])
-    links = request.get("links", [])
-    body_md = request.get("body_md", "")
-
-    # Validate required fields
-    if not title:
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "error": "VALIDATION_ERROR",
-                "message": "Field 'title' is required",
-            },
-        )
+    node_id = request.id
+    title = request.title
+    node_type = request.type
+    status = request.status
+    tags = request.tags
+    priority = request.priority
+    risk = request.risk
+    owner = request.owner
+    source_links = request.source_links
+    acceptance_criteria = request.acceptance_criteria
+    links = request.links
+    body_md = request.body_md
 
     # Validate type enum
     valid_types = {"Inbox", "Concept", "System", "Decision", "TaskContract", "Artifact"}
@@ -979,11 +991,7 @@ async def create_node(request: dict) -> dict:
         "reindexed": reindexed,
     }
 
-    return Response(
-        content=json.dumps(response_data),
-        status_code=201,
-        media_type="application/json",
-    )
+    return response_data
 
 
 @app.get("/search")
@@ -1499,7 +1507,7 @@ async def get_metrics() -> dict:
 
 
 @app.post("/generate-plan")
-async def generate_plan(request: dict) -> dict:
+async def generate_plan(request: GeneratePlanRequest) -> dict:
     """
     Generate a deterministic implementation plan from selected nodes.
 
@@ -1523,31 +1531,10 @@ async def generate_plan(request: dict) -> dict:
     from app.frontmatter import RelationType
     from pathlib import Path
 
-    # Validate selection (required, non-empty)
-    selection = request.get("selection", [])
-    if not selection or not isinstance(selection, list):
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "error": "VALIDATION_ERROR",
-                "message": "selection is required and must be a non-empty list",
-            },
-        )
-
-    # Validate depth (non-negative integer)
-    depth = request.get("depth", 2)
-    if not isinstance(depth, int) or depth < 0:
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "error": "VALIDATION_ERROR",
-                "message": "depth must be a non-negative integer",
-            },
-        )
-
-    # Validate relationship types
-    include_rel_types = request.get("include_rel_types", [])
-    exclude_rel_types = request.get("exclude_rel_types", [])
+    selection = request.selection
+    depth = request.depth
+    include_rel_types = request.include_rel_types
+    exclude_rel_types = request.exclude_rel_types
 
     valid_rel_types = {rt.value for rt in RelationType}
 
@@ -1609,11 +1596,8 @@ async def generate_plan(request: dict) -> dict:
     )
 
     # Handle optional file write
-    output_config = request.get("output", {})
-    write_enabled = output_config.get("write", False)
-    output_path = output_config.get(
-        "path", "app/brain-map/generated/IMPLEMENTATION_PLAN.generated.md"
-    )
+    write_enabled = request.output.write
+    output_path = request.output.path
 
     written_info = None
     if write_enabled:

@@ -1629,6 +1629,8 @@ def generate_plan_markdown(
     edges: list[dict],
     selection: list[str],
 ) -> str:
+    nodes_by_id = {n.get("id"): n for n in nodes}
+
     """
     Generate deterministic markdown plan from subgraph.
 
@@ -1734,7 +1736,7 @@ def generate_plan_markdown(
             # Find node titles for cycle display
             cycle_titles = []
             for node_id in cycle:
-                node = next((n for n in nodes if n["id"] == node_id), None)
+                node = nodes_by_id.get(node_id)
                 title = node["title"] if node else node_id
                 cycle_titles.append(title)
 
@@ -1760,7 +1762,7 @@ def generate_plan_markdown(
     selection_set = set(selection)
 
     for idx, node_id in enumerate(sorted_node_ids, 1):
-        node = next((n for n in nodes if n["id"] == node_id), None)
+        node = nodes_by_id.get(node_id)
         if not node:
             continue
 
@@ -1773,7 +1775,7 @@ def generate_plan_markdown(
         if deps:
             dep_titles = []
             for dep_id in deps:
-                dep_node = next((n for n in nodes if n["id"] == dep_id), None)
+                dep_node = nodes_by_id.get(dep_id)
                 dep_title = dep_node["title"] if dep_node else dep_id
                 dep_titles.append(dep_title)
             lines.append(f"   - **Depends on:** {', '.join(dep_titles)}")
@@ -1807,7 +1809,7 @@ def generate_plan_markdown(
             lines.append("**Dependencies:**")
             lines.append("")
             for dep_id in deps:
-                dep_node = next((n for n in nodes if n["id"] == dep_id), None)
+                dep_node = nodes_by_id.get(dep_id)
                 dep_title = dep_node["title"] if dep_node else dep_id
                 lines.append(f"- {dep_title} (`{dep_id}`)")
 
@@ -1818,9 +1820,7 @@ def generate_plan_markdown(
             lines.append("**Blocks:**")
             lines.append("")
             for dependent_id in dependents:
-                dependent_node = next(
-                    (n for n in nodes if n["id"] == dependent_id), None
-                )
+                dependent_node = nodes_by_id.get(dependent_id)
                 dependent_title = (
                     dependent_node["title"] if dependent_node else dependent_id
                 )
@@ -1859,7 +1859,7 @@ def generate_plan_markdown(
                 lines.append("**Dependencies:**")
                 lines.append("")
                 for dep_id in deps:
-                    dep_node = next((n for n in nodes if n["id"] == dep_id), None)
+                    dep_node = nodes_by_id.get(dep_id)
                     dep_title = dep_node["title"] if dep_node else dep_id
                     lines.append(f"- {dep_title} (`{dep_id}`)")
 
@@ -1890,8 +1890,8 @@ def generate_plan_markdown(
 
             for edge in edges_by_type[rel_type]:
                 # Find node titles for readability
-                from_node = next((n for n in nodes if n["id"] == edge["from"]), None)
-                to_node = next((n for n in nodes if n["id"] == edge["to"]), None)
+                from_node = nodes_by_id.get(edge["from"])
+                to_node = nodes_by_id.get(edge["to"])
 
                 from_title = from_node["title"] if from_node else edge["from"]
                 to_title = to_node["title"] if to_node else edge["to"]

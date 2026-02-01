@@ -6,7 +6,12 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from fastapi.testclient import TestClient
+
+try:
+    from fastapi.testclient import TestClient
+except ModuleNotFoundError:  # pragma: no cover
+    pytest.skip("fastapi not installed; skipping Brain Map backend API tests", allow_module_level=True)
+
 
 from app.index import search_nodes, _create_schema
 from app.main import app
