@@ -11,7 +11,7 @@ const RELATIONSHIP_TYPES = [
   { value: 'references', label: 'References', color: '#1abc9c' }
 ]
 
-function RelationshipEditor({ node, onRelationshipUpdate }) {
+function RelationshipEditor({ node, onRelationshipUpdate, theme, onError }) {
   const [outboundLinks, setOutboundLinks] = useState([])
   const [inboundLinks, setInboundLinks] = useState([])
   const [isAddingRelationship, setIsAddingRelationship] = useState(false)
@@ -49,7 +49,7 @@ function RelationshipEditor({ node, onRelationshipUpdate }) {
           setSearchLoading(false)
         })
         .catch(err => {
-          console.error('Search failed:', err)
+          if (onError) onError('Search failed: ' + err.message)
           setSearchLoading(false)
         })
     }, 300)
@@ -74,7 +74,7 @@ function RelationshipEditor({ node, onRelationshipUpdate }) {
 
       setInboundLinks(inbound)
     } catch (err) {
-      console.error('Failed to fetch inbound links:', err)
+      if (onError) onError('Failed to fetch inbound links: ' + err.message)
     }
   }
 
@@ -115,8 +115,7 @@ function RelationshipEditor({ node, onRelationshipUpdate }) {
         onRelationshipUpdate()
       }
     } catch (err) {
-      console.error('Failed to add relationship:', err)
-      alert('Error adding relationship: ' + err.message)
+      if (onError) onError('Failed to add relationship: ' + err.message)
     }
   }
 
@@ -148,8 +147,7 @@ function RelationshipEditor({ node, onRelationshipUpdate }) {
         onRelationshipUpdate()
       }
     } catch (err) {
-      console.error('Failed to remove relationship:', err)
-      alert('Error removing relationship: ' + err.message)
+      if (onError) onError('Failed to remove relationship: ' + err.message)
     }
   }
 

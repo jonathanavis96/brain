@@ -6,7 +6,7 @@ const METRIC_OPTIONS = [
   { value: 'task', label: 'Task Heat', description: 'Open/blocked task activity' }
 ]
 
-function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
+function FilterPanel({ onFilterChange, visible, graphData, onNodeClick, onError }) {
   const [selectedMetric, setSelectedMetric] = useState('task')
   const [showAllHotspots, setShowAllHotspots] = useState(false)
   const [hotspots, setHotspots] = useState([])
@@ -57,7 +57,7 @@ function FilterPanel({ onFilterChange, visible, graphData, onNodeClick }) {
       try {
         setSavedViews(JSON.parse(stored))
       } catch (e) {
-        console.error('Failed to parse saved views:', e)
+        if (onError) onError('Failed to parse saved views from storage')
       }
     }
   }, [])

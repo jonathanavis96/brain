@@ -1561,6 +1561,7 @@ function App() {
                 visible={true}
                 theme={colors}
                 graphData={graphData}
+                onError={showToast}
                 onNodeClick={(nodeId) => {
                   fetch(`${API_BASE_URL}/node/${nodeId}`)
                     .then(res => res.json())
@@ -1581,6 +1582,7 @@ function App() {
             visible={showFilterPanel}
             theme={colors}
             graphData={graphData}
+            onError={showToast}
             onNodeClick={(nodeId) => {
               fetch(`${API_BASE_URL}/node/${nodeId}`)
                 .then(res => res.json())
@@ -1598,6 +1600,7 @@ function App() {
             <div style={{ padding: '1rem', borderBottom: `1px solid ${colors.panelBorder}` }}>
               <ActivityCalendar
                 visible={showActivityCalendar}
+                onError={showToast}
                 onDateClick={(date) => {
                   // Filter graph to nodes updated on this date
                   setFilters(prev => ({
@@ -2031,6 +2034,7 @@ function App() {
             colors={colors}
             visible={true}
             pathMetadata={pathMetadata}
+            onError={showToast}
           />
         </div>
 
@@ -2040,6 +2044,7 @@ function App() {
               node={selectedNode}
               onRelationshipUpdate={handleRelationshipUpdate}
               theme={colors}
+              onError={showToast}
             />
           </div>
         )}

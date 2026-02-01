@@ -418,7 +418,7 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
           const coords = sigmaRef.current.viewportToGraph({ x: e.offsetX, y: e.offsetY })
           onGraphDropRef.current(coords, nodeData)
         } catch (err) {
-          console.error('Error handling drop:', err)
+          setToast({ message: 'Error handling drop: ' + err.message, type: 'error' })
         }
       }
     }
@@ -1037,10 +1037,10 @@ function GraphView({ onNodeSelect, showRecencyHeat, heatMetric = 'recency', onGr
               body: JSON.stringify({ x, y })
             })
             if (!response.ok) {
-              console.error('Failed to persist node position:', await response.text())
+              setToast({ message: 'Failed to persist node position', type: 'error' })
             }
           } catch (error) {
-            console.error('Error persisting node position:', error)
+            setToast({ message: 'Error persisting node position: ' + error.message, type: 'error' })
           }
 
           dragStateRef.current.isDragging = false

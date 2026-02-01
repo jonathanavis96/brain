@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react'
  * - Click date to filter graph to that day
  * - Hover shows date and activity count
  */
-function ActivityCalendar({ visible, onDateClick, theme }) {
+function ActivityCalendar({ visible, onDateClick, theme, onError }) {
   const [activityData, setActivityData] = useState([])
   const [hoveredDay, setHoveredDay] = useState(null)
 
@@ -25,7 +25,7 @@ function ActivityCalendar({ visible, onDateClick, theme }) {
         setActivityData(data.daily_activity || [])
       })
       .catch(err => {
-        console.error('Failed to fetch activity data:', err)
+        if (onError) onError('Failed to fetch activity data: ' + err.message)
       })
   }, [visible])
 

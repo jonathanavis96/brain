@@ -12,7 +12,8 @@ function InsightsPanel({
   saving = false,
   colors,
   visible = true,
-  pathMetadata = null
+  pathMetadata = null,
+  onError
 }) {
   const [activeTab, setActiveTab] = useState('details')
   const [comments, setComments] = useState([])
@@ -56,7 +57,7 @@ function InsightsPanel({
           setAvailableNodes(data.nodes || [])
         }
       } catch (error) {
-        console.error('Failed to fetch nodes for mentions:', error)
+        if (onError) onError('Failed to fetch nodes for mentions: ' + error.message)
       }
     }
     fetchNodes()
@@ -73,7 +74,7 @@ function InsightsPanel({
           setMetrics(data)
         }
       } catch (error) {
-        console.error('Failed to fetch metrics:', error)
+        if (onError) onError('Failed to fetch metrics: ' + error.message)
       } finally {
         setLoadingMetrics(false)
       }
@@ -92,7 +93,7 @@ function InsightsPanel({
           setSuggestions(data.suggestions || [])
         }
       } catch (error) {
-        console.error('Failed to fetch suggestions:', error)
+        if (onError) onError('Failed to fetch suggestions: ' + error.message)
       } finally {
         setLoadingSuggestions(false)
       }
@@ -230,7 +231,7 @@ function InsightsPanel({
         setReplyingTo(null)
       }
     } catch (error) {
-      console.error('Failed to submit comment:', error)
+      if (onError) onError('Failed to submit comment: ' + error.message)
     } finally {
       setSubmittingComment(false)
     }
