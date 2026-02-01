@@ -48,6 +48,7 @@ function App() {
   const [pathMetadata, setPathMetadata] = useState(null)
   const [showActivityCalendar, setShowActivityCalendar] = useState(false)
   const [presentationMode, setPresentationMode] = useState(false)
+  const [toast, setToast] = useState({ show: false, message: '', type: 'error' })
   const [focusedNode, setFocusedNode] = useState(null)
   // Default preset views
   const getDefaultViews = () => [
@@ -96,6 +97,12 @@ function App() {
 
   const colors = getTheme(themeMode)
 
+  // Toast notification helper
+  const showToast = (message, type = 'error') => {
+    setToast({ show: true, message, type })
+    setTimeout(() => setToast({ show: false, message: '', type: 'error' }), 5000)
+  }
+
   useEffect(() => {
     fetch(`${API_BASE_URL}/health`)
       .then(res => res.json())
@@ -130,7 +137,7 @@ function App() {
           }, 500) // Wait for graph to render
         }
       } catch (err) {
-        console.error('Failed to parse shared view:', err)
+        showToast('Failed to parse shared view from URL')
         alert('Invalid share link - could not load view')
       }
     }
@@ -327,7 +334,7 @@ function App() {
           setSearchLoading(false)
         })
         .catch(err => {
-          console.error('Search failed:', err)
+          showToast('Search failed: ' + err.message)
           setSearchLoading(false)
         })
     }, 300)
@@ -364,7 +371,7 @@ function App() {
           setSelectedNode(data)
           setEditedNode(data)
         })
-        .catch(err => console.error('Failed to fetch node details:', err))
+        .catch(err => showToast('Failed to fetch node details: ' + err.message))
     }
   }
 
@@ -386,7 +393,7 @@ function App() {
         setEditedNode(data)
         // TODO: Focus the node in the graph view (requires GraphView API)
       })
-      .catch(err => console.error('Failed to fetch node details:', err))
+      .catch(err => showToast('Failed to fetch node details: ' + err.message))
   }
 
   const handleFieldChange = (field, value) => {
@@ -646,7 +653,7 @@ function App() {
         URL.revokeObjectURL(url)
       }, 'image/png')
     } catch (err) {
-      console.error('PNG export failed:', err)
+      showToast('PNG export failed: ' + err.message)
       alert(`Failed to export PNG: ${err.message}`)
     }
   }
@@ -727,7 +734,7 @@ function App() {
       link.click()
       URL.revokeObjectURL(url)
     } catch (err) {
-      console.error('SVG export failed:', err)
+      showToast('SVG export failed: ' + err.message)
       alert(`Failed to export SVG: ${err.message}`)
     }
   }
@@ -800,7 +807,7 @@ function App() {
       link.click()
       URL.revokeObjectURL(url)
     } catch (err) {
-      console.error('GraphML export failed:', err)
+      showToast('GraphML export failed: ' + err.message)
       alert(`Failed to export GraphML: ${err.message}`)
     }
   }
@@ -858,7 +865,7 @@ function App() {
       link.click()
       URL.revokeObjectURL(url)
     } catch (err) {
-      console.error('Markdown table export failed:', err)
+      showToast('Markdown table export failed: ' + err.message)
       alert(`Failed to export markdown table: ${err.message}`)
     }
   }
@@ -1562,7 +1569,7 @@ function App() {
                       setEditedNode(data)
                       setMobileFilterOpen(false)
                     })
-                    .catch(err => console.error('Failed to fetch node details:', err))
+                    .catch(err => showToast('Failed to fetch node details: ' + err.message))
                 }}
               />
             </div>
@@ -1581,7 +1588,7 @@ function App() {
                   setSelectedNode(data)
                   setEditedNode(data)
                 })
-                .catch(err => console.error('Failed to fetch node details:', err))
+                .catch(err => showToast('Failed to fetch node details: ' + err.message))
             }}
           />
         </div>
@@ -2038,6 +2045,25 @@ function App() {
         )}
       </div>
       </div>
+
+      {/* Toast Notification */}
+      {toast.show && (
+        <div style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          background: toast.type === 'error' ? '#dc3545' : '#28a745',
+          color: 'white',
+          padding: '12px 20px',
+          borderRadius: '4px',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
+          zIndex: 10000,
+          maxWidth: '400px',
+          animation: 'slideIn 0.3s ease-out'
+        }}>
+          {toast.message}
+        </div>
+      )}
     </>
   )
 }
