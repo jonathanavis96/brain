@@ -1,0 +1,21 @@
+# markdownlint-cli2 configuration
+# This controls which files are linted by markdownlint-cli2
+
+globs:
+  - "**/*.md"
+
+ignores:
+  # Third-party dependencies
+  - "node_modules/**"
+  - "**/node_modules/**"
+  - "**/.venv/**"
+  - "**/.pytest_cache/**"
+  
+  # Generated and cache files
+  - ".git/**"
+  - ".verify/**"
+  - "artifacts/rollflow_cache/**"
+  - "app/brain-map/generated/**"
+  
+  # Test fixtures that intentionally violate rules
+  - "tools/tests/fixtures/**"

@@ -1,9 +1,18 @@
 # Markdownlint ignore patterns
 # Exclude third-party dependencies and generated files
 
-node_modules/
-**/node_modules/
-.git/
-.verify/
-artifacts/rollflow_cache/
-app/brain-map/generated/
+node_modules
+.git
+.verify
+artifacts/rollflow_cache
+app/brain-map/generated
+.venv
+.pytest_cache
+app/brain-map/.pytest_cache
+app/brain-map/backend/.pytest_cache
+app/brain-map/backend/.venv
+tools/rollflow_analyze/.pytest_cache
+tools/tests/.pytest_cache
+
+# Test fixtures that intentionally violate rules
+tools/tests/fixtures
