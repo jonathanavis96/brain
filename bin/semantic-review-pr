@@ -9,8 +9,8 @@
 #   --base BRANCH       Base branch to compare against (default: main)
 #   --verbose           Show detailed output
 #
-# Environment:
-#   ANTHROPIC_API_KEY   Required for semantic review (unless --dry-run)
+# Note: This script is intentionally HEURISTICS-ONLY for automation safety.
+# For interactive LLM review, use: tools/agents/semantic-review-chat
 #
 # Exit codes:
 #   0 - Review passed or no changes to review
@@ -21,7 +21,6 @@ set -euo pipefail
 # Default options
 BASE_BRANCH="main"
 VERBOSE=false
-
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -97,20 +96,19 @@ fi
 # Run semantic review
 echo -e "${BLUE}Running semantic review: $CURRENT_BRANCH vs $BASE_BRANCH${NC}"
 
+# Force heuristics-only for automation safety.
+PROVIDER_ARG=("--provider" "none")
+
 if [[ "$VERBOSE" == "true" ]]; then
   echo "Diff stats:"
   git diff --stat "$BASE_BRANCH"..."$CURRENT_BRANCH"
   echo ""
 fi
 
-# Create temp file for diff
-TEMP_DIFF=$(mktemp)
-trap 'rm -f "$TEMP_DIFF"' EXIT
-
-git diff "$BASE_BRANCH"..."$CURRENT_BRANCH" > "$TEMP_DIFF"
-
-# Run the semantic reviewer
-if python3 "$REVIEWER_SCRIPT" < "$TEMP_DIFF"; then
+# Run the semantic reviewer against the base branch.
+# NOTE: semantic_reviewer.py supports --against <branch>, but --git-diff is not
+# implemented yet.
+if python3 "$REVIEWER_SCRIPT" "${PROVIDER_ARG[@]}" --against "$BASE_BRANCH"; then
   echo -e "${GREEN}✓ Semantic review passed${NC}"
   exit 0
 else
