@@ -6,26 +6,26 @@ This document provides a human-friendly overview of the Brain repository structu
 
 ## Top-Level Folders
 
-### `cortex/` - Manager Layer (Opus 4.5)
+### `cortex/` - Manager Layer
 
 **Purpose:** High-level planning, task delegation, and strategic oversight.
 
 **Key Files:**
 
 - `CORTEX_SYSTEM_PROMPT.md` - Cortex's identity, role, and operational rules
-- `REPO_MAP.md` - This file - navigation guide for the repository
+- `docs/REPO_MAP.md` - This file - navigation guide for the repository
 - `DECISIONS.md` - Architectural decisions and conventions (stability anchor)
-- `RUNBOOK.md` - Operations guide (how to start Cortex, troubleshooting)
-- `IMPLEMENTATION_PLAN.md` - Task contracts for workers (delegation format)
+- `docs/RUNBOOK.md` - Operations guide (how to start Cortex, troubleshooting)
+- `workers/IMPLEMENTATION_PLAN.md` - Task contracts for workers (delegation format)
 - `THOUGHTS.md` - Cortex's analysis and decision log
-- `run.sh` - Main entry point to start Cortex
+- `cortex.bash` - Main entry point to start Cortex
 - `snapshot.sh` - Generates current state summary for Cortex context
 
 **What Cortex Can Modify:**
 
-- `cortex/IMPLEMENTATION_PLAN.md` - Task contracts for workers
+- `workers/workers/IMPLEMENTATION_PLAN.md` - Task contracts for workers
 - `cortex/THOUGHTS.md` - Cortex's own thinking space
-- Root-level `IMPLEMENTATION_PLAN.md` - When delegating to Ralph
+- Root-level `workers/IMPLEMENTATION_PLAN.md` - When delegating to Ralph
 - Root-level `THOUGHTS.md` - Strategic decisions
 - `skills/self-improvement/GAP_BACKLOG.md` - Knowledge gaps
 - `skills/self-improvement/SKILL_BACKLOG.md` - Skill promotion queue
@@ -43,16 +43,17 @@ This document provides a human-friendly overview of the Brain repository structu
 
 **Current Workers:**
 
-- `ralph/` - Shell-based loop executor (Sonnet 4.5)
+- `ralph/` - Shell-based loop executor
   - `loop.sh` - Main execution loop (PLAN/BUILD cycles)
   - `PROMPT.md` - Ralph's instructions and operational rules
   - `verifier.sh` - Acceptance criteria validation
   - `current_ralph_tasks.sh` - Real-time task monitor
   - `thunk_ralph_tasks.sh` - Completed task log viewer
-  - `IMPLEMENTATION_PLAN.md` - Ralph's local copy of tasks
-  - `THUNK.md` - Completed task log
+  - `workers/IMPLEMENTATION_PLAN.md` - Ralph's local copy of tasks
+  - `workers/ralph/THUNK.md` - Completed task log
   - `NEURONS.md` - Ralph's codebase map
   - `THOUGHTS.md` - Ralph's working context
+  - `.maintenance/` - Repository health checks and maintenance tracking
 
 **Workflow:** Cortex writes task contracts → Ralph executes → Ralph reports progress → Cortex reviews
 
@@ -69,7 +70,7 @@ This document provides a human-friendly overview of the Brain repository structu
 - `projects/` - Project-specific conventions and context
 - `self-improvement/` - Gap capture and skill promotion system
   - `GAP_CAPTURE_RULES.md` - Protocol for logging knowledge gaps
-  - `GAP_BACKLOG.md` - Raw log of discovered gaps
+  - `skills/self-improvement/GAP_BACKLOG.md` - Raw log of discovered gaps
   - `SKILL_BACKLOG.md` - Gaps ready for promotion to skills
   - `SKILL_TEMPLATE.md` - Template for creating new skill files
 
@@ -88,8 +89,8 @@ This document provides a human-friendly overview of the Brain repository structu
 
 **Structure:**
 
-- Template files for different project types (backend, python, ralph)
-- Generator scripts located in `workers/ralph/generators/` folder (if present)
+- Template files for different project types (backend, python, ralph, website, go, javascript)
+- Bootstrap script at root: `new-project.sh`
 
 **Common Templates:**
 
@@ -141,7 +142,7 @@ This document provides a human-friendly overview of the Brain repository structu
 - `HISTORY.md` - Project evolution
 - `TEST_SCENARIOS.md` - Validation scenarios
 
-### `.maintenance/` - Repository Health
+### `workers/ralph/.maintenance/` - Repository Health
 
 **Purpose:** Maintenance tracking and verification.
 
@@ -150,15 +151,14 @@ This document provides a human-friendly overview of the Brain repository structu
 - `MAINTENANCE.md` - Current maintenance items
 - `MAINTENANCE_LOG.md` - Historical maintenance log
 - `verify-brain.sh` - Repository health check script
-
-**Note:** Analysis files are located in `workers/ralph/analysis/` if present.
+- `REORGANIZATION_PROPOSAL.md` - Structural improvement proposals
 
 ## Key Root Files
 
 | File | Purpose | Owner |
 |------|---------|-------|
 | `README.md` | Human-readable overview | Human/Cortex |
-| `IMPLEMENTATION_PLAN.md` | High-level task list | Cortex |
+| `workers/IMPLEMENTATION_PLAN.md` | High-level task list | Cortex |
 
 **Worker-Specific Files (in `workers/ralph/`):**
 
@@ -167,8 +167,8 @@ This document provides a human-friendly overview of the Brain repository structu
 | `AGENTS.md` | Operational guide for Ralph | Human/Cortex |
 | `NEURONS.md` | Ralph's codebase map | Ralph |
 | `THOUGHTS.md` | Ralph's working context | Ralph |
-| `IMPLEMENTATION_PLAN.md` | Ralph's local task list | Ralph (synced from root) |
-| `THUNK.md` | Completed task log | Ralph |
+| `workers/IMPLEMENTATION_PLAN.md` | Ralph's local task list | Ralph (synced from root) |
+| `workers/ralph/THUNK.md` | Completed task log | Ralph |
 | `PROMPT.md` | Ralph's instructions | Human (protected) |
 | `VALIDATION_CRITERIA.md` | Quality gates | Human/Cortex |
 | `loop.sh` | Ralph's main loop | Human (protected) |
@@ -176,8 +176,8 @@ This document provides a human-friendly overview of the Brain repository structu
 
 ## Where State Lives
 
-- **Current tasks:** `IMPLEMENTATION_PLAN.md` (root and `workers/ralph/`)
-- **Completed tasks:** `workers/ralph/THUNK.md`
+- **Current tasks:** `workers/IMPLEMENTATION_PLAN.md` (root and `workers/ralph/`)
+- **Completed tasks:** `workers/ralph/workers/ralph/THUNK.md`
 - **Strategic context:** `cortex/THOUGHTS.md`
 - **Ralph's context:** `workers/ralph/THOUGHTS.md`
 - **Knowledge gaps:** `skills/self-improvement/GAP_BACKLOG.md`
@@ -185,6 +185,9 @@ This document provides a human-friendly overview of the Brain repository structu
 - **Verifier status:** `.verify/latest.txt`
 - **Git state:** `.git/` (local commits before push)
 - **Maintenance items:** `workers/ralph/.maintenance/MAINTENANCE.md`
+- **Cortex analysis:** `cortex/analysis/` (strategic analysis and planning documents)
+- **Cortex logs:** `cortex/logs/` (archived thoughts and execution logs)
+- **Cortex projects:** `cortex/projects/` (project-specific planning)
 
 ## Navigation Tips
 
@@ -194,11 +197,11 @@ This document provides a human-friendly overview of the Brain repository structu
 
 ### "I need to see what tasks are active"
 
-→ Read `IMPLEMENTATION_PLAN.md` (root level)
+→ Read `workers/IMPLEMENTATION_PLAN.md` (root level)
 
 ### "I need to know what's been completed"
 
-→ Read `THUNK.md`
+→ Read `workers/ralph/THUNK.md`
 
 ### "I need to understand the codebase structure"
 
@@ -245,16 +248,16 @@ This document provides a human-friendly overview of the Brain repository structu
 │  ┌──────────────┐         ┌─────────────────────┐          │
 │  │   Cortex     │────────>│  IMPLEMENTATION_    │          │
 │  │  (Manager)   │  writes │  PLAN.md            │          │
-│  │  Opus 4.5    │         │  (task contracts)   │          │
+│  │              │         │  (task contracts)   │          │
 │  └──────────────┘         └──────────┬──────────┘          │
 │         │                            │                      │
 │         │ reads status               │ reads tasks          │
 │         │                            │                      │
 │         ▼                            ▼                      │
 │  ┌──────────────┐         ┌─────────────────────┐          │
-│  │   THUNK.md   │<────────│      Ralph          │          │
+│  │   workers/ralph/THUNK.md   │<────────│      Ralph          │          │
 │  │  (completed) │  writes │    (Worker)         │          │
-│  └──────────────┘         │   Sonnet 4.5        │          │
+│  └──────────────┘         │                     │          │
 │                           └─────────────────────┘          │
 │                                     │                       │
 │                                     │ reads                 │

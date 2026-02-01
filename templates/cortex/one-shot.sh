@@ -34,8 +34,9 @@ usage() {
   echo ""
   echo "Options:"
   echo "  --help, -h           Show this help"
-  echo "  --model MODEL        Override model (opus, sonnet, auto)"
+  echo "  --model MODEL        Override model (gpt52, codex, opus, sonnet, auto)"
   echo ""
+
   echo "Examples:"
   echo "  bash cortex/one-shot.sh                           # Default planning"
   echo "  bash cortex/one-shot.sh 'Review phase 1 tasks'    # With specific request"
@@ -45,7 +46,7 @@ usage() {
   echo "To run Ralph: bash loop.sh"
 }
 
-MODEL_ARG="opus"
+MODEL_ARG="gpt52" # Default to GPT-5.2 for Cortex
 MESSAGE=""
 
 while [[ $# -gt 0 ]]; do
@@ -68,7 +69,9 @@ done
 RESOLVED_MODEL=""
 case "$MODEL_ARG" in
   opus) RESOLVED_MODEL="anthropic.claude-opus-4-5-20251101-v1:0" ;;
-  sonnet) RESOLVED_MODEL="anthropic.claude-sonnet-4-20250514-v1:0" ;;
+  gpt52 | gpt-5.2 | gpt5.2) RESOLVED_MODEL="gpt-5.2" ;;
+  codex | gpt-5.2-codex) RESOLVED_MODEL="gpt-5.2-codex" ;;
+  sonnet) RESOLVED_MODEL="anthropic.claude-sonnet-4-5-20250929-v1:0" ;;
   auto) RESOLVED_MODEL="auto" ;;
   *) RESOLVED_MODEL="$MODEL_ARG" ;;
 esac

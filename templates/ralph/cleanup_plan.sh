@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# cleanup_plan.sh - Archive completed tasks from workers/IMPLEMENTATION_PLAN.md
+# cleanup_plan.sh - Archive completed tasks from IMPLEMENTATION_PLAN.md
 #
 # Usage:
 #   bash cleanup_plan.sh --dry-run    # Preview what would be archived
@@ -24,9 +24,25 @@ else
   REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 fi
 
-# Use explicit paths from repo root
+# Use explicit paths from repo root (canonical location: workers/IMPLEMENTATION_PLAN.md)
 PLAN_FILE="${REPO_ROOT}/workers/IMPLEMENTATION_PLAN.md"
 ARCHIVE_FILE="${REPO_ROOT}/workers/PLAN_DONE.md"
+
+normalize_markdown_blank_lines() {
+  local file="$1"
+  # Enforce markdown whitespace invariant: at most one blank line between blocks.
+  # (i.e., collapse any run of 3+ newlines down to exactly 2 newlines).
+  python3 - "$file" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+text = path.read_text(encoding="utf-8")
+text = re.sub(r"\n{3,}", "\n\n", text)
+path.write_text(text, encoding="utf-8")
+PY
+}
 
 # Default flags
 DRY_RUN=false
@@ -65,7 +81,7 @@ if [[ ! -f "$ARCHIVE_FILE" ]]; then
   exit 1
 fi
 
-echo "Cleaning up workers/IMPLEMENTATION_PLAN.md..."
+echo "Cleaning up IMPLEMENTATION_PLAN.md..."
 
 # Warn about orphaned task entries (sub-items without a parent task)
 # These occur when cleanup removes "- [x] **X.Y**" but leaves indented sub-items behind
@@ -100,6 +116,7 @@ fi
 # Collect completed tasks for archiving
 archived_tasks=()
 current_date=$(date '+%Y-%m-%d')
+current_time=$(date '+%H:%M:%S')
 current_phase=""
 
 while IFS= read -r line; do
@@ -139,7 +156,7 @@ existing_task_ids=$(grep -o '|[[:space:]]*[^|]*[[:space:]]*|[[:space:]]*[^|]*[[:
 
 {
   echo ""
-  echo "### Archived on $current_date"
+  echo "### Archived on $current_date $current_time"
   echo ""
   echo "| Date | Task ID | Description |"
   echo "|------|---------|-------------|"
@@ -153,6 +170,8 @@ existing_task_ids=$(grep -o '|[[:space:]]*[^|]*[[:space:]]*|[[:space:]]*[^|]*[[:
     fi
   done
 } >>"$ARCHIVE_FILE"
+
+normalize_markdown_blank_lines "$ARCHIVE_FILE"
 
 echo "Archived ${#archived_tasks[@]} tasks to PLAN_DONE.md"
 

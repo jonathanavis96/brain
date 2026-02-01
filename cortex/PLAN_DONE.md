@@ -12,7 +12,6 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 
 <!-- Tasks are appended here by cleanup_cortex_plan.sh -->
 
-
 ### Archived on 2026-01-25 (Phase 10, 9C, 6, 7)
 
 | Date | Task ID | Description |
@@ -229,7 +228,7 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-26 |     - [x] Cache files excluded by default |     - [x] Cache files excluded by default |
 | 2026-01-26 |     - [x] Hash regenerated in all `.verify/` directories |     - [x] Hash regenerated in all `.verify/` directories |
 
-### Archived on 2026-01-26
+### Archived on 2026-01-26 (Batch 11)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
@@ -275,7 +274,251 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-26 | 22.5.3 | - [x] **22.5.3** Fix MD024 in cortex/PLAN_DONE.md line 221 |
 | 2026-01-26 | 22.6.1 | - [x] **22.6.1** Fix MD001 in workers/PLAN_DONE.md line 7 |
 
-### Archived on 2026-01-26
+### Archived on 2026-01-26 (Batch 12)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
+
+### Archived on 2026-01-27 (Batch 13)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 0.L.1 | - [x] **0.L.1** Fix MD024 in cortex/PLAN_DONE.md (duplicate heading "Archived on 2026-01-26") |
+| 2026-01-27 | 0.L.2 | - [x] **0.L.2** Fix MD056 table column count errors in TEMPLATE_DRIFT_REPORT.md |
+| 2026-01-27 | 0.L.3 | - [x] **0.L.3** Fix MD032 blank line errors in TEMPLATE_DRIFT_REPORT.md |
+| 2026-01-27 | 0.L.4 | - [x] **0.L.4** Fix MD009 trailing spaces in TEMPLATE_DRIFT_REPORT.md |
+| 2026-01-27 | 0.L.5 | - [x] **0.L.5** Fix MD040 missing language in TEMPLATE_DRIFT_REPORT.md |
+| 2026-01-27 | 0.L.6 | - [x] **0.L.6** Fix MD056 table column count errors in workers/ralph/THUNK.md |
+| 2026-01-27 | 25.1.1 | - [x] **25.1.1** Scaffold Brain Map app workspace (frontend + backend skeleton) |
+| 2026-01-27 | 25.1.2 | - [x] **25.1.2** Define Markdown note discovery + loading (scan notes root) |
+| 2026-01-27 | 25.1.3 | - [x] **25.1.3** Implement canonical frontmatter parser and validator |
+| 2026-01-27 | 25.1.4 | - [x] **25.1.4** Build SQLite schema and deterministic index rebuild |
+| 2026-01-27 | 25.1.5 | - [x] **25.1.5** Implement `/search` endpoint using the index (fast global search) |
+| 2026-01-27 | 25.1.6 | - [x] **25.1.6** Implement `/graph` endpoint (graph snapshot for UI) |
+| 2026-01-27 | 25.1.7 | - [x] **25.1.7** Implement `/node/{id}` read endpoint |
+| 2026-01-27 | 25.1.8 | - [x] **25.1.8** Implement node create (`POST /node`) with markdown-first write + reindex |
+| 2026-01-27 | 25.1.9 | - [x] **25.1.9** Implement node update (`PUT /node/{id}`) with atomic write + reindex |
+| 2026-01-27 | 25.1.10 | - [x] **25.1.10** Implement `/generate-plan` endpoint (deterministic markdown + optional write) |
+| 2026-01-27 | 25.1.11 | - [x] **25.1.11** Frontend: Graph view rendering from `/graph` (sigma.js) |
+| 2026-01-27 | 25.1.12 | - [x] **25.1.12** Frontend: Node detail panel (read + edit + save) |
+| 2026-01-27 | 25.1.13 | - [x] **25.1.13** Frontend: Search palette (Ctrl+K) via `/search` |
+| 2026-01-27 | 25.1.14 | - [x] **25.1.14** Frontend: Basic recency heat overlay toggle |
+| 2026-01-27 | 25.1.15 | - [x] **25.1.15** Frontend: Generate plan wizard (minimal) using `/generate-plan` |
+| 2026-01-27 | 25.2.1 | - [x] **25.2.1** Backend: compute and return recency heat deterministically |
+| 2026-01-27 | 25.2.2 | - [x] **25.2.2** Backend: density heat (degree + clustering coefficient) with caching |
+| 2026-01-27 | 25.2.3 | - [x] **25.2.3** Backend: task heat based on TaskContract neighborhood |
+| 2026-01-27 | 25.2.4 | - [x] **25.2.4** Frontend: hotspots / insights panel (top N) |
+| 2026-01-27 | 25.2.5 | - [x] **25.2.5** Frontend: filtering controls (type/status/tags/recency) |
+| 2026-01-27 | 25.2.6 | - [x] **25.2.6** Backend: file watcher + incremental reindex |
+| 2026-01-27 | 25.3.1 | - [x] **25.3.1** Frontend: semantic zoom + clustering (supernodes) |
+| 2026-01-27 | 25.3.2 | - [x] **25.3.2** Backend: dependency analysis (cycles, critical path hints) |
+| 2026-01-27 | 25.3.3 | - [x] **25.3.3** Plan generator improvements (toposort, richer dependency sections) |
+| 2026-01-27 | 24.5.1 | - [x] **24.5.1** Decide + (if approved) template `render_ac_status.sh` |
+| 2026-01-27 | 24.6.1 | - [x] **24.6.1** Align model-header single-source-of-truth + prompt batching rule across canonical files |
+| 2026-01-27 | 24.7.1 | - [x] **24.7.1** Backport `loop.sh` scoped staging improvements into templates (without Brain-specific paths) |
+| 2026-01-27 | 24.8.1 | - [x] **24.8.1** Backport verifier caching into templates without regressing A1 root/path logic |
+| 2026-01-27 | 24.9.1 | - [x] **24.9.1** Backport `current_ralph_tasks.sh` parsing improvements into templates |
+
+### Archived on 2026-01-27 (Batch 14)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 26.2 | - [x] **26.2** Verify all Brain Map backend tests pass |
+| 2026-01-27 | 26.3 | - [x] **26.3** Add Brain Map test running to verifier (optional check) |
+| 2026-01-27 | 26.4 | - [x] **26.4** Document Brain Map development workflow |
+| 2026-01-27 | 27.1 | - [x] **27.1** Review GAP_BACKLOG for P0/P1 items ready for promotion |
+| 2026-01-27 | 27.2 | - [x] **27.2** Promote "Custom Semantic Code Review Tool (LLM-Based Linting)" gap |
+| 2026-01-27 | 28.1 | - [x] **28.1** Audit templates for post-Phase-24 drift |
+
+### Archived on 2026-01-27 (Warnings)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | WARN.MD024.cortex/PLAN_DONE.md | - [x] **WARN.MD024.cortex/PLAN_DONE.md** - Fix MD024/no-duplicate-heading in cortex/PLAN_DONE.md line 323 |
+| 2026-01-27 | WARN.MD024.workers/PLAN_DONE.md | - [x] **WARN.MD024.workers/PLAN_DONE.md** - Fix MD024/no-duplicate-heading in workers/PLAN_DONE.md line 265 |
+
+### Archived on 2026-01-27 (Batch 1)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 29.1.1 | - [x] **29.1.1** Remove `zoomLevel` from `useEffect` dependency array in `GraphView.jsx` |
+
+### Archived on 2026-01-27 (Batch 2)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 29.1.2 | - [x] **29.1.2** Add derived state for cluster mode toggle |
+| 2026-01-27 | 29.2.1 | - [x] **29.2.1** Add `labelRenderedSizeThreshold` to Sigma config |
+| 2026-01-27 | 29.3.1 | - [x] **29.3.1** Make Hotspots collapsible using `<details>` element |
+| 2026-01-27 | 30.1.1 | - [x] **30.1.1** Refactor cluster rebuild to use `showClusters` boolean |
+
+### Archived on 2026-01-27 (Batch 3)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 30.2.1 | - [x] **30.2.1** Add "Fit to Screen" button |
+| 2026-01-27 | 30.2.2 | - [x] **30.2.2** Add zoom controls (+/- buttons) |
+
+### Archived on 2026-01-27 (Batch 4)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 30.2.3 | - [x] **30.2.3** Add minimap or breadcrumb indicator |
+| 2026-01-27 | 30.3.1 | - [x] **30.3.1** Implement hover-only label mode - Custom label reducer that renders labels only for `data.highlighted` or `data.hovered` nodes, add enterNode/leaveNode handlers to set hovered attribute. AC: Labels appear only on hover. Verification: Mouse over to label appears; move away to disappears. If Blocked: Lower priority; 29.2.1 threshold sufficient |
+| 2026-01-27 | 30.3.2 | - [x] **30.3.2** Zoom-based label sizing - Set `labelSize: Math.max(10, Math.min(16, 12 * zoomLevel))` to scale font size with zoom level. AC: Labels grow/shrink as user zooms in/out. Verification: Zoom in → bigger labels; zoom out → smaller labels. If Blocked: Skip; static size fine for MVP |
+| 2026-01-27 | 30.4.1 | - [x] **30.4.1** Fix `InsightsPanel` positioning (remove `position: fixed`) |
+
+### Archived on 2026-01-27 (Batch 5)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 34.1.1 | - [x] **34.1.1** Create `bin/discord-post` with stdin input and chunking |
+| 2026-01-27 | 34.1.2 | - [x] **34.1.2** Add `generate_iteration_summary` function to `loop.sh` |
+| 2026-01-27 | - [x] MVP complete: Discord posts after every iteration | - [x] MVP complete: Discord posts after every iteration |
+| 2026-01-27 | - [x] Long summaries chunk correctly (≤2000 chars per message) | - [x] Long summaries chunk correctly (≤2000 chars per message) |
+| 2026-01-27 | - [x] Missing/invalid webhook doesn't crash loop | - [x] Missing/invalid webhook doesn't crash loop |
+| 2026-01-27 | - [x] Dry-run mode works for testing | - [x] Dry-run mode works for testing |
+| 2026-01-27 | 31.1.1 | - [x] **31.1.1** Enforce canonical `type` + `status` enums end-to-end - Backend validation: `type ∈ {Inbox, Concept, System, Decision, TaskContract, Artifact}` and `status ∈ {idea, planned, active, blocked, done, archived}` with clear 400 errors; frontend dropdowns use exact values; node creation defaults: `type=Inbox`, `status=idea` when omitted. AC: Creating/updating node with invalid type/status returns 400 with allowed values; UI only allows allowed values. Verification: Try POST invalid type → 400; Quick Add shows dropdowns with exact enums. If Blocked: Add frontend dropdowns first, backend validation second |
+
+### Archived on 2026-01-27
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 32.1.2 | - [x] **32.1.2** Implement shortest path algorithm - Backend endpoint `/path?from={id}&to={id}` returns shortest path using BFS/Dijkstra on edge graph. AC: Returns array of node IDs in path order. Verification: Request path between known nodes → correct path returned. If Blocked: Use graphology `shortestPath()` client-side |
+| 2026-01-27 | 32.1.3 | - [x] **32.1.3** Highlight path on graph - Render path nodes with glow effect, edges in path with bright color (e.g., cyan), fade non-path elements. AC: Path visually distinct. Verification: Find path → highlighted nodes/edges clear. If Blocked: Just zoom to fit path nodes |
+| 2026-01-27 | 32.1.4 | - [x] **32.1.4** Show path metadata - Display path length, intermediate nodes, estimated "semantic distance" (based on edge weights). AC: Path info panel shows details. Verification: Find path → see "4 hops via Node X, Y, Z". If Blocked: Just show node count |
+| 2026-01-27 | 32.2.1 | - [x] **32.2.1** Implement auto-tagging suggestions - Backend analyzes node body text, suggests tags using keyword extraction (TF-IDF or simple regex). AC: API endpoint `/node/{id}/suggest-tags` returns tag array. Verification: Request suggestions for sample note → relevant tags returned. If Blocked: Use predefined tag dictionary matching |
+| 2026-01-27 | 32.2.2 | - [x] **32.2.2** Orphan node detection - Backend identifies nodes with zero edges (in/out degree = 0), returns list via `/insights/orphans`. AC: Orphans endpoint works. Verification: Create isolated node → appears in orphans list. If Blocked: Client-side filter (graph.nodes.filter(n => graph.degree(n) === 0)) |
+
+### Archived on 2026-01-27 (Batch 6)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-27 | 0.1 | - [x] **0.1** Fix MD012 in workers/IMPLEMENTATION_PLAN.md:43 (Expected: 2; Actual: 3) |
+| 2026-01-27 | 0.2 | - [x] **0.2** Fix MD012 in workers/IMPLEMENTATION_PLAN.md:44 (Expected: 2; Actual: 4) |
+| 2026-01-27 | 0.3 | - [x] **0.3** Fix MD012 in workers/IMPLEMENTATION_PLAN.md:45 (Expected: 2; Actual: 5) |
+| 2026-01-27 | 0.4 | - [x] **0.4** Fix MD012 in workers/IMPLEMENTATION_PLAN.md:51 (Expected: 2; Actual: 3) |
+| 2026-01-27 | 32.2.3 | - [x] **32.2.3** Bridge node identification - Calculate betweenness centrality (nodes that connect disparate clusters), highlight top 5 in UI. AC: Bridge nodes marked with icon. Verification: Manually create bridge topology → correct nodes identified. If Blocked: Skip betweenness, use degree centrality (most connected) |
+| 2026-01-27 | 32.2.4 | - [x] **32.2.4** Stale note alerts - Flag nodes with `updated_at > 90 days`, show in insights panel with "Update recommended". AC: Stale nodes listed. Verification: Create old note → appears in stale list. If Blocked: Use recency metric already implemented |
+| 2026-01-27 | 32.3.1 | - [x] **32.3.1** Add "Save View" button - Captures current filter state + zoom + camera position, stores in localStorage with user-defined name. AC: Save View → prompts for name → saved. Verification: Save view "My Project" → appears in views list. If Blocked: Save filters only (not camera state) |
+| 2026-01-27 | 32.3.2 | - [x] **32.3.2** Create Views dropdown in header - List of saved views, click to load (applies filters, restores camera). AC: Dropdown shows saved views. Verification: Load saved view → graph state restored. If Blocked: Use bookmarks panel in sidebar |
+| 2026-01-27 | 32.3.3 | - [x] **32.3.3** Implement view sharing - "Share View" generates URL with encoded filter params (e.g., `/graph?view=base64encodedstate`). AC: Copy link, open in new tab → same view. Verification: Share link to another user → they see same filtered graph. If Blocked: Copy filter JSON to clipboard |
+| 2026-01-27 | 32.3.4 | - [x] **32.3.4** Add default views - Preset views: "All Tasks", "Blocked Items", "Recent Activity (7d)", "Orphans". AC: Default views available on first load. Verification: Fresh session → 4 default views shown. If Blocked: Just document filter examples in help |
+
+### Archived on 2026-01-28 (Phase 32-33 Tasks)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-28 | 32.4.3 | - [x] **32.4.3** Add filter preview count - Show "X nodes match" before applying filter. AC: Preview count updates as chips change. Verification: Adjust filter → count updates live. If Blocked: Apply-then-count (no preview) |
+| 2026-01-28 | 32.4.4 | - [x] **32.4.4** Save filter as named view - "Save as View" button in query builder creates reusable saved view. AC: Query builder state saved. Verification: Build complex query → save → reload → works. If Blocked: Manual JSON export |
+| 2026-01-28 | 33.1.1 | - [x] **33.1.1** Add timeline scrubber component - Slider at bottom of graph showing date range (earliest to latest `created_at`), drag to filter nodes by date. AC: Scrubber renders with correct date range. Verification: Drag slider → nodes fade in/out. If Blocked: Use discrete buttons (Today, This Week, This Month, All Time) |
+| 2026-01-28 | 33.1.2 | - [x] **33.1.2** Implement time-based filtering - As scrubber moves, filter nodes where `created_at <= selected_date`, animate nodes appearing/disappearing. AC: Time travel works. Verification: Scrub to past date → older nodes hidden. If Blocked: Show all nodes, just highlight time-filtered subset |
+| 2026-01-28 | 33.1.3 | - [x] **33.1.3** Add "Play" animation - Auto-advance scrubber from start to end (1 second per week), show graph growing over time. AC: Play button animates timeline. Verification: Click Play → graph evolves. If Blocked: Manual scrub only |
+| 2026-01-28 | 33.1.4 | - [x] **33.1.4** Activity heatmap calendar - GitHub-style contribution calendar showing days with most creates/updates. AC: Calendar renders with activity data. Verification: Click date → filters graph to that day. If Blocked: Skip calendar, use histogram chart |
+| 2026-01-28 | 33.2.1 | - [x] **33.2.1** Add Comments tab to InsightsPanel - New tab (next to Details tab) showing threaded comments for selected node. AC: Tab switcher works. Verification: Click Comments → shows comment list. If Blocked: Single comment field (no threading) |
+| 2026-01-28 | 33.2.2 | - [x] **33.2.2** Backend: Store comments in frontmatter - `comments: [{author, text, timestamp, replies: [...]}]` array in markdown. POST to `/node/{id}/comments`. AC: Comments persisted. Verification: Add comment → markdown updated. If Blocked: Use separate JSON file per node |
+| 2026-01-28 | 33.2.3 | - [x] **33.2.3** Frontend: Render comment threads - Show comments in nested list, reply button adds to thread. AC: Threading works. Verification: Reply to comment → indented reply shown. If Blocked: Flat list (no replies) |
+| 2026-01-28 | 33.2.4 | - [x] **33.2.4** Add mentions (@username) - Detect `@username` in comment text, notify mentioned user (if multi-user setup). AC: Mentions highlighted. Verification: Type @alice → suggestion appears. If Blocked: Plain text only |
+| 2026-01-28 | 33.3.1 | - [x] **33.3.1** Export graph as PNG - Button in header "Export → PNG", renders current graph view to canvas, downloads as image file. AC: PNG export works. Verification: Click Export PNG → file downloads. If Blocked: Use screenshot library (html2canvas) |
+| 2026-01-28 | 33.3.2 | - [x] **33.3.2** Export graph as SVG - Vector format export for high-quality prints/presentations. AC: SVG export works. Verification: Open SVG in Inkscape → editable vectors. If Blocked: PNG-only for MVP |
+| 2026-01-28 | 33.3.3 | - [x] **33.3.3** Export as GraphML/GEXF - Standard graph formats for Gephi/Cytoscape import. AC: GraphML file valid. Verification: Import into Gephi → graph loads. If Blocked: Export JSON only |
+| 2026-01-28 | 33.3.4 | - [x] **33.3.4** Markdown table export - Export filtered nodes as markdown table (ID, Title, Type, Status, Tags). AC: Table export works. Verification: Open in markdown editor → table renders. If Blocked: CSV export instead |
+| 2026-01-28 | 33.4.1 | - [x] **33.4.1** Add "Present" button - Enters full-screen mode, hides UI panels, shows graph + navigation controls only. AC: Presentation mode toggles. Verification: Click Present → full-screen graph. If Blocked: Just hide sidebars (not true full-screen) |
+| 2026-01-28 | 33.4.2 | - [x] **33.4.2** Keyboard navigation - Arrow keys navigate between connected nodes (follow edges), space bar zooms to focused node. AC: Keyboard nav works. Verification: Press Right → moves to connected node. If Blocked: Click-only navigation |
+
+### Archived on 2026-01-28 (Batch 1 - Empty)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+
+### Archived on 2026-01-28 (Batch 3 - MD012 Fixes)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-28 | 0.W.MD012.workers/PLAN_DONE.md | - [x] **0.W.MD012.workers/PLAN_DONE.md** Fix MD012 in workers/PLAN_DONE.md |
+
+### Archived on 2026-01-28 (Lint Fixes - MD004)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-28 | 0-Lint.1.1 | - [x] **0-Lint.1.1** Fix MD004/ul-style errors in cortex/docs/MindMerge_MindMerge-PR.md |
+| 2026-01-28 | 36.1.2 | - [x] **36.1.2** Remove hover/zoom label duplication by matching default placement and ensuring hover "upgrades" the same label |
+
+### Archived on 2026-01-28 (Ad-hoc 1 - MD004 Fix)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-28 | 0.1.1 | - [x] **0.1.1** Fix MD004 in cortex/docs/MindMerge_MindMerge-PR.md |
+
+### Archived on 2026-01-28 (Ad-hoc 2 - Multiple Warnings)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.753 | - [x] **0-Warn.MD012.workers-PLAN_DONE.753** Fix MD012 in workers/PLAN_DONE.md line 753 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.760 | - [x] **0-Warn.MD012.workers-PLAN_DONE.760** Fix MD012 in workers/PLAN_DONE.md line 760 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.767 | - [x] **0-Warn.MD012.workers-PLAN_DONE.767** Fix MD012 in workers/PLAN_DONE.md line 767 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.774 | - [x] **0-Warn.MD012.workers-PLAN_DONE.774** Fix MD012 in workers/PLAN_DONE.md line 774 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.781 | - [x] **0-Warn.MD012.workers-PLAN_DONE.781** Fix MD012 in workers/PLAN_DONE.md line 781 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.788 | - [x] **0-Warn.MD012.workers-PLAN_DONE.788** Fix MD012 in workers/PLAN_DONE.md line 788 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.795 | - [x] **0-Warn.MD012.workers-PLAN_DONE.795** Fix MD012 in workers/PLAN_DONE.md line 795 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.802 | - [x] **0-Warn.MD012.workers-PLAN_DONE.802** Fix MD012 in workers/PLAN_DONE.md line 802 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.809 | - [x] **0-Warn.MD012.workers-PLAN_DONE.809** Fix MD012 in workers/PLAN_DONE.md line 809 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.816 | - [x] **0-Warn.MD012.workers-PLAN_DONE.816** Fix MD012 in workers/PLAN_DONE.md line 816 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.823 | - [x] **0-Warn.MD012.workers-PLAN_DONE.823** Fix MD012 in workers/PLAN_DONE.md line 823 |
+| 2026-01-28 | 0-Warn.MD012.workers-PLAN_DONE.824 | - [x] **0-Warn.MD012.workers-PLAN_DONE.824** Fix MD012 in workers/PLAN_DONE.md line 824 |
+| 2026-01-28 | 37.1.2 | - [x] **37.1.2** Remove references to renamed/deleted scripts and paths |
+| 2026-01-28 | 37.2.1 | - [x] **37.2.1** Inventory runnable tools and reconcile with `docs/TOOLS.md` |
+| 2026-01-28 | 37.2.2 | - [x] **37.2.2** Add missing usage/outputs/prereqs for each documented tool |
+| 2026-01-28 | 37.3.1 | - [x] **37.3.1** Refresh `NEURONS.md` to match current repo structure |
+| 2026-01-28 | 37.3.2 | - [x] **37.3.2** Reconcile `cortex/docs/REPO_MAP.md` and other high-level docs with current structure |
+| 2026-01-28 | 37.4.1 | - [x] **37.4.1** Add a lightweight "tool inventory" validator (optional) or documented procedure |
+| 2026-01-28 | 37.4.2 | - [x] **37.4.2** Add/extend a check to catch out-of-workspace brain references in templates |
+| 2026-01-28 | 38.1.1 | - [x] **38.1.1** Inventory duplicated topics and pick canonical docs |
+
+### Archived on 2026-01-28 (Batch 7 - Documentation Cleanup)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-28 | 38.1.2 | - [x] **38.1.2** Resolve the highest-impact contradictions |
+| 2026-01-28 | 38.2.1 | - [x] **38.2.1** Create/refresh a single top-level “Start Here” section |
+| 2026-01-28 | 38.2.2 | - [x] **38.2.2** Reduce redundant onboarding text in `AGENTS.md`/`cortex/docs/*` |
+| 2026-01-28 | 38.3.1 | - [x] **38.3.1** Mark historical change logs and old analysis as “historical” and de-emphasize in navigation |
+| 2026-01-28 | 38.3.2 | - [x] **38.3.2** Merge or remove duplicate runbooks |
+| 2026-01-28 | 38.4.1 | - [x] **38.4.1** Standardize references to canonical files across the repo |
+| 2026-01-28 | 38.4.2 | - [x] **38.4.2** Add/refresh “See also” sections on major docs |
+| 2026-01-28 | 38.2.2 | - [x] **38.2.2** Reduce redundant onboarding text in `AGENTS.md`/`cortex/docs/*` |
+| 2026-01-28 | 38.3.1 | - [x] **38.3.1** Mark historical change logs and old analysis as "historical" and de-emphasize in navigation |
+| 2026-01-28 | 38.4.1 | - [x] **38.4.1** Standardize references to canonical files across the repo |
+
+### Archived on 2026-01-28 21:23:51
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-28 | 39.1 | - [x] **39.1** Create destination directories for root-file moves |
+| 2026-01-28 | 39.2 | - [x] **39.2** Move root scripts into `scripts/` |
+| 2026-01-28 | 39.3 | - [x] **39.3** Move root docs/reports to their new locations |
+| 2026-01-28 | 39.4 | - [x] **39.4** Move root config template into `config/templates/` |
+| 2026-01-28 | 39.5 | - [x] **39.5** Update repo references to new file locations (Markdown + code) |
+| 2026-01-28 | 39.6 | - [x] **39.6** Delete root temporary debris (`tmp_rovodev_*`, `__pycache__/`) |
+| 2026-01-28 | 39.7 | - [x] **39.7** Run validations and fix any fallout from the moves |
+| 2026-01-28 | 0-Warn.MD024.workers-IMPL_PLAN.47 | - [x] **0-Warn.MD024.workers-IMPL_PLAN.47** Fix MD024 duplicate heading in workers/IMPLEMENTATION_PLAN.md line 47 |
+| 2026-01-28 | 0-Warn.MD024.workers-IMPL_PLAN.53 | - [x] **0-Warn.MD024.workers-IMPL_PLAN.53** Fix MD024 duplicate heading in workers/IMPLEMENTATION_PLAN.md line 53 |
+| 2026-01-28 | 0-Warn.MD024.workers-IMPL_PLAN.62 | - [x] **0-Warn.MD024.workers-IMPL_PLAN.62** Fix MD024 duplicate heading in workers/IMPLEMENTATION_PLAN.md line 62 |
+| 2026-01-28 | 0-Warn.MD024.cortex-IMPL_PLAN.57 | - [x] **0-Warn.MD024.cortex-IMPL_PLAN.57** Fix MD024 duplicate heading in cortex/IMPLEMENTATION_PLAN.md line 57 |
+
+### Archived on 2026-01-29 00:16:04
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-01-29 | WARN.MD001.TEMPLATE_DRIFT_REPORT | - [x] **WARN.MD001.TEMPLATE_DRIFT_REPORT** Fix MD001/heading-increment in artifacts/reports/TEMPLATE_DRIFT_REPORT.md:245 |
+| 2026-01-29 | WARN.MD032.CORTEX_SYSTEM_PROMPT | - [x] **WARN.MD032.CORTEX_SYSTEM_PROMPT** Fix MD032/blanks-around-lists in cortex/CORTEX_SYSTEM_PROMPT.md:10 |
+| 2026-01-29 | WARN.MD022.CORTEX_SYSTEM_PROMPT | - [x] **WARN.MD022.CORTEX_SYSTEM_PROMPT** Fix MD022/blanks-around-headings in cortex/CORTEX_SYSTEM_PROMPT.md:11 |
+| 2026-01-29 | 35.2.3 | - [x] **35.2.3** Update bootstrap scripts |
+
+### Archived on 2026-02-01 12:29:18
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-02-01 | WARN.MD040.test_md040.md | - [x] **WARN.MD040.test_md040.md** - Fix MD040 in tools/tests/fixtures/test_md040.md |
+| 2026-02-01 | 39.5.1 | - [x] **39.5.1** Run semantic review during PLAN only (not BUILD) |
+| 2026-02-01 | 39.6.1 | - [x] **39.6.1** Verify BUILD never commits; PLAN commits still occur; end-of-run always commits |

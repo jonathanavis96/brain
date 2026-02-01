@@ -37,20 +37,39 @@ Catalog of all skill files in the brain system.
 - [caching-patterns.md](domains/backend/caching-patterns.md) - Caching strategies and patterns
 - [config-patterns.md](domains/backend/config-patterns.md) - Portable configs, templates, environment variables
 - [database-patterns.md](domains/backend/database-patterns.md) - Database design and query patterns
+- [email-patterns.md](domains/backend/email-patterns.md) - Sending email reliably (idempotency, logging, failure handling)
 - [error-handling-patterns.md](domains/backend/error-handling-patterns.md) - Error handling strategies
+- [retry-patterns.md](domains/backend/retry-patterns.md) - Safe retries (timeouts, backoff/jitter, idempotency)
+- [validation-patterns.md](domains/backend/validation-patterns.md) - Input and boundary validation patterns
 
 ### Code Quality
 
+- [add-patterns.md](domains/code-quality/add-patterns.md) - Safe patterns for adding new functionality
+- [bug-patterns.md](domains/code-quality/bug-patterns.md) - Triage, diagnosis, prevention
 - [bulk-edit-patterns.md](domains/code-quality/bulk-edit-patterns.md) - Bulk editing strategies and markdown auto-fix patterns
 - [code-consistency.md](domains/code-quality/code-consistency.md) - Documentation accuracy, terminology, parsing consistency
 - [code-hygiene.md](domains/code-quality/code-hygiene.md) - Definition of Done checklists
 - [code-review-patterns.md](domains/code-quality/code-review-patterns.md) - Code review checklist for regex, scope, examples, documentation quality
+- [coverage-patterns.md](domains/code-quality/coverage-patterns.md) - Operational guidance for using coverage effectively
+- [create-patterns.md](domains/code-quality/create-patterns.md) - Creating new modules/endpoints/jobs with consistent structure
+- [error-patterns.md](domains/code-quality/error-patterns.md) - Operational error classification and handling patterns
+- [fix-patterns.md](domains/code-quality/fix-patterns.md) - Safe bugfix workflow patterns
+- [implement-patterns.md](domains/code-quality/implement-patterns.md) - Implementation patterns for maintainable features
+- [logging-patterns.md](domains/code-quality/logging-patterns.md) - Structured logging patterns and recommended fields
 - [markdown-patterns.md](domains/code-quality/markdown-patterns.md) - Lint rules (MD040, MD024, MD050), documentation accuracy
+- [migrate-patterns.md](domains/code-quality/migrate-patterns.md) - Safe migration patterns (schema/layout/api)
+- [monitoring-patterns.md](domains/code-quality/monitoring-patterns.md) - Monitoring/alerting patterns, runbook linkage
+- [refactor-patterns.md](domains/code-quality/refactor-patterns.md) - Safe refactoring patterns
 - [research-cheatsheet.md](domains/code-quality/research-cheatsheet.md) - One-page quick reference for research patterns
 - [research-patterns.md](domains/code-quality/research-patterns.md) - Systematic research methodology for gathering and evaluating information
+- [security-patterns.md](domains/code-quality/security-patterns.md) - Secure engineering workflow patterns
+- [semantic-code-review.md](domains/code-quality/semantic-code-review.md) - LLM-based semantic analysis patterns for logic validation and intent checking
+- [simplify-patterns.md](domains/code-quality/simplify-patterns.md) - Simplification patterns without breaking behavior
+- [test-patterns.md](domains/code-quality/test-patterns.md) - Practical day-to-day test patterns
 - [test-coverage-patterns.md](domains/code-quality/test-coverage-patterns.md) - Test coverage measurement and improvement strategies
 - [testing-patterns.md](domains/code-quality/testing-patterns.md) - Testing strategies and patterns
 - [token-efficiency.md](domains/code-quality/token-efficiency.md) - Token optimization strategies for AI agents
+- [update-patterns.md](domains/code-quality/update-patterns.md) - Safe update patterns (deps/config/schema)
 
 ### Anti-Patterns
 
@@ -76,6 +95,8 @@ Catalog of all skill files in the brain system.
 - [state-management-patterns.md](domains/infrastructure/state-management-patterns.md) - State management patterns
 
 ### Languages
+
+- [api-patterns.md](domains/languages/api-patterns.md) - Cross-language API implementation themes (index)
 
 #### Go
 
@@ -167,6 +188,7 @@ Catalog of all skill files in the brain system.
 - [pricing-strategy.md](domains/marketing/strategy/pricing-strategy.md) - Design pricing models and pages
 - [launch-strategy.md](domains/marketing/strategy/launch-strategy.md) - Plan product launches
 - [marketing-ideas.md](domains/marketing/strategy/marketing-ideas.md) - Generate marketing ideas
+- [business-ideas.md](domains/marketing/strategy/business-ideas.md) - Generate and evaluate business ideas (market gaps, autonomy-first)
 - [marketing-psychology.md](domains/marketing/strategy/marketing-psychology.md) - Apply psychology to marketing
 - [competitor-alternatives.md](domains/marketing/strategy/competitor-alternatives.md) - Analyze competitors and positioning
 
@@ -246,7 +268,7 @@ Catalog of all skill files in the brain system.
 
 - [README.md](self-improvement/README.md) - Self-improvement system overview
 - [GAP_CAPTURE_RULES.md](self-improvement/GAP_CAPTURE_RULES.md) - Gap capture protocol
-- [GAP_BACKLOG.md](self-improvement/GAP_BACKLOG.md) - Raw gap capture log
+- [skills/self-improvement/GAP_BACKLOG.md](self-improvement/GAP_BACKLOG.md) - Raw gap capture log
 - [GAP_LOG_AND_AUTO_SKILL_SPEC.md](self-improvement/GAP_LOG_AND_AUTO_SKILL_SPEC.md) - Gap log structure and auto-skill generation spec
 - [SKILL_BACKLOG.md](self-improvement/SKILL_BACKLOG.md) - Promotion queue
 - [SKILL_TEMPLATE.md](self-improvement/SKILL_TEMPLATE.md) - Template for new skills

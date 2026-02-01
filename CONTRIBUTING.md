@@ -86,7 +86,7 @@ rg "topic" docs/ README.md NEURONS.md
 **Process:**
 
 1. Search existing skills: `rg "pattern" skills/`
-2. Check `skills/self-improvement/GAP_BACKLOG.md` for planned skills
+2. Check `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` for planned skills
 3. Use `skills/self-improvement/SKILL_TEMPLATE.md` as template
 4. Place in appropriate category:
    - Broadly reusable → `skills/domains/<category>/<skill>.md`
@@ -111,7 +111,7 @@ rg "topic" docs/ README.md NEURONS.md
 1. Identify template to improve (ralph/, cortex/, backend/, python/, go/, javascript/, website/)
 2. Make changes to template file
 3. Consider if change should propagate to `workers/ralph/` (Brain-specific infrastructure)
-4. Test template with new project bootstrap: `bash new-project.sh test-idea.md`
+4. Test template with new project bootstrap: `bash scripts/new-project.sh test-idea.md`
 5. Document change in commit message
 
 **Important:**
@@ -127,7 +127,7 @@ rg "topic" docs/ README.md NEURONS.md
 **Process:**
 
 1. Search for similar issues: `rg "error_pattern" .`
-2. Check if issue is already tracked in `workers/IMPLEMENTATION_PLAN.md`
+2. Check if issue is already tracked in `workers/workers/IMPLEMENTATION_PLAN.md`
 3. Fix the issue following quality gates below
 4. Run validation commands (see Validation section)
 5. Commit with descriptive message: `fix(scope): description`
@@ -139,8 +139,8 @@ rg "topic" docs/ README.md NEURONS.md
 **Process:**
 
 1. Search `skills/` for existing documentation
-2. Check `skills/self-improvement/GAP_BACKLOG.md` for existing entries
-3. If not found, append entry to `GAP_BACKLOG.md`:
+2. Check `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` for existing entries
+3. If not found, append entry to `skills/self-improvement/GAP_BACKLOG.md`:
 
 ```markdown
 ### Gap: [Short Title]
@@ -300,7 +300,7 @@ bash verifier.sh
 
 3. **Link related issues:**
    - Reference Gap Backlog entries if applicable
-   - Link to IMPLEMENTATION_PLAN.md tasks if relevant
+   - Link to workers/IMPLEMENTATION_PLAN.md tasks if relevant
 
 4. **Ensure CI passes:**
    - All quality gates must pass

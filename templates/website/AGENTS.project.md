@@ -12,7 +12,7 @@ Operational instructions for building conversion-focused websites. This template
 
 ## Project Structure
 
-See [NEURONS.md](NEURONS.md) for complete project map.
+See [NEURONS.project.md](NEURONS.project.md) for complete project map.
 
 **Key directories:**
 
@@ -27,9 +27,9 @@ See [NEURONS.md](NEURONS.md) for complete project map.
 
 **Read these skills first:**
 
-- `brain/skills/domains/websites/discovery/requirements-distiller.md`
-- `brain/skills/domains/websites/discovery/audience-mapping.md`
-- `brain/skills/domains/websites/architecture/sitemap-builder.md`
+- `skills/domains/websites/discovery/requirements-distiller.md`
+- `skills/domains/websites/discovery/audience-mapping.md`
+- `skills/domains/websites/architecture/sitemap-builder.md`
 
 **Create these files:**
 
@@ -48,13 +48,13 @@ See [NEURONS.md](NEURONS.md) for complete project map.
 
 **Read these skills:**
 
-- `brain/skills/domains/websites/architecture/section-composer.md`
-- `brain/skills/domains/websites/architecture/tech-stack-chooser.md`
-- `brain/skills/domains/websites/copywriting/value-proposition.md`
+- `skills/domains/websites/architecture/section-composer.md`
+- `skills/domains/websites/architecture/tech-stack-chooser.md`
+- `skills/domains/websites/copywriting/value-proposition.md`
 
 **Create/update:**
 
-- `IMPLEMENTATION_PLAN.md` - Phased build plan
+- `brain/workers/IMPLEMENTATION_PLAN.md` - Phased build plan
 - `sections.md` - Detailed section content for each page
 - Tech stack decisions documented in `THOUGHTS.md`
 
@@ -72,10 +72,10 @@ See [NEURONS.md](NEURONS.md) for complete project map.
 
 **Read these skills:**
 
-- `brain/skills/domains/websites/design/design-direction.md`
-- `brain/skills/domains/websites/design/typography-system.md`
-- `brain/skills/domains/websites/design/color-system.md`
-- `brain/skills/domains/websites/design/spacing-layout.md`
+- `skills/domains/websites/design/design-direction.md`
+- `skills/domains/websites/design/typography-system.md`
+- `skills/domains/websites/design/color-system.md`
+- `skills/domains/websites/design/spacing-layout.md`
 
 **Tasks:**
 
@@ -88,8 +88,8 @@ See [NEURONS.md](NEURONS.md) for complete project map.
 
 **Read these skills:**
 
-- `brain/skills/domains/websites/copywriting/cta-optimizer.md`
-- `brain/skills/domains/websites/copywriting/objection-handler.md`
+- `skills/domains/websites/copywriting/cta-optimizer.md`
+- `skills/domains/websites/copywriting/objection-handler.md`
 
 **Build in this order:**
 
@@ -111,9 +111,9 @@ See [NEURONS.md](NEURONS.md) for complete project map.
 
 **Read these skills:**
 
-- `brain/skills/domains/websites/qa/acceptance-criteria.md`
-- `brain/skills/domains/websites/qa/visual-qa.md`
-- `brain/skills/domains/websites/qa/accessibility.md`
+- `skills/domains/websites/qa/acceptance-criteria.md`
+- `skills/domains/websites/qa/visual-qa.md`
+- `skills/domains/websites/qa/accessibility.md`
 
 **Checklist:**
 
@@ -130,8 +130,8 @@ See [NEURONS.md](NEURONS.md) for complete project map.
 
 **Read these skills:**
 
-- `brain/skills/domains/websites/launch/finishing-pass.md`
-- `brain/skills/domains/websites/launch/deployment.md`
+- `skills/domains/websites/launch/finishing-pass.md`
+- `skills/domains/websites/launch/deployment.md`
 
 **Pre-launch checklist:**
 
@@ -227,10 +227,10 @@ npx lighthouse http://localhost:3000 --view
 
 ## See Also
 
-- **[THOUGHTS.md](THOUGHTS.md)** - Project vision and goals
-- **[NEURONS.md](NEURONS.md)** - Project structure map
-- **[VALIDATION_CRITERIA.md](VALIDATION_CRITERIA.md)** - Acceptance criteria
-- **[sitemap.md](sitemap.md)** - Navigation structure
-- **[sections.md](sections.md)** - Page section composition
-- **brain/skills/domains/websites/** - All website skills
-- **brain/skills/domains/marketing/** - Marketing and CRO skills
+- **[THOUGHTS.project.md](THOUGHTS.project.md)** - Project vision and goals
+- **[NEURONS.project.md](NEURONS.project.md)** - Project structure map
+- **[VALIDATION_CRITERIA.project.md](VALIDATION_CRITERIA.project.md)** - Acceptance criteria
+- **[sitemap.md](docs/sitemap.md)** - Navigation structure
+- **[sections.md](docs/sections.md)** - Page section composition
+- **skills/domains/websites/** - All website skills
+- **skills/domains/marketing/** - Marketing and CRO skills

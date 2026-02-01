@@ -3,6 +3,8 @@
 **Date:** 2026-01-21 20:30:00  
 **Analyzed by:** Cortex
 
+**2026-01-27 note:** Atlassian UI "Session context" meter appears to have increased from ~200K max to ~272K max for the same model/profile (likely a platform-side update). Practical implication: slightly more headroom before truncation, but keep using token-efficient practices to reduce latency and cognitive load.
+
 ## Summary Statistics
 
 | Component                    | Lines | Words | Bytes  | Est. Tokens |
@@ -47,7 +49,7 @@
 
 #### 4. **Cortex: Verbose Task Contracts**
 
-- **Problem:** Task contracts in IMPLEMENTATION_PLAN.md are comprehensive but verbose
+- **Problem:** Task contracts in workers/IMPLEMENTATION_PLAN.md are comprehensive but verbose
 - **Example:** Task 0.0 is 42 lines with full context
 - **Cost:** ~300 tokens per task × 10 tasks = 3,000 tokens
 - **Fix:** Use shorthand format for simple tasks:
@@ -200,7 +202,7 @@ Reserve verbose format for:
 
 ## Token Budget Recommendations
 
-### Cortex (Opus 4.5)
+### Cortex (GPT-5.2)
 
 - **Current:** ~4,700 tokens per session start
 - **Target:** ~3,500 tokens (25% reduction)
@@ -209,7 +211,7 @@ Reserve verbose format for:
   - Snapshot: 1,000 tokens (cached)
   - Dynamic context: Variable
 
-### Ralph (Sonnet 4.5)
+### Ralph (GPT-5.2-Codex)
 
 - **Current:** ~4,800 tokens per iteration × 20 = 96,000 tokens
 - **Target:** ~2,000 tokens per iteration × 20 = 40,000 tokens (58% reduction)

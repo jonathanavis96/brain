@@ -1,6 +1,10 @@
 # Logs
 ralph/logs/
-*.log
+workers/ralph/logs/
+workers/cerebras/logs/
+templates/ralph/logs/
+# *.log
+!workers/ralph/tests/fixtures/*.log
 
 # Backup files
 *.bak
@@ -27,6 +31,7 @@ Thumbs.db
 # Credentials/secrets (if any)
 *.gpg
 .gpg_passphrase
+.env
 # Local development files
 ralph/.opencode/
 ralph/opencode.json

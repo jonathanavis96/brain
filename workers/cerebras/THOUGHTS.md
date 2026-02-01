@@ -8,10 +8,10 @@ This file captures the strategic context and goals for the Cerebras worker.
 
 The Cerebras worker is an autonomous agent that:
 
-- Executes tasks from the shared `workers/IMPLEMENTATION_PLAN.md` backlog
+- Executes tasks from the shared `workers/workers/IMPLEMENTATION_PLAN.md` backlog
 - Uses the Cerebras LLM for high-quality code generation and problem-solving
 - Operates independently of the Ralph worker
-- Maintains its own task completion log in `THUNK.md`
+- Maintains its own task completion log in `workers/ralph/THUNK.md`
 - Validates changes against acceptance criteria in `rules/AC.rules`
 
 ## Current Focus
@@ -26,14 +26,14 @@ The Cerebras worker is an autonomous agent that:
 - **Independence:** Cerebras worker runs without Ralph-specific dependencies
 - **Quality:** All commits pass acceptance criteria validation
 - **Efficiency:** Tasks completed in minimal iterations
-- **Documentation:** Clear audit trail in THUNK.md
+- **Documentation:** Clear audit trail in workers/ralph/THUNK.md
 
 ## Design Principles
 
 1. **One task per iteration** - No batching unless explicitly allowed
 2. **Search before creating** - Verify files don't exist before adding
 3. **Skills-first** - Consult skills/SUMMARY.md before implementing
-4. **Checkpoint frequently** - Commit after every task with THUNK.md update
+4. **Checkpoint frequently** - Commit after every task with workers/ralph/THUNK.md update
 
 ## Known Constraints
 
@@ -45,5 +45,5 @@ The Cerebras worker is an autonomous agent that:
 ## See Also
 
 - **[../../THOUGHTS.md](../../THOUGHTS.md)** - Root strategic vision
-- **[../IMPLEMENTATION_PLAN.md](../IMPLEMENTATION_PLAN.md)** - Shared task backlog
+- **[../workers/IMPLEMENTATION_PLAN.md](../IMPLEMENTATION_PLAN.md)** - Shared task backlog
 - **[../../skills/SUMMARY.md](../../skills/SUMMARY.md)** - Skills knowledge base

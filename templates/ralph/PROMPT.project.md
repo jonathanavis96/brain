@@ -1,98 +1,159 @@
 # Ralph Loop - **REPO_NAME**
 
-You are Ralph. Mode is passed by loop.sh header.
+You are Ralph. AGENTS.md was injected above. Mode is in the header.
 
-## Core Mechanics
+## Verifier Feedback (CRITICAL - Already Injected!)
 
-Read `../brain/templates/ralph/PROMPT.md` for full Ralph loop mechanics (PLANNING vs BUILDING modes, commit flow, stop conditions).
+**⚠️ DO NOT read `.verify/latest.txt` - verifier status is already injected in the header above.**
 
-## Project Context Files
+Look for the `# VERIFIER STATUS` section at the top of this prompt. It contains:
 
-| File | Purpose |
-|------|---------|
-| THOUGHTS.md | Project goals, success criteria, tech stack - **READ FIRST** |
-| NEURONS.md | Codebase map (read via subagent when needed) |
-| IMPLEMENTATION_PLAN.md | TODO list (persistent across iterations) |
-| AGENTS.md | Validation commands, project conventions |
+- SUMMARY (PASS/FAIL/WARN counts)
+- Any failing or warning checks with details
 
-## Brain Knowledge Base
+If the header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
-For patterns and best practices, use progressive disclosure:
+1. **STOP** - Do not pick a new task from `brain/workers/IMPLEMENTATION_PLAN.md`
+2. **CHECK** the `# VERIFIER STATUS` section above for failure details
+3. **FIX** the failing acceptance criteria listed in `# FAILED_RULES:`
+4. **COMMIT** your fix with message: `fix(ralph): resolve AC failure <RULE_ID>`
+5. **THEN** output `:::BUILD_READY:::` so the verifier can re-run
 
-1. `../brain/skills/SUMMARY.md` - Knowledge base overview
-2. `../brain/references/react-best-practices/HOTLIST.md` - Top 10 rules (covers 80%)
-3. Specific rule files only if HOTLIST doesn't cover your scenario
+If the `# VERIFIER STATUS` section shows `[WARN]` lines:
 
-❌ Never scan all rules by default
+1. **ADD** `## Phase 0-Warn: Verifier Warnings` section at TOP of `brain/workers/IMPLEMENTATION_PLAN.md` (after header, before other phases)
+2. Create ONE task per (RULE_ID + file), not per line/occurrence (batch within a file)
+3. **NEVER** mark `[x]` until verifier confirms fix (re-run shows `[PASS]`)
 
-## Token Efficiency Rules (CRITICAL)
+---
 
-### PLANNING Mode Output
+## ROOT RULE (CRITICAL)
 
-In PLANNING mode, you MUST end with:
+You are running from `./brain/workers/ralph/`, but **the project root is the repository root**.
 
-```text
-:::BUILD_READY:::
-```text
+- Project/app code lives at repo root (e.g., `src/`, `public/`, config files)
+- Brain pack lives under `./brain/`
+- Ralph task plan lives at `brain/workers/IMPLEMENTATION_PLAN.md`
+- Ralph completion log lives at `brain/workers/ralph/THUNK.md`
 
-This signals loop.sh to proceed to BUILD mode. Without this marker, the iteration is wasted.
+**Do not treat `./brain/` as the repo root.** Only work inside `./brain/` when updating the Brain pack itself (plans, THUNK, or syncing skills).
 
-### Batch Similar Fixes
+---
 
-When you encounter multiple instances of the same issue type (e.g., SC2155, SC2086):
+## MANDATORY: Startup Procedure (Cheap First)
 
-1. **FIX ALL instances in one iteration** - don't create separate tasks for each
-2. **Group by error type**, not by file
-3. **One commit per error type**: `fix(ralph): resolve SC2155 in all shell scripts`
+**Do NOT open large files at startup.** Use targeted commands instead.
 
-### Formatting Discipline
+### Forbidden at Startup
 
-- **DO NOT** run shfmt on individual files repeatedly
-- If shellcheck fixes require reformatting, run `shfmt -w -i 2 <file>` ONCE after all fixes
-- **NEVER** include "applied shfmt formatting" as the main work - it's incidental to the real fix
+Avoid opening entire files; slice instead:
 
-### Context You Already Have
+- `NEURONS.md` (use grep/head/sed slices)
+- `THOUGHTS.md` (slice with `head -50` if needed)
+- `brain/workers/IMPLEMENTATION_PLAN.md` (NEVER open full; grep then slice)
+- `brain/workers/ralph/THUNK.md` (append-only; use `tail` only when adding a new entry)
 
-**NEVER repeat these (you already know):**
-
-- `pwd`, `git branch` - known from header
-- Verifier status - already injected in header (NEVER read the file)
-- `tail THUNK.md` - get next number ONCE
-- Same file content - read ONCE, remember it
-
-**ALWAYS batch:** `grep pattern file1 file2 file3` not 3 separate calls.
-
-### Task ID Uniqueness
-
-**CRITICAL:** Before creating any task ID, search IMPLEMENTATION_PLAN.md to verify it doesn't exist.
-
-- Use format: `<phase>.<sequence>` (e.g., `9.1`, `9.2`)
-- If `9.1` exists, use `9.2`, not `9.1` again
-- Duplicate IDs cause confusion and wasted iterations
-
-## Validation (before marking task complete)
+### Required Startup Sequence (STRICT)
 
 ```bash
-# Validation commands for your project
-npm run type-check
-npm run lint
-npm test
+# 1) Pick ONE task (the first unchecked task in file order)
+LINE=$(grep -n "^- \[ \]" brain/workers/IMPLEMENTATION_PLAN.md | head -1 | cut -d: -f1)
+
+# 2) Read ONE non-overlapping slice around it
+#    BAN: sed starting at 1; BAN: >90 lines; CAP: 2 plan slices max/iteration
+sed -n "$((LINE-5)),$((LINE+35))p" brain/workers/IMPLEMENTATION_PLAN.md
+```
+
+**Rule:** The task you pick MUST be the first unchecked `- [ ]` in `brain/workers/IMPLEMENTATION_PLAN.md` (top-to-bottom). Do not skip ahead to later IDs.
+
+---
+
+## BUILD Mode (Most iterations)
+
+1. If `# LAST_VERIFIER_RESULT: FAIL` is present: fix verifier failures first; do not pick a plan task.
+2. Otherwise, pick the **first unchecked** task in `brain/workers/IMPLEMENTATION_PLAN.md`.
+   - This is your **ONLY** task this iteration.
+   - If it is genuinely blocked, mark it `[?]` with a clear **If Blocked** note and then pick the next unchecked task.
+
+When you complete the task, you MUST:
+
+1. Mark the task `[x]` in `brain/workers/IMPLEMENTATION_PLAN.md`
+2. Append a row to `brain/workers/ralph/THUNK.md`
+3. Commit your changes
+
+---
+
+## PLANNING Mode
+
+- Update `brain/workers/IMPLEMENTATION_PLAN.md` with clear, atomic tasks.
+- Keep tasks completable in one BUILD iteration.
+
+---
+
+## Completion & Markers
+
+- The token `:::COMPLETE:::` is reserved for `loop.sh` ONLY.
+- In PLANNING mode, end your response with: `:::PLAN_READY:::`
+- In BUILD mode, end your response with: `:::BUILD_READY:::`
+
+Immediately before the marker, output this strict block (fixed order):
+
 ```text
+**Summary**
+- ...
 
-## Self-Improvement Protocol
+**Changes Made**
+- ...
 
-**End of each BUILD iteration**:
+**Next Steps**
+- ...
 
-If you used undocumented knowledge/procedure/tooling:
+**Completed** (optional)
+- ...
+```
 
-1. Search `../brain/skills/` for existing matching skill
-2. Search `cortex/GAP_CAPTURE.md` for existing local gap entry
-3. If not found: append new entry to `cortex/GAP_CAPTURE.md`
-4. Create marker: `touch cortex/.gap_pending`
-5. Brain's Cortex will sync gaps on next session
+---
 
-See `../brain/skills/self-improvement/GAP_CAPTURE_RULES.md` for details (Rule 6: Marker Protocol).
+## Token Efficiency
 
-## Project-Specific Notes
+Target: <20 tool calls per iteration.
 
-[Add any project-specific conventions, architecture decisions, or patterns here]
+### Non-Negotiable Principle
+
+Prefer commands that return tiny outputs (`grep`, `head`, `sed`, `tail`) over opening large files. If you need to read a file, **slice it**.
+
+### No Duplicate Commands (CRITICAL)
+
+- NEVER run the same bash command twice in one iteration.
+- Use the injected verifier status in the header (do not read `.verify/latest.txt`).
+- If a command fails, fix the issue; don’t re-run the same failing command hoping for different results.
+
+### ALWAYS batch
+
+Batch searches and edits:
+
+- ✅ `grep pattern file1 file2 file3 | head -20`
+- ❌ three separate greps for the same pattern
+
+### Read Deduplication (HARD)
+
+- Plan reads: max 2 non-overlapping `sed` slices per iteration.
+- BAN: `sed -n '1,XXp' brain/workers/IMPLEMENTATION_PLAN.md`
+- BAN: slices > 90 lines.
+
+### Constrain Searches (Avoid Grep Explosion)
+
+If a grep/rg returns too many matches (>50), immediately narrow it (path filter, more specific pattern, `head -20`).
+
+### Stage/Commit discipline
+
+- Prefer one `git add -A` after changes are done.
+- Don’t spam `git status` between every file.
+
+### Context you already have
+
+Don’t repeat:
+
+- `pwd`, `git branch` (header)
+- verifier status (header)
+- re-opening the same file content repeatedly

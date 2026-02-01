@@ -27,6 +27,14 @@ LOGDIR="$RALPH/logs"
 VERIFY_REPORT="$RALPH/.verify/latest.txt"
 mkdir -p "$LOGDIR"
 
+# Load environment variables from .env file (if exists)
+if [[ -f "$ROOT/.env" ]]; then
+  # shellcheck source=../../.env
+  set -a  # Auto-export all variables
+  source "$ROOT/.env"
+  set +a
+fi
+
 # Source shared utilities (includes RollFlow tracking functions)
 # shellcheck source=../shared/common.sh
 source "$(dirname "$RALPH")/shared/common.sh"
@@ -525,10 +533,11 @@ fi
 
 # Model version configuration - SINGLE SOURCE OF TRUTH
 # Update these when new model versions are released
-# Last updated: 2026-01-18 (Sonnet 4.5 September 2025 release)
+# Last updated: 2026-01-28
 MODEL_SONNET_45="anthropic.claude-sonnet-4-5-20250929-v1:0"
 MODEL_OPUS_45="anthropic.claude-opus-4-5-20251101-v1:0"
 MODEL_SONNET_4="anthropic.claude-sonnet-4-20250514-v1:0"
+MODEL_GPT52_CODEX="gpt-5.2-codex"  # Valid RovoDev model ID (400K context)
 
 # Resolve model shortcut to full model ID
 resolve_model() {
@@ -542,6 +551,9 @@ resolve_model() {
       ;;
     sonnet4)
       echo "$MODEL_SONNET_4"
+      ;;
+    gpt52 | codex | gpt-5.2 | gpt5.2)
+      echo "$MODEL_GPT52_CODEX"
       ;;
     latest | auto)
       # Use system default - don't override config
@@ -586,11 +598,12 @@ CONFIG_FLAG=""
 TEMP_CONFIG=""
 
 # Use provided model or default based on runner
+# Match Cortex pattern: explicit model shortcut (not "auto")
 if [[ -z "$MODEL_ARG" ]]; then
   if [[ "$RUNNER" == "opencode" ]]; then
     MODEL_ARG="grok" # Default for OpenCode
   else
-    MODEL_ARG="sonnet" # Default for RovoDev
+    MODEL_ARG="sonnet" # Default for RovoDev (Sonnet 4.5) - explicit shortcut like Cortex
   fi
 fi
 
@@ -600,7 +613,8 @@ else
   RESOLVED_MODEL="$(resolve_model "$MODEL_ARG")"
 fi
 
-# Only create RovoDev temp config when runner=rovodev and we have a model to set
+# Only create RovoDev temp config when runner=rovodev and we have a model to set.
+# acli rovodev run supports --config-file (see: acli rovodev run --help)
 if [[ "$RUNNER" == "rovodev" ]]; then
   if [[ -n "$RESOLVED_MODEL" ]]; then
     TEMP_CONFIG="/tmp/rovodev_config_$$_$(date +%s).yml"
@@ -615,6 +629,7 @@ agent:
   modelId: $RESOLVED_MODEL
 EOFCONFIG
     fi
+
     CONFIG_FLAG="--config-file $TEMP_CONFIG"
     echo "Using model: $RESOLVED_MODEL"
   fi
@@ -640,7 +655,9 @@ else
 fi
 
 # Debug output for derived values
+MODEL_DISPLAY="${RESOLVED_MODEL:-${MODEL_ARG:-auto}}"
 echo "Repo: $REPO_NAME | Branch: $TARGET_BRANCH | Lock: $LOCK_FILE"
+echo "Runner=$RUNNER Model=$MODEL_DISPLAY Format=${OPENCODE_FORMAT:-default} Attach=${OPENCODE_ATTACH:-<none>} Serve=${OPENCODE_SERVE:-false}"
 
 # Resolve a prompt path robustly (works from repo root or ralph/)
 resolve_prompt() {
@@ -930,8 +947,11 @@ stage_scoped_changes() {
 # =============================================================================
 # End-of-Run Flush Commit - Ensure no changes are left uncommitted
 # =============================================================================
-# Commits any pending changes using scoped staging so that runs ending on BUILD
+# Stages any pending changes using scoped staging so that runs ending on BUILD
 # do not leave a dirty worktree.
+#
+# IMPORTANT: Commit policy is PLAN-only by default. This function will *not*
+# commit unless explicitly allowed.
 #
 # Usage: flush_scoped_commit_if_needed <reason>
 flush_scoped_commit_if_needed() {
@@ -942,6 +962,11 @@ flush_scoped_commit_if_needed() {
     return 0
   fi
 
+  # Default commit policy: plan-only
+  # Values: plan-only | always
+  local commit_policy
+  commit_policy="${COMMIT_POLICY:-plan-only}"
+
   # Nothing to do if clean
   if git diff --quiet && git diff --cached --quiet; then
     return 0
@@ -950,11 +975,18 @@ flush_scoped_commit_if_needed() {
   echo "Flushing pending changes (${reason})..."
   stage_scoped_changes || true
 
-  if ! git diff --cached --quiet; then
+  if git diff --cached --quiet; then
+    echo "No files to commit after scoped staging"
+    echo ""
+    return 0
+  fi
+
+  # Only commit when explicitly allowed
+  if [[ "$commit_policy" == "always" ]]; then
     git commit -m "build: flush pending changes (${reason})" || true
     echo "✓ Changes flushed"
   else
-    echo "No files to commit after scoped staging"
+    echo "Skipping commit (COMMIT_POLICY=$commit_policy). Changes are staged."
   fi
   echo ""
 }
@@ -1035,6 +1067,195 @@ emit_marker() {
     echo "$marker" >>"$CURRENT_LOG_FILE"
   fi
 }
+
+# Generate iteration summary for Discord/observability (task 34.1.2)
+# Extracts Ralph's structured summary from iteration logs
+# Args: $1 = iteration_number, $2 = mode, $3 = logfile
+generate_iteration_summary() {
+  local iter_num="$1"
+  local mode="$2"
+  local logfile="$3"
+
+  local timestamp run_id
+  timestamp="$(date '+%Y-%m-%d %H:%M')"
+  run_id="${ROLLFLOW_RUN_ID:-unknown}"
+
+  # Context (best-effort)
+  local branch runner model
+  branch="${TARGET_BRANCH:-$(git -C "$ROOT" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown") }"
+  runner="${RUNNER:-unknown}"
+  model="${MODEL_DISPLAY:-${RESOLVED_MODEL:-${MODEL_ARG:-auto}}}"
+
+  strip_ansi_csi() {
+    sed -E $'s/\x1B\[[0-?]*[ -/]*[@-~]//g; s/\x1B\][^\x07]*(\x07|\x1B\\\\)//g'
+  }
+
+  if [[ ! -f "$logfile" ]]; then
+    cat <<EOF
+**Ralph — Iteration ${iter_num} (${mode^^})** • ${timestamp}
+
+**Run**
+# shellcheck disable=SC2006
+- Run ID: \`${run_id}\`
+# shellcheck disable=SC2006
+- Log: \`${logfile}\`
+EOF
+    return
+  fi
+
+  local marker_line
+  marker_line=$(grep -n ":::\(PLAN\|BUILD\)_READY:::" "$logfile" 2>/dev/null | tail -1 | cut -d: -f1 || echo "")
+
+  if [[ -z "$marker_line" ]]; then
+    cat <<EOF
+**Ralph — Iteration ${iter_num} (${mode^^})** • ${timestamp}
+
+**Run**
+# shellcheck disable=SC2006
+- Run ID: \`${run_id}\`
+# shellcheck disable=SC2006
+- Log: \`${logfile}\`
+EOF
+    return
+  fi
+
+  local search_prefix response_line start_line
+  search_prefix=$(sed -n "1,${marker_line}p" "$logfile" | strip_ansi_csi)
+  response_line=$(echo "$search_prefix" | grep -n "─── Response" | tail -1 | cut -d: -f1 || echo "")
+
+  if [[ -n "$response_line" ]]; then
+    start_line=$((response_line + 1))
+  else
+    start_line=1
+  fi
+
+  local raw_block
+  raw_block=$(sed -n "${start_line},$((marker_line - 1))p" "$logfile" | strip_ansi_csi)
+
+  local awk_program
+  awk_program=$(cat <<'AWK'
+function flush_section() {
+  if (sec == "") return
+  out[sec] = buf
+  buf = ""
+}
+
+function add_line(s) {
+  if (s ~ /^[[:space:]]*$/) return
+  sub(/\r$/, "", s)
+
+  # Convert bullet glyphs to dash bullets
+  if (s ~ /^[[:space:]]*[•●]/) {
+    sub(/^[[:space:]]*[•●][[:space:]]*/, "- ", s)
+  }
+
+  # If this is an indented continuation and last line was a bullet, indent it
+  if (s ~ /^[[:space:]]+/ && last_was_bullet) {
+    s = "  " s
+  }
+
+  last_was_bullet = (s ~ /^- /)
+  buf = buf s "\n"
+}
+
+BEGIN {
+  sec = "Preamble"
+  buf = ""
+  last_was_bullet = 0
+}
+
+/^PROGRESS[[:space:]]*\|/ {
+  if (match($0, /file=([^[:space:]]+)/, m)) file = m[1]
+  next
+}
+
+/^STATUS[[:space:]]*\|/ { next }
+
+/^Summary[[:space:]]*$/       { flush_section(); sec = "Summary"; next }
+/^Changes Made[[:space:]]*$/  { flush_section(); sec = "Changes Made"; next }
+/^Next Steps[[:space:]]*$/    { flush_section(); sec = "Next Steps"; next }
+/^Completed[[:space:]]*$/     { flush_section(); sec = "Completed"; next }
+
+{ add_line($0) }
+
+END {
+  flush_section()
+
+  if (file != "") print "__FILE__=" file
+
+  if (out["Summary"] == "" && out["Preamble"] != "") out["Summary"] = out["Preamble"]
+
+  # If Summary has no dash bullets, bulletize each line
+  if (out["Summary"] != "" && out["Summary"] !~ /^- /) {
+    n = split(out["Summary"], a, "\n")
+    tmp = ""
+    for (i=1; i<=n; i++) {
+      if (a[i] ~ /^[[:space:]]*$/) continue
+      tmp = tmp "- " a[i] "\n"
+    }
+    out["Summary"] = tmp
+  }
+
+  print "__SECTION__Summary";       printf "%s", out["Summary"]
+  print "__SECTION__Changes Made";  printf "%s", out["Changes Made"]
+  print "__SECTION__Next Steps";    printf "%s", out["Next Steps"]
+}
+AWK
+)
+
+  local parsed
+  parsed=$(echo "$raw_block" | awk "$awk_program")
+
+  local context_file=""
+  if echo "$parsed" | head -1 | grep -q '^__FILE__='; then
+    context_file=$(echo "$parsed" | head -1 | sed 's/^__FILE__=//')
+    parsed=$(echo "$parsed" | tail -n +2)
+  fi
+
+  local summary_section changes_section next_steps_section
+  summary_section=$(echo "$parsed" | awk '/^__SECTION__Summary$/{p=1;next} /^__SECTION__Changes Made$/{p=0} p{print}')
+  changes_section=$(echo "$parsed" | awk '/^__SECTION__Changes Made$/{p=1;next} /^__SECTION__Next Steps$/{p=0} p{print}')
+  next_steps_section=$(echo "$parsed" | awk '/^__SECTION__Next Steps$/{p=1;next} p{print}')
+
+  summary_section=$(echo "$summary_section" | sed '/^[[:space:]]*$/d')
+  changes_section=$(echo "$changes_section" | sed '/^[[:space:]]*$/d')
+  next_steps_section=$(echo "$next_steps_section" | sed '/^[[:space:]]*$/d')
+
+  echo "**Ralph — Iteration ${iter_num} (${mode^^})** • ${timestamp}"
+  echo ""
+  echo "**Context**"
+  echo "- Branch: \`${branch}\`"
+  echo "- Runner: \`${runner}\`"
+  echo "- Model: \`${model}\`"
+  if [[ -n "$context_file" ]]; then
+    echo "- File: \`${context_file}\`"
+  fi
+  echo ""
+
+  if [[ -n "$summary_section" ]]; then
+    echo "**Summary**"
+    echo "$summary_section"
+    echo ""
+  fi
+
+  if [[ -n "$changes_section" ]]; then
+    echo "**Changes Made**"
+    echo "$changes_section"
+    echo ""
+  fi
+
+  if [[ -n "$next_steps_section" ]]; then
+    echo "**Next Steps**"
+    echo "$next_steps_section"
+    echo ""
+  fi
+
+  echo "**Run**"
+  echo "- Run ID: \`${run_id}\`"
+  echo "- Log: \`${logfile}\`"
+}
+
+
 
 # Emit structured TOOL_START marker
 # Args: $1 = tool_id, $2 = tool_name, $3 = cache_key, $4 = git_sha
@@ -1356,6 +1577,26 @@ run_once() {
       echo ""
     fi
 
+    # PLAN Ralph should see broken links too
+    if [[ "$phase" == "plan" ]] && [[ -n "${BROKEN_LINKS:-}" ]]; then
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo "# BROKEN INTERNAL LINKS (add tasks to IMPLEMENTATION_PLAN.md)"
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo "#"
+      echo "# The following markdown files have broken internal links."
+      echo "# Add tasks to IMPLEMENTATION_PLAN.md using this format:"
+      echo "#"
+      echo "#   - [ ] **X.Y** Fix broken links in <filename>"
+      echo "#     - **AC:** \`bash tools/validate_links.sh <file>\` passes"
+      echo "#"
+      echo "# Broken links:"
+      echo "#"
+      echo "$BROKEN_LINKS"
+      echo ""
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo ""
+    fi
+
     # Inject AGENTS.md (standard Ralph pattern: PROMPT.md + AGENTS.md)
     # NEURONS.md and THOUGHTS.md are read via subagent when needed (too large for base context)
     echo "# AGENTS.md - Operational Guide"
@@ -1540,7 +1781,7 @@ except Exception:
   else
     # Default: RovoDev (with error filtering)
     run_tool "$tool_id" "$RUNNER" "$tool_key" "$git_sha" \
-      "script -q -c \"cat \\\"$prompt_with_mode\\\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG} 2>&1 | bash $ROOT/workers/shared/filter_acli_errors.sh\" \"$log\""
+      "script -q -c \"cat \\\"$prompt_with_mode\\\" | acli rovodev run ${CONFIG_FLAG} ${YOLO_FLAG} 2> >(bash $ROOT/workers/shared/filter_acli_errors.sh >&2)\" \"$log\""
     rc=$?
   fi
 
@@ -1736,9 +1977,6 @@ if [[ -n "${OPENCODE_ATTACH:-}" ]]; then
   fi
 fi
 
-# Print effective config for debugging
-echo "Runner=${RUNNER} Model=${RESOLVED_MODEL:-<default>} Format=${OPENCODE_FORMAT:-<default>} Attach=${OPENCODE_ATTACH:-<none>} Serve=${OPENCODE_SERVE:-false}"
-
 # Change to repository root for all git operations
 cd "$ROOT"
 
@@ -1749,6 +1987,16 @@ echo "Setting up worktree branch: $TARGET_BRANCH"
 echo "========================================"
 ensure_worktree_branch "$TARGET_BRANCH"
 echo ""
+
+# Discord notification: Loop start
+if [[ -x "$ROOT/bin/discord-post" ]]; then
+  pending_count=$(grep -c '^\- \[ \]' "$ROOT/workers/IMPLEMENTATION_PLAN.md" 2>/dev/null || echo "0")
+  "$ROOT/bin/discord-post" "**Ralph Loop Starting** 🚀
+Iterations: ${ITERATIONS}
+Mode: PLAN → BUILD cycling
+Branch: $(git branch --show-current)
+Pending tasks: ${pending_count}" >/dev/null 2>&1 &
+fi
 
 # Launch monitors before starting iterations (unless --no-monitors flag is set)
 if [[ "$NO_MONITORS" == "false" ]]; then
@@ -1774,9 +2022,9 @@ fi
 trap 'cleanup_and_emit' EXIT
 
 # Sync workers plan to cortex (one-time at start)
-if [[ -f "$RALPH/sync_cortex_plan.sh" ]]; then
+if [[ -f "$RALPH/sync_workers_plan_to_cortex.sh" ]]; then
   echo "Syncing plan to cortex..."
-  if (cd "$RALPH" && bash sync_cortex_plan.sh) 2>&1; then
+  if (cd "$RALPH" && bash sync_workers_plan_to_cortex.sh) 2>&1; then
     echo "✓ Plan sync complete"
   else
     echo "⚠ Plan sync failed (non-blocking)"
@@ -1901,6 +2149,21 @@ if [[ -n "$PROMPT_ARG" ]]; then
         echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
         echo ""
         echo "After fixing manually, re-run the loop to continue."
+
+        # Post verifier failure alert to Discord (if configured)
+        if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+          {
+            echo "**⚠️ Verifier Failed - Loop Stopped**"
+            echo ""
+            echo "Iteration: $i"
+            echo "Consecutive failures: $CONSECUTIVE_VERIFIER_FAILURES"
+            echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
+            echo ""
+            echo "**Recent failures:**"
+            sed -n '/^\[FAIL\]/p' .verify/latest.txt 2>/dev/null | head -10
+          } | "$ROOT/bin/discord-post" 2>/dev/null || true
+        fi
+
         exit 1
       else
         echo ""
@@ -1910,10 +2173,36 @@ if [[ -n "$PROMPT_ARG" ]]; then
         echo "Next iteration will inject LAST_VERIFIER_RESULT: FAIL"
         echo "Ralph should fix the AC failures before picking new tasks."
         echo ""
+
+        # Post verifier failure alert to Discord (if configured)
+        if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+          {
+            echo "**⚠️ Verifier Failed - Retry Scheduled**"
+            echo ""
+            echo "Iteration: $i"
+            echo "Status: Giving Ralph one retry iteration"
+            echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
+            echo ""
+            echo "**Top failures:**"
+            sed -n '/^\[FAIL\]/p' .verify/latest.txt 2>/dev/null | head -5
+          } | "$ROOT/bin/discord-post" 2>/dev/null || true
+        fi
       fi
     else
       # Reset counter on successful iteration
       CONSECUTIVE_VERIFIER_FAILURES=0
+    fi
+
+    # Update THUNK.md from completed tasks in workers/IMPLEMENTATION_PLAN.md
+    # This makes THUNK append deterministic and prevents markdown table corruption.
+    if [[ -x "$RALPH/update_thunk_from_plan.sh" ]]; then
+      echo "Updating THUNK from plan completions..."
+      if (cd "$RALPH" && bash update_thunk_from_plan.sh) 2>&1; then
+        echo "✓ THUNK update complete"
+      else
+        echo "⚠ THUNK update failed (non-blocking)"
+      fi
+      echo ""
     fi
 
     # Run gap radar after iteration completes (task 7.4.1)
@@ -2029,30 +2318,58 @@ else
         echo ""
       fi
 
-      # Commit any accumulated changes from BUILD iterations (scoped staging)
+      # Stage any accumulated changes from BUILD iterations (scoped staging)
+      # Commit policy is PLAN-only (default). We stage here so PLAN phase can decide
+      # whether to commit, but we avoid noisy commits triggered purely by reaching PLAN.
       if ! git diff --quiet || ! git diff --cached --quiet; then
-        echo "Committing accumulated BUILD changes..."
+        echo "Staging accumulated BUILD changes (no commit)..."
         stage_scoped_changes || true # May return 1 if nothing staged (denylist)
         if ! git diff --cached --quiet; then
-          git commit -m "build: accumulated changes from BUILD iterations" || true
-          echo "✓ BUILD changes committed"
+          echo "✓ BUILD changes staged"
         else
-          echo "No files to commit after scoped staging"
+          echo "No files to stage after scoped staging"
         fi
         echo ""
       fi
 
       # Snapshot plan BEFORE sync for drift detection (prevents direct-edit bypass)
+      mkdir -p "$ROOT/.verify"
       PLAN_SNAPSHOT="$ROOT/.verify/plan_snapshot.md"
       if [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
         cp "$ROOT/workers/IMPLEMENTATION_PLAN.md" "$PLAN_SNAPSHOT"
       fi
 
+      # Run semantic review during PLAN phase only (task 39.5.1)
+      echo ""
+      echo "========================================"
+      echo "🔍 Running semantic review (PLAN phase only)..."
+      echo "========================================"
+      if [[ -x "$ROOT/bin/semantic-review-pr" ]]; then
+        if "$ROOT/bin/semantic-review-pr" --base main 2>&1 | tee -a "$LOGDIR/iter${i}_semantic_review.log"; then
+          echo "✓ Semantic review passed"
+        else
+          review_rc=$?
+          if [[ $review_rc -eq 0 ]]; then
+            echo "✓ No changes to review (clean branch)"
+          else
+            echo "⚠️  Semantic review found issues (non-blocking)"
+          fi
+        fi
+      else
+        echo "⚠️  Semantic review script not found: $ROOT/bin/semantic-review-pr"
+      fi
+      echo ""
+
       # Capture remaining markdown lint errors for PLAN phase
-      # PLAN Ralph should see these so he can add tasks to fix them
+      # Auto-fix markdown issues before checking for remaining errors
       MARKDOWN_LINT_ERRORS=""
       if command -v markdownlint &>/dev/null; then
-        echo "Checking for markdown lint errors..."
+        echo "Running auto-fix for markdown lint errors..."
+        if [[ -f "$RALPH/fix-markdown.sh" ]]; then
+          bash "$RALPH/fix-markdown.sh" "$ROOT" 2>&1 | tail -10 || true
+        fi
+
+        echo "Checking for remaining markdown lint errors..."
         lint_output=$(markdownlint "$ROOT" 2>&1 | grep -E "error MD" | head -40) || true
         if [[ -n "$lint_output" ]]; then
           MARKDOWN_LINT_ERRORS="$lint_output"
@@ -2061,6 +2378,20 @@ else
           echo "No markdown lint errors found"
         fi
         unset lint_output
+      fi
+
+      # Validate internal markdown links
+      BROKEN_LINKS=""
+      if [[ -f "$ROOT/tools/validate_links.sh" ]]; then
+        echo "Validating internal markdown links..."
+        link_output=$(bash "$ROOT/tools/validate_links.sh" "$ROOT" 2>&1 | grep -E "BROKEN|ERROR" | head -40) || true
+        if [[ -n "$link_output" ]]; then
+          BROKEN_LINKS="$link_output"
+          echo "Found broken links for PLAN review"
+        else
+          echo "All internal links valid"
+        fi
+        unset link_output
       fi
 
       emit_event --event phase_start --iter "$i" --phase "plan"
@@ -2153,16 +2484,8 @@ else
         emit_marker ":::PHASE_END::: iter=$i phase=build status=fail code=$run_result run_id=$ROLLFLOW_RUN_ID ts=$phase_end_ts"
       fi
 
-      # Sync completions back to Cortex after BUILD iterations
-      if [[ -f "$RALPH/sync_completions_to_cortex.sh" ]]; then
-        echo "Syncing completions to Cortex..."
-        if (cd "$RALPH" && bash sync_completions_to_cortex.sh) 2>&1; then
-          echo "✓ Completions synced to Cortex"
-        else
-          echo "⚠ Completions sync failed (non-blocking)"
-        fi
-        echo ""
-      fi
+      # NOTE: This repository does not sync completions back into cortex.
+      # Completion tracking is handled under workers/ (workers/PLAN_DONE.md and workers/ralph/THUNK.md).
     fi
 
     # Plan drift detection: compare snapshot vs current plan
@@ -2210,6 +2533,21 @@ else
         echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
         echo ""
         echo "After fixing manually, re-run the loop to continue."
+
+        # Post verifier failure alert to Discord (if configured)
+        if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+          {
+            echo "**⚠️ Verifier Failed - Loop Stopped**"
+            echo ""
+            echo "Iteration: $i"
+            echo "Consecutive failures: $CONSECUTIVE_VERIFIER_FAILURES"
+            echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
+            echo ""
+            echo "**Recent failures:**"
+            sed -n '/^\[FAIL\]/p' .verify/latest.txt 2>/dev/null | head -10
+          } | "$ROOT/bin/discord-post" 2>/dev/null || true
+        fi
+
         exit 1
       else
         echo ""
@@ -2219,10 +2557,36 @@ else
         echo "Next iteration will inject LAST_VERIFIER_RESULT: FAIL"
         echo "Ralph should fix the AC failures before picking new tasks."
         echo ""
+
+        # Post verifier failure alert to Discord (if configured)
+        if [[ -n "$DISCORD_WEBHOOK_URL" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+          {
+            echo "**⚠️ Verifier Failed - Retry Scheduled**"
+            echo ""
+            echo "Iteration: $i"
+            echo "Status: Giving Ralph one retry iteration"
+            echo "Failed rules: $LAST_VERIFIER_FAILED_RULES"
+            echo ""
+            echo "**Top failures:**"
+            sed -n '/^\[FAIL\]/p' .verify/latest.txt 2>/dev/null | head -5
+          } | "$ROOT/bin/discord-post" 2>/dev/null || true
+        fi
       fi
     else
       # Reset counter on successful iteration
       CONSECUTIVE_VERIFIER_FAILURES=0
+    fi
+
+    # Update THUNK.md from completed tasks in workers/IMPLEMENTATION_PLAN.md
+    # This makes THUNK append deterministic and prevents markdown table corruption.
+    if [[ -x "$RALPH/update_thunk_from_plan.sh" ]]; then
+      echo "Updating THUNK from plan completions..."
+      if (cd "$RALPH" && bash update_thunk_from_plan.sh) 2>&1; then
+        echo "✓ THUNK update complete"
+      else
+        echo "⚠ THUNK update failed (non-blocking)"
+      fi
+      echo ""
     fi
 
     # Run gap radar after BUILD iteration completes (task 7.4.1)
@@ -2242,14 +2606,95 @@ else
 
     emit_event --event iteration_end --iter "$i" --status ok
 
+    # Generate iteration summary for Discord/observability (task 34.1.2)
+    generate_iteration_summary "$i" "$current_phase" "$CURRENT_LOG_FILE"
+
     # Emit ITER_END marker for rollflow_analyze (task X.1.1)
     iter_end_ts="$(($(date +%s%N) / 1000000))"
     emit_marker ":::ITER_END::: iter=$i run_id=$ROLLFLOW_RUN_ID ts=$iter_end_ts"
+
+    # Post iteration summary to Discord (if configured) - task 34.1.3
+    if [[ -n "${DISCORD_WEBHOOK_URL:-}" ]] && [[ -x "$ROOT/bin/discord-post" ]]; then
+      echo ""
+      echo "Posting iteration summary to Discord..."
+
+      # Use the generated summary (includes Ralph's structured summary from logs)
+      summary_content=$(generate_iteration_summary "$i" "$current_phase" "$CURRENT_LOG_FILE")
+
+      # Calculate cache time saved
+      time_saved_display=""
+      if [[ "$CACHE_SKIP" == "true" ]] && [[ $CACHE_HITS -gt 0 ]]; then
+        TIME_SAVED_SEC=$((TIME_SAVED_MS / 1000))
+        time_saved_display="Time saved: ${TIME_SAVED_SEC}s"
+      fi
+
+      # Get current verifier status
+      verifier_status="Unknown"
+      if [[ -f ".verify/latest.txt" ]]; then
+        verifier_status=$(grep "^SUMMARY" .verify/latest.txt | head -1 || echo "Unknown")
+      fi
+
+      # Post iteration summary to Discord (summary already contains Run info)
+      # Avoid re-printing the full summary to the interactive terminal (too noisy).
+      completion_log="${LOGDIR}/iter${i}_completion.log"
+      echo "$summary_content" | "$ROOT/bin/discord-post" >>"$completion_log" 2>&1
+      discord_rc=$?
+
+      if [[ $discord_rc -eq 0 ]]; then
+        echo "✓ Discord update posted"
+      else
+        echo "⚠ Discord post failed (non-blocking)"
+      fi
+      echo ""
+    fi
   done
 fi
 
 # Ensure no pending changes are left uncommitted when the loop ends
-flush_scoped_commit_if_needed "end_of_run"
+# End-of-run is special: we ALWAYS commit (unless DRY_RUN=true) so the worktree
+# is not left in a staged/dirty state.
+#
+# Also run final "common bug" catchers before committing:
+#   - fix-markdown.sh (only if markdown changed)
+#   - pre-commit (if installed)
+#   - verifier.sh (non-blocking)
+if [[ "${DRY_RUN:-false}" != "true" ]]; then
+  # Detect changed files (staged + unstaged)
+  end_changed_files="$(
+    git diff --name-only HEAD 2>/dev/null
+    git diff --name-only --cached 2>/dev/null
+  )"
+  end_md_changed=$(echo "$end_changed_files" | grep -c '\.md$' || true)
+
+  if [[ -f "$RALPH/fix-markdown.sh" ]] && [[ "$end_md_changed" -gt 0 ]]; then
+    echo "Running end-of-run markdown auto-fix ($end_md_changed .md file(s) changed)..."
+    (cd "$ROOT" && bash "$RALPH/fix-markdown.sh" . 2>/dev/null) || true
+  fi
+
+  # Stage changes after auto-fix so pre-commit/verifier see latest state
+  stage_scoped_changes || true
+
+  # Run pre-commit on the staged set (if available)
+  if command -v pre-commit &>/dev/null; then
+    if ! git diff --cached --quiet; then
+      echo "Running end-of-run pre-commit on staged files..."
+      (cd "$ROOT" && pre-commit run 2>/dev/null) || true
+    else
+      echo "Skipping end-of-run pre-commit (nothing staged)"
+    fi
+  fi
+
+  # Run verifier (non-blocking) for visibility
+  if [[ -x "$VERIFY_SCRIPT" ]]; then
+    echo "Running end-of-run verifier (non-blocking)..."
+    (cd "$RALPH" && bash verifier.sh 2>/dev/null) || true
+  fi
+
+  # Force commit at end-of-run (policy override)
+  COMMIT_POLICY=always flush_scoped_commit_if_needed "end_of_run"
+else
+  flush_scoped_commit_if_needed "end_of_run"
+fi
 
 # Print cache statistics summary at end of run
 if [[ "$CACHE_SKIP" == "true" ]]; then
@@ -2266,3 +2711,5 @@ if [[ "$CACHE_SKIP" == "true" ]]; then
   echo "========================================"
   echo ""
 fi
+
+# Loop completion summary is now sent after each iteration (removed duplicate)

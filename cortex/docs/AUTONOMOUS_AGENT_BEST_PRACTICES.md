@@ -177,13 +177,13 @@ You are working on EXACTLY ONE task:
 
 DO NOT:
 
-- Work on other tasks from IMPLEMENTATION_PLAN.md
+- Work on other tasks from workers/IMPLEMENTATION_PLAN.md
 
 - Fix unrelated issues you notice
 
 - Refactor beyond the task scope
 
-If you discover related issues, note them in THUNK.md for future tasks.
+If you discover related issues, note them in workers/ralph/THUNK.md for future tasks.
 
 ```text
 
@@ -210,7 +210,7 @@ instance_template: |-
 
 ### Step 1: Understand
 
-- Read the task from IMPLEMENTATION_PLAN.md
+- Read the task from workers/IMPLEMENTATION_PLAN.md
 
 - Read the target file(s) using head_file or read_file
 
@@ -238,7 +238,7 @@ instance_template: |-
 
 ### Step 5: Log
 
-- Append completion to THUNK.md
+- Append completion to workers/ralph/THUNK.md
 
 - Output :::BUILD_READY:::
 
@@ -256,7 +256,7 @@ instance_template: |-
 Before outputting :::BUILD_READY:::, verify:
 1. [ ] git status shows clean working tree OR committed changes
 2. [ ] No uncommitted modifications to target files
-3. [ ] THUNK.md has been updated with completion entry
+3. [ ] workers/ralph/THUNK.md has been updated with completion entry
 
 If ANY of these fail, DO NOT output :::BUILD_READY:::
 
@@ -509,7 +509,7 @@ Improved:
 4. patch_file with exact match
 5. diff workers/ralph/loop.sh to verify
 6. git_commit "feat(ralph): add .initialized security check"
-7. append_file THUNK.md with completion
+7. append_file workers/ralph/THUNK.md with completion
 8. Output: :::BUILD_READY:::
 
 ```text

@@ -8,14 +8,14 @@ brain/
 │   ├── AGENTS.md          # Your rules & task format
 │   ├── NEURONS.md         # This map
 │   ├── THOUGHTS.md        # Strategic context
-│   ├── IMPLEMENTATION_PLAN.md  # Tasks for Ralph
+│   ├── workers/IMPLEMENTATION_PLAN.md  # Tasks for Ralph
 │   └── docs/REPO_MAP.md   # Full detailed map
 │
 ├── workers/ralph/          # Execution layer
 │   ├── PROMPT.md          # Ralph's instructions (protected)
 │   ├── loop.sh            # Execution loop (protected)
-│   ├── IMPLEMENTATION_PLAN.md  # Ralph's task copy
-│   ├── THUNK.md           # Completion log
+│   ├── workers/IMPLEMENTATION_PLAN.md  # Ralph's task copy
+│   ├── workers/ralph/THUNK.md           # Completion log
 │   └── NEURONS.md         # Ralph's codebase map
 │
 ├── skills/                 # Knowledge base
@@ -35,8 +35,8 @@ brain/
 
 | I need to... | Read this |
 |--------------|-----------|
-| See active tasks | `IMPLEMENTATION_PLAN.md` |
-| See completed tasks | `workers/ralph/THUNK.md` |
+| See active tasks | `workers/IMPLEMENTATION_PLAN.md` |
+| See completed tasks | `workers/ralph/workers/ralph/THUNK.md` |
 | Fix a verifier error | `skills/SUMMARY.md` → Error table |
 | Understand project goals | `cortex/THOUGHTS.md` |
 | Learn a pattern | `skills/domains/<pattern>.md` |
@@ -46,8 +46,8 @@ brain/
 
 ## Files I Can Modify
 
-✅ `cortex/IMPLEMENTATION_PLAN.md`, `cortex/THOUGHTS.md`
-✅ `skills/self-improvement/GAP_BACKLOG.md`, `SKILL_BACKLOG.md`
+✅ `workers/workers/IMPLEMENTATION_PLAN.md`, `cortex/THOUGHTS.md`
+✅ `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md`, `SKILL_BACKLOG.md`
 
 ## Files I Cannot Modify
 

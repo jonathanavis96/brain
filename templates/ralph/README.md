@@ -9,8 +9,10 @@ This directory contains template files for bootstrapping new Ralph worker instan
 - **loop.sh** - Main Ralph execution loop (PLAN/BUILD cycles)
 - **verifier.sh** - Acceptance criteria validation
 - **current_ralph_tasks.sh** - Real-time task monitor (pending tasks)
+  - **Rule:** This is an interactive, continuously-refreshing monitor. **Do not pipe it** (no `| grep`, `| sed`, etc.). For snapshots/debugging use `timeout 2s bash current_ralph_tasks.sh --hide-completed`.
 - **thunk_ralph_tasks.sh** - Real-time task monitor (completed tasks log)
-- **sync_cortex_plan.sh** - Sync tasks from Cortex to Ralph IMPLEMENTATION_PLAN.md
+- **sync_workers_plan_to_cortex.sh** - Copy workers plan to cortex for review/visibility
+- **sync_brain_skills.sh** - Refresh vendored Brain knowledge at `./brain/skills/` (workspace-safe)
 - **pr-batch.sh** - Batch PR creation script
 - **init_verifier_baselines.sh** - Initialize verifier baseline hashes
 
@@ -22,16 +24,22 @@ This directory contains template files for bootstrapping new Ralph worker instan
 - **THOUGHTS.md** - Project vision and goals template
 - **VALIDATION_CRITERIA.project.md** - Acceptance criteria template
 - **IMPLEMENTATION_PLAN.project.md** - Task backlog template
-- **THUNK.md** - Completed task log template
+- **brain/workers/ralph/THUNK.md** - Completed task log template
+
+### Optional Utilities
+
+- **render_ac_status.sh** - Generate human-readable verifier status dashboard from `.verify/latest.txt`
+  - Usage: `./render_ac_status.sh` (stdout) or `./render_ac_status.sh --inline` (update IMPLEMENTATION_PLAN.md)
+  - Requires markers `<!-- AC_STATUS_START -->` and `<!-- AC_STATUS_END -->` in brain/workers/IMPLEMENTATION_PLAN.md for inline mode
 
 ### Template Sync Policy
 
-**Files that SHOULD stay in sync** (copy workers/ralph/ → templates/ralph/ when changed):
+**Files that SHOULD stay in sync** (copy brain/workers/ralph/ → templates/ralph/ when changed):
 
 - `verifier.sh` - Core verification logic
 - `current_ralph_tasks.sh` - Monitor display (Phase detection may differ)
 - `thunk_ralph_tasks.sh` - Monitor display
-- `sync_cortex_plan.sh` - Cortex integration
+- `sync_workers_plan_to_cortex.sh` - Copy workers plan to cortex for review/visibility
 - `pr-batch.sh` - PR automation
 - `init_verifier_baselines.sh` - Baseline initialization
 
@@ -41,7 +49,7 @@ This directory contains template files for bootstrapping new Ralph worker instan
   - Cache library integration (`source ../shared/cache.sh`)
   - Verifier state injection into BUILD mode prompts (lines 881-892)
   - Auto-fix integration (`fix-markdown.sh`, `pre-commit`) (lines 921-930)
-  - Cortex sync triggers (`sync_cortex_plan.sh`) (lines 935-945)
+  - Cortex copy triggers (`sync_workers_plan_to_cortex.sh`) (lines 935-945)
   - Cache configuration flags (`--cache-skip`, `--force-no-cache`, `--cache-mode`, `--cache-scope`)
   - Enhanced cleanup trap handling
   - ITER_START/ITER_END event markers for RollFlow analysis
@@ -51,13 +59,12 @@ This directory contains template files for bootstrapping new Ralph worker instan
   - Archive section detection to terminate task parsing
   - Enhanced priority section matching (excludes archived sections)
 
-**Files unique to workers/ralph/** (not in templates):
+**Files unique to Brain (not shipped in templates):**
 
 - `fix-markdown.sh` - Markdown auto-fix script (brain-specific tooling)
 - `ralph.sh` - Brain repository convenience wrapper
-- `new-project.sh` - Project bootstrapping (already at repo root)
-- `render_ac_status.sh` - Verifier status renderer (brain-specific)
-- `sync_completions_to_cortex.sh` - Brain-to-Cortex sync (brain-specific)
+- `new-project.sh` - Brain-only operator bootstrap tool (intentionally not shipped in downstream templates)
+- `sync_completions_to_cortex.sh` - Deprecated (no longer used)
 
 ## Why Template Drift Exists
 
@@ -85,9 +92,9 @@ The verifier includes template sync checks:
 
 ```bash
 # From brain repository root
-cp workers/ralph/<file> templates/ralph/<file>
+cp brain/workers/ralph/<file> templates/ralph/<file>
 git add templates/ralph/<file>
-git commit -m "sync(templates): update <file> from workers/ralph"
+git commit -m "sync(templates): update <file> from brain/workers/ralph"
 ```
 
 **If drift is intentional:**
@@ -96,7 +103,7 @@ Request a waiver via `.verify/request_waiver.sh` with detailed justification exp
 
 ## Using These Templates
 
-1. Copy entire `templates/ralph/` directory to your project's `workers/ralph/` or equivalent
+1. Copy entire `templates/ralph/` directory to your project's `brain/workers/ralph/`
 2. Customize `PROMPT.md`, `AGENTS.md`, `THOUGHTS.md` for your project
 3. Initialize verifier baselines: `bash init_verifier_baselines.sh`
 4. Create `rules/AC.rules` with your acceptance criteria
@@ -108,5 +115,5 @@ See `docs/BOOTSTRAPPING.md` for detailed setup instructions.
 
 - [workers/ralph/README.md](../../workers/ralph/README.md) - Brain Ralph implementation documentation
 - [docs/BOOTSTRAPPING.md](../../docs/BOOTSTRAPPING.md) - New project bootstrapping guide
-- [skills/domains/ralph/ralph-patterns.md](../../skills/domains/ralph/ralph-patterns.md) - Ralph loop architecture
-- [skills/domains/ralph/change-propagation.md](../../skills/domains/ralph/change-propagation.md) - Template sync patterns
+- [skills/domains/ralph/ralph-patterns.md](../../skills/domains/ralph/ralph-patterns.md) - Ralph loop architecture (in downstream projects, vendored under `./brain/skills/...`)
+- [skills/domains/ralph/change-propagation.md](../../skills/domains/ralph/change-propagation.md) - Template sync patterns (in downstream projects, vendored under `./brain/skills/...`)

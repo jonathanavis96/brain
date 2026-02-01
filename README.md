@@ -76,6 +76,18 @@ Cortex plans → Ralph builds → Brain improves → Your projects benefit.
 
 **First time here?** Pick your goal below. Each path takes 2-5 minutes.
 
+### 🎯 Start Here
+
+**New to Brain?** Here are the essential docs to get oriented:
+
+- **[NEURONS.md](NEURONS.md)** - Repository structure map (know where everything lives)
+- **[docs/TOOLS.md](docs/TOOLS.md)** - Available tools and utilities
+- **[docs/BOOTSTRAPPING.md](docs/BOOTSTRAPPING.md)** - Create new projects from templates
+- **[skills/SUMMARY.md](skills/SUMMARY.md)** - Skills overview and error quick reference
+- **[workers/IMPLEMENTATION_PLAN.md](workers/IMPLEMENTATION_PLAN.md)** - Current work plan and task backlog
+
+**Contributing?** See [CONTRIBUTING.md](CONTRIBUTING.md) for workflow and conventions.
+
 ### 🎯 Choose Your Path
 
 #### 🚀 I Want to Bootstrap a New Project
@@ -99,7 +111,7 @@ Goals: User auth, Dashboard, API integration
 EOF
 
 # 3. Bootstrap (creates GitHub repo + local clone with full AI infrastructure)
-bash new-project.sh MY_PROJECT.md
+bash scripts/new-project.sh MY_PROJECT.md
 
 # 4. Start building!
 cd ~/code/my-app
@@ -110,7 +122,7 @@ bash ralph/loop.sh --iterations 5
 
 - ✅ GitHub repo created automatically
 - ✅ Complete Ralph loop infrastructure (worker + verifier)
-- ✅ Project files: `THOUGHTS.md`, `NEURONS.md`, `IMPLEMENTATION_PLAN.md`
+- ✅ Project files: `THOUGHTS.md`, `NEURONS.md`, `workers/IMPLEMENTATION_PLAN.md`
 - ✅ Connection to brain's skills library
 - ✅ Pre-configured validation rules
 
@@ -152,7 +164,7 @@ ls domains/  # shell, python, frontend, backend, infrastructure, etc.
 **📖 Explore the library:**
 
 - **[skills/SUMMARY.md](skills/SUMMARY.md)** - Quick overview and error reference
-- **[skills/index.md](skills/index.md)** - Complete catalog of all 119 skills
+- **[skills/index.md](skills/index.md)** - Complete catalog of all 120 skills
 - **[skills/playbooks/](skills/playbooks/)** - Step-by-step procedures for common tasks
 
 ---
@@ -242,7 +254,7 @@ brain/
 │   └── cerebras/           # Fast inference worker
 │
 ├── cortex/                 # Manager layer (plans work)
-│   ├── IMPLEMENTATION_PLAN.md
+│   ├── workers/IMPLEMENTATION_PLAN.md
 │   └── THOUGHTS.md
 │
 └── rules/                  # Acceptance criteria & validation
@@ -341,7 +353,7 @@ EOF
 
 ### Self-Improvement
 
-Brain improves itself using the Ralph loop. Tasks in `IMPLEMENTATION_PLAN.md` get executed automatically.
+Brain improves itself using the Ralph loop. Tasks in `workers/IMPLEMENTATION_PLAN.md` get executed automatically.
 
 ### Token Efficiency
 
@@ -403,7 +415,7 @@ Key areas for contribution:
 
 1. **Add Skills** - Document patterns you've discovered (use [skills/self-improvement/SKILL_TEMPLATE.md](skills/self-improvement/SKILL_TEMPLATE.md))
 2. **Improve Templates** - Enhance project scaffolding (follow template sync rules in CONTRIBUTING.md)
-3. **Report Gaps** - Add entries to `skills/self-improvement/GAP_BACKLOG.md`
+3. **Report Gaps** - Add entries to `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md`
 4. **Fix Bugs** - Create issues or submit PRs (run `pre-commit run --all-files` before committing)
 
 ### Quick Contribution Guide
@@ -462,6 +474,6 @@ MIT
 
 <div align="center">
 
-**Get Started:** `bash setup.sh` then `bash workers/ralph/new-project.sh MY_PROJECT.md`
+**Get Started:** `bash setup.sh` then `bash scripts/new-project.sh MY_PROJECT.md`
 
 </div>

@@ -1,0 +1,1659 @@
+"""Brain Map FastAPI Backend - Main Application Entry Point."""
+
+import logging
+import os
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+import yaml
+
+from app.watcher import FileWatcher
+
+
+class PositionUpdate(BaseModel):
+    x: float
+    y: float
+
+
+class CommentCreate(BaseModel):
+    author: str = Field(min_length=1)
+    text: str = Field(min_length=1)
+    timestamp: str | None = None
+    replies: list[dict] = Field(default_factory=list)
+
+
+class NodeCreate(BaseModel):
+    id: str | None = None
+    title: str = Field(min_length=1)
+    type: str = "Inbox"
+    status: str = "idea"
+    tags: list[str] = Field(default_factory=list)
+    priority: str | None = None
+    risk: str | None = None
+    owner: str | None = None
+    source_links: list[str] = Field(default_factory=list)
+    acceptance_criteria: list[str] = Field(default_factory=list)
+    links: list[dict] = Field(default_factory=list)
+    body_md: str = Field(default="", max_length=100000)  # Limit to ~100KB
+
+
+class NodeUpdate(BaseModel):
+    id: str | None = None
+    title: str | None = None
+    type: str | None = None
+    status: str | None = None
+    tags: list[str] | None = None
+    priority: str | None = None
+    risk: str | None = None
+    owner: str | None = None
+    source_links: list[str] | None = None
+    acceptance_criteria: list[str] | None = None
+    links: list[dict] | None = None
+    body_md: str | None = Field(default=None, max_length=100000)  # Limit to ~100KB
+
+
+class GeneratePlanOutput(BaseModel):
+    write: bool = False
+    path: str = "app/brain-map/generated/IMPLEMENTATION_PLAN.generated.md"
+
+
+class GeneratePlanRequest(BaseModel):
+    selection: list[str] = Field(min_length=1)
+    depth: int = Field(default=2, ge=0)
+    include_rel_types: list[str] = Field(default_factory=list)
+    exclude_rel_types: list[str] = Field(default_factory=list)
+    output: GeneratePlanOutput = Field(default_factory=GeneratePlanOutput)
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
+
+# Configure rate limiting (protect against accidental DoS even on localhost)
+limiter = Limiter(key_func=get_remote_address)
+
+# Global file watcher instance
+file_watcher: FileWatcher | None = None
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Manage application lifecycle (startup/shutdown)."""
+    global file_watcher
+
+    # Startup: Initialize and start file watcher
+    logger.info("Starting Brain Map backend")
+    file_watcher = FileWatcher(debounce_seconds=2.0)
+
+    try:
+        await file_watcher.start()
+        logger.info("File watcher started successfully")
+    except Exception as e:
+        logger.error(f"Failed to start file watcher: {e}", exc_info=True)
+        # Continue running even if watcher fails (degraded mode)
+
+    yield
+
+    # Shutdown: Stop file watcher gracefully
+    logger.info("Shutting down Brain Map backend")
+    if file_watcher:
+        try:
+            await file_watcher.stop()
+            logger.info("File watcher stopped successfully")
+        except Exception as e:
+            logger.error(f"Error stopping file watcher: {e}", exc_info=True)
+
+
+app = FastAPI(
+    title="Brain Map API",
+    description="Local-first knowledge graph API for Brain Map system",
+    version="0.1.0",
+    lifespan=lifespan,
+    root_path="/api/v1",  # API versioning for future compatibility
+)
+
+# Register rate limiter
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# =============================================================================
+# SECURITY NOTES - Localhost-Only Application
+# =============================================================================
+# This API is designed for LOCAL USE ONLY and should never be exposed publicly.
+# Security model:
+#   - NO AUTHENTICATION: Assumes single-user localhost environment
+#   - NO CSRF PROTECTION: allow_credentials disabled (no cookies used)
+#   - BASIC RATE LIMITING: Protects against accidental DoS (see @limiter decorators)
+#   - NO TLS: Plain HTTP sufficient for localhost traffic
+#
+# ⚠️ WARNING: DO NOT expose this API to network interfaces beyond localhost!
+#    If you need multi-user or remote access, you MUST add:
+#      1. Authentication (e.g., JWT tokens, API keys)
+#      2. CSRF protection (if using cookies/sessions)
+#      3. Rate limiting (e.g., slowapi)
+#      4. TLS/HTTPS (reverse proxy with nginx/caddy)
+#      5. Input validation and sanitization
+# =============================================================================
+
+# CORS middleware for local development (frontend on :5173, backend on :8000)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=False,  # No cookies/sessions - safer for localhost-only use
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Accept"],
+)
+
+
+@app.get("/health")
+async def health_check() -> dict[str, str]:
+    """Health check endpoint for monitoring and startup verification."""
+    return {"status": "ok"}
+
+
+@app.get("/debug/notes")
+async def debug_notes() -> dict[str, list[str] | int]:
+    """Debug endpoint to verify note discovery.
+
+    This is intentionally gated to reduce accidental exposure.
+
+    Enable with: BRAINMAP_ENABLE_DEBUG_ENDPOINTS=1
+    """
+    if os.getenv("BRAINMAP_ENABLE_DEBUG_ENDPOINTS") != "1":
+        raise HTTPException(status_code=404, detail={"error": "NOT_FOUND"})
+
+    from app.notes import discover_notes
+
+    discovered = discover_notes()
+    return {
+        "count": len(discovered),
+        "notes": discovered,
+    }
+
+
+@app.get("/graph")
+async def get_graph(
+    type: list[str] | None = None,
+    status: list[str] | None = None,
+    tags: list[str] | None = None,
+    tags_mode: str = "all",
+    updated_since: str | None = None,
+    updated_within_days: int | None = None,
+    include_rel_types: list[str] | None = None,
+    exclude_rel_types: list[str] | None = None,
+    limit: int = 100,
+    offset: int = 0,
+) -> dict:
+    """Return graph snapshot for rendering.
+
+    Query parameters (all optional):
+        type: Filter by node types (can be repeated).
+        status: Filter by node statuses (can be repeated).
+        tags: Filter by tags (can be repeated).
+        tags_mode: Tag matching mode ("all" or "any"), default "all".
+        updated_since: ISO8601 timestamp filter (nodes updated after this).
+        updated_within_days: Filter nodes updated within N days.
+        include_rel_types: Include only these relationship types (repeated).
+        exclude_rel_types: Exclude these relationship types (repeated).
+        limit: Maximum nodes to return (default 100).
+        offset: Number of nodes to skip (default 0).
+
+    Returns:
+        JSON response with nodes, edges, and pagination info.
+
+    Status codes:
+        200 OK: Successful graph fetch.
+        400 BAD REQUEST: Invalid filter values or relationship types.
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from app.index import get_graph_snapshot
+
+    # Validate tags_mode
+    if tags_mode not in ["all", "any"]:
+        raise HTTPException(status_code=400, detail="tags_mode must be 'all' or 'any'")
+
+    try:
+        nodes, edges, total = get_graph_snapshot(
+            type_filter=type,
+            status_filter=status,
+            tags_filter=tags,
+            tags_mode=tags_mode,
+            updated_since=updated_since,
+            updated_within_days=updated_within_days,
+            include_rel_types=include_rel_types,
+            exclude_rel_types=exclude_rel_types,
+            limit=limit,
+            offset=offset,
+        )
+
+        return {
+            "nodes": nodes,
+            "edges": edges,
+            "page": {"limit": limit, "offset": offset, "total": total},
+        }
+
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
+@app.get("/node/{node_id}")
+async def get_node(node_id: str) -> dict:
+    """Fetch a single node by ID.
+
+    Args:
+        node_id: Node ID to fetch.
+
+    Returns:
+        JSON response with node metadata and body_md.
+
+    Status codes:
+        200 OK: Node found and returned.
+        404 NOT FOUND: Node ID not found.
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from app.index import get_index_connection
+    from app.notes import load_note_content
+    from app.frontmatter import parse_and_validate
+    import json
+
+    try:
+        conn = get_index_connection()
+        cursor = conn.cursor()
+
+        # Fetch node from index
+        cursor.execute(
+            """
+            SELECT id, type, title, filepath, created_at, modified_at,
+                   tags, status, priority, context, acceptance_criteria,
+                   frontmatter_json
+            FROM nodes
+            WHERE id = ?
+        """,
+            (node_id,),
+        )
+
+        row = cursor.fetchone()
+
+        if not row:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "NODE_NOT_FOUND",
+                    "message": f"Node '{node_id}' not found",
+                },
+            )
+
+        # Load markdown content to extract body
+        try:
+            content = load_note_content(row["filepath"])
+            frontmatter, body, _ = parse_and_validate(content)
+        except (FileNotFoundError, ValueError) as e:
+            # Index exists but file is missing or corrupt
+            raise HTTPException(
+                status_code=500,
+                detail={
+                    "error": "INTERNAL_ERROR",
+                    "message": f"Failed to load node content: {str(e)}",
+                },
+            )
+
+        # Parse frontmatter JSON to get links
+        frontmatter_data = json.loads(row["frontmatter_json"])
+        relationships = frontmatter_data.get("relationships", [])
+
+        # Convert relationships to links format
+        links = []
+        for rel in relationships:
+            link = {"to": rel.get("target"), "type": rel.get("type", "related_to")}
+            if rel.get("title"):
+                link["title"] = rel["title"]
+            if rel.get("note"):
+                link["note"] = rel["note"]
+            if rel.get("created_at"):
+                link["created_at"] = rel["created_at"]
+            links.append(link)
+
+        # Build node response
+        node = {
+            "id": row["id"],
+            "title": row["title"],
+            "type": row["type"],
+            "status": row["status"],
+            "tags": json.loads(row["tags"]) if row["tags"] else [],
+            "created_at": row["created_at"],
+            "updated_at": row["modified_at"],
+            "priority": row["priority"],
+            "source_links": frontmatter_data.get("source_links", []),
+            "acceptance_criteria": json.loads(row["acceptance_criteria"])
+            if row["acceptance_criteria"]
+            else [],
+            "links": links,
+        }
+
+        # Add optional fields if present
+        if frontmatter_data.get("risk"):
+            node["risk"] = frontmatter_data["risk"]
+        if frontmatter_data.get("owner"):
+            node["owner"] = frontmatter_data["owner"]
+        if row["context"]:
+            node["context"] = row["context"]
+
+        conn.close()
+
+        return {"node": node, "body_md": body.strip() if body else ""}
+
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
+@app.put("/node/{node_id}/position")
+@limiter.limit("60/minute")  # Allow 60 position updates per minute
+async def update_node_position(request: Request, node_id: str, update: PositionUpdate) -> dict:
+    """Update node position in frontmatter.
+
+    Args:
+        node_id: Node ID to update.
+        request: JSON body with {x: float, y: float}.
+
+    Returns:
+        JSON response with success status.
+
+    Status codes:
+        200 OK: Position updated successfully.
+        400 BAD REQUEST: Invalid position data.
+        404 NOT FOUND: Node ID not found.
+    """
+    from datetime import datetime, timezone
+    from app.notes import load_note_content, _find_repo_root
+    from app.frontmatter import parse_and_validate
+    import yaml
+
+    x = update.x
+    y = update.y
+
+    # Find node file
+    repo_root = _find_repo_root()
+    notes_dir = repo_root / "notes"
+    file_path = None
+    for f in notes_dir.rglob("*.md"):
+        try:
+            content = load_note_content(str(f))
+            fm, _, _ = parse_and_validate(content)
+            if fm.get("id") == node_id:
+                file_path = f
+                break
+        except Exception:
+            continue
+
+    if file_path is None:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "error": "NODE_NOT_FOUND",
+                "message": f"Node '{node_id}' not found",
+            },
+        )
+
+    # Load and update frontmatter
+    try:
+        content = load_note_content(str(file_path))
+        frontmatter, body, _ = parse_and_validate(content)
+    except (FileNotFoundError, ValueError) as e:
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "INTERNAL_ERROR",
+                "message": f"Failed to load node: {str(e)}",
+            },
+        )
+
+    # Update position and timestamp
+    frontmatter["position"] = {"x": x, "y": y}
+    frontmatter["updated_at"] = datetime.now(timezone.utc).isoformat()
+
+    # Write updated content
+    frontmatter_yaml = yaml.dump(frontmatter, default_flow_style=False, sort_keys=False)
+    new_content = f"---\n{frontmatter_yaml}---\n\n{body}"
+
+    temp_path = file_path.with_suffix(".tmp")
+    try:
+        temp_path.write_text(new_content, encoding="utf-8")
+        temp_path.replace(file_path)
+    except Exception as e:
+        try:
+            temp_path.unlink()
+        except Exception:
+            pass
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "WRITE_ERROR",
+                "message": f"Failed to write position: {str(e)}",
+            },
+        )
+
+    return {
+        "success": True,
+        "node_id": node_id,
+        "position": {"x": x, "y": y},
+    }
+
+
+@app.put("/node/{node_id}")
+@limiter.limit("30/minute")  # Allow 30 node updates per minute
+async def update_node(request: Request, node_id: str, node_update: NodeUpdate) -> dict:
+    """Update an existing node (markdown-first).
+
+    Args:
+        node_id: Node ID to update (from path).
+        request: JSON body with fields to update.
+
+    Returns:
+        JSON response with updated node details and reindex status.
+
+    Status codes:
+        200 OK: Node updated successfully.
+        400 BAD REQUEST: Validation error (e.g., attempting to change id).
+        404 NOT FOUND: Node ID not found.
+        503 SERVICE UNAVAILABLE: Index unavailable or rebuild failed.
+    """
+    from datetime import datetime, timezone
+    from pathlib import Path
+    from app.notes import load_note_content, _find_repo_root
+    from app.frontmatter import parse_and_validate
+    from app.index import rebuild_index, IndexRebuildError
+
+    # Reject attempts to change id
+    if node_update.id is not None and node_update.id != node_id:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "VALIDATION_ERROR",
+                "message": "Cannot change node id",
+            },
+        )
+
+    # Check if node exists in index
+    try:
+        from app.index import get_index_connection
+
+        conn = get_index_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT filepath FROM nodes WHERE id = ?", (node_id,))
+        row = cursor.fetchone()
+        conn.close()
+
+        if not row:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "NODE_NOT_FOUND",
+                    "message": f"Node '{node_id}' not found",
+                },
+            )
+
+        file_path = Path(row["filepath"])
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+    # Load existing note
+    try:
+        content = load_note_content(str(file_path))
+        frontmatter, body, _ = parse_and_validate(content)
+    except (FileNotFoundError, ValueError) as e:
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "INTERNAL_ERROR",
+                "message": f"Failed to load existing node: {str(e)}",
+            },
+        )
+
+    # Update frontmatter fields from request
+    now = datetime.now(timezone.utc).isoformat()
+    frontmatter["updated_at"] = now
+
+    # Update allowed fields
+    if node_update.title is not None:
+        frontmatter["title"] = node_update.title
+
+    if node_update.type is not None:
+        # Validate type enum
+        valid_types = {
+            "Inbox",
+            "Concept",
+            "System",
+            "Decision",
+            "TaskContract",
+            "Artifact",
+        }
+        if node_update.type not in valid_types:
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "error": "VALIDATION_ERROR",
+                    "message": f"Invalid type '{request.type}'. Allowed values: {sorted(valid_types)}",
+                },
+            )
+        frontmatter["type"] = node_update.type
+
+    if node_update.status is not None:
+        # Validate status enum
+        valid_statuses = {"idea", "planned", "active", "blocked", "done", "archived"}
+        if node_update.status not in valid_statuses:
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "error": "VALIDATION_ERROR",
+                    "message": f"Invalid status '{request.status}'. Allowed values: {sorted(valid_statuses)}",
+                },
+            )
+        frontmatter["status"] = node_update.status
+
+    if node_update.tags is not None:
+        frontmatter["tags"] = node_update.tags
+
+    if node_update.priority is not None:
+        frontmatter["priority"] = node_update.priority
+
+    if node_update.risk is not None:
+        frontmatter["risk"] = node_update.risk
+
+    if node_update.owner is not None:
+        frontmatter["owner"] = node_update.owner
+
+    if node_update.source_links is not None:
+        frontmatter["source_links"] = node_update.source_links
+
+    if node_update.acceptance_criteria is not None:
+        frontmatter["acceptance_criteria"] = node_update.acceptance_criteria
+
+    # Handle links (convert to relationships format)
+    if node_update.links is not None:
+        links = request.links
+        if links:
+            relationships = []
+            for link in links:
+                rel = {"target": link["to"], "type": link.get("type", "related_to")}
+                if link.get("title"):
+                    rel["title"] = link["title"]
+                if link.get("note"):
+                    rel["note"] = link["note"]
+                if link.get("created_at"):
+                    rel["created_at"] = link["created_at"]
+                relationships.append(rel)
+            frontmatter["relationships"] = relationships
+        else:
+            # Empty links list - remove relationships
+            frontmatter.pop("relationships", None)
+
+    # Update body if provided
+    if node_update.body_md is not None:
+        body = request.body_md
+
+    # Build updated markdown content
+    import yaml
+
+    frontmatter_yaml = yaml.dump(frontmatter, default_flow_style=False, sort_keys=False)
+    new_content = f"---\n{frontmatter_yaml}---\n\n{body}"
+
+    # Atomic write: write to temp file, then rename
+    temp_path = file_path.with_suffix(".tmp")
+    try:
+        temp_path.write_text(new_content, encoding="utf-8")
+        temp_path.replace(file_path)
+    except Exception as e:
+        # Clean up temp file on error
+        try:
+            temp_path.unlink()
+        except Exception:
+            pass
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "WRITE_ERROR",
+                "message": f"Failed to write updated node: {str(e)}",
+            },
+        )
+
+    # Get repo-relative path for response
+    try:
+        repo_root = _find_repo_root()
+        source_path = str(file_path.relative_to(repo_root))
+    except Exception:
+        source_path = str(file_path)
+
+    # Rebuild index
+    reindexed = False
+    try:
+        rebuild_index()
+        reindexed = True
+    except IndexRebuildError as e:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": f"Failed to rebuild index: {str(e)}",
+            },
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": f"Failed to rebuild index: {str(e)}",
+            },
+        )
+
+    # Return 200 with node details
+    response_data = {
+        "node": {
+            "id": node_id,
+            "source_path": source_path,
+            "updated_at": now,
+        },
+        "reindexed": reindexed,
+    }
+
+    return response_data
+
+
+@app.post("/node/{node_id}/comments", status_code=201)
+@limiter.limit("20/minute")  # Allow 20 comments per minute
+async def add_comment(request: Request, node_id: str, comment: CommentCreate) -> dict:
+    """Add a comment to a node (stored in frontmatter).
+
+    Args:
+        node_id: Node ID to add comment to.
+        request: JSON body with comment fields {author, text, timestamp?, replies?}.
+
+    Returns:
+        JSON response with comment details and reindex status.
+
+    Status codes:
+        201 CREATED: Comment added successfully.
+        400 BAD REQUEST: Validation error (missing required fields).
+        404 NOT FOUND: Node ID not found.
+        503 SERVICE UNAVAILABLE: Index unavailable or rebuild failed.
+    """
+    from datetime import datetime, timezone
+    from pathlib import Path
+    from app.notes import load_note_content
+    from app.frontmatter import parse_and_validate
+    from app.index import rebuild_index, IndexRebuildError
+
+    # Load existing node
+    try:
+        from app.index import get_index_connection
+
+        conn = get_index_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT file_path FROM nodes WHERE id = ?", (node_id,))
+        row = cur.fetchone()
+        if not row:
+            raise HTTPException(
+                status_code=404,
+                detail={"error": "NOT_FOUND", "message": f"Node '{node_id}' not found"},
+            )
+        file_path = Path(row[0])
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "SERVICE_UNAVAILABLE",
+                "message": f"Failed to query index: {str(e)}",
+            },
+        )
+
+    # Load and parse existing frontmatter
+    try:
+        content = load_note_content(file_path)
+        frontmatter, body, warnings = parse_and_validate(content)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "INTERNAL_ERROR",
+                "message": f"Failed to load existing node: {str(e)}",
+            },
+        )
+
+    # Build comment object
+    now = datetime.now(timezone.utc).isoformat()
+    comment_data = {
+        "author": comment.author,
+        "text": comment.text,
+        "timestamp": comment.timestamp or now,
+        "replies": comment.replies,
+    }
+
+    # Add to comments array in frontmatter
+    if "comments" not in frontmatter:
+        frontmatter["comments"] = []
+    frontmatter["comments"].append(comment_data)
+
+    # Update modified timestamp
+    frontmatter["updated_at"] = now
+
+    # Build updated markdown content
+    import yaml
+
+    frontmatter_yaml = yaml.dump(frontmatter, default_flow_style=False, sort_keys=False)
+    new_content = f"---\n{frontmatter_yaml}---\n\n{body}"
+
+    # Atomic write: write to temp file, then rename
+    temp_path = file_path.with_suffix(".tmp")
+    try:
+        temp_path.write_text(new_content, encoding="utf-8")
+        temp_path.replace(file_path)
+    except Exception as e:
+        # Clean up temp file on error
+        try:
+            temp_path.unlink()
+        except Exception:
+            pass
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "WRITE_ERROR",
+                "message": f"Failed to update node file: {str(e)}",
+            },
+        )
+
+    # Trigger reindex
+    try:
+        rebuild_index()
+    except IndexRebuildError as e:
+        logger.error(f"Index rebuild failed after adding comment: {e}")
+        # Comment was written successfully, but index is stale
+        return {
+            "status": "comment_added",
+            "node_id": node_id,
+            "comment": comment,
+            "reindex_status": "failed",
+            "message": "Comment added but index rebuild failed",
+        }
+
+    return {
+        "status": "comment_added",
+        "node_id": node_id,
+        "comment": comment,
+        "reindex_status": "success",
+    }
+
+
+@app.post("/node", status_code=201)
+@limiter.limit("20/minute")  # Allow 20 node creations per minute
+async def create_node(request: Request, node_data: NodeCreate) -> dict:
+    """Create a new node (markdown-first).
+
+    Args:
+        request: JSON body with node fields (id optional).
+
+    Returns:
+        JSON response with created node details and reindex status.
+
+    Status codes:
+        201 CREATED: Node created successfully.
+        400 BAD REQUEST: Validation error (invalid fields).
+        409 CONFLICT: Duplicate ID detected.
+        503 SERVICE UNAVAILABLE: Index unavailable and rebuild failed.
+    """
+    from datetime import datetime, timezone
+    import uuid
+    from app.notes import get_notes_root, _find_repo_root
+    from app.index import rebuild_index, get_index_connection, IndexRebuildError
+
+    # Extract fields from request
+    node_id = node_data.id
+    title = node_data.title
+    node_type = node_data.type
+    status = node_data.status
+    tags = node_data.tags
+    priority = node_data.priority
+    risk = node_data.risk
+    owner = node_data.owner
+    source_links = node_data.source_links
+    acceptance_criteria = node_data.acceptance_criteria
+    links = node_data.links
+    body_md = node_data.body_md
+
+    # Validate type enum
+    valid_types = {"Inbox", "Concept", "System", "Decision", "TaskContract", "Artifact"}
+    if node_type not in valid_types:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "VALIDATION_ERROR",
+                "message": f"Invalid type '{node_type}'. Allowed values: {sorted(valid_types)}",
+            },
+        )
+
+    # Validate status enum
+    valid_statuses = {"idea", "planned", "active", "blocked", "done", "archived"}
+    if status not in valid_statuses:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "VALIDATION_ERROR",
+                "message": f"Invalid status '{status}'. Allowed values: {sorted(valid_statuses)}",
+            },
+        )
+
+    # Generate ID if not provided
+    if not node_id:
+        node_id = f"bm_{uuid.uuid4()}"
+
+    # Validate ID format (must start with bm_)
+    if not node_id.startswith("bm_"):
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "VALIDATION_ERROR",
+                "message": "Invalid ID format: must start with 'bm_'",
+            },
+        )
+
+    # Check for duplicate ID in existing index
+    try:
+        conn = get_index_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id FROM nodes WHERE id = ?", (node_id,))
+        if cursor.fetchone():
+            conn.close()
+            raise HTTPException(
+                status_code=409,
+                detail={
+                    "error": "DUPLICATE_ID",
+                    "message": f"Node with id '{node_id}' already exists",
+                },
+            )
+        conn.close()
+    except FileNotFoundError:
+        # Index doesn't exist yet - that's fine, we'll create it
+        pass
+
+    # Build frontmatter dictionary
+    now = datetime.now(timezone.utc).isoformat()
+    frontmatter = {
+        "id": node_id,
+        "title": title,
+        "type": node_type,
+        "status": status,
+        "tags": tags,
+        "created_at": now,
+        "updated_at": now,
+    }
+
+    if priority:
+        frontmatter["priority"] = priority
+    if risk:
+        frontmatter["risk"] = risk
+    if owner:
+        frontmatter["owner"] = owner
+    if source_links:
+        frontmatter["source_links"] = source_links
+    if acceptance_criteria:
+        frontmatter["acceptance_criteria"] = acceptance_criteria
+
+    # Convert links to relationships format
+    if links:
+        relationships = []
+        for link in links:
+            rel = {"target": link["to"], "type": link.get("type", "related_to")}
+            if link.get("title"):
+                rel["title"] = link["title"]
+            if link.get("note"):
+                rel["note"] = link["note"]
+            if link.get("created_at"):
+                rel["created_at"] = link["created_at"]
+            relationships.append(rel)
+        frontmatter["relationships"] = relationships
+
+    # Generate markdown content
+    frontmatter_yaml = yaml.dump(
+        frontmatter, default_flow_style=False, allow_unicode=True, sort_keys=False
+    )
+    markdown_content = f"---\n{frontmatter_yaml}---\n\n{body_md}"
+
+    # Determine file path (use sanitized title for filename)
+    notes_root = get_notes_root()
+    safe_title = "".join(
+        c if c.isalnum() or c in (" ", "-", "_") else "_" for c in title
+    )
+    safe_title = safe_title.replace(" ", "_").lower()[:50]  # Limit length
+    filename = f"{safe_title}.md"
+
+    # Ensure filename is unique
+    file_path = notes_root / filename
+    counter = 1
+    while file_path.exists():
+        filename = f"{safe_title}_{counter}.md"
+        file_path = notes_root / filename
+        counter += 1
+
+    # Write markdown file atomically
+    try:
+        notes_root.mkdir(parents=True, exist_ok=True)
+        file_path.write_text(markdown_content, encoding="utf-8")
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "INTERNAL_ERROR",
+                "message": f"Failed to write note file: {str(e)}",
+            },
+        )
+
+    # Get repo-relative path
+    try:
+        repo_root = _find_repo_root(notes_root)
+        source_path = str(file_path.relative_to(repo_root))
+    except (RuntimeError, ValueError):
+        source_path = str(file_path)
+
+    # Rebuild index
+    try:
+        diagnostics = rebuild_index()
+        reindexed = True
+
+        # Check if rebuild had errors
+        if diagnostics.errors:
+            # Log errors but don't fail if the new node was indexed
+            pass
+
+    except IndexRebuildError as e:
+        # Index rebuild failed - delete the file to maintain consistency
+        try:
+            file_path.unlink()
+        except Exception:
+            pass
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "error": "DUPLICATE_ID",
+                "message": str(e),
+            },
+        )
+    except Exception as e:
+        # Other rebuild errors
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": f"Failed to rebuild index: {str(e)}",
+            },
+        )
+
+    # Return 201 with node details
+    response_data = {
+        "node": {
+            "id": node_id,
+            "source_path": source_path,
+            "created_at": now,
+            "updated_at": now,
+        },
+        "reindexed": reindexed,
+    }
+
+    return response_data
+
+
+@app.get("/search")
+async def search(
+    q: str,
+    type: list[str] | None = None,
+    status: list[str] | None = None,
+    tags: list[str] | None = None,
+    tags_mode: str = "all",
+    updated_since: str | None = None,
+    updated_within_days: int | None = None,
+    limit: int = 50,
+    offset: int = 0,
+) -> dict:
+    """Fast global search for nodes using FTS5.
+
+    Args:
+        q: Search query string (required).
+        type: Filter by node types (can be repeated).
+        status: Filter by node statuses (can be repeated).
+        tags: Filter by tags (can be repeated).
+        tags_mode: Tag matching mode ("all" or "any"), default "all".
+        updated_since: ISO8601 timestamp filter (nodes updated after this).
+        updated_within_days: Filter nodes updated within N days.
+        limit: Maximum results to return (default 50).
+        offset: Number of results to skip (default 0).
+
+    Returns:
+        JSON response with items and pagination info.
+
+    Status codes:
+        200 OK: Successful search.
+        400 BAD REQUEST: Validation error (e.g., missing query).
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from app.index import search_nodes
+
+    # Validate query parameter
+    if not q or not q.strip():
+        raise HTTPException(status_code=400, detail="Query parameter 'q' is required")
+
+    # Validate tags_mode
+    if tags_mode not in ["all", "any"]:
+        raise HTTPException(status_code=400, detail="tags_mode must be 'all' or 'any'")
+
+    try:
+        results, total = search_nodes(
+            query=q,
+            type_filter=type,
+            status_filter=status,
+            tags_filter=tags,
+            tags_mode=tags_mode,
+            updated_since=updated_since,
+            updated_within_days=updated_within_days,
+            limit=limit,
+            offset=offset,
+        )
+
+        return {
+            "items": results,
+            "page": {"limit": limit, "offset": offset, "total": total},
+        }
+
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
+@app.get("/path")
+async def find_path(from_id: str, to_id: str) -> dict:
+    """Find shortest path between two nodes using BFS.
+
+    Args:
+        from_id: Source node ID (query parameter).
+        to_id: Target node ID (query parameter).
+
+    Returns:
+        JSON response with path array and metadata.
+
+    Status codes:
+        200 OK: Path found successfully.
+        404 NOT FOUND: One or both nodes not found, or no path exists.
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from collections import deque
+    from app.index import get_index_connection
+
+    # Validate parameters
+    if not from_id or not to_id:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "VALIDATION_ERROR",
+                "message": "Both 'from_id' and 'to_id' query parameters are required",
+            },
+        )
+
+    try:
+        conn = get_index_connection()
+        cursor = conn.cursor()
+
+        # Verify both nodes exist
+        cursor.execute("SELECT id FROM nodes WHERE id IN (?, ?)", (from_id, to_id))
+        existing_nodes = {row["id"] for row in cursor.fetchall()}
+
+        if from_id not in existing_nodes:
+            conn.close()
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "NODE_NOT_FOUND",
+                    "message": f"Source node '{from_id}' not found",
+                },
+            )
+
+        if to_id not in existing_nodes:
+            conn.close()
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "NODE_NOT_FOUND",
+                    "message": f"Target node '{to_id}' not found",
+                },
+            )
+
+        # If source and target are the same, return single-node path
+        if from_id == to_id:
+            conn.close()
+            return {
+                "path": [from_id],
+                "length": 0,
+                "found": True,
+            }
+
+        # Build adjacency list (treat graph as undirected for path finding)
+        cursor.execute("SELECT source_id, target_id FROM edges")
+        edge_rows = cursor.fetchall()
+
+        adjacency = {}
+        for row in edge_rows:
+            src, tgt = row["source_id"], row["target_id"]
+
+            if src not in adjacency:
+                adjacency[src] = []
+            if tgt not in adjacency:
+                adjacency[tgt] = []
+
+            adjacency[src].append(tgt)
+            adjacency[tgt].append(src)  # Undirected
+
+        # BFS to find shortest path
+        queue = deque([from_id])
+        visited = {from_id}
+        parent = {from_id: None}
+
+        found = False
+        while queue:
+            current = queue.popleft()
+
+            if current == to_id:
+                found = True
+                break
+
+            for neighbor in adjacency.get(current, []):
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    parent[neighbor] = current
+                    queue.append(neighbor)
+
+        conn.close()
+
+        if not found:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "PATH_NOT_FOUND",
+                    "message": f"No path exists between '{from_id}' and '{to_id}'",
+                },
+            )
+
+        # Reconstruct path from parent pointers
+        path = []
+        current = to_id
+        while current is not None:
+            path.append(current)
+            current = parent[current]
+
+        path.reverse()
+
+        return {
+            "path": path,
+            "length": len(path) - 1,  # Number of edges
+            "found": True,
+        }
+
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
+@app.get("/node/{node_id}/suggest-tags")
+async def suggest_tags_for_node(node_id: str) -> dict:
+    """Suggest tags for a node based on content analysis.
+
+    Args:
+        node_id: Node ID to analyze.
+
+    Returns:
+        JSON response with suggested tags array.
+
+    Status codes:
+        200 OK: Suggestions generated successfully.
+        404 NOT FOUND: Node ID not found.
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from app.index import get_index_connection
+    from app.notes import load_note_content
+    from app.frontmatter import parse_and_validate
+    from app.tagging import suggest_tags
+    import json
+
+    try:
+        conn = get_index_connection()
+        cursor = conn.cursor()
+
+        # Fetch node from index
+        cursor.execute(
+            """
+            SELECT id, title, filepath, tags
+            FROM nodes
+            WHERE id = ?
+        """,
+            (node_id,),
+        )
+
+        row = cursor.fetchone()
+        conn.close()
+
+        if not row:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "NODE_NOT_FOUND",
+                    "message": f"Node '{node_id}' not found",
+                },
+            )
+
+        # Load markdown content to extract body
+        try:
+            content = load_note_content(row["filepath"])
+            _, body, _ = parse_and_validate(content)
+        except (FileNotFoundError, ValueError) as e:
+            raise HTTPException(
+                status_code=500,
+                detail={
+                    "error": "INTERNAL_ERROR",
+                    "message": f"Failed to load node content: {str(e)}",
+                },
+            )
+
+        # Parse existing tags
+        existing_tags = json.loads(row["tags"]) if row["tags"] else []
+
+        # Generate suggestions
+        suggestions = suggest_tags(
+            title=row["title"],
+            body=body or "",
+            existing_tags=existing_tags,
+        )
+
+        return {
+            "node_id": node_id,
+            "suggestions": suggestions,
+        }
+
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
+@app.get("/insights/orphans")
+async def get_orphans() -> dict:
+    """Get list of orphan nodes (nodes with zero edges).
+
+    Returns:
+        JSON response with orphan nodes list.
+
+    Status codes:
+        200 OK: Orphans retrieved successfully.
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from app.index import get_orphan_nodes
+
+    try:
+        orphans = get_orphan_nodes()
+        return {
+            "orphans": orphans,
+            "count": len(orphans),
+        }
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
+@app.get("/insights/bridges")
+async def get_bridges(top_n: int = 5, use_degree_fallback: bool = False) -> dict:
+    """Get list of bridge nodes (high betweenness centrality).
+
+    Bridge nodes connect disparate clusters in the graph. This endpoint
+    identifies the top N nodes by betweenness centrality score.
+
+    Args:
+        top_n: Number of top bridge nodes to return (default 5).
+        use_degree_fallback: Use degree centrality instead of betweenness (default False).
+
+    Returns:
+        JSON response with bridge nodes list and metadata.
+
+    Status codes:
+        200 OK: Bridge nodes retrieved successfully.
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from app.index import get_bridge_nodes
+
+    try:
+        bridges = get_bridge_nodes(top_n=top_n, use_degree_fallback=use_degree_fallback)
+        return {
+            "bridges": bridges,
+            "count": len(bridges),
+            "algorithm": "degree_centrality"
+            if use_degree_fallback
+            else "betweenness_centrality",
+        }
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
+@app.get("/insights/activity")
+async def get_activity(days: int = 90) -> dict:
+    """Get daily activity data for activity calendar visualization.
+
+    Aggregates node creation and update events by date over the last N days.
+    Used for GitHub-style contribution calendar showing when nodes were
+    created or modified.
+
+    Args:
+        days: Number of days to look back (default 90).
+
+    Returns:
+        JSON response with daily_activity array.
+
+    Status codes:
+        200 OK: Activity data retrieved successfully.
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from app.index import get_activity_data
+
+    try:
+        activity_data = get_activity_data(days=days)
+        return {
+            "daily_activity": activity_data,
+            "days": days,
+        }
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
+@app.get("/insights/suggestions")
+async def get_suggestions(threshold_days: int = 90) -> dict:
+    """Get actionable suggestions for improving the knowledge graph.
+
+    Analyzes orphan nodes, stale notes, and tag patterns to generate
+    user-friendly suggestions like "Link these 3 orphans", "Update 5 stale notes".
+
+    Args:
+        threshold_days: Days threshold for stale node detection (default 90).
+
+    Returns:
+        JSON response with suggestions array.
+
+    Status codes:
+        200 OK: Suggestions generated successfully.
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from app.suggestions import generate_suggestions
+
+    try:
+        suggestions = generate_suggestions(threshold_days=threshold_days)
+        return {
+            "suggestions": suggestions,
+            "count": len(suggestions),
+        }
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
+@app.get("/insights/stale")
+async def get_stale_nodes(threshold_days: int = 90) -> dict:
+    """Get list of stale nodes (not updated recently).
+
+    Stale nodes are those with updated_at > threshold_days ago.
+    Useful for identifying notes that may need review or updates.
+
+    Args:
+        threshold_days: Number of days after which a node is considered stale (default 90).
+
+    Returns:
+        JSON response with stale nodes list and metadata.
+
+    Status codes:
+        200 OK: Stale nodes retrieved successfully.
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from app.index import get_stale_nodes
+
+    try:
+        stale_nodes = get_stale_nodes(threshold_days=threshold_days)
+        return {
+            "stale_nodes": stale_nodes,
+            "count": len(stale_nodes),
+            "threshold_days": threshold_days,
+        }
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
+@app.get("/metrics")
+async def get_metrics() -> dict:
+    """Get graph health metrics.
+
+    Computes comprehensive graph statistics including node/edge counts,
+    connectivity metrics, and component analysis.
+
+    Returns:
+        JSON response with graph metrics:
+        - node_count: Total number of nodes
+        - edge_count: Total number of edges
+        - avg_degree: Average edges per node
+        - orphan_count: Nodes with zero edges
+        - num_components: Number of connected components
+        - largest_component_size: Size of largest connected component
+
+    Status codes:
+        200 OK: Metrics computed successfully.
+        503 SERVICE UNAVAILABLE: Index not available (needs rebuild).
+    """
+    from fastapi import HTTPException
+    from app.index import get_graph_metrics
+
+    try:
+        metrics = get_graph_metrics()
+        return metrics
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+
+@app.post("/generate-plan")
+@limiter.limit("10/minute")  # Allow 10 plan generations per minute (expensive operation)
+async def generate_plan(request: Request, plan_request: GeneratePlanRequest) -> dict:
+    """
+    Generate a deterministic implementation plan from selected nodes.
+
+    Extracts a subgraph using depth and relationship filters, then generates
+    markdown output suitable for agent consumption.
+
+    Request body:
+    - selection: list of node ids (required, non-empty)
+    - depth: non-negative integer for subgraph traversal (default 2)
+    - include_rel_types: relationship types to include (default all)
+    - exclude_rel_types: relationship types to exclude (default none)
+    - output: optional dict with 'write' (bool) and 'path' (str)
+
+    Returns 200 with generated markdown and metadata.
+    Returns 400 if validation fails.
+    Returns 404 if any selection id is not found.
+    Returns 503 if index is unavailable.
+    """
+    from fastapi import HTTPException
+    from app.index import get_node, extract_subgraph, generate_plan_markdown
+    from app.frontmatter import RelationType
+    from pathlib import Path
+
+    selection = plan_request.selection
+    depth = plan_request.depth
+    include_rel_types = plan_request.include_rel_types
+    exclude_rel_types = plan_request.exclude_rel_types
+
+    valid_rel_types = {rt.value for rt in RelationType}
+
+    for rel_type in include_rel_types:
+        if rel_type not in valid_rel_types:
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "error": "VALIDATION_ERROR",
+                    "message": f"Invalid relationship type in include_rel_types: {rel_type}",
+                },
+            )
+
+    for rel_type in exclude_rel_types:
+        if rel_type not in valid_rel_types:
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "error": "VALIDATION_ERROR",
+                    "message": f"Invalid relationship type in exclude_rel_types: {rel_type}",
+                },
+            )
+
+    # Check index availability
+    try:
+        # Verify all selection nodes exist
+        for node_id in selection:
+            node = get_node(node_id)
+            if not node:
+                raise HTTPException(
+                    status_code=404,
+                    detail={
+                        "error": "NODE_NOT_FOUND",
+                        "message": f"Node not found: {node_id}",
+                    },
+                )
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "INDEX_UNAVAILABLE",
+                "message": "Search index not available. Run rebuild first.",
+            },
+        )
+
+    # Extract subgraph
+    subgraph_nodes, subgraph_edges = extract_subgraph(
+        selection=selection,
+        depth=depth,
+        include_rel_types=include_rel_types if include_rel_types else None,
+        exclude_rel_types=exclude_rel_types if exclude_rel_types else None,
+    )
+
+    # Generate markdown plan
+    markdown = generate_plan_markdown(
+        nodes=subgraph_nodes,
+        edges=subgraph_edges,
+        selection=selection,
+    )
+
+    # Handle optional file write
+    write_enabled = request.output.write
+    output_path = request.output.path
+
+    written_info = None
+    if write_enabled:
+        # Ensure directory exists
+        output_file = Path(output_path)
+        output_file.parent.mkdir(parents=True, exist_ok=True)
+
+        # Write atomically
+        temp_path = output_file.with_suffix(".tmp")
+        temp_path.write_text(markdown, encoding="utf-8")
+        temp_path.replace(output_file)
+
+        written_info = {"path": output_path}
+
+    return {
+        "markdown": markdown,
+        "written": written_info,
+        "inputs": {
+            "selection": selection,
+            "depth": depth,
+            "include_rel_types": include_rel_types,
+            "exclude_rel_types": exclude_rel_types,
+        },
+    }

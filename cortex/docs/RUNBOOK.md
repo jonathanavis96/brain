@@ -10,21 +10,21 @@ Cortex is the high-level planning and management layer for the Brain repository.
 
 ```bash
 cd /path/to/brain/cortex/
-bash run.sh
+bash cortex.bash
 ```text
 
 **What Cortex does:**
 
 - Reviews current mission and progress via `snapshot.sh`
-- Updates `IMPLEMENTATION_PLAN.md` with high-level tasks
+- Updates `workers/IMPLEMENTATION_PLAN.md` with high-level tasks
 - Delegates work to Ralph by creating Task Contracts
 - Reviews completed work and adjusts plans
 
 **What Cortex can modify:**
 
-- `IMPLEMENTATION_PLAN.md` (task planning)
+- `workers/IMPLEMENTATION_PLAN.md` (task planning)
 - `THOUGHTS.md` (strategic analysis)
-- `GAP_BACKLOG.md` (knowledge gaps)
+- `skills/self-improvement/GAP_BACKLOG.md` (knowledge gaps)
 - `SKILL_BACKLOG.md` (skill promotion)
 
 **What Cortex CANNOT modify:**
@@ -37,6 +37,8 @@ bash run.sh
 
 Ralph is the tactical worker who executes individual tasks from the implementation plan.
 
+> **📖 For detailed Ralph documentation (architecture, design, knowledge base):** See [workers/ralph/README.md](../../workers/ralph/README.md)
+
 ```bash
 cd /path/to/brain/workers/ralph/
 bash loop.sh                    # Single iteration
@@ -47,7 +49,7 @@ bash loop.sh --resume           # Resume from interruption
 
 **Modes:**
 
-- **PLAN mode:** Iteration 1 or every 3rd iteration - updates IMPLEMENTATION_PLAN.md, pushes commits
+- **PLAN mode:** Iteration 1 or every 3rd iteration - updates workers/IMPLEMENTATION_PLAN.md, pushes commits
 - **BUILD mode:** All other iterations - picks ONE task, implements, commits locally (no push)
 
 **Stop sentinel:** Ralph outputs `:::COMPLETE:::` only when ALL tasks are done (managed by `loop.sh`, not Ralph himself)
@@ -63,7 +65,7 @@ cd /path/to/brain/workers/ralph/
 bash current_ralph_tasks.sh
 ```text
 
-Shows pending `[ ]` tasks from `IMPLEMENTATION_PLAN.md`, organized by priority.
+Shows pending `[ ]` tasks from `workers/IMPLEMENTATION_PLAN.md`, organized by priority.
 
 **Hotkeys:**
 
@@ -81,7 +83,7 @@ cd /path/to/brain/workers/ralph/
 bash thunk_ralph_tasks.sh
 ```text
 
-Shows completed task log from `THUNK.md` (append-only).
+Shows completed task log from `workers/ralph/THUNK.md` (append-only).
 
 **Hotkeys:**
 
@@ -116,7 +118,7 @@ bash verifier.sh
 ### Maintenance Check
 
 ```bash
-cd /path/to/brain/
+cd /path/to/brain/workers/ralph/
 bash .maintenance/verify-brain.sh
 ```text
 
@@ -133,7 +135,7 @@ Checks for:
 #### Issue: Loop doesn't stop
 
 **Symptom:** Ralph keeps running even though tasks appear complete  
-**Check:** Does `IMPLEMENTATION_PLAN.md` have any unchecked `[ ]` tasks?  
+**Check:** Does `workers/IMPLEMENTATION_PLAN.md` have any unchecked `[ ]` tasks?  
 **Fix:** Ensure ALL tasks are marked `[x]`, including subsections and nested tasks
 
 #### Issue: Ralph batches multiple tasks
@@ -173,11 +175,11 @@ Checks for:
 
 #### Issue: "acli not found"
 
-**Fix:** Add Atlassian CLI to PATH in `~/.bashrc`:
+**Fix:** Authenticate with RovoDev:
 
 ```bash
-export PATH="$PATH:/path/to/atlassian-cli/bin"
-source ~/.bashrc
+acli rovodev auth
+acli rovodev usage site
 ```text
 
 ### Cortex Issues
@@ -229,24 +231,15 @@ git commit                          # If merging
 
 #### Issue: Bootstrap generator fails
 
-**Symptom:** `new-project.sh` or `generate-*.sh` fails  
+**Symptom:** `new-project.sh` fails  
 **Check:** Required fields in idea file (Project, Tech Stack, Purpose)  
 **Fix:** Ensure idea template has all required fields populated
-
-#### Issue: GitHub CLI not authenticated
-
-**Symptom:** `new-project.sh` fails with GitHub API errors  
-**Fix:**
-
-```bash
-gh auth login
-```text
 
 ## What to Do If Blocked
 
 ### If Ralph is blocked
 
-1. **Check IMPLEMENTATION_PLAN.md** - Is the task description clear and complete?
+1. **Check workers/IMPLEMENTATION_PLAN.md** - Is the task description clear and complete?
 2. **Check acceptance criteria** - Are they testable and specific?
 3. **Check THOUGHTS.md** - Is the strategic context clear?
 4. **Create issue** - If task is ambiguous, create `SPEC_CHANGE_REQUEST.md` and STOP
@@ -255,7 +248,7 @@ gh auth login
 
 1. **Review snapshot output** - Is the current state accurately captured?
 2. **Review DECISIONS.md** - Are architectural decisions documented?
-3. **Review THUNK.md** - Is work being completed but not reflected in plans?
+3. **Review workers/ralph/THUNK.md** - Is work being completed but not reflected in plans?
 4. **Escalate to human** - If unable to resolve, document the blocker and stop
 
 ### If verifier blocks progress
@@ -290,10 +283,12 @@ Example:
 
 ## See Also
 
-- **CORTEX_SYSTEM_PROMPT.md** - Cortex identity and rules
-- **REPO_MAP.md** - Brain repository navigation guide
-- **DECISIONS.md** - Architectural decisions and stability anchor
-- **../ralph/AGENTS.md** - Ralph operational guide and validation commands
-- **../ralph/PROMPT.md** - Ralph's instructions (PLAN/BUILD protocols)
-- **../skills/SUMMARY.md** - Skills knowledge base overview
-- **../skills/domains/ralph/ralph-patterns.md** - Ralph loop architecture
+- **[CORTEX_SYSTEM_PROMPT.md](../CORTEX_SYSTEM_PROMPT.md)** - Cortex identity and rules
+- **[REPO_MAP.md](REPO_MAP.md)** - Brain repository navigation guide
+- **[DECISIONS.md](../DECISIONS.md)** - Architectural decisions and stability anchor
+- **[workers/ralph/AGENTS.md](../../workers/ralph/AGENTS.md)** - Ralph operational guide and validation commands
+- **[workers/ralph/PROMPT.md](../../workers/ralph/PROMPT.md)** - Ralph's instructions (PLAN/BUILD protocols)
+- **[workers/ralph/README.md](../../workers/ralph/README.md)** - Ralph loop design philosophy
+- **[skills/SUMMARY.md](../../skills/SUMMARY.md)** - Skills knowledge base overview
+- **[skills/domains/ralph/ralph-patterns.md](../../skills/domains/ralph/ralph-patterns.md)** - Ralph loop architecture
+- **[NEURONS.md](../../NEURONS.md)** - Repository structure map

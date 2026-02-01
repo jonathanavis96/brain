@@ -1,0 +1,149 @@
+#!/usr/bin/env bash
+# semantic-review-chat - Interactive semantic review chat for current branch vs base
+#
+# This is intended for HUMAN use (interactive). It generates a review prompt file
+# (including AGENTS_DEBUG.md directives) and launches `acli rovodev run` so you
+# can interactively discuss the PR with the agent.
+#
+# Usage:
+#   semantic-review-chat [--base BRANCH]
+#
+# Defaults:
+#   --base main
+
+set -euo pipefail
+
+BASE_BRANCH="main"
+NO_CHAT=0
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --base)
+      BASE_BRANCH="$2"
+      shift 2
+      ;;
+    --no-chat)
+      NO_CHAT=1
+      shift
+      ;;
+    --help)
+      sed -n '2,/^$/p' "$0" | sed 's/^# \?//'
+      echo ""
+      echo "Options:"
+      echo "  --base BRANCH   Compare current branch against BRANCH (default: main)"
+      echo "  --no-chat       Only regenerate the prompt file and exit"
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      exit 1
+      ;;
+  esac
+done
+
+if ! git rev-parse --git-dir >/dev/null 2>&1; then
+  echo "Error: not in a git repo" >&2
+  exit 1
+fi
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+BASE_SHA=$(git rev-parse "$BASE_BRANCH")
+HEAD_SHA=$(git rev-parse HEAD)
+MERGE_BASE_SHA=$(git merge-base "$BASE_BRANCH" HEAD)
+
+CURRENT_BRANCH=$(git branch --show-current)
+if [[ -z "$CURRENT_BRANCH" ]]; then
+  echo "Error: detached HEAD" >&2
+  exit 1
+fi
+
+REVIEWER_SCRIPT="$REPO_ROOT/tools/semantic_reviewer.py"
+DIRECTIVES_FILE="$REPO_ROOT/tools/agents/AGENTS_DEBUG.md"
+
+if [[ ! -f "$DIRECTIVES_FILE" ]]; then
+  echo "Error: directives file not found: $DIRECTIVES_FILE" >&2
+  exit 1
+fi
+
+# Store generated prompts inside the repo workspace so the agent can open them via `open_files`.
+# NOTE: We intentionally keep this inside the repo. If you set SEMANTIC_REVIEW_PROMPT_DIR to a path
+# outside the workspace (e.g. /tmp), the agent will not be able to `open_files` it.
+PROMPT_DIR_DEFAULT="$REPO_ROOT/tools/agents"
+PROMPT_DIR="${SEMANTIC_REVIEW_PROMPT_DIR:-$PROMPT_DIR_DEFAULT}"
+
+# If an override is outside the repo root, ignore it (prevents "outside workspace" failures).
+case "$PROMPT_DIR" in
+  "$REPO_ROOT"/*) ;;
+  *)
+    echo "Warning: SEMANTIC_REVIEW_PROMPT_DIR points outside repo; ignoring: $PROMPT_DIR" >&2
+    PROMPT_DIR="$PROMPT_DIR_DEFAULT"
+    ;;
+esac
+
+mkdir -p "$PROMPT_DIR"
+PROMPT_FILE="$PROMPT_DIR/semantic_review_prompt_latest.txt"
+
+# Always keep the generated prompt file.
+# This makes it easy to inspect/reuse and avoids confusion if the interactive run fails later.
+KEEP_PROMPT=1
+# trap is set later after CONFIG_FILE is created
+
+# Generate prompt file for the PR (overwrite the stable path each run)
+rm -f "$PROMPT_FILE"
+python3 "$REVIEWER_SCRIPT" \
+  --directives "$DIRECTIVES_FILE" \
+  --dump-prompt "$PROMPT_FILE" \
+  --against "$BASE_BRANCH" \
+  >/dev/null
+
+# Validate the prompt contains actual diff content (not just directives/header).
+# Be tolerant of leading whitespace/control chars.
+if ! grep -qE "^[[:space:]]*diff --git" "$PROMPT_FILE"; then
+  echo "Error: generated prompt does not contain any git diff hunks." >&2
+  echo "Prompt path: $PROMPT_FILE" >&2
+  echo "Hint: try inspecting with: sed -n '1,120p' '$PROMPT_FILE'" >&2
+  echo "Changed files vs $BASE_BRANCH:" >&2
+  git diff --name-only "$BASE_BRANCH"..HEAD | sed -n '1,120p' >&2
+  exit 1
+fi
+
+echo "Prompt written to: $PROMPT_FILE"
+echo "Prompt mtime: $(date -r "$PROMPT_FILE" '+%Y-%m-%d %H:%M:%S')"
+echo "Prompt sha256: $(sha256sum "$PROMPT_FILE" | awk '{print $1}')"
+echo "Prompt stats: $(wc -l <"$PROMPT_FILE") lines, $(wc -c <"$PROMPT_FILE") bytes"
+echo "Compare: $BASE_BRANCH=$BASE_SHA .. HEAD=$HEAD_SHA (merge-base=$MERGE_BASE_SHA)"
+echo "First diff header:"
+grep -m 1 "^diff --git" "$PROMPT_FILE" || true
+
+if [[ "$NO_CHAT" == "1" ]]; then
+  exit 0
+fi
+
+echo "Launching interactive RovoDev chat (base=$BASE_BRANCH, branch=$CURRENT_BRANCH)"
+echo ""
+
+# Launch interactive chat with a temporary config that preloads directives and the prompt path.
+# This avoids requiring you to paste an initial message (and keeps the session interactive).
+CONFIG_FILE="${TMPDIR:-/tmp}/semantic_review_chat_config_$$_$(date +%s).yml"
+trap 'echo "Keeping prompt: $PROMPT_FILE" >&2; rm -f "$CONFIG_FILE"' EXIT
+
+cat >"$CONFIG_FILE" <<EOF
+version: 1
+agent:
+  additionalSystemPrompt: |
+$(while IFS= read -r line; do
+  echo "    $line"
+done <"$DIRECTIVES_FILE")
+
+    Read the PR review prompt from: $PROMPT_FILE
+  streaming: true
+  temperature: 0.3
+  modelId: auto
+EOF
+
+echo "Using config: $CONFIG_FILE"
+
+echo ""
+acli rovodev run --config-file "$CONFIG_FILE" --yolo

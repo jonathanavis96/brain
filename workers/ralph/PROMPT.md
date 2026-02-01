@@ -13,7 +13,7 @@ Look for the `# VERIFIER STATUS` section at the top of this prompt. It contains:
 
 If the header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
-1. **STOP** - Do not pick a new task from workers/IMPLEMENTATION_PLAN.md
+1. **STOP** - Do not pick a new task from workers/workers/IMPLEMENTATION_PLAN.md
 2. **CHECK** the `# VERIFIER STATUS` section above for failure details
 3. **FIX** the failing acceptance criteria listed in `# FAILED_RULES:`
 4. **COMMIT** your fix with message: `fix(ralph): resolve AC failure <RULE_ID>`
@@ -21,9 +21,9 @@ If the header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
 If the `# VERIFIER STATUS` section shows `[WARN]` lines:
 
-1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of workers/IMPLEMENTATION_PLAN.md (after header, before other phases)
+1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of workers/workers/IMPLEMENTATION_PLAN.md (after header, before other phases)
 2. **⚠️ DO NOT create "## Verifier Warnings" without the "Phase 0-Warn:" prefix** - This breaks the task monitor!
-3. **LIST** each as: `- [ ] WARN.<RULE_ID>.<filename> - <description>` (include filename to prevent duplicate IDs)
+3. **LIST (BATCHED):** Create **ONE task per (RULE_ID + file)**, not per line/occurrence. Use: `- [ ] WARN.<RULE_ID>.<filename> - <description>`
 4. **NEVER use numbered lists (1. 2. 3.)** - ALWAYS use checkbox format `- [ ]`
 5. **IGNORE** warnings marked `(manual review)` - these require human testing, not code fixes
 6. **IGNORE** warnings prefixed with `Cortex.*` - these are Cortex's responsibility, not Ralph's
@@ -78,31 +78,29 @@ Then output `:::BUILD_READY:::` to end the iteration.
 - `NEURONS.md` - use `ls` to explore structure
 - `THOUGHTS.md` - slice with `head -30` if needed
 - `cortex/*.md` - Cortex files are NOT needed for BUILD tasks
-- `workers/IMPLEMENTATION_PLAN.md` (full file) - use grep to find tasks
-- `workers/ralph/THUNK.md` (full file) - use tail to append only
+- `workers/workers/IMPLEMENTATION_PLAN.md` (full file) - use grep to find tasks
+- `workers/ralph/workers/ralph/THUNK.md` (full file) - use tail to append only
 
-**⚠️ Ralph's tasks are in `workers/IMPLEMENTATION_PLAN.md`, NOT `cortex/IMPLEMENTATION_PLAN.md`**
-
-### Required Startup Sequence
+### Required Startup Sequence (STRICT)
 
 ```bash
-# 1. Find next unchecked task (DO THIS FIRST)
-grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -20
+# 1) Pick ONE task
+LINE=$(grep -n "^- \[ \]" workers/workers/IMPLEMENTATION_PLAN.md | head -1 | cut -d: -f1)
 
-# 2. If you need context for a specific task, slice by line number
-# Example: task found around line 236
-sed -n '220,280p' workers/IMPLEMENTATION_PLAN.md
+# 2) Read ONE non-overlapping slice around it
+#    BAN: sed starting at 1; BAN: >90 lines; CAP: 2 plan slices max/iteration
+sed -n "$((LINE-5)),$((LINE+35))p" workers/workers/IMPLEMENTATION_PLAN.md
 
-# 3. Check for existing tools before creating new ones
+# 3) Search before creating tools
 find bin/ -maxdepth 1 -type f | head -20
 find tools/ -maxdepth 1 -name "*.py" -o -name "*.sh" 2>/dev/null | head -10
 ```
 
-### THUNK.md Access Rules
+### workers/ralph/THUNK.md Access Rules (STRICT)
 
-- **NEVER** open THUNK.md to "check what's done" - use `grep` or `bin/brain-search`
-- **ONLY** open THUNK.md when appending a new completion entry
-- For last THUNK number: `tail -20 workers/ralph/THUNK.md | grep "^|" | tail -1`
+- Lookups: `grep ... workers/ralph/workers/ralph/THUNK.md | head -3`
+- Append: get next id ONCE right before append:
+  - `tail -10 workers/ralph/workers/ralph/THUNK.md | grep "^|" | tail -1`
 
 ### Search Before Creating
 
@@ -224,6 +222,33 @@ See `skills/domains/code-quality/bulk-edit-patterns.md` for details.
 
 **End:** `:::PLAN_READY:::` or `:::BUILD_READY:::` on its own line.
 
+**STRICT SUMMARY BLOCK (required; immediately before the marker):**
+
+At the end of every iteration (PLAN/BUILD), immediately before the marker line (`:::PLAN_READY:::` or `:::BUILD_READY:::`), output EXACTLY this block shape:
+
+```text
+**Summary**
+- ...
+
+**Changes Made**
+- ...
+
+**Next Steps**
+- ...
+
+**Completed** (optional)
+- ...
+```
+
+**Enforcement rules:**
+
+- **Fixed order:** Summary → Changes Made → Next Steps → Completed (optional)
+- **Format:** Bullets or short paragraphs only
+- **Forbidden:** Do NOT wrap the block in code fences (` ``` `), ASCII boxes, or ANSI decorations
+- **Forbidden:** Do NOT include STATUS lines inside the summary block
+- **Required:** Marker line (`:::PLAN_READY:::` or `:::BUILD_READY:::`) must be on its own line immediately after the block
+- **No gaps:** Do not insert blank lines between the summary block and the marker line
+
 ---
 
 ## PLANNING Mode (Iteration 1 or every 3rd)
@@ -269,6 +294,57 @@ ls bin/ tools/*.py tools/*.sh 2>/dev/null | head -20
 
 **If WARN/FAIL items exist:** Prioritize fixing them before feature work. Add to "## Phase 0-Warn: Verifier Warnings" section if not already tracked.
 
+### Batch Task Template
+
+Use this format for tasks that fix the SAME issue type across multiple files:
+
+```markdown
+- [ ] **X.Y.Z** BATCH: Fix SC2162 across shell scripts
+  - **Scope:** `tools/*.sh`, `workers/**/*.sh`, `bin/*`
+  - **Fix:** Add `-r` flag to all `read` commands (prevents backslash interpretation)
+  - **Steps:**
+    1. Find all affected files: `rg -l "read [^-]" tools/*.sh workers/**/*.sh bin/* 2>/dev/null`
+    2. Fix each occurrence: Replace `read var` with `read -r var`
+    3. Verify: `shellcheck -e SC1091 <file>` shows no SC2162 errors
+    4. Test: Run affected scripts to ensure no regressions
+  - **AC:** All shell scripts pass `shellcheck` with no SC2162 warnings
+  - **Estimated Time:** [M] 5-10 minutes (8 files to fix)
+```
+
+**When to batch:**
+
+- ✅ **SAME fix type** across multiple files (e.g., SC2162 in 5+ shell scripts)
+- ✅ **SAME directory** warnings (e.g., 4 MD040 errors in `skills/domains/backend/`)
+- ✅ **MARKDOWN errors** - Efficiently batch by error type:
+  - Group by rule ID (e.g., all MD040 errors together, all MD024 errors together)
+  - Run `fix-markdown.sh` first to auto-fix common issues (MD009, MD010, MD012, MD031, MD032, MD047)
+  - Only create manual tasks for remaining errors that need human judgment (MD040, MD024, MD036)
+  - Example: "Fix MD040 (missing code fence languages) across 12 files in skills/"
+- ❌ **NOT** different fix types even if same file (e.g., SC2034 + SC2162 in one file = separate tasks)
+
+**Verification pattern for batched tasks:**
+
+```bash
+# 1. List all affected files
+rg -l "pattern" <glob>
+
+# 2. Apply fix with find_and_replace_code (one call per file)
+# ... do the fixes ...
+
+# 3. Verify ALL files pass
+for file in <glob>; do
+  <validation-command> "$file" || echo "FAIL: $file"
+done
+
+# 4. Commit with batch context
+git add -A && git commit -m "fix(scope): resolve SC2162 across 8 shell scripts
+
+- Added -r flag to read commands in tools/*.sh
+- Added -r flag to read commands in workers/**/*.sh
+- Added -r flag to read commands in bin/*
+- All files now pass shellcheck validation"
+```
+
 ### Actions
 
 1. Create/update workers/IMPLEMENTATION_PLAN.md:
@@ -277,6 +353,7 @@ ls bin/ tools/*.py tools/*.sh 2>/dev/null | head -20
    - **⚠️ CORRECT format:** "## Phase 0-Warn: Verifier Warnings", "## Phase 0-Quick: Quick Wins", "## Phase 1: Core Features"
    - ALL tasks MUST use checkbox format: `- [ ]` or `- [x]`
    - NEVER use numbered lists (1. 2. 3.) for tasks
+   - Use **Batch Task Template** (above) when ≥3 files need the same fix
    - Prioritize: High → Medium → Low
    - Break down complex tasks hierarchically (1.1, 1.2, 1.3)
    - A task is "atomic" when completable in ONE BUILD iteration
@@ -301,7 +378,7 @@ ls bin/ tools/*.py tools/*.sh 2>/dev/null | head -20
 
 If you identify knowledge gaps or improvements that need **new Phase sections** (not just new tasks within existing phases):
 
-1. **PROPOSE, don't commit** - Describe the new phases in your response but DO NOT write them to IMPLEMENTATION_PLAN.md yet
+1. **PROPOSE, don't commit** - Describe the new phases in your response but DO NOT write them to workers/IMPLEMENTATION_PLAN.md yet
 2. **Explain the rationale** - Why is this needed? What gaps does it fill?
 3. **Wait for approval** - Human or Cortex must approve before you add new phases
 4. **Exception:** `## Phase 0-Warn: Verifier Warnings` can be added immediately (urgent fixes)
@@ -314,26 +391,33 @@ PROPOSED NEW PHASES:
   - Rationale: Brain is referenced by web projects, needs React/Vue patterns
   - Tasks: 8.1.1 Create frontend README, 8.1.2 Add component patterns...
 
-Awaiting approval before adding to IMPLEMENTATION_PLAN.md.
+Awaiting approval before adding to workers/IMPLEMENTATION_PLAN.md.
 ```
 
 **Why this rule exists:** New phases represent significant scope expansion. Cortex owns strategic planning; Ralph executes. Proposing allows review before commitment.
 
 ## BUILDING Mode (All other iterations)
 
-### Context Gathering (Cheap First - Follow Startup Procedure)
+### Context Gathering (Cheap First - STRICT)
 
 **Step 1: Find your ONE task (mandatory first step)**
 
 ```bash
-grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -10
+# Find the FIRST unchecked task only
+grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -1
 ```
 
-**Step 2: Slice only the task block you need**
+**Step 2: Slice only the task block you need (STRICT RULES)**
 
 ```bash
+# RULES:
+#  - BAN: sed -n '1,XXp' workers/IMPLEMENTATION_PLAN.md
+#  - Max 90 lines per slice
+#  - Max 2 total plan slices in BUILD mode
+#  - No overlapping slices
+#
 # Example: task at line 236
-sed -n '230,260p' workers/IMPLEMENTATION_PLAN.md
+sed -n '231,270p' workers/IMPLEMENTATION_PLAN.md
 ```
 
 **Step 3: Search before assuming things are missing**
@@ -364,13 +448,6 @@ rg -l "keyword" tools/ skills/domains/ | head -10
 
 2. Pick FIRST unchecked `[ ]` numbered task (e.g., `0.A.1.1`, including subtasks like 1.1)
    - **This is your ONLY task this iteration**
-   - **THUNK pre-check:** Before investigating, verify task isn't already done:
-
-     ```bash
-     grep "task_id" workers/ralph/THUNK.md | head -3
-     ```
-
-     If THUNK shows the task completed, mark `[x]` in plan and pick next task.
 
 3. Implement using exactly 1 subagent for modifications
 
@@ -394,8 +471,8 @@ rg -l "keyword" tools/ skills/domains/ | head -10
 
 7. **Self-Improvement Check:** If you used undocumented knowledge/procedure/tooling:
    - Search `skills/` for existing matching skill
-   - Search `skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
-   - If not found: append new entry to `GAP_BACKLOG.md`
+   - Search `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
+   - If not found: append new entry to `skills/self-improvement/GAP_BACKLOG.md`
    - If gap is clear, specific, and recurring: promote to `SKILL_BACKLOG.md`
 
 8. **STOP** - Do not push, do not continue to next task
@@ -439,16 +516,16 @@ You may mark tasks `[?]` when you've implemented changes. The verifier determine
 
 ## Workspace Boundaries
 
-**You have access to the ENTIRE brain repository** (from `$ROOT`), not just `workers/ralph/`.
+**You have access to the project repository** (from `$ROOT`).
 
 | Access Level | Paths | Notes |
 | ------------ | ----- | ----- |
-| **Full access** | `skills/`, `templates/`, `cortex/`, `docs/`, `workers/` | Read, write, create, delete |
+| **Full access** | Project files, documentation, source code | Read, write, create, delete |
 | **Protected** | `rules/AC.rules`, `verifier.sh`, `loop.sh`, `PROMPT.md`, `AGENTS.md` | Read only - hash-guarded |
 | **Protected** | `.verify/*.sha256` | Baseline hashes - human updates |
 | **Forbidden** | `.verify/waivers/*.approved` | OTP-protected - cannot read/write |
 
-When fixing issues, search the ENTIRE repo: `rg "pattern" $ROOT` not just `workers/ralph/`.
+When fixing issues, search the entire repo: `rg "pattern" $ROOT`
 
 ---
 
@@ -458,6 +535,14 @@ When fixing issues, search the ENTIRE repo: `rg "pattern" $ROOT` not just `worke
 - **No destructive commands** (`rm -rf`, deleting directories) unless plan task explicitly says so
 - **Search before creating** - Verify something doesn't exist before adding it
 - **One task per BUILD** - No batching, no "while I'm here" extras (EXCEPT: same-file warnings - batch those)
+
+### Batching rule (docs/markdown)
+
+If the work is **small, homogeneous markdown/doc fixes** (e.g., markdownlint warnings, link fixes, formatting fixes), batch them:
+
+- Combine up to **5–10** related markdown issues per iteration (or until changes stop being “small”).
+- Prefer one cohesive patch over many tiny patches.
+- Split into separate iterations only if changes become risky, cross-cutting, or require separate verification.
 - **Never remove uncompleted items** - NEVER delete `[ ]` tasks from workers/IMPLEMENTATION_PLAN.md
 - **Never delete completed tasks** - Mark tasks `[x]` complete but NEVER delete them (they stay forever as history)
 - **Never delete sections** - NEVER remove entire sections (## Phase X:, ## Verifier Warnings, etc.) even if all tasks are complete
@@ -483,8 +568,8 @@ Target: <20 tool calls per iteration.
 **Anti-patterns (NEVER do these):**
 
 - Trying to read `.verify/latest.txt` (it's already in the header!)
-- Reading `THUNK.md` to check if a task was done (use `grep` or `bin/brain-search`)
-- Opening `NEURONS.md`, `THOUGHTS.md`, or full `IMPLEMENTATION_PLAN.md` at startup
+- Reading `workers/ralph/THUNK.md` to check if a task was done (use `grep` or `bin/brain-search`)
+- Opening `NEURONS.md`, `THOUGHTS.md`, or full `workers/IMPLEMENTATION_PLAN.md` at startup
 - Running `git status` before AND after `git add`
 - Running `shellcheck file.sh`, then `shellcheck -e SC1091 file.sh`, then `shellcheck -x file.sh`
 
@@ -513,7 +598,7 @@ Before ending BUILD iteration, verify all files are staged:
 
 ```bash
 git status --short
-# Should show IMPLEMENTATION_PLAN.md and THUNK.md staged (along with your fix)
+# Should show workers/IMPLEMENTATION_PLAN.md and workers/ralph/THUNK.md staged (along with your fix)
 git add -A
 # NO commit - loop.sh handles this at PLAN phase
 ```
@@ -540,43 +625,6 @@ When a validation tool fails on code examples:
 3. If code is obviously valid (kwargs, for-loop, comprehension), assume **validator bug** and fix validator
 4. **DO NOT** rewrite valid examples into awkward forms to satisfy broken validators
 
-### Validator Errors: Smallest Reproduction First
-
-When any pre-commit hook fails:
-
-1. Re-run the failing hook **only on the file**: `pre-commit run <hook-id> --files <file>`
-2. Inspect validator logic **before** editing docs: `rg -n "<error message>" tools/`
-3. Fix validator if the example is valid code (don't rewrite examples 3 times)
-
-### Stage Atomicity
-
-Before ending BUILD, verify all files are staged:
-
-```bash
-git status --short
-git diff --cached --stat
-```
-
-**Rule:** If task completion requires both IMPL_PLAN + THUNK updates, they must be staged **together** (loop.sh commits at PLAN phase).
-
-### Search Explosion Guard
-
-If grep/rg output exceeds 100 lines:
-
-1. **STOP** - do not process the output
-2. **Narrow scope** - add path filter, file extension, or more specific pattern
-3. **Rerun** with constrained query
-
-**Never do:** `rg "pattern" skills/domains/**/*.md` with broad patterns
-
-### THUNK Lookup Path
-
-If you need THUNK info (task history, completions):
-
-1. **First discover tools:** `bin/thunk-parse --help || true`
-2. **Use structured queries** via thunk-parse or brain-search
-3. **Only tail THUNK.md** when appending new entries (not for lookups)
-
 ### Context You Already Have
 
 **NEVER repeat these (you already know):**
@@ -588,12 +636,10 @@ If you need THUNK info (task history, completions):
 
 **ALWAYS batch:** `grep pattern file1 file2 file3` not 3 separate calls.
 
-### Read Deduplication
+### Read Deduplication (HARD)
 
-Track files read this iteration. Before re-reading:
-
-- If already read → use `sed -n 'start,endp'` for a different slice
-- If same content needed → reference your earlier output, don't re-read
+- Plan reads: max 2 non-overlapping `sed` slices per iteration; ban `sed -n '1,*p'`; ban >90 lines.
+- This is enforced by `tools/check_startup_rules.sh`.
 
 ---
 

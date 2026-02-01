@@ -33,7 +33,7 @@ Current mission and focus. Historical logs archived in `cortex/logs/THOUGHTS_ARC
 ### Success Criteria
 
 - [x] Cortex runs independently
-- [x] Ralph syncs tasks from cortex/IMPLEMENTATION_PLAN.md
+- [x] Ralph syncs tasks from workers/workers/IMPLEMENTATION_PLAN.md
 - [x] Clear separation: Cortex plans, Ralph builds
 - [ ] Skills system captures gaps (ongoing)
 - [x] Both agents respect protected files

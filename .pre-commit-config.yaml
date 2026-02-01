@@ -144,7 +144,8 @@ repos:
             .*/PLAYBOOK_TEMPLATE\.md$|
             skills/playbooks/README\.md$|
             skills/conventions\.md$|
-            workers/ralph/README\.md$
+            workers/ralph/README\.md$|
+            app/brain-map/frontend/node_modules/.*
           )$
 
       - id: validate-code-examples
@@ -165,6 +166,27 @@ repos:
           )$
 
 
+  # ==========================================================================
+  # Semantic Code Review (Manual/CI only)
+  # ==========================================================================
+  - repo: local
+    hooks:
+      - id: semantic-code-review
+        name: semantic-code-review
+        description: AI-assisted semantic code review (manual stage only)
+        entry: python3 tools/semantic_reviewer.py --paths
+        language: system
+        stages: [manual]
+        pass_filenames: true
+        files: \.(md|py|sh|bash|yaml|yml|js|jsx|ts|tsx)$
+        exclude: |
+          (?x)^(
+            .*THUNK\.md$|
+            .*IMPLEMENTATION_PLAN\.md$|
+            .*/node_modules/.*|
+            .*\.min\..*
+          )$
+
   # Protected File Hash Validation
   # ==========================================================================
   - repo: local
@@ -175,7 +197,7 @@ repos:
         entry: bash tools/validate_protected_hashes.sh
         language: system
         pass_filenames: false
-        always_run: true
+        files: ^(workers/ralph/(loop\.sh|verifier\.sh|PROMPT\.md|AGENTS\.md)|rules/AC\.rules|\.verify/.*\.sha256|workers/ralph/\.verify/.*\.sha256)$
 
       - id: validate-doc-sync
         name: validate-doc-sync

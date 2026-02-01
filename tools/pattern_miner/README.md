@@ -244,7 +244,7 @@ The pattern miner is designed for periodic human/Cortex review, not automated Ra
 
 ## See Also
 
-- **[skills/self-improvement/GAP_BACKLOG.md](../../skills/self-improvement/GAP_BACKLOG.md)** - Known gaps in skills
+- **[skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md](../../skills/self-improvement/GAP_BACKLOG.md)** - Known gaps in skills
 - **[skills/self-improvement/SKILL_BACKLOG.md](../../skills/self-improvement/SKILL_BACKLOG.md)** - Planned skills
 - **[skills/self-improvement/SKILL_TEMPLATE.md](../../skills/self-improvement/SKILL_TEMPLATE.md)** - Template for new skills
 - **[skills/index.md](../../skills/index.md)** - Complete skills catalog

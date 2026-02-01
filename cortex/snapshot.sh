@@ -82,7 +82,8 @@ if [[ -f "workers/IMPLEMENTATION_PLAN.md" ]]; then
       path="${BASH_REMATCH[1]}"
       # Get directory prefix (e.g., skills/, templates/)
       dir_prefix=$(echo "$path" | cut -d'/' -f1)
-      directories[$dir_prefix]=$((${directories[$dir_prefix]:-0} + 1))
+      dir_prefix="${dir_prefix:-__root__}"
+      directories["$dir_prefix"]=$((${directories["$dir_prefix"]:-0} + 1))
 
       # Get file extension
       if [[ $path =~ \.([a-z]+)$ ]]; then
@@ -168,7 +169,10 @@ echo ""
 # 5. Pending Gaps from sibling projects
 pending_gaps=()
 shopt -s nullglob
-for marker in "${BRAIN_ROOT}"/../*/cortex/.gap_pending; do
+# Support both legacy and new downstream layouts:
+# - legacy:   <project>/cortex/.gap_pending
+# - new:      <project>/brain/cortex/.gap_pending
+for marker in "${BRAIN_ROOT}"/../*/cortex/.gap_pending "${BRAIN_ROOT}"/../*/brain/cortex/.gap_pending; do
   [[ -f "$marker" ]] && pending_gaps+=("$marker")
 done
 shopt -u nullglob
@@ -179,6 +183,7 @@ if [[ ${#pending_gaps[@]} -gt 0 ]]; then
   for marker in "${pending_gaps[@]}"; do
     project_dir=$(dirname "$(dirname "$marker")")
     project_name=$(basename "$project_dir")
+    # GAP_CAPTURE.md sits alongside the marker in both layouts.
     gap_file="$(dirname "$marker")/GAP_CAPTURE.md"
     count=$(grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2}' "$gap_file" 2>/dev/null) || count=0
     echo "  - $project_name: $count gap(s)"

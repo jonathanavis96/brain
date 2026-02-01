@@ -205,7 +205,7 @@ The brain repository uses structured markers (format: `:::MARKER_NAME::: key=val
 
 | Marker | Reason | Meaning |
 |--------|--------|---------|
-| `CACHE_GUARD` | `pending_tasks` | Tasks remain in IMPLEMENTATION_PLAN.md |
+| `CACHE_GUARD` | `pending_tasks` | Tasks remain in workers/IMPLEMENTATION_PLAN.md |
 | `CACHE_GUARD` | `no_pending_tasks` | All tasks complete |
 | `CACHE_GUARD` | `idempotent_check` | PLAN phase (idempotent operations) |
 | `TOOL_END` | `cache_hit` | Result retrieved from cache |

@@ -1,11 +1,11 @@
 # Gap Capture - PROJECT_NAME
 
-Local gap capture for this project. Gaps are synced to brain's `GAP_BACKLOG.md` via marker file protocol.
+Local gap capture for this project. Gaps are synced to brain's `skills/self-improvement/GAP_BACKLOG.md` via marker file protocol.
 
 ## How It Works
 
 1. **Capture:** When you discover a knowledge gap, add it below using the format
-2. **Mark:** Create `.gap_pending` marker: `touch cortex/.gap_pending`
+2. **Mark:** Create `.gap_pending` marker: `touch brain/cortex/.gap_pending`
 3. **Sync:** Brain's Cortex detects pending gaps and runs `sync_gaps.sh`
 4. **Clear:** After sync, this file is cleared and marker removed
 

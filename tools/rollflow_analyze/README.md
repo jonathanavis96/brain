@@ -97,5 +97,5 @@ pytest tests/test_marker_parser.py -v
 
 ## See Also
 
-- [Phase 12 Implementation Plan](../../cortex/IMPLEMENTATION_PLAN.md) - Task breakdown
+- [Phase 12 Implementation Plan](../../workers/IMPLEMENTATION_PLAN.md) - Task breakdown
 - [Sample Logs](samples/) - Example logs for testing

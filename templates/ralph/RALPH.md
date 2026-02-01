@@ -12,7 +12,7 @@ Use parallel subagents (max 100) to read project vision, goals, and success crit
 **0b. Identify source code location**  
 Prefer `src/` directory. If different, document the actual location.
 
-**0c. Study fix_plan.md**  
+**0c. Study brain/workers/IMPLEMENTATION_PLAN.md**  
 Read the current plan. If it doesn't exist or is empty, the first iteration must create it.
 
 ### The Loop
@@ -23,11 +23,11 @@ Ralph operates in two alternating phases:
 
 See `PROMPT.md` (planning mode section) for full instructions.
 
-**Goal**: Create or update `fix_plan.md` with a prioritized Top 10 checklist
+**Goal**: Create or update `brain/workers/IMPLEMENTATION_PLAN.md` with clear, atomic tasks
 
 **Frequency**:
 
-- First iteration (if fix_plan.md missing/empty)
+- First iteration (if brain/workers/IMPLEMENTATION_PLAN.md missing/empty)
 - Every N iterations (configurable, default: every 3)
 - When explicitly requested
 
@@ -35,16 +35,16 @@ See `PROMPT.md` (planning mode section) for full instructions.
 
 See `PROMPT.md` (building mode section) for full instructions.
 
-**Goal**: Implement the top item from `fix_plan.md`
+**Goal**: Implement the top item from `brain/workers/IMPLEMENTATION_PLAN.md`
 
 **Process**:
 
-1. Take top incomplete item from fix_plan.md
+1. Take top incomplete item from brain/workers/IMPLEMENTATION_PLAN.md
 2. Implement the change
 3. Run build/tests
-4. Update fix_plan.md (mark completed ✅)
-5. Append progress to ralph/progress.txt
-6. **DO NOT COMMIT** - PLAN phase handles commits
+4. Update brain/workers/IMPLEMENTATION_PLAN.md (mark completed `[x]`)
+5. Append progress to brain/workers/ralph/THUNK.md
+6. Stage changes with `git add -A` (NO commit - loop.sh batches commits at PLAN phase)
 
 ### Parallelism Contract
 
@@ -59,7 +59,7 @@ See `PROMPT.md` (building mode section) for full instructions.
 - Running build commands
 - Executing tests and benchmarks
 - Making file modifications
-- Git operations (PLAN phase only)
+- Git operations (staging in BUILD, commits batched at PLAN phase)
 
 ### Completion Sentinel
 
@@ -73,62 +73,52 @@ The loop runner detects this sentinel and stops iteration.
 
 ## Progress Tracking
 
-All Ralph iterations are logged to `ralph/progress.txt` with:
+All Ralph task completions are logged to `brain/workers/ralph/THUNK.md` with:
 
+- Task ID
 - Timestamp
-- Iteration number
 - Phase (PLAN or BUILD)
 - Actions taken
 - Results and outcomes
 
+Organized into "eras" for major project phases.
+
 ## Git Commits
 
-**Commits happen in PLAN phase only**, not after each BUILD iteration.
+**Commits are batched at PLAN phase** for efficiency (~13 seconds saved per BUILD iteration).
 
-PLAN phase commits all accumulated changes from BUILD iterations:
+**BUILD phase:** Stage changes only (`git add -A`, no commit)  
+**PLAN phase:** loop.sh commits all accumulated BUILD changes at PLAN start, then stages/commits plan updates
 
-```text
-git add -A
-git commit -m "Ralph Plan: [comprehensive summary of all changes]"
-```text
+**Exception:** Verifier failures get immediate commits in BUILD mode with message: `fix(ralph): resolve AC failure <RULE_ID>`
 
 This ensures:
 
 - Fewer, more meaningful commits
+- Faster BUILD iterations (no commit overhead)
 - Comprehensive commit messages (Ralph has full context during PLAN)
 - All related changes grouped together
 
 ## Knowledge Base Integration
 
-Ralph MUST consult the shared brain knowledge base:
-
-**Always read first:**
-
-- `../../brain/skills/SUMMARY.md`
-- `../../brain/references/react-best-practices/HOTLIST.md`
-
-**Read on-demand:**
-
-- `../../brain/references/react-best-practices/INDEX.md`
-- `../../brain/references/react-best-practices/react-performance-guidelines.md`
-- `../../brain/references/react-best-practices/rules/*` (specific rules only)
+Ralph can consult project-specific skills in the skills directory when it exists.
 
 **Knowledge growth:**
-When Ralph discovers new conventions or decisions, it creates/updates KB files in `../../brain/skills/` and updates `../../brain/skills/SUMMARY.md`.
+When Ralph discovers new conventions or decisions specific to the project, it can create/update KB files in the skills directory.
 
 ## Running Ralph
 
 ### PowerShell
 
 ```powershell
-.\ralph\ralph.ps1 -Iterations 10 -PlanEvery 3
+.\workers\ralph\ralph.ps1 -Iterations 10 -PlanEvery 3
 ```text
 
 ### Manual (RovoDev CLI)
 
 ```powershell
 # Ralph determines mode from iteration number
-acli rovodev run "$(Get-Content ralph\PROMPT.md -Raw)"
+acli rovodev run "$(Get-Content workers\ralph\PROMPT.md -Raw)"
 ```text
 
 ## File Structure
@@ -140,30 +130,32 @@ project-root/               ← Application code and config files
 ├── tsconfig.json           # Config files - in project root
 ├── index.html              # Entry points - in project root
 ├── README.md               # Project readme
-└── ralph/                  # ALL Ralph-related files
-    ├── RALPH.md            # This file - Ralph contract
-    ├── PROMPT.md           # Unified prompt (mode detection)
-    ├── IMPLEMENTATION_PLAN.md  # Task tracking
-    ├── VALIDATION_CRITERIA.md  # Quality gates
-    ├── AGENTS.md           # Agent guidance for this project
-    ├── THOUGHTS.md         # Project vision, goals, success criteria
-    ├── NEURONS.md          # Codebase map (auto-generated)
-    ├── loop.sh             # Loop runner script
-    ├── logs/               # Iteration logs
-    ├── skills/             # Project-specific knowledge base
-    └── progress.txt        # Iteration log (appended)
+└── workers/
+    └── ralph/                  # ALL Ralph-related files
+        ├── RALPH.md            # This file - Ralph contract
+        ├── PROMPT.md           # Unified prompt (mode detection)
+        ├── VALIDATION_CRITERIA.md  # Quality gates
+        ├── AGENTS.md           # Agent guidance for this project
+        ├── THOUGHTS.md         # Project vision, goals, success criteria
+        ├── NEURONS.md          # Codebase map (auto-generated)
+        ├── THUNK.md            # Task completion log (append-only)
+        ├── loop.sh             # Loop runner script
+        ├── logs/               # Iteration logs
+        └── skills/             # Project-specific knowledge base
+    ├── IMPLEMENTATION_PLAN.md  # Task tracking (at workers/ level)
 ```text
 
-### ⚠️ CRITICAL: Source code goes in PROJECT ROOT, not ralph/
+### ⚠️ CRITICAL: Source code goes in PROJECT ROOT, not Ralph directory
 
-**The `ralph/` directory contains Ralph loop infrastructure AND project context files.**
+**The Ralph directory contains Ralph loop infrastructure AND project context files.**
 
 - Source code → `src/` (project root)
 - Config files → project root (`package.json`, `tsconfig.json`, etc.)
 - Entry points → project root (`index.html`, `main.py`, etc.)
-- Ralph files → `ralph/` (PROMPT.md, IMPLEMENTATION_PLAN.md, AGENTS.md, THOUGHTS.md, NEURONS.md, skills/, logs/, etc.)
+- Ralph files → Ralph directory (PROMPT.md, AGENTS.md, THOUGHTS.md, NEURONS.md, THUNK.md, skills/, logs/, etc.)
+- Task tracking → brain/workers/IMPLEMENTATION_PLAN.md
 
-**NEVER create `ralph/src/` or put application code inside `ralph/`.**
+**NEVER put application code inside the Ralph directory.**
 
 ## Philosophy: Ralph Wiggum
 

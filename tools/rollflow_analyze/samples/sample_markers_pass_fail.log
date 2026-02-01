@@ -1,0 +1,47 @@
+# Sample log with explicit markers - contains both PASS and FAIL tool calls
+# Use for testing marker_parser.py
+
+::RUN:: id=sample-run-001 ts=2026-01-24T10:00:00Z
+
+::ITER:: id=iter-001 run_id=sample-run-001 ts=2026-01-24T10:00:00Z
+
+# Tool 1: shellcheck - PASS
+::TOOL_CALL_START:: id=tc-001 name=shellcheck key=abc123def456 ts=2026-01-24T10:00:01Z git=main-abcd1234
+Running shellcheck on workers/ralph/loop.sh...
+In loop.sh line 45:
+  # No issues found
+::TOOL_CALL_END:: id=tc-001 status=PASS exit=0 duration_ms=234
+
+# Tool 2: markdownlint - FAIL
+::TOOL_CALL_START:: id=tc-002 name=markdownlint key=789ghi012jkl ts=2026-01-24T10:00:05Z git=main-abcd1234
+Running markdownlint on docs/*.md...
+docs/README.md:15 MD040 Fenced code blocks should have a language specified
+docs/README.md:42 MD024 Multiple headings with the same content
+::TOOL_CALL_END:: id=tc-002 status=FAIL exit=1 duration_ms=567 err=MD040,MD024
+
+# Tool 3: pytest - PASS
+::TOOL_CALL_START:: id=tc-003 name=pytest key=mno345pqr678 ts=2026-01-24T10:00:10Z git=main-abcd1234
+Running pytest tests/...
+============================= test session starts ==============================
+collected 12 items
+tests/test_parser.py ............                                        [100%]
+============================= 12 passed in 1.23s ================================
+::TOOL_CALL_END:: id=tc-003 status=PASS exit=0 duration_ms=1456
+
+::ITER:: id=iter-002 run_id=sample-run-001 ts=2026-01-24T10:01:00Z
+
+# Tool 4: shellcheck again (same cache key - demonstrates cacheability)
+::TOOL_CALL_START:: id=tc-004 name=shellcheck key=abc123def456 ts=2026-01-24T10:01:01Z git=main-abcd1234
+Running shellcheck on workers/ralph/loop.sh...
+::TOOL_CALL_END:: id=tc-004 status=PASS exit=0 duration_ms=198
+
+# Tool 5: build - FAIL with traceback
+::TOOL_CALL_START:: id=tc-005 name=build key=stu901vwx234 ts=2026-01-24T10:01:05Z git=main-abcd1234
+Building project...
+Traceback (most recent call last):
+  File "build.py", line 42, in main
+    compile_assets()
+  File "build.py", line 15, in compile_assets
+    raise RuntimeError("Missing dependency: node")
+RuntimeError: Missing dependency: node
+::TOOL_CALL_END:: id=tc-005 status=FAIL exit=1 duration_ms=89 err=RuntimeError:Missing_dependency

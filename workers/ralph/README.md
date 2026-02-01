@@ -10,6 +10,8 @@ The **brain** repository is the shared consciousness for all projects - a centra
 
 ## Quick Start
 
+> **📖 For operational guidance (troubleshooting, verifier, waivers):** See [cortex/docs/RUNBOOK.md](../../cortex/docs/RUNBOOK.md)
+
 ### Bootstrap a New Project
 
 ```bash
@@ -24,19 +26,19 @@ Goals: MVP in 2 weeks, 1000 users in first month
 EOF
 
 # 2. Run bootstrap
-bash new-project.sh NEW_PROJECT_IDEA.md
+bash scripts/new-project.sh NEW_PROJECT_IDEA.md
 
 # 3. Your project is ready!
 cd /path/to/your-project
-bash ralph/loop.sh --iterations 10
+bash workers/ralph/loop.sh --iterations 10
 ```text
 
 **What gets created:**
 
-- Complete Ralph infrastructure (`ralph/loop.sh`, `ralph/PROMPT.md`, etc.)
+- Complete Ralph infrastructure (`workers/ralph/loop.sh`, `workers/ralph/PROMPT.md`, etc.)
 - Custom `THOUGHTS.md` (generated from your project idea)
 - Custom `NEURONS.md` (codebase map inferred from tech stack)
-- Custom `IMPLEMENTATION_PLAN.md` (prioritized first tasks)
+- Custom `workers/IMPLEMENTATION_PLAN.md` (prioritized first tasks)
 - `AGENTS.md` with brain knowledge base references
 
 **Bootstrap time:** ~14 seconds
@@ -49,7 +51,12 @@ brain/
 ├── AGENTS.md                      # How to run Ralph
 ├── NEURONS.md                     # Brain repository map
 ├── THOUGHTS.md                    # Vision & Ralph's mission
-├── IMPLEMENTATION_PLAN.md         # Current tasks for brain maintenance
+├── workers/IMPLEMENTATION_PLAN.md         # Canonical task plan (brain maintenance)
+│
+├── workers/ralph/                         # Ralph worker layer (execution infrastructure)
+│   ├── loop.sh                            # Ralph loop runner
+│   ├── PROMPT.md                          # Ralph system prompt
+│   └── ...
 │
 ├── skills/                        # Skills & Knowledge Base (33 files)
 │   ├── SUMMARY.md                 # KB index
@@ -70,7 +77,7 @@ brain/
 │   ├── AGENTS.project.md          # Agent guidance
 │   ├── THOUGHTS.project.md        # Vision template
 │   ├── NEURONS.project.md         # Codebase map template
-│   └── ralph/                     # Ralph infrastructure
+│   └── ralph/                     # Ralph infrastructure templates
 │       ├── loop.sh                # Ralph runner
 │       ├── PROMPT.project.md      # Unified prompt
 │       └── IMPLEMENTATION_PLAN.project.md
@@ -80,9 +87,8 @@ brain/
 │   ├── generate-neurons.sh        # Tech-stack-aware map
 │   └── generate-implementation-plan.sh
 │
-├── new-project.sh                 # Bootstrap orchestration
-├── loop.sh                        # Ralph loop (brain self-improvement)
-└── watch_ralph_tasks.sh           # Interactive task monitor
+├── scripts/new-project.sh         # Bootstrap orchestration (wrapper)
+└── workers/ralph/watch_ralph_tasks.sh   # Interactive task monitor
 ```text
 
 ## Knowledge Base Usage
@@ -122,7 +128,7 @@ Ralph maintains the brain repository through iterative PLAN/BUILD cycles.
 ### Run Ralph
 
 ```bash
-cd /path/to/brain/ralph/
+cd /path/to/brain/workers/ralph/
 
 # Single iteration (auto-detects PLAN or BUILD mode)
 bash loop.sh
@@ -136,7 +142,7 @@ bash watch_ralph_tasks.sh
 
 ### Task Monitor (Interactive)
 
-Real-time display of `IMPLEMENTATION_PLAN.md` with hotkeys:
+Real-time display of `workers/IMPLEMENTATION_PLAN.md` with hotkeys:
 
 ```bash
 bash watch_ralph_tasks.sh
@@ -208,13 +214,81 @@ Current: React/Next.js focused
 - DevOps (infrastructure, automation)
 - Libraries/packages (npm, PyPI)
 
+## Discord Integration
+
+Ralph can post build updates to Discord channels via webhooks. This provides real-time visibility into iteration progress and failures.
+
+### Setup
+
+1. **Create Discord webhook:**
+   - Open Discord Server Settings → Integrations → Webhooks
+   - Click "New Webhook"
+   - Name it (e.g., "Ralph Build Bot")
+   - Select target channel
+   - Copy webhook URL
+
+2. **Configure environment variable:**
+
+   ```bash
+   export DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN"
+   ```
+
+   Add to your shell profile (~/.bashrc or ~/.zshrc) to persist across sessions.
+
+3. **Verify setup:**
+
+   ```bash
+   echo "Test message" | bin/discord-post
+   ```
+
+   Check Discord channel for message.
+
+### What Gets Posted
+
+- **Iteration summaries** - Task completed, files changed, mode (PLAN/BUILD)
+- **Verifier failures** - Failed acceptance criteria with details
+- **Loop completion** - Final status when all tasks complete
+
+### Troubleshooting
+
+**Discord sanity check (recommended first):** If iteration summaries aren’t appearing, start by posting *known-good* content via stdin:
+
+```bash
+cat /path/to/known_good_summary.txt | bin/discord-post
+```
+
+Avoid constructing Discord Markdown with backticks in bash strings (backticks trigger command substitution). Use a quoted heredoc (`<<'EOF'`) or pipe content from a file.
+
+
+**Python:** If you see `bash: python: command not found`, use `python3` (this repo’s scripts assume `python3`).
+
+
+| Issue | Solution |
+| ----- | -------- |
+| No messages appearing | Check `DISCORD_WEBHOOK_URL` is set: `echo $DISCORD_WEBHOOK_URL` |
+| "webhook not found" error | Regenerate webhook in Discord settings |
+| Messages truncated | Normal - discord-post chunks at 1900 chars automatically |
+| bin/discord-post not found | Ensure you're in correct directory: `cd workers/ralph` |
+| Ralph uses wrong model | **How it works:** `workers/ralph/loop.sh` resolves `--model` (e.g. `sonnet`, `gpt52`) to a full `modelId`, generates a temp RovoDev config under `/tmp/rovodev_config_<pid>_<ts>.yml` with `agent.modelId` overridden, and runs `acli rovodev run --config-file <temp>` to force the model. **Swap models:** run `ralph --model sonnet` or `ralph --model gpt52`. **Default:** set in `workers/ralph/loop.sh` (and template in `templates/ralph/loop.sh`). **Verify:** the loop banner prints `Model=<resolved>` and RovoDev output should show `Using model:` accordingly. If you still see the wrong model, check you’re running the updated `workers/ralph/loop.sh` from this repo checkout. |
+
+### Technical Details
+
+See [cortex/docs/DISCORD_INTEGRATION_SPEC.md](../../cortex/docs/DISCORD_INTEGRATION_SPEC.md) for:
+
+- Integration architecture
+- Message chunking strategy (2000 char Discord limit)
+- Rate limiting handling
+- Error recovery approach
+
+**Note:** Discord posting is **non-blocking** - webhook failures don't stop the loop.
+
 ## Path Convention (CRITICAL)
 
 All templates use **bash-style forward slash paths**:
 
 ```markdown
 # Correct ✅
-../../brain/skills/SUMMARY.md
+./skills/SUMMARY.md
 ../../brain/references/react-best-practices/HOTLIST.md
 
 # Incorrect ❌
@@ -284,10 +358,10 @@ All templates use **bash-style forward slash paths**:
 Brain can improve itself:
 
 ```bash
-cd /path/to/brain/ralph/
+cd /path/to/brain/workers/ralph/
 
-# Add tasks to IMPLEMENTATION_PLAN.md
-echo "- [ ] **My improvement task**" >> IMPLEMENTATION_PLAN.md
+# Add tasks to workers/IMPLEMENTATION_PLAN.md
+echo "- [ ] **My improvement task**" >> workers/IMPLEMENTATION_PLAN.md
 
 # Run Ralph
 bash loop.sh --iterations 5
@@ -299,7 +373,7 @@ bash watch_ralph_tasks.sh
 **Ralph's Design Philosophy:**
 
 - **PROMPT.md** - Single prompt with conditional logic (plan + build modes)
-- **IMPLEMENTATION_PLAN.md** - The persistent TODO list (actionable tasks only)
+- **workers/IMPLEMENTATION_PLAN.md** - The persistent TODO list (actionable tasks only)
 - **VALIDATION_CRITERIA.md** - Quality gates and acceptance criteria (reference document)
 - **NEURONS.md** - Codebase map (read via subagent when needed, not first-load)
 - **One Iteration = One Unit** - Implement + validate + update plan + STOP
@@ -413,8 +487,8 @@ The brain repository is successful when:
 - ✅ Interactive task monitor with hotkeys
 - ✅ Templates use bash paths consistently
 - ✅ Ralph loop maintains brain repository
-- 📝 10 tasks in IMPLEMENTATION_PLAN.md for continuous improvement
+- 📝 10 tasks in workers/IMPLEMENTATION_PLAN.md for continuous improvement
 
 ---
 
-**Get Started:** Run `bash new-project.sh NEW_PROJECT_IDEA.md` to bootstrap your first project!
+**Get Started:** Run `bash scripts/new-project.sh NEW_PROJECT_IDEA.md` to bootstrap your first project!

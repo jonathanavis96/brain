@@ -1,0 +1,7 @@
+# Generated prompt artifacts (large, ephemeral)
+
+semantic_review_prompt_*.txt
+
+# OS/editor noise
+
+.DS_Store

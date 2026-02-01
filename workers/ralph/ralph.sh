@@ -90,7 +90,7 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     -m)
-      LOOP_ARGS+=(--model "${2:-auto}")
+      LOOP_ARGS+=(--model "${2:-gpt52}")
       shift 2
       ;;
     -m*)
