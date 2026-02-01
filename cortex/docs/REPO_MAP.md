@@ -27,7 +27,7 @@ This document provides a human-friendly overview of the Brain repository structu
 - `cortex/THOUGHTS.md` - Cortex's own thinking space
 - Root-level `workers/IMPLEMENTATION_PLAN.md` - When delegating to Ralph
 - Root-level `THOUGHTS.md` - Strategic decisions
-- `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` - Knowledge gaps
+- `skills/self-improvement/GAP_BACKLOG.md` - Knowledge gaps
 - `skills/self-improvement/SKILL_BACKLOG.md` - Skill promotion queue
 
 **What Cortex Cannot Modify:**
@@ -180,7 +180,7 @@ This document provides a human-friendly overview of the Brain repository structu
 - **Completed tasks:** `workers/ralph/workers/ralph/THUNK.md`
 - **Strategic context:** `cortex/THOUGHTS.md`
 - **Ralph's context:** `workers/ralph/THOUGHTS.md`
-- **Knowledge gaps:** `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md`
+- **Knowledge gaps:** `skills/self-improvement/GAP_BACKLOG.md`
 - **Skill backlog:** `skills/self-improvement/SKILL_BACKLOG.md`
 - **Verifier status:** `.verify/latest.txt`
 - **Git state:** `.git/` (local commits before push)
