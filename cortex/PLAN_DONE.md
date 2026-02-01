@@ -514,3 +514,11 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-29 | WARN.MD032.CORTEX_SYSTEM_PROMPT | - [x] **WARN.MD032.CORTEX_SYSTEM_PROMPT** Fix MD032/blanks-around-lists in cortex/CORTEX_SYSTEM_PROMPT.md:10 |
 | 2026-01-29 | WARN.MD022.CORTEX_SYSTEM_PROMPT | - [x] **WARN.MD022.CORTEX_SYSTEM_PROMPT** Fix MD022/blanks-around-headings in cortex/CORTEX_SYSTEM_PROMPT.md:11 |
 | 2026-01-29 | 35.2.3 | - [x] **35.2.3** Update bootstrap scripts |
+
+### Archived on 2026-02-01 12:29:18
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-02-01 | WARN.MD040.test_md040.md | - [x] **WARN.MD040.test_md040.md** - Fix MD040 in tools/tests/fixtures/test_md040.md |
+| 2026-02-01 | 39.5.1 | - [x] **39.5.1** Run semantic review during PLAN only (not BUILD) |
+| 2026-02-01 | 39.6.1 | - [x] **39.6.1** Verify BUILD never commits; PLAN commits still occur; end-of-run always commits |
