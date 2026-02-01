@@ -2,7 +2,7 @@
 
 This file has code fences without language tags.
 
-```bash
+```
 #!/bin/bash
 echo "This should trigger MD040"
 ```
@@ -15,7 +15,7 @@ echo "This has a language tag"
 
 Another bad one:
 
-```python
+```
 def main():
     pass
 ```
