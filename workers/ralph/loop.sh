@@ -1095,8 +1095,10 @@ generate_iteration_summary() {
 **Ralph — Iteration ${iter_num} (${mode^^})** • ${timestamp}
 
 **Run**
-- Run ID: `${run_id}`
-- Log: `${logfile}`
+# shellcheck disable=SC2006
+- Run ID: \`${run_id}\`
+# shellcheck disable=SC2006
+- Log: \`${logfile}\`
 EOF
     return
   fi
@@ -1109,8 +1111,10 @@ EOF
 **Ralph — Iteration ${iter_num} (${mode^^})** • ${timestamp}
 
 **Run**
-- Run ID: `${run_id}`
-- Log: `${logfile}`
+# shellcheck disable=SC2006
+- Run ID: \`${run_id}\`
+# shellcheck disable=SC2006
+- Log: \`${logfile}\`
 EOF
     return
   fi

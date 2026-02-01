@@ -111,7 +111,7 @@ function App() {
         setGraphData(data)
       }
     } catch (err) {
-      console.error('Failed to refresh graph:', err)
+      showToast('Failed to refresh graph: ' + err.message)
     }
   }
 
@@ -1823,27 +1823,72 @@ function App() {
                     z-index: 1000;
                     box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.2);
                   `
-                  panel.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; position: sticky; top: 0; background: ${colors.backgroundSecondary}; padding-bottom: 0.5rem; border-bottom: 1px solid ${colors.panelBorder};">
-                      <h3 style="margin: 0; color: ${colors.text};">${editedNode?.title || 'Node Details'}</h3>
-                      <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 28px; cursor: pointer; color: ${colors.textSecondary}; padding: 0; line-height: 1;">×</button>
-                    </div>
-                    <div style="color: ${colors.text};">
-                      <div style="margin-bottom: 1rem;">
-                        <strong style="color: ${colors.textSecondary};">Type:</strong> ${editedNode?.type || 'N/A'}
-                      </div>
-                      <div style="margin-bottom: 1rem;">
-                        <strong style="color: ${colors.textSecondary};">Status:</strong> ${editedNode?.status || 'N/A'}
-                      </div>
-                      <div style="margin-bottom: 1rem;">
-                        <strong style="color: ${colors.textSecondary};">Tags:</strong> ${editedNode?.tags?.join(', ') || 'None'}
-                      </div>
-                      <div style="margin-bottom: 1rem;">
-                        <strong style="color: ${colors.textSecondary};">Body:</strong>
-                        <div style="margin-top: 0.5rem; padding: 0.75rem; background: ${colors.panelBackgroundAlt}; border-radius: 4px; white-space: pre-wrap; font-size: 14px; line-height: 1.6;">${editedNode?.body || 'No content'}</div>
-                      </div>
-                    </div>
-                  `
+                  // Create header with close button
+                  const header = document.createElement('div')
+                  header.style.cssText = `display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; position: sticky; top: 0; background: ${colors.backgroundSecondary}; padding-bottom: 0.5rem; border-bottom: 1px solid ${colors.panelBorder};`
+                  
+                  const titleEl = document.createElement('h3')
+                  titleEl.style.cssText = `margin: 0; color: ${colors.text};`
+                  titleEl.textContent = editedNode?.title || 'Node Details'
+                  
+                  const closeBtn = document.createElement('button')
+                  closeBtn.style.cssText = `background: none; border: none; font-size: 28px; cursor: pointer; color: ${colors.textSecondary}; padding: 0; line-height: 1;`
+                  closeBtn.textContent = '×'
+                  closeBtn.onclick = () => panel.remove()
+                  
+                  header.appendChild(titleEl)
+                  header.appendChild(closeBtn)
+                  panel.appendChild(header)
+                  
+                  // Create content container
+                  const content = document.createElement('div')
+                  content.style.cssText = `color: ${colors.text};`
+                  
+                  // Type field
+                  const typeDiv = document.createElement('div')
+                  typeDiv.style.cssText = 'margin-bottom: 1rem;'
+                  const typeLabel = document.createElement('strong')
+                  typeLabel.style.color = colors.textSecondary
+                  typeLabel.textContent = 'Type: '
+                  typeDiv.appendChild(typeLabel)
+                  typeDiv.appendChild(document.createTextNode(editedNode?.type || 'N/A'))
+                  content.appendChild(typeDiv)
+                  
+                  // Status field
+                  const statusDiv = document.createElement('div')
+                  statusDiv.style.cssText = 'margin-bottom: 1rem;'
+                  const statusLabel = document.createElement('strong')
+                  statusLabel.style.color = colors.textSecondary
+                  statusLabel.textContent = 'Status: '
+                  statusDiv.appendChild(statusLabel)
+                  statusDiv.appendChild(document.createTextNode(editedNode?.status || 'N/A'))
+                  content.appendChild(statusDiv)
+                  
+                  // Tags field
+                  const tagsDiv = document.createElement('div')
+                  tagsDiv.style.cssText = 'margin-bottom: 1rem;'
+                  const tagsLabel = document.createElement('strong')
+                  tagsLabel.style.color = colors.textSecondary
+                  tagsLabel.textContent = 'Tags: '
+                  tagsDiv.appendChild(tagsLabel)
+                  tagsDiv.appendChild(document.createTextNode(editedNode?.tags?.join(', ') || 'None'))
+                  content.appendChild(tagsDiv)
+                  
+                  // Body field
+                  const bodyContainer = document.createElement('div')
+                  bodyContainer.style.cssText = 'margin-bottom: 1rem;'
+                  const bodyLabel = document.createElement('strong')
+                  bodyLabel.style.color = colors.textSecondary
+                  bodyLabel.textContent = 'Body:'
+                  bodyContainer.appendChild(bodyLabel)
+                  
+                  const bodyContent = document.createElement('div')
+                  bodyContent.style.cssText = `margin-top: 0.5rem; padding: 0.75rem; background: ${colors.panelBackgroundAlt}; border-radius: 4px; white-space: pre-wrap; font-size: 14px; line-height: 1.6;`
+                  bodyContent.textContent = editedNode?.body || 'No content'
+                  bodyContainer.appendChild(bodyContent)
+                  content.appendChild(bodyContainer)
+                  
+                  panel.appendChild(content)
                   document.body.appendChild(panel)
                 }}
                 style={{

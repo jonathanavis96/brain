@@ -4,9 +4,12 @@ import logging
 import os
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 import yaml
 
 from app.watcher import FileWatcher
@@ -36,7 +39,7 @@ class NodeCreate(BaseModel):
     source_links: list[str] = Field(default_factory=list)
     acceptance_criteria: list[str] = Field(default_factory=list)
     links: list[dict] = Field(default_factory=list)
-    body_md: str = ""
+    body_md: str = Field(default="", max_length=100000)  # Limit to ~100KB
 
 
 class NodeUpdate(BaseModel):
@@ -51,7 +54,7 @@ class NodeUpdate(BaseModel):
     source_links: list[str] | None = None
     acceptance_criteria: list[str] | None = None
     links: list[dict] | None = None
-    body_md: str | None = None
+    body_md: str | None = Field(default=None, max_length=100000)  # Limit to ~100KB
 
 
 class GeneratePlanOutput(BaseModel):
@@ -72,6 +75,9 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
+
+# Configure rate limiting (protect against accidental DoS even on localhost)
+limiter = Limiter(key_func=get_remote_address)
 
 # Global file watcher instance
 file_watcher: FileWatcher | None = None
@@ -110,15 +116,39 @@ app = FastAPI(
     description="Local-first knowledge graph API for Brain Map system",
     version="0.1.0",
     lifespan=lifespan,
+    root_path="/api/v1",  # API versioning for future compatibility
 )
+
+# Register rate limiter
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# =============================================================================
+# SECURITY NOTES - Localhost-Only Application
+# =============================================================================
+# This API is designed for LOCAL USE ONLY and should never be exposed publicly.
+# Security model:
+#   - NO AUTHENTICATION: Assumes single-user localhost environment
+#   - NO CSRF PROTECTION: allow_credentials disabled (no cookies used)
+#   - BASIC RATE LIMITING: Protects against accidental DoS (see @limiter decorators)
+#   - NO TLS: Plain HTTP sufficient for localhost traffic
+#
+# ⚠️ WARNING: DO NOT expose this API to network interfaces beyond localhost!
+#    If you need multi-user or remote access, you MUST add:
+#      1. Authentication (e.g., JWT tokens, API keys)
+#      2. CSRF protection (if using cookies/sessions)
+#      3. Rate limiting (e.g., slowapi)
+#      4. TLS/HTTPS (reverse proxy with nginx/caddy)
+#      5. Input validation and sanitization
+# =============================================================================
 
 # CORS middleware for local development (frontend on :5173, backend on :8000)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_credentials=False,  # No cookies/sessions - safer for localhost-only use
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Accept"],
 )
 
 
@@ -338,7 +368,8 @@ async def get_node(node_id: str) -> dict:
 
 
 @app.put("/node/{node_id}/position")
-async def update_node_position(node_id: str, request: PositionUpdate) -> dict:
+@limiter.limit("60/minute")  # Allow 60 position updates per minute
+async def update_node_position(request: Request, node_id: str, update: PositionUpdate) -> dict:
     """Update node position in frontmatter.
 
     Args:
@@ -358,8 +389,8 @@ async def update_node_position(node_id: str, request: PositionUpdate) -> dict:
     from app.frontmatter import parse_and_validate
     import yaml
 
-    x = request.x
-    y = request.y
+    x = update.x
+    y = update.y
 
     # Find node file
     repo_root = _find_repo_root()
@@ -430,7 +461,8 @@ async def update_node_position(node_id: str, request: PositionUpdate) -> dict:
 
 
 @app.put("/node/{node_id}")
-async def update_node(node_id: str, request: NodeUpdate) -> dict:
+@limiter.limit("30/minute")  # Allow 30 node updates per minute
+async def update_node(request: Request, node_id: str, node_update: NodeUpdate) -> dict:
     """Update an existing node (markdown-first).
 
     Args:
@@ -453,7 +485,7 @@ async def update_node(node_id: str, request: NodeUpdate) -> dict:
     from app.index import rebuild_index, IndexRebuildError
 
     # Reject attempts to change id
-    if request.id is not None and request.id != node_id:
+    if node_update.id is not None and node_update.id != node_id:
         raise HTTPException(
             status_code=400,
             detail={
@@ -509,10 +541,10 @@ async def update_node(node_id: str, request: NodeUpdate) -> dict:
     frontmatter["updated_at"] = now
 
     # Update allowed fields
-    if request.title is not None:
-        frontmatter["title"] = request.title
+    if node_update.title is not None:
+        frontmatter["title"] = node_update.title
 
-    if request.type is not None:
+    if node_update.type is not None:
         # Validate type enum
         valid_types = {
             "Inbox",
@@ -522,7 +554,7 @@ async def update_node(node_id: str, request: NodeUpdate) -> dict:
             "TaskContract",
             "Artifact",
         }
-        if request.type not in valid_types:
+        if node_update.type not in valid_types:
             raise HTTPException(
                 status_code=400,
                 detail={
@@ -530,12 +562,12 @@ async def update_node(node_id: str, request: NodeUpdate) -> dict:
                     "message": f"Invalid type '{request.type}'. Allowed values: {sorted(valid_types)}",
                 },
             )
-        frontmatter["type"] = request.type
+        frontmatter["type"] = node_update.type
 
-    if request.status is not None:
+    if node_update.status is not None:
         # Validate status enum
         valid_statuses = {"idea", "planned", "active", "blocked", "done", "archived"}
-        if request.status not in valid_statuses:
+        if node_update.status not in valid_statuses:
             raise HTTPException(
                 status_code=400,
                 detail={
@@ -543,28 +575,28 @@ async def update_node(node_id: str, request: NodeUpdate) -> dict:
                     "message": f"Invalid status '{request.status}'. Allowed values: {sorted(valid_statuses)}",
                 },
             )
-        frontmatter["status"] = request.status
+        frontmatter["status"] = node_update.status
 
-    if request.tags is not None:
-        frontmatter["tags"] = request.tags
+    if node_update.tags is not None:
+        frontmatter["tags"] = node_update.tags
 
-    if request.priority is not None:
-        frontmatter["priority"] = request.priority
+    if node_update.priority is not None:
+        frontmatter["priority"] = node_update.priority
 
-    if request.risk is not None:
-        frontmatter["risk"] = request.risk
+    if node_update.risk is not None:
+        frontmatter["risk"] = node_update.risk
 
-    if request.owner is not None:
-        frontmatter["owner"] = request.owner
+    if node_update.owner is not None:
+        frontmatter["owner"] = node_update.owner
 
-    if request.source_links is not None:
-        frontmatter["source_links"] = request.source_links
+    if node_update.source_links is not None:
+        frontmatter["source_links"] = node_update.source_links
 
-    if request.acceptance_criteria is not None:
-        frontmatter["acceptance_criteria"] = request.acceptance_criteria
+    if node_update.acceptance_criteria is not None:
+        frontmatter["acceptance_criteria"] = node_update.acceptance_criteria
 
     # Handle links (convert to relationships format)
-    if request.links is not None:
+    if node_update.links is not None:
         links = request.links
         if links:
             relationships = []
@@ -583,7 +615,7 @@ async def update_node(node_id: str, request: NodeUpdate) -> dict:
             frontmatter.pop("relationships", None)
 
     # Update body if provided
-    if request.body_md is not None:
+    if node_update.body_md is not None:
         body = request.body_md
 
     # Build updated markdown content
@@ -654,7 +686,8 @@ async def update_node(node_id: str, request: NodeUpdate) -> dict:
 
 
 @app.post("/node/{node_id}/comments", status_code=201)
-async def add_comment(node_id: str, request: CommentCreate) -> dict:
+@limiter.limit("20/minute")  # Allow 20 comments per minute
+async def add_comment(request: Request, node_id: str, comment: CommentCreate) -> dict:
     """Add a comment to a node (stored in frontmatter).
 
     Args:
@@ -716,17 +749,17 @@ async def add_comment(node_id: str, request: CommentCreate) -> dict:
 
     # Build comment object
     now = datetime.now(timezone.utc).isoformat()
-    comment = {
-        "author": request.author,
-        "text": request.text,
-        "timestamp": request.timestamp or now,
-        "replies": request.replies,
+    comment_data = {
+        "author": comment.author,
+        "text": comment.text,
+        "timestamp": comment.timestamp or now,
+        "replies": comment.replies,
     }
 
     # Add to comments array in frontmatter
     if "comments" not in frontmatter:
         frontmatter["comments"] = []
-    frontmatter["comments"].append(comment)
+    frontmatter["comments"].append(comment_data)
 
     # Update modified timestamp
     frontmatter["updated_at"] = now
@@ -779,7 +812,8 @@ async def add_comment(node_id: str, request: CommentCreate) -> dict:
 
 
 @app.post("/node", status_code=201)
-async def create_node(request: NodeCreate) -> dict:
+@limiter.limit("20/minute")  # Allow 20 node creations per minute
+async def create_node(request: Request, node_data: NodeCreate) -> dict:
     """Create a new node (markdown-first).
 
     Args:
@@ -800,18 +834,18 @@ async def create_node(request: NodeCreate) -> dict:
     from app.index import rebuild_index, get_index_connection, IndexRebuildError
 
     # Extract fields from request
-    node_id = request.id
-    title = request.title
-    node_type = request.type
-    status = request.status
-    tags = request.tags
-    priority = request.priority
-    risk = request.risk
-    owner = request.owner
-    source_links = request.source_links
-    acceptance_criteria = request.acceptance_criteria
-    links = request.links
-    body_md = request.body_md
+    node_id = node_data.id
+    title = node_data.title
+    node_type = node_data.type
+    status = node_data.status
+    tags = node_data.tags
+    priority = node_data.priority
+    risk = node_data.risk
+    owner = node_data.owner
+    source_links = node_data.source_links
+    acceptance_criteria = node_data.acceptance_criteria
+    links = node_data.links
+    body_md = node_data.body_md
 
     # Validate type enum
     valid_types = {"Inbox", "Concept", "System", "Decision", "TaskContract", "Artifact"}
@@ -1507,7 +1541,8 @@ async def get_metrics() -> dict:
 
 
 @app.post("/generate-plan")
-async def generate_plan(request: GeneratePlanRequest) -> dict:
+@limiter.limit("10/minute")  # Allow 10 plan generations per minute (expensive operation)
+async def generate_plan(request: Request, plan_request: GeneratePlanRequest) -> dict:
     """
     Generate a deterministic implementation plan from selected nodes.
 
@@ -1531,10 +1566,10 @@ async def generate_plan(request: GeneratePlanRequest) -> dict:
     from app.frontmatter import RelationType
     from pathlib import Path
 
-    selection = request.selection
-    depth = request.depth
-    include_rel_types = request.include_rel_types
-    exclude_rel_types = request.exclude_rel_types
+    selection = plan_request.selection
+    depth = plan_request.depth
+    include_rel_types = plan_request.include_rel_types
+    exclude_rel_types = plan_request.exclude_rel_types
 
     valid_rel_types = {rt.value for rt in RelationType}
 

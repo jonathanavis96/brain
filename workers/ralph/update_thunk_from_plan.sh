@@ -122,7 +122,8 @@ get_next_thunk_number() {
 # to dedupe by task id.
 get_existing_original_ids() {
   # Exclude header rows
-  grep -E '^\\|[[:space:]]*[0-9]+[[:space:]]*\\|' "$THUNK_FILE" |
+  # Match table rows starting with | <number> |
+  grep -E '^\|[[:space:]]*[0-9]+[[:space:]]*\|' "$THUNK_FILE" |
     awk -F'|' '{gsub(/^[[:space:]]+|[[:space:]]+$/, "", $3); print $3}' |
     sed '/^$/d' |
     sort -u

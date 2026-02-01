@@ -620,7 +620,22 @@ fi
 # - We intentionally avoid symlinks here (they are often unsupported in Windows/WSL setups).
 if [ -d "$BRAIN_ROOT/skills" ]; then
   info "Vendoring Brain skills into project workspace (brain/skills/)..."
-  rm -rf "$PROJECT_LOCATION/brain/skills"
+  
+  # Safety check: Ensure PROJECT_LOCATION is set and non-empty
+  if [[ -z "${PROJECT_LOCATION:-}" ]]; then
+    die "CRITICAL: PROJECT_LOCATION is not set. Refusing to run rm -rf."
+  fi
+  
+  # Safety check: Ensure path is absolute and contains expected project structure
+  if [[ ! "$PROJECT_LOCATION" =~ ^/ ]]; then
+    die "CRITICAL: PROJECT_LOCATION must be an absolute path. Got: $PROJECT_LOCATION"
+  fi
+  
+  # Only remove if the target directory exists and is within PROJECT_LOCATION
+  if [[ -d "$PROJECT_LOCATION/brain/skills" ]]; then
+    rm -rf "$PROJECT_LOCATION/brain/skills"
+  fi
+  
   cp -R "$BRAIN_ROOT/skills" "$PROJECT_LOCATION/brain/skills"
   success "Vendored brain/skills/ snapshot from Brain"
 else
