@@ -1,6 +1,8 @@
 # Logs
 ralph/logs/
 workers/ralph/logs/
+workers/cerebras/logs/
+templates/ralph/logs/
 # *.log
 !workers/ralph/tests/fixtures/*.log
 
