@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
-
-const API_BASE_URL = import.meta.env.VITE_BRAIN_MAP_API_BASE_URL || 'http://localhost:8000'
+import { API_BASE_URL } from './constants'
 
 const RELATIONSHIP_TYPES = [
   { value: 'related_to', label: 'Related To', color: '#999' },

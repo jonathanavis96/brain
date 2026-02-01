@@ -3,13 +3,12 @@ import Graph from 'graphology'
 import Sigma from 'sigma'
 import FA2Layout from 'graphology-layout-forceatlas2/worker'
 import HeatLegend from './HeatLegend'
-
-const API_BASE_URL = import.meta.env.VITE_BRAIN_MAP_API_BASE_URL || 'http://localhost:8000'
+import { API_BASE_URL, SUCCESS_MESSAGE_DURATION } from './constants'
 
 // Toast notification component
 function Toast({ message, type, onClose }) {
   useEffect(() => {
-    const timer = setTimeout(onClose, 3000)
+    const timer = setTimeout(onClose, SUCCESS_MESSAGE_DURATION)
     return () => clearTimeout(timer)
   }, [onClose])
 

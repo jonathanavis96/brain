@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { API_BASE_URL } from './constants'
 
 /**
  * ActivityCalendar - GitHub-style contribution calendar showing node activity
@@ -12,8 +13,6 @@ import { useState, useEffect } from 'react'
 function ActivityCalendar({ visible, onDateClick, theme, onError }) {
   const [activityData, setActivityData] = useState([])
   const [hoveredDay, setHoveredDay] = useState(null)
-
-  const API_BASE_URL = import.meta.env.VITE_BRAIN_MAP_API_BASE_URL || 'http://localhost:8000'
 
   useEffect(() => {
     if (!visible) return

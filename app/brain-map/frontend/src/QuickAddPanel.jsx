@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
+import { API_BASE_URL, SUCCESS_MESSAGE_DURATION, GRAPH_RELOAD_DELAY } from './constants'
 
-function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActive = false, onStartDragToPlace, selectedNode = null, onError }) {
+function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActive = false, onStartDragToPlace, selectedNode = null, onError, onNodeCreated }) {
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
   const [type, setType] = useState('Inbox')
@@ -28,8 +29,6 @@ function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActiv
   }
 
   const handleCreateNode = async () => {
-    const API_BASE_URL = import.meta.env.VITE_BRAIN_MAP_API_BASE_URL || 'http://localhost:8000'
-    
     try {
       const response = await fetch(`${API_BASE_URL}/node`, {
         method: 'POST',
@@ -46,7 +45,7 @@ function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActiv
       if (response.ok) {
         // Show success toast
         setShowToast(true)
-        setTimeout(() => setShowToast(false), 3000)
+        setTimeout(() => setShowToast(false), SUCCESS_MESSAGE_DURATION)
         
         // Clear form after successful creation
         setTitle('')
@@ -58,8 +57,10 @@ function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActiv
         // Focus title input for next note
         titleRef.current?.focus()
         
-        // Reload page to show new node in graph
-        setTimeout(() => window.location.reload(), 1000)
+        // Notify parent to refresh graph
+        if (onNodeCreated) {
+          setTimeout(() => onNodeCreated(), GRAPH_RELOAD_DELAY)
+        }
       } else {
         if (onError) onError('Failed to create node')
       }

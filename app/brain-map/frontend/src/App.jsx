@@ -7,8 +7,7 @@ import InsightsPanel from './InsightsPanel'
 import RelationshipEditor from './RelationshipEditor'
 import ActivityCalendar from './ActivityCalendar'
 import { getTheme } from './theme'
-
-const API_BASE_URL = import.meta.env.VITE_BRAIN_MAP_API_BASE_URL || 'http://localhost:8000'
+import { API_BASE_URL, TOAST_DURATION, SUCCESS_MESSAGE_DURATION } from './constants'
 
 function App() {
   const [healthStatus, setHealthStatus] = useState(null)
@@ -100,7 +99,20 @@ function App() {
   // Toast notification helper
   const showToast = (message, type = 'error') => {
     setToast({ show: true, message, type })
-    setTimeout(() => setToast({ show: false, message: '', type: 'error' }), 5000)
+    setTimeout(() => setToast({ show: false, message: '', type: 'error' }), TOAST_DURATION)
+  }
+
+  // Refresh graph data without full page reload
+  const refreshGraph = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/graph?limit=100`)
+      if (response.ok) {
+        const data = await response.json()
+        setGraphData(data)
+      }
+    } catch (err) {
+      console.error('Failed to refresh graph:', err)
+    }
   }
 
   useEffect(() => {
@@ -426,7 +438,7 @@ function App() {
       setSelectedNode(updatedNode)
       setEditedNode(updatedNode)
       setSaveSuccess(true)
-      setTimeout(() => setSaveSuccess(false), 3000)
+      setTimeout(() => setSaveSuccess(false), SUCCESS_MESSAGE_DURATION)
     } catch (err) {
       setSaveError(err.message)
     } finally {
@@ -434,9 +446,9 @@ function App() {
     }
   }
 
-  const handleRelationshipUpdate = () => {
+  const handleRelationshipUpdate = async () => {
     // Refresh graph data after relationship changes
-    window.location.reload()
+    await refreshGraph()
   }
 
   const handlePromote = () => {
@@ -475,7 +487,7 @@ function App() {
       setSelectedNode(null)
       setEditedNode(null)
       // Refresh graph data
-      window.location.reload()
+      await refreshGraph()
     } catch (err) {
       alert(`Failed to delete node: ${err.message}`)
     }
@@ -543,8 +555,8 @@ function App() {
             body: JSON.stringify({ x: position.x, y: position.y })
           })
           showToast('Node created successfully', 'success')
-          // Refresh graph
-          window.location.reload()
+          // Refresh graph data
+          await refreshGraph()
         } else {
           showToast('Failed to create node')
         }
@@ -582,8 +594,8 @@ function App() {
           body: JSON.stringify({ x: position.x, y: position.y })
         })
         showToast('Node created successfully', 'success')
-        // Refresh graph
-        window.location.reload()
+        // Refresh graph data
+        await refreshGraph()
       } else {
         showToast('Failed to create node via drag-drop')
       }
@@ -1726,7 +1738,7 @@ function App() {
                       await Promise.all(promises)
                       alert(`Promoted ${selectedNodes.length} nodes to ${targetType}`)
                       setSelectedNodes([])
-                      window.location.reload() // Refresh graph
+                      await refreshGraph() // Refresh graph
                     }
                   }}
                   style={{
@@ -1755,7 +1767,7 @@ function App() {
                       await Promise.all(promises)
                       alert(`Archived ${selectedNodes.length} nodes`)
                       setSelectedNodes([])
-                      window.location.reload() // Refresh graph
+                      await refreshGraph() // Refresh graph
                     }
                   }}
                   style={{
@@ -2020,6 +2032,7 @@ function App() {
                 selectedNode={selectedNode}
                 theme={colors}
                 onError={showToast}
+                onNodeCreated={refreshGraph}
               />
             </div>
           </>
@@ -2050,6 +2063,7 @@ function App() {
                 selectedNode={selectedNode}
                 theme={colors}
                 onError={showToast}
+                onNodeCreated={refreshGraph}
               />
             )}
             <button
