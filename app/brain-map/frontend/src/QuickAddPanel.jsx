@@ -29,7 +29,6 @@ function QuickAddPanel({ visible = true, onClickToPlaceToggle, clickToPlaceActiv
 
   const handleCreateNode = () => {
     // TODO: Implement API call to create node
-    console.log('Creating node:', { title, body, type, status, tags })
 
     // Clear form after successful creation
     setTitle('')

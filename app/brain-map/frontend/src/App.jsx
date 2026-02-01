@@ -515,7 +515,6 @@ function App() {
   const handleGraphClick = (position) => {
     if (clickToPlaceActive && clickToPlaceData) {
       // TODO: Implement POST to /node endpoint with position
-      console.log('Creating node at position:', position, clickToPlaceData)
       setClickToPlaceActive(false)
     }
   }
@@ -526,7 +525,6 @@ function App() {
 
   const handleGraphDrop = (position, nodeData) => {
     // TODO: Implement POST to /node endpoint with position
-    console.log('Creating node via drag-drop at position:', position, nodeData)
     // Clear the form data after successful drop
     setClickToPlaceData(null)
   }
