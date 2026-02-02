@@ -306,6 +306,136 @@ ORDER BY avg_ms DESC;
 EOF
 ```
 
+## Anti-Patterns
+
+### ❌ Anti-Pattern: Debugging Without Cache Logs
+
+```bash
+# BAD: Trying to debug cache issues without enabling logging
+export ROVODEV_CACHE_ENABLED=true
+# Run command and wonder why it's slow
+acli rovodev chat --prompt "test"
+```
+
+**Why it's wrong:**
+
+- No visibility into cache hits/misses
+- Can't measure performance impact
+- Can't identify which tools are slow
+- Wastes time guessing at problems
+
+**Correct approach:**
+
+```bash
+# GOOD: Enable cache logging first
+export ROVODEV_CACHE_ENABLED=true
+export ROVODEV_CACHE_LOG=artifacts/rollflow_cache/cache.log
+acli rovodev chat --prompt "test"
+# Now analyze the logs
+tail -50 artifacts/rollflow_cache/cache.log
+```
+
+### ❌ Anti-Pattern: Ignoring Cache Misses
+
+```bash
+# BAD: Seeing cache misses and continuing without investigation
+grep "cache_miss" artifacts/rollflow_cache/cache.log
+# 50 cache misses for grep tool
+# "Oh well, must be normal"
+```
+
+**Why it's wrong:**
+
+- Grep is deterministic and should hit cache
+- High miss rate indicates cache key issues
+- Performance degradation goes unnoticed
+- No action taken to fix root cause
+
+**Correct approach:**
+
+```bash
+# GOOD: Investigate unexpected cache misses
+grep "cache_miss.*grep" artifacts/rollflow_cache/cache.log | head -5
+# Check if inputs are varying when they shouldn't
+# Check if tool is incorrectly marked as non-cacheable
+grep "grep" workers/ralph/config/non_cacheable_tools.txt
+# Fix the root cause
+```
+
+### ❌ Anti-Pattern: Querying Cache DB Without Schema Knowledge
+
+```bash
+# BAD: Random SQL queries without understanding schema
+sqlite3 artifacts/rollflow_cache/cache.sqlite "SELECT * FROM cache"
+# Error: no such table: cache
+```
+
+**Why it's wrong:**
+
+- Wastes time with trial and error
+- Incorrect queries return wrong data
+- No understanding of available metrics
+
+**Correct approach:**
+
+```bash
+# GOOD: Check schema first
+sqlite3 artifacts/rollflow_cache/cache.sqlite ".schema"
+# Now write correct queries against known tables
+sqlite3 artifacts/rollflow_cache/cache.sqlite \
+  "SELECT tool_name, COUNT(*) FROM pass_cache GROUP BY tool_name"
+```
+
+### ❌ Anti-Pattern: Never Clearing Stale Cache
+
+```bash
+# BAD: Cache growing forever with stale entries
+ls -lh artifacts/rollflow_cache/cache.sqlite
+# 500MB cache file
+# Last cleared: never
+```
+
+**Why it's wrong:**
+
+- Disk space waste
+- Query performance degrades
+- Stale entries never expire
+- Hit rate may be artificially high
+
+**Correct approach:**
+
+```bash
+# GOOD: Periodic cache cleanup
+# Clear entries older than 30 days
+sqlite3 artifacts/rollflow_cache/cache.sqlite \
+  "DELETE FROM pass_cache WHERE last_used_at < datetime('now', '-30 days')"
+# Vacuum to reclaim space
+sqlite3 artifacts/rollflow_cache/cache.sqlite "VACUUM"
+```
+
+### ❌ Anti-Pattern: Disabling Cache for All Tools
+
+```bash
+# BAD: One tool causes issues, disable cache entirely
+export ROVODEV_CACHE_ENABLED=false
+# Now everything is slow
+```
+
+**Why it's wrong:**
+
+- Throws away performance benefits for all tools
+- Doesn't fix root cause
+- No granular control
+
+**Correct approach:**
+
+```bash
+# GOOD: Add problematic tool to non-cacheable list
+echo "problematic_tool" >> workers/ralph/config/non_cacheable_tools.txt
+# Cache still works for other tools
+export ROVODEV_CACHE_ENABLED=true
+```
+
 ## Related Files
 
 - `docs/CACHE_DESIGN.md` - Full cache architecture

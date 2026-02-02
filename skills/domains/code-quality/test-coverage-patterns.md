@@ -682,6 +682,58 @@ echo "$DATE,$COVERAGE" >> coverage-history.csv
 
 ---
 
+## Real-World Example: Brain Repository Test Coverage Evolution
+
+### Context
+
+The brain repository initially had minimal test coverage for critical tools like `brain-event` parser and validation scripts. THUNK entries (#601, #766, #1175-1176) document the journey toward comprehensive test coverage.
+
+### Implementation Journey
+
+**Initial Creation (THUNK #601, 2026-01-24):**
+
+- Created comprehensive test-coverage-patterns.md (669 lines)
+- Documented metrics (line/branch/function/statement/path coverage)
+- Defined pragmatic targets by code type: critical 90-100%, business logic 80-90%, UI 60-80%
+- Added tool configuration for Jest, pytest, Go, Ruby SimpleCov
+- Included CI/CD integration patterns
+
+**Real-World Application Issues (THUNK #766, #1175-1176, 2026-01-25 & 2026-02-02):**
+
+1. **Jest Flag Correction (THUNK #766, #1175):**
+   - Original example used invalid flag: `--collectCoverageFrom='src/utils/**/*.js'` (not a CLI flag)
+   - Fixed to correct Jest CLI syntax: `--testPathPattern='utils'`
+   - Learning: Coverage examples must use actual tool APIs, not conceptual placeholders
+
+2. **CI Artifacts Path (THUNK #1176):**
+   - GitHub Actions artifacts upload example had incorrect path structure
+   - Fixed to match GitHub Actions runner filesystem layout
+   - Learning: CI/CD examples must reflect actual runner environments
+
+### Key Learnings
+
+1. **Tool-Specific Syntax Matters:** Generic coverage advice must be backed by accurate tool-specific commands
+2. **Validator Feedback Drives Quality:** Running `tools/validate_examples.py` caught issues that manual review missed
+3. **CI/CD Context is Critical:** Coverage upload/artifact patterns must match runner environment details
+4. **Usage Drives Refinement:** 4+ THUNK references show active use drives continuous improvement
+
+### Impact
+
+- **Pragmatic Targets:** Established risk-based coverage goals (not arbitrary 100%)
+- **Tool Configuration:** Teams can copy-paste working Jest/pytest/Go/Ruby configs
+- **CI Integration:** GitHub Actions/GitLab CI examples tested in real pipelines
+- **Gap Analysis:** Techniques used to identify untested critical paths in brain tools
+
+### References
+
+- THUNK #601: Initial test-coverage-patterns.md creation
+- THUNK #766: Fixed Jest flag example
+- THUNK #1175: Verified and corrected Jest CLI syntax
+- THUNK #1176: Fixed GitHub Actions artifacts path
+- See also: `tests/unit/brain-event.bats` (applies these patterns for brain-event testing)
+
+---
+
 ## Pre-Commit Checklist (REQUIRED)
 
 Before committing, verify:

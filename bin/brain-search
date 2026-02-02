@@ -20,6 +20,7 @@ SEARCH_GIT=true
 SEARCH_CACHE=false
 LIMIT=10
 VERBOSE=false
+FUZZY_MODE=false
 
 usage() {
   cat <<EOF
@@ -32,6 +33,7 @@ OPTIONS:
     -g, --git-only       Search git history only
     -c, --cache-only     Search cache database only
     -a, --all            Search all sources including cache
+    -f, --fuzzy          Use fuzzy matching (requires fzf)
     -l, --limit N        Limit results per source (default: 10)
     -v, --verbose        Show verbose output
     -h, --help           Show this help message
@@ -41,6 +43,7 @@ EXAMPLES:
     brain-search --all "markdown"       # Search all sources
     brain-search --thunk-only "SC2034"  # Search THUNK only
     brain-search --limit 5 "verifier"   # Limit to 5 results per source
+    brain-search --fuzzy "mrk"          # Fuzzy search (matches "markdown", "marker", etc.)
 
 EOF
   exit 0
@@ -68,6 +71,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     -a | --all)
       SEARCH_CACHE=true
+      shift
+      ;;
+    -f | --fuzzy)
+      FUZZY_MODE=true
       shift
       ;;
     -l | --limit)
@@ -142,7 +149,16 @@ search_thunk() {
 
   local count=0
   local matches
-  matches=$(grep -i -- "$QUERY" "$thunk_file" | head -n "$LIMIT" || true)
+
+  if [[ "$FUZZY_MODE" == "true" ]]; then
+    if ! command -v fzf &>/dev/null; then
+      echo -e "${RED}Error: fzf not found. Install fzf or omit --fuzzy flag${NC}" >&2
+      return
+    fi
+    matches=$(fzf --filter="$QUERY" < "$thunk_file" | head -n "$LIMIT" || true)
+  else
+    matches=$(grep -i -- "$QUERY" "$thunk_file" | head -n "$LIMIT" || true)
+  fi
 
   if [[ -n "$matches" ]]; then
     FOUND_RESULTS=true
@@ -152,10 +168,12 @@ search_thunk() {
       echo -e "${GREEN}[$count]${NC} $line"
     done <<<"$matches"
 
-    local total
-    total=$(grep -ci -- "$QUERY" "$thunk_file" || echo "0")
-    if [[ $total -gt $LIMIT ]]; then
-      echo -e "${YELLOW}... and $((total - LIMIT)) more matches${NC}"
+    if [[ "$FUZZY_MODE" != "true" ]]; then
+      local total
+      total=$(grep -ci -- "$QUERY" "$thunk_file" || echo "0")
+      if [[ $total -gt $LIMIT ]]; then
+        echo -e "${YELLOW}... and $((total - LIMIT)) more matches${NC}"
+      fi
     fi
   else
     echo -e "${YELLOW}No matches found${NC}"
@@ -171,7 +189,16 @@ search_git() {
 
   local count=0
   local matches
-  matches=$(git log --all --oneline --grep="$QUERY" -i -n "$LIMIT" || true)
+
+  if [[ "$FUZZY_MODE" == "true" ]]; then
+    if ! command -v fzf &>/dev/null; then
+      echo -e "${RED}Error: fzf not found. Install fzf or omit --fuzzy flag${NC}" >&2
+      return
+    fi
+    matches=$(git log --all --oneline | fzf --filter="$QUERY" | head -n "$LIMIT" || true)
+  else
+    matches=$(git log --all --oneline --grep="$QUERY" -i -n "$LIMIT" || true)
+  fi
 
   if [[ -n "$matches" ]]; then
     FOUND_RESULTS=true
@@ -184,10 +211,12 @@ search_git() {
       echo -e "${GREEN}[$count]${NC} ${MAGENTA}$sha${NC} $msg"
     done <<<"$matches"
 
-    local total
-    total=$(git log --all --oneline --grep="$QUERY" -i | wc -l || echo "0")
-    if [[ $total -gt $LIMIT ]]; then
-      echo -e "${YELLOW}... and $((total - LIMIT)) more commits${NC}"
+    if [[ "$FUZZY_MODE" != "true" ]]; then
+      local total
+      total=$(git log --all --oneline --grep="$QUERY" -i | wc -l || echo "0")
+      if [[ $total -gt $LIMIT ]]; then
+        echo -e "${YELLOW}... and $((total - LIMIT)) more commits${NC}"
+      fi
     fi
   else
     echo -e "${YELLOW}No commits found${NC}"

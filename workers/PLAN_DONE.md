@@ -1182,7 +1182,6 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
   - **Archived At:** 2026-01-31 22:20:54
   - **Block:**
 
-
 ### Archived on 2026-01-31 (Phase 39 Complete)
 
 | Date | Task ID | Description |
@@ -1208,3 +1207,130 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | 2026-02-02 | 41.3 | - [x] **41.3** Fix M1: `bin/brain-event` robust flag parsing (missing value should not consume next option) |
 | 2026-02-02 | 41.9 | - [x] **41.9** (HUMAN REQUIRED / Protected) Address C1: SHA256 hash mismatches for protected files |
 | 2026-02-02 | 41.10 | - [x] **41.10** (HUMAN REQUIRED / Protected) Decide on M2–M7 protected-script fixes |
+
+### Archived on 2026-02-02 17:25:36
+
+- [x] **40.3.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **40.3.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **40.4**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.8.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.8.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.4.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.7.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.7.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.5.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.5.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.5.3**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.5.4**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.6.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.6.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **43.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **43.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **43.3**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **43.4**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **43.5**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **42.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **42.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **42.3**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **42.4**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**

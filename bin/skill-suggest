@@ -1,0 +1,155 @@
+#!/usr/bin/env bash
+# skill-suggest - Suggest relevant skills from skills/ for a given task
+# Usage: skill-suggest "task description"
+#
+# Searches skill documents for relevant keywords and ranks by relevance.
+# Returns top 3-5 matching skills with paths.
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BRAIN_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+SKILLS_DIR="$BRAIN_ROOT/skills"
+
+# Display usage
+usage() {
+  cat <<EOF
+Usage: skill-suggest "task description"
+
+Searches the skills knowledge base for relevant patterns and practices.
+
+Examples:
+  skill-suggest "fix shell script"
+  skill-suggest "add react component"
+  skill-suggest "implement caching pattern"
+
+Options:
+  -h, --help    Show this help message
+  -n NUM        Number of results to return (default: 5)
+  -v            Verbose output (show scores)
+
+Output:
+  Returns top N matching skill paths with brief descriptions.
+EOF
+}
+
+# Parse arguments
+NUM_RESULTS=5
+VERBOSE=false
+QUERY=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    -n)
+      NUM_RESULTS="$2"
+      shift 2
+      ;;
+    -v)
+      VERBOSE=true
+      shift
+      ;;
+    *)
+      QUERY="$1"
+      shift
+      ;;
+  esac
+done
+
+# Validate query
+if [[ -z "$QUERY" ]]; then
+  echo "Error: Task description required" >&2
+  usage
+  exit 1
+fi
+
+# Extract keywords from query (lowercase, split on spaces)
+KEYWORDS=$(echo "$QUERY" | tr '[:upper:]' '[:lower:]' | tr -s ' ' '\n' | grep -v '^$')
+
+# Search skills directory for matching content
+# We'll use ripgrep for fast searching
+TEMP_RESULTS=$(mktemp)
+
+# Search for each keyword and collect matching files with context
+echo "$KEYWORDS" | while IFS= read -r keyword; do
+  if [[ -n "$keyword" ]]; then
+    rg -l -i "$keyword" "$SKILLS_DIR" 2>/dev/null || true
+  fi
+done | sort | uniq -c | sort -rn > "$TEMP_RESULTS"
+
+# Calculate scores based on:
+# 1. Keyword frequency (how many keywords matched)
+# 2. Domain relevance (prioritize domains matching query context)
+# 3. File type (patterns > anti-patterns, playbooks > general)
+
+declare -A SCORES
+declare -A DESCRIPTIONS
+
+while read -r count file; do
+  # Skip if file doesn't exist or isn't readable
+  [[ -f "$file" ]] || continue
+
+  # Base score from keyword matches
+  score=$count
+
+  # Boost for domain relevance
+  case "$QUERY" in
+    *shell*|*bash*|*script*)
+      [[ "$file" =~ languages/shell ]] && score=$((score + 3))
+      ;;
+    *react*|*component*|*frontend*)
+      [[ "$file" =~ frontend ]] && score=$((score + 3))
+      ;;
+    *backend*|*api*|*database*)
+      [[ "$file" =~ backend ]] && score=$((score + 3))
+      ;;
+    *test*|*coverage*)
+      [[ "$file" =~ code-quality.*test ]] && score=$((score + 3))
+      ;;
+    *ralph*|*loop*|*agent*)
+      [[ "$file" =~ ralph ]] && score=$((score + 3))
+      ;;
+    *deploy*|*infrastructure*)
+      [[ "$file" =~ infrastructure ]] && score=$((score + 3))
+      ;;
+  esac
+
+  # Boost patterns over anti-patterns
+  [[ "$file" =~ -patterns\.md$ ]] && score=$((score + 2))
+  [[ "$file" =~ anti-patterns\.md$ ]] && score=$((score + 1))
+
+  # Boost playbooks (actionable guidance)
+  [[ "$file" =~ playbooks/ ]] && score=$((score + 2))
+
+  # Store score and extract brief description from file
+  SCORES["$file"]=$score
+
+  # Get first heading or first non-empty line as description
+  desc=$(grep -m1 '^#' "$file" 2>/dev/null | sed 's/^#* *//' || head -1 "$file" 2>/dev/null)
+  DESCRIPTIONS["$file"]="${desc:0:60}"
+done < "$TEMP_RESULTS"
+
+# Sort by score and output top N
+{
+  for file in "${!SCORES[@]}"; do
+    echo "${SCORES[$file]} $file"
+  done
+} | sort -rn | head -n "$NUM_RESULTS" | while read -r score file; do
+  # Make path relative to brain root for cleaner output
+  rel_path="${file#"$BRAIN_ROOT"/}"
+
+  if [[ "$VERBOSE" == "true" ]]; then
+    printf "[%2d] %s\n     %s\n" "$score" "$rel_path" "${DESCRIPTIONS[$file]}"
+  else
+    printf "%s\n     %s\n" "$rel_path" "${DESCRIPTIONS[$file]}"
+  fi
+done
+
+# Cleanup
+rm -f "$TEMP_RESULTS"
+
+# Exit successfully if we found results, otherwise exit 1
+[[ ${#SCORES[@]} -gt 0 ]]

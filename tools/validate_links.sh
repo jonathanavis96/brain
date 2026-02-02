@@ -31,6 +31,8 @@ IGNORE_FIND_PATHS=(
 IGNORE_FILE_BASENAMES=(
   "PLAYBOOK_TEMPLATE.md"
   "SKILL_TEMPLATE.md"
+  "IMPLEMENTATION_PLAN.md"
+  "plan_snapshot.md"
 )
 
 should_skip_file() {

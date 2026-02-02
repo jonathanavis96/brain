@@ -790,6 +790,49 @@ module.exports = { initTracing };
 
 ---
 
+## Real-World Example: Brain Repository Observability
+
+### Context
+
+The brain repository's Ralph loop system needed better observability to track iteration progress, identify bottlenecks, and debug failures. Multiple THUNK entries (#603, #1177-1181) document the evolution of observability patterns in practice.
+
+### Implementation Journey
+
+**Initial Creation (THUNK #603, 2026-01-24):**
+
+- Created comprehensive observability-patterns.md covering three pillars (logs/metrics/traces)
+- Documented structured logging (Winston/Python JSON), metrics collection (Prometheus/StatsD)
+- Added distributed tracing patterns with OpenTelemetry context propagation
+- Included alerting strategies and runbook templates
+
+**Refinement Through Validation (THUNK #1177-1181, 2026-02-02):**
+Multiple validation issues revealed real-world application challenges:
+
+1. **Code Example Correctness** - SQL injection examples needed proper parameterization
+2. **Metrics Middleware** - Express middleware required accurate Node.js patterns
+3. **Python Logging** - Fixed logger initialization and context passing
+
+### Key Learnings
+
+1. **Documentation Validation is Critical:** Even comprehensive guides need validation against actual usage patterns (validator caught 5+ issues in examples)
+2. **Language-Specific Nuances Matter:** Generic patterns must be adapted correctly for each language (Python logging vs Node.js Winston)
+3. **Iterative Refinement:** Initial creation is just step 1; real-world usage reveals edge cases requiring fixes
+4. **Examples Must Be Production-Ready:** Code examples should be copy-pasteable and follow security best practices
+
+### Impact
+
+- **Usage:** 5+ references in THUNK (most-used infrastructure skill)
+- **Quality Gates:** Patterns validated through brain's own verifier system
+- **Cross-Project Value:** Used as reference for observability in multiple brain tools (rollflow_analyze, gap_radar, task monitors)
+
+### References
+
+- THUNK #603: Initial observability-patterns.md creation
+- THUNK #1177-1181: Validation-driven refinements
+- See also: `tools/rollflow_analyze/` (applies these patterns for Ralph loop observability)
+
+---
+
 ## See Also
 
 - **[deployment-patterns.md](./deployment-patterns.md)** - Deployment strategies and CI/CD

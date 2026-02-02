@@ -248,6 +248,36 @@ echo "Long message..." | bin/discord-post --max-length 1500
 
 ---
 
+### `bin/semantic-review-pr` - Semantic Code Review Tool
+
+Run automated semantic code review on current branch changes.
+
+**Purpose:** Analyze git diffs for semantic issues using heuristics-only validation (no LLM calls). Safe for automation. For interactive LLM review, use `tools/agents/semantic-review-chat` instead.
+
+**Usage:**
+
+```bash
+# Review current branch vs main
+bin/semantic-review-pr
+
+# Review against different base branch
+bin/semantic-review-pr --base develop
+
+# Show detailed output
+bin/semantic-review-pr --verbose
+
+# Show help
+bin/semantic-review-pr --help
+```
+
+**Output:** Review report with identified issues (if any). Exit code 0 on pass, 1 on issues found or configuration error.
+
+**Prerequisites:** `git`, `python3`, `tools/semantic_reviewer.py`
+
+**See also:** [skills/domains/code-quality/semantic-code-review.md](../skills/domains/code-quality/semantic-code-review.md)
+
+---
+
 ## Python Tools (`tools/`)
 
 ### `tools/thunk_parser.py` - workers/ralph/THUNK.md Parser

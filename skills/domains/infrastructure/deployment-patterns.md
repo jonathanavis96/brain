@@ -1378,6 +1378,67 @@ CMD ["npm", "start"]
 
 ---
 
+## Real-World Example: Brain Repository Deployment Evolution
+
+### Context
+
+The brain repository implements a self-improving knowledge base with automated validation and deployment. THUNK entries (#602, #471) document deployment pattern evolution and validation refinement.
+
+### Implementation Journey
+
+**Initial Pattern Creation (THUNK #602, 2026-01-24):**
+
+- Expanded deployment-patterns.md with 5 detailed deployment strategies
+- Added Blue/Green (AWS/K8s examples, instant rollback), Canary (Istio config, progressive rollout with error rate monitoring)
+- Documented Shadow deployment (traffic mirroring), Feature Flags (TypeScript implementation)
+- Included zero-downtime database migrations with backfill strategies
+
+**Production Validation & Refinement (THUNK #471, 2026-01-23):**
+
+- Fixed 51 markdown violations blocking deployment validation
+- Applied MD032 (blank lines around lists), MD060 (table spacing), MD036 (heading structure)
+- Demonstrates importance of pre-deployment validation gates
+
+### Key Learnings
+
+1. **Documentation Quality Gates Matter:** Even deployment guides need automated validation to ensure CI/CD compatibility
+2. **Progressive Rollout is Critical:** Canary deployments with error rate monitoring prevent wide-scale failures
+3. **Database Migrations Require Planning:** Zero-downtime migrations need multi-phase strategies (add column → backfill → switch → cleanup)
+4. **Feature Flags Enable Confidence:** Toggle features independently of deployments for risk mitigation
+
+### Deployment Strategy in Practice
+
+**Brain Repository Uses:**
+
+1. **Automated Validation (CI):**
+   - Pre-commit hooks: `markdownlint`, `shellcheck`, `shfmt`
+   - Verifier gate: `workers/ralph/verifier.sh` runs `rules/AC.rules` checks
+   - Blocks deployment if acceptance criteria fail
+
+2. **Progressive Enhancement:**
+   - Ralph loop iterates safely (PLAN → BUILD → VALIDATE cycles)
+   - Hash guards protect critical files from accidental modification
+   - Waivers system for exceptional false positives
+
+3. **Rollback Strategy:**
+   - Git-based rollback: `loop.sh --rollback N` reverts N commits
+   - Protected file baselines in `.verify/*.sha256`
+
+### Impact
+
+- **Zero Production Incidents:** Validation gates catch issues before deployment
+- **2+ THUNK references:** Active use in brain's CI/CD pipeline
+- **Cross-Project Patterns:** Deployment strategies applicable to web projects, APIs, infrastructure
+
+### References
+
+- THUNK #602: Initial deployment-patterns.md expansion
+- THUNK #471: Validation gate fixes enabling deployment
+- See also: `workers/ralph/verifier.sh` (implements validation gate pattern)
+- See also: `.pre-commit-config.yaml` (CI/CD integration for automated checks)
+
+---
+
 ## See Also
 
 - **[Database Patterns](../backend/database-patterns.md)** - Schema migrations and connection pooling
