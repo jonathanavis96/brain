@@ -1196,3 +1196,15 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | 2026-01-31 | 39.4.2 | - [x] **39.4.2** Add `bin/semantic-review-pr` (diff vs main) |
 | 2026-01-31 | 39.5.1 | - [x] **39.5.1** Run semantic review during PLAN only (not BUILD) |
 | 2026-01-31 | 39.6.1 | - [x] **39.6.1** Verify BUILD never commits; PLAN commits still occur; end-of-run always commits |
+
+---
+
+### Archived on 2026-02-02 15:22:00 (Plan cleanup: completed items removed from IMPLEMENTATION_PLAN.md)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-02-02 | 40.1 | - [x] **40.1** Rename docs backlog folder to `docs/still-to-do/` and update references |
+| 2026-02-02 | 40.2 | - [x] **40.2** Add Bug Packet template doc + keep `AGENTS.md` lean (pointer + policy) |
+| 2026-02-02 | 41.3 | - [x] **41.3** Fix M1: `bin/brain-event` robust flag parsing (missing value should not consume next option) |
+| 2026-02-02 | 41.9 | - [x] **41.9** (HUMAN REQUIRED / Protected) Address C1: SHA256 hash mismatches for protected files |
+| 2026-02-02 | 41.10 | - [x] **41.10** (HUMAN REQUIRED / Protected) Decide on M2–M7 protected-script fixes |

@@ -1,125 +1,112 @@
 # Implementation Plan - Brain Repository
 
-**Last Updated:** 2026-01-31 22:22:16
+**Last Updated:** 2026-02-02 15:24:49
 
-**Current Status:** Phase 39 completed - All tasks done. Ready for new phase planning.
+**Current Status:** Phase 40 in progress (docs-only workflow hardening). Phase 41 queued (CodeRabbit tracker fixes).
 
-**Recent Completions:**
+**Execution Order (Ralph):**
 
-- **Phase 39: CodeRabbit-Style Semantic Review (✅ COMPLETED 2026-01-31)** - Full semantic review tooling with LLM + heuristics, pre-commit integration, PR review script
-- **Phase 28: Template Maintenance (✅ COMPLETED)** - Audited templates for drift, verified no critical issues
-- **Phase 27: Skills Knowledge Base Expansion (✅ COMPLETED)** - Reviewed GAP_BACKLOG, promoted semantic code review skill
-- **Phase 26: Environment & Testing Infrastructure (✅ COMPLETED)** - Brain Map testing setup and documentation
-- **Phase 25: Brain Map (✅ COMPLETED)** - Full MVP with backend API, frontend UI, comprehensive tests
-
-**Active Focus:**
-
-- No active phases - awaiting Cortex guidance for Phase 40+
-- Verifier status: 2 warnings (Protected file changes - human review required)
+1. Phase 40 (docs-only): reviewer checklist, then optional worktrees doc
+2. Phase 41 (fixes): start with low-risk repo hygiene and markdown fixes, then docs/example fixes
 
 <!-- Cortex adds new Task Contracts below this line -->
 
 ## Phase 40: Workflow Hardening (Bug Packets + Review Gate)
 
-- [x] **40.1** Rename docs backlog folder to `docs/still-to-do/` and update references
-  - **Goal:** Standardize docs folder naming (lowercase + kebab-case) without breaking internal links.
-  - **AC:**
-    - Folder exists at `docs/still-to-do/`
-    - `docs/still-to-do/claude_team_workflow_tricks_mapping_plan.md` exists and renders with working TOC anchors
-    - No remaining references to `docs/Still_To_Do/` in repo markdown (`grep -R "Still_To_Do" -n .` returns none)
-    - (After rename) the old folder `docs/Still_To_Do/` no longer exists
-    - Link validation passes: `bash tools/validate_links.sh`
-  - **If Blocked:** If link validation is noisy due to unrelated links, scope it to docs only and report remaining failures.
-
-- [x] **40.2** Add Bug Packet template doc + keep `AGENTS.md` lean (pointer + policy)
-  - **Goal:** Standardize bugfix task intake (repro + expected/actual + verification + proof) without bloating `AGENTS.md`.
-  - **Dependencies:** Do **40.1** first so the source doc path is stable under `docs/still-to-do/`.
-  - **Implementation:**
-    - Create `docs/bug-packet-template.md` containing the “Bug Packet Template (strict)” from `docs/still-to-do/claude_team_workflow_tricks_mapping_plan.md` section E.
-    - Treat `docs/CODERABBIT_ISSUES_TRACKER.md` as the long-lived “issue history + prevention ideas” document.
-    - Update top-level `AGENTS.md` with a *short* “Bug Packets” section:
-      - Link to `docs/bug-packet-template.md`.
-      - State the policy: bugfix tasks must include repro + expected/actual + verification commands; completions must include proof + root cause + risk/rollback.
-  - **AC:**
-    - `docs/bug-packet-template.md` exists
-    - `AGENTS.md` remains high-level (only a brief pointer/policy, not the full template)
-    - `AGENTS.md` links to both `docs/bug-packet-template.md` and `docs/CODERABBIT_ISSUES_TRACKER.md`
-    - `bash workers/ralph/fix-markdown.sh AGENTS.md docs/bug-packet-template.md` succeeds
-
-- [ ] **40.3** Add a lightweight “Reviewer skepticism checklist” for complex changes
-  - **Goal:** Introduce a consistent review gate (plan → skeptic review questions → implementation) for higher-risk work.
-  - **Implementation:**
-    - Add `docs/review-checklist.txt` with a 10–15 item checklist derived from section A/B (e.g., “prove it works”, “what could break”, “rollback”, “smallest tests”).
-    - Add a short pointer in `workers/IMPLEMENTATION_PLAN.md` (or `AGENTS.md`) describing when to apply it (e.g., multi-file refactors, API changes, template sync, verifier changes).
+- [ ] **40.3.1** Create `docs/review-checklist.txt`
+  - **Goal:** Create a lightweight skepticism checklist reviewers can apply to complex changes.
+  - **Implementation:** Add `docs/review-checklist.txt` with 10–15 items derived from CodeRabbit guidance (prove it works, what could break, rollback, smallest tests, etc.).
   - **AC:**
     - `docs/review-checklist.txt` exists
-    - At least one recent/next task in the plan references the checklist explicitly
-  - **If Blocked:** If checklist becomes too long, keep only the “top 7” questions and defer the rest.
+    - Checklist is 10–15 items, plain text
+
+- [ ] **40.3.2** Reference the checklist from `AGENTS.md`
+  - **Goal:** Make the checklist discoverable without bloating `AGENTS.md`.
+  - **Dependencies:** Do **40.3.1** first.
+  - **Implementation:** Add a short pointer in `AGENTS.md` describing when to apply `docs/review-checklist.txt` (multi-file refactors, API changes, template sync, verifier/protected-file changes).
+  - **AC:**
+    - `AGENTS.md` links to `docs/review-checklist.txt`
+    - `bash workers/ralph/fix-markdown.sh AGENTS.md` succeeds
 
 - [ ] **40.4** (Optional) Worktree + plan handoff conventions (docs-only)
   - **Goal:** Document a safe worktree workflow (wt-plan / wt-build / wt-analysis / wt-review) and a plan handoff mechanism.
+  - **Implementation:** Prefer creating `docs/worktrees.md`.
   - **AC:**
-    - `docs/worktrees.md` exists with the recommended conventions from section C/G
-    - Includes a clear “default = commit plan artifact” rule and failure modes
-  - **If Blocked:** Skip creating `docs/worktrees.md` and instead add a short section to `docs/BOOTSTRAPPING.md`.
+    - EITHER `docs/worktrees.md` exists with the conventions from section C/G
+    - OR `docs/BOOTSTRAPPING.md` contains a short section with the same conventions (if `docs/worktrees.md` is skipped)
+    - Includes a clear “default = commit plan artifact” rule and common failure modes
 
 ---
 
 ## Phase 41: CodeRabbit Tracker → Atomic Fix Tasks
 
-- [ ] **41.1** Triage `docs/CODERABBIT_ISSUES_TRACKER.md` and add only OPEN items as tasks
-  - **Goal:** Convert the tracker into an actionable, non-duplicative Ralph backlog.
-  - **AC:**
-    - Every new task references a specific issue id (e.g., C2, M1) and file path/lines
-    - Items already marked ✅ Fixed are NOT duplicated as new tasks
+- [ ] **41.8.1** Git hygiene: add `*.egg-info/` to `.gitignore`
+  - **Goal:** Prevent Python build artifacts from being committed.
+  - **AC:** `.gitignore` includes `*.egg-info/`
 
-- [ ] **41.2** Fix C2: Shell README config mismatch
-  - **Goal:** Align `skills/domains/languages/shell/README.md` with actual `.pre-commit-config.yaml` shfmt settings (or vice versa).
+- [ ] **41.8.2** Git hygiene: remove any tracked `*.egg-info/` from git index (if present)
+  - **Goal:** Ensure the repo index is clean while keeping local files.
+  - **Dependencies:** Do **41.8.1** first.
   - **AC:**
-    - Docs match config after change
-    - Doc validation passes (use `bash tools/validate_doc_sync.sh` if that is the canonical validator)
+    - `git ls-files | grep -E '\\.egg-info(/|$)'` returns no matches
+  - **If Blocked:** If none are tracked, record that fact in the task completion and mark done.
 
-- [x] **41.3** Fix M1: `bin/brain-event` robust flag parsing (missing value should not consume next option)
-  - **Goal:** Make `--event` (and similar flags) safe when last arg or when next token is another option.
-  - **AC:**
-    - `bash -n bin/brain-event` passes
-    - Add/extend `tests/unit/brain-event.bats` to cover:
-      - `--event` as last arg
-      - `--event --iter 1` does not treat `--iter` as the event value
-
-- [ ] **41.4** Fix M10: `workers/ralph/THUNK.md` table column mismatch
+- [ ] **41.4.1** Fix M10: repair `workers/ralph/THUNK.md` table formatting
   - **Goal:** Ensure all rows in the THUNK table have consistent column counts and escaped pipes.
   - **AC:**
     - `bash workers/ralph/fix-markdown.sh workers/ralph/THUNK.md`
     - `markdownlint workers/ralph/THUNK.md` passes (or at minimum no table-related rule failures)
 
-- [ ] **41.5** Fix m1: Observability patterns code example issues
-  - **Goal:** Correct broken/unsafe examples in `skills/domains/infrastructure/observability-patterns.md`.
+- [ ] **41.2** Fix C2: Shell README config mismatch
+  - **Goal:** Align `skills/domains/languages/shell/README.md` with actual `.pre-commit-config.yaml` shfmt settings (or vice versa).
   - **AC:**
-    - No stray/duplicate code fences
+    - Docs match config after change
+    - Doc validation passes: `bash tools/validate_doc_sync.sh`
+
+- [ ] **41.7.1** Fix m6: correct Jest flag example in `skills/domains/code-quality/test-coverage-patterns.md`
+  - **Goal:** Ensure Jest CLI flags in examples are valid.
+  - **AC:**
+    - Example commands are correct for Jest (or explicitly marked as pseudocode)
+    - Any shell snippets use `bash` fences and are copy/pastable
+
+- [ ] **41.7.2** Fix m6: correct artifacts endpoint example in `skills/domains/code-quality/test-coverage-patterns.md`
+  - **Goal:** Ensure the artifacts endpoint example matches the documented tooling (or is clearly labeled as an example).
+  - **AC:**
+    - Endpoint/example is correct, or explicitly annotated as tool-specific/pseudocode
+
+- [ ] **41.5.1** Fix m1: remove stray/duplicate code fences in `skills/domains/infrastructure/observability-patterns.md`
+  - **Goal:** Make the markdown render correctly.
+  - **AC:**
+    - No stray/duplicate closing fences in the file
+    - `markdownlint skills/domains/infrastructure/observability-patterns.md` has no fence-related failures (if rule enabled)
+
+- [ ] **41.5.2** Fix m1: correct SQL placeholder style + injection-risk example in `skills/domains/infrastructure/observability-patterns.md`
+  - **Goal:** Remove unsafe SQL-injection patterns and keep placeholder style consistent inside each example.
+  - **AC:**
+    - SQL examples avoid injection patterns OR clearly label an unsafe example and provide a corrected safe alternative
+    - Placeholder style is consistent within each SQL example (no mixing `?`/`%s`/`$1` in one example)
+
+- [ ] **41.5.3** Fix m1: correct Python example issues in `skills/domains/infrastructure/observability-patterns.md`
+  - **Goal:** Fix broken Python snippets (e.g., references to non-existent attributes).
+  - **AC:**
     - Python examples are syntactically valid (where feasible)
-    - SQL examples avoid injection patterns or are clearly labeled unsafe + corrected alternative
+    - Example code does not reference obviously non-existent fields like `record.extra` unless defined in the snippet
 
-- [ ] **41.6** Fix m4: Incorrect future dates in documentation
-  - **Goal:** Replace future dates with correct historical timestamps.
-  - **AC:** No docs contain dates later than current date (2026-02-02)
+- [ ] **41.5.4** Fix m1: correct metrics middleware example in `skills/domains/infrastructure/observability-patterns.md`
+  - **Goal:** Avoid hardcoded HTTP status in middleware examples.
+  - **AC:** Middleware example does not hardcode status "200" (uses actual response status or equivalent).
 
-- [ ] **41.7** Fix m6: Verify JS examples in `skills/domains/code-quality/test-coverage-patterns.md`
-  - **Goal:** Confirm and correct the “Jest flag used incorrectly” and “Artifacts endpoint incorrect” items.
-  - **AC:** Example commands are correct for the documented tooling (or annotated if intentionally pseudocode)
+- [ ] **41.6.1** Fix m4: correct future date in `skills/domains/languages/typescript/README.md`
+  - **Goal:** Remove future timestamps.
+  - **AC:** No date in that file is later than 2026-02-02.
 
-- [ ] **41.8** Fix m7: Git hygiene (`*.egg-info/`)
-  - **Goal:** Prevent Python build artifacts from being committed.
+- [ ] **41.6.2** Fix m4: correct future date reference in plan artifacts (if any)
+  - **Goal:** Ensure no plan docs contain future dates.
+  - **AC:** `grep -R "2026-02-0[3-9]" -n .` returns no matches.
+
+- [ ] **41.1** (Last) Convert additional OPEN tracker items into new atomic plan tasks (bounded)
+  - **Goal:** Keep the plan actionable without duplicating already-fixed items.
+  - **Scope:** Create at most 5 new tasks from OPEN items in `docs/CODERABBIT_ISSUES_TRACKER.md` that are not already represented in this plan.
   - **AC:**
-    - `.gitignore` includes `*.egg-info/`
-    - If any are tracked, remove them from git while keeping local files
-
-- [x] **41.9** (HUMAN REQUIRED / Protected) Address C1: SHA256 hash mismatches for protected files
-  - **Goal:** Bring `.verify/*.sha256` baselines back into sync with protected targets, following waiver protocol.
-  - **AC:** Verifier warnings about protected hash changes are resolved with explicit human approval where required.
-  - **If Blocked:** Do not auto-update protected hashes without following the waiver/protected-file protocol.
-
-- [x] **41.10** (HUMAN REQUIRED / Protected) Decide on M2–M7 protected-script fixes
-  - **Goal:** Decide whether to fix M2–M7 now or defer (these touch protected scripts: `workers/ralph/loop.sh`, `workers/ralph/verifier.sh`, `.verify/approve_waiver_totp.py`, etc.).
-  - **AC:** Each item (M2, M3, M4, M5, M6, M7) has an explicit decision + next step (fix now with waiver vs defer) recorded in the tracker and/or plan.
-
+    - Each new task references a specific issue id and the file path/approximate lines from the tracker
+    - Items marked ✅ Fixed in the tracker are not duplicated
