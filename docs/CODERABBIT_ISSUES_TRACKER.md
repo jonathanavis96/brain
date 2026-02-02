@@ -191,11 +191,13 @@ CodeRabbit has identified **50+ issues** across PR5 and PR6, with significant ov
 
 ### C2: Shell README Config Mismatch (New in PR6)
 
-**Status:** ⬜ Open  
+**Status:** ✅ Closed  
 **File:** `skills/domains/languages/shell/README.md` line 64  
 **PR:** #6 (PI-1)
 
 **Issue:** README documents shfmt configuration that doesn't match actual `.pre-commit-config.yaml`.
+
+**Resolution:** Verified with `tools/validate_doc_sync.sh` - documentation correctly distinguishes between manual usage (`-i 2 -ci -w`) and pre-commit check mode (`-d -i 2 -ci`). Config and docs are in sync.
 
 **Prevention:** Documentation-config sync validation script.
 

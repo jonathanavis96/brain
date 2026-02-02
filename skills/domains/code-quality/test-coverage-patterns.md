@@ -431,15 +431,18 @@ fi
       "https://api.github.com/repos/${{ github.repository }}/actions/runs?branch=main&status=success&per_page=1" \
       | jq -r '.workflow_runs[0].id')
     
-    # Get artifact ID for coverage-summary
-    ARTIFACT_ID=$(curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+    # Get artifact download URL for coverage-summary
+    ARTIFACT_URL=$(curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
       "https://api.github.com/repos/${{ github.repository }}/actions/runs/${RUN_ID}/artifacts" \
-      | jq -r '.artifacts[] | select(.name=="coverage-summary") | .id')
+      | jq -r '.artifacts[] | select(.name=="coverage-summary") | .archive_download_url')
+    
+    # Note: GitHub Actions artifacts API endpoint (v3 REST API)
+    # Endpoint: GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts
     
     # Download artifact
     curl -L -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
       -o base-coverage.zip \
-      "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${ARTIFACT_ID}/zip"
+      "${ARTIFACT_URL}"
     
     unzip -p base-coverage.zip coverage-summary.json > base-coverage.json
 

@@ -40,40 +40,40 @@
 
 ## Phase 41: CodeRabbit Tracker → Atomic Fix Tasks
 
-- [ ] **41.8.1** Git hygiene: add `*.egg-info/` to `.gitignore`
+- [x] **41.8.1** Git hygiene: add `*.egg-info/` to `.gitignore`
   - **Goal:** Prevent Python build artifacts from being committed.
   - **AC:** `.gitignore` includes `*.egg-info/`
   - **If Blocked:** If `.gitignore` already contains an equivalent rule, link to the existing line in completion notes and mark done.
 
-- [ ] **41.8.2** Git hygiene: remove any tracked `*.egg-info/` from git index (if present)
+- [x] **41.8.2** Git hygiene: remove any tracked `*.egg-info/` from git index (if present)
   - **Goal:** Ensure the repo index is clean while keeping local files.
   - **Dependencies:** Do **41.8.1** first.
   - **AC:**
     - `git ls-files | grep -E '\\.egg-info(/|$)'` returns no matches
   - **If Blocked:** If none are tracked, record that fact in the task completion and mark done.
 
-- [ ] **41.4.1** Fix M10: repair `workers/ralph/THUNK.md` table formatting
+- [x] **41.4.1** Fix M10: repair `workers/ralph/THUNK.md` table formatting
   - **Goal:** Ensure all rows in the THUNK table have consistent column counts and escaped pipes.
   - **AC:**
     - `bash workers/ralph/fix-markdown.sh workers/ralph/THUNK.md`
     - `markdownlint workers/ralph/THUNK.md` passes (or at minimum no table-related rule failures)
   - **If Blocked:** If `markdownlint` is not available in the environment, run `bash workers/ralph/fix-markdown.sh ...` and ensure the table renders correctly (consistent pipes) and note the missing tool.
 
-- [ ] **41.2** Fix C2: Shell README config mismatch
+- [x] **41.2** Fix C2: Shell README config mismatch
   - **Goal:** Align `skills/domains/languages/shell/README.md` with actual `.pre-commit-config.yaml` shfmt settings (or vice versa).
   - **AC:**
     - Docs match config after change
     - Doc validation passes: `bash tools/validate_doc_sync.sh`
-  - **If Blocked:** If the canonical validator differs, use the repo’s documented doc validator and report which command was used.
+  - **If Blocked:** If the canonical validator differs, use the repo's documented doc validator and report which command was used.
 
-- [ ] **41.7.1** Fix m6: correct Jest flag example in `skills/domains/code-quality/test-coverage-patterns.md`
+- [x] **41.7.1** Fix m6: correct Jest flag example in `skills/domains/code-quality/test-coverage-patterns.md`
   - **Goal:** Ensure Jest CLI flags in examples are valid.
   - **AC:**
     - Example commands are correct for Jest (or explicitly marked as pseudocode)
     - Any shell snippets use `bash` fences and are copy/pastable
-  - **If Blocked:** If repo tooling is not Jest, annotate the example as “tool-specific” and provide the correct command for the actual tool used in this repo.
+  - **If Blocked:** If repo tooling is not Jest, annotate the example as "tool-specific" and provide the correct command for the actual tool used in this repo.
 
-- [ ] **41.7.2** Fix m6: correct artifacts endpoint example in `skills/domains/code-quality/test-coverage-patterns.md`
+- [x] **41.7.2** Fix m6: correct artifacts endpoint example in `skills/domains/code-quality/test-coverage-patterns.md`
   - **Goal:** Ensure the artifacts endpoint example matches the documented tooling (or is clearly labeled as an example).
   - **AC:**
     - Endpoint/example is correct, or explicitly annotated as tool-specific/pseudocode
