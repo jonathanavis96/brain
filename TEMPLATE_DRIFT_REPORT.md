@@ -58,7 +58,7 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 
 | ID | File/Path | Diff Type | Intended? | Confidence | Impact | Summary | Action |
 |----|-----------|-----------|-----------|------------|--------|---------|--------|
-| **MATCHED FILES (exist in both)** |
+| **MATCHED FILES (exist in both)** | | | | | | | |
 | D01 | `.gitignore` | Modified | Intended | High | Low | Brain adds `old_md/` ignore | Keep |
 | D02 | `CEREBRAS_AGENT.md` | Identical | - | - | - | No drift | - |
 | D03 | `HUMAN_REQUIRED.md` | Modified | Unknown | Medium | Low | Minor wording changes | Decide |
@@ -74,7 +74,7 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 | D13 | `sync_cortex_plan.sh` | Modified | Intended | Med | Med | Simplified in template | Keep |
 | D14 | `thunk_ralph_tasks.sh` | Identical | - | - | - | No drift | - |
 | D15 | `verifier.sh` | Modified | Mixed | High | High | Template has new path fix; current has caching | Backport-partial |
-| **TEMPLATE-ONLY FILES** |
+| **TEMPLATE-ONLY FILES** | | | | | | | |
 | T01 | `.markdownlint.yaml` | Missing in current | Intended | High | Low | Root-level config used instead | Keep missing |
 | T02 | `IMPLEMENTATION_PLAN.project.md` | Template placeholder | Intended | High | - | Becomes `IMPLEMENTATION_PLAN.md` | - |
 | T03 | `PROMPT.project.md` | Template placeholder | Intended | High | - | Supplementary prompt template | - |
@@ -84,7 +84,7 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 | T07 | `SKILL_TEMPLATE.md` | Missing in current | Intended | High | Low | Template for skills (brain has in skills/) | Keep missing |
 | T08 | `rules/AC.rules` | Different location | Intended | High | Med | Template has sample; brain uses root `rules/` | Keep |
 | T09 | `rules/MANUAL_APPROVALS.rules` | Different location | Intended | High | Low | Same pattern as AC.rules | Keep |
-| **WORKERS-ONLY FILES** |
+| **WORKERS-ONLY FILES** | | | | | | | |
 | W01 | `AGENTS.md` | Not templated | Intended | High | Med | Brain-specific agent guide | Keep |
 | W02 | `NEURONS.md` | Not templated | Intended | High | Med | Brain-specific repo map | Keep |
 | W03 | `THOUGHTS.md` | Not templated | Intended | High | Low | Brain-specific strategy | Keep |
@@ -251,7 +251,7 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 
 ### Dependencies
 
-```
+```text
 Phase 1 items are independent - can be done in parallel
 Phase 2.4 (loop.sh) should come before 2.5 (verifier.sh) - similar patterns
 Phase 3 decisions can happen anytime

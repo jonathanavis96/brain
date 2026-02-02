@@ -474,7 +474,7 @@ Where notifications happen:
 
 ---
 
-### Phase 1: Worktrees + two-agent plan/review gate
+## Phase 1: Worktrees + two-agent plan/review gate
 
 **Changes**
 

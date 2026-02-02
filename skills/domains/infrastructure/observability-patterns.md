@@ -162,6 +162,7 @@ func metricsMiddleware(next http.HandlerFunc) http.HandlerFunc {
         defer activeConnections.Dec()
         
         // Wrap ResponseWriter to capture status code
+        // Default to 200 OK (HTTP standard default when WriteHeader is not explicitly called)
         wrappedWriter := &responseWriter{ResponseWriter: w, statusCode: http.StatusOK}
         
         // Call the actual handler
@@ -312,7 +313,7 @@ def get_order(order_id):
 def fetch_from_db(order_id):
     with tracer.start_as_current_span("db.query") as span:
         # SECURITY: Always use parameterized queries, never interpolate values into SQL
-        # PostgreSQL uses %s placeholders (psycopg2) or $1 (asyncpg)
+        # Example uses psycopg2-style placeholders (%s)
         span.set_attribute("db.statement", "SELECT * FROM orders WHERE id = %s")
         span.set_attribute("db.system", "postgresql")
         span.set_attribute("db.operation", "SELECT")
@@ -499,6 +500,11 @@ class AnomalyDetector:
 # Usage
 detector = AnomalyDetector(window_size=100, threshold_stddev=3)
 
+def send_alert(title, description, severity):
+    """Send alert to monitoring system (implementation depends on your alerting service)"""
+    # Example: POST to PagerDuty, Slack, or email service
+    pass
+
 def check_metric(metric_name, current_value):
     result = detector.add_value(current_value)
     
@@ -648,6 +654,7 @@ async function callDownstreamService(url: string, data: any, req: Request) {
 ```python
 import random
 from functools import wraps
+from datetime import datetime
 
 class SamplingLogger:
     def __init__(self, logger, sample_rate=0.1):

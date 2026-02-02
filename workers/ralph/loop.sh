@@ -194,7 +194,7 @@ INTERRUPT_RECEIVED=false
 
 # Cleanup function for temp files and lock
 cleanup() {
-  rm -f "$LOCK_FILE"
+  # Note: LOCK_FILE is handled by release_lock()
   if [[ -n "${TEMP_CONFIG:-}" && -f "${TEMP_CONFIG:-}" ]]; then
     rm -f "$TEMP_CONFIG"
   fi
@@ -1687,7 +1687,7 @@ run_once() {
         echo "========================================"
         echo ""
         # Skip cache lookup, proceed with normal execution
-      elif lookup_cache_pass "$tool_key" "$git_sha" "${AGENT_NAME:-$RUNNER}"; then
+      elif lookup_cache_pass "$tool_key" "$git_sha" "$RUNNER"; then
         # Cache hit - skip tool execution
         local guard_ts=$(($(date +%s%N) / 1000000))
         emit_marker ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=no_pending_tasks phase=BUILD ts=${guard_ts}"
@@ -1724,6 +1724,8 @@ except Exception:
         if [[ -n "${TEMP_CONFIG:-}" && -f "${TEMP_CONFIG:-}" ]]; then
           rm -f "$TEMP_CONFIG"
         fi
+        # Cleanup temp prompt file before early return
+        rm -f "$prompt_with_mode"
         return 0
       else
         # Cache miss - proceed with execution
@@ -1734,7 +1736,7 @@ except Exception:
       fi
     else
       # PLAN phase - check cache normally
-      if lookup_cache_pass "$tool_key" "$git_sha" "${AGENT_NAME:-$RUNNER}"; then
+      if lookup_cache_pass "$tool_key" "$git_sha" "$RUNNER"; then
         # Cache hit - skip tool execution
         local guard_ts=$(($(date +%s%N) / 1000000))
         emit_marker ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=idempotent_check phase=PLAN ts=${guard_ts}"
