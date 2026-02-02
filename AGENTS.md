@@ -45,6 +45,7 @@ For detailed guidance on common tasks, see:
 - **Adding new skills:** [skills/self-improvement/README.md](skills/self-improvement/README.md)
 - **Updating templates:** [workers/ralph/AGENTS.md](workers/ralph/AGENTS.md#template-sync-rule)
 - **Running the verifier:** [workers/ralph/VALIDATION_CRITERIA.md](workers/ralph/VALIDATION_CRITERIA.md)
+- **Pre-commit review:** [docs/review-checklist.txt](docs/review-checklist.txt)
 
 ## Troubleshooting
 

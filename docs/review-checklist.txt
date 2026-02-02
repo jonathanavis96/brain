@@ -1,0 +1,86 @@
+# Review Checklist - Skepticism Pass for Complex Changes
+
+Use this checklist when reviewing complex plans, implementations, or bug fixes.
+Apply a "staff engineer review" mindset: look for gaps, edge cases, and hidden assumptions.
+
+## 1. Proof of Understanding
+- [ ] Does the plan/fix demonstrate understanding of root cause (not just symptoms)?
+- [ ] Are the constraints and trade-offs explicitly stated?
+
+## 2. Verification Strategy
+- [ ] Is there a repro command that proves the bug exists?
+- [ ] Is there a verification command that proves the fix works?
+- [ ] Are edge cases and failure modes tested?
+
+## 3. Scope Control
+- [ ] Is the change scoped to exactly what's needed (no "while I'm here" extras)?
+- [ ] Are dependencies and prerequisites clearly identified?
+- [ ] Is there a clear definition of "done"?
+
+## 4. Safety & Reversibility
+- [ ] Can this change be rolled back cleanly if it fails?
+- [ ] Are there hash guards, protected files, or manual approval gates to consider?
+- [ ] Does the change modify critical paths (verifier, loop, prompt)?
+
+## 5. Context Preservation
+- [ ] Are assumptions documented (not just implied)?
+- [ ] Are validation commands provided for future maintainers?
+- [ ] Is there enough context to understand "why" in 6 months?
+
+## 6. Error Handling
+- [ ] What happens if inputs are invalid, missing, or malformed?
+- [ ] Are error messages actionable (not just "failed")?
+- [ ] Are timeouts, retries, and fallbacks considered?
+
+## 7. Documentation Alignment
+- [ ] Does the change match existing patterns in skills/ or docs/?
+- [ ] Are there contradictions with AGENTS.md, VALIDATION_CRITERIA.md, or AC.rules?
+- [ ] Is new behavior documented where users will look for it?
+
+## 8. Hidden Costs
+- [ ] What's the iteration/token cost of this approach vs simpler alternatives?
+- [ ] Are there maintenance costs (new files to keep in sync, new gates to maintain)?
+- [ ] Does this create technical debt that will need cleanup later?
+
+## 9. Integration Points
+- [ ] How does this interact with the verifier, loop.sh, or commit hooks?
+- [ ] Are there race conditions, file locking, or concurrent access issues?
+- [ ] Does this change affect other workers (Cerebras, Cortex)?
+
+## 10. "Grill Me" Questions
+- [ ] What's the simplest thing that could possibly work? (Are we over-engineering?)
+- [ ] What would break if we scaled this 10x? (Performance, file size, complexity?)
+- [ ] What question should I ask that I'm not asking? (Blind spots?)
+
+---
+
+## When to Use This Checklist
+
+**ALWAYS:**
+- Complex refactors that touch 5+ files
+- Changes to loop.sh, verifier.sh, or protected files
+- New patterns that will be reused across skills/
+- Bug fixes where root cause is unclear
+
+**SOMETIMES:**
+- Medium-complexity features (3-5 files, new behavior)
+- Documentation that introduces new concepts or workflows
+- Changes suggested after multiple iterations of back-and-forth
+
+**SKIP:**
+- Trivial fixes (typos, formatting, single-line changes)
+- Well-understood patterns (adding a skill following existing template)
+- Changes with strong automated validation (verifier catches issues)
+
+---
+
+## Review Modes
+
+**Pre-implementation (Plan Review):**
+Focus on items 1-3, 5, 7, 10 (understanding, scope, context)
+
+**Post-implementation (Code Review):**
+Focus on items 2, 4, 6, 8, 9 (verification, safety, errors, integration)
+
+**Emergency Fix (Incident Response):**
+Focus on items 2, 4, 6 (verify it works, ensure it's reversible, handle errors)

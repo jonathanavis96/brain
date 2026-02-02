@@ -18,14 +18,17 @@
 ## A) Recommendation Summary (top 3 to adopt first)
 
 1) **Bug Packet + “verification-first” contract (Tips 5 + 6 adapted)**
+
 - **Why first:** Biggest reliability win with the least moving parts. Cuts iteration thrash and “cannot reproduce” loops.
 - **What changes:** You standardize what you paste to Ralph (failure + repro + environment + expected behavior), and you require a verification command list and proof output in the final response.
 
 2) **Two-stage gating: Cortex Plan → Reviewer audit → Ralph execution (Tips 2 + 6)**
+
 - **Why second:** Your repo already encodes role separation (Cortex vs Ralph). Adding a lightweight review gate improves correctness and reduces rework.
 - **What changes:** Make “Plan” the artifact, do a skepticism pass (“staff engineer review”), and explicitly define when to stop and re-plan.
 
 3) **Worktrees for parallelism + a read-only analysis tree (Tip 1)**
+
 - **Why third:** This unlocks true concurrency (plan while builds/tests run elsewhere) without changing your core loop. It also helps context hygiene (analysis tree stays clean).
 - **What changes:** Add 3–4 worktrees with a clear purpose and naming scheme; define how plans move from Cortex worktree to Ralph worktree (see section C).
 
@@ -57,93 +60,115 @@ If you do only these three, you’ll see faster throughput, fewer regressions, a
 You want the Cortex plan (in `wt-plan`) to be reliably visible to Ralph (in `wt-build`) with minimal footguns.
 
 ### Option A — Commit the plan artifact (branch or same branch)
+
 **Mechanism**
+
 - Cortex writes/updates a plan file (or a plan section in a canonical file), then commits it.
 - Ralph pulls/merges that commit in their worktree and executes.
 
 **Pros**
+
 - Strong provenance/audit trail (“what plan did we execute?”).
 - Works across machines.
 - Naturally resolves “stale plan” issues because Git forces explicit sync.
 
 **Cons**
+
 - More commits (noise) unless you squash or use a dedicated “plans” branch.
 - If you’re mid-iteration, committing partial plans may feel heavy.
 
 **Failure modes**
+
 - Ralph implements against an old commit because they didn’t pull.
 - Merge conflicts if both touch the same plan file.
 
 **Recommendation**
+
 - **Recommended for anything non-trivial**. Use a dedicated convention:
   - Either a `plan/<ticket-or-topic>` branch, or
   - A “plan commit” label/tag in the message, then squash later.
 
 **Integration with `acli rovodev run`**
+
 - Cortex: `acli rovodev run` → produces/updates plan → human commits.
 - Ralph: pulls latest → `acli rovodev run` in implementer mode using the plan as the artifact of record.
 
 ---
 
 ### Option B — Copy plan file across worktrees
+
 **Mechanism**
+
 - A script copies `plan.md` (or `workers/IMPLEMENTATION_PLAN.md`) from `wt-plan` to `wt-build` before Ralph runs.
 
 **Pros**
+
 - Very fast; no git ceremony.
 - Good for “local-only” workflows.
 
 **Cons**
+
 - Easy to desync (“which copy is authoritative?”).
 - Harder to audit later.
 - Risk of overwriting local changes.
 
 **Failure modes**
+
 - Copy happens from the wrong source path (wrong worktree).
 - Partial copy leaves Ralph with a truncated plan.
 
 **Recommendation**
+
 - **Not recommended as the primary mechanism**. If used, treat it as a stopgap and enforce:
   - checksum/size check,
   - timestamp logging,
   - and a “source-of-truth” banner inside the copied plan.
 
 **Integration with `acli rovodev run`**
+
 - Wrapper around `acli rovodev run` in the Ralph worktree: “sync plan → run”.
 
 ---
 
 ### Option C — Shared read-only location / shared artifact pointer
+
 **Mechanism**
+
 - Plan lives in a shared location accessible to all worktrees:
   - e.g., a single canonical path outside worktrees (or a dedicated “plans” repo/folder),
   - or a generated artifact that Ralph references by path/URL.
 - Ralph reads it, but doesn’t edit it.
 
 **Pros**
+
 - Eliminates duplication: one plan, many consumers.
 - Can be made read-only to prevent accidental edits.
 - Works well with an “analysis” worktree too.
 
 **Cons**
+
 - Requires careful pathing on Windows/WSL.
 - If the shared location isn’t versioned, you lose history.
 
 **Failure modes**
+
 - Permissions drift (RO becomes writable).
 - Path differences between Windows and WSL confuse scripts.
 
 **Recommendation**
+
 - **Good hybrid** when paired with Option A:
   - Canonical plan is committed (history),
   - A “latest plan pointer” is also written to a stable path for convenience.
 
 **Integration with `acli rovodev run`**
+
 - Runs include “Plan is at: `<path>`” and instruct the agent to treat that as immutable input.
 
 ---
 
 ### Overall recommendation
+
 - **Default:** **Option A (commit plan artifact)** for correctness and auditability.
 - **Convenience add-on:** Option C as a pointer/cache for “latest plan” access.
 - Avoid Option B except as a temporary bridge.
@@ -157,6 +182,7 @@ You want the Cortex plan (in `wt-plan`) to be reliably visible to Ralph (in `wt-
 Use a structured, append-only section so new rules don’t rewrite history:
 
 **Format**
+
 - **Rule ID:** `R-YYYYMMDD-###`
 - **Trigger:** “When X happens…”
 - **Directive:** “Do Y instead…”
@@ -170,46 +196,55 @@ This keeps rules actionable and prevents “wall of text”.
 ### 8 example rules (generic but relevant)
 
 1) **Scoped staging**
+
 - **Trigger:** When changing multiple subsystems in one fix.
 - **Do:** Split into separate commits/PRs; stage files by concern; never mix refactor + behavior change.
 - **Verify:** `git diff --staged` shows only one concern.
 
 2) **Verification is mandatory**
+
 - **Trigger:** When claiming a bug is fixed.
 - **Do:** Run the repro command first (fail), apply fix, rerun (pass), then run the smallest relevant test suite.
 - **Verify:** Paste command + output snippets (before/after).
 
 3) **Migrations / schema changes**
+
 - **Trigger:** When changing storage formats, schemas, or serialized shapes.
 - **Do:** Add forward + backward compatibility, and a migration note; include rollback plan.
 - **Verify:** Versioned fixture tests (old + new).
 
 4) **Null/empty handling**
+
 - **Trigger:** When reading external inputs (files, env vars, API responses).
 - **Do:** Treat missing/empty as first-class; explicit defaults; no blind indexing.
 - **Verify:** Add at least one test for missing key / empty file.
 
 5) **Refactor safety rails**
+
 - **Trigger:** When touching “core” modules.
 - **Do:** Mechanical refactor only; preserve public interfaces; add characterization tests first if behavior unclear.
 - **Verify:** Public API snapshot / golden test passes.
 
 6) **Error handling must be explicit**
+
 - **Trigger:** When adding new network/file/process calls.
 - **Do:** Handle failure paths; produce actionable error messages; avoid swallowing exceptions.
 - **Verify:** Induce one failure mode and show message quality.
 
 7) **No “drive-by” formatting**
+
 - **Trigger:** When working on a logic bug.
 - **Do:** Don’t reformat unrelated code. If formatting is required, do it in a separate commit.
 - **Verify:** Diff is narrow; blame remains meaningful.
 
 8) **Test selection discipline**
+
 - **Trigger:** When the test suite is large.
 - **Do:** Run the smallest targeted tests locally; only run full suite when touching shared layers or before merge.
 - **Verify:** Provide the exact command list used.
 
 ### Weekly pruning routine (keep under ~300 lines)
+
 - **Cadence:** weekly (15 minutes).
 - **Steps:**
   1) **Deduplicate**: merge near-identical rules; keep the newest ID but preserve rationale.
@@ -223,6 +258,7 @@ This keeps rules actionable and prevents “wall of text”.
 ## E) “Hands‑off bug fixing” adaptation without Slack
 
 ### What you should paste instead
+
 To replace the “Slack thread” context, paste a compact, deterministic evidence bundle:
 
 - **Repro command** (exact command, from repo root, include env vars)
@@ -282,6 +318,7 @@ Ralph replies with:
 ```
 
 ### Verification requirement
+
 - Every fix must include:
   - **A “before” failing run** (or a credible explanation if impossible, but treat that as exceptional).
   - **An “after” passing run** of the same repro.
@@ -294,6 +331,7 @@ Ralph replies with:
 ## F) Voice dictation + TTS on Windows/WSL (runner-agnostic)
 
 ### Voice dictation options (Windows)
+
 - **Windows built-in dictation (Win+H)**
   - **Pros:** zero setup, works in most text fields, good enough for prompts/plans.
   - **Cons:** limited customization/vocab; depends on focus/cursor; may struggle with code symbols.
@@ -312,10 +350,13 @@ Ralph replies with:
 ### TTS notifications (two approaches)
 
 #### Approach 1 — PowerShell TTS triggered from WSL
+
 **Mechanism**
+
 - From WSL scripts, call `powershell.exe` with a short TTS command on key events.
 
 **Where it hooks**
+
 - In a wrapper script around your `acli rovodev run` invocation:
   - on start (optional),
   - on success,
@@ -323,31 +364,39 @@ Ralph replies with:
   - and on “human required” / approval needed.
 
 **Benefits**
+
 - Hands-free awareness while you multitask.
 - Works in Windows+WSL without special desktop apps.
 
 **Risks**
+
 - PowerShell invocation quoting can be finicky.
 - Over-notifying becomes noise.
 
 #### Approach 2 — Non-TTS fallback (toast / sound)
+
 **Mechanism**
+
 - Trigger:
   - Windows toast notification, or
   - simple system sound, or
   - Windows Terminal bell.
 
 **Where it hooks**
+
 - Same wrapper points: start/end/fail, plus CI failure detection if you run CI locally.
 
 **Benefits**
+
 - Less intrusive than voice.
 - Often easier to implement robustly than TTS.
 
 **Risks**
+
 - Toast permissions/focus mode can suppress notifications.
 
 **Recommendation**
+
 - Implement non-TTS first if you want minimal fragility; add TTS only for failure/human-required states.
 
 ---
@@ -397,11 +446,14 @@ Where notifications happen:
 ## H) Phased Implementation Plan (PLAN ONLY; no code changes)
 
 ### Phase 0 (1–2 hours): Minimal changes (highest ROI, lowest risk)
+
 **Changes**
+
 - Adopt Bug Packet Template + verification contract for Ralph.
 - Adopt “Cortex Plan artifact + reviewer skepticism checklist” for complex tasks.
 
 **Acceptance criteria**
+
 - 1 real bug/task completed using the Bug Packet template with:
   - repro before/after proof,
   - targeted tests listed,
@@ -409,29 +461,38 @@ Where notifications happen:
 - 1 complex change goes through: plan → review questions → implementation.
 
 **Rollback**
+
 - Stop using the templates; return to ad-hoc pasting.
 
 **Measure**
+
 - Iterations per fix (messages/back-and-forth).
-- # of “cannot reproduce” incidents.
+
+- # of “cannot reproduce” incidents
+
 - % of tasks with explicit repro + verification proof.
 
 ---
 
 ### Phase 1: Worktrees + two-agent plan/review gate
+
 **Changes**
+
 - Create worktrees: `wt-plan`, `wt-build`, `wt-analysis`, optional `wt-review`.
 - Define a strict “plan handoff” mechanism (recommend Option A: commit plan).
 
 **Acceptance criteria**
+
 - You can run Cortex planning in `wt-plan` while tests/build run in `wt-build`.
 - Ralph never edits in `wt-analysis`.
 - 2 tasks completed without worktree confusion; plan commit is the artifact of record.
 
 **Rollback**
+
 - Remove extra worktrees; return to single checkout.
 
 **Measure**
+
 - Time spent waiting on tests (should drop via parallel activity).
 - Number of “wrong directory/worktree” mistakes (should be near zero).
 - Lead time from plan approved → implementation started.
@@ -439,39 +500,49 @@ Where notifications happen:
 ---
 
 ### Phase 2: “Skills” equivalents + bug packet + verification hardening
+
 **Changes**
+
 - Convert repeated routines into “skills” (prompt snippets/checklists) referenced from `agents.md`.
 - Standardize verification commands by task type (backend/frontend/docs).
 
 **Acceptance criteria**
+
 - At least 3 reusable skills exist (e.g., “python bugfix”, “refactor safety”, “release note”).
 - Each skill includes: inputs required, steps, verification commands, failure handling.
 - Regression rate decreases (fewer follow-up fixes).
 
 **Rollback**
+
 - Keep skills but stop enforcing them; revert to ad-hoc.
 
 **Measure**
+
 - Rework rate (follow-up fixes within 24–72 hours).
 - Average time-to-fix for recurring task categories.
 
 ---
 
 ### Phase 3: Statusline/notifications/voice (operator-speed improvements)
+
 **Changes**
+
 - Add statusline showing: repo, branch, worktree id, dirty state, time since last commit.
 - Add wrapper hooks for end/fail notifications (toast/sound; optional TTS).
 - Add dictation habit: use voice for planning + bug packets.
 
 **Acceptance criteria**
+
 - You can tell worktree + branch at a glance before running `acli rovodev run`.
 - You receive a reliable signal on fail/human-required without watching the terminal.
 - Voice dictation reliably produces usable plan text at least once daily.
 
 **Rollback**
+
 - Disable statusline module; remove notification hooks; stop using dictation.
 
 **Measure**
+
 - Context-switch overhead (subjective: fewer “where was I?” moments).
 - Missed failures (times you didn’t notice a run failed).
 - Throughput: tasks/day or plan→merge cycle time.
@@ -479,6 +550,7 @@ Where notifications happen:
 ---
 
 ### What is *not* viable / should be deferred (given your constraints)
+
 - Deep “Slack thread → go fix” automation equivalents (you don’t use Slack): emulate via Bug Packets instead.
 - Auto-approval routing “through a model” (Tip 8 advanced): risky unless `acli rovodev run` has explicit, auditable support for permission gates and you’re comfortable with that risk model.
 - macOS-centric terminal tooling (Ghostty-specific workflows): use Windows Terminal + WSL-compatible prompt tooling instead.

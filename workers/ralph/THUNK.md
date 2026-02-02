@@ -1179,3 +1179,8 @@ Started: 2026-01-18
 | 1166 | WARN.MD040.test_md040.md | HIGH | - [x] **WARN.MD040.test_md040.md** - Fix MD040 in tools/tests/fixtures/test_md040.md | 2026-01-31 |
 | 1167 | 39.5.1 | HIGH | - [x] **39.5.1** Run semantic review during PLAN only (not BUILD) - Verified semantic review block is wrapped in PLAN-only conditional | 2026-01-31 |
 | 109 | 2026-01-31 | 39.6.1 | Verified loop commit policy | BUILD never commits (COMMIT_POLICY=plan-only default); PLAN commits at start (batching BUILD changes); end-of-run always commits (COMMIT_POLICY=always override); flush_scoped_commit_if_needed controls all commits | M |
+| 110 | 2026-02-02 | 40.3.1 | Created review-checklist.txt | Added docs/review-checklist.txt with 10-item skepticism checklist for complex changes (86 lines); includes review modes, when-to-use guidance, and "grill me" questions from claude_team_workflow_tricks source material | M |
+| 1168 | 40.3.1 | UNKNOWN | - [x] **40.3.1** Create `docs/review-checklist.txt` | 2026-02-02 |
+| 208 | 2026-02-02 | 40.3.2 | Reference review-checklist.txt from AGENTS.md | Added link to docs/review-checklist.txt in Common Tasks section | AGENTS.md |
+| 1169 | 40.3.2 | UNKNOWN | - [x] **40.3.2** Reference the checklist from `AGENTS.md` | 2026-02-02 |
+| 1170 | 40.4 | BUILD | Created `docs/worktrees.md` with worktree workflow conventions: naming conventions (wt-plan/wt-build/wt-analysis/wt-review), plan handoff mechanism (commit artifacts by default), common failure modes (wrong directory, permissions drift, stale plans), cleanup procedures, and RovoDev integration guidance. Extracted from `docs/still-to-do/claude_team_workflow_tricks_mapping_plan.md`. | 2026-02-02 |

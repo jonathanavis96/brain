@@ -1,25 +1,124 @@
 # Implementation Plan - Brain Repository
 
-**Last Updated:** 2026-01-28 19:34:25
+**Last Updated:** 2026-02-02 15:26:05
 
-**Current Status:** Phase 37-38 active, Phase 0-Warn markdown lint cleanup required
+**Current Status:** Phase 40 in progress (docs-only workflow hardening). Phase 41 queued (CodeRabbit tracker fixes).
 
-**Recent Completions:**
+**Execution Order (Ralph):**
 
-- **Phase 28: Template Maintenance (✅ COMPLETED)** - Audited templates for drift, verified no critical issues
-- **Phase 27: Skills Knowledge Base Expansion (✅ COMPLETED)** - Reviewed GAP_BACKLOG, promoted semantic code review skill
-- **Phase 26: Environment & Testing Infrastructure (✅ COMPLETED)** - Brain Map testing setup and documentation
-- **Phase 25: Brain Map (✅ COMPLETED)** - Full MVP with backend API, frontend UI, comprehensive tests
-- **Phase 24: Template Drift Alignment (✅ COMPLETED)**
-- **Phase 23: Loop Efficiency & Correctness Fixes (✅ COMPLETED)**
-
-**Active Focus:**
-
-- Phase 0-Warn: MD012 errors in workers/workers/PLAN_DONE.md
-- Phase 37: Repo Cleanup & Drift Control
-- Phase 38: Documentation Consolidation & Navigation
+1. Phase 40 (docs-only): reviewer checklist, then optional worktrees doc
+2. Phase 41 (fixes): start with low-risk repo hygiene and markdown fixes, then docs/example fixes
 
 <!-- Cortex adds new Task Contracts below this line -->
 
+## Phase 40: Workflow Hardening (Bug Packets + Review Gate)
+
+- [ ] **40.3.1** Create `docs/review-checklist.txt`
+  - **Goal:** Create a lightweight skepticism checklist reviewers can apply to complex changes.
+  - **AC:**
+    - `docs/review-checklist.txt` exists
+    - Checklist is 10–15 items, plain text
+  - **If Blocked:** If the checklist source material is unclear, draft a first-pass 10-item list and call out 1–2 items that may need refinement.
+
+- [ ] **40.3.2** Reference the checklist from `AGENTS.md`
+  - **Goal:** Make the checklist discoverable without bloating `AGENTS.md`.
+  - **Dependencies:** Do **40.3.1** first.
+  - **AC:**
+    - `AGENTS.md` links to `docs/review-checklist.txt`
+    - `bash workers/ralph/fix-markdown.sh AGENTS.md` succeeds
+  - **If Blocked:** If `AGENTS.md` is at risk of getting too long, keep it to a 2–3 line pointer and move any additional guidance into `docs/review-checklist.txt`.
+
+- [ ] **40.4** (Optional) Worktree + plan handoff conventions (docs-only)
+  - **Goal:** Document a safe worktree workflow (wt-plan / wt-build / wt-analysis / wt-review) and a plan handoff mechanism.
+  - **AC:**
+    - EITHER `docs/worktrees.md` exists with the conventions from section C/G
+    - OR `docs/BOOTSTRAPPING.md` contains a short section with the same conventions (if `docs/worktrees.md` is skipped)
+    - Includes a clear “default = commit plan artifact” rule and common failure modes
+  - **If Blocked:** If the source material is too long, write a minimal version: naming conventions + when to use which worktree + the “commit plan artifacts by default” rule.
+
 ---
 
+## Phase 41: CodeRabbit Tracker → Atomic Fix Tasks
+
+- [ ] **41.8.1** Git hygiene: add `*.egg-info/` to `.gitignore`
+  - **Goal:** Prevent Python build artifacts from being committed.
+  - **AC:** `.gitignore` includes `*.egg-info/`
+  - **If Blocked:** If `.gitignore` already contains an equivalent rule, link to the existing line in completion notes and mark done.
+
+- [ ] **41.8.2** Git hygiene: remove any tracked `*.egg-info/` from git index (if present)
+  - **Goal:** Ensure the repo index is clean while keeping local files.
+  - **Dependencies:** Do **41.8.1** first.
+  - **AC:**
+    - `git ls-files | grep -E '\\.egg-info(/|$)'` returns no matches
+  - **If Blocked:** If none are tracked, record that fact in the task completion and mark done.
+
+- [ ] **41.4.1** Fix M10: repair `workers/ralph/THUNK.md` table formatting
+  - **Goal:** Ensure all rows in the THUNK table have consistent column counts and escaped pipes.
+  - **AC:**
+    - `bash workers/ralph/fix-markdown.sh workers/ralph/THUNK.md`
+    - `markdownlint workers/ralph/THUNK.md` passes (or at minimum no table-related rule failures)
+  - **If Blocked:** If `markdownlint` is not available in the environment, run `bash workers/ralph/fix-markdown.sh ...` and ensure the table renders correctly (consistent pipes) and note the missing tool.
+
+- [ ] **41.2** Fix C2: Shell README config mismatch
+  - **Goal:** Align `skills/domains/languages/shell/README.md` with actual `.pre-commit-config.yaml` shfmt settings (or vice versa).
+  - **AC:**
+    - Docs match config after change
+    - Doc validation passes: `bash tools/validate_doc_sync.sh`
+  - **If Blocked:** If the canonical validator differs, use the repo’s documented doc validator and report which command was used.
+
+- [ ] **41.7.1** Fix m6: correct Jest flag example in `skills/domains/code-quality/test-coverage-patterns.md`
+  - **Goal:** Ensure Jest CLI flags in examples are valid.
+  - **AC:**
+    - Example commands are correct for Jest (or explicitly marked as pseudocode)
+    - Any shell snippets use `bash` fences and are copy/pastable
+  - **If Blocked:** If repo tooling is not Jest, annotate the example as “tool-specific” and provide the correct command for the actual tool used in this repo.
+
+- [ ] **41.7.2** Fix m6: correct artifacts endpoint example in `skills/domains/code-quality/test-coverage-patterns.md`
+  - **Goal:** Ensure the artifacts endpoint example matches the documented tooling (or is clearly labeled as an example).
+  - **AC:**
+    - Endpoint/example is correct, or explicitly annotated as tool-specific/pseudocode
+  - **If Blocked:** If the correct endpoint depends on CI vendor, label the example with the vendor and provide at least one concrete correct endpoint.
+
+- [ ] **41.5.1** Fix m1: remove stray/duplicate code fences in `skills/domains/infrastructure/observability-patterns.md`
+  - **Goal:** Make the markdown render correctly.
+  - **AC:**
+    - No stray/duplicate closing fences in the file
+    - `markdownlint skills/domains/infrastructure/observability-patterns.md` has no fence-related failures (if rule enabled)
+  - **If Blocked:** If markdownlint is unavailable, manually confirm rendered fences are balanced and note the limitation.
+
+- [ ] **41.5.2** Fix m1: correct SQL placeholder style + injection-risk example in `skills/domains/infrastructure/observability-patterns.md`
+  - **Goal:** Remove unsafe SQL-injection patterns and keep placeholder style consistent inside each example.
+  - **AC:**
+    - SQL examples avoid injection patterns OR clearly label an unsafe example and provide a corrected safe alternative
+    - Placeholder style is consistent within each SQL example (no mixing `?`/`%s`/`$1` in one example)
+  - **If Blocked:** If the example is meant to be dialect-agnostic, use neutral pseudocode placeholders and clearly label it as pseudocode.
+
+- [ ] **41.5.3** Fix m1: correct Python example issues in `skills/domains/infrastructure/observability-patterns.md`
+  - **Goal:** Fix broken Python snippets (e.g., references to non-existent attributes).
+  - **AC:**
+    - Python examples are syntactically valid (where feasible)
+    - Example code does not reference obviously non-existent fields like `record.extra` unless defined in the snippet
+  - **If Blocked:** If full correctness requires library-specific types, add a short comment explaining the assumed record fields/types.
+
+- [ ] **41.5.4** Fix m1: correct metrics middleware example in `skills/domains/infrastructure/observability-patterns.md`
+  - **Goal:** Avoid hardcoded HTTP status in middleware examples.
+  - **AC:** Middleware example does not hardcode status "200" (uses actual response status or equivalent).
+  - **If Blocked:** If the framework example cannot access the status, explain the limitation and show the closest correct alternative.
+
+- [ ] **41.6.1** Fix m4: correct future date in `skills/domains/languages/typescript/README.md`
+  - **Goal:** Remove future timestamps.
+  - **AC:** No date in that file is later than 2026-02-02.
+  - **If Blocked:** If the “date” is an example (not a real timestamp), label it clearly as an example and pick a non-future value.
+
+- [ ] **41.6.2** Fix m4: confirm repo has no future dates
+  - **Goal:** Ensure no plan/docs contain future dates.
+  - **AC:** `grep -R "2026-02-0[3-9]" -n .` returns no matches.
+  - **If Blocked:** If grep hits generated artifacts, scope the search to `docs/`, `skills/`, `workers/`, and `cortex/` and report any remaining hits.
+
+- [ ] **41.1** (Last) Convert additional OPEN tracker items into new atomic plan tasks (bounded)
+  - **Goal:** Keep the plan actionable without duplicating already-fixed items.
+  - **Scope:** Create at most 5 new tasks from OPEN items in `docs/CODERABBIT_ISSUES_TRACKER.md` that are not already represented in this plan.
+  - **AC:**
+    - Each new task references a specific issue id and the file path/approximate lines from the tracker
+    - Items marked ✅ Fixed in the tracker are not duplicated
+  - **If Blocked:** If OPEN items are too broad, create tasks only for the highest-impact items (Critical/Major) and leave minor items in the tracker.

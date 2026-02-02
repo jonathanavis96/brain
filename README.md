@@ -203,7 +203,7 @@ npm install  # First time only
 npm run dev
 ```
 
-**Open in browser:** http://localhost:5173
+**Open in browser:** <http://localhost:5173>
 
 **What you get:**
 
@@ -420,7 +420,7 @@ EOF
   - Node centrality (most connected concepts)
   - Temporal activity (recently modified notes)
   - Relationship strength
-- **Insights Panel**: 
+- **Insights Panel**:
   - Orphan node detection
   - Density metrics
   - Suggested connections
@@ -429,6 +429,7 @@ EOF
 ### Architecture
 
 **Backend (FastAPI + Python):**
+
 - REST API for notes, search, and graph data
 - Full-text search with ranking
 - Frontmatter parsing and validation
@@ -436,6 +437,7 @@ EOF
 - Localhost-only security (no external access)
 
 **Frontend (React + Vite + D3.js):**
+
 - Force-directed graph layout with zoom/pan
 - Toast notifications for all user actions
 - Filtering and search UI
@@ -454,7 +456,7 @@ cd ~/code/brain/app/brain-map/frontend
 npm install && npm run dev
 ```
 
-Open http://localhost:5173 to explore the graph.
+Open <http://localhost:5173> to explore the graph.
 
 **📖 Full documentation:** [app/brain-map/START.md](app/brain-map/START.md)
 
@@ -529,6 +531,7 @@ Every commit runs through:
 ### Real-World Applications
 
 **1. Project Bootstrapping**
+
 ```bash
 # Create a new Next.js SaaS project in 14 seconds
 cat > saas_project.md << 'EOF'
@@ -546,12 +549,14 @@ bash scripts/new-project.sh saas_project.md
 ```
 
 **2. Knowledge Graph Exploration**
+
 - Use Brain-Map to explore relationships between 145+ skills
 - Find orphaned documentation that needs connections
 - Visualize how different patterns relate to each other
 - Quick lookup for "what skills do I have for X?"
 
 **3. Continuous Skill Improvement**
+
 ```bash
 # Ralph discovers a new pattern while working
 # Automatically documents it in skills/
@@ -560,6 +565,7 @@ bash scripts/new-project.sh saas_project.md
 ```
 
 **4. Documentation-Driven Development**
+
 - Keep `IMPLEMENTATION_PLAN.md` as source of truth
 - Ralph executes tasks from the plan
 - Updates documentation as work progresses
@@ -576,12 +582,14 @@ See **[skills/projects/brain-example.md](skills/projects/brain-example.md)** for
 ### Common Issues
 
 **Problem: Ralph loop fails with "PLAN_DONE.md not found"**
+
 ```bash
 # Solution: Initialize the PLAN_DONE marker
 touch workers/PLAN_DONE.md
 ```
 
 **Problem: Bootstrap script can't find templates**
+
 ```bash
 # Solution: Ensure you're running from brain repository root
 cd ~/code/brain
@@ -589,6 +597,7 @@ bash scripts/new-project.sh MY_PROJECT.md
 ```
 
 **Problem: Brain-Map backend won't start**
+
 ```bash
 # Solution: Install Python dependencies
 cd app/brain-map/backend
@@ -598,6 +607,7 @@ pip install -r requirements.txt
 ```
 
 **Problem: Brain-Map frontend shows blank graph**
+
 ```bash
 # Solution: Ensure backend is running and check notes directory
 curl http://localhost:8000/health
@@ -605,6 +615,7 @@ ls app/brain-map/notes/*.md  # Should show notes
 ```
 
 **Problem: Verifier fails on protected files**
+
 ```bash
 # Solution: Request a waiver for critical changes
 cd workers/ralph
@@ -613,6 +624,7 @@ bash .verify/request_waiver.sh "Reason for change"
 ```
 
 **Problem: Skills not syncing to new project**
+
 ```bash
 # Solution: Update brain pointer in new project
 cd ~/code/my-project

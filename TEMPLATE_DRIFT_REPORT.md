@@ -108,6 +108,7 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 ### 4.1 Missing but Should Be Added (templates → current)
 
 **None identified.** Template files that are "missing" in current are either:
+
 - Placeholder files (`.project.md`) that become instance files
 - Different location by design (AC.rules at root)
 
@@ -143,9 +144,10 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 
 ### 4.5 Modified: Should Backport to Template
 
-#### D06: `cerebras_agent.py` 
+#### D06: `cerebras_agent.py`
 
 **Changes in current:**
+
 - `DEFAULT_MAX_TURNS`: 25 → 15 (safer default)
 - Added `MAX_CONTEXT_CHARS = 50000` (context management)
 - Added `MAX_TOOL_RESULT_CHARS = 4000` (truncation)
@@ -157,6 +159,7 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 #### D07: `current_ralph_tasks.sh`
 
 **Changes in current:**
+
 - +94 lines of improved parsing logic
 - Better state tracking for task extraction
 
@@ -165,11 +168,13 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 #### D11: `loop.sh` (PARTIAL)
 
 **Backport these:**
+
 - `stage_scoped_changes()` function - smart staging that avoids noise
 - Protected file hash co-staging logic
 - `CACHE_MODE` default change (`off` → `use`)
 
 **Keep brain-specific:**
+
 - Hardcoded paths like `workers/IMPLEMENTATION_PLAN.md`
 - Brain-specific denylist patterns
 
@@ -178,6 +183,7 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 **Template already has:** New path logic (RALPH_PROJECT_ROOT, SCRIPT_DIR-relative)
 
 **Backport from current:**
+
 - Caching system for verifier checks
 - Cache key generation with AC.rules hash
 
@@ -186,6 +192,7 @@ This affects ROOT calculation in loop.sh and verifier.sh.
 #### D15: `verifier.sh` ROOT/path logic
 
 **Template version is correct** - we just fixed this today. The template now:
+
 - Uses `RALPH_PROJECT_ROOT` env var if set
 - Defaults to `$SCRIPT_DIR/..` (one level up)
 - Finds AC.rules relative to SCRIPT_DIR
