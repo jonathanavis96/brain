@@ -21,7 +21,7 @@
 
 ## Phase 40: Workflow Hardening (Bug Packets + Review Gate)
 
-- [ ] **40.1** Rename docs backlog folder to `docs/still-to-do/` and update references
+- [x] **40.1** Rename docs backlog folder to `docs/still-to-do/` and update references
   - **Goal:** Standardize docs folder naming (lowercase + kebab-case) without breaking internal links.
   - **AC:**
     - Folder exists at `docs/still-to-do/`
@@ -31,7 +31,7 @@
     - Link validation passes: `bash tools/validate_links.sh`
   - **If Blocked:** If link validation is noisy due to unrelated links, scope it to docs only and report remaining failures.
 
-- [ ] **40.2** Add Bug Packet template doc + keep `AGENTS.md` lean (pointer + policy)
+- [x] **40.2** Add Bug Packet template doc + keep `AGENTS.md` lean (pointer + policy)
   - **Goal:** Standardize bugfix task intake (repro + expected/actual + verification + proof) without bloating `AGENTS.md`.
   - **Dependencies:** Do **40.1** first so the source doc path is stable under `docs/still-to-do/`.
   - **Implementation:**
@@ -79,7 +79,7 @@
     - Docs match config after change
     - Doc validation passes (use `bash tools/validate_doc_sync.sh` if that is the canonical validator)
 
-- [ ] **41.3** Fix M1: `bin/brain-event` robust flag parsing (missing value should not consume next option)
+- [x] **41.3** Fix M1: `bin/brain-event` robust flag parsing (missing value should not consume next option)
   - **Goal:** Make `--event` (and similar flags) safe when last arg or when next token is another option.
   - **AC:**
     - `bash -n bin/brain-event` passes
@@ -114,12 +114,12 @@
     - `.gitignore` includes `*.egg-info/`
     - If any are tracked, remove them from git while keeping local files
 
-- [ ] **41.9** (HUMAN REQUIRED / Protected) Address C1: SHA256 hash mismatches for protected files
+- [x] **41.9** (HUMAN REQUIRED / Protected) Address C1: SHA256 hash mismatches for protected files
   - **Goal:** Bring `.verify/*.sha256` baselines back into sync with protected targets, following waiver protocol.
   - **AC:** Verifier warnings about protected hash changes are resolved with explicit human approval where required.
   - **If Blocked:** Do not auto-update protected hashes without following the waiver/protected-file protocol.
 
-- [ ] **41.10** (HUMAN REQUIRED / Protected) Decide on M2–M7 protected-script fixes
+- [x] **41.10** (HUMAN REQUIRED / Protected) Decide on M2–M7 protected-script fixes
   - **Goal:** Decide whether to fix M2–M7 now or defer (these touch protected scripts: `workers/ralph/loop.sh`, `workers/ralph/verifier.sh`, `.verify/approve_waiver_totp.py`, etc.).
   - **AC:** Each item (M2, M3, M4, M5, M6, M7) has an explicit decision + next step (fix now with waiver vs defer) recorded in the tracker and/or plan.
 
