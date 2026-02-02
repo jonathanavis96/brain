@@ -1,7 +1,7 @@
 # Bug Packet Template (strict)
 
 > Purpose: A copy/paste template for creating bugfix tasks with reproducible steps and verification proof.
-> 
+>
 > Source: `docs/still-to-do/claude_team_workflow_tricks_mapping_plan.md` (section "Bug Packet Template (strict)").
 
 ## 1) Context
@@ -52,4 +52,4 @@
 
 ## 9) Done When (Acceptance Criteria)
 
-- [ ] 
+- [ ]
