@@ -1556,6 +1556,27 @@ run_once() {
       echo ""
     fi
 
+    # Inject brain-event self-test failures (PLAN mode only)
+    if [[ "$phase" == "plan" ]] && [[ "${BRAIN_EVENT_SELFTEST_STATUS:-}" == "FAIL" ]]; then
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo "# BRAIN-EVENT SELF-TEST FAILED (add task + fix)"
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo "#"
+      echo "# Required: fix bin/brain-event flag parsing regression(s)"
+      echo "# Quick verify:"
+      echo "#   bash tools/test_brain_event_parsing.sh"
+      echo "#"
+      echo "# Output:"
+      echo "#"
+      echo "${BRAIN_EVENT_SELFTEST_OUTPUT:-<no output>}"
+      echo "#"
+      echo "# Suggested task format:"
+      echo "#   - [ ] **X.Y** Fix brain-event flag parsing"
+      echo "#     - **AC:** `bash tools/test_brain_event_parsing.sh` passes"
+      echo "# ═══════════════════════════════════════════════════════════════"
+      echo ""
+    fi
+
     # Inject remaining markdown lint errors (PLAN mode only)
     # PLAN Ralph should see these so he can add tasks to fix them
     if [[ "$phase" == "plan" ]] && [[ -n "${MARKDOWN_LINT_ERRORS:-}" ]]; then
@@ -2392,6 +2413,22 @@ else
           echo "All internal links valid"
         fi
         unset link_output
+      fi
+
+      # Preflight: verify brain-event flag parsing (self-test)
+      # Capture output so it can be injected into the PLAN prompt (actionable for Ralph)
+      BRAIN_EVENT_SELFTEST_STATUS=""
+      BRAIN_EVENT_SELFTEST_OUTPUT=""
+      if [[ -x "$ROOT/tools/test_brain_event_parsing.sh" ]]; then
+        if BRAIN_EVENT_SELFTEST_OUTPUT=$(bash "$ROOT/tools/test_brain_event_parsing.sh" 2>&1); then
+          BRAIN_EVENT_SELFTEST_STATUS="PASS"
+        else
+          BRAIN_EVENT_SELFTEST_STATUS="FAIL"
+          echo "⚠️  brain-event parsing self-test failed (non-blocking; will be injected into PLAN prompt)"
+        fi
+      else
+        BRAIN_EVENT_SELFTEST_STATUS="SKIP"
+        BRAIN_EVENT_SELFTEST_OUTPUT="tools/test_brain_event_parsing.sh not found"
       fi
 
       emit_event --event phase_start --iter "$i" --phase "plan"

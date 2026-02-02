@@ -499,3 +499,10 @@ gate=warn
 desc=Pre-commit config exists at repo root
 cmd=bash -c '[[ -f "../../.pre-commit-config.yaml" ]] && echo "ok" || echo "MISSING: .pre-commit-config.yaml"'
 expect_stdout_regex=^ok
+
+[Test.BrainEvent.FlagParsing]
+mode=auto
+gate=warn
+desc=brain-event flag parsing self-test (no bats dependency)
+cmd=bash -c 'bash ../../tools/test_brain_event_parsing.sh'
+expect_stdout_regex=^PASS
