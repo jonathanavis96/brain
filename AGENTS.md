@@ -33,6 +33,13 @@ See **[skills/self-improvement/README.md](skills/self-improvement/README.md)** f
 
 ## Common Tasks
 
+### Bug Packets (verification-first)
+
+When asking Ralph to fix a bug, use the strict Bug Packet template and require proof in the completion message:
+
+- Template: `docs/bug-packet-template.md`
+- Long-lived issue tracker/patterns: `docs/CODERABBIT_ISSUES_TRACKER.md`
+
 For detailed guidance on common tasks, see:
 
 - **Adding new skills:** [skills/self-improvement/README.md](skills/self-improvement/README.md)
