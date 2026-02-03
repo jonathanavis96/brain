@@ -147,6 +147,41 @@
   - **Priority:** Medium
   - **Estimated Time:** [M] 12-18 minutes
 
+## Phase 5: Skill-Suggest Recommendations (Agreed Reference Set)
+
+> Source: `bin/skill-suggest` runs validated on 2026-02-03. These are the skill files we agreed are relevant; keep them here as a quick “what to read first” index when planning/triaging similar work.
+
+- [ ] **5.1** Cache + shell-script bug work: review key shell patterns
+  - **Skills:**
+    - `skills/domains/languages/shell/variable-patterns.md`
+    - `skills/domains/languages/shell/validation-patterns.md`
+  - **AC:** Reviewer/implementer confirms these patterns were consulted before proposing a fix.
+  - **If Blocked:** If the task is time-critical, at least scan the “Common pitfalls” sections and proceed.
+
+- [ ] **5.2** Docs + lint + broken-link work: review markdown + documentation anti-patterns
+  - **Skills:**
+    - `skills/domains/anti-patterns/markdown-anti-patterns.md`
+    - `skills/domains/anti-patterns/documentation-anti-patterns.md`
+  - **AC:** Proposed doc edits explicitly avoid the listed anti-patterns (esp. unlabeled fences, broken relative paths).
+  - **If Blocked:** Skim headings only; come back for deeper reading after the first pass fix.
+
+- [ ] **5.3** React graph viz performance work: review frontend performance patterns
+  - **Skills:**
+    - `skills/domains/frontend/react-patterns.md`
+    - `skills/domains/frontend/accessibility-patterns.md`
+    - `skills/domains/frontend/README.md`
+  - **AC:** Proposed changes include at least one concrete performance tactic (memoization, reducing rebuild triggers, profiling).
+  - **If Blocked:** Focus on React patterns first; treat a11y as follow-up unless UI behavior changes.
+
+- [ ] **5.4** Cross-cutting workflow guardrails (template sync + debugging)
+  - **Skills/Playbooks:**
+    - `skills/playbooks/safe-template-sync.md`
+    - `skills/playbooks/investigate-test-failures.md`
+    - `skills/domains/code-quality/test-coverage-patterns.md`
+    - `skills/domains/ralph/ralph-patterns.md`
+  - **AC:** Any changes that touch templates or tests follow the playbook steps (or explicitly justify deviations).
+  - **If Blocked:** Use the safe-template-sync playbook as the minimum bar.
+
 ---
 
 **Legend:**
