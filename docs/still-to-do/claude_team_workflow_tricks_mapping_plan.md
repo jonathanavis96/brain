@@ -445,6 +445,24 @@ Where notifications happen:
 
 ## H) Phased Implementation Plan (PLAN ONLY; no code changes)
 
+### Status (what is already implemented in this repo)
+
+> Updated: 2026-02-03 13:30:51
+
+This section marks the items below as done **based on existing repo artifacts** (so we can clearly see what remains to add next).
+
+- [x] **Phase 0 — Bug Packet + verification-first contract is adopted**
+  - Evidence: `docs/bug-packet-template.md` exists; `AGENTS.md` explicitly points to it.
+- [x] **Phase 1 — Worktree guidance exists**
+  - Evidence: `docs/worktrees.md` exists (worktree naming + handoff conventions).
+- [x] **Phase 2 — “Skills” equivalents + verification hardening are in place**
+  - Evidence: `skills/` tree exists; multiple playbooks exist under `skills/playbooks/` (e.g., `safe-template-sync.md`, `investigate-test-failures.md`); verifier/markdown/link validation tooling exists in `tools/`.
+- [ ] **Phase 3 — Statusline/notifications/voice improvements**
+  - TODO: Document or implement a consistent statusline + notification wrapper workflow for your current WSL/Windows Terminal setup (optional).
+
+---
+
+
 ### Phase 0 (1–2 hours): Minimal changes (highest ROI, lowest risk)
 
 **Changes**

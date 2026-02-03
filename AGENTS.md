@@ -57,7 +57,9 @@ For troubleshooting guidance:
 
 ## Environment Notes
 
-**WSL/Windows 11 Specifics:**
+**WSL/Windows 11 Specifics (assumes WSL2):**
+
+- **WSL Version:** This repo’s default assumptions target **WSL2** (confirmed working baseline). Some file-watcher/network behaviors differ on WSL1.
 
 **Python in WSL:** Use `python3` (not `python`). Many WSL distros do not provide a `python` shim by default. When writing commands/scripts, prefer `python3` explicitly and use `python -m ...` only if you’ve verified the environment provides it.
 

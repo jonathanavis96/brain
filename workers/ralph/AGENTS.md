@@ -10,7 +10,7 @@ Ralph loop for brain repository self-improvement. Runs PLAN/BUILD cycles to main
 
 ## Prerequisites
 
-- **Environment:** WSL (Windows Subsystem for Linux) on Windows 11 with Ubuntu
+- **Environment:** WSL2 (Windows Subsystem for Linux) on Windows 11 with Ubuntu (WSL2 is the assumed baseline for this repo)
 - **Shell:** bash (comes with WSL Ubuntu)
 - **Atlassian CLI:** `acli` - <https://developer.atlassian.com/cloud/cli/>
 - **RovoDev:** `acli rovodev auth && acli rovodev usage site`
