@@ -1334,3 +1334,22 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
   - **Archived From:** workers/IMPLEMENTATION_PLAN.md
   - **Archived At:** 2026-02-02 17:25:36
   - **Block:**
+
+---
+
+### Archived on 2026-02-03 13:26:14 (Plan cleanup: remove completed Phase 0–4 items from workers/IMPLEMENTATION_PLAN.md)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-02-03 | 0.1 | - [x] **0.1** Run verifier and address any warnings/failures |
+| 2026-02-03 | 0.2 | - [x] **0.2** Review and update skills/SUMMARY.md index |
+| 2026-02-03 | 1.1 | - [x] **1.1** Review GAP_BACKLOG.md for stale entries |
+| 2026-02-03 | 1.2 | - [x] **1.2** Check SKILL_BACKLOG.md promotion queue |
+| 2026-02-03 | 2.1 | - [x] **2.1** Audit skills/domains/ralph/ for completeness |
+| 2026-02-03 | 2.2 | - [x] **2.2** Verify skill cross-references are valid |
+| 2026-02-03 | 2.3 | - [x] **2.3** Add real-world examples to top 3 most-used skills |
+| 2026-02-03 | 3.1 | - [x] **3.1** Review bin/ tools for documentation gaps |
+| 2026-02-03 | 3.2 | - [x] **3.2** Enhance brain-search tool with fuzzy matching |
+| 2026-02-03 | 3.3 | - [x] **3.3** Create skill-suggest tool for task planning |
+| 2026-02-03 | 4.1 | - [x] **4.1** Audit templates/ for consistency with brain repo |
+| 2026-02-03 | 4.2 | - [x] **4.2** Update templates/ralph/PROMPT.md with latest patterns |
