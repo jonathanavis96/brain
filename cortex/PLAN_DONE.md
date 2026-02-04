@@ -552,3 +552,9 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-02-03 | 42.2 | - [x] **42.2** Fix brain-event flag parsing regression |
 | 2026-02-03 | 42.3 | - [x] **42.3** BATCH: Fix MD056 table column count errors in `TEMPLATE_DRIFT_REPORT.md` |
 | 2026-02-03 | 42.4 | - [x] **42.4** Fix MD040 in `TEMPLATE_DRIFT_REPORT.md` |
+
+### Archived on 2026-02-04 20:34:52
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-02-04 | 6.7 | - [x] **6.7** Voice (dictation): Document the intended workflow (Windows-native) |
