@@ -69,6 +69,68 @@ ln -s ../project-wt-plan/IMPLEMENTATION_PLAN.md /tmp/latest-plan.md
 
 **Recommendation:** Use Option C as a convenience cache, but **always commit the canonical plan** (Option A).
 
+## Prompt/Statusline Configuration
+
+**Goal:** Make it visually obvious which worktree/branch you're in before running commands.
+
+### Minimal Bash Prompt (PS1)
+
+Add this to your `~/.bashrc` or per-worktree `.envrc`:
+
+```bash
+# Show: [repo/branch worktree-label] with dirty indicator
+parse_git_branch() {
+  git branch 2>/dev/null | sed -n '/\* /s///p'
+}
+
+parse_git_dirty() {
+  [[ $(git status --porcelain 2>/dev/null) ]] && echo "*"
+}
+
+export PS1='\[\033[01;34m\][\w]\[\033[00m\] \[\033[01;32m\]($(parse_git_branch)$(parse_git_dirty))\[\033[00m\] \$ '
+```
+
+### Worktree Label Strategy
+
+**Option A: Environment variable per worktree**
+
+Set a worktree-specific label in each directory:
+
+```bash
+# In wt-plan/.envrc (if using direnv) or manually:
+export BRAIN_WT="wt-plan"
+
+# Update PS1 to show it:
+export PS1="[$BRAIN_WT] \w ($(parse_git_branch)) \$ "
+```
+
+**Option B: Parse from git worktree list**
+
+```bash
+# Add to .bashrc
+get_worktree_label() {
+  local wt_path
+  wt_path=$(git rev-parse --show-toplevel 2>/dev/null) || return
+  git worktree list | grep -F "$wt_path" | awk '{print $1}' | xargs basename
+}
+
+export PS1='[\w ($(get_worktree_label))] \$ '
+```
+
+### Windows Terminal Tab Titles (Optional)
+
+If using Windows Terminal on Windows 11/WSL2, set tab titles per worktree:
+
+```bash
+# In wt-plan: Add to shell startup
+echo -ne "\033]0;Brain: wt-plan\007"
+
+# In wt-build:
+echo -ne "\033]0;Brain: wt-build\007"
+```
+
+**Note:** These are convenience examples, not auto-installed. Customize to your preferences.
+
 ## Common Failure Modes
 
 ### 1. Wrong Worktree/Directory
@@ -78,8 +140,8 @@ ln -s ../project-wt-plan/IMPLEMENTATION_PLAN.md /tmp/latest-plan.md
 **Prevention:**
 
 - Check `pwd` and `git branch` before starting work
-- Use shell prompt showing worktree name: `export PS1="[\w ($(basename $(git rev-parse --show-toplevel)))] $ "`
-- Add statusline showing: repo, branch, worktree id, dirty state
+- Use prompt/statusline configuration (see section above)
+- Verify context before running `acli rovodev run`
 
 ### 2. Permissions Drift
 
