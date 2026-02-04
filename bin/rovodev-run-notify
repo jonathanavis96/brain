@@ -117,6 +117,7 @@ set -e
 # Send notification based on exit code and HUMAN_REQUIRED detection
 if [[ $EXIT_CODE -eq 0 ]]; then
   "$NOTIFY_BIN" --level info --title "RovoDev Success" --message "Task completed successfully" || true
+  echo "RovoDev: SUCCESS"
 else
   # Check for HUMAN_REQUIRED markers
   HUMAN_REQUIRED=false
@@ -129,8 +130,10 @@ else
   # Send appropriate notification
   if [[ "$HUMAN_REQUIRED" == "true" ]]; then
     "$NOTIFY_BIN" --level warn --sound --tts --title "RovoDev - Human Required" --message "Task requires human intervention (exit code $EXIT_CODE)" || true
+    echo "RovoDev: HUMAN_REQUIRED (exit $EXIT_CODE)"
   else
     "$NOTIFY_BIN" --level error --sound --title "RovoDev Failed" --message "Task failed with exit code $EXIT_CODE" || true
+    echo "RovoDev: FAIL (exit $EXIT_CODE)"
   fi
 fi
 

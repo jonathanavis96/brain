@@ -73,12 +73,12 @@ ln -s ../project-wt-plan/IMPLEMENTATION_PLAN.md /tmp/latest-plan.md
 
 **Goal:** Make it visually obvious which worktree/branch you're in before running commands.
 
-### Minimal Bash Prompt (PS1)
+### Prompt/Statusline Configuration
 
-Add this to your `~/.bashrc` or per-worktree `.envrc`:
+Add this to your `~/.bashrc` or per-worktree `.envrc` to show repo, branch, worktree label, dirty status, and exit code:
 
 ```bash
-# Show: [repo/branch worktree-label] with dirty indicator
+# Show: [exit-code] repo/worktree branch* $
 parse_git_branch() {
   git branch 2>/dev/null | sed -n '/\* /s///p'
 }
@@ -87,7 +87,33 @@ parse_git_dirty() {
   [[ $(git status --porcelain 2>/dev/null) ]] && echo "*"
 }
 
-export PS1='\[\033[01;34m\][\w]\[\033[00m\] \[\033[01;32m\]($(parse_git_branch)$(parse_git_dirty))\[\033[00m\] \$ '
+get_repo_name() {
+  basename "$(git rev-parse --show-toplevel 2>/dev/null)" 2>/dev/null || echo "no-repo"
+}
+
+# Capture exit status FIRST (before any other commands)
+prompt_command() {
+  local exit_code=$?
+  local exit_color='\[\033[01;32m\]'  # green
+  [[ $exit_code -ne 0 ]] && exit_color='\[\033[01;31m\]'  # red on error
+  
+  PS1="${exit_color}[${exit_code}]\[\033[00m\] \[\033[01;34m\]$(get_repo_name)/${BRAIN_WT:-main}\[\033[00m\] \[\033[01;32m\]($(parse_git_branch)$(parse_git_dirty))\[\033[00m\] \$ "
+}
+
+PROMPT_COMMAND=prompt_command
+```
+
+**What this shows:**
+
+- `[0]` or `[N]` - Exit status of last command (green for 0, red for errors)
+- `brain/wt-plan` - Repo name / worktree label (from `$BRAIN_WT` env var)
+- `(main*)` - Git branch with dirty indicator (`*` if uncommitted changes)
+
+**Copy/paste snippet for quick setup:**
+
+```bash
+# Set worktree label (add to each worktree's .envrc or shell rc)
+export BRAIN_WT="wt-plan"  # or "wt-build", "main", etc.
 ```
 
 ### Worktree Label Strategy

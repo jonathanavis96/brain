@@ -1,5 +1,41 @@
 # Brain Event Markers
 
+## Voice Dictation Workflow (Windows-Native)
+
+**Goal:** Reduce typing friction for bug packets, plan drafts, and review notes using Windows 11's built-in dictation.
+
+**Environment:** Windows 11 with WSL2 (dictation happens in Windows, text is transferred to WSL).
+
+### How to Use It
+
+1. **Activate dictation:** Press `Win + H` in any Windows text field (Notepad, VSCode, browser)
+2. **Dictate your content:** Speak naturally - punctuation commands work ("comma", "period", "new line")
+3. **Transfer to WSL:** Copy text from Windows app, paste into WSL terminal (right-click or Ctrl+Shift+V in Windows Terminal)
+4. **Use for:**
+   - Bug packet descriptions (`docs/bug-packet-template.md`)
+   - Implementation plan task descriptions (`workers/IMPLEMENTATION_PLAN.md`)
+   - Review notes and commit messages
+   - Gap capture entries (`skills/self-improvement/GAP_BACKLOG.md`)
+
+### Tips
+
+- Dictate into a **scratch file first** (e.g., `tmp_rovodev_dictation.txt`) for easier editing
+- Use **code editor dictation** (VSCode Windows version) to dictate directly into markdown files
+- Windows dictation learns from your corrections - fix errors inline and keep going
+- For technical terms, spell them out: "S-H-ellcheck" → "shellcheck"
+
+### Where Dictated Text Goes
+
+| Content Type | Destination File | Notes |
+|-------------|------------------|-------|
+| Bug reports | `docs/bug-packet-template.md` | Use template structure, dictate symptoms/steps |
+| Plan tasks | `workers/IMPLEMENTATION_PLAN.md` | Dictate task descriptions, edit formatting after |
+| Skill gaps | `skills/self-improvement/GAP_BACKLOG.md` | Quick capture of missing knowledge |
+| Review feedback | Inline comments in files | Dictate observations while reviewing |
+| Commit messages | Terminal or editor | Dictate body paragraphs, edit subject line |
+
+---
+
 Provider-neutral event markers emitted by the Ralph loop for external tooling.
 
 ## Overview
@@ -188,6 +224,53 @@ Common tools captured from RovoDev logs:
 | **Granularity** | Iteration-level | Tool-level |
 | **Use case** | Track loop progress | Debug tool usage |
 
+## Notification Contract
+
+The Ralph loop emits lifecycle events that can trigger notifications to the user. This section defines the canonical mapping of events to notification behavior.
+
+### Event Types
+
+| Event | Title | Level | Sound | TTS | Description |
+|-------|-------|-------|-------|-----|-------------|
+| **Start** | `Ralph: Starting iteration N` | info | none | optional | Loop begins a new iteration |
+| **Success** | `Ralph: Iteration N complete` | success | none | optional | Iteration completed successfully |
+| **Fail** | `Ralph: Iteration N failed` | error | recommended | recommended | Iteration failed (verifier, command error, etc.) |
+| **Human Required** | `Ralph: Human intervention needed` | warning | recommended | recommended | Loop detected a condition requiring human review |
+
+### Signal Types
+
+- **Toast** (implemented): Visual notification via `bin/notify` (Windows PowerShell toast notifications)
+- **Sound** (optional): Audible alert via `bin/notify --sound` (Windows system sounds)
+- **TTS** (optional): Text-to-speech via `bin/notify --tts` (Windows SAPI.SpVoice)
+
+### Message Format
+
+Notifications should be short and scannable:
+
+- **Title**: `<tool>: <action>` (e.g., `Ralph: Iteration 5 failed`)
+- **Message**: One-line summary (max 200 chars)
+- **Level**: Maps to toast appearance (`info`, `success`, `warning`, `error`)
+
+### Implementation Notes
+
+- All notification signals are **best-effort** (never fail the caller)
+- Sound and TTS are optional enhancements (toast is the baseline)
+- The `bin/rovodev-run-notify` wrapper handles event detection and notification dispatch
+- Human-required detection uses `tools/detect_human_required.py` to scan logs
+
+### Example Usage
+
+```bash
+# Success notification (toast only)
+bin/notify --title "Ralph: Iteration 5 complete" --message "All tasks passed" --level success
+
+# Failure notification (toast + sound + TTS)
+bin/notify --title "Ralph: Iteration 5 failed" --message "Verifier check failed" --level error --sound --tts
+
+# Human required notification (toast + sound)
+bin/notify --title "Ralph: Human intervention needed" --message "Protected file modified" --level warning --sound
+```
+
 ## Integration Notes
 
 External tools can:
@@ -196,5 +279,6 @@ External tools can:
 - **Parse periodically** to aggregate metrics
 - **Correlate with other logs** using `ts` and `iter` fields
 - **Parse RovoDev logs** to get complete tool visibility (see `rollflow_analyze` tool)
+- **Subscribe to notifications** via the contract defined above
 
 The `runner` field, when present, indicates which tool executed the loop (e.g., `rovodev`, `opencode`). This is optional and may be omitted or set to `unknown`.

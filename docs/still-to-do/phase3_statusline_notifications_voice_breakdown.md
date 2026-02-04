@@ -120,11 +120,34 @@ Checklist:
 
 - [x] Choose triggers *(A: marker/regex scan)*
 - [x] Document exact strings/regex *(see `tools/detect_human_required.py` `HUMAN_REQUIRED_PATTERNS`)*
-- [ ] Verify trigger works on at least 1 real historical log example *(still needs a pinned example / fixture file reference)*
+- [x] Verify trigger works on at least 1 real historical log example
+
+**Fixtures:**
+
+- `tools/tests/fixtures/human_required_positive.log` - Contains "⚠️ HUMAN INTERVENTION REQUIRED" marker
+- `tools/tests/fixtures/human_required_negative.log` - Normal log without markers
+- `tools/tests/fixtures/human_required_captcha.log` - Contains "CAPTCHA" marker
+
+**Test suite:** `tools/tests/test_detect_human_required.py` validates detection against all fixtures.
+
+**Verification commands:**
+
+```bash
+# Positive case (should exit 0 - marker found)
+python3 tools/detect_human_required.py tools/tests/fixtures/human_required_positive.log
+echo $?  # Expected: 0
+
+# Negative case (should exit 1 - no marker found)
+python3 tools/detect_human_required.py tools/tests/fixtures/human_required_negative.log
+echo $?  # Expected: 1
+
+# Run full test suite
+python3 tools/tests/test_detect_human_required.py
+```
 
 **Acceptance criteria:**
 
-- [x] A “human required” run produces a distinct notification message/title.
+- [x] A "human required" run produces a distinct notification message/title.
 
 ---
 

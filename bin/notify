@@ -10,8 +10,8 @@ set -euo pipefail
 #   --title TEXT        Notification title (required)
 #   --message TEXT      Notification message (required)
 #   --level LEVEL       Notification level: info|warn|error (default: info)
-#   --sound             Play sound (not implemented yet)
-#   --tts               Use text-to-speech (not implemented yet)
+#   --sound             Play Windows system sound (best-effort)
+#   --tts               Use text-to-speech to speak message (best-effort)
 #   --dry-run           Print what would happen without executing
 #   --debug             Print PowerShell output/errors for troubleshooting
 #   --help              Show this help message
@@ -124,31 +124,48 @@ if [[ "$DRY_RUN" == "true" ]]; then
   fi
 
   if [[ "$SOUND" == "true" ]]; then
-    echo "Warning: --sound not implemented yet" >&2
+    echo "Would execute: Play Windows system sound (Exclamation)"
   fi
 
   if [[ "$TTS" == "true" ]]; then
-    echo "Warning: --tts not implemented yet" >&2
+    echo "Would execute: Speak message using SAPI.SpVoice"
   fi
 
   exit 0
 fi
 
-# Warn about unimplemented features
-if [[ "$SOUND" == "true" ]]; then
-  echo "Warning: --sound not implemented yet" >&2
-fi
-
-if [[ "$TTS" == "true" ]]; then
-  echo "Warning: --tts not implemented yet" >&2
-fi
-
-# Execute notification
+# Execute sound and TTS (best-effort, never fail)
 if [[ "$HAS_POWERSHELL" == "true" ]]; then
   # Escape single quotes in PowerShell strings
   ESCAPED_TITLE="${TITLE//\'/\'\'}"
   ESCAPED_MESSAGE="${MESSAGE//\'/\'\'}"
 
+  # Play sound if requested (best-effort)
+  if [[ "$SOUND" == "true" ]]; then
+    "$POWERSHELL_BIN" -NoProfile -Command "
+      try {
+        [System.Media.SystemSounds]::Exclamation.Play()
+      } catch {
+        # Silently ignore sound errors
+      }
+    " >/dev/null 2>&1 || true
+  fi
+
+  # Speak message if requested (best-effort)
+  if [[ "$TTS" == "true" ]]; then
+    "$POWERSHELL_BIN" -NoProfile -Command "
+      try {
+        \$speak = New-Object -ComObject SAPI.SpVoice
+        \$speak.Speak('$ESCAPED_MESSAGE') | Out-Null
+      } catch {
+        # Silently ignore TTS errors
+      }
+    " >/dev/null 2>&1 || true
+  fi
+fi
+
+# Execute notification
+if [[ "$HAS_POWERSHELL" == "true" ]]; then
   # Use PowerShell to show Windows toast notification
   # Note: BurntToast module would be better, but requires installation.
   # We use a simple approach that works on all Windows 10/11 systems.
@@ -194,7 +211,7 @@ if [[ "$HAS_POWERSHELL" == "true" ]]; then
         exit 1
       }
     }
-  " $( [[ "$DEBUG" == "true" ]] && echo "" || echo ">/dev/null 2>&1" ) || {
+  " "$([[ "$DEBUG" == "true" ]] && echo "" || echo ">/dev/null 2>&1")" || {
     # Fallback if toast fails
     echo "[$LEVEL] $TITLE: $MESSAGE"
   }

@@ -21,13 +21,14 @@
 >
 > **Environment assumption:** WSL2 on Windows 11 (notifications are implemented via `powershell.exe` bridge from WSL → Windows).
 
-- [x] **6.5** Integration: Make `bin/rovodev-run-notify` emit distinct notifications for HUMAN_REQUIRED
-  - **Goal:** Human-required runs get a distinct title/message (and optional TTS), not just “failed”.
-  - **Implementation:** Update wrapper to:
-    - Run detector after completion (or tail log if provided).
-    - If human-required: `bin/notify --level warn --sound --tts` with a distinct message.
-  - **AC:** With a fixture log, wrapper chooses HUMAN_REQUIRED path (can be tested via `--dry-run`).
-  - **If Blocked:** Skip TTS and use warn-level toast only.
+- [x] **6.7** Voice (dictation): Document the intended workflow (Windows-native)
+  - **Goal:** Reduce typing friction by having a consistent, repeatable dictation workflow.
+  - **Implementation:** Add a short section to an appropriate doc (suggested: `docs/BOOTSTRAPPING.md` or `docs/events.md`) describing:
+    - primary dictation mechanism (Windows dictation recommended)
+    - where dictated text goes (bug packets, plan drafts, review notes)
+    - 3–5 bullet “how to use it” steps
+  - **AC:** Doc includes the workflow steps and “where text goes” guidance.
+  - **If Blocked:** Add the workflow notes to `docs/still-to-do/phase3_statusline_notifications_voice_breakdown.md`.
 
 ---
 

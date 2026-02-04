@@ -1397,3 +1397,97 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
   - **Archived From:** workers/IMPLEMENTATION_PLAN.md
   - **Archived At:** 2026-02-04 13:08:29
   - **Block:**
+
+### Archived on 2026-02-04 13:53:45
+
+- [x] **6.6**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 13:53:45
+  - **Block:**
+
+### Archived on 2026-02-04 14:46:04
+
+- [x] **6.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 14:46:04
+  - **Block:**
+
+```markdown
+- [x] **6.1** Statusline: Ensure prompt/worktree label recipe exists and meets the minimal requirements
+  - **Goal:** Before running `acli rovodev run`, the prompt makes it obvious which repo/worktree/branch you're in.
+  - **Implementation:** Confirm `docs/worktrees.md` includes (or update it to include) a minimal bash prompt recipe that shows:
+    - repo name (or unmistakable repo path)
+    - git branch
+    - dirty/clean indicator
+    - exit status of last command
+    - a worktree label (env var `BRAIN_WT=...` or derived)
+  - **AC:** `docs/worktrees.md` "Prompt/Statusline Configuration" section includes a copy/paste snippet and notes for labeling worktrees.
+  - **If Blocked:** Document only the env-var worktree label approach (`BRAIN_WT`) and branch/dirty indicators.
+
+```
+
+- [x] **6.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 14:46:04
+  - **Block:**
+
+```markdown
+- [x] **6.2** Notifications: Document a single "event → notification" contract
+  - **Goal:** There is one canonical mapping of lifecycle events (start/success/fail/human-required) to notification behavior.
+  - **Implementation:** Add a short section (recommended: `docs/events.md` or a new section in `docs/TOOLS.md`) that defines:
+    - events: Start, Success, Fail, Human-required
+    - minimum signal types: toast (implemented), sound (optional), TTS (optional)
+    - what title/message should look like (short + scannable)
+  - **AC:** Doc includes a compact table mapping event → title → level → optional sound/TTS; markdownlint passes.
+  - **If Blocked:** Add the mapping to `docs/still-to-do/phase3_statusline_notifications_voice_breakdown.md` as the canonical table.
+
+```
+
+- [x] **6.3**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 14:46:04
+  - **Block:**
+
+```markdown
+- [x] **6.3** Wrapper: Make `bin/rovodev-run-notify` print a one-line summary even if notifications fail
+  - **Goal:** If Windows toast is suppressed/unavailable, you still get an obvious terminal summary line.
+  - **Implementation:** Update `bin/rovodev-run-notify` to always print a final line like:
+    - `RovoDev: SUCCESS` / `RovoDev: FAIL (exit N)` / `RovoDev: HUMAN_REQUIRED (exit N)`
+    - independent of whether `bin/notify` succeeds.
+  - **AC:** In a simulated no-PowerShell environment (or by forcing `bin/notify` to fail), wrapper still prints the summary line.
+  - **If Blocked:** Print the summary line only on non-zero exits.
+
+```
+
+- [x] **6.4**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 14:46:04
+  - **Block:**
+
+```markdown
+- [x] **6.4** Human-required: Pin and reference at least one real log/fixture proving detection works
+  - **Goal:** Human-required detection is validated against a pinned example (fixture path) and is easy to reproduce.
+  - **Implementation:** Ensure there is at least one fixture under `tools/tests/fixtures/` and:
+    - add a tiny test (or extend existing tests) that asserts detection returns 0 for positive fixtures and 1 for negative
+    - reference the fixture(s) from `docs/still-to-do/phase3_statusline_notifications_voice_breakdown.md` (or the new contract doc)
+  - **AC:** `python3 tools/detect_human_required.py tools/tests/fixtures/human_required_positive.log` exits 0 and negative exits 1; tests cover both.
+  - **If Blocked:** Document manual commands to run against the fixtures (no automated test).
+
+```
+
+- [x] **6.5**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 14:46:04
+  - **Block:**
+
+```markdown
+- [x] **6.5** Notification helper: Implement `--sound` and `--tts` in `bin/notify` (Windows PowerShell)
+  - **Goal:** Optional audible signals are available for FAIL/HUMAN_REQUIRED without extra tooling.
+  - **Implementation:** Update `bin/notify` so:
+    - `--sound` plays a Windows system sound (e.g., `[System.Media.SystemSounds]::Exclamation.Play()` or similar)
+    - `--tts` speaks the message using `SAPI.SpVoice`
+    - both remain best-effort (never fail the caller; fall back to console output)
+  - **AC:** `bin/notify --dry-run --sound --tts --title test --message hi` describes both actions; real run attempts sound/TTS on Windows.
+  - **If Blocked:** Implement `--sound` only and keep `--tts` as “not implemented” warning.
+
+```

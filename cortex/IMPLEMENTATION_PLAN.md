@@ -13,68 +13,6 @@
 
 ---
 
-## Phase 5: Skill-Suggest Recommendations (Agreed Reference Set)
-
-> Source: `bin/skill-suggest` runs validated on 2026-02-03. These are the skill files we agreed are relevant; keep them here as a quick “what to read first” index when planning/triaging similar work.
->
-> **Important:** These Phase 5 items are meant to be **atomic “pre-flight” tasks**. Each one should produce a tiny, explicit checklist in the iteration summary/THUNK entry (so we can prove the reference set was actually consulted).
-
-- [ ] **5.1** Pre-flight (cache + shell-script bug work): consult shell variable + validation patterns
-  - **When to use:** Before fixing shellcheck warnings, cache-key issues, or any bash regression.
-  - **Read:**
-    - `skills/domains/languages/shell/variable-patterns.md`
-    - `skills/domains/languages/shell/validation-patterns.md`
-  - **Steps:**
-    1. Skim the “Quick Reference” tables (or headings if time-boxed).
-    2. Identify 1–2 risks that apply to the current change (e.g., SC2155 masking exit codes, unquoted variables, missing `-r` on `read`, brittle validation).
-    3. Paste a 3–5 line “Pre-flight notes” snippet into the iteration log/THUNK entry.
-  - **AC:** The iteration summary includes a snippet like:
-    - `Pre-flight (5.1): variable-patterns: <risk>; validation-patterns: <risk>`
-  - **If Blocked:** If time-critical, do Step 1 only and paste `Pre-flight (5.1): skimmed headings only`.
-
-- [ ] **5.2** Pre-flight (docs + lint + broken-link work): consult markdown + documentation anti-patterns
-  - **When to use:** Before changing markdown docs, templates, or anything that commonly triggers markdownlint/link-check failures.
-  - **Read:**
-    - `skills/domains/anti-patterns/markdown-anti-patterns.md`
-    - `skills/domains/anti-patterns/documentation-anti-patterns.md`
-  - **Steps:**
-    1. Skim “Common Failures” / “Anti-patterns” sections.
-    2. Choose the top 2 anti-patterns most likely to bite this change (e.g., unlabeled fences, broken relative links, duplicate headings, tables with stray pipes).
-    3. Paste a 2–4 line “Doc pre-flight notes” snippet into the iteration log/THUNK entry.
-  - **AC:** The iteration summary includes a snippet like:
-    - `Pre-flight (5.2): avoiding: <anti-pattern A>, <anti-pattern B>`
-  - **If Blocked:** Skim headings only; paste `Pre-flight (5.2): skimmed headings only`.
-
-- [ ] **5.3** Pre-flight (React graph viz performance work): consult frontend performance patterns
-  - **When to use:** Before making UI/GraphView performance changes (memoization, clustering, rendering loops, event handlers).
-  - **Read:**
-    - `skills/domains/frontend/react-patterns.md`
-    - `skills/domains/frontend/accessibility-patterns.md`
-    - `skills/domains/frontend/README.md`
-  - **Steps:**
-    1. Skim the performance-related sections of `react-patterns.md`.
-    2. Pick one concrete tactic to apply or explicitly rule out (e.g., `useMemo`/`useCallback`, reducing effect deps, profiling before optimizing).
-    3. If UI behavior changes, skim the relevant a11y checklist section and note any required follow-ups.
-    4. Paste a 2–5 line “Frontend pre-flight notes” snippet into the iteration log/THUNK entry.
-  - **AC:** The iteration summary includes a snippet like:
-    - `Pre-flight (5.3): tactic: <chosen tactic>; a11y: <note or N/A>`
-  - **If Blocked:** Focus only on `react-patterns.md` and paste `Pre-flight (5.3): a11y deferred`.
-
-- [ ] **5.4** Pre-flight (cross-cutting workflow): consult template sync + test failure playbooks
-  - **When to use:** Before touching `templates/`, `.verify/`, tests, or anything that can trigger verifier/protected-file workflows.
-  - **Read:**
-    - `skills/playbooks/safe-template-sync.md`
-    - `skills/playbooks/investigate-test-failures.md`
-    - `skills/domains/code-quality/test-coverage-patterns.md`
-    - `skills/domains/ralph/ralph-patterns.md`
-  - **Steps:**
-    1. Decide which playbook applies (template sync vs test failure vs both).
-    2. Identify the **minimum bar** steps that must be followed (especially around intentional drift + waivers).
-    3. Paste a 2–5 line “Workflow pre-flight notes” snippet into the iteration log/THUNK entry.
-  - **AC:** The iteration summary includes a snippet like:
-    - `Pre-flight (5.4): playbook: <chosen>; min steps: <list>`
-  - **If Blocked:** Use safe-template-sync as the minimum bar and paste `Pre-flight (5.4): safe-template-sync minimum bar only`.
-
 ## Phase 6: Phase 3 Operator-Speed Improvements (statusline + notifications + voice)
 
 > Source breakdown: `docs/still-to-do/phase3_statusline_notifications_voice_breakdown.md`.
@@ -83,52 +21,59 @@
 >
 > **Environment assumption:** WSL2 on Windows 11 (notifications are implemented via `powershell.exe` bridge from WSL → Windows).
 
-- [ ] **6.1** Docs: Add a minimal prompt/statusline recipe (repo + branch + dirty + worktree label)
-  - **Goal:** Provide a copy-pasteable snippet (not auto-installed) that shows where you are before running `acli rovodev run`.
-  - **Implementation:** Update `docs/worktrees.md` with a “Prompt/Statusline” section containing:
-    - A minimal `PS1` example (bash) showing repo/branch/dirty.
-    - A worktree label strategy using an env var (e.g., `BRAIN_WT=wt-plan`) *or* `git worktree list` parsing.
-    - A note on Windows Terminal tab titles as optional.
-  - **AC:** `docs/worktrees.md` has a new section with a bash snippet and usage notes; markdownlint passes for the file.
-  - **If Blocked:** If prompt customization is too personal, document only the env var approach + an example of exporting it per worktree.
+- [ ] **6.1** Statusline: Ensure prompt/worktree label recipe exists and meets the minimal requirements
+  - **Goal:** Before running `acli rovodev run`, the prompt makes it obvious which repo/worktree/branch you’re in.
+  - **Implementation:** Confirm `docs/worktrees.md` includes (or update it to include) a minimal bash prompt recipe that shows:
+    - repo name (or unmistakable repo path)
+    - git branch
+    - dirty/clean indicator
+    - exit status of last command
+    - a worktree label (env var `BRAIN_WT=...` or derived)
+  - **AC:** `docs/worktrees.md` “Prompt/Statusline Configuration” section includes a copy/paste snippet and notes for labeling worktrees.
+  - **If Blocked:** Document only the env-var worktree label approach (`BRAIN_WT`) and branch/dirty indicators.
 
-- [ ] **6.2** Tooling: Add `bin/notify` (WSL-safe) for toast/sound/TTS with no-op fallback
-  - **Goal:** A single helper command Ralph scripts can call to notify the operator.
-  - **Implementation:** Create `bin/notify` that:
-    - Accepts flags like `--title`, `--message`, `--level (info|warn|error)`, `--sound`, `--tts`.
-    - Uses PowerShell when available (WSL): `powershell.exe -NoProfile -Command ...`.
-    - If PowerShell is unavailable, prints a single-line fallback and exits 0.
-    - Has `--dry-run` to print what would have happened.
-  - **AC:** `bin/notify --dry-run --title test --message hi` exits 0 and prints intended action; script is executable.
-  - **If Blocked:** Implement toast only first; leave sound/TTS as flags that warn “not implemented yet”.
+- [ ] **6.2** Notifications: Document a single “event → notification” contract
+  - **Goal:** There is one canonical mapping of lifecycle events (start/success/fail/human-required) to notification behavior.
+  - **Implementation:** Add a short section (recommended: `docs/events.md` or a new section in `docs/TOOLS.md`) that defines:
+    - events: Start, Success, Fail, Human-required
+    - minimum signal types: toast (implemented), sound (optional), TTS (optional)
+    - what title/message should look like (short + scannable)
+  - **AC:** Doc includes a compact table mapping event → title → level → optional sound/TTS; markdownlint passes.
+  - **If Blocked:** Add the mapping to `docs/still-to-do/phase3_statusline_notifications_voice_breakdown.md` as the canonical table.
 
-- [ ] **6.3** Tooling: Add `bin/rovodev-run-notify` wrapper around `acli rovodev run`
-  - **Goal:** Run RovoDev and get a loud signal on SUCCESS/FAIL, without changing Ralph loop internals.
-  - **Implementation:** Create `bin/rovodev-run-notify` that:
-    - Runs `acli rovodev run ...` (pass-through args).
-    - On exit 0: calls `bin/notify --level info`.
-    - On non-zero: calls `bin/notify --level error --sound`.
-    - Supports `--dry-run` (does not execute acli).
-  - **AC:** `bin/rovodev-run-notify --dry-run -- echo hi` prints the command it would run; real invocation preserves exit code.
-  - **If Blocked:** Provide wrapper without dry-run; document that it is a thin pass-through.
+- [ ] **6.3** Wrapper: Make `bin/rovodev-run-notify` print a one-line summary even if notifications fail
+  - **Goal:** If Windows toast is suppressed/unavailable, you still get an obvious terminal summary line.
+  - **Implementation:** Update `bin/rovodev-run-notify` to always print a final line like:
+    - `RovoDev: SUCCESS` / `RovoDev: FAIL (exit N)` / `RovoDev: HUMAN_REQUIRED (exit N)`
+    - independent of whether `bin/notify` succeeds.
+  - **AC:** In a simulated no-PowerShell environment (or by forcing `bin/notify` to fail), wrapper still prints the summary line.
+  - **If Blocked:** Print the summary line only on non-zero exits.
 
-- [ ] **6.4** Detection: Add “human-required” marker detection (regex list + fixture test)
-  - **Goal:** Distinguish FAIL vs HUMAN_REQUIRED and notify differently.
-  - **Implementation:** Create `tools/detect_human_required.py` (or a small `bin/` helper) that:
-    - Accepts a log file path (or stdin).
-    - Returns exit code 0 if human-required markers found, 1 otherwise.
-    - Uses a small, documented regex list (e.g., `HUMAN REQUIRED`, `CAPTCHA`, `Approve waiver`, `manual intervention`).
-    - Add a minimal test/fixture log file under `tools/tests/fixtures/`.
-  - **AC:** Running detector against fixture returns expected exit code; add a short usage note in the script help.
-  - **If Blocked:** Start with a bash/rg-based detector and upgrade to Python later.
+- [ ] **6.4** Human-required: Pin and reference at least one real log/fixture proving detection works
+  - **Goal:** Human-required detection is validated against a pinned example (fixture path) and is easy to reproduce.
+  - **Implementation:** Ensure there is at least one fixture under `tools/tests/fixtures/` and:
+    - add a tiny test (or extend existing tests) that asserts detection returns 0 for positive fixtures and 1 for negative
+    - reference the fixture(s) from `docs/still-to-do/phase3_statusline_notifications_voice_breakdown.md` (or the new contract doc)
+  - **AC:** `python3 tools/detect_human_required.py tools/tests/fixtures/human_required_positive.log` exits 0 and negative exits 1; tests cover both.
+  - **If Blocked:** Document manual commands to run against the fixtures (no automated test).
 
-- [ ] **6.5** Integration: Make `bin/rovodev-run-notify` emit distinct notifications for HUMAN_REQUIRED
-  - **Goal:** Human-required runs get a distinct title/message (and optional TTS), not just “failed”.
-  - **Implementation:** Update wrapper to:
-    - Run detector after completion (or tail log if provided).
-    - If human-required: `bin/notify --level warn --sound --tts` with a distinct message.
-  - **AC:** With a fixture log, wrapper chooses HUMAN_REQUIRED path (can be tested via `--dry-run`).
-  - **If Blocked:** Skip TTS and use warn-level toast only.
+- [ ] **6.5** Notification helper: Implement `--sound` and `--tts` in `bin/notify` (Windows PowerShell)
+  - **Goal:** Optional audible signals are available for FAIL/HUMAN_REQUIRED without extra tooling.
+  - **Implementation:** Update `bin/notify` so:
+    - `--sound` plays a Windows system sound (e.g., `[System.Media.SystemSounds]::Exclamation.Play()` or similar)
+    - `--tts` speaks the message using `SAPI.SpVoice`
+    - both remain best-effort (never fail the caller; fall back to console output)
+  - **AC:** `bin/notify --dry-run --sound --tts --title test --message hi` describes both actions; real run attempts sound/TTS on Windows.
+  - **If Blocked:** Implement `--sound` only and keep `--tts` as “not implemented” warning.
+
+- [ ] **6.7** Voice (dictation): Document the intended workflow (Windows-native)
+  - **Goal:** Reduce typing friction by having a consistent, repeatable dictation workflow.
+  - **Implementation:** Add a short section to an appropriate doc (suggested: `docs/BOOTSTRAPPING.md` or `docs/events.md`) describing:
+    - primary dictation mechanism (Windows dictation recommended)
+    - where dictated text goes (bug packets, plan drafts, review notes)
+    - 3–5 bullet “how to use it” steps
+  - **AC:** Doc includes the workflow steps and “where text goes” guidance.
+  - **If Blocked:** Add the workflow notes to `docs/still-to-do/phase3_statusline_notifications_voice_breakdown.md`.
 
 ---
 
