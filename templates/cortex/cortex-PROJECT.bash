@@ -172,7 +172,8 @@ else
   echo "  modelId: auto" >>"$CONFIG_FILE"
 fi
 
-LOGFIRE_DISABLE=1 acli rovodev run --config-file "$CONFIG_FILE" --yolo
+bin/cortex-run-notify --min-seconds 120 -- \
+  --config-file "$CONFIG_FILE" --yolo
 EXIT_CODE=$?
 
 rm -f "$CONFIG_FILE"

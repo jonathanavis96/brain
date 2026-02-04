@@ -13,22 +13,28 @@
 
 ---
 
-## Phase 6: Phase 3 Operator-Speed Improvements (statusline + notifications + voice)
+## Phase 7: Propagate Phase 6 notifications + HUMAN_REQUIRED markers into templates
 
-> Source breakdown: `docs/still-to-do/phase3_statusline_notifications_voice_breakdown.md`.
+> Goal: new repos created from templates inherit the Phase 6 operator-speed improvements (Windows notifications + TTS, canonical `:::HUMAN_REQUIRED::: <reason>` markers, and project-prefixed notification titles).
 >
-> Goal: make it hard to run in the wrong worktree/branch, and make FAIL/HUMAN_REQUIRED runs loud without terminal babysitting.
->
-> **Environment assumption:** WSL2 on Windows 11 (notifications are implemented via `powershell.exe` bridge from WSL → Windows).
+> **Policy:** Use project label = git repo root basename, with env override via `BRAIN_PROJECT_LABEL` (preferred) or `PROJECT_LABEL`.
 
-- [x] **6.7** Voice (dictation): Document the intended workflow (Windows-native)
-  - **Goal:** Reduce typing friction by having a consistent, repeatable dictation workflow.
-  - **Implementation:** Add a short section to an appropriate doc (suggested: `docs/BOOTSTRAPPING.md` or `docs/events.md`) describing:
-    - primary dictation mechanism (Windows dictation recommended)
-    - where dictated text goes (bug packets, plan drafts, review notes)
-    - 3–5 bullet “how to use it” steps
-  - **AC:** Doc includes the workflow steps and “where text goes” guidance.
-  - **If Blocked:** Add the workflow notes to `docs/still-to-do/phase3_statusline_notifications_voice_breakdown.md`.
+- [x] **7.4** Update template Cortex launchers to use `bin/cortex-run-notify` (min 120s)
+  - **Goal:** Running Cortex from a templated repo uses notifications for long sessions.
+  - **Implementation:** Update:
+    - `templates/cortex/cortex.bash`
+    - `templates/cortex/cortex-PROJECT.bash`
+    to call: `bin/cortex-run-notify --min-seconds 120 -- --config-file ... --yolo`.
+  - **AC:** `bash -n templates/cortex/cortex.bash templates/cortex/cortex-PROJECT.bash`
+  - **If Blocked:** If template install paths differ, adjust paths consistently across templates.
+
+- [x] **7.5** Update template docs and references (wrapper rename + canonical marker)
+  - **Goal:** Templates documentation matches the new canonical marker and wrapper names.
+  - **Implementation:**
+    - Update `templates/ralph/PROMPT.md` to document canonical `:::HUMAN_REQUIRED::: <reason>` (mention legacy fallback optionally).
+    - Ensure no template docs reference `rovodev-run-notify`.
+  - **AC:** `rg "rovodev-run-notify" templates/` returns no matches.
+  - **If Blocked:** At minimum, add a short note in `templates/ralph/PROMPT.md` pointing to `docs/events.md` in this repo.
 
 ---
 

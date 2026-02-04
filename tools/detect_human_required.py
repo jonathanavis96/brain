@@ -3,7 +3,7 @@
 Detect "human-required" markers in log files or stdin.
 
 Returns exit code 0 if human-required markers are found, 1 otherwise.
-Used by bin/rovodev-run-notify to distinguish failures requiring human intervention.
+Used by bin/cortex-run-notify to distinguish failures requiring human intervention.
 
 Usage:
     python3 tools/detect_human_required.py <logfile>
@@ -19,6 +19,9 @@ from typing import List
 
 # Documented regex patterns for human-required markers
 HUMAN_REQUIRED_PATTERNS: List[str] = [
+    # Canonical structured marker (preferred): :::HUMAN_REQUIRED::: <reason>
+    r"^\s*:::\s*HUMAN_REQUIRED\s*:::",
+    # Legacy/compat patterns
     r"HUMAN REQUIRED",
     r"HUMAN INTERVENTION REQUIRED",
     r"⚠️ HUMAN INTERVENTION REQUIRED",
@@ -43,7 +46,7 @@ def detect_human_required(content: str) -> bool:
         True if human-required marker found, False otherwise
     """
     for pattern in HUMAN_REQUIRED_PATTERNS:
-        if re.search(pattern, content, re.IGNORECASE):
+        if re.search(pattern, content, re.IGNORECASE | re.MULTILINE):
             return True
     return False
 

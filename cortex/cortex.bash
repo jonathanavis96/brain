@@ -205,7 +205,9 @@ else
 fi
 
 # Launch interactive chat (NO message argument = interactive mode)
-acli rovodev run --config-file "$CONFIG_FILE" --yolo
+# Use Cortex notifier wrapper so long sessions notify on completion.
+"${BRAIN_ROOT}/bin/cortex-run-notify" --min-seconds 120 -- \
+  --config-file "$CONFIG_FILE" --yolo
 EXIT_CODE=$?
 
 # Cleanup

@@ -177,41 +177,72 @@ cleanup_and_emit() {
     local notify_bin="$ROOT/bin/notify"
     if [[ -x "$notify_bin" ]]; then
       local level="info"
-      local title="Ralph Loop"
-      local msg=""
+      local title="Ralph"
+      local message=""
+      local reason=""
+      local sound=false
+      local tts=false
 
       # Prefer explicit reason/message if set
       if [[ -n "${LOOP_STOP_REASON:-}" ]]; then
-        msg="${LOOP_STOP_REASON}"
+        reason="${LOOP_STOP_REASON}"
         if [[ -n "${LOOP_STOP_MESSAGE:-}" ]]; then
-          msg="${msg}: ${LOOP_STOP_MESSAGE}"
+          reason="${reason}: ${LOOP_STOP_MESSAGE}"
         fi
       else
         # Derive from exit code
         if [[ $exit_code -eq 0 ]]; then
-          msg="completed"
+          reason="completed"
         elif [[ $exit_code -eq 130 ]]; then
-          msg="interrupted"
+          reason="interrupted"
         else
-          msg="stopped"
+          reason="stopped"
         fi
       fi
 
-      case "$msg" in
-        completed*) level="info" ;;
-        interrupted*) level="warn" ;;
-        *HUMAN*|*human*|*intervention*) level="warn" ;;
+      case "$reason" in
+        completed*)
+          level="info"
+          title="Ralph complete"
+          message="Ralph complete, Please review"
+          tts=true
+          ;;
+        interrupted*)
+          level="warn"
+          title="Ralph interrupted"
+          message="Stopped"
+          ;;
+        *HUMAN*|*human*|*intervention*)
+          level="warn"
+          title="Ralph needs you"
+          message="Ralph needs you, Please review"
+          sound=true
+          tts=true
+          ;;
         *)
-          if [[ $exit_code -ne 0 ]]; then level="error"; fi
+          if [[ $exit_code -ne 0 ]]; then
+            level="error"
+            title="Ralph error"
+            message="Ralph Error, stopped, Please fix"
+            sound=true
+            tts=true
+          else
+            level="info"
+            title="Ralph stopped"
+            message="Stopped"
+          fi
           ;;
       esac
 
-      # Include context
-      local branch
-      branch=$(git -C "$ROOT" branch --show-current 2>/dev/null || echo "unknown")
-      "$notify_bin" --level "$level" --title "$title" \
-        --message "${msg} (exit=${exit_code}, iter=${CURRENT_ITER:-0}, branch=${branch})" \
-        >/dev/null 2>&1 || true
+      local notify_args=(--level "$level" --title "$title" --message "$message")
+      if [[ "$sound" == "true" ]]; then
+        notify_args+=(--sound)
+      fi
+      if [[ "$tts" == "true" ]]; then
+        notify_args+=(--tts)
+      fi
+
+      "$notify_bin" "${notify_args[@]}" >/dev/null 2>&1 || true
     fi
   fi
 
@@ -887,9 +918,16 @@ parse_verifier_failures() {
 check_human_intervention() {
   local log_file="$1"
   # Strip ANSI codes and check for human intervention marker
+  # Canonical marker: :::HUMAN_REQUIRED::: <reason>
+  if sed 's/\x1b\[[0-9;]*m//g' "$log_file" | grep -qE '^\s*:::HUMAN_REQUIRED:::'; then
+    return 0 # intervention needed
+  fi
+
+  # Legacy fallback (older logs/fixtures)
   if sed 's/\x1b\[[0-9;]*m//g' "$log_file" | grep -q 'HUMAN INTERVENTION REQUIRED'; then
     return 0 # intervention needed
   fi
+
   return 1 # no intervention needed
 }
 
@@ -1910,6 +1948,10 @@ except Exception:
     echo "Ralph has indicated it cannot proceed without human help."
     echo "Review the log above for details."
     echo ""
+    # Emit canonical marker for downstream detectors/parsers.
+    # Note: no reliable reason extraction from arbitrary logs here; keep it generic.
+    local human_reason="ralph requested human intervention"
+    emit_marker ":::HUMAN_REQUIRED::: ${human_reason}"
     return 43 # Special return code for human intervention
   fi
 
@@ -2149,6 +2191,7 @@ if [[ -n "$PROMPT_ARG" ]]; then
       echo "========================================"
       LOOP_STOP_REASON="human intervention required"
       LOOP_STOP_MESSAGE="protected file hash mismatches"
+      emit_marker ":::HUMAN_REQUIRED::: protected file hash mismatches"
       echo "Protected file hash mismatches detected: $LAST_VERIFIER_FAILED_RULES"
       echo ""
       echo "These files are protected and cannot be fixed by Ralph."
@@ -2357,6 +2400,7 @@ else
       echo "========================================"
       LOOP_STOP_REASON="human intervention required"
       LOOP_STOP_MESSAGE="protected file hash mismatches"
+      emit_marker ":::HUMAN_REQUIRED::: protected file hash mismatches"
       echo "Protected file hash mismatches detected: $LAST_VERIFIER_FAILED_RULES"
       echo ""
       echo "These files are protected and cannot be fixed by Ralph."

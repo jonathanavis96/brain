@@ -20,11 +20,11 @@ Goal: Before running `acli rovodev run`, you can instantly see repo + branch + d
 
 ### 3.1.1 Minimal prompt requirements (shell-agnostic)
 
-- [ ] Show **repo name**
-- [ ] Show **git branch**
-- [ ] Show **dirty/clean indicator**
-- [ ] Show **exit status of last command** (helps spot failed verifier/test commands)
-- [ ] Show **WSL distro / host marker** (optional but helpful if you use multiple)
+- [x] Show **repo name** *(see: `docs/worktrees.md` → “Prompt/Statusline Configuration”)*
+- [x] Show **git branch** *(see: `docs/worktrees.md` → “Prompt/Statusline Configuration”)*
+- [x] Show **dirty/clean indicator** *(see: `docs/worktrees.md` → `parse_git_dirty`)*
+- [x] Show **exit status of last command** (helps spot failed verifier/test commands) *(see: `docs/worktrees.md` → `set_prompt`)*
+- [ ] Show **WSL distro / host marker** (optional but helpful if you use multiple) *(not implemented; optional)*
 
 **Acceptance criteria:**
 
@@ -39,9 +39,9 @@ Options (choose one):
 
 Checklist:
 
-- [ ] Choose approach A or B
-- [ ] Worktree label appears in prompt
-- [ ] Worktree label is **hard to miss** (brackets/prefix)
+- [x] Choose approach A or B *(implemented: Option A `$BRAIN_WT` and Option B parsing; see `docs/worktrees.md`)*
+- [x] Worktree label appears in prompt *(see: `docs/worktrees.md` → `$BRAIN_WT`)*
+- [x] Worktree label is **hard to miss** (brackets/prefix) *(included alongside repo name in prompt snippet; see `docs/worktrees.md`)*
 
 **Acceptance criteria:**
 
@@ -49,8 +49,8 @@ Checklist:
 
 ### 3.1.3 Windows Terminal tab title integration (optional)
 
-- [ ] Tab title includes `repo:branch` (and optionally worktree)
-- [ ] Title updates on `cd` into/out of repo
+- [x] Tab title includes `repo:branch` (and optionally worktree) *(static per-worktree startup example; see `docs/worktrees.md` → “Windows Terminal Tab Titles”)*
+- [ ] Title updates on `cd` into/out of repo *(not implemented; would require PROMPT_COMMAND / chpwd hook)*
 
 **Acceptance criteria:**
 
@@ -64,19 +64,19 @@ Goal: You should not need to babysit the terminal to know when a run fails or re
 
 ### 3.2.1 Define the notification contract
 
-- [ ] Decide which events matter:
-  - [ ] Start
-  - [ ] Success
-  - [ ] Fail
-  - [ ] Human-required (CAPTCHA / approval / protected files)
-- [ ] Decide minimum signal types:
-  - [ ] Sound *(not implemented in `bin/notify` yet)*
+- [x] Decide which events matter: *(see: `docs/events.md` → “Notification Contract”)*
+  - [x] Start
+  - [x] Success
+  - [x] Fail
+  - [x] Human-required (CAPTCHA / approval / protected files)
+- [x] Decide minimum signal types: *(toast baseline; optional sound/TTS; see: `docs/events.md` and `bin/notify`)*
+  - [x] Sound *(implemented in `bin/notify --sound`)*
   - [x] Toast / Windows notification *(implemented via `bin/notify` PowerShell bridge)*
-  - [ ] Optional: TTS *(not implemented in `bin/notify` yet)*
+  - [x] Optional: TTS *(implemented in `bin/notify --tts`)*
 
 **Acceptance criteria:**
 
-- [ ] There is a single documented mapping from event → notification method(s).
+- [x] There is a single documented mapping from event → notification method(s). *(see: `docs/events.md` → “Notification Contract”)*
 
 ### 3.2.2 Wrapper script around `acli rovodev run`
 
@@ -88,7 +88,7 @@ Design goals:
 
 **Status:** Implemented.
 
-- Wrapper: `bin/rovodev-run-notify`
+- Wrapper: `bin/cortex-run-notify`
 - Notifier: `bin/notify`
 
 Checklist:
@@ -97,7 +97,7 @@ Checklist:
 - [x] Wrapper emits notifications on:
   - [x] success exit code (0)
   - [x] non-zero exit code
-- [ ] Wrapper prints a short summary line even if notifications fail *(wrapper currently relies on `bin/notify` fallback printing; could add a dedicated one-liner in the wrapper)*
+- [x] Wrapper prints a short summary line even if notifications fail *(wrapper prints `Cortex: SUCCESS/FAIL/HUMAN_REQUIRED` independent of notifier; see `bin/cortex-run-notify`)*
 
 **Acceptance criteria:**
 
@@ -114,7 +114,7 @@ Potential inputs (choose at least one reliable trigger):
 **Status:** Implemented (log-marker based).
 
 - Detector: `tools/detect_human_required.py` (regex list is in-code; returns exit code 0 if a marker is found)
-- Wrapper integration: `bin/rovodev-run-notify --log <file>`
+- Wrapper integration: `bin/cortex-run-notify --log <file>`
 
 Checklist:
 
@@ -157,11 +157,11 @@ Goal: Reduce typing friction for plans/bug packets; optionally read out fail/hum
 
 ### 3.3.1 Dictation workflow
 
-- [ ] Decide primary dictation mechanism (Windows-native recommended)
-- [ ] Decide where dictated text goes:
-  - [ ] Bug packets
-  - [ ] Plan drafts
-  - [ ] Review notes
+- [x] Decide primary dictation mechanism (Windows-native recommended) *(Windows 11 dictation via `Win + H`; see `docs/events.md` → “Voice Dictation Workflow”)*
+- [x] Decide where dictated text goes: *(see `docs/events.md` → “where text goes” section)*
+  - [x] Bug packets
+  - [x] Plan drafts
+  - [x] Review notes
 
 **Acceptance criteria:**
 
@@ -169,9 +169,9 @@ Goal: Reduce typing friction for plans/bug packets; optionally read out fail/hum
 
 ### 3.3.2 Text-to-speech for alerts (optional)
 
-- [ ] Decide whether to do TTS at all
-- [ ] If yes, choose method (PowerShell `SAPI.SpVoice` is the usual Windows option)
-- [ ] Implement “human required” spoken alert distinct from generic failure
+- [x] Decide whether to do TTS at all *(yes; implemented)*
+- [x] If yes, choose method (PowerShell `SAPI.SpVoice` is the usual Windows option) *(see: `bin/notify`)*
+- [x] Implement “human required” spoken alert distinct from generic failure *(distinct titles/messages + `--tts` paths implemented in `workers/ralph/loop.sh` and `bin/cortex-run-notify`)*
 
 **Acceptance criteria:**
 
@@ -194,8 +194,8 @@ Suggested atomic task seeds:
 
 - [x] Create a WSL-safe `bin/notify` helper (no-op fallback) with `--toast`.
   - **Notes:** `--sound` and `--tts` flags exist but are not implemented yet.
-- [x] Create `bin/rovodev-run-notify` wrapper that calls `acli rovodev run` and notifies on exit.
-- [ ] Add a prompt/worktree label snippet (documented, not auto-installed).
+- [x] Create `bin/cortex-run-notify` wrapper that calls `acli rovodev run` and notifies on exit.
+- [x] Add a prompt/worktree label snippet (documented, not auto-installed). *(see `docs/worktrees.md`)*
 - [x] Add a “human required detection” regex list + unit-like fixture test using a sample log.
   - **Notes:** Regex list exists in `tools/detect_human_required.py`. Remaining work: pin a historical log example/fixture and reference it here.
 

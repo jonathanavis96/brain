@@ -54,14 +54,21 @@ If verifier shows `Protected.1`, `Protected.2`, `Protected.3`, or `Protected.4` 
 
 **Anti-pattern:** Reading verifier output multiple times hoping for different results.
 
-If you cannot fix a failure (protected file, infrastructure issue), output:
+If you cannot fix a failure (protected file, infrastructure issue), output the canonical human-required marker:
 
 ```text
-⚠️ HUMAN INTERVENTION REQUIRED
+:::HUMAN_REQUIRED::: <reason>
+```
 
-Cannot fix AC failure: <RULE_ID>
-Reason: <why you can't fix it>
-```text
+Where `<reason>` is a brief description of why human intervention is needed. Examples:
+
+- `:::HUMAN_REQUIRED::: protected file hash mismatch in ac.sha256`
+- `:::HUMAN_REQUIRED::: cannot resolve AC failure Protected.1`
+- `:::HUMAN_REQUIRED::: infrastructure issue with verifier.sh`
+
+This canonical marker is detected by `loop.sh` and external monitoring tools. For details on the event system, see `docs/events.md` in the brain repository.
+
+**Legacy fallback:** If the agent outputs unstructured text like "HUMAN INTERVENTION REQUIRED", `detect_human_required.py` will still catch it, but prefer the canonical marker for clarity.
 
 Then output `:::BUILD_READY:::` to end the iteration.
 

@@ -1449,9 +1449,9 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
   - **Block:**
 
 ```markdown
-- [x] **6.3** Wrapper: Make `bin/rovodev-run-notify` print a one-line summary even if notifications fail
+- [x] **6.3** Wrapper: Make `bin/cortex-run-notify` print a one-line summary even if notifications fail
   - **Goal:** If Windows toast is suppressed/unavailable, you still get an obvious terminal summary line.
-  - **Implementation:** Update `bin/rovodev-run-notify` to always print a final line like:
+  - **Implementation:** Update `bin/cortex-run-notify` to always print a final line like:
     - `RovoDev: SUCCESS` / `RovoDev: FAIL (exit N)` / `RovoDev: HUMAN_REQUIRED (exit N)`
     - independent of whether `bin/notify` succeeds.
   - **AC:** In a simulated no-PowerShell environment (or by forcing `bin/notify` to fail), wrapper still prints the summary line.
@@ -1489,5 +1489,86 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
     - both remain best-effort (never fail the caller; fall back to console output)
   - **AC:** `bin/notify --dry-run --sound --tts --title test --message hi` describes both actions; real run attempts sound/TTS on Windows.
   - **If Blocked:** Implement `--sound` only and keep `--tts` as “not implemented” warning.
+
+```
+
+### Archived on 2026-02-04 17:36:00
+
+- [x] **6.7**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 17:36:00
+  - **Block:**
+
+```markdown
+- [x] **6.7** Voice (dictation): Document the intended workflow (Windows-native)
+  - **Goal:** Reduce typing friction by having a consistent, repeatable dictation workflow.
+  - **Implementation:** Add a short section to an appropriate doc (suggested: `docs/BOOTSTRAPPING.md` or `docs/events.md`) describing:
+    - primary dictation mechanism (Windows dictation recommended)
+    - where dictated text goes (bug packets, plan drafts, review notes)
+    - 3–5 bullet “how to use it” steps
+  - **AC:** Doc includes the workflow steps and “where text goes” guidance.
+  - **If Blocked:** Add the workflow notes to `docs/still-to-do/phase3_statusline_notifications_voice_breakdown.md`.
+
+---
+
+```
+
+### Archived on 2026-02-04 17:50:41
+
+- [x] **7.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 17:50:41
+  - **Block:**
+
+```markdown
+- [x] **7.1** Add `bin/ralph-run-notify` wrapper (repo + templates)
+  - **Goal:** Provide a simple entrypoint that runs the Ralph loop and notifies only for long runs.
+  - **Implementation:**
+    - Create `bin/ralph-run-notify` (modeled after `bin/cortex-run-notify`) with default `--min-seconds 120`.
+    - Titles must be project-prefixed: `Ralph <project> complete|needs you|error`.
+    - `bin/ralph-run-notify` should call `bash workers/ralph/loop.sh` and preserve exit code.
+    - Propagate the wrapper into templates at `templates/ralph/bin/ralph-run-notify`.
+  - **AC:**
+    - `bash -n bin/ralph-run-notify templates/ralph/bin/ralph-run-notify`
+    - `bin/ralph-run-notify --dry-run` shows `--min-seconds 120` and project-prefixed titles.
+  - **If Blocked:** Add only the repo-level wrapper first, then copy it into templates in a follow-up task.
+
+```
+
+- [x] **7.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 17:50:41
+  - **Block:**
+
+```markdown
+- [x] **7.2** Ensure `bin/cortex-run-notify` is shipped in templates (and uses project-prefixed titles)
+  - **Goal:** New repos created from templates include the Cortex wrapper and it produces `Cortex <project> ...` notifications.
+  - **Implementation:**
+    - Add `templates/ralph/bin/cortex-run-notify` (copy of repo `bin/cortex-run-notify`).
+    - Ensure project label resolution uses: `BRAIN_PROJECT_LABEL` → `PROJECT_LABEL` → `git rev-parse --show-toplevel | basename` → `basename "$PWD"`.
+  - **AC:**
+    - `bash -n templates/ralph/bin/cortex-run-notify`
+    - Wrapper emits titles like `Cortex brain complete` when run in this repo.
+  - **If Blocked:** If templates layout requires a different install location, document the correct target path and update template callers.
+
+```
+
+- [x] **7.3**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 17:50:41
+  - **Block:**
+
+```markdown
+- [x] **7.3** Update `templates/ralph/loop.sh`: canonical `:::HUMAN_REQUIRED::: <reason>` marker + end-of-run notifications
+  - **Goal:** Template Ralph loop behaves like the repo loop for human-required detection and Windows notifications.
+  - **Implementation:**
+    - Update template `check_human_intervention()` to detect canonical marker `^\s*:::HUMAN_REQUIRED:::` first (legacy fallback allowed).
+    - Emit `emit_marker ":::HUMAN_REQUIRED::: protected file hash mismatches"` in protected-file failure paths.
+    - Add end-of-run notify block (using `bin/notify`) with **project-prefixed** titles and `--tts/--sound` as in repo `workers/ralph/loop.sh`.
+  - **AC:**
+    - `bash -n templates/ralph/loop.sh`
+    - `rg ":::HUMAN_REQUIRED:::" templates/ralph/loop.sh` shows both detection and emission
+    - `rg "Ralph .*complete|Ralph .*needs you|Ralph .*error" templates/ralph/loop.sh`
+  - **If Blocked:** Port only the HUMAN_REQUIRED detection/emission first; add notifications in a follow-up.
 
 ```

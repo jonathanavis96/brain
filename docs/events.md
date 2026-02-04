@@ -255,7 +255,7 @@ Notifications should be short and scannable:
 
 - All notification signals are **best-effort** (never fail the caller)
 - Sound and TTS are optional enhancements (toast is the baseline)
-- The `bin/rovodev-run-notify` wrapper handles event detection and notification dispatch
+- The `bin/cortex-run-notify` wrapper handles event detection and notification dispatch
 - Human-required detection uses `tools/detect_human_required.py` to scan logs
 
 ### Example Usage
