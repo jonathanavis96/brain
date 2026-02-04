@@ -21,37 +21,7 @@
 >
 > **Environment assumption:** WSL2 on Windows 11 (notifications are implemented via `powershell.exe` bridge from WSL → Windows).
 
-- [ ] **6.2** Tooling: Add `bin/notify` (WSL-safe) for toast/sound/TTS with no-op fallback
-  - **Goal:** A single helper command Ralph scripts can call to notify the operator.
-  - **Implementation:** Create `bin/notify` that:
-    - Accepts flags like `--title`, `--message`, `--level (info|warn|error)`, `--sound`, `--tts`.
-    - Uses PowerShell when available (WSL): `powershell.exe -NoProfile -Command ...`.
-    - If PowerShell is unavailable, prints a single-line fallback and exits 0.
-    - Has `--dry-run` to print what would have happened.
-  - **AC:** `bin/notify --dry-run --title test --message hi` exits 0 and prints intended action; script is executable.
-  - **If Blocked:** Implement toast only first; leave sound/TTS as flags that warn “not implemented yet”.
-
-- [ ] **6.3** Tooling: Add `bin/rovodev-run-notify` wrapper around `acli rovodev run`
-  - **Goal:** Run RovoDev and get a loud signal on SUCCESS/FAIL, without changing Ralph loop internals.
-  - **Implementation:** Create `bin/rovodev-run-notify` that:
-    - Runs `acli rovodev run ...` (pass-through args).
-    - On exit 0: calls `bin/notify --level info`.
-    - On non-zero: calls `bin/notify --level error --sound`.
-    - Supports `--dry-run` (does not execute acli).
-  - **AC:** `bin/rovodev-run-notify --dry-run -- echo hi` prints the command it would run; real invocation preserves exit code.
-  - **If Blocked:** Provide wrapper without dry-run; document that it is a thin pass-through.
-
-- [ ] **6.4** Detection: Add “human-required” marker detection (regex list + fixture test)
-  - **Goal:** Distinguish FAIL vs HUMAN_REQUIRED and notify differently.
-  - **Implementation:** Create `tools/detect_human_required.py` (or a small `bin/` helper) that:
-    - Accepts a log file path (or stdin).
-    - Returns exit code 0 if human-required markers found, 1 otherwise.
-    - Uses a small, documented regex list (e.g., `HUMAN REQUIRED`, `CAPTCHA`, `Approve waiver`, `manual intervention`).
-    - Add a minimal test/fixture log file under `tools/tests/fixtures/`.
-  - **AC:** Running detector against fixture returns expected exit code; add a short usage note in the script help.
-  - **If Blocked:** Start with a bash/rg-based detector and upgrade to Python later.
-
-- [ ] **6.5** Integration: Make `bin/rovodev-run-notify` emit distinct notifications for HUMAN_REQUIRED
+- [x] **6.5** Integration: Make `bin/rovodev-run-notify` emit distinct notifications for HUMAN_REQUIRED
   - **Goal:** Human-required runs get a distinct title/message (and optional TTS), not just “failed”.
   - **Implementation:** Update wrapper to:
     - Run detector after completion (or tail log if provided).

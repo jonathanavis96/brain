@@ -1,0 +1,168 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# notify - WSL-safe notification helper for Ralph loop
+#
+# Usage:
+#   notify --title TITLE --message MESSAGE [OPTIONS]
+#
+# Options:
+#   --title TEXT        Notification title (required)
+#   --message TEXT      Notification message (required)
+#   --level LEVEL       Notification level: info|warn|error (default: info)
+#   --sound             Play sound (not implemented yet)
+#   --tts               Use text-to-speech (not implemented yet)
+#   --dry-run           Print what would happen without executing
+#   --help              Show this help message
+#
+# Environment:
+#   Detects WSL and uses PowerShell bridge to Windows for toast notifications.
+#   Falls back to simple console output if PowerShell is unavailable.
+
+usage() {
+  sed -n '3,18p' "$0" | sed 's/^# //' | sed 's/^#//'
+  exit 0
+}
+
+TITLE=""
+MESSAGE=""
+LEVEL="info"
+SOUND=false
+TTS=false
+DRY_RUN=false
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --title)
+      TITLE="$2"
+      shift 2
+      ;;
+    --message)
+      MESSAGE="$2"
+      shift 2
+      ;;
+    --level)
+      LEVEL="$2"
+      shift 2
+      ;;
+    --sound)
+      SOUND=true
+      shift
+      ;;
+    --tts)
+      TTS=true
+      shift
+      ;;
+    --dry-run)
+      DRY_RUN=true
+      shift
+      ;;
+    --help)
+      usage
+      ;;
+    *)
+      echo "Error: Unknown option '$1'" >&2
+      echo "Run 'notify --help' for usage" >&2
+      exit 1
+      ;;
+  esac
+done
+
+# Validate required arguments
+if [[ -z "$TITLE" ]]; then
+  echo "Error: --title is required" >&2
+  exit 1
+fi
+
+if [[ -z "$MESSAGE" ]]; then
+  echo "Error: --message is required" >&2
+  exit 1
+fi
+
+# Validate level
+if [[ ! "$LEVEL" =~ ^(info|warn|error)$ ]]; then
+  echo "Error: --level must be one of: info, warn, error" >&2
+  exit 1
+fi
+
+# Check for PowerShell availability (WSL bridge to Windows)
+HAS_POWERSHELL=false
+if command -v powershell.exe >/dev/null 2>&1; then
+  HAS_POWERSHELL=true
+fi
+
+# Dry-run mode
+if [[ "$DRY_RUN" == "true" ]]; then
+  echo "=== DRY RUN ==="
+  echo "Title: $TITLE"
+  echo "Message: $MESSAGE"
+  echo "Level: $LEVEL"
+  echo "Sound: $SOUND"
+  echo "TTS: $TTS"
+  echo "PowerShell available: $HAS_POWERSHELL"
+
+  if [[ "$HAS_POWERSHELL" == "true" ]]; then
+    echo "Would execute: PowerShell toast notification"
+  else
+    echo "Would execute: Console fallback (PowerShell not available)"
+  fi
+
+  if [[ "$SOUND" == "true" ]]; then
+    echo "Warning: --sound not implemented yet" >&2
+  fi
+
+  if [[ "$TTS" == "true" ]]; then
+    echo "Warning: --tts not implemented yet" >&2
+  fi
+
+  exit 0
+fi
+
+# Warn about unimplemented features
+if [[ "$SOUND" == "true" ]]; then
+  echo "Warning: --sound not implemented yet" >&2
+fi
+
+if [[ "$TTS" == "true" ]]; then
+  echo "Warning: --tts not implemented yet" >&2
+fi
+
+# Execute notification
+if [[ "$HAS_POWERSHELL" == "true" ]]; then
+  # Escape single quotes in PowerShell strings
+  ESCAPED_TITLE="${TITLE//\'/\'\'}"
+  ESCAPED_MESSAGE="${MESSAGE//\'/\'\'}"
+
+  # Use PowerShell to show Windows toast notification
+  # Note: BurntToast module would be better, but requires installation.
+  # We use a simple approach that works on all Windows 10/11 systems.
+  powershell.exe -NoProfile -Command "
+    [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
+    [Windows.UI.Notifications.ToastNotification, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
+    [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime] | Out-Null
+
+    \$template = @\"
+<toast>
+  <visual>
+    <binding template='ToastGeneric'>
+      <text>$ESCAPED_TITLE</text>
+      <text>$ESCAPED_MESSAGE</text>
+    </binding>
+  </visual>
+</toast>
+\"@
+
+    \$xml = New-Object Windows.Data.Xml.Dom.XmlDocument
+    \$xml.LoadXml(\$template)
+    \$toast = New-Object Windows.UI.Notifications.ToastNotification \$xml
+    [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier('RalphLoop').Show(\$toast)
+  " >/dev/null 2>&1 || {
+    # Fallback if toast fails
+    echo "[$LEVEL] $TITLE: $MESSAGE"
+  }
+else
+  # Console fallback when PowerShell is unavailable
+  echo "[$LEVEL] $TITLE: $MESSAGE"
+fi
+
+exit 0

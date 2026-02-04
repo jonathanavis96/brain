@@ -1,0 +1,7 @@
+2026-02-04 13:00:00 [INFO] Starting task execution
+2026-02-04 13:00:15 [INFO] Running validation checks
+2026-02-04 13:00:30 [ERROR] Shellcheck failed on loop.sh
+2026-02-04 13:00:31 [ERROR] SC2034: unused variable 'FOO'
+2026-02-04 13:00:32 [INFO] Fixing shellcheck issues
+2026-02-04 13:00:45 [INFO] All checks passed
+2026-02-04 13:00:46 [INFO] Exit code: 0

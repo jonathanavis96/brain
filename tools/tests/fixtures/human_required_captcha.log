@@ -1,0 +1,5 @@
+2026-02-04 13:00:00 [INFO] Attempting login to service
+2026-02-04 13:00:15 [ERROR] Authentication failed
+2026-02-04 13:00:16 [ERROR] CAPTCHA challenge detected
+2026-02-04 13:00:17 [ERROR] Cannot proceed without manual intervention
+2026-02-04 13:00:18 [INFO] Exit code: 1
