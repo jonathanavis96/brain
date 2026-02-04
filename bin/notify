@@ -13,6 +13,7 @@ set -euo pipefail
 #   --sound             Play sound (not implemented yet)
 #   --tts               Use text-to-speech (not implemented yet)
 #   --dry-run           Print what would happen without executing
+#   --debug             Print PowerShell output/errors for troubleshooting
 #   --help              Show this help message
 #
 # Environment:
@@ -30,6 +31,7 @@ LEVEL="info"
 SOUND=false
 TTS=false
 DRY_RUN=false
+DEBUG=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -55,6 +57,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --dry-run)
       DRY_RUN=true
+      shift
+      ;;
+    --debug)
+      DEBUG=true
       shift
       ;;
     --help)
@@ -86,9 +92,18 @@ if [[ ! "$LEVEL" =~ ^(info|warn|error)$ ]]; then
 fi
 
 # Check for PowerShell availability (WSL bridge to Windows)
+#
+# In WSL, `powershell.exe` is sometimes not on PATH, but is typically available at:
+#   /mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe
 HAS_POWERSHELL=false
+POWERSHELL_BIN=""
+
 if command -v powershell.exe >/dev/null 2>&1; then
   HAS_POWERSHELL=true
+  POWERSHELL_BIN="powershell.exe"
+elif [[ -x "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe" ]]; then
+  HAS_POWERSHELL=true
+  POWERSHELL_BIN="/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
 fi
 
 # Dry-run mode
@@ -100,6 +115,7 @@ if [[ "$DRY_RUN" == "true" ]]; then
   echo "Sound: $SOUND"
   echo "TTS: $TTS"
   echo "PowerShell available: $HAS_POWERSHELL"
+  echo "Debug: $DEBUG"
 
   if [[ "$HAS_POWERSHELL" == "true" ]]; then
     echo "Would execute: PowerShell toast notification"
@@ -136,8 +152,9 @@ if [[ "$HAS_POWERSHELL" == "true" ]]; then
   # Use PowerShell to show Windows toast notification
   # Note: BurntToast module would be better, but requires installation.
   # We use a simple approach that works on all Windows 10/11 systems.
-  powershell.exe -NoProfile -Command "
-    [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
+  "$POWERSHELL_BIN" -NoProfile -Command "
+    try {
+      [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
     [Windows.UI.Notifications.ToastNotification, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
     [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime] | Out-Null
 
@@ -155,8 +172,29 @@ if [[ "$HAS_POWERSHELL" == "true" ]]; then
     \$xml = New-Object Windows.Data.Xml.Dom.XmlDocument
     \$xml.LoadXml(\$template)
     \$toast = New-Object Windows.UI.Notifications.ToastNotification \$xml
-    [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier('RalphLoop').Show(\$toast)
-  " >/dev/null 2>&1 || {
+    # Use default notifier AppID (more reliable than a custom AppID in many environments)
+    [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier().Show(\$toast)
+      exit 0
+    } catch {
+      # Fallback: classic tray balloon (often works even when toast is blocked)
+      try {
+        Add-Type -AssemblyName System.Windows.Forms | Out-Null
+        Add-Type -AssemblyName System.Drawing | Out-Null
+        \$n = New-Object System.Windows.Forms.NotifyIcon
+        \$n.Icon = [System.Drawing.SystemIcons]::Information
+        \$n.BalloonTipTitle = '$ESCAPED_TITLE'
+        \$n.BalloonTipText = '$ESCAPED_MESSAGE'
+        \$n.Visible = \$true
+        \$n.ShowBalloonTip(5000)
+        Start-Sleep -Milliseconds 200
+        \$n.Dispose()
+        exit 0
+      } catch {
+        Write-Error \$_
+        exit 1
+      }
+    }
+  " $( [[ "$DEBUG" == "true" ]] && echo "" || echo ">/dev/null 2>&1" ) || {
     # Fallback if toast fails
     echo "[$LEVEL] $TITLE: $MESSAGE"
   }

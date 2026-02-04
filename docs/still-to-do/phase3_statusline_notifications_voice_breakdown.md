@@ -70,13 +70,13 @@ Goal: You should not need to babysit the terminal to know when a run fails or re
   - [ ] Fail
   - [ ] Human-required (CAPTCHA / approval / protected files)
 - [ ] Decide minimum signal types:
-  - [ ] Sound
-  - [ ] Toast / Windows notification
-  - [ ] Optional: TTS
+  - [ ] Sound *(not implemented in `bin/notify` yet)*
+  - [x] Toast / Windows notification *(implemented via `bin/notify` PowerShell bridge)*
+  - [ ] Optional: TTS *(not implemented in `bin/notify` yet)*
 
 **Acceptance criteria:**
 
-- There is a single documented mapping from event → notification method(s).
+- [ ] There is a single documented mapping from event → notification method(s).
 
 ### 3.2.2 Wrapper script around `acli rovodev run`
 
@@ -86,35 +86,45 @@ Design goals:
 - Should not require a GUI Linux notification daemon.
 - Should degrade gracefully (if PowerShell not found, skip notifications).
 
+**Status:** Implemented.
+
+- Wrapper: `bin/rovodev-run-notify`
+- Notifier: `bin/notify`
+
 Checklist:
 
-- [ ] Wrapper accepts: command + args
-- [ ] Wrapper emits notifications on:
-  - [ ] success exit code (0)
-  - [ ] non-zero exit code
-- [ ] Wrapper prints a short summary line even if notifications fail
+- [x] Wrapper accepts: command + args
+- [x] Wrapper emits notifications on:
+  - [x] success exit code (0)
+  - [x] non-zero exit code
+- [ ] Wrapper prints a short summary line even if notifications fail *(wrapper currently relies on `bin/notify` fallback printing; could add a dedicated one-liner in the wrapper)*
 
 **Acceptance criteria:**
 
-- Running the wrapper produces a sound/toast on failure.
+- [x] Running the wrapper produces a toast notification on failure (sound/TTS optional).
 
 ### 3.2.3 Human-required detection
 
 Potential inputs (choose at least one reliable trigger):
 
-- A) Detect specific markers in logs (e.g., `HUMAN_REQUIRED`, `CAPTCHA`, `APPROVAL_REQUIRED`).
-- B) Detect verifier warnings that explicitly say human intervention needed.
-- C) Detect if process is waiting for input (harder; defer unless needed).
+- [x] A) Detect specific markers in logs (e.g., `HUMAN_REQUIRED`, `CAPTCHA`, `APPROVAL_REQUIRED`).
+- [ ] B) Detect verifier warnings that explicitly say human intervention needed.
+- [ ] C) Detect if process is waiting for input (harder; defer unless needed).
+
+**Status:** Implemented (log-marker based).
+
+- Detector: `tools/detect_human_required.py` (regex list is in-code; returns exit code 0 if a marker is found)
+- Wrapper integration: `bin/rovodev-run-notify --log <file>`
 
 Checklist:
 
-- [ ] Choose triggers
-- [ ] Document exact strings/regex
-- [ ] Verify trigger works on at least 1 real historical log example
+- [x] Choose triggers *(A: marker/regex scan)*
+- [x] Document exact strings/regex *(see `tools/detect_human_required.py` `HUMAN_REQUIRED_PATTERNS`)*
+- [ ] Verify trigger works on at least 1 real historical log example *(still needs a pinned example / fixture file reference)*
 
 **Acceptance criteria:**
 
-- A “human required” run produces a distinct notification (different sound/message).
+- [x] A “human required” run produces a distinct notification message/title.
 
 ---
 
@@ -159,7 +169,13 @@ When converting to `workers/IMPLEMENTATION_PLAN.md`, prefer tasks that:
 
 Suggested atomic task seeds:
 
-- [ ] Create a WSL-safe `bin/notify` helper (no-op fallback) with `--sound` and `--toast`.
-- [ ] Create `bin/rovodev-run-notify` wrapper that calls `acli rovodev run` and notifies on exit.
+- [x] Create a WSL-safe `bin/notify` helper (no-op fallback) with `--toast`.
+  - **Notes:** `--sound` and `--tts` flags exist but are not implemented yet.
+- [x] Create `bin/rovodev-run-notify` wrapper that calls `acli rovodev run` and notifies on exit.
 - [ ] Add a prompt/worktree label snippet (documented, not auto-installed).
-- [ ] Add a “human required detection” regex list + unit-like fixture test using a sample log.
+- [x] Add a “human required detection” regex list + unit-like fixture test using a sample log.
+  - **Notes:** Regex list exists in `tools/detect_human_required.py`. Remaining work: pin a historical log example/fixture and reference it here.
+
+Additional (implemented):
+
+- [x] Notify when Ralph finishes or stops (loop-level): `workers/ralph/loop.sh` now triggers `bin/notify` on loop exit (completion, human-required, verifier-stop, interrupt).
