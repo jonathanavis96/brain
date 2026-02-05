@@ -1182,7 +1182,6 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
   - **Archived At:** 2026-01-31 22:20:54
   - **Block:**
 
-
 ### Archived on 2026-01-31 (Phase 39 Complete)
 
 | Date | Task ID | Description |
@@ -1196,3 +1195,380 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | 2026-01-31 | 39.4.2 | - [x] **39.4.2** Add `bin/semantic-review-pr` (diff vs main) |
 | 2026-01-31 | 39.5.1 | - [x] **39.5.1** Run semantic review during PLAN only (not BUILD) |
 | 2026-01-31 | 39.6.1 | - [x] **39.6.1** Verify BUILD never commits; PLAN commits still occur; end-of-run always commits |
+
+---
+
+### Archived on 2026-02-02 15:22:00 (Plan cleanup: completed items removed from IMPLEMENTATION_PLAN.md)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-02-02 | 40.1 | - [x] **40.1** Rename docs backlog folder to `docs/still-to-do/` and update references |
+| 2026-02-02 | 40.2 | - [x] **40.2** Add Bug Packet template doc + keep `AGENTS.md` lean (pointer + policy) |
+| 2026-02-02 | 41.3 | - [x] **41.3** Fix M1: `bin/brain-event` robust flag parsing (missing value should not consume next option) |
+| 2026-02-02 | 41.9 | - [x] **41.9** (HUMAN REQUIRED / Protected) Address C1: SHA256 hash mismatches for protected files |
+| 2026-02-02 | 41.10 | - [x] **41.10** (HUMAN REQUIRED / Protected) Decide on M2–M7 protected-script fixes |
+
+### Archived on 2026-02-02 17:25:36
+
+- [x] **40.3.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **40.3.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **40.4**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.8.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.8.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.4.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.7.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.7.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.5.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.5.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.5.3**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.5.4**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.6.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.6.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **41.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **43.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **43.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **43.3**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **43.4**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **43.5**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **42.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **42.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **42.3**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+- [x] **42.4**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-02 17:25:36
+  - **Block:**
+
+---
+
+### Archived on 2026-02-03 13:26:14 (Plan cleanup: remove completed Phase 0–4 items from workers/IMPLEMENTATION_PLAN.md)
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-02-03 | 0.1 | - [x] **0.1** Run verifier and address any warnings/failures |
+| 2026-02-03 | 0.2 | - [x] **0.2** Review and update skills/SUMMARY.md index |
+| 2026-02-03 | 1.1 | - [x] **1.1** Review GAP_BACKLOG.md for stale entries |
+| 2026-02-03 | 1.2 | - [x] **1.2** Check SKILL_BACKLOG.md promotion queue |
+| 2026-02-03 | 2.1 | - [x] **2.1** Audit skills/domains/ralph/ for completeness |
+| 2026-02-03 | 2.2 | - [x] **2.2** Verify skill cross-references are valid |
+| 2026-02-03 | 2.3 | - [x] **2.3** Add real-world examples to top 3 most-used skills |
+| 2026-02-03 | 3.1 | - [x] **3.1** Review bin/ tools for documentation gaps |
+| 2026-02-03 | 3.2 | - [x] **3.2** Enhance brain-search tool with fuzzy matching |
+| 2026-02-03 | 3.3 | - [x] **3.3** Create skill-suggest tool for task planning |
+| 2026-02-03 | 4.1 | - [x] **4.1** Audit templates/ for consistency with brain repo |
+| 2026-02-03 | 4.2 | - [x] **4.2** Update templates/ralph/PROMPT.md with latest patterns |
+
+### Archived on 2026-02-04 12:57:43
+
+- [x] **5.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 12:57:43
+  - **Block:**
+
+- [x] **5.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 12:57:43
+  - **Block:**
+
+- [x] **5.3**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 12:57:43
+  - **Block:**
+
+- [x] **5.4**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 12:57:43
+  - **Block:**
+
+- [x] **6.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 12:57:43
+  - **Block:**
+
+### Archived on 2026-02-04 13:08:29
+
+- [x] **6.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 13:08:29
+  - **Block:**
+
+- [x] **6.3**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 13:08:29
+  - **Block:**
+
+- [x] **6.4**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 13:08:29
+  - **Block:**
+
+### Archived on 2026-02-04 13:53:45
+
+- [x] **6.6**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 13:53:45
+  - **Block:**
+
+### Archived on 2026-02-04 14:46:04
+
+- [x] **6.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 14:46:04
+  - **Block:**
+
+```markdown
+- [x] **6.1** Statusline: Ensure prompt/worktree label recipe exists and meets the minimal requirements
+  - **Goal:** Before running `acli rovodev run`, the prompt makes it obvious which repo/worktree/branch you're in.
+  - **Implementation:** Confirm `docs/worktrees.md` includes (or update it to include) a minimal bash prompt recipe that shows:
+    - repo name (or unmistakable repo path)
+    - git branch
+    - dirty/clean indicator
+    - exit status of last command
+    - a worktree label (env var `BRAIN_WT=...` or derived)
+  - **AC:** `docs/worktrees.md` "Prompt/Statusline Configuration" section includes a copy/paste snippet and notes for labeling worktrees.
+  - **If Blocked:** Document only the env-var worktree label approach (`BRAIN_WT`) and branch/dirty indicators.
+
+```
+
+- [x] **6.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 14:46:04
+  - **Block:**
+
+```markdown
+- [x] **6.2** Notifications: Document a single "event → notification" contract
+  - **Goal:** There is one canonical mapping of lifecycle events (start/success/fail/human-required) to notification behavior.
+  - **Implementation:** Add a short section (recommended: `docs/events.md` or a new section in `docs/TOOLS.md`) that defines:
+    - events: Start, Success, Fail, Human-required
+    - minimum signal types: toast (implemented), sound (optional), TTS (optional)
+    - what title/message should look like (short + scannable)
+  - **AC:** Doc includes a compact table mapping event → title → level → optional sound/TTS; markdownlint passes.
+  - **If Blocked:** Add the mapping to `docs/still-to-do/phase3_statusline_notifications_voice_breakdown.md` as the canonical table.
+
+```
+
+- [x] **6.3**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 14:46:04
+  - **Block:**
+
+```markdown
+- [x] **6.3** Wrapper: Make `bin/cortex-run-notify` print a one-line summary even if notifications fail
+  - **Goal:** If Windows toast is suppressed/unavailable, you still get an obvious terminal summary line.
+  - **Implementation:** Update `bin/cortex-run-notify` to always print a final line like:
+    - `RovoDev: SUCCESS` / `RovoDev: FAIL (exit N)` / `RovoDev: HUMAN_REQUIRED (exit N)`
+    - independent of whether `bin/notify` succeeds.
+  - **AC:** In a simulated no-PowerShell environment (or by forcing `bin/notify` to fail), wrapper still prints the summary line.
+  - **If Blocked:** Print the summary line only on non-zero exits.
+
+```
+
+- [x] **6.4**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 14:46:04
+  - **Block:**
+
+```markdown
+- [x] **6.4** Human-required: Pin and reference at least one real log/fixture proving detection works
+  - **Goal:** Human-required detection is validated against a pinned example (fixture path) and is easy to reproduce.
+  - **Implementation:** Ensure there is at least one fixture under `tools/tests/fixtures/` and:
+    - add a tiny test (or extend existing tests) that asserts detection returns 0 for positive fixtures and 1 for negative
+    - reference the fixture(s) from `docs/still-to-do/phase3_statusline_notifications_voice_breakdown.md` (or the new contract doc)
+  - **AC:** `python3 tools/detect_human_required.py tools/tests/fixtures/human_required_positive.log` exits 0 and negative exits 1; tests cover both.
+  - **If Blocked:** Document manual commands to run against the fixtures (no automated test).
+
+```
+
+- [x] **6.5**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 14:46:04
+  - **Block:**
+
+```markdown
+- [x] **6.5** Notification helper: Implement `--sound` and `--tts` in `bin/notify` (Windows PowerShell)
+  - **Goal:** Optional audible signals are available for FAIL/HUMAN_REQUIRED without extra tooling.
+  - **Implementation:** Update `bin/notify` so:
+    - `--sound` plays a Windows system sound (e.g., `[System.Media.SystemSounds]::Exclamation.Play()` or similar)
+    - `--tts` speaks the message using `SAPI.SpVoice`
+    - both remain best-effort (never fail the caller; fall back to console output)
+  - **AC:** `bin/notify --dry-run --sound --tts --title test --message hi` describes both actions; real run attempts sound/TTS on Windows.
+  - **If Blocked:** Implement `--sound` only and keep `--tts` as “not implemented” warning.
+
+```
+
+### Archived on 2026-02-04 17:36:00
+
+- [x] **6.7**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 17:36:00
+  - **Block:**
+
+```markdown
+- [x] **6.7** Voice (dictation): Document the intended workflow (Windows-native)
+  - **Goal:** Reduce typing friction by having a consistent, repeatable dictation workflow.
+  - **Implementation:** Add a short section to an appropriate doc (suggested: `docs/BOOTSTRAPPING.md` or `docs/events.md`) describing:
+    - primary dictation mechanism (Windows dictation recommended)
+    - where dictated text goes (bug packets, plan drafts, review notes)
+    - 3–5 bullet “how to use it” steps
+  - **AC:** Doc includes the workflow steps and “where text goes” guidance.
+  - **If Blocked:** Add the workflow notes to `docs/still-to-do/phase3_statusline_notifications_voice_breakdown.md`.
+
+---
+
+```
+
+### Archived on 2026-02-04 17:50:41
+
+- [x] **7.1**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 17:50:41
+  - **Block:**
+
+```markdown
+- [x] **7.1** Add `bin/ralph-run-notify` wrapper (repo + templates)
+  - **Goal:** Provide a simple entrypoint that runs the Ralph loop and notifies only for long runs.
+  - **Implementation:**
+    - Create `bin/ralph-run-notify` (modeled after `bin/cortex-run-notify`) with default `--min-seconds 120`.
+    - Titles must be project-prefixed: `Ralph <project> complete|needs you|error`.
+    - `bin/ralph-run-notify` should call `bash workers/ralph/loop.sh` and preserve exit code.
+    - Propagate the wrapper into templates at `templates/ralph/bin/ralph-run-notify`.
+  - **AC:**
+    - `bash -n bin/ralph-run-notify templates/ralph/bin/ralph-run-notify`
+    - `bin/ralph-run-notify --dry-run` shows `--min-seconds 120` and project-prefixed titles.
+  - **If Blocked:** Add only the repo-level wrapper first, then copy it into templates in a follow-up task.
+
+```
+
+- [x] **7.2**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 17:50:41
+  - **Block:**
+
+```markdown
+- [x] **7.2** Ensure `bin/cortex-run-notify` is shipped in templates (and uses project-prefixed titles)
+  - **Goal:** New repos created from templates include the Cortex wrapper and it produces `Cortex <project> ...` notifications.
+  - **Implementation:**
+    - Add `templates/ralph/bin/cortex-run-notify` (copy of repo `bin/cortex-run-notify`).
+    - Ensure project label resolution uses: `BRAIN_PROJECT_LABEL` → `PROJECT_LABEL` → `git rev-parse --show-toplevel | basename` → `basename "$PWD"`.
+  - **AC:**
+    - `bash -n templates/ralph/bin/cortex-run-notify`
+    - Wrapper emits titles like `Cortex brain complete` when run in this repo.
+  - **If Blocked:** If templates layout requires a different install location, document the correct target path and update template callers.
+
+```
+
+- [x] **7.3**
+  - **Archived From:** workers/IMPLEMENTATION_PLAN.md
+  - **Archived At:** 2026-02-04 17:50:41
+  - **Block:**
+
+```markdown
+- [x] **7.3** Update `templates/ralph/loop.sh`: canonical `:::HUMAN_REQUIRED::: <reason>` marker + end-of-run notifications
+  - **Goal:** Template Ralph loop behaves like the repo loop for human-required detection and Windows notifications.
+  - **Implementation:**
+    - Update template `check_human_intervention()` to detect canonical marker `^\s*:::HUMAN_REQUIRED:::` first (legacy fallback allowed).
+    - Emit `emit_marker ":::HUMAN_REQUIRED::: protected file hash mismatches"` in protected-file failure paths.
+    - Add end-of-run notify block (using `bin/notify`) with **project-prefixed** titles and `--tts/--sound` as in repo `workers/ralph/loop.sh`.
+  - **AC:**
+    - `bash -n templates/ralph/loop.sh`
+    - `rg ":::HUMAN_REQUIRED:::" templates/ralph/loop.sh` shows both detection and emission
+    - `rg "Ralph .*complete|Ralph .*needs you|Ralph .*error" templates/ralph/loop.sh`
+  - **If Blocked:** Port only the HUMAN_REQUIRED detection/emission first; add notifications in a follow-up.
+
+```

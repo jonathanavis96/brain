@@ -172,7 +172,15 @@ else
   echo "  modelId: auto" >>"$CONFIG_FILE"
 fi
 
-LOGFIRE_DISABLE=1 acli rovodev run --config-file "$CONFIG_FILE" --yolo
+CORTEX_RUN_NOTIFY_BIN="${PROJECT_ROOT}/bin/cortex-run-notify"
+if [[ ! -x "$CORTEX_RUN_NOTIFY_BIN" ]]; then
+  echo "Error: cortex-run-notify not found or not executable: $CORTEX_RUN_NOTIFY_BIN" >&2
+  echo "Tip: ensure your project includes bin/cortex-run-notify (from the Brain repo)" >&2
+  exit 1
+fi
+
+"$CORTEX_RUN_NOTIFY_BIN" --min-seconds 120 -- \
+  --config-file "$CONFIG_FILE" --yolo
 EXIT_CODE=$?
 
 rm -f "$CONFIG_FILE"

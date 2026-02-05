@@ -1,0 +1,236 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# notify - WSL-safe notification helper for Ralph loop
+#
+# Usage:
+#   notify --title TITLE --message MESSAGE [OPTIONS]
+#
+# Options:
+#   --title TEXT        Notification title (required)
+#   --message TEXT      Notification message (required)
+#   --level LEVEL       Notification level: info|warn|error (default: info)
+#   --sound             Play Windows system sound (best-effort)
+#   --tts               Use text-to-speech to speak message (best-effort)
+#   --dry-run           Print what would happen without executing
+#   --debug             Print PowerShell output/errors for troubleshooting
+#   --help              Show this help message
+#
+# Environment:
+#   Detects WSL and uses PowerShell bridge to Windows for toast notifications.
+#   Falls back to simple console output if PowerShell is unavailable.
+
+usage() {
+  sed -n '3,18p' "$0" | sed 's/^# //' | sed 's/^#//'
+  exit 0
+}
+
+TITLE=""
+MESSAGE=""
+LEVEL="info"
+SOUND=false
+TTS=false
+DRY_RUN=false
+DEBUG=false
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --title)
+      TITLE="$2"
+      shift 2
+      ;;
+    --message)
+      MESSAGE="$2"
+      shift 2
+      ;;
+    --level)
+      LEVEL="$2"
+      shift 2
+      ;;
+    --sound)
+      SOUND=true
+      shift
+      ;;
+    --tts)
+      TTS=true
+      shift
+      ;;
+    --dry-run)
+      DRY_RUN=true
+      shift
+      ;;
+    --debug)
+      DEBUG=true
+      shift
+      ;;
+    --help)
+      usage
+      ;;
+    *)
+      echo "Error: Unknown option '$1'" >&2
+      echo "Run 'notify --help' for usage" >&2
+      exit 1
+      ;;
+  esac
+done
+
+# Validate required arguments
+if [[ -z "$TITLE" ]]; then
+  echo "Error: --title is required" >&2
+  exit 1
+fi
+
+if [[ -z "$MESSAGE" ]]; then
+  echo "Error: --message is required" >&2
+  exit 1
+fi
+
+# Validate level
+if [[ ! "$LEVEL" =~ ^(info|warn|error)$ ]]; then
+  echo "Error: --level must be one of: info, warn, error" >&2
+  exit 1
+fi
+
+# Check for PowerShell availability (WSL bridge to Windows)
+#
+# In WSL, `powershell.exe` is sometimes not on PATH, but is typically available at:
+#   /mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe
+HAS_POWERSHELL=false
+POWERSHELL_BIN=""
+
+if command -v powershell.exe >/dev/null 2>&1; then
+  HAS_POWERSHELL=true
+  POWERSHELL_BIN="powershell.exe"
+elif [[ -x "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe" ]]; then
+  HAS_POWERSHELL=true
+  POWERSHELL_BIN="/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
+fi
+
+# Dry-run mode
+if [[ "$DRY_RUN" == "true" ]]; then
+  echo "=== DRY RUN ==="
+  echo "Title: $TITLE"
+  echo "Message: $MESSAGE"
+  echo "Level: $LEVEL"
+  echo "Sound: $SOUND"
+  echo "TTS: $TTS"
+  echo "PowerShell available: $HAS_POWERSHELL"
+  echo "Debug: $DEBUG"
+
+  if [[ "$HAS_POWERSHELL" == "true" ]]; then
+    echo "Would execute: PowerShell toast notification"
+  else
+    echo "Would execute: Console fallback (PowerShell not available)"
+  fi
+
+  if [[ "$SOUND" == "true" ]]; then
+    echo "Would execute: Play Windows system sound (Exclamation)"
+  fi
+
+  if [[ "$TTS" == "true" ]]; then
+    echo "Would execute: Speak message using SAPI.SpVoice"
+  fi
+
+  exit 0
+fi
+
+# Execute sound and TTS (best-effort, never fail)
+if [[ "$HAS_POWERSHELL" == "true" ]]; then
+  # Escape single quotes in PowerShell strings
+  ESCAPED_TITLE="${TITLE//\'/\'\'}"
+  ESCAPED_MESSAGE="${MESSAGE//\'/\'\'}"
+
+  # Play sound if requested (best-effort)
+  if [[ "$SOUND" == "true" ]]; then
+    "$POWERSHELL_BIN" -NoProfile -Command "
+      try {
+        [System.Media.SystemSounds]::Exclamation.Play()
+      } catch {
+        # Silently ignore sound errors
+      }
+    " >/dev/null 2>&1 || true
+  fi
+
+  # Speak message if requested (best-effort)
+  if [[ "$TTS" == "true" ]]; then
+    "$POWERSHELL_BIN" -NoProfile -Command "
+      try {
+        \$speak = New-Object -ComObject SAPI.SpVoice
+        \$speak.Speak('$ESCAPED_MESSAGE') | Out-Null
+      } catch {
+        # Silently ignore TTS errors
+      }
+    " >/dev/null 2>&1 || true
+  fi
+fi
+
+# Execute notification
+if [[ "$HAS_POWERSHELL" == "true" ]]; then
+  # Use PowerShell to show Windows toast notification
+  # Note: BurntToast module would be better, but requires installation.
+  # We use a simple approach that works on all Windows 10/11 systems.
+  ps_output=$("$POWERSHELL_BIN" -NoProfile -Command "
+    try {
+      [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
+      [Windows.UI.Notifications.ToastNotification, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
+      [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime] | Out-Null
+
+      \$template = @\"
+<toast>
+  <visual>
+    <binding template='ToastGeneric'>
+      <text>$ESCAPED_TITLE</text>
+      <text>$ESCAPED_MESSAGE</text>
+    </binding>
+  </visual>
+</toast>
+\"@
+
+      \$xml = New-Object Windows.Data.Xml.Dom.XmlDocument
+      \$xml.LoadXml(\$template)
+      \$toast = New-Object Windows.UI.Notifications.ToastNotification \$xml
+      # Use default notifier AppID (more reliable than a custom AppID in many environments)
+      [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier().Show(\$toast)
+      exit 0
+    } catch {
+      # Fallback: classic tray balloon (often works even when toast is blocked)
+      try {
+        Add-Type -AssemblyName System.Windows.Forms | Out-Null
+        Add-Type -AssemblyName System.Drawing | Out-Null
+        \$n = New-Object System.Windows.Forms.NotifyIcon
+        \$n.Icon = [System.Drawing.SystemIcons]::Information
+        \$n.BalloonTipTitle = '$ESCAPED_TITLE'
+        \$n.BalloonTipText = '$ESCAPED_MESSAGE'
+        \$n.Visible = \$true
+        \$n.ShowBalloonTip(5000)
+        Start-Sleep -Milliseconds 200
+        \$n.Dispose()
+        exit 0
+      } catch {
+        Write-Error \$_
+        exit 1
+      }
+    }
+  " 2>&1)
+  ps_exit=$?
+
+  if [[ $ps_exit -ne 0 ]]; then
+    if [[ "$DEBUG" == "true" ]] && [[ -n "$ps_output" ]]; then
+      echo "notify: PowerShell notification failed:" >&2
+      echo "$ps_output" >&2
+    fi
+
+    # Fallback if toast fails
+    echo "[$LEVEL] $TITLE: $MESSAGE"
+  fi
+
+  # If not debugging, suppress PowerShell output.
+  if [[ "$DEBUG" != "true" ]]; then
+    :
+  fi
+else
+  # Console fallback when PowerShell is unavailable
+  echo "[$LEVEL] $TITLE: $MESSAGE"
+fi
+
+exit 0

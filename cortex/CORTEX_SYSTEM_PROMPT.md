@@ -122,6 +122,7 @@ Before ending any session where substantial knowledge was discussed, write a sum
 - [ ] **Templates updated:** If I changed workers/ralph/, did templates/ralph/ need it too?
 - [ ] **Complex workflow?** Did I learn something multi-file? → Document in `skills/`
 - [ ] **Protected file changed?** → Regen hashes in ALL `.verify/` dirs
+- [ ] **Plan contract check (if editing IMPLEMENTATION_PLAN.md):** Ensure every pending task has **Goal**, **AC**, and **If Blocked** (run: `bash cortex/cleanup_cortex_plan.sh --dry-run`)
 
 ### 🔁 AFTER User Feedback
 

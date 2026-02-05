@@ -191,11 +191,13 @@ CodeRabbit has identified **50+ issues** across PR5 and PR6, with significant ov
 
 ### C2: Shell README Config Mismatch (New in PR6)
 
-**Status:** ⬜ Open  
+**Status:** ✅ Closed  
 **File:** `skills/domains/languages/shell/README.md` line 64  
 **PR:** #6 (PI-1)
 
 **Issue:** README documents shfmt configuration that doesn't match actual `.pre-commit-config.yaml`.
+
+**Resolution:** Verified with `tools/validate_doc_sync.sh` - documentation correctly distinguishes between manual usage (`-i 2 -ci -w`) and pre-commit check mode (`-d -i 2 -ci`). Config and docs are in sync.
 
 **Prevention:** Documentation-config sync validation script.
 
@@ -361,6 +363,158 @@ CodeRabbit has identified **50+ issues** across PR5 and PR6, with significant ov
 **Issue:** Incorrect or misleading documentation.
 
 **Prevention:** Documentation review checklist.
+
+---
+
+### M13: Notification Wrapper Default Mismatch (New)
+
+**Status:** ⬜ Open  
+**Files:**
+
+- `bin/cortex-run-notify` (`MIN_SECONDS_DEFAULT` vs help text)
+- `templates/ralph/bin/cortex-run-notify` (same mismatch)
+
+**Issue:** Help text documents `--min-seconds` default as 60 but code default is 120.
+
+**Fix:** Make the help text and constant agree (and keep repo + template in sync).
+
+**Prevention:** Add a checklist item: "Help/usage defaults must match constants" for wrapper scripts.
+
+---
+
+### M14: bin/notify Broken Redirection Argument (New)
+
+**Status:** ⬜ Open  
+**File:** `bin/notify` (PowerShell invocation block)
+
+**Issue:** The script passes a literal string like `">/dev/null 2>&1"` as an argument rather than performing shell redirection.
+
+**Fix:** Capture PowerShell combined output into a variable and only print it when `--debug` is enabled; otherwise fall back to console output.
+
+**Prevention:** Document/avoid "stringly-typed redirection"; use `cmd ... >/dev/null 2>&1` or `output=$(cmd 2>&1)` patterns.
+
+---
+
+### M15: Wrapper Flag Parsing Unsafe Under set -u (New)
+
+**Status:** ⬜ Open  
+**Files:**
+
+- `bin/ralph-run-notify` (`--log`, `--min-seconds`)
+- `templates/ralph/bin/ralph-run-notify` (same logic)
+
+**Issue:** Case arms read `$2` and `shift 2` without validating the value exists and is not another flag.
+
+**Fix:** Guard `${2:-}` and reject missing/flag-like values before assignment + shifting.
+
+**Prevention:** Add shell wrapper argument-parsing tests (missing value, next-flag-as-value).
+
+---
+
+### M16: Wrapper Array Expansion Nounset Risk (New)
+
+**Status:** ⬜ Open  
+**Files:**
+
+- `bin/ralph-run-notify` and templates variant (DRY_RUN uses `${LOOP_ARGS[*]}`)
+
+**Issue:** Under `set -u`, empty/unset arrays can trigger "unbound variable" in some expansions.
+
+**Fix:** Use safe default expansions where appropriate (e.g., `${arr[*]:-}`) and keep quoted `"${arr[@]}"` for execution.
+
+**Prevention:** Wrapper template pattern should standardize safe dry-run printing for arrays.
+
+---
+
+### M17: skill-suggest Description Fallback Never Runs (New)
+
+**Status:** ⬜ Open  
+**File:** `bin/skill-suggest`
+
+**Issue:** `grep | sed || head -1` never falls back because `sed` returns success even when `grep` outputs nothing.
+
+**Fix:** Compute heading-derived description first; if empty, fall back to `head -1`.
+
+**Prevention:** Avoid `cmd1 | cmd2 || fallback` when `cmd2` can succeed on empty input.
+
+---
+
+### M18: Template REPO_ROOT Calculation Incorrect (New)
+
+**Status:** ⬜ Open  
+**Files:**
+
+- `templates/ralph/bin/cortex-run-notify`
+- `templates/ralph/bin/ralph-run-notify`
+
+**Issue:** `REPO_ROOT` resolves to `templates/ralph` instead of repository root, breaking `tools/detect_human_required.py` lookup.
+
+**Fix:** Prefer `git -C "$SCRIPT_DIR" rev-parse --show-toplevel` with a fallback directory climb.
+
+**Prevention:** Document a standard `resolve_repo_root()` function for template scripts.
+
+---
+
+### M19: Template Wrapper Path Resolution (New)
+
+**Status:** ⬜ Open  
+**Files:**
+
+- `templates/cortex/cortex-PROJECT.bash`
+- `templates/cortex/cortex.bash`
+
+**Issue:** Template scripts call wrappers at CWD-relative paths (`bin/...`), which can fail when invoked from a different working directory or when the generated project layout differs.
+
+**Fix:**
+
+- Resolve and validate wrapper path from a known root (`PROJECT_ROOT`/`BRAIN_ROOT`) before invocation.
+- For Cortex chat template, invoke the wrapper as an absolute path: `${BRAIN_ROOT}/bin/cortex-run-notify`.
+
+**Prevention:** Template scripts should never assume CWD-relative `bin/...` exists without `test -x`, and should avoid relative wrapper execution.
+
+---
+
+### M20: Coverage Artifact URL Missing Guard (New)
+
+**Status:** ⬜ Open  
+**File:** `skills/domains/code-quality/test-coverage-patterns.md`
+
+**Issue:** Script example uses `ARTIFACT_URL` without checking it is non-empty; `curl` may run with an empty URL.
+
+**Fix:** Guard for empty `ARTIFACT_URL` and print an actionable error mentioning `coverage-summary` + `RUN_ID`.
+
+**Prevention:** Example validation should include "required variable non-empty" checks for external fetches.
+
+---
+
+### M21: Cache Debugging SQL Column Name Drift (New)
+
+**Status:** ⬜ Open  
+**File:** `skills/domains/ralph/cache-debugging.md`
+
+**Issue:** Example SQL uses `last_used_at` but schema documents `last_pass_ts`.
+
+**Fix:** Replace `last_used_at` with `last_pass_ts` (and ensure consistency across the document).
+
+**Prevention:** Keep schema and example queries adjacent and cross-check during edits.
+
+---
+
+### M22: ralph-run-notify Uses CWD-Relative loop.sh Path (New)
+
+**Status:** ⬜ Open  
+**Files:**
+
+- `bin/ralph-run-notify`
+- `templates/ralph/bin/ralph-run-notify`
+
+**Issue:** Wrapper executes `bash workers/ralph/loop.sh ...` which fails if invoked from a different CWD.
+
+**Fix:** Use absolute path derived from `REPO_ROOT`:
+
+- `bash "${REPO_ROOT}/workers/ralph/loop.sh" "${LOOP_ARGS[@]}"`
+
+**Prevention:** Wrapper/template scripts should avoid CWD-relative execution for internal entrypoints; prefer `REPO_ROOT` + absolute paths.
 
 ---
 

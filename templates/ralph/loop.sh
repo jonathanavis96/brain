@@ -166,6 +166,80 @@ _loop_emitted_end=false
 cleanup_and_emit() {
   local exit_code=$?
 
+  # Notify on loop termination (only once, after the run actually started)
+  if [[ "$LOOP_RUN_STARTED" == "true" ]]; then
+    local notify_bin="$ROOT/bin/notify"
+    if [[ -x "$notify_bin" ]]; then
+      local level="info"
+      local title="Ralph"
+      local message=""
+      local reason=""
+      local sound=false
+      local tts=false
+
+      # Prefer explicit reason/message if set
+      if [[ -n "${LOOP_STOP_REASON:-}" ]]; then
+        reason="${LOOP_STOP_REASON}"
+        if [[ -n "${LOOP_STOP_MESSAGE:-}" ]]; then
+          reason="${reason}: ${LOOP_STOP_MESSAGE}"
+        fi
+      else
+        # Derive from exit code
+        if [[ $exit_code -eq 0 ]]; then
+          reason="completed"
+        elif [[ $exit_code -eq 130 ]]; then
+          reason="interrupted"
+        else
+          reason="stopped"
+        fi
+      fi
+
+      case "$reason" in
+        completed*)
+          level="info"
+          title="Ralph complete"
+          message="Ralph complete, Please review"
+          tts=true
+          ;;
+        interrupted*)
+          level="warn"
+          title="Ralph interrupted"
+          message="Stopped"
+          ;;
+        *HUMAN*|*human*|*intervention*)
+          level="warn"
+          title="Ralph needs you"
+          message="Ralph needs you, Please review"
+          sound=true
+          tts=true
+          ;;
+        *)
+          if [[ $exit_code -ne 0 ]]; then
+            level="error"
+            title="Ralph error"
+            message="Ralph Error, stopped, Please fix"
+            sound=true
+            tts=true
+          else
+            level="info"
+            title="Ralph stopped"
+            message="Stopped"
+          fi
+          ;;
+      esac
+
+      local notify_args=(--level "$level" --title "$title" --message "$message")
+      if [[ "$sound" == "true" ]]; then
+        notify_args+=(--sound)
+      fi
+      if [[ "$tts" == "true" ]]; then
+        notify_args+=(--tts)
+      fi
+
+      "$notify_bin" "${notify_args[@]}" >/dev/null 2>&1 || true
+    fi
+  fi
+
   # Avoid double-emission
   if [[ "$_loop_emitted_end" == "true" ]]; then
     cleanup
@@ -834,7 +908,11 @@ parse_verifier_failures() {
 # Check if Ralph requested human intervention in the log
 check_human_intervention() {
   local log_file="$1"
-  # Strip ANSI codes and check for human intervention marker
+  # Strip ANSI codes and check for canonical marker first
+  if sed 's/\x1b\[[0-9;]*m//g' "$log_file" | grep -qE '^\s*:::HUMAN_REQUIRED:::'; then
+    return 0 # intervention needed
+  fi
+  # Legacy fallback: check for old-style marker
   if sed 's/\x1b\[[0-9;]*m//g' "$log_file" | grep -q 'HUMAN INTERVENTION REQUIRED'; then
     return 0 # intervention needed
   fi
@@ -1914,6 +1992,14 @@ export ROLLFLOW_RUN_ID
 log_run_start "$ROLLFLOW_RUN_ID"
 
 # Print cache status reminder if enabled
+# Generate RollFlow run ID and log run start marker
+ROLLFLOW_RUN_ID="run-$(date +%s)-$$"
+export ROLLFLOW_RUN_ID
+log_run_start "$ROLLFLOW_RUN_ID"
+
+# From this point on, we consider the run "started" (enable end-of-run notifications)
+LOOP_RUN_STARTED=true
+
 if [[ "$CACHE_SKIP" == "true" ]]; then
   echo ""
   echo "========================================"
@@ -1990,6 +2076,7 @@ if [[ -n "$PROMPT_ARG" ]]; then
       echo "  sha256sum rules/AC.rules | cut -d' ' -f1 > ../.verify/ac.sha256"
       echo ""
       echo "After resolving, re-run the loop to continue."
+      emit_marker ":::HUMAN_REQUIRED::: protected file hash mismatches"
       exit 1
     fi
 
@@ -2185,6 +2272,7 @@ else
       echo "  sha256sum rules/AC.rules | cut -d' ' -f1 > ../.verify/ac.sha256"
       echo ""
       echo "After resolving, re-run the loop to continue."
+      emit_marker ":::HUMAN_REQUIRED::: protected file hash mismatches"
       exit 1
     fi
 
@@ -2241,7 +2329,7 @@ else
         if [[ -f "$RALPH/fix-markdown.sh" ]]; then
           bash "$RALPH/fix-markdown.sh" "$ROOT" 2>&1 | tail -10 || true
         fi
-        
+
         echo "Checking for remaining markdown lint errors..."
         lint_output=$(markdownlint "$ROOT" 2>&1 | grep -E "error MD" | head -40) || true
         if [[ -n "$lint_output" ]]; then

@@ -522,3 +522,39 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-02-01 | WARN.MD040.test_md040.md | - [x] **WARN.MD040.test_md040.md** - Fix MD040 in tools/tests/fixtures/test_md040.md |
 | 2026-02-01 | 39.5.1 | - [x] **39.5.1** Run semantic review during PLAN only (not BUILD) |
 | 2026-02-01 | 39.6.1 | - [x] **39.6.1** Verify BUILD never commits; PLAN commits still occur; end-of-run always commits |
+
+### Archived on 2026-02-03 13:18:57
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-02-03 | 40.3.1 | - [x] **40.3.1** Create `docs/review-checklist.txt` |
+| 2026-02-03 | 40.3.2 | - [x] **40.3.2** Reference the checklist from `AGENTS.md` |
+| 2026-02-03 | 40.4 | - [x] **40.4** (Optional) Worktree + plan handoff conventions (docs-only) |
+| 2026-02-03 | 41.8.1 | - [x] **41.8.1** Git hygiene: add `*.egg-info/` to `.gitignore` |
+| 2026-02-03 | 41.8.2 | - [x] **41.8.2** Git hygiene: remove any tracked `*.egg-info/` from git index (if present) |
+| 2026-02-03 | 41.4.1 | - [x] **41.4.1** Fix M10: repair `workers/ralph/THUNK.md` table formatting |
+| 2026-02-03 | 41.2 | - [x] **41.2** Fix C2: Shell README config mismatch |
+| 2026-02-03 | 41.7.1 | - [x] **41.7.1** Fix m6: correct Jest flag example in `skills/domains/code-quality/test-coverage-patterns.md` |
+| 2026-02-03 | 41.7.2 | - [x] **41.7.2** Fix m6: correct artifacts endpoint example in `skills/domains/code-quality/test-coverage-patterns.md` |
+| 2026-02-03 | 41.5.1 | - [x] **41.5.1** Fix m1: remove stray/duplicate code fences in `skills/domains/infrastructure/observability-patterns.md` |
+| 2026-02-03 | 41.5.2 | - [x] **41.5.2** Fix m1: correct SQL placeholder style + injection-risk example in `skills/domains/infrastructure/observability-patterns.md` |
+| 2026-02-03 | 41.5.3 | - [x] **41.5.3** Fix m1: correct Python example issues in `skills/domains/infrastructure/observability-patterns.md` |
+| 2026-02-03 | 41.5.4 | - [x] **41.5.4** Fix m1: correct metrics middleware example in `skills/domains/infrastructure/observability-patterns.md` |
+| 2026-02-03 | 41.6.1 | - [x] **41.6.1** Fix m4: correct future date in `skills/domains/languages/typescript/README.md` |
+| 2026-02-03 | 41.6.2 | - [x] **41.6.2** Fix m4: confirm repo has no future dates |
+| 2026-02-03 | 41.1 | - [x] **41.1** (Last) Convert additional OPEN tracker items into new atomic plan tasks (bounded) |
+| 2026-02-03 | 43.1 | - [x] **43.1** Fix M1: bin/brain-event flag parsing bugs |
+| 2026-02-03 | 43.2 | - [x] **43.2** Fix M2: cleanup() not called in trap (loop.sh) |
+| 2026-02-03 | 43.3 | - [x] **43.3** Fix M3: lookup_cache_pass missing argument (loop.sh) |
+| 2026-02-03 | 43.4 | - [x] **43.4** Fix M4: cache-hit returns before cleanup (loop.sh) |
+| 2026-02-03 | 43.5 | - [x] **43.5** Fix M10: workers/ralph/THUNK.md table column mismatch |
+| 2026-02-03 | 42.1 | - [x] **42.1** Fix MD001 in `docs/still-to-do/claude_team_workflow_tricks_mapping_plan.md` |
+| 2026-02-03 | 42.2 | - [x] **42.2** Fix brain-event flag parsing regression |
+| 2026-02-03 | 42.3 | - [x] **42.3** BATCH: Fix MD056 table column count errors in `TEMPLATE_DRIFT_REPORT.md` |
+| 2026-02-03 | 42.4 | - [x] **42.4** Fix MD040 in `TEMPLATE_DRIFT_REPORT.md` |
+
+### Archived on 2026-02-04 20:34:52
+
+| Date | Task ID | Description |
+|------|---------|-------------|
+| 2026-02-04 | 6.7 | - [x] **6.7** Voice (dictation): Document the intended workflow (Windows-native) |

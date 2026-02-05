@@ -14,20 +14,25 @@ This file documents all bugs found and fixed during semantic reviews. Before fix
 **Files**: `workers/ralph/update_thunk_from_plan.sh`
 
 ### Symptoms
+
 Existing THUNK tasks not detected during deduplication, causing duplicate entries to be appended every time the script runs after the first append.
 
 ### Root Cause
+
 The grep pattern in `get_existing_original_ids()` was over-escaped: `'^\\|[[:space:]]*[0-9]+[[:space:]]*\\|'`
 
 The double backslashes (`\\|`) look for a literal backslash character before the pipe, instead of matching the pipe itself. This made `existing_original_ids` always empty, so no duplicates were ever detected.
 
 ### Fix Applied
+
 Changed the pattern from `'^\\|'` to `'^\|'` (single backslash):
+
 ```bash
 grep -E '^\|[[:space:]]*[0-9]+[[:space:]]*\|' "$THUNK_FILE"
 ```
 
 ### Prevention
+
 - In grep patterns, use single backslash for escaping special regex characters
 - Test regex patterns with sample data before committing
 - Add unit tests for deduplication logic with existing entries
@@ -42,13 +47,17 @@ grep -E '^\|[[:space:]]*[0-9]+[[:space:]]*\|' "$THUNK_FILE"
 **Files**: `app/brain-map/frontend/src/App.jsx`
 
 ### Symptoms
+
 User-controlled data (node title, body, tags, type, status) injected directly into HTML via `innerHTML`, allowing script execution. An attacker could create a node with title `<img src=x onerror=alert('XSS')>` and execute arbitrary JavaScript.
 
 ### Root Cause
+
 Using `panel.innerHTML = \`<h3>${editedNode?.title}</h3>...\`` without sanitization. Template literals with user data inserted directly into HTML create XSS vulnerabilities.
 
 ### Fix Applied
+
 Replaced `innerHTML` with safe DOM methods (65+ lines of changes):
+
 ```javascript
 // Before (UNSAFE):
 panel.innerHTML = `<h3>${editedNode?.title}</h3>`
@@ -60,11 +69,13 @@ panel.appendChild(titleEl)
 ```
 
 Built entire DOM tree programmatically using:
+
 - `document.createElement()` for structure
 - `textContent` for all user data (auto-escapes)
 - Event listeners instead of inline onclick handlers
 
 ### Prevention
+
 - **Never** use `innerHTML` with user-controlled data
 - Use `textContent`, `createTextNode()`, or DOMPurify library for sanitization
 - Prefer React components over raw DOM manipulation (already using React elsewhere)
@@ -81,13 +92,17 @@ Built entire DOM tree programmatically using:
 **Files**: `scripts/new-project.sh`
 
 ### Symptoms
+
 If `$PROJECT_LOCATION` variable is unset or empty, `rm -rf "$PROJECT_LOCATION/brain/skills"` could delete unintended files (e.g., `rm -rf /brain/skills` at filesystem root).
 
 ### Root Cause
+
 No validation before destructive `rm -rf` operations. Shell expands empty variables to empty strings, making the path unpredictable.
 
 ### Fix Applied
+
 Added comprehensive validation before `rm -rf`:
+
 ```bash
 # Safety check: Ensure PROJECT_LOCATION is set and non-empty
 if [[ -z "${PROJECT_LOCATION:-}" ]]; then
@@ -106,6 +121,7 @@ fi
 ```
 
 ### Prevention
+
 - **Always** validate variables before `rm -rf`
 - Use `${VAR:-}` to prevent unset variable errors
 - Require absolute paths for destructive operations
@@ -123,12 +139,15 @@ fi
 **Files**: `app/brain-map/backend/app/main.py`
 
 ### Symptoms
+
 FastAPI CORS middleware configured with `allow_credentials=True` but no CSRF token validation, making the API vulnerable to cross-site request forgery attacks.
 
 ### Root Cause
+
 Misunderstanding of CORS security model. `allow_credentials=True` allows cookies/auth headers to be sent cross-origin, but without CSRF protection, malicious sites can make authenticated requests.
 
 ### Fix Applied
+
 1. Changed `allow_credentials=True` to `allow_credentials=False` (no cookies/sessions used)
 2. Added comprehensive security documentation explaining localhost-only model
 3. Explicitly limited allowed methods and headers
@@ -144,6 +163,7 @@ app.add_middleware(
 ```
 
 ### Prevention
+
 - Only enable `allow_credentials` if using cookie-based auth AND implementing CSRF tokens
 - For localhost-only apps, use `allow_credentials=False`
 - Document security model explicitly (authentication, CSRF, rate limiting, TLS)
@@ -160,12 +180,15 @@ app.add_middleware(
 **Files**: `app/brain-map/backend/app/main.py`, `app/brain-map/backend/requirements.txt`
 
 ### Symptoms
+
 No rate limiting on POST/PUT/DELETE endpoints, allowing unlimited requests that could cause denial of service or abuse expensive operations (e.g., index rebuild).
 
 ### Root Cause
+
 Default FastAPI configuration has no rate limiting. Even for localhost apps, accidental infinite loops or bugs can cause self-DoS.
 
 ### Fix Applied
+
 1. Added `slowapi==0.1.9` to requirements.txt
 2. Configured global rate limiter with `get_remote_address` key function
 3. Applied decorators to all mutating endpoints:
@@ -185,6 +208,7 @@ async def create_node(request: Request, node_data: NodeCreate) -> dict:
 ```
 
 Rate limits applied:
+
 - Position updates: 60/minute
 - Node updates: 30/minute
 - Comments: 20/minute
@@ -192,6 +216,7 @@ Rate limits applied:
 - Plan generation: 10/minute (expensive)
 
 ### Prevention
+
 - **Always** add rate limiting to public endpoints (even localhost)
 - Use lower limits for expensive operations (searches, reports, AI calls)
 - Add `Request` parameter to all rate-limited functions
@@ -208,13 +233,17 @@ Rate limits applied:
 **Files**: `app/brain-map/backend/app/main.py`
 
 ### Symptoms
+
 `body_md` field in `NodeCreate` and `NodeUpdate` models has no maximum length, allowing massive payloads that could cause memory exhaustion or DoS.
 
 ### Root Cause
+
 Pydantic models default to unlimited string length. Without explicit `max_length`, users can send multi-gigabyte payloads.
 
 ### Fix Applied
+
 Added `max_length=100000` (100KB limit) to body fields:
+
 ```python
 # Before:
 body_md: str = ""
@@ -227,6 +256,7 @@ body_md: str | None = Field(default=None, max_length=100000)
 ```
 
 ### Prevention
+
 - Always set `max_length` on user-input string fields
 - Consider business requirements (code snippets vs full documents)
 - Add similar limits to other text fields (title, tags, comments)
@@ -243,13 +273,17 @@ body_md: str | None = Field(default=None, max_length=100000)
 **Files**: `app/brain-map/frontend/src/App.jsx`
 
 ### Symptoms
+
 `console.error('Failed to refresh graph:', err)` exposes error details in browser console, potentially leaking sensitive information.
 
 ### Root Cause
+
 Debug statement left in production code. While low severity for localhost apps, it's poor practice and could expose implementation details.
 
 ### Fix Applied
+
 Replaced with toast notification:
+
 ```javascript
 // Before:
 console.error('Failed to refresh graph:', err)
@@ -259,6 +293,7 @@ showToast('Failed to refresh graph: ' + err.message)
 ```
 
 ### Prevention
+
 - Use proper error logging/notification systems instead of console methods
 - Run linters to catch console.* statements (eslint-plugin-no-console)
 - Set up proper logging service for production (Sentry, LogRocket)
@@ -274,13 +309,17 @@ showToast('Failed to refresh graph: ' + err.message)
 **Files**: `app/brain-map/backend/app/main.py`
 
 ### Symptoms
+
 API endpoints have no version prefix (e.g., `/api/v1/`), making it difficult to introduce breaking changes in the future.
 
 ### Root Cause
+
 FastAPI default configuration uses root path `/`. Without versioning from the start, adding it later requires coordinating frontend/backend changes.
 
 ### Fix Applied
+
 Added `root_path="/api/v1"` to FastAPI app:
+
 ```python
 app = FastAPI(
     title="Brain Map API",
@@ -292,6 +331,7 @@ app = FastAPI(
 ```
 
 ### Prevention
+
 - **Always** version APIs from day one (even localhost apps)
 - Use path-based versioning (`/api/v1/`) or header-based (`Accept: application/vnd.api+json; version=1`)
 - Document versioning strategy in API docs
@@ -307,13 +347,17 @@ app = FastAPI(
 **Files**: `bin/brain-search`
 
 ### Symptoms
+
 Initial review identified potential SQL injection in cache search where `$QUERY` appeared to be directly interpolated into SQL without escaping.
 
 ### Root Cause
+
 False alarm - the variable was named `QUERY_SQL_ESCAPED` but appeared unused in initial scan. Closer inspection revealed proper escaping was already implemented at line 126.
 
 ### Fix Applied
+
 No fix needed - code already correctly escapes single quotes:
+
 ```bash
 # Line 126: Pre-escape query for safe interpolation into SQLite string literals
 # SQLite escapes single quotes by doubling them: ' -> ''
@@ -327,6 +371,7 @@ local query_sql="SELECT tool_name, timestamp, status, duration_ms
 ```
 
 ### Prevention
+
 - **Always** name SQL-escaped variables clearly (e.g., `QUERY_SQL_ESCAPED`)
 - Add comments explaining the escaping mechanism
 - Use parameterized queries where possible (not available in sqlite3 CLI)
@@ -342,13 +387,17 @@ local query_sql="SELECT tool_name, timestamp, status, duration_ms
 **Files**: `scripts/new-project.sh`
 
 ### Symptoms
+
 The `rm -rf` operation at line 636 could potentially delete unintended directories if `PROJECT_LOCATION` is manipulated or contains special characters.
 
 ### Root Cause
+
 While absolute path validation existed, there was no verification that the path actually points to a valid project directory before running destructive operations.
 
 ### Fix Applied
+
 Added additional safety check before rm -rf:
+
 ```bash
 # Additional safety: Verify this looks like a project directory
 # Check for either .gitignore (already created) or brain/ directory marker
@@ -358,6 +407,7 @@ fi
 ```
 
 ### Prevention
+
 - **Never** run `rm -rf` without multiple safety checks
 - Validate paths contain expected markers before destructive operations
 - Consider using safer alternatives (e.g., `rm -rf "$dir"/{known,list,of,subdirs}`)
@@ -374,13 +424,17 @@ fi
 **Files**: `app/brain-map/frontend/src/GraphView.jsx`
 
 ### Symptoms
+
 The timeline animation useEffect (line 341) was missing `timelineFilter.selectedDate` from its dependency array, which could be flagged as a bug by linters or confuse future developers.
 
 ### Root Cause
+
 The effect intentionally excludes `selectedDate` because it updates that value internally via `setInterval`. Including it in deps would cause the interval to restart on every tick, breaking the animation. This is correct behavior but wasn't documented.
 
 ### Fix Applied
+
 Added clarifying comment:
+
 ```javascript
 }, [isPlaying, timelineFilter.active, timelineFilter.minDate, timelineFilter.maxDate])
 // Note: timelineFilter.selectedDate intentionally excluded from deps - it's updated
@@ -390,6 +444,7 @@ Added clarifying comment:
 ```
 
 ### Prevention
+
 - **Always** document intentional dependency omissions in useEffect
 - Add eslint-disable comments if necessary: `// eslint-disable-next-line react-hooks/exhaustive-deps`
 - Consider refactoring to avoid confusing patterns (use refs for interval state)
@@ -405,13 +460,17 @@ Added clarifying comment:
 **Files**: `app/brain-map/backend/app/index.py`
 
 ### Symptoms
+
 If two processes call `rebuild_index()` simultaneously (e.g., file watcher + manual rebuild), they could both succeed in building temp databases but race on the final `Path(temp_db_path).replace(index_path)`, potentially publishing a partially-built or corrupted index.
 
 ### Root Cause
+
 No locking mechanism prevented concurrent rebuilds. The atomic `replace()` operation is atomic per-file but doesn't prevent two processes from racing to publish different versions.
 
 ### Fix Applied
+
 Added file-based exclusive locking using fcntl:
+
 ```python
 import fcntl
 import os
@@ -444,6 +503,7 @@ def rebuild_index() -> RebuildDiagnostics:
 ```
 
 ### Prevention
+
 - **Always** use locking for expensive operations that modify shared resources
 - Use `LOCK_NB` (non-blocking) to fail fast rather than queue
 - Document lock files in .gitignore
@@ -461,13 +521,17 @@ def rebuild_index() -> RebuildDiagnostics:
 **Files**: `app/brain-map/frontend/src/App.jsx`
 
 ### Symptoms
+
 Build output showed bundle size of 643KB (165KB gzipped), causing slow initial page load. Vite warned: "Some chunks are larger than 500 kB after minification."
 
 ### Root Cause
+
 GraphView component and its dependencies (sigma.js, graph algorithms) were included in the main bundle, forcing users to download all graph visualization code before seeing any UI.
 
 ### Fix Applied
+
 Implemented React code splitting with lazy loading:
+
 ```javascript
 import { lazy, Suspense } from 'react'
 
@@ -493,6 +557,7 @@ const GraphView = lazy(() => import('./GraphView'))
 ```
 
 ### Prevention
+
 - **Always** implement code splitting for large third-party libraries
 - Use `lazy()` for route-level and feature-level components
 - Monitor bundle size in CI: `npm run build -- --json > build-stats.json`

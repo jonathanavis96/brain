@@ -274,9 +274,9 @@ existing_task_ids=$(grep -oE '\|[[:space:]]*[^|]*[[:space:]]*\|[[:space:]]*[^|]*
     echo "  - **Archived At:** $current_date $current_time"
     echo "  - **Block:**"
     echo ""
-    echo "```markdown"
-    echo "$block"
-    echo "```"
+    printf '%s\n' '```markdown'
+    printf '%s\n' "$block"
+    printf '%s\n' '```'
     echo ""
   done
 } >>"$ARCHIVE_FILE"

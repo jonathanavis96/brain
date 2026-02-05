@@ -163,8 +163,88 @@ emit_event() {
 _loop_exit_code=0
 _loop_emitted_end=false
 
+# End-of-run notifications (Windows toast via WSL bridge)
+# Best-effort: never fail the loop due to notification issues.
+LOOP_RUN_STARTED=false
+LOOP_STOP_REASON=""
+LOOP_STOP_MESSAGE=""
+
 cleanup_and_emit() {
   local exit_code=$?
+
+  # Notify on loop termination (only once, after the run actually started)
+  if [[ "$LOOP_RUN_STARTED" == "true" ]]; then
+    local notify_bin="$ROOT/bin/notify"
+    if [[ -x "$notify_bin" ]]; then
+      local level="info"
+      local title="Ralph"
+      local message=""
+      local reason=""
+      local sound=false
+      local tts=false
+
+      # Prefer explicit reason/message if set
+      if [[ -n "${LOOP_STOP_REASON:-}" ]]; then
+        reason="${LOOP_STOP_REASON}"
+        if [[ -n "${LOOP_STOP_MESSAGE:-}" ]]; then
+          reason="${reason}: ${LOOP_STOP_MESSAGE}"
+        fi
+      else
+        # Derive from exit code
+        if [[ $exit_code -eq 0 ]]; then
+          reason="completed"
+        elif [[ $exit_code -eq 130 ]]; then
+          reason="interrupted"
+        else
+          reason="stopped"
+        fi
+      fi
+
+      case "$reason" in
+        completed*)
+          level="info"
+          title="Ralph complete"
+          message="Ralph complete, Please review"
+          tts=true
+          ;;
+        interrupted*)
+          level="warn"
+          title="Ralph interrupted"
+          message="Stopped"
+          ;;
+        *HUMAN*|*human*|*intervention*)
+          level="warn"
+          title="Ralph needs you"
+          message="Ralph needs you, Please review"
+          sound=true
+          tts=true
+          ;;
+        *)
+          if [[ $exit_code -ne 0 ]]; then
+            level="error"
+            title="Ralph error"
+            message="Ralph Error, stopped, Please fix"
+            sound=true
+            tts=true
+          else
+            level="info"
+            title="Ralph stopped"
+            message="Stopped"
+          fi
+          ;;
+      esac
+
+      local notify_args=(--level "$level" --title "$title" --message "$message")
+      if [[ "$sound" == "true" ]]; then
+        notify_args+=(--sound)
+      fi
+      if [[ "$tts" == "true" ]]; then
+        notify_args+=(--tts)
+      fi
+
+      "$notify_bin" "${notify_args[@]}" >/dev/null 2>&1 || true
+    fi
+  fi
 
   # Avoid double-emission
   if [[ "$_loop_emitted_end" == "true" ]]; then
@@ -194,7 +274,15 @@ INTERRUPT_RECEIVED=false
 
 # Cleanup function for temp files and lock
 cleanup() {
-  rm -f "$LOCK_FILE"
+  # Always release the lock on exit.
+  #
+  # Rationale: The loop installs `trap 'cleanup' EXIT` early, but only installs
+  # `trap 'cleanup_and_emit' EXIT` later (after the run is considered "started").
+  # Any early exit path (argument parsing failures, rollback/resume branches,
+  # etc.) must still remove the lock file so subsequent runs don't incorrectly
+  # fail with "loop already running".
+  release_lock
+
   if [[ -n "${TEMP_CONFIG:-}" && -f "${TEMP_CONFIG:-}" ]]; then
     rm -f "$TEMP_CONFIG"
   fi
@@ -838,9 +926,16 @@ parse_verifier_failures() {
 check_human_intervention() {
   local log_file="$1"
   # Strip ANSI codes and check for human intervention marker
+  # Canonical marker: :::HUMAN_REQUIRED::: <reason>
+  if sed 's/\x1b\[[0-9;]*m//g' "$log_file" | grep -qE '^\s*:::HUMAN_REQUIRED:::'; then
+    return 0 # intervention needed
+  fi
+
+  # Legacy fallback (older logs/fixtures)
   if sed 's/\x1b\[[0-9;]*m//g' "$log_file" | grep -q 'HUMAN INTERVENTION REQUIRED'; then
     return 0 # intervention needed
   fi
+
   return 1 # no intervention needed
 }
 
@@ -1687,7 +1782,7 @@ run_once() {
         echo "========================================"
         echo ""
         # Skip cache lookup, proceed with normal execution
-      elif lookup_cache_pass "$tool_key" "$git_sha" "${AGENT_NAME:-$RUNNER}"; then
+      elif lookup_cache_pass "$tool_key" "$git_sha" "$RUNNER"; then
         # Cache hit - skip tool execution
         local guard_ts=$(($(date +%s%N) / 1000000))
         emit_marker ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=no_pending_tasks phase=BUILD ts=${guard_ts}"
@@ -1724,6 +1819,8 @@ except Exception:
         if [[ -n "${TEMP_CONFIG:-}" && -f "${TEMP_CONFIG:-}" ]]; then
           rm -f "$TEMP_CONFIG"
         fi
+        # Cleanup temp prompt file before early return
+        rm -f "$prompt_with_mode"
         return 0
       else
         # Cache miss - proceed with execution
@@ -1734,7 +1831,7 @@ except Exception:
       fi
     else
       # PLAN phase - check cache normally
-      if lookup_cache_pass "$tool_key" "$git_sha" "${AGENT_NAME:-$RUNNER}"; then
+      if lookup_cache_pass "$tool_key" "$git_sha" "$RUNNER"; then
         # Cache hit - skip tool execution
         local guard_ts=$(($(date +%s%N) / 1000000))
         emit_marker ":::CACHE_GUARD::: iter=${iter} allowed=1 reason=idempotent_check phase=PLAN ts=${guard_ts}"
@@ -1859,6 +1956,10 @@ except Exception:
     echo "Ralph has indicated it cannot proceed without human help."
     echo "Review the log above for details."
     echo ""
+    # Emit canonical marker for downstream detectors/parsers.
+    # Note: no reliable reason extraction from arbitrary logs here; keep it generic.
+    local human_reason="ralph requested human intervention"
+    emit_marker ":::HUMAN_REQUIRED::: ${human_reason}"
     return 43 # Special return code for human intervention
   fi
 
@@ -2029,6 +2130,9 @@ ROLLFLOW_RUN_ID="run-$(date +%s)-$$"
 export ROLLFLOW_RUN_ID
 log_run_start "$ROLLFLOW_RUN_ID"
 
+# From this point on, we consider the run "started" (enable end-of-run notifications)
+LOOP_RUN_STARTED=true
+
 # Print cache status reminder if enabled
 if [[ "$CACHE_SKIP" == "true" ]]; then
   echo ""
@@ -2093,6 +2197,9 @@ if [[ -n "$PROMPT_ARG" ]]; then
       echo "========================================"
       echo "🛑 HUMAN INTERVENTION REQUIRED"
       echo "========================================"
+      LOOP_STOP_REASON="human intervention required"
+      LOOP_STOP_MESSAGE="protected file hash mismatches"
+      emit_marker ":::HUMAN_REQUIRED::: protected file hash mismatches"
       echo "Protected file hash mismatches detected: $LAST_VERIFIER_FAILED_RULES"
       echo ""
       echo "These files are protected and cannot be fixed by Ralph."
@@ -2146,6 +2253,8 @@ if [[ -n "$PROMPT_ARG" ]]; then
     if [[ $run_result -eq 42 ]]; then
       echo ""
       echo "Loop terminated early due to completion."
+      LOOP_STOP_REASON="completed"
+      LOOP_STOP_MESSAGE="Ralph signaled completion"
       break
     fi
     # Check if Ralph requested human intervention
@@ -2153,6 +2262,8 @@ if [[ -n "$PROMPT_ARG" ]]; then
       echo ""
       echo "Loop paused - human intervention required."
       echo "After resolving the issue, re-run the loop to continue."
+      LOOP_STOP_REASON="human intervention required"
+      LOOP_STOP_MESSAGE="Ralph requested human intervention"
       exit 1
     fi
     # Check if verifier failed (exit code 44) - give one retry then stop
@@ -2284,6 +2395,8 @@ else
       echo ""
       flush_scoped_commit_if_needed "graceful_interrupt"
       echo "Exiting gracefully after iteration $((i - 1))."
+      LOOP_STOP_REASON="interrupted"
+      LOOP_STOP_MESSAGE="Ctrl+C requested graceful exit"
       exit 130
     fi
 
@@ -2293,6 +2406,9 @@ else
       echo "========================================"
       echo "🛑 HUMAN INTERVENTION REQUIRED"
       echo "========================================"
+      LOOP_STOP_REASON="human intervention required"
+      LOOP_STOP_MESSAGE="protected file hash mismatches"
+      emit_marker ":::HUMAN_REQUIRED::: protected file hash mismatches"
       echo "Protected file hash mismatches detected: $LAST_VERIFIER_FAILED_RULES"
       echo ""
       echo "These files are protected and cannot be fixed by Ralph."
@@ -2546,6 +2662,8 @@ else
     if [[ $run_result -eq 42 ]]; then
       echo ""
       echo "Loop terminated early due to completion."
+      LOOP_STOP_REASON="completed"
+      LOOP_STOP_MESSAGE="Ralph signaled completion"
       break
     fi
     # Check if Ralph requested human intervention (exit code 43)
@@ -2553,6 +2671,8 @@ else
       echo ""
       echo "Loop paused - human intervention required."
       echo "After resolving the issue, re-run the loop to continue."
+      LOOP_STOP_REASON="human intervention required"
+      LOOP_STOP_MESSAGE="Ralph requested human intervention"
       exit 1
     fi
     # Check if verifier failed (exit code 44) - give one retry then stop

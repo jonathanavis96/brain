@@ -162,6 +162,7 @@ func metricsMiddleware(next http.HandlerFunc) http.HandlerFunc {
         defer activeConnections.Dec()
         
         // Wrap ResponseWriter to capture status code
+        // Default to 200 OK (HTTP standard default when WriteHeader is not explicitly called)
         wrappedWriter := &responseWriter{ResponseWriter: w, statusCode: http.StatusOK}
         
         // Call the actual handler
@@ -312,7 +313,7 @@ def get_order(order_id):
 def fetch_from_db(order_id):
     with tracer.start_as_current_span("db.query") as span:
         # SECURITY: Always use parameterized queries, never interpolate values into SQL
-        # PostgreSQL uses %s placeholders (psycopg2) or $1 (asyncpg)
+        # Example uses psycopg2-style placeholders (%s)
         span.set_attribute("db.statement", "SELECT * FROM orders WHERE id = %s")
         span.set_attribute("db.system", "postgresql")
         span.set_attribute("db.operation", "SELECT")
@@ -499,6 +500,11 @@ class AnomalyDetector:
 # Usage
 detector = AnomalyDetector(window_size=100, threshold_stddev=3)
 
+def send_alert(title, description, severity):
+    """Send alert to monitoring system (implementation depends on your alerting service)"""
+    # Example: POST to PagerDuty, Slack, or email service
+    pass
+
 def check_metric(metric_name, current_value):
     result = detector.add_value(current_value)
     
@@ -648,6 +654,7 @@ async function callDownstreamService(url: string, data: any, req: Request) {
 ```python
 import random
 from functools import wraps
+from datetime import datetime
 
 class SamplingLogger:
     def __init__(self, logger, sample_rate=0.1):
@@ -780,6 +787,49 @@ module.exports = { initTracing };
 
 8. **Vendor lock-in:** Using proprietary instrumentation makes migration hard
    - **Fix:** Use OpenTelemetry for vendor-neutral observability
+
+---
+
+## Real-World Example: Brain Repository Observability
+
+### Context
+
+The brain repository's Ralph loop system needed better observability to track iteration progress, identify bottlenecks, and debug failures. Multiple THUNK entries (#603, #1177-1181) document the evolution of observability patterns in practice.
+
+### Implementation Journey
+
+**Initial Creation (THUNK #603, 2026-01-24):**
+
+- Created comprehensive observability-patterns.md covering three pillars (logs/metrics/traces)
+- Documented structured logging (Winston/Python JSON), metrics collection (Prometheus/StatsD)
+- Added distributed tracing patterns with OpenTelemetry context propagation
+- Included alerting strategies and runbook templates
+
+**Refinement Through Validation (THUNK #1177-1181, 2026-02-02):**
+Multiple validation issues revealed real-world application challenges:
+
+1. **Code Example Correctness** - SQL injection examples needed proper parameterization
+2. **Metrics Middleware** - Express middleware required accurate Node.js patterns
+3. **Python Logging** - Fixed logger initialization and context passing
+
+### Key Learnings
+
+1. **Documentation Validation is Critical:** Even comprehensive guides need validation against actual usage patterns (validator caught 5+ issues in examples)
+2. **Language-Specific Nuances Matter:** Generic patterns must be adapted correctly for each language (Python logging vs Node.js Winston)
+3. **Iterative Refinement:** Initial creation is just step 1; real-world usage reveals edge cases requiring fixes
+4. **Examples Must Be Production-Ready:** Code examples should be copy-pasteable and follow security best practices
+
+### Impact
+
+- **Usage:** 5+ references in THUNK (most-used infrastructure skill)
+- **Quality Gates:** Patterns validated through brain's own verifier system
+- **Cross-Project Value:** Used as reference for observability in multiple brain tools (rollflow_analyze, gap_radar, task monitors)
+
+### References
+
+- THUNK #603: Initial observability-patterns.md creation
+- THUNK #1177-1181: Validation-driven refinements
+- See also: `tools/rollflow_analyze/` (applies these patterns for Ralph loop observability)
 
 ---
 

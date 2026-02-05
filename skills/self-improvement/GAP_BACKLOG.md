@@ -39,6 +39,7 @@ Rules:
 - **Priority:** P2
 - **Status:** Reviewed - Keep as reference
 - **Review notes (2026-01-18):** Does not meet "recurring" criteria. Very specialized for interactive terminal scripts. Only 2 monitor scripts in brain repo use this. Low reuse potential. Keep as reference in GAP_BACKLOG for future monitor script work.
+- **Review notes (2026-02-02):** Still relevant as reference. No new use cases emerged since last review. Specialized pattern for terminal UI work.
 
 ### 2026-01-18 — Bash Associative Arrays for Caching
 
@@ -55,6 +56,7 @@ Rules:
 - **Priority:** P2
 - **Status:** Reviewed - Keep as reference
 - **Review notes (2026-01-18):** Does not meet "recurring" criteria. General caching patterns already documented in skills/domains/backend/caching-patterns.md. This is a bash-specific implementation detail with low reuse potential. Keep as reference for bash caching needs.
+- **Review notes (2026-02-02):** Still relevant as reference. Bash-specific caching pattern used in monitor scripts. No new applications identified since last review.
 
 ### 2026-01-19 — Bash/Shell Project Validation Patterns
 
@@ -73,6 +75,7 @@ Rules:
   - Should add bash/shell template variant or make templates tech-stack aware
 - **Priority:** P1
 - **Status:** Promoted to SKILL_BACKLOG (2026-01-23)
+- **Review notes (2026-02-02):** Already promoted and completed. Gap successfully addressed.
 
 ### 2026-01-25 — Custom Semantic Code Review Tool (LLM-Based Linting)
 
@@ -95,3 +98,4 @@ Rules:
 - **Priority:** P1
 - **Status:** Done (promoted to skills/domains/code-quality/semantic-code-review.md)
 - **Related:** See `docs/CODERABBIT_PR5_ALL_ISSUES.md` for full list of semantic issues caught by CodeRabbit
+- **Review notes (2026-02-02):** Completed and in active use. Semantic review tool integrated into pre-PR workflow.

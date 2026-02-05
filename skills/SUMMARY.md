@@ -374,7 +374,13 @@ brain/ (repository root)
 
 ## Freshness Status
 
-**Last checked:** 2026-01-26
+**Last checked:** 2026-02-02
+
+**Total skills:** 123 files
+- Domains: 114 (anti-patterns: 4, backend: 9, code-quality: 26, frontend: 4, infrastructure: 8, languages: 9, marketing: 24, ralph: 6, websites: 24)
+- Playbooks: 9
+- Projects: 1
+- Self-improvement: 2
 
 Run `bash tools/skill_freshness.sh` to see current freshness report.
 

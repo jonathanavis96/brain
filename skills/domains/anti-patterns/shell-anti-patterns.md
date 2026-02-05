@@ -822,6 +822,161 @@ shellcheck **/*.sh | grep SC2034 | cut -d: -f1 | sort -u
 - **[cleanup-patterns.md](../languages/shell/cleanup-patterns.md)** - Resource management patterns
 - **[fix-shellcheck-failures.md](../../playbooks/fix-shellcheck-failures.md)** - Systematic shellcheck resolution
 
+---
+
+## Wrapper Pitfall: Missing Option Value Under `set -u`
+
+**Context:** Shell wrappers that parse `--flag VALUE` pairs while running with `set -euo pipefail`.
+
+**Bad example:**
+
+```bash
+set -euo pipefail
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --log)
+      LOG_FILE="$2"   # can explode if $2 missing
+      shift 2
+      ;;
+  esac
+done
+```
+
+**Why it’s wrong:**
+
+- With `set -u`, reading `$2` when it’s missing can terminate the script.
+- If the user passes `--log --other-flag`, you may accidentally treat `--other-flag` as the value.
+
+**Good example:**
+
+```bash
+set -euo pipefail
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --log)
+      if [[ $# -lt 2 ]] || [[ "${2:-}" == --* ]]; then
+        echo "Error: --log requires a file path" >&2
+        exit 1
+      fi
+      LOG_FILE="$2"
+      shift 2
+      ;;
+  esac
+done
+```
+
+**How to detect:**
+
+- Wrapper uses `set -u` and contains `FOO="$2"` / `shift 2` without a guard.
+
+---
+
+## Wrapper Pitfall: “Fake Redirection” Passed as an Argument
+
+**Context:** Trying to suppress output by appending a string like `">/dev/null 2>&1"` to a command.
+
+**Bad example:**
+
+```bash
+cmd "$( [[ "$DEBUG" == "true" ]] && echo "" || echo ">/dev/null 2>&1" )"
+```
+
+**Why it’s wrong:**
+
+- Redirection must be handled by the shell parser, not passed as an argv string.
+- You’ll end up passing a literal argument and still printing output.
+
+**Good example:**
+
+```bash
+output=$(cmd 2>&1)
+exit_code=$?
+
+if [[ $exit_code -ne 0 ]]; then
+  if [[ "${DEBUG:-false}" == "true" ]] && [[ -n "$output" ]]; then
+    echo "$output" >&2
+  fi
+  echo "fallback message" >&2
+fi
+```
+
+**How to detect:**
+
+- Look for `">/dev/null"` inside quotes or constructed strings.
+
+---
+
+## Wrapper Pitfall: CWD-Relative Invocation of Internal Entrypoints
+
+**Context:** Wrapper scripts that call internal scripts like `workers/ralph/loop.sh`.
+
+**Bad example:**
+
+```bash
+# Fails if you run the wrapper from a different directory
+bash workers/ralph/loop.sh "${args[@]}"
+```
+
+**Good example:**
+
+```bash
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+bash "${REPO_ROOT}/workers/ralph/loop.sh" "${args[@]}"
+```
+
+**Why it matters:**
+
+- Users commonly run wrappers from arbitrary working directories.
+- Relative paths create non-obvious failures and inconsistent behavior.
+
+---
+
+## Template Pitfall: Incorrect Repo Root From `SCRIPT_DIR` Math
+
+**Context:** Template scripts often live under `templates/...` at authoring time, but are installed to a different path in generated projects.
+
+**Bad example:**
+
+```bash
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"  # may resolve to templates/ralph, not repo root
+DETECT_HUMAN="$REPO_ROOT/tools/detect_human_required.py"
+```
+
+**Why it’s wrong:**
+
+- Relative “walk up N directories” logic is brittle across template install locations.
+- Breaks as soon as the file moves or is copied into a different layout.
+
+**Good example:**
+
+```bash
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+REPO_ROOT=""
+if REPO_ROOT=$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel 2>/dev/null); then
+  :
+else
+  candidate="$SCRIPT_DIR"
+  for _ in 1 2 3 4 5; do
+    candidate="$(cd "$candidate/.." && pwd)"
+    if [[ -f "$candidate/tools/detect_human_required.py" ]]; then
+      REPO_ROOT="$candidate"
+      break
+    fi
+  done
+fi
+
+if [[ -z "$REPO_ROOT" ]]; then
+  echo "Error: Could not resolve repo root" >&2
+  exit 1
+fi
+```
+
 ## See Also
 
 - **[Anti-Patterns README](README.md)** - Anti-patterns library overview and format guidelines
