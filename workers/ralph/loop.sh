@@ -274,7 +274,15 @@ INTERRUPT_RECEIVED=false
 
 # Cleanup function for temp files and lock
 cleanup() {
-  # Note: LOCK_FILE is handled by release_lock()
+  # Always release the lock on exit.
+  #
+  # Rationale: The loop installs `trap 'cleanup' EXIT` early, but only installs
+  # `trap 'cleanup_and_emit' EXIT` later (after the run is considered "started").
+  # Any early exit path (argument parsing failures, rollback/resume branches,
+  # etc.) must still remove the lock file so subsequent runs don't incorrectly
+  # fail with "loop already running".
+  release_lock
+
   if [[ -n "${TEMP_CONFIG:-}" && -f "${TEMP_CONFIG:-}" ]]; then
     rm -f "$TEMP_CONFIG"
   fi
