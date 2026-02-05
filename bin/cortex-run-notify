@@ -31,12 +31,17 @@ usage() {
 
 DRY_RUN=false
 INTERACTIVE_WATCH=false
+DEBUG_INTERACTIVE_WATCH=false
 LOG_FILE=""
 ACLI_ARGS=()
 
 MIN_SECONDS_DEFAULT=120
 MIN_SECONDS="${CORTEX_NOTIFY_MIN_SECONDS:-$MIN_SECONDS_DEFAULT}"
 ALWAYS_NOTIFY_SUCCESS=false
+
+# Debug mode for interactive-watch watcher logs
+# Set: CORTEX_NOTIFY_DEBUG=true
+DEBUG_INTERACTIVE_WATCH="${CORTEX_NOTIFY_DEBUG:-false}"
 
 # Parse wrapper options before --
 while [[ $# -gt 0 ]]; do
@@ -210,8 +215,14 @@ interactive_watch() {
         # End of a turn (assistant finished responding)
         if [[ -n "${turn_start_ts:-}" ]]; then
           duration=$(( now - turn_start_ts ))
+          notified=false
           if [[ $duration -ge $MIN_SECONDS ]]; then
             send_notify --level info --title "Cortex $PROJECT_LABEL complete" --message "Cortex response complete" --tts
+            notified=true
+          fi
+
+          if [[ "$DEBUG_INTERACTIVE_WATCH" == "true" ]]; then
+            echo "[cortex-run-notify] interactive-watch: turn duration=${duration}s notified=${notified}" >&2
           fi
         fi
 
