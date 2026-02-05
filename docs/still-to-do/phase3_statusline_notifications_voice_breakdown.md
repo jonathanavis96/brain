@@ -24,7 +24,7 @@ Goal: Before running `acli rovodev run`, you can instantly see repo + branch + d
 - [x] Show **git branch** *(see: `docs/worktrees.md` → “Prompt/Statusline Configuration”)*
 - [x] Show **dirty/clean indicator** *(see: `docs/worktrees.md` → `parse_git_dirty`)*
 - [x] Show **exit status of last command** (helps spot failed verifier/test commands) *(see: `docs/worktrees.md` → `set_prompt`)*
-- [ ] Show **WSL distro / host marker** (optional but helpful if you use multiple) *(not implemented; optional)*
+- [ ] **(Optional / intentionally not implemented)** Show **WSL distro / host marker** (helpful if you use multiple) *(not implemented in this repo; optional enhancement)*
 
 **Acceptance criteria:**
 
@@ -50,7 +50,7 @@ Checklist:
 ### 3.1.3 Windows Terminal tab title integration (optional)
 
 - [x] Tab title includes `repo:branch` (and optionally worktree) *(static per-worktree startup example; see `docs/worktrees.md` → “Windows Terminal Tab Titles”)*
-- [ ] Title updates on `cd` into/out of repo *(not implemented; would require PROMPT_COMMAND / chpwd hook)*
+- [ ] **(Optional / intentionally not implemented)** Title updates on `cd` into/out of repo *(would require PROMPT_COMMAND / chpwd hook; optional enhancement)*
 
 **Acceptance criteria:**
 
@@ -108,8 +108,8 @@ Checklist:
 Potential inputs (choose at least one reliable trigger):
 
 - [x] A) Detect specific markers in logs (e.g., `HUMAN_REQUIRED`, `CAPTCHA`, `APPROVAL_REQUIRED`).
-- [ ] B) Detect verifier warnings that explicitly say human intervention needed.
-- [ ] C) Detect if process is waiting for input (harder; defer unless needed).
+- [x] B) Detect verifier warnings that explicitly say human intervention needed *(covered by log-pattern detection: e.g. "Approve waiver", "manual review required", and canonical `:::HUMAN_REQUIRED:::` marker in `tools/detect_human_required.py`)*
+- [ ] **(Optional / deferred)** C) Detect if process is waiting for input (harder; defer unless needed).
 
 **Status:** Implemented (log-marker based).
 
@@ -193,7 +193,7 @@ When converting to `workers/IMPLEMENTATION_PLAN.md`, prefer tasks that:
 Suggested atomic task seeds:
 
 - [x] Create a WSL-safe `bin/notify` helper (no-op fallback) with `--toast`.
-  - **Notes:** `--sound` and `--tts` flags exist but are not implemented yet.
+  - **Notes:** `--sound` and `--tts` are implemented (best-effort on Windows; safe no-op/fallback otherwise).
 - [x] Create `bin/cortex-run-notify` wrapper that calls `acli rovodev run` and notifies on exit.
 - [x] Add a prompt/worktree label snippet (documented, not auto-installed). *(see `docs/worktrees.md`)*
 - [x] Add a “human required detection” regex list + unit-like fixture test using a sample log.
