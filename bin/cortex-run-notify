@@ -221,9 +221,11 @@ interactive_watch() {
         continue
       fi
 
-      # Start timing on the first non-empty line after the prompt, which should be the user's message.
+      # Start timing on the submitted user message line. In the acli UI this appears as:
+      #   > your message
+      # The bare prompt line (`> █`) should be ignored.
       if [[ "$awaiting_user_input" == "true" ]] && [[ -z "${turn_start_ts:-}" ]]; then
-        if [[ -n "${line//[[:space:]]/}" ]]; then
+        if [[ "$line" =~ ^\>[[:space:]]+[^[:space:]].* ]]; then
           turn_start_ts="$now"
           awaiting_user_input=false
         fi
