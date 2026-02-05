@@ -204,39 +204,11 @@ else
   echo "  modelId: auto" >>"$CONFIG_FILE"
 fi
 
-# Interactive chat loop:
-# We run one `acli rovodev run --restore <message>` per user message.
-# This makes "long response" notifications meaningful (they can fire per-turn),
-# instead of only firing when the whole chat session ends.
-EXIT_CODE=0
-
-while true; do
-  echo -ne "${GREEN}You> ${NC}"
-  if ! IFS= read -r USER_MSG; then
-    echo ""
-    break
-  fi
-
-  case "$USER_MSG" in
-    exit|quit)
-      break
-      ;;
-    "")
-      continue
-      ;;
-  esac
-
-  echo ""
-
-  # Use Cortex notifier wrapper so long responses notify on completion.
-  # --restore keeps the session across turns.
-  "${BRAIN_ROOT}/bin/cortex-run-notify" --min-seconds 120 -- \
-    --config-file "$CONFIG_FILE" --restore --yolo "$USER_MSG"
-  EXIT_CODE=$?
-
-  echo ""
-
-done
+# Launch interactive chat (NO message argument = interactive mode)
+# Use Cortex notifier wrapper so long sessions can notify when a slow response finishes.
+"${BRAIN_ROOT}/bin/cortex-run-notify" --interactive-watch --min-seconds 120 -- \
+  --config-file "$CONFIG_FILE" --yolo
+EXIT_CODE=$?
 
 # Cleanup
 rm -f "$CONFIG_FILE"

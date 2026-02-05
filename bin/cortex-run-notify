@@ -10,6 +10,7 @@ set -euo pipefail
 #
 # Options:
 #   --dry-run                Print what would be executed without running acli
+#   --interactive-watch       Run interactive acli session under `script` and notify per turn
 #   --log FILE               Log file to scan for HUMAN_REQUIRED markers (optional)
 #   --min-seconds N          Only notify on SUCCESS if runtime >= N seconds (default: 120)
 #   --always-notify-success  Always notify on SUCCESS (ignores --min-seconds)
@@ -29,6 +30,7 @@ usage() {
 }
 
 DRY_RUN=false
+INTERACTIVE_WATCH=false
 LOG_FILE=""
 ACLI_ARGS=()
 
@@ -44,6 +46,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --dry-run)
       DRY_RUN=true
+      shift
+      ;;
+    --interactive-watch)
+      INTERACTIVE_WATCH=true
       shift
       ;;
     --log)
@@ -120,6 +126,7 @@ if [[ "$DRY_RUN" == "true" ]]; then
   echo ""
   echo "Success notification policy:"
   echo "  min-seconds=$MIN_SECONDS (env: CORTEX_NOTIFY_MIN_SECONDS), always-notify-success=$ALWAYS_NOTIFY_SUCCESS"
+  echo "  interactive-watch=$INTERACTIVE_WATCH (per-turn notifications on 'Session context:' boundaries)"
   echo ""
   echo "On SUCCESS (exit 0 + duration >= threshold):"
   echo "  $NOTIFY_BIN --level info --title 'Cortex $PROJECT_LABEL complete' --message 'Cortex complete' --tts"
@@ -150,11 +157,114 @@ fi
 
 start_ts=$(date +%s)
 
-# Execute acli rovodev run with provided arguments
-set +e
-acli rovodev run "${ACLI_ARGS[@]}"
-EXIT_CODE=$?
-set -e
+send_notify() {
+  # Best-effort: never fail the caller
+  "$NOTIFY_BIN" "$@" >/dev/null 2>&1 || true
+}
+
+interactive_watch() {
+  # Run acli interactively under a PTY and send notifications when a turn finishes.
+  # A turn is considered finished when acli prints a "Session context:" line.
+  # Start time is approximated as the first new log line after that marker.
+
+  if ! command -v script >/dev/null 2>&1; then
+    echo "Error: 'script' is required for --interactive-watch but was not found" >&2
+    return 1
+  fi
+
+  local tmp_log
+  tmp_log="/tmp/cortex_run_notify_$$_$(date +%s).log"
+
+  # tmp_log is the session capture; if --log was provided, we append it at the end.
+
+  # Background watcher state
+  local watch_pid=""
+
+  # Ensure cleanup
+  cleanup_watch() {
+    if [[ -n "$watch_pid" ]] && kill -0 "$watch_pid" 2>/dev/null; then
+      kill "$watch_pid" 2>/dev/null || true
+      wait "$watch_pid" 2>/dev/null || true
+    fi
+    rm -f "$tmp_log" 2>/dev/null || true
+  }
+  trap cleanup_watch EXIT
+
+  # Start watcher
+  (
+    set -euo pipefail
+
+    local awaiting_user_input=true
+    local turn_start_ts=""
+
+    # We follow the log and look for:
+    # - "Session context:" => end-of-turn marker (and also indicates prompt readiness)
+    # - first non-empty line after a Session context => treat as "user submitted message"
+    #
+    # We then measure time until the next "Session context:" appears.
+
+    tail -n 0 -F "$tmp_log" 2>/dev/null | while IFS= read -r line; do
+      now=$(date +%s)
+
+      if [[ "$line" == *"Session context:"* ]]; then
+        # End of a turn (assistant finished responding)
+        if [[ -n "${turn_start_ts:-}" ]]; then
+          duration=$(( now - turn_start_ts ))
+          if [[ $duration -ge $MIN_SECONDS ]]; then
+            send_notify --level info --title "Cortex $PROJECT_LABEL complete" --message "Cortex response complete" --tts
+          fi
+        fi
+
+        # Prompt ready for next user input
+        awaiting_user_input=true
+        turn_start_ts=""
+        continue
+      fi
+
+      # Start timing on the first non-empty line after the prompt, which should be the user's message.
+      if [[ "$awaiting_user_input" == "true" ]] && [[ -z "${turn_start_ts:-}" ]]; then
+        if [[ -n "${line//[[:space:]]/}" ]]; then
+          turn_start_ts="$now"
+          awaiting_user_input=false
+        fi
+      fi
+
+    done
+  ) &
+  watch_pid=$!
+
+  # Run interactive acli under script (PTY). Flush output to tmp_log.
+  # We also keep the session interactive in the current terminal.
+  local cmd=(acli rovodev run "${ACLI_ARGS[@]}")
+  local cmd_str
+  cmd_str=$(printf '%q ' "${cmd[@]}")
+
+  set +e
+  script -q -f "$tmp_log" -c "$cmd_str" /dev/null
+  EXIT_CODE=$?
+  set -e
+
+  # If user asked for a log file, append the session log.
+  if [[ -n "$LOG_FILE" ]]; then
+    # best-effort
+    cat "$tmp_log" >>"$LOG_FILE" 2>/dev/null || true
+  fi
+
+  return $EXIT_CODE
+}
+
+EXIT_CODE=0
+
+if [[ "$INTERACTIVE_WATCH" == "true" ]]; then
+  interactive_watch
+  EXIT_CODE=$?
+else
+  # Execute acli rovodev run with provided arguments
+  set +e
+  acli rovodev run "${ACLI_ARGS[@]}"
+  EXIT_CODE=$?
+  set -e
+fi
 
 end_ts=$(date +%s)
 duration=$((end_ts - start_ts))
@@ -166,14 +276,11 @@ elif [[ $duration -ge $MIN_SECONDS ]]; then
   should_notify_success=true
 fi
 
-send_notify() {
-  # Best-effort: never fail the caller
-  "$NOTIFY_BIN" "$@" >/dev/null 2>&1 || true
-}
-
 # Send notification based on exit code and HUMAN_REQUIRED detection
 if [[ $EXIT_CODE -eq 0 ]]; then
-  if [[ "$should_notify_success" == "true" ]]; then
+  # In interactive-watch mode, we notify per-turn. Avoid spamming an additional
+  # session-level SUCCESS notification when the user exits the chat.
+  if [[ "$INTERACTIVE_WATCH" != "true" ]] && [[ "$should_notify_success" == "true" ]]; then
     send_notify --level info --title "Cortex $PROJECT_LABEL complete" --message "Cortex complete" --tts
   fi
   echo "Cortex: SUCCESS (duration=${duration}s)"

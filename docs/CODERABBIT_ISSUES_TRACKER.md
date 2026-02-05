@@ -458,13 +458,19 @@ CodeRabbit has identified **50+ issues** across PR5 and PR6, with significant ov
 ### M19: Template Wrapper Path Resolution (New)
 
 **Status:** ⬜ Open  
-**File:** `templates/cortex/cortex-PROJECT.bash`
+**Files:**
 
-**Issue:** Calls `bin/cortex-run-notify` as a relative path which may not exist in new projects depending on layout.
+- `templates/cortex/cortex-PROJECT.bash`
+- `templates/cortex/cortex.bash`
 
-**Fix:** Resolve and validate wrapper path from `PROJECT_ROOT` (and/or alternate known install locations) before invocation.
+**Issue:** Template scripts call wrappers at CWD-relative paths (`bin/...`), which can fail when invoked from a different working directory or when the generated project layout differs.
 
-**Prevention:** Template scripts should never assume CWD-relative `bin/...` exists without `test -x`.
+**Fix:**
+
+- Resolve and validate wrapper path from a known root (`PROJECT_ROOT`/`BRAIN_ROOT`) before invocation.
+- For Cortex chat template, invoke the wrapper as an absolute path: `${BRAIN_ROOT}/bin/cortex-run-notify`.
+
+**Prevention:** Template scripts should never assume CWD-relative `bin/...` exists without `test -x`, and should avoid relative wrapper execution.
 
 ---
 
