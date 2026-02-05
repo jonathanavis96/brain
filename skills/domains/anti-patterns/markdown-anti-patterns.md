@@ -321,8 +321,11 @@ rg '^\*\*[A-Z][^*]+\*\*$' --type md
 
 - **What breaks:** Table rendering, column alignment, data readability
 - **Why it happens:** Manual table editing, copy-paste errors, row truncation
+- **Common trigger:** Literal `|` characters inside a table cell (including inside inline code like `` `cmd | other` ``)
 - **Detection:** `markdownlint` reports "MD056/table-column-count"
 - **Real-world impact:** Broken table layout, misaligned data, rendering errors
+
+**Rule of thumb:** If you must mention pipelines inside a markdown table, prefer describing them in words, or move the example outside the table. Avoid leaving `...` truncated rows inside tables—shorten the cell content instead.
 
 ### ✅ Correct Pattern
 

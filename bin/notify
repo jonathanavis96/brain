@@ -169,13 +169,13 @@ if [[ "$HAS_POWERSHELL" == "true" ]]; then
   # Use PowerShell to show Windows toast notification
   # Note: BurntToast module would be better, but requires installation.
   # We use a simple approach that works on all Windows 10/11 systems.
-  "$POWERSHELL_BIN" -NoProfile -Command "
+  ps_output=$("$POWERSHELL_BIN" -NoProfile -Command "
     try {
       [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
-    [Windows.UI.Notifications.ToastNotification, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
-    [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime] | Out-Null
+      [Windows.UI.Notifications.ToastNotification, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
+      [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime] | Out-Null
 
-    \$template = @\"
+      \$template = @\"
 <toast>
   <visual>
     <binding template='ToastGeneric'>
@@ -186,11 +186,11 @@ if [[ "$HAS_POWERSHELL" == "true" ]]; then
 </toast>
 \"@
 
-    \$xml = New-Object Windows.Data.Xml.Dom.XmlDocument
-    \$xml.LoadXml(\$template)
-    \$toast = New-Object Windows.UI.Notifications.ToastNotification \$xml
-    # Use default notifier AppID (more reliable than a custom AppID in many environments)
-    [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier().Show(\$toast)
+      \$xml = New-Object Windows.Data.Xml.Dom.XmlDocument
+      \$xml.LoadXml(\$template)
+      \$toast = New-Object Windows.UI.Notifications.ToastNotification \$xml
+      # Use default notifier AppID (more reliable than a custom AppID in many environments)
+      [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier().Show(\$toast)
       exit 0
     } catch {
       # Fallback: classic tray balloon (often works even when toast is blocked)
@@ -211,10 +211,23 @@ if [[ "$HAS_POWERSHELL" == "true" ]]; then
         exit 1
       }
     }
-  " "$([[ "$DEBUG" == "true" ]] && echo "" || echo ">/dev/null 2>&1")" || {
+  " 2>&1)
+  ps_exit=$?
+
+  if [[ $ps_exit -ne 0 ]]; then
+    if [[ "$DEBUG" == "true" ]] && [[ -n "$ps_output" ]]; then
+      echo "notify: PowerShell notification failed:" >&2
+      echo "$ps_output" >&2
+    fi
+
     # Fallback if toast fails
     echo "[$LEVEL] $TITLE: $MESSAGE"
-  }
+  fi
+
+  # If not debugging, suppress PowerShell output.
+  if [[ "$DEBUG" != "true" ]]; then
+    :
+  fi
 else
   # Console fallback when PowerShell is unavailable
   echo "[$LEVEL] $TITLE: $MESSAGE"

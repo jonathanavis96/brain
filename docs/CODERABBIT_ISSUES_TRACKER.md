@@ -366,6 +366,134 @@ CodeRabbit has identified **50+ issues** across PR5 and PR6, with significant ov
 
 ---
 
+### M13: Notification Wrapper Default Mismatch (New)
+
+**Status:** ⬜ Open  
+**Files:**
+
+- `bin/cortex-run-notify` (`MIN_SECONDS_DEFAULT` vs help text)
+- `templates/ralph/bin/cortex-run-notify` (same mismatch)
+
+**Issue:** Help text documents `--min-seconds` default as 60 but code default is 120.
+
+**Fix:** Make the help text and constant agree (and keep repo + template in sync).
+
+**Prevention:** Add a checklist item: "Help/usage defaults must match constants" for wrapper scripts.
+
+---
+
+### M14: bin/notify Broken Redirection Argument (New)
+
+**Status:** ⬜ Open  
+**File:** `bin/notify` (PowerShell invocation block)
+
+**Issue:** The script passes a literal string like `">/dev/null 2>&1"` as an argument rather than performing shell redirection.
+
+**Fix:** Capture PowerShell combined output into a variable and only print it when `--debug` is enabled; otherwise fall back to console output.
+
+**Prevention:** Document/avoid "stringly-typed redirection"; use `cmd ... >/dev/null 2>&1` or `output=$(cmd 2>&1)` patterns.
+
+---
+
+### M15: Wrapper Flag Parsing Unsafe Under set -u (New)
+
+**Status:** ⬜ Open  
+**Files:**
+
+- `bin/ralph-run-notify` (`--log`, `--min-seconds`)
+- `templates/ralph/bin/ralph-run-notify` (same logic)
+
+**Issue:** Case arms read `$2` and `shift 2` without validating the value exists and is not another flag.
+
+**Fix:** Guard `${2:-}` and reject missing/flag-like values before assignment + shifting.
+
+**Prevention:** Add shell wrapper argument-parsing tests (missing value, next-flag-as-value).
+
+---
+
+### M16: Wrapper Array Expansion Nounset Risk (New)
+
+**Status:** ⬜ Open  
+**Files:**
+
+- `bin/ralph-run-notify` and templates variant (DRY_RUN uses `${LOOP_ARGS[*]}`)
+
+**Issue:** Under `set -u`, empty/unset arrays can trigger "unbound variable" in some expansions.
+
+**Fix:** Use safe default expansions where appropriate (e.g., `${arr[*]:-}`) and keep quoted `"${arr[@]}"` for execution.
+
+**Prevention:** Wrapper template pattern should standardize safe dry-run printing for arrays.
+
+---
+
+### M17: skill-suggest Description Fallback Never Runs (New)
+
+**Status:** ⬜ Open  
+**File:** `bin/skill-suggest`
+
+**Issue:** `grep | sed || head -1` never falls back because `sed` returns success even when `grep` outputs nothing.
+
+**Fix:** Compute heading-derived description first; if empty, fall back to `head -1`.
+
+**Prevention:** Avoid `cmd1 | cmd2 || fallback` when `cmd2` can succeed on empty input.
+
+---
+
+### M18: Template REPO_ROOT Calculation Incorrect (New)
+
+**Status:** ⬜ Open  
+**Files:**
+
+- `templates/ralph/bin/cortex-run-notify`
+- `templates/ralph/bin/ralph-run-notify`
+
+**Issue:** `REPO_ROOT` resolves to `templates/ralph` instead of repository root, breaking `tools/detect_human_required.py` lookup.
+
+**Fix:** Prefer `git -C "$SCRIPT_DIR" rev-parse --show-toplevel` with a fallback directory climb.
+
+**Prevention:** Document a standard `resolve_repo_root()` function for template scripts.
+
+---
+
+### M19: Template Wrapper Path Resolution (New)
+
+**Status:** ⬜ Open  
+**File:** `templates/cortex/cortex-PROJECT.bash`
+
+**Issue:** Calls `bin/cortex-run-notify` as a relative path which may not exist in new projects depending on layout.
+
+**Fix:** Resolve and validate wrapper path from `PROJECT_ROOT` (and/or alternate known install locations) before invocation.
+
+**Prevention:** Template scripts should never assume CWD-relative `bin/...` exists without `test -x`.
+
+---
+
+### M20: Coverage Artifact URL Missing Guard (New)
+
+**Status:** ⬜ Open  
+**File:** `skills/domains/code-quality/test-coverage-patterns.md`
+
+**Issue:** Script example uses `ARTIFACT_URL` without checking it is non-empty; `curl` may run with an empty URL.
+
+**Fix:** Guard for empty `ARTIFACT_URL` and print an actionable error mentioning `coverage-summary` + `RUN_ID`.
+
+**Prevention:** Example validation should include "required variable non-empty" checks for external fetches.
+
+---
+
+### M21: Cache Debugging SQL Column Name Drift (New)
+
+**Status:** ⬜ Open  
+**File:** `skills/domains/ralph/cache-debugging.md`
+
+**Issue:** Example SQL uses `last_used_at` but schema documents `last_pass_ts`.
+
+**Fix:** Replace `last_used_at` with `last_pass_ts` (and ensure consistency across the document).
+
+**Prevention:** Keep schema and example queries adjacent and cross-check during edits.
+
+---
+
 ## 🟡 MINOR Issues
 
 ### m1: Observability Patterns Issues (Recurring)

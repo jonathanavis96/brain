@@ -127,8 +127,12 @@ while read -r count file; do
   # Store score and extract brief description from file
   SCORES["$file"]=$score
 
-  # Get first heading or first non-empty line as description
-  desc=$(grep -m1 '^#' "$file" 2>/dev/null | sed 's/^#* *//' || head -1 "$file" 2>/dev/null)
+  # Get first heading as description, falling back to first line.
+  # Note: Don't use `grep ... | sed ... || head ...` because `sed` can succeed on empty input.
+  desc=$(grep -m1 '^#' "$file" 2>/dev/null | sed 's/^#* *//')
+  if [[ -z "$desc" ]]; then
+    desc=$(head -1 "$file" 2>/dev/null)
+  fi
   DESCRIPTIONS["$file"]="${desc:0:60}"
 done < "$TEMP_RESULTS"
 

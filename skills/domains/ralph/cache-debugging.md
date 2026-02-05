@@ -408,7 +408,7 @@ ls -lh artifacts/rollflow_cache/cache.sqlite
 # GOOD: Periodic cache cleanup
 # Clear entries older than 30 days
 sqlite3 artifacts/rollflow_cache/cache.sqlite \
-  "DELETE FROM pass_cache WHERE last_used_at < datetime('now', '-30 days')"
+  "DELETE FROM pass_cache WHERE last_pass_ts < datetime('now', '-30 days')"
 # Vacuum to reclaim space
 sqlite3 artifacts/rollflow_cache/cache.sqlite "VACUUM"
 ```

@@ -439,6 +439,11 @@ fi
     # Note: GitHub Actions artifacts API endpoint (v3 REST API)
     # Endpoint: GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts
     
+    if [[ -z "$ARTIFACT_URL" || "$ARTIFACT_URL" == "null" ]]; then
+      echo "Error: Could not find 'coverage-summary' artifact URL for RUN_ID=$RUN_ID" >&2
+      exit 1
+    fi
+
     # Download artifact
     curl -L -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
       -o base-coverage.zip \
