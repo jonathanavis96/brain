@@ -137,7 +137,7 @@ fi
 # Dry-run mode
 if [[ "$DRY_RUN" == "true" ]]; then
   echo "=== DRY RUN ==="
-  echo "Would execute: bash workers/ralph/loop.sh ${LOOP_ARGS[*]}"
+  echo "Would execute: bash ${REPO_ROOT}/workers/ralph/loop.sh ${LOOP_ARGS[*]}"
   echo ""
   echo "Project label: $PROJECT_LABEL"
   echo ""
@@ -175,7 +175,7 @@ start_ts=$(date +%s)
 
 # Execute Ralph loop with provided arguments
 set +e
-bash workers/ralph/loop.sh "${LOOP_ARGS[@]}"
+bash "${REPO_ROOT}/workers/ralph/loop.sh" "${LOOP_ARGS[@]}"
 EXIT_CODE=$?
 set -e
 

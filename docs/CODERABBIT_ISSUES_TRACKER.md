@@ -494,6 +494,24 @@ CodeRabbit has identified **50+ issues** across PR5 and PR6, with significant ov
 
 ---
 
+### M22: ralph-run-notify Uses CWD-Relative loop.sh Path (New)
+
+**Status:** ⬜ Open  
+**Files:**
+
+- `bin/ralph-run-notify`
+- `templates/ralph/bin/ralph-run-notify`
+
+**Issue:** Wrapper executes `bash workers/ralph/loop.sh ...` which fails if invoked from a different CWD.
+
+**Fix:** Use absolute path derived from `REPO_ROOT`:
+
+- `bash "${REPO_ROOT}/workers/ralph/loop.sh" "${LOOP_ARGS[@]}"`
+
+**Prevention:** Wrapper/template scripts should avoid CWD-relative execution for internal entrypoints; prefer `REPO_ROOT` + absolute paths.
+
+---
+
 ## 🟡 MINOR Issues
 
 ### m1: Observability Patterns Issues (Recurring)

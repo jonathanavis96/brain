@@ -908,6 +908,33 @@ fi
 
 ---
 
+## Wrapper Pitfall: CWD-Relative Invocation of Internal Entrypoints
+
+**Context:** Wrapper scripts that call internal scripts like `workers/ralph/loop.sh`.
+
+**Bad example:**
+
+```bash
+# Fails if you run the wrapper from a different directory
+bash workers/ralph/loop.sh "${args[@]}"
+```
+
+**Good example:**
+
+```bash
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+bash "${REPO_ROOT}/workers/ralph/loop.sh" "${args[@]}"
+```
+
+**Why it matters:**
+
+- Users commonly run wrappers from arbitrary working directories.
+- Relative paths create non-obvious failures and inconsistent behavior.
+
+---
+
 ## Template Pitfall: Incorrect Repo Root From `SCRIPT_DIR` Math
 
 **Context:** Template scripts often live under `templates/...` at authoring time, but are installed to a different path in generated projects.
