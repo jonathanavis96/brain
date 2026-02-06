@@ -13,16 +13,45 @@ set -euo pipefail
 #
 # =============================================================================
 
-# ROOT can be overridden via env var for project delegation
+# ROOT can be overridden via env var for project delegation.
+#
+# Monorepo support:
+# - In a monorepo layout (repo root contains both `brain/` and a sibling app such as `website/`), set ROOT
+#   to the repo root so RovoDev can read/write across projects.
+# - Track BRAIN_ROOT separately so internal worker paths remain correct.
 if [[ -n "${RALPH_PROJECT_ROOT:-}" ]]; then
-  ROOT="$RALPH_PROJECT_ROOT"
-  RALPH="$ROOT/workers/ralph"
+  ROOT="$(cd "$RALPH_PROJECT_ROOT" && pwd)"
+
+  # If the provided root contains a brain/ folder, treat that as the brain root.
+  if [[ -d "$ROOT/brain/workers/ralph" ]]; then
+    BRAIN_ROOT="$ROOT/brain"
+  else
+    BRAIN_ROOT="$ROOT"
+  fi
+
+  RALPH="$BRAIN_ROOT/workers/ralph"
 else
-  # Get absolute path to this script, then go up two levels for ROOT (brain/workers/ralph -> brain)
+  # Get absolute path to this script.
   SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  RALPH="$SCRIPT_DIR"
-  ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
+
+  # brain/workers/ralph -> brain
+  BRAIN_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
+
+  # If we are nested in a monorepo (repo root contains brain/ + website/), widen ROOT to the repo root.
+  CANDIDATE_REPO_ROOT="$(dirname "$BRAIN_ROOT")"
+  if [[ -d "$CANDIDATE_REPO_ROOT/brain" && -d "$CANDIDATE_REPO_ROOT/website" ]]; then
+    ROOT="$CANDIDATE_REPO_ROOT"
+    BRAIN_ROOT="$ROOT/brain"
+  else
+    ROOT="$BRAIN_ROOT"
+  fi
+
+  RALPH="$BRAIN_ROOT/workers/ralph"
 fi
+
+# Print effective roots for debugging workspace boundaries.
+echo "Workspace ROOT=$ROOT"
+echo "Brain ROOT=$BRAIN_ROOT"
 LOGDIR="$RALPH/logs"
 VERIFY_REPORT="$RALPH/.verify/latest.txt"
 mkdir -p "$LOGDIR"
@@ -1832,10 +1861,10 @@ except Exception:
   fi
 
   # Check if all tasks are done (for true completion)
-  if [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
+  if [[ -f "$BRAIN_ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
     local unchecked_count
     # Note: grep -c returns exit 1 when count is 0, so we capture output first then default
-    unchecked_count=$(grep -cE '^\s*-\s*\[ \]' "$ROOT/workers/IMPLEMENTATION_PLAN.md" 2>/dev/null) || unchecked_count=0
+    unchecked_count=$(grep -cE '^\s*-\s*\[ \]' "$BRAIN_ROOT/workers/IMPLEMENTATION_PLAN.md" 2>/dev/null) || unchecked_count=0
     if [[ "$unchecked_count" -eq 0 ]]; then
       # All tasks done - run final verification
       if run_verifier "$iter"; then
@@ -2306,8 +2335,8 @@ else
       # Snapshot plan BEFORE sync for drift detection (prevents direct-edit bypass)
       mkdir -p "$ROOT/.verify"
       PLAN_SNAPSHOT="$ROOT/.verify/plan_snapshot.md"
-      if [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
-        cp "$ROOT/workers/IMPLEMENTATION_PLAN.md" "$PLAN_SNAPSHOT"
+      if [[ -f "$BRAIN_ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
+        cp "$BRAIN_ROOT/workers/IMPLEMENTATION_PLAN.md" "$PLAN_SNAPSHOT"
       fi
 
       # Sync tasks from Cortex before PLAN mode
@@ -2457,10 +2486,10 @@ else
 
     # Plan drift detection: compare snapshot vs current plan
     PLAN_SNAPSHOT="$ROOT/.verify/plan_snapshot.md"
-    if [[ -f "$PLAN_SNAPSHOT" ]] && [[ -f "$ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
+    if [[ -f "$PLAN_SNAPSHOT" ]] && [[ -f "$BRAIN_ROOT/workers/IMPLEMENTATION_PLAN.md" ]]; then
       # Check for unexpected changes (tasks added directly, not via cortex sync)
       snapshot_tasks=$(grep -c "^- \[ \]" "$PLAN_SNAPSHOT" 2>/dev/null || echo "0")
-      current_tasks=$(grep -c "^- \[ \]" "$ROOT/workers/IMPLEMENTATION_PLAN.md" 2>/dev/null || echo "0")
+      current_tasks=$(grep -c "^- \[ \]" "$BRAIN_ROOT/workers/IMPLEMENTATION_PLAN.md" 2>/dev/null || echo "0")
       if [[ "$current_tasks" -gt "$snapshot_tasks" ]]; then
         new_task_count=$((current_tasks - snapshot_tasks))
         echo ""
