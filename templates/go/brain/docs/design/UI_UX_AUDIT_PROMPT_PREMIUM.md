@@ -9,12 +9,6 @@ This document contains the canonical **design-only audit prompt** used to run a 
 
 ---
 
-## Source
-
-Relocated here to keep `skills/` focused on broadly reusable patterns.
-
----
-
 ## Prompt
 
 This prompt turns your AI coding agent into a premium UI/UX architect with Steve Jobs and Jony Ive's design philosophies built into it.
@@ -214,17 +208,18 @@ IMPLEMENTATION NOTES FOR BUILD AGENT:
 
 If you use Design Packs, the required inputs in `<design_startup>` should live under:
 
-- `docs/design-packs/<pack-name>/DESIGN_SYSTEM.md`
-- `docs/design-packs/<pack-name>/FRONTEND_GUIDELINES.md`
-- `docs/design-packs/<pack-name>/APP_FLOW.md`
-- `docs/design-packs/<pack-name>/PRD.md` (optional but recommended)
-- `docs/design-packs/<pack-name>/TECH_STACK.md`
-- `docs/design-packs/<pack-name>/LESSONS.md` (optional but recommended)
+- `brain/docs/design-packs/<pack-name>/DESIGN_SYSTEM.md`
+- `brain/docs/design-packs/<pack-name>/FRONTEND_GUIDELINES.md`
+- `brain/docs/design-packs/<pack-name>/APP_FLOW.md`
+- `brain/docs/design-packs/<pack-name>/PRD.md` (optional but recommended)
+- `brain/docs/design-packs/<pack-name>/TECH_STACK.md`
+- `brain/docs/design-packs/<pack-name>/LESSONS.md` (optional but recommended)
 
-Progress/completion context should come from:
+Progress/completion context should come from one of:
 
-- `workers/ralph/THUNK.md`
+- `brain/workers/ralph/THUNK.md` (if you are using Ralph)
+- A short, plain-text progress snapshot you provide to the agent (if you are using Cortex directly)
 
 Audit outputs belong under:
 
-- `artifacts/design-audits/<pack-name>/`
+- `brain/artifacts/design-audits/<pack-name>/`
