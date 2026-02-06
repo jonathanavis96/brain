@@ -36,7 +36,7 @@
 └── ralph/                 # Ralph loop infrastructure
     ├── PROMPT.md
     ├── brain/workers/IMPLEMENTATION_PLAN.md
-    └── progress.txt
+    └── THUNK.md            # Task completion log (append-only)
 ```text
 
 ---
@@ -284,3 +284,7 @@ DELETE /api/v1/users/:id   - Delete user
 - Keep the structure section accurate as the project evolves
 - Document project-specific patterns and conventions
 - Link to external documentation for complex features
+
+## See Also
+
+- **brain/docs/design-packs/README.md** - Design Packs standard (UI/UX artifacts + workflow contract)

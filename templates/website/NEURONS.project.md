@@ -213,4 +213,5 @@ npm run format
 - **[AGENTS.project.md](AGENTS.project.md)** - How to work on this project
 - **[docs/sitemap.md](docs/sitemap.md)** - Navigation structure
 - **[docs/sections.md](docs/sections.md)** - Page section composition
+- **brain/docs/design-packs/README.md** - Design Packs standard (UI/UX artifacts + workflow contract)
 - **skills/domains/websites/** - Website development patterns

@@ -304,3 +304,7 @@ snakeviz output.prof
 - Maintain test coverage >80% on critical paths
 - Use virtual environments consistently
 - Document setup steps in README.md
+
+## See Also
+
+- **brain/docs/design-packs/README.md** - Design Packs standard (UI/UX artifacts + workflow contract)
