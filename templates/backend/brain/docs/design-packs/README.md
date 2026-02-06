@@ -50,3 +50,7 @@ Progress/completion context should come from:
 
 - Repo-local workflow + canonical artifacts live under `brain/docs/`.
 - Broad reusable patterns live under `brain/skills/`.
+
+## See Also
+
+- `brain/docs/design/UI_UX_AUDIT_PROMPT_PREMIUM.md` — premium UI/UX audit prompt + protocol (design-only)

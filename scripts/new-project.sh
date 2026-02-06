@@ -377,6 +377,15 @@ else
   warn "Design packs templates not found at templates/${TEMPLATE_FAMILY}/brain/docs/design-packs; skipping"
 fi
 
+# Copy design-only prompts/guides (project-local)
+if [[ -d "$TEMPLATES_DIR/${TEMPLATE_FAMILY}/brain/docs/design" ]]; then
+  mkdir -p "$PROJECT_LOCATION/brain/docs"
+  cp -R "$TEMPLATES_DIR/${TEMPLATE_FAMILY}/brain/docs/design" "$PROJECT_LOCATION/brain/docs/"
+  success "Copied brain/docs/design (from templates/${TEMPLATE_FAMILY})"
+else
+  warn "Design docs not found at templates/${TEMPLATE_FAMILY}/brain/docs/design; skipping"
+fi
+
 # ============================================
 # Copy and Process Template Files
 # ============================================

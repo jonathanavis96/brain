@@ -78,6 +78,16 @@ A “flow inventory” is required, but the artifact name depends on the project
 
 `--design` is an **intent flag**: the session is a design-only audit and planning session.
 
+Example invocation:
+
+```bash
+# If installed to ~/bin via ./scripts/setup.sh
+cortex --design
+
+# Or directly:
+bash cortex/cortex.bash --design
+```text
+
 - Cortex/auditor **does not implement changes**.
 - Output is a phased plan for review and approval.
 - After approval, Cortex may translate approved items into Ralph task contracts in `/workers/IMPLEMENTATION_PLAN.md`.
