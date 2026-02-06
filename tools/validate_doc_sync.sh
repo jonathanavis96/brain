@@ -139,6 +139,32 @@ check_shellcheck_args() {
 }
 
 # =============================================================================
+# Check: duplicated path segments in docs
+# =============================================================================
+check_duplicate_paths() {
+  log_info "Checking for duplicated path segments..."
+
+  local duplicate_patterns=(
+    "skills/self-improvement/skills/self-improvement"
+    "workers/ralph/workers/ralph"
+  )
+
+  local found=false
+
+  for pattern in "${duplicate_patterns[@]}"; do
+    if grep -R -n --exclude-dir=.git "$pattern" . > /tmp/rovodev_doc_sync_dupes.txt; then
+      log_error "Found duplicated path segment: $pattern"
+      cat /tmp/rovodev_doc_sync_dupes.txt >&2
+      found=true
+    fi
+  done
+
+  if [[ "$found" == true ]]; then
+    return 1
+  fi
+}
+
+# =============================================================================
 # Main execution
 # =============================================================================
 main() {
@@ -150,6 +176,7 @@ main() {
   check_shfmt_flags || true
   check_markdownlint_config || true
   check_shellcheck_args || true
+  check_duplicate_paths || true
 
   echo ""
   echo "=========================================="
