@@ -1,19 +1,33 @@
 # PRD (Optional)
 
-## Purpose
+## What this file is
 
-Functional requirements and must-not-change behaviors.
+A compact place to capture **must-not-change behaviors** and key functional requirements.
 
-## Status
+If you already have a PRD elsewhere, link it here and extract only the “design-relevant constraints.”
 
-- Owner: TBD
-- Last reviewed: TBD
+## Setup (how to start)
 
-## Scope
+1. Write 5–15 bullet requirements.
+2. Add a clear “out of scope” section.
+3. Identify invariants: what must not change during redesign.
 
-- In scope
+## Ask the user (minimum interview)
+
+- What behaviors are invariants (must not change)?
+- What user promises can’t be broken?
+- Any compliance/legal requirements?
+- What is explicitly out of scope?
+
+## Required sections (layout contract)
+
+- Problem statement
+- Users/personas (brief)
+- Requirements (bulleted)
+- Must-not-change constraints
 - Out of scope
 
-## Requirements
+## Completeness checklist
 
-- (List)
+- [ ] Invariants are explicit
+- [ ] Out-of-scope is explicit
