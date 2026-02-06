@@ -634,6 +634,33 @@ if [[ "$CACHE_MODE" != "off" && "$CACHE_MODE" != "record" && "$CACHE_MODE" != "u
   exit 2
 fi
 
+# =============================================================================
+# Optional: Auto-refresh vendored Brain skills
+# =============================================================================
+
+# By default we attempt an offline-first refresh from a sibling Brain checkout.
+# This prevents the common failure mode where vendored skills drift out of date.
+#
+# Controls:
+#   - SKIP_BRAIN_SKILLS_SYNC=1       Disable the sync step entirely
+#   - BRAIN_SKILLS_SYNC_MODE=sibling|repo
+#       sibling: use ../brain/skills (no network)
+#       repo: clone/pull into ./brain_upstream (network)
+SKIP_BRAIN_SKILLS_SYNC="${SKIP_BRAIN_SKILLS_SYNC:-0}"
+BRAIN_SKILLS_SYNC_MODE="${BRAIN_SKILLS_SYNC_MODE:-sibling}"
+
+if [[ "$SKIP_BRAIN_SKILLS_SYNC" != "1" ]]; then
+  SYNC_SCRIPT="${ROOT}/workers/ralph/sync_brain_skills.sh"
+  if [[ -x "$SYNC_SCRIPT" ]]; then
+    echo "[INFO] Refreshing vendored brain/skills (mode=$BRAIN_SKILLS_SYNC_MODE)..." >&2
+    if [[ "$BRAIN_SKILLS_SYNC_MODE" == "repo" ]]; then
+      bash "$SYNC_SCRIPT" --from-repo || echo "[WARN] brain/skills refresh failed (continuing)" >&2
+    else
+      bash "$SYNC_SCRIPT" --from-sibling || echo "[WARN] brain/skills refresh failed (continuing)" >&2
+    fi
+  fi
+fi
+
 # Model version configuration - SINGLE SOURCE OF TRUTH
 # Update these when new model versions are released
 # Last updated: 2026-01-18 (Sonnet 4.5 September 2025 release)

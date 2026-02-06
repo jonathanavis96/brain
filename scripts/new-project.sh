@@ -678,7 +678,8 @@ if [ -d "$BRAIN_ROOT/skills" ]; then
 
   # Provide a small local helper doc explaining how vendoring + refresh works.
   # IMPORTANT: Keep this OUT of brain/skills because sync_brain_skills.sh refreshes that directory.
-  cat >"$PROJECT_LOCATION/brain/brain-sync.md" <<'EOF'
+  mkdir -p "$PROJECT_LOCATION/brain/docs"
+  cat >"$PROJECT_LOCATION/brain/docs/brain-sync.md" <<'EOF'
 # Brain Skills Sync (Vendored Snapshot)
 
 This repo vendors a snapshot of the Brain knowledge base under:
@@ -749,6 +750,14 @@ ${PROJECT_GOALS:-To be defined.}
 - Work happens on the \`$WORK_BRANCH\` branch (never directly on main)
 - Use `brain/workers/ralph/pr-batch.sh` to create PRs back to main
 - Run `brain/workers/ralph/loop.sh` to start AI-assisted development
+
+### Brain skills sync (vendored)
+
+This repo vendors Brain skills under `brain/skills/`.
+
+- How to refresh manually: see `brain/docs/brain-sync.md`
+- By default, `brain/workers/ralph/loop.sh` will attempt an offline-first refresh at startup.
+  - To disable: `SKIP_BRAIN_SKILLS_SYNC=1 bash brain/workers/ralph/loop.sh ...`
 
 ### Getting Started
 
