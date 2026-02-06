@@ -1,58 +1,62 @@
-# Summary
+## Summary
+
+<12 sentences. What does this PR do?>
 
 ## What changed
 
-- <one-liner>
+- <bullets>
 
 ## Why
 
-- <motivation / context>
+- <bullets>
 
----
+## How to verify
 
-# CodeRabbit findings addressed
+### 1) Automated checks
+
+```bash
+# Markdown (if docs changed)
+markdownlint <files>
+
+# Links (if markdown links changed)
+bash tools/validate_links.sh
+
+# Tests/verifier (if code changed)
+# <command>
+```
+
+### 2) Manual smoke (optional)
+
+- <optional>
+
+## Scope notes
+
+- <optional>
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai -->
+## CodeRabbit findings addressed
 
 > If CodeRabbit didnt review this PR, write: "N/A  no CodeRabbit review."
 
-- [ ] **CR-1:** <finding>
-  - **Fix:** <what you changed>
-  - **Evidence:** <tests/commands/links>
+- <bullets>
 
-- [ ] **CR-2:** <finding>
-  - **Fix:** <what you changed>
-  - **Evidence:** <tests/commands/links>
+<!-- end of auto-generated comment: release notes by coderabbit.ai -->
 
 ---
 
-# Validation
-
-## Automated checks
-
-- [ ] `markdownlint` (if docs changed)
-- [ ] `bash tools/validate_links.sh` (if markdown links changed)
-- [ ] Verifier / tests (if code changed): <command + result>
-
-## Manual checks (if applicable)
-
-- [ ] <manual step>
-
----
-
-# Risk & rollout
+## Risk & rollout
 
 - **Risk level:** Low / Medium / High
 
 ## Mitigations
 
-- <what makes this safe>
+- <optional>
 
----
-
-# Notes / follow-ups
+## Notes / follow-ups
 
 - <optional>
 
-# Reviewer checklist (quick)
+## Reviewer checklist (quick)
 
 - [ ] Changes are scoped and readable
 - [ ] Examples/commands are copy-pastable
