@@ -26,6 +26,14 @@ This directory contains templates for bootstrapping new projects with the Ralph 
   - **VALIDATION_CRITERIA.project.md** - Quality gates template (acceptance criteria)
   - **RALPH.md** - Ralph contract documentation template
 
+## Design artifacts (project-local)
+
+Bootstrapped projects include canonical design inputs and design-only prompts under `brain/docs/`:
+
+- `brain/docs/design-packs/` — design packs (design system, guidelines, flows, tech stack)
+- `brain/docs/design/` — design-only prompts and protocols
+  - `brain/docs/design/UI_UX_AUDIT_PROMPT_PREMIUM.md` — premium UI/UX audit prompt + protocol
+
 ## Path Convention (CRITICAL)
 
 All templates use **bash-style forward slash paths** for brain repository references to ensure cross-platform compatibility and WSL/Linux support.
