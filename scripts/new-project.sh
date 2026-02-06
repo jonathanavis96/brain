@@ -343,8 +343,39 @@ mkdir -p "$PROJECT_LOCATION/brain/workers/ralph"
 mkdir -p "$PROJECT_LOCATION/brain/workers/ralph/logs"
 mkdir -p "$PROJECT_LOCATION/brain/workers/shared"
 mkdir -p "$PROJECT_LOCATION/brain/skills"
+mkdir -p "$PROJECT_LOCATION/brain/docs"
 mkdir -p "$PROJECT_LOCATION/src"
 mkdir -p "$PROJECT_LOCATION/docs"
+
+# ============================================
+# Template Family Selection (for project-local Brain docs)
+# ============================================
+
+# Many Brain artifacts are generic (workers/ralph, cortex/), but some are project-type-specific
+# (e.g. Design Packs docs). We choose the best matching template family based on Tech Stack.
+# Fallback is `javascript` (most common UI-centric template).
+TEMPLATE_FAMILY="javascript"
+if [[ "${PROJECT_TECH:-}" =~ (python|fastapi|django|flask) ]]; then
+  TEMPLATE_FAMILY="python"
+elif [[ "${PROJECT_TECH:-}" =~ (go|golang) ]]; then
+  TEMPLATE_FAMILY="go"
+elif [[ "${PROJECT_TECH:-}" =~ (backend|api|service) ]]; then
+  TEMPLATE_FAMILY="backend"
+elif [[ "${PROJECT_TECH:-}" =~ (website|marketing|astro|next|gatsby|hugo) ]]; then
+  TEMPLATE_FAMILY="website"
+fi
+
+# ============================================
+# Copy Design Packs Standard + Template (project-local)
+# ============================================
+
+if [[ -d "$TEMPLATES_DIR/${TEMPLATE_FAMILY}/brain/docs/design-packs" ]]; then
+  mkdir -p "$PROJECT_LOCATION/brain/docs"
+  cp -R "$TEMPLATES_DIR/${TEMPLATE_FAMILY}/brain/docs/design-packs" "$PROJECT_LOCATION/brain/docs/"
+  success "Copied brain/docs/design-packs (from templates/${TEMPLATE_FAMILY})"
+else
+  warn "Design packs templates not found at templates/${TEMPLATE_FAMILY}/brain/docs/design-packs; skipping"
+fi
 
 # ============================================
 # Copy and Process Template Files
@@ -644,6 +675,52 @@ if [ -d "$BRAIN_ROOT/skills" ]; then
   
   cp -R "$BRAIN_ROOT/skills" "$PROJECT_LOCATION/brain/skills"
   success "Vendored brain/skills/ snapshot from Brain"
+
+  # Provide a small local helper doc explaining how vendoring + refresh works.
+  # IMPORTANT: Keep this OUT of brain/skills because sync_brain_skills.sh refreshes that directory.
+  cat >"$PROJECT_LOCATION/brain/brain-sync.md" <<'EOF'
+# Brain Skills Sync (Vendored Snapshot)
+
+This repo vendors a snapshot of the Brain knowledge base under:
+
+- `brain/skills/`
+
+## Why
+
+RovoDev/agents generally cannot read files outside the current repo workspace.
+Vendoring Brain skills keeps the agent effective in this repo.
+
+## How to refresh the snapshot
+
+From the repo root:
+
+```bash
+bash brain/workers/ralph/sync_brain_skills.sh --from-sibling
+```
+
+Or explicitly from a local Brain checkout:
+
+```bash
+bash brain/workers/ralph/sync_brain_skills.sh --from-local /path/to/brain
+```
+
+## How to request new skills / patterns
+
+If you discover missing knowledge, capture a gap locally and mark it for Brain ingestion:
+
+1. Add an entry to `brain/cortex/GAP_CAPTURE.md`
+2. Touch the marker file:
+
+```bash
+touch brain/cortex/.gap_pending
+```
+
+Brain will ingest pending gaps from sibling projects when you run (in the Brain repo):
+
+```bash
+bash cortex/sync_gaps.sh
+```
+EOF
 else
   warn "No skills/ directory found at Brain root; skipping brain knowledge snapshot"
 fi
