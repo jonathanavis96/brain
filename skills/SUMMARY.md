@@ -209,7 +209,6 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
   - [State Management Patterns](domains/infrastructure/state-management-patterns.md) - React state, global stores, persistence
   - **[Frontend Development](domains/frontend/README.md)** - Frontend development overview
     - [Accessibility Patterns](domains/frontend/accessibility-patterns.md) - WCAG compliance, ARIA attributes, keyboard navigation, screen reader support
-    - [UI/UX Audit Protocol](domains/frontend/ui-ux-audit-protocol.md) - Design-only UI/UX audit protocol and phased plan template
     - [Component Architecture](domains/frontend/component-architecture.md) - Component design and organization patterns
     - [React Patterns](domains/frontend/react-patterns.md) - Component composition, hooks, state management, performance optimization
     - [Vue Patterns](domains/frontend/vue-patterns.md) - Vue.js composition API, reactivity, lifecycle management

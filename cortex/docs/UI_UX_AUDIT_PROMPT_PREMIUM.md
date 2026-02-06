@@ -11,8 +11,7 @@ This document contains the canonical **design-only audit prompt** used to run a 
 
 ## Source
 
-Originally captured from `skills/domains/frontend/ui-ux-audit-protocol.md` and relocated here to keep
-`skills/` focused on broadly reusable patterns.
+Relocated here to keep `skills/` focused on broadly reusable patterns.
 
 ---
 

@@ -131,7 +131,6 @@ Progress/completion context should come from:
 
 ## See Also
 
-- `skills/domains/frontend/ui-ux-audit-protocol.md` — short reusable audit protocol
-- `cortex/docs/UI_UX_AUDIT_PROMPT_PREMIUM.md` — full premium prompt (copy/paste)
+- `cortex/docs/UI_UX_AUDIT_PROMPT_PREMIUM.md` — premium audit prompt + protocol (copy/paste)
 - `workers/IMPLEMENTATION_PLAN.md` — task contracts and approval state
 - `workers/ralph/THUNK.md` — append-only completion log
