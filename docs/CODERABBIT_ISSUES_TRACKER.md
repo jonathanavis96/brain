@@ -24,6 +24,9 @@ These items were raised by CodeRabbit during review (advisory) and were validate
   - **Fix approach:** restore single plan path in docs and drift reports.
 - **Root cause note:** bulk path normalization without validation can double-prefix paths (e.g., `skills/self-improvement/skills/self-improvement/...`).
   - **Prevention:** run `bash tools/validate_links.sh` and grep for doubled segments (e.g., `rg "skills/self-improvement/skills/self-improvement" docs/ skills/`) during doc edits.
+- **loop.sh sync script path** — ensure skill sync uses co-located script (✅ Fixed)
+  - **What was broken:** `SYNC_SCRIPT` referenced `${ROOT}/workers/ralph/sync_brain_skills.sh`, which breaks when ROOT is not the local loop.sh directory.
+  - **Fix approach:** set `SYNC_SCRIPT` relative to the running loop.sh directory (`$(dirname "${BASH_SOURCE[0]}")/sync_brain_skills.sh`).
 
 
 ### Fix Notes (what changed + how to apply elsewhere)

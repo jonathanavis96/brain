@@ -72,6 +72,7 @@ echo "Created SPEC_CHANGE_REQUEST.md - awaiting human review"
 
 - Protected files: `AC.rules`, `verifier.sh`, `loop.sh`, `PROMPT.md`, `.verify/*.sha256`
 - See `docs/WAIVER_PROTOCOL.md` for false positive handling
+- When a script references a sibling helper, prefer `$(dirname "${BASH_SOURCE[0]}")` to avoid ROOT/RALPH path drift
 
 ---
 

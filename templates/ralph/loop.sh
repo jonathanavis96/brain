@@ -658,7 +658,8 @@ SKIP_BRAIN_SKILLS_SYNC="${SKIP_BRAIN_SKILLS_SYNC:-0}"
 BRAIN_SKILLS_SYNC_MODE="${BRAIN_SKILLS_SYNC_MODE:-sibling}"
 
 if [[ "$SKIP_BRAIN_SKILLS_SYNC" != "1" ]]; then
-  SYNC_SCRIPT="${ROOT}/workers/ralph/sync_brain_skills.sh"
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  SYNC_SCRIPT="${SCRIPT_DIR}/sync_brain_skills.sh"
   if [[ -x "$SYNC_SCRIPT" ]]; then
     echo "[INFO] Refreshing vendored brain/skills (mode=$BRAIN_SKILLS_SYNC_MODE)..." >&2
     if [[ "$BRAIN_SKILLS_SYNC_MODE" == "repo" ]]; then
