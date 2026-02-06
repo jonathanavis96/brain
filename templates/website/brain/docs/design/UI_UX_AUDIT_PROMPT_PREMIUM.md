@@ -215,10 +215,12 @@ If you use Design Packs, the required inputs in `<design_startup>` should live u
 - `brain/docs/design-packs/<pack-name>/TECH_STACK.md`
 - `brain/docs/design-packs/<pack-name>/LESSONS.md` (optional but recommended)
 
-Progress/completion context should come from one of:
+Progress/completion context should come from:
 
-- `brain/workers/ralph/THUNK.md` (if you are using Ralph)
-- A short, plain-text progress snapshot you provide to the agent (if you are using Cortex directly)
+- The current state of the UI (run the site; include screenshots only as a fallback)
+- Any recent UI changes/constraints you already know about (paste a short summary into the chat)
+
+(You do not need Ralph outputs to run a design audit; Cortex should produce the plan and update `brain/workers/IMPLEMENTATION_PLAN.md` for Ralph.)
 
 Audit outputs belong under:
 
