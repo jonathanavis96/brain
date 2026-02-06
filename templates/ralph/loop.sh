@@ -34,19 +34,23 @@ else
   # Get absolute path to this script.
   SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-  # brain/workers/ralph -> brain
+  # Default layout: <repo>/brain/workers/ralph/loop.sh
+  # - SCRIPT_DIR points to <repo>/brain/workers/ralph
+  # - BRAIN_ROOT points to <repo>/brain
+  # - REPO_ROOT_CANDIDATE points to <repo>
   BRAIN_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
+  REPO_ROOT_CANDIDATE="$(dirname "$BRAIN_ROOT")"
 
-  # If we are nested in a monorepo (repo root contains brain/ + website/), widen ROOT to the repo root.
-  CANDIDATE_REPO_ROOT="$(dirname "$BRAIN_ROOT")"
-  if [[ -d "$CANDIDATE_REPO_ROOT/brain" && -d "$CANDIDATE_REPO_ROOT/website" ]]; then
-    ROOT="$CANDIDATE_REPO_ROOT"
+  # Monorepo detection: if this loop lives under <repo>/brain and sibling app dirs exist
+  # (e.g., <repo>/website), default ROOT to the monorepo root.
+  if [[ -d "$REPO_ROOT_CANDIDATE/brain" && -d "$REPO_ROOT_CANDIDATE/website" ]]; then
+    ROOT="$REPO_ROOT_CANDIDATE"
     BRAIN_ROOT="$ROOT/brain"
+    RALPH="$BRAIN_ROOT/workers/ralph"
   else
     ROOT="$BRAIN_ROOT"
+    RALPH="$SCRIPT_DIR"
   fi
-
-  RALPH="$BRAIN_ROOT/workers/ralph"
 fi
 
 # Print effective roots for debugging workspace boundaries.
