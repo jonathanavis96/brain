@@ -267,7 +267,7 @@ bash tools/gap_radar/suggest_gaps.sh --dry-run
 - **`errors.json`** - Raw error extraction (if saved with `> errors.json`)
 - **`coverage.json`** - Matched errors with coverage info
 - **`coverage.txt`** - Human-readable coverage report
-- **`skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md`** - Updated with new gaps (--auto-append mode)
+- **`skills/self-improvement/GAP_BACKLOG.md`** - Updated with new gaps (--auto-append mode)
 
 ## Dependencies
 
@@ -304,6 +304,6 @@ bash tools/gap_radar/suggest_gaps.sh --dry-run
 ## See Also
 
 - **[skills/self-improvement/README.md](../../skills/self-improvement/README.md)** - Gap capture protocol
-- **[skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md](../../skills/self-improvement/GAP_BACKLOG.md)** - Gap log
+- **[skills/self-improvement/GAP_BACKLOG.md](../../skills/self-improvement/GAP_BACKLOG.md)** - Gap log
 - **[skills/self-improvement/GAP_CAPTURE_RULES.md](../../skills/self-improvement/GAP_CAPTURE_RULES.md)** - Manual gap capture rules
 - **[skills/SUMMARY.md](../../skills/SUMMARY.md)** - Skills overview and error reference

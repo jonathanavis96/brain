@@ -47,7 +47,7 @@ brain/
 ## Files I Can Modify
 
 ✅ `workers/IMPLEMENTATION_PLAN.md`, `cortex/THOUGHTS.md`
-✅ `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md`, `SKILL_BACKLOG.md`
+✅ `skills/self-improvement/GAP_BACKLOG.md`, `SKILL_BACKLOG.md`
 
 ## Files I Cannot Modify
 

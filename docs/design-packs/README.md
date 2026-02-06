@@ -86,7 +86,7 @@ cortex --design
 
 # Or directly:
 bash cortex/cortex.bash --design
-```text
+```
 
 - Cortex/auditor **does not implement changes**.
 - Output is a phased plan for review and approval.

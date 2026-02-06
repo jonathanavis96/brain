@@ -152,7 +152,7 @@ bin/gap-radar --from-log path/to/log.txt
 bin/gap-radar --append
 ```
 
-**Output:** Gap suggestions printed to stdout, optionally appended to `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md`.
+**Output:** Gap suggestions printed to stdout, optionally appended to `skills/self-improvement/GAP_BACKLOG.md`.
 
 **Prerequisites:** Python 3, `tools/gap_radar/patterns.yaml` for error matching.
 

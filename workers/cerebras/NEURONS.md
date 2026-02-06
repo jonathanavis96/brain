@@ -430,7 +430,7 @@ skills/domains/<category>/<skill>.md
 skills/playbooks/<playbook>.md
 
 # Add gap (missing knowledge)
-echo "- Gap description" >> skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md
+echo "- Gap description" >> skills/self-improvement/GAP_BACKLOG.md
 ```
 
 ### Working with Tasks

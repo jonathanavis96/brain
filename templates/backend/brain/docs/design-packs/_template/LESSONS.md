@@ -33,6 +33,7 @@ Each entry:
 ```text
 2026-02-06 13:29:16
 - Changed button sizes to use spacing tokens instead of per-component CSS.
+- Why: the previous per-component sizing drifted across breakpoints.
 - Learned: the old CSS caused inconsistent hit targets on mobile.
 - Rule: all interactive components must meet minimum hit size.
 ```

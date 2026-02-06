@@ -116,7 +116,7 @@ substitute_placeholders() {
 
 # Usage message
 usage() {
-  cat <<EOF
+  cat <<'EOF'
 Usage: bash new-project.sh NEW_PROJECT_IDEA.md [--local-only]
 
 Bootstrap a new project with complete Ralph infrastructure and GitHub integration.
@@ -740,7 +740,7 @@ fi
 # ============================================
 
 info "Generating README.md..."
-cat >"$PROJECT_LOCATION/README.md" <<EOF
+cat >"$PROJECT_LOCATION/README.md" <<'EOF'
 # $PROJECT_NAME
 
 ${PROJECT_PURPOSE:-A new project bootstrapped with Ralph Brain.}

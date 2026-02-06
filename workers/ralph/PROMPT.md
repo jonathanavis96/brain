@@ -471,7 +471,7 @@ rg -l "keyword" tools/ skills/domains/ | head -10
 
 7. **Self-Improvement Check:** If you used undocumented knowledge/procedure/tooling:
    - Search `skills/` for existing matching skill
-   - Search `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
+   - Search `skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
    - If not found: append new entry to `skills/self-improvement/GAP_BACKLOG.md`
    - If gap is clear, specific, and recurring: promote to `SKILL_BACKLOG.md`
 

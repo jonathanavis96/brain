@@ -29,7 +29,7 @@ brain/artifacts/design-audits/<pack-name>/<YYYY-MM-DD_HHMMSS>.md
 ```
 
 4. After approval, translate approved items into task contracts in:
-   - `brain/workers/IMPLEMENTATION_PLAN.md`
+   - `workers/workers/IMPLEMENTATION_PLAN.md`
 
 ## Required inputs (mirrors the premium audit prompt)
 

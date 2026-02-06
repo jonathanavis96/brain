@@ -220,7 +220,7 @@ Progress/completion context should come from:
 - The current state of the UI (run the app; include screenshots only as a fallback)
 - Any recent UI changes/constraints you already know about (paste a short summary into the chat)
 
-(You do not need Ralph outputs to run a design audit; Cortex should produce the plan and update `brain/workers/IMPLEMENTATION_PLAN.md` for Ralph.)
+(You do not need Ralph outputs to run a design audit; Cortex should produce the plan and update `workers/workers/IMPLEMENTATION_PLAN.md` for Ralph.)
 
 Audit outputs belong under:
 

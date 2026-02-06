@@ -114,7 +114,7 @@ brain/ (repository root)
 | **Understand what's in the brain** | `NEURONS.md` (this file) or `cortex/REPO_MAP.md` |
 | **Run Ralph loop** | `AGENTS.md` → `bash loop.sh` |
 | **Run Cortex manager** | `cortex/RUNBOOK.md` → `bash cortex/run.sh` |
-| **Find TODO list** | `workers/IMPLEMENTATION_PLAN.md` (Ralph) or `workers/IMPLEMENTATION_PLAN.md` (Cortex) |
+| **Find TODO list** | `workers/IMPLEMENTATION_PLAN.md` |
 | **See commit examples & error recovery** | `docs/EDGE_CASES.md` |
 | **See recent changes** | `docs/CHANGES.md` |
 | **See KB structure** | `skills/SUMMARY.md` |
@@ -288,7 +288,7 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 **Workflow:**
 
 1. Cortex creates/updates high-level tasks in `workers/IMPLEMENTATION_PLAN.md`
-2. Ralph copies these to `workers/IMPLEMENTATION_PLAN.md` (via sync mechanism - to be implemented)
+2. Ralph syncs the plan as part of startup
 3. Ralph picks ONE atomic task per BUILD iteration and implements it
 4. Ralph logs completion to `workers/ralph/THUNK.md`
 5. Cortex reviews progress via `cortex/snapshot.sh` and adjusts strategy
@@ -297,7 +297,7 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 
 - ✅ `workers/IMPLEMENTATION_PLAN.md` - Task contracts
 - ✅ `cortex/THOUGHTS.md` - Strategic thinking
-- ✅ `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` - Knowledge gaps
+- ✅ `skills/self-improvement/GAP_BACKLOG.md` - Knowledge gaps
 - ✅ `skills/self-improvement/SKILL_BACKLOG.md` - Skill promotion queue
 
 **What Cortex Cannot Modify:**

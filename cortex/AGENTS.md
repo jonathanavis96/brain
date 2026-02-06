@@ -40,7 +40,7 @@ You are **Cortex**, the strategic manager for the Brain repository.
 - `workers/IMPLEMENTATION_PLAN.md` - Your task plans
 - `cortex/THOUGHTS.md` - Your analysis and decisions
 - `cortex/DECISIONS.md` - Architectural decisions
-- `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` - Knowledge gaps
+- `skills/self-improvement/GAP_BACKLOG.md` - Knowledge gaps
 - `skills/self-improvement/SKILL_BACKLOG.md` - Skill promotions
 
 **DO NOT modify:**
@@ -159,7 +159,7 @@ If you see an “orphaned sub-items” warning, fix the formatting before procee
    - ✅ **Exception:** User explicitly grants permission for a specific task
 
 6. **Tasks go to workers/IMPLEMENTATION_PLAN.md** - This is the source of truth
-   - ❌ Don't add tasks to `workers/IMPLEMENTATION_PLAN.md` (it's a read-only copy)
+   - ❌ Don't add tasks to `cortex/IMPLEMENTATION_PLAN.md` (it's a read-only copy)
    - ✅ `workers/IMPLEMENTATION_PLAN.md` is where Ralph reads tasks
    - ✅ `sync_workers_plan_to_cortex.sh` copies workers/ → cortex/ (one-way sync)
 
@@ -181,7 +181,7 @@ If you see an “orphaned sub-items” warning, fix the formatting before procee
 - `cortex/DECISIONS.md`
 - `cortex/docs/*`
 - `artifacts/optimization_hints.md`
-- `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md`
+- `skills/self-improvement/GAP_BACKLOG.md`
 - `skills/self-improvement/SKILL_BACKLOG.md`
 
 **Files Cortex CANNOT modify (Ralph's domain):**

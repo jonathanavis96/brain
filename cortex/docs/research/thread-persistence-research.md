@@ -80,7 +80,7 @@ CREATE TABLE fail_log (
 
 ### 1.3 workers/IMPLEMENTATION_PLAN.md - Active Tasks
 
-**Location:** `workers/IMPLEMENTATION_PLAN.md` (synced from `workers/IMPLEMENTATION_PLAN.md`)
+**Location:** `workers/IMPLEMENTATION_PLAN.md`
 
 **Format:** Markdown checkboxes with task contracts
 

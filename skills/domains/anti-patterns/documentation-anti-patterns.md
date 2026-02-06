@@ -43,6 +43,8 @@ Documentation references a file that doesn't exist, or uses outdated paths after
 
 **Why it's bad:** Reader clicks link, gets 404, loses trust in documentation.
 
+**Recent Example:** `tools/validate_doc_sync.sh` looked for `brain/skills/...` while this repo stores files at `skills/...`, breaking pre-commit runs.
+
 ### Good Example
 
 Before adding links, verify the target exists:

@@ -64,7 +64,7 @@ bash brain/workers/ralph/capture_gap.sh "Suggested Skill Name" \
   --evidence "paths/notes"
 ```text
 
-**Brain-side ingestion:** run `bash cortex/sync_gaps.sh` from the Brain repo to import pending gaps into `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md`.
+**Brain-side ingestion:** run `bash cortex/sync_gaps.sh` from the Brain repo to import pending gaps into `skills/self-improvement/GAP_BACKLOG.md`.
 
 
 Templates use **relative paths with forward slashes**:

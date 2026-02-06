@@ -27,7 +27,7 @@ This document records critical corrections made to the Brain template system and
    - This mismatch caused confusion about proper git workflow
 
 3. **Incorrect Path Pattern**
-   - Cortex documentation in deene-social referenced non-existent `workers/IMPLEMENTATION_PLAN.md`
+   - Cortex documentation in deene-social referenced non-existent `workers/workers/IMPLEMENTATION_PLAN.md`
    - Should be `workers/IMPLEMENTATION_PLAN.md`
    - 10 incorrect references found across 3 Cortex files
 
@@ -122,7 +122,7 @@ This ensures:
 **Pattern:**
 
 ```diff
-- workers/IMPLEMENTATION_PLAN.md
+- workers/workers/IMPLEMENTATION_PLAN.md
 + workers/IMPLEMENTATION_PLAN.md
 ```
 

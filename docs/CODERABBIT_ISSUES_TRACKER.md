@@ -11,6 +11,21 @@
 
 These items were raised by CodeRabbit during review (advisory) and were validated and fixed in the current branch.
 
+## Recent Fixes (2026-02-06)
+
+- **validate_doc_sync paths** — repo-root path regression fixed (✅ Fixed)
+  - **What was broken:** `tools/validate_doc_sync.sh` assumed `brain/skills/...`, failing in repo root.
+  - **Fix approach:** normalize to `skills/...` paths so pre-commit runs from repo root.
+- **GAP_BACKLOG path normalization** — remove duplicated `skills/self-improvement/` (✅ Fixed)
+  - **What was broken:** multiple docs referenced a non-existent nested path.
+  - **Fix approach:** update all references to `skills/self-improvement/GAP_BACKLOG.md`.
+- **Plan path guidance clarification** — keep `workers/IMPLEMENTATION_PLAN.md` as source of truth (✅ Fixed)
+  - **What was broken:** conflicting path references suggested alternate plan locations.
+  - **Fix approach:** restore single plan path in docs and drift reports.
+- **Root cause note:** bulk path normalization without validation can double-prefix paths (e.g., `skills/self-improvement/skills/self-improvement/...`).
+  - **Prevention:** run `bash tools/validate_links.sh` and grep for doubled segments (e.g., `rg "skills/self-improvement/skills/self-improvement" docs/ skills/`) during doc edits.
+
+
 ### Fix Notes (what changed + how to apply elsewhere)
 
 - **`bin/brain-search` — SQL quote-breaking/injection risk** (✅ Fixed, `89180e0`)
