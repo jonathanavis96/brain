@@ -86,7 +86,7 @@ Then output `:::BUILD_READY:::` to end the iteration.
 - `THOUGHTS.md` - slice with `head -30` if needed
 - `cortex/*.md` - Cortex files are NOT needed for BUILD tasks
 - `workers/IMPLEMENTATION_PLAN.md` (full file) - use grep to find tasks
-- `workers/ralph/workers/ralph/THUNK.md` (full file) - use tail to append only
+- `workers/ralph/THUNK.md` (full file) - use tail to append only
 
 ### Required Startup Sequence (STRICT)
 
@@ -103,11 +103,11 @@ find bin/ -maxdepth 1 -type f | head -20
 find tools/ -maxdepth 1 -name "*.py" -o -name "*.sh" 2>/dev/null | head -10
 ```
 
-### workers/ralph/workers/ralph/THUNK.md Access Rules (STRICT)
+### workers/ralph/THUNK.md Access Rules (STRICT)
 
-- Lookups: `grep ... workers/ralph/workers/ralph/THUNK.md | head -3`
+- Lookups: `grep ... workers/ralph/THUNK.md | head -3`
 - Append: get next id ONCE right before append:
-  - `tail -10 workers/ralph/workers/ralph/THUNK.md | grep "^|" | tail -1`
+  - `tail -10 workers/ralph/THUNK.md | grep "^|" | tail -1`
 
 ### Search Before Creating
 

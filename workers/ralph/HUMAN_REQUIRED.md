@@ -30,7 +30,7 @@ Manual verification tasks that cannot be automated. Complete these and update `r
 2. In another terminal, edit `workers/IMPLEMENTATION_PLAN.md`
 3. Mark any task as complete: change `- [ ]` to `- [x]`
 4. Save the file and wait 5-10 seconds
-5. Check `workers/ralph/workers/ralph/THUNK.md` - it should NOT be auto-updated
+5. Check `workers/ralph/THUNK.md` - it should NOT be auto-updated
 
 **Pass criteria:** workers/ralph/THUNK.md remains unchanged (monitor only displays, doesn't sync)
 

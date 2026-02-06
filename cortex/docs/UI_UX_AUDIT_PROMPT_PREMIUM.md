@@ -223,7 +223,7 @@ If you use Design Packs, the required inputs in `<design_startup>` should live u
 
 Progress/completion context should come from:
 
-- `workers/ralph/THUNK.md`
+- current UI state and a brief summary of recent design changes (include screenshots if needed)
 
 Audit outputs belong under:
 

@@ -1,7 +1,7 @@
 # CodeRabbit Issues Tracker
 
 **Created:** 2026-01-25  
-**Last Updated:** 2026-01-27  
+**Last Updated:** 2026-02-06  
 **PRs Covered:** #5, #6  
 **Purpose:** Unified tracker for CodeRabbit findings and prevention systems
 
@@ -351,7 +351,7 @@ CodeRabbit has identified **50+ issues** across PR5 and PR6, with significant ov
 ### M10: workers/ralph/THUNK.md Table Column Mismatch (Recurring)
 
 **Status:** ⬜ Open  
-**File:** `workers/ralph/workers/ralph/THUNK.md` lines 748, 770-782  
+**File:** `workers/ralph/THUNK.md` lines 748, 770-782  
 **PRs:** #5 (D8), #6 (PI-6, PI-10)
 
 **Issue:** Table rows have wrong column count (6 instead of 5), unescaped pipes.

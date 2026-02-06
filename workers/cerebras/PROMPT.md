@@ -71,7 +71,7 @@ Then output `:::BUILD_READY:::` to end the iteration.
 **Every completed task MUST include ALL THREE in ONE commit:**
 
 1. ✅ The code/doc fix itself
-2. ✅ workers/ralph/workers/ralph/THUNK.md entry (append to current era table)
+2. ✅ workers/ralph/THUNK.md entry (append to current era table)
 3. ✅ workers/IMPLEMENTATION_PLAN.md update (mark task `[x]`)
 
 ```bash
@@ -81,7 +81,7 @@ git add -A && git commit -m "msg"
 
 **NEVER make separate commits** for "mark task complete" or "log to THUNK" - these waste iterations and break traceability.
 
-**If you commit code without updating workers/ralph/workers/ralph/THUNK.md and workers/IMPLEMENTATION_PLAN.md, you have NOT completed the task.**
+**If you commit code without updating workers/ralph/THUNK.md and workers/IMPLEMENTATION_PLAN.md, you have NOT completed the task.**
 
 ---
 
@@ -352,8 +352,8 @@ rg -l "keyword" tools/ skills/domains/ | head -10
 
 4. Validate per AGENTS.md commands
 
-5. **SINGLE COMMIT RULE:** Commit ALL changes together (code fix + workers/ralph/workers/ralph/THUNK.md + workers/IMPLEMENTATION_PLAN.md):
-   - Log completion to workers/ralph/workers/ralph/THUNK.md (append to current era table)
+5. **SINGLE COMMIT RULE:** Commit ALL changes together (code fix + workers/ralph/THUNK.md + workers/IMPLEMENTATION_PLAN.md):
+   - Log completion to workers/ralph/THUNK.md (append to current era table)
    - Mark task `[x]` in workers/IMPLEMENTATION_PLAN.md
    - **NEVER make separate commits** for "mark task complete" or "log to THUNK" - these waste iterations
 

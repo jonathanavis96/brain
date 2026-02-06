@@ -89,7 +89,7 @@ Extract structured data from workers/ralph/THUNK.md markdown tables.
 bin/thunk-parse --stats
 
 # Export to JSON (stdout)
-bin/thunk-parse --format json workers/ralph/workers/ralph/THUNK.md
+bin/thunk-parse --format json workers/ralph/THUNK.md
 
 # Export to JSON file
 bin/thunk-parse --format json -o thunk.json
@@ -290,13 +290,13 @@ Extract structured data from workers/ralph/THUNK.md markdown tables.
 
 ```bash
 # Parse and display stats
-python3 tools/thunk_parser.py workers/ralph/workers/ralph/THUNK.md --stats
+python3 tools/thunk_parser.py workers/ralph/THUNK.md --stats
 
 # Export to JSON
-python3 tools/thunk_parser.py workers/ralph/workers/ralph/THUNK.md --format json --output thunk.json
+python3 tools/thunk_parser.py workers/ralph/THUNK.md --format json --output thunk.json
 
 # Export to SQLite
-python3 tools/thunk_parser.py workers/ralph/workers/ralph/THUNK.md --format sqlite --output thunk.db
+python3 tools/thunk_parser.py workers/ralph/THUNK.md --format sqlite --output thunk.db
 ```
 
 **Output:** JSON array or SQLite database with fields: `thunk_num`, `original_id`, `priority`, `description`, `completed`, `era`.
@@ -372,7 +372,7 @@ bash tools/thunk_dedup.sh --dry-run
 bash tools/thunk_dedup.sh
 ```
 
-**Output:** Updates `workers/ralph/workers/ralph/THUNK.md` in-place, prints statistics to stdout.
+**Output:** Updates `workers/ralph/THUNK.md` in-place, prints statistics to stdout.
 
 **Prerequisites:** Bash, standard Unix tools (awk, sort).
 
@@ -637,7 +637,7 @@ bash workers/ralph/thunk_ralph_tasks.sh --once
 
 **Output:** Terminal display of completed tasks with timestamps and descriptions.
 
-**Prerequisites:** Bash, access to `workers/ralph/workers/ralph/THUNK.md`.
+**Prerequisites:** Bash, access to `workers/ralph/THUNK.md`.
 
 ---
 
@@ -836,7 +836,7 @@ bin/thunk-parse --format sqlite -o threads.db
 
 | Bad (high tokens) | Good (low tokens) |
 |-------------------|-------------------|
-| `open_files workers/ralph/workers/ralph/THUNK.md` | `bin/thunk-parse --stats` |
+| `open_files workers/ralph/THUNK.md` | `bin/thunk-parse --stats` |
 | `grep "pattern" workers/ralph/THUNK.md` | `bin/brain-search "pattern"` |
 | Manual `git log \| grep` | `bin/brain-search --git-only "pattern"` |
 | Read whole IMPL_PLAN | `grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md \| head -10` |
@@ -846,7 +846,7 @@ bin/thunk-parse --format sqlite -o threads.db
 | Task | Command |
 |------|---------|
 | Check if task done | `bin/brain-search --thunk-only "11.1.3"` |
-| Get last THUNK # | `tail -5 workers/ralph/workers/ralph/THUNK.md` then grep for `^\|` |
+| Get last THUNK # | `tail -5 workers/ralph/THUNK.md` then grep for `^\|` |
 | Count completions | `bin/thunk-parse --stats` |
 | Find similar work | `bin/brain-search "keyword"` |
 

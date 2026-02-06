@@ -180,7 +180,7 @@ bash verifier.sh
 
 ```bash
 git add templates/ralph/<filename>
-git add workers/IMPLEMENTATION_PLAN.md workers/ralph/workers/ralph/THUNK.md
+git add workers/IMPLEMENTATION_PLAN.md workers/ralph/THUNK.md
 git commit -m "sync(templates): update <filename> from workers/ralph
 
 - <Brief description of what changed>
@@ -195,7 +195,7 @@ Brain-Repo: jonathanavis96/brain"
 
 ```bash
 git add templates/ralph/README.md .verify/waiver_requests/WVR-*.json
-git add workers/IMPLEMENTATION_PLAN.md workers/ralph/workers/ralph/THUNK.md
+git add workers/IMPLEMENTATION_PLAN.md workers/ralph/THUNK.md
 git commit -m "docs(templates): document intentional drift in <filename>
 
 - Updated README.md to explain brain-specific features

@@ -92,7 +92,7 @@ Use complexity tags to estimate iteration time and identify candidates for decom
 ### Monitor Progress
 
 - `bash cortex/snapshot.sh` - Git + Ralph status
-- Read `workers/ralph/workers/ralph/THUNK.md` - Completed work
+- Read `workers/ralph/THUNK.md` - Completed work
 
 ---
 
@@ -126,7 +126,7 @@ curl -s https://raw.githubusercontent.com/user/repo/main/README.md
 grep -E '^\- \[ \]' workers/IMPLEMENTATION_PLAN.md | head -5
 
 # Recent completions
-grep -E '^\| [0-9]+' workers/ralph/workers/ralph/THUNK.md | tail -5
+grep -E '^\| [0-9]+' workers/ralph/THUNK.md | tail -5
 
 # Full snapshot
 bash cortex/snapshot.sh

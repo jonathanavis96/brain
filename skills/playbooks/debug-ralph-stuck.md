@@ -309,7 +309,7 @@ Common error patterns:
 
 **Action:** Record the issue and resolution for future reference.
 
-- Add entry to `workers/ralph/workers/ralph/THUNK.md` if you manually intervened
+- Add entry to `workers/ralph/THUNK.md` if you manually intervened
 - Clean up any temporary debug files
 - If this was a novel issue, consider adding to `skills/self-improvement/GAP_BACKLOG.md`
 

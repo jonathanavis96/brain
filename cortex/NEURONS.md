@@ -36,7 +36,7 @@ brain/
 | I need to... | Read this |
 |--------------|-----------|
 | See active tasks | `workers/IMPLEMENTATION_PLAN.md` |
-| See completed tasks | `workers/ralph/workers/ralph/THUNK.md` |
+| See completed tasks | `workers/ralph/THUNK.md` |
 | Fix a verifier error | `skills/SUMMARY.md` → Error table |
 | Understand project goals | `cortex/THOUGHTS.md` |
 | Learn a pattern | `skills/domains/<pattern>.md` |

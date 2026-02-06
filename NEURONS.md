@@ -280,7 +280,7 @@ brain/                           # Root of brain repository
 
 - `skills/self-improvement/GAP_BACKLOG.md` - Identified knowledge gaps
 - `skills/self-improvement/SKILL_BACKLOG.md` - Skills to create
-- `workers/ralph/workers/ralph/THUNK.md` - Completed tasks log
+- `workers/ralph/THUNK.md` - Completed tasks log
 
 ## Domain Coverage
 
@@ -345,7 +345,7 @@ brain/                           # Root of brain repository
 | Understand Ralph loop | `workers/ralph/AGENTS.md` → `skills/domains/ralph/` |
 | Check acceptance criteria | `rules/AC.rules` (read only) |
 | Review verifier output | `.verify/latest.txt` |
-| See completed work | `workers/ralph/workers/ralph/THUNK.md` |
+| See completed work | `workers/ralph/THUNK.md` |
 | Understand brain mission | `THOUGHTS.md` |
 | Get started (human) | `README.md` |
 | Add new skill | `skills/self-improvement/GAP_BACKLOG.md` |

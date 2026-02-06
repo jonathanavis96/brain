@@ -153,7 +153,7 @@ cat > skills/domains/anti-patterns/ralph-anti-patterns.md << 'EOF'
 EOF
 
 # Log completion (append to current era table)
-echo "| 500 | 16.3.2 | MEDIUM | Create ralph-anti-patterns.md - 7 anti-patterns documented | $(date +%Y-%m-%d) |" >> workers/ralph/workers/ralph/THUNK.md
+echo "| 500 | 16.3.2 | MEDIUM | Create ralph-anti-patterns.md - 7 anti-patterns documented | $(date +%Y-%m-%d) |" >> workers/ralph/THUNK.md
 
 # Mark task complete
 sed -i 's/- \[ \] \*\*16.3.2\*\*/- [x] **16.3.2**/' workers/IMPLEMENTATION_PLAN.md
@@ -353,7 +353,7 @@ SUMMARY
 
 ```bash
 # DON'T: Open large files at startup
-open_files(["NEURONS.md", "THOUGHTS.md", "workers/IMPLEMENTATION_PLAN.md", "workers/ralph/workers/ralph/THUNK.md"])
+open_files(["NEURONS.md", "THOUGHTS.md", "workers/IMPLEMENTATION_PLAN.md", "workers/ralph/THUNK.md"])
 
 # DON'T: Read full files to find one task
 cat workers/IMPLEMENTATION_PLAN.md | grep "[ ]"
@@ -380,7 +380,7 @@ ls skills/domains/
 find bin/ -maxdepth 1 -type f
 
 # DO: Use tail for THUNK lookups
-tail -20 workers/ralph/workers/ralph/THUNK.md | grep "^|" | tail -1
+tail -20 workers/ralph/THUNK.md | grep "^|" | tail -1
 ```
 
 ### Related Patterns

@@ -100,7 +100,7 @@ These block the verifier and must be fixed by a human (hash files are protected)
 
 | # | File | Issue | Fix |
 |---|------|-------|-----|
-| D8 | `workers/ralph/workers/ralph/THUNK.md` | Malformed table rows (unescaped pipes) | Escape pipes or use backticks |
+| D8 | `workers/ralph/THUNK.md` | Malformed table rows (unescaped pipes) | Escape pipes or use backticks |
 | D9 | `cortex/AGENTS.md` | Code block formatting issue line 45-50 | Fix closing fence |
 | D10 | `skills/domains/infrastructure/observability-patterns.md` | Stray duplicate closing fence | Remove extra backticks |
 
