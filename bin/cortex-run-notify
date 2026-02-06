@@ -187,7 +187,7 @@ interactive_watch() {
 
   # Ensure cleanup
   cleanup_watch() {
-    if [[ -n "$watch_pid" ]] && kill -0 "$watch_pid" 2>/dev/null; then
+    if [[ -n "${watch_pid:-}" ]] && kill -0 "$watch_pid" 2>/dev/null; then
       kill "$watch_pid" 2>/dev/null || true
       wait "$watch_pid" 2>/dev/null || true
     fi
@@ -253,7 +253,7 @@ interactive_watch() {
   cmd_str=$(printf '%q ' "${cmd[@]}")
 
   set +e
-  script -q -f "$tmp_log" -c "$cmd_str" /dev/null
+  script -q -f -c "$cmd_str" "$tmp_log"
   EXIT_CODE=$?
   set -e
 
