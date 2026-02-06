@@ -382,6 +382,22 @@ CodeRabbit has identified **50+ issues** across PR5 and PR6, with significant ov
 
 ---
 
+### M13b: cortex-run-notify `script(1)` Invocation Uses Wrong Arg Order (Fixed)
+
+**Status:** ✅ Fixed (2026-02-06)  
+**File:** `bin/cortex-run-notify`
+
+**Issue:** In interactive-watch mode, the wrapper invoked `script` with the output file before `-c` and included an extraneous `/dev/null`, which breaks on some systems and can capture logs incorrectly.
+
+**Fix:** Call `script` with options first, then the `-c` command, then the output file:
+
+- `script -q -f -c "$cmd_str" "$tmp_log"`
+
+Also made `watch_pid` cleanup safe under `set -u` by using `${watch_pid:-}` in the guard.
+
+**Prevention:** Document the `script` argument order pitfall in shell anti-patterns; avoid “stringly” extra args like `/dev/null` unless required.
+
+---
 ### M14: bin/notify Broken Redirection Argument (New)
 
 **Status:** ⬜ Open  
@@ -517,7 +533,6 @@ CodeRabbit has identified **50+ issues** across PR5 and PR6, with significant ov
 **Prevention:** Wrapper/template scripts should avoid CWD-relative execution for internal entrypoints; prefer `REPO_ROOT` + absolute paths.
 
 ---
-
 ## 🟡 MINOR Issues
 
 ### m1: Observability Patterns Issues (Recurring)

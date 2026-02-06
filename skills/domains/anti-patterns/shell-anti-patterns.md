@@ -935,6 +935,36 @@ bash "${REPO_ROOT}/workers/ralph/loop.sh" "${args[@]}"
 
 ---
 
+## Wrapper Pitfall: Wrong `script(1)` Argument Order (PTY Capture)
+
+**Context:** Wrappers using `script` to run an interactive command under a PTY while logging output.
+
+**Bad example:**
+
+```bash
+# Wrong: output file placed before -c, and stray /dev/null argument.
+script -q -f "$tmp_log" -c "$cmd_str" /dev/null
+```
+
+**Why it’s wrong:**
+
+- `script` expects `-c <command>` before the output file argument.
+- The extra `/dev/null` is treated as another filename argument on many implementations.
+- Symptoms range from “command not found”/usage errors to logs written to unexpected files.
+
+**Good example:**
+
+```bash
+script -q -f -c "$cmd_str" "$tmp_log"
+EXIT_CODE=$?
+```
+
+**How to detect:**
+
+- Look for `script ... "$log" -c ...` (output file before `-c`).
+- Look for unexpected extra path arguments like `/dev/null`.
+
+---
 ## Template Pitfall: Incorrect Repo Root From `SCRIPT_DIR` Math
 
 **Context:** Template scripts often live under `templates/...` at authoring time, but are installed to a different path in generated projects.
@@ -976,7 +1006,6 @@ if [[ -z "$REPO_ROOT" ]]; then
   exit 1
 fi
 ```
-
 ## See Also
 
 - **[Anti-Patterns README](README.md)** - Anti-patterns library overview and format guidelines
