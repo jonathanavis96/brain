@@ -41,9 +41,13 @@ else
   BRAIN_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
   REPO_ROOT_CANDIDATE="$(dirname "$BRAIN_ROOT")"
 
-  # Monorepo detection: if this loop lives under <repo>/brain and sibling app dirs exist
-  # (e.g., <repo>/website), default ROOT to the monorepo root.
-  if [[ -d "$REPO_ROOT_CANDIDATE/brain" && -d "$REPO_ROOT_CANDIDATE/website" ]]; then
+  # Monorepo detection:
+  # If this loop lives under <repo>/brain and the *git root* is the parent directory,
+  # default ROOT to the monorepo root (<repo>) so Ralph can operate on the whole workspace.
+  #
+  # This avoids false positives when running inside the standalone Brain repo
+  # (where <repo> == <repo>/brain).
+  if [[ -d "$REPO_ROOT_CANDIDATE/brain" && -d "$REPO_ROOT_CANDIDATE/.git" && ! -d "$BRAIN_ROOT/.git" ]]; then
     ROOT="$REPO_ROOT_CANDIDATE"
     BRAIN_ROOT="$ROOT/brain"
     RALPH="$BRAIN_ROOT/workers/ralph"
