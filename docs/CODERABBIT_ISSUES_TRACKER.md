@@ -134,7 +134,7 @@ These items were raised by CodeRabbit during review (advisory) and were validate
 
 - **Cortex docs — conflicting task contract guidance + CLI break** (✅ Fixed, `11c40b8`, `8b726b1`)
   - **Fix approach:**
-    - Make the source-of-truth explicit: task contracts live in `workers/workers/IMPLEMENTATION_PLAN.md`.
+    - Make the source-of-truth explicit: task contracts live in `workers/IMPLEMENTATION_PLAN.md`.
     - Avoid non-printable control characters in docs (they can break YAML/JSON parsing in tooling).
 
 - **Protected-file workflow — spec alignment** (✅ Fixed, `11c40b8`)
@@ -398,6 +398,7 @@ Also made `watch_pid` cleanup safe under `set -u` by using `${watch_pid:-}` in t
 **Prevention:** Document the `script` argument order pitfall in shell anti-patterns; avoid “stringly” extra args like `/dev/null` unless required.
 
 ---
+
 ### M14: bin/notify Broken Redirection Argument (New)
 
 **Status:** ⬜ Open  
@@ -533,6 +534,7 @@ Also made `watch_pid` cleanup safe under `set -u` by using `${watch_pid:-}` in t
 **Prevention:** Wrapper/template scripts should avoid CWD-relative execution for internal entrypoints; prefer `REPO_ROOT` + absolute paths.
 
 ---
+
 ## 🟡 MINOR Issues
 
 ### m1: Observability Patterns Issues (Recurring)
@@ -587,7 +589,7 @@ Also made `watch_pid` cleanup safe under `set -u` by using `${watch_pid:-}` in t
 
 | File | Issue |
 |------|-------|
-| `workers/workers/IMPLEMENTATION_PLAN.md` | Future date |
+| `workers/IMPLEMENTATION_PLAN.md` | Future date |
 | `skills/domains/languages/typescript/README.md` | Future date |
 
 **Prevention:** Date validation script (no future dates).

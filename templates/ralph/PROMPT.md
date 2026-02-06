@@ -13,7 +13,7 @@ Look for the `# VERIFIER STATUS` section at the top of this prompt. It contains:
 
 If the header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
-1. **STOP** - Do not pick a new task from workers/workers/IMPLEMENTATION_PLAN.md
+1. **STOP** - Do not pick a new task from workers/IMPLEMENTATION_PLAN.md
 2. **CHECK** the `# VERIFIER STATUS` section above for failure details
 3. **FIX** the failing acceptance criteria listed in `# FAILED_RULES:`
 4. **COMMIT** your fix with message: `fix(ralph): resolve AC failure <RULE_ID>`
@@ -21,7 +21,7 @@ If the header contains `# LAST_VERIFIER_RESULT: FAIL`, you MUST:
 
 If the `# VERIFIER STATUS` section shows `[WARN]` lines:
 
-1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of workers/workers/IMPLEMENTATION_PLAN.md (after header, before other phases)
+1. **ADD** "## Phase 0-Warn: Verifier Warnings" section at TOP of workers/IMPLEMENTATION_PLAN.md (after header, before other phases)
 2. **⚠️ DO NOT create "## Verifier Warnings" without the "Phase 0-Warn:" prefix** - This breaks the task monitor!
 3. **LIST (BATCHED):** Create **ONE task per (RULE_ID + file)**, not per line/occurrence. Use: `- [ ] WARN.<RULE_ID>.<filename> - <description>`
 4. **NEVER use numbered lists (1. 2. 3.)** - ALWAYS use checkbox format `- [ ]`
@@ -85,7 +85,7 @@ Then output `:::BUILD_READY:::` to end the iteration.
 - `NEURONS.md` - use `ls` to explore structure
 - `THOUGHTS.md` - slice with `head -30` if needed
 - `cortex/*.md` - Cortex files are NOT needed for BUILD tasks
-- `workers/workers/IMPLEMENTATION_PLAN.md` (full file) - use grep to find tasks
+- `workers/IMPLEMENTATION_PLAN.md` (full file) - use grep to find tasks
 - `workers/ralph/workers/ralph/THUNK.md` (full file) - use tail to append only
 
 ### Required Startup Sequence (STRICT)

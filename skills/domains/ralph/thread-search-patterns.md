@@ -223,7 +223,7 @@ sqlite3 artifacts/rollflow_cache/cache.sqlite \
 
 ```bash
 # 1. Find task in IMPLEMENTATION_PLAN
-grep "\*\*11.1.1\*\*" workers/workers/IMPLEMENTATION_PLAN.md
+grep "\*\*11.1.1\*\*" workers/IMPLEMENTATION_PLAN.md
 
 # 2. Find task in THUNK (completion record)
 grep "\*\*11.1.1\*\*" workers/ralph/workers/ralph/THUNK.md
@@ -259,7 +259,7 @@ cat artifacts/rollflow_cache/config.yml
 grep "\*\*TASK_ID\*\*" workers/ralph/workers/ralph/THUNK.md || echo "Not completed"
 
 # 2. Check current status in PLAN
-grep "\*\*TASK_ID\*\*" workers/workers/IMPLEMENTATION_PLAN.md
+grep "\*\*TASK_ID\*\*" workers/IMPLEMENTATION_PLAN.md
 
 # 3. Check verifier output for related failures
 grep -i "task_keyword" .verify/latest.txt

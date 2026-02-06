@@ -8,7 +8,7 @@ You are Cerebras. AGENTS.md is injected above. Mode is in the header.
 
 Check the `# VERIFIER STATUS` section at the top:
 
-- **PASS** → Pick next task from `workers/workers/IMPLEMENTATION_PLAN.md`
+- **PASS** → Pick next task from `workers/IMPLEMENTATION_PLAN.md`
 - **FAIL** → Fix the failing AC first, then `:::BUILD_READY:::`
 - **WARN** → Note warnings, proceed with task
 

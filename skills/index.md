@@ -84,6 +84,7 @@ Catalog of all skill files in the brain system.
 - [README.md](domains/frontend/README.md) - Frontend development overview
 - [react-patterns.md](domains/frontend/react-patterns.md) - React hooks, composition, state management, performance
 - [accessibility-patterns.md](domains/frontend/accessibility-patterns.md) - ARIA, keyboard navigation, screen readers, WCAG compliance
+- [ui-ux-audit-protocol.md](domains/frontend/ui-ux-audit-protocol.md) - Design-only UI/UX audit protocol and phased plan template
 
 ### Infrastructure
 

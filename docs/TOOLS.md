@@ -601,7 +601,7 @@ bash workers/ralph/loop.sh --resume
 
 Real-time display of pending tasks from workers/IMPLEMENTATION_PLAN.md.
 
-**Purpose:** Monitor pending tasks from workers/workers/IMPLEMENTATION_PLAN.md in real-time.
+**Purpose:** Monitor pending tasks from workers/IMPLEMENTATION_PLAN.md in real-time.
 
 **Usage:**
 
@@ -615,7 +615,7 @@ bash workers/ralph/current_ralph_tasks.sh --once
 
 **Output:** Terminal display with pending tasks grouped by phase, updates on file change.
 
-**Prerequisites:** Bash, access to `workers/workers/IMPLEMENTATION_PLAN.md`.
+**Prerequisites:** Bash, access to `workers/IMPLEMENTATION_PLAN.md`.
 
 ---
 
@@ -708,7 +708,7 @@ bash workers/ralph/render_ac_status.sh
 
 ### `workers/ralph/sync_workers_plan_to_cortex.sh` - Plan Sync
 
-Sync workers/workers/IMPLEMENTATION_PLAN.md to workers/workers/IMPLEMENTATION_PLAN.md.
+Sync workers/IMPLEMENTATION_PLAN.md to cortex/IMPLEMENTATION_PLAN.md.
 
 **Purpose:** Propagate Ralph's plan updates to Cortex manager layer.
 
@@ -719,7 +719,7 @@ Sync workers/workers/IMPLEMENTATION_PLAN.md to workers/workers/IMPLEMENTATION_PL
 bash workers/ralph/sync_workers_plan_to_cortex.sh
 ```
 
-**Output:** Copies `workers/workers/IMPLEMENTATION_PLAN.md` to `workers/workers/IMPLEMENTATION_PLAN.md`.
+**Output:** Copies `workers/IMPLEMENTATION_PLAN.md` to `cortex/IMPLEMENTATION_PLAN.md`.
 
 **Prerequisites:** Bash, write access to `cortex/` directory.
 
@@ -839,7 +839,7 @@ bin/thunk-parse --format sqlite -o threads.db
 | `open_files workers/ralph/workers/ralph/THUNK.md` | `bin/thunk-parse --stats` |
 | `grep "pattern" workers/ralph/THUNK.md` | `bin/brain-search "pattern"` |
 | Manual `git log \| grep` | `bin/brain-search --git-only "pattern"` |
-| Read whole IMPL_PLAN | `grep -n "^- \[ \]" workers/workers/IMPLEMENTATION_PLAN.md \| head -10` |
+| Read whole IMPL_PLAN | `grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md \| head -10` |
 
 ### For THUNK operations
 

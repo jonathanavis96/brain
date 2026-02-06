@@ -45,7 +45,7 @@ Look for patterns in pending tasks:
 
 ```bash
 # Find similar pending tasks
-grep "^\- \[ \]" workers/workers/IMPLEMENTATION_PLAN.md
+grep "^\- \[ \]" workers/IMPLEMENTATION_PLAN.md
 ```
 
 **Clustering signals:**

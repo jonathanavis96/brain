@@ -86,15 +86,15 @@ These block the verifier and must be fixed by a human (hash files are protected)
 
 | # | File | Issue | Fix |
 |---|------|-------|-----|
-| D4 | `workers/workers/IMPLEMENTATION_PLAN.md` | "2026-01-25" is future date | Change to 2026-01-24 |
+| D4 | `workers/IMPLEMENTATION_PLAN.md` | "2026-01-25" is future date | Change to 2026-01-24 |
 | D5 | `skills/domains/languages/typescript/README.md` | "2026-01-25" is future date | Change to 2026-01-24 |
 
 ### Status/Checklist Mismatches
 
 | # | File | Issue | Fix |
 |---|------|-------|-----|
-| D6 | `workers/workers/IMPLEMENTATION_PLAN.md` | Phase 2.1.2 status says "remains" but checkbox complete | Update status text |
-| D7 | `workers/workers/IMPLEMENTATION_PLAN.md` | Phase 12.4.2-12.4.3 status says "deferred" but checked | Reconcile checkbox vs text |
+| D6 | `workers/IMPLEMENTATION_PLAN.md` | Phase 2.1.2 status says "remains" but checkbox complete | Update status text |
+| D7 | `workers/IMPLEMENTATION_PLAN.md` | Phase 12.4.2-12.4.3 status says "deferred" but checked | Reconcile checkbox vs text |
 
 ### Markdown Formatting
 

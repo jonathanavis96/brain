@@ -114,7 +114,7 @@ brain/ (repository root)
 | **Understand what's in the brain** | `NEURONS.md` (this file) or `cortex/REPO_MAP.md` |
 | **Run Ralph loop** | `AGENTS.md` → `bash loop.sh` |
 | **Run Cortex manager** | `cortex/RUNBOOK.md` → `bash cortex/run.sh` |
-| **Find TODO list** | `workers/IMPLEMENTATION_PLAN.md` (Ralph) or `workers/workers/IMPLEMENTATION_PLAN.md` (Cortex) |
+| **Find TODO list** | `workers/IMPLEMENTATION_PLAN.md` (Ralph) or `workers/IMPLEMENTATION_PLAN.md` (Cortex) |
 | **See commit examples & error recovery** | `docs/EDGE_CASES.md` |
 | **See recent changes** | `docs/CHANGES.md` |
 | **See KB structure** | `skills/SUMMARY.md` |
@@ -136,7 +136,7 @@ brain/ (repository root)
 | **Project-specific knowledge** | `skills/projects/<project>.md` | ✅ Yes |
 | **Ralph operational docs** | `AGENTS.md` | ✅ Yes (Ralph only) |
 | **Brain structure map** | `NEURONS.md` or `cortex/REPO_MAP.md` | ✅ Yes |
-| **Cortex strategic planning** | `workers/workers/IMPLEMENTATION_PLAN.md`, `cortex/THOUGHTS.md` | ✅ Yes (Cortex only) |
+| **Cortex strategic planning** | `workers/IMPLEMENTATION_PLAN.md`, `cortex/THOUGHTS.md` | ✅ Yes (Cortex only) |
 | **Cortex architecture decisions** | `cortex/DECISIONS.md` | ✅ Yes (Cortex only) |
 | **React performance rules** | `references/react-best-practices/rules/` | ❌ **READ-ONLY** |
 | **Project templates** | `templates/` | ✅ Yes |
@@ -280,14 +280,14 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 - `cortex/REPO_MAP.md` - Human-friendly navigation guide for the brain repository
 - `cortex/DECISIONS.md` - Stability anchor for naming, style, architecture decisions
 - `cortex/RUNBOOK.md` - Operations guide (how to start, troubleshoot, verify)
-- `workers/workers/IMPLEMENTATION_PLAN.md` - Task contract template (high-level tasks for Ralph)
+- `workers/IMPLEMENTATION_PLAN.md` - Task contract template (high-level tasks for Ralph)
 - `cortex/THOUGHTS.md` - Cortex thinking space (current mission, decision log)
 - `cortex/run.sh` - Main entry point (concatenates context and calls RovoDev)
 - `cortex/snapshot.sh` - Generates current state summary (mission, progress, git status)
 
 **Workflow:**
 
-1. Cortex creates/updates high-level tasks in `workers/workers/IMPLEMENTATION_PLAN.md`
+1. Cortex creates/updates high-level tasks in `workers/IMPLEMENTATION_PLAN.md`
 2. Ralph copies these to `workers/IMPLEMENTATION_PLAN.md` (via sync mechanism - to be implemented)
 3. Ralph picks ONE atomic task per BUILD iteration and implements it
 4. Ralph logs completion to `workers/ralph/THUNK.md`
@@ -295,7 +295,7 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 
 **What Cortex Can Modify:**
 
-- ✅ `workers/workers/IMPLEMENTATION_PLAN.md` - Task contracts
+- ✅ `workers/IMPLEMENTATION_PLAN.md` - Task contracts
 - ✅ `cortex/THOUGHTS.md` - Strategic thinking
 - ✅ `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` - Knowledge gaps
 - ✅ `skills/self-improvement/SKILL_BACKLOG.md` - Skill promotion queue

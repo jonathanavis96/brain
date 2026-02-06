@@ -8,7 +8,7 @@ This file captures the strategic context and goals for the Cerebras worker.
 
 The Cerebras worker is an autonomous agent that:
 
-- Executes tasks from the shared `workers/workers/IMPLEMENTATION_PLAN.md` backlog
+- Executes tasks from the shared `workers/IMPLEMENTATION_PLAN.md` backlog
 - Uses the Cerebras LLM for high-quality code generation and problem-solving
 - Operates independently of the Ralph worker
 - Maintains its own task completion log in `workers/ralph/THUNK.md`

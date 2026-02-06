@@ -19,7 +19,7 @@ Use this playbook when:
 Before decomposing:
 
 - **Tools:** Access to `current_ralph_tasks.sh` for ETA tracking
-- **Files:** `workers/workers/IMPLEMENTATION_PLAN.md`, `workers/ralph/workers/ralph/THUNK.md`
+- **Files:** `workers/IMPLEMENTATION_PLAN.md`, `workers/ralph/workers/ralph/THUNK.md`
 - **Knowledge:** Understanding of the original task's acceptance criteria
 - **Context:** Recent iteration logs showing task durations
 

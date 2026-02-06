@@ -9,14 +9,14 @@ This file maps the brain repository structure from the Cerebras worker's perspec
 - **Worker:** Cerebras (Direct Cerebras API integration)
 - **Location:** `/workers/cerebras/`
 - **Access:** Full brain repository (read/write except protected files)
-- **Scope:** Shared task execution from `workers/workers/IMPLEMENTATION_PLAN.md`
+- **Scope:** Shared task execution from `workers/IMPLEMENTATION_PLAN.md`
 - **Model:** Cerebras Llama 3.3 70B (default)
 
 ## Quick Navigation
 
 | I need to... | Read this |
 |--------------|-----------|
-| See active tasks | `workers/workers/IMPLEMENTATION_PLAN.md` |
+| See active tasks | `workers/IMPLEMENTATION_PLAN.md` |
 | See completed tasks | `workers/cerebras/workers/ralph/THUNK.md` |
 | Fix a verifier error | `skills/SUMMARY.md` → Error table |
 | Understand project goals | `THOUGHTS.md` |
@@ -77,7 +77,7 @@ cortex/
 **Cortex Role:**
 
 - Strategic planning (not implementation)
-- Writes tasks to `workers/workers/IMPLEMENTATION_PLAN.md`
+- Writes tasks to `workers/IMPLEMENTATION_PLAN.md`
 - Reviews Ralph/Cerebras progress
 - Never modifies source code directly
 
@@ -137,7 +137,7 @@ workers/
 
 **Cerebras Worker Key Files:**
 
-- `workers/workers/IMPLEMENTATION_PLAN.md` - Shared task source (cerebras reads from here)
+- `workers/IMPLEMENTATION_PLAN.md` - Shared task source (cerebras reads from here)
 - `workers/ralph/THUNK.md` - Cerebras's completed task log
 - `loop.sh` - Main loop (simpler than Ralph: 1,356 vs 2,292 lines)
 - `verifier.sh` - Same verifier as Ralph but adapted paths
@@ -437,7 +437,7 @@ echo "- Gap description" >> skills/self-improvement/skills/self-improvement/GAP_
 
 ```bash
 # View active tasks
-grep "^- \[ \]" workers/workers/IMPLEMENTATION_PLAN.md | head -10
+grep "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -10
 
 # View completed tasks
 tail -50 workers/cerebras/workers/ralph/THUNK.md

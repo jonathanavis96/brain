@@ -46,7 +46,7 @@ workers/cerebras/
 
 ## Task Execution
 
-See workers/workers/IMPLEMENTATION_PLAN.md for shared task backlog.
+See workers/IMPLEMENTATION_PLAN.md for shared task backlog.
 
 ## Protected Files
 

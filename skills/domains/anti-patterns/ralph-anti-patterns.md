@@ -155,7 +155,7 @@ EOF
 echo "| 500 | 16.3.2 | MEDIUM | Create ralph-anti-patterns.md - 7 anti-patterns documented | $(date +%Y-%m-%d) |" >> workers/ralph/workers/ralph/THUNK.md
 
 # Mark task complete
-sed -i 's/- \[ \] \*\*16.3.2\*\*/- [x] **16.3.2**/' workers/workers/IMPLEMENTATION_PLAN.md
+sed -i 's/- \[ \] \*\*16.3.2\*\*/- [x] **16.3.2**/' workers/IMPLEMENTATION_PLAN.md
 
 # Single atomic commit
 git add -A && git commit -m "feat(skills): add ralph-anti-patterns.md
@@ -269,7 +269,7 @@ rm -f *.log
 rm -f skills/domains/ralph/anti-patterns-draft.md
 
 # DO: Propose deletion in PLAN mode if needed
-cat >> workers/workers/IMPLEMENTATION_PLAN.md << 'EOF'
+cat >> workers/IMPLEMENTATION_PLAN.md << 'EOF'
 - [ ] **16.5.1** Clean up deprecated skills/domains/deprecated/ directory [LOW]
   - Goal: Remove obsolete patterns documented in Phase 14
   - AC: Directory deleted, skills/index.md updated
@@ -352,10 +352,10 @@ SUMMARY
 
 ```bash
 # DON'T: Open large files at startup
-open_files(["NEURONS.md", "THOUGHTS.md", "workers/workers/IMPLEMENTATION_PLAN.md", "workers/ralph/workers/ralph/THUNK.md"])
+open_files(["NEURONS.md", "THOUGHTS.md", "workers/IMPLEMENTATION_PLAN.md", "workers/ralph/workers/ralph/THUNK.md"])
 
 # DON'T: Read full files to find one task
-cat workers/workers/IMPLEMENTATION_PLAN.md | grep "[ ]"
+cat workers/IMPLEMENTATION_PLAN.md | grep "[ ]"
 ```
 
 ### Why It's Bad
@@ -369,10 +369,10 @@ cat workers/workers/IMPLEMENTATION_PLAN.md | grep "[ ]"
 
 ```bash
 # DO: Find your task efficiently
-grep -n "^- \[ \]" workers/workers/IMPLEMENTATION_PLAN.md | head -10
+grep -n "^- \[ \]" workers/IMPLEMENTATION_PLAN.md | head -10
 
 # DO: Slice only the section you need
-sed -n '465,480p' workers/workers/IMPLEMENTATION_PLAN.md
+sed -n '465,480p' workers/IMPLEMENTATION_PLAN.md
 
 # DO: Use ls/find instead of NEURONS.md
 ls skills/domains/

@@ -7,7 +7,7 @@
 
 ## For Brain Repository Ralph (workers/ralph/)
 
-Add these tasks to `workers/workers/IMPLEMENTATION_PLAN.md` AFTER Phase 0-Sync:
+Add these tasks to `workers/IMPLEMENTATION_PLAN.md` AFTER Phase 0-Sync:
 
 ---
 
@@ -59,7 +59,7 @@ Add these tasks to `workers/workers/IMPLEMENTATION_PLAN.md` AFTER Phase 0-Sync:
 
 - [ ] **0-R.3** Create initial Cortex workers/IMPLEMENTATION_PLAN.md for rovo
   - **Goal:** Give Cortex a starting plan that Ralph can sync from
-  - **Files:** `../rovo/workers/workers/IMPLEMENTATION_PLAN.md`
+  - **Files:** `../rovo/workers/IMPLEMENTATION_PLAN.md`
   - **Changes:**
     1. Copy window management tasks from `brain/cortex/analysis/ROVO_WINDOW_FIX_PLAN.md`
     2. Create Phase 0-Window section with 4 tasks (0-W.1 through 0-W.4)
@@ -84,7 +84,7 @@ User should manually:
 2. **KEEP Phase 0-P1** (login retry logic fix) in `../rovo/ralph/workers/IMPLEMENTATION_PLAN.md`
    - Reason: That IS a rovo-specific task (fixes create_account.sh)
 
-3. **ADD Phase 0-Window tasks** from `../rovo/workers/workers/IMPLEMENTATION_PLAN.md` (after Brain Ralph completes 0-R.3)
+3. **ADD Phase 0-Window tasks** from `../rovo/workers/IMPLEMENTATION_PLAN.md` (after Brain Ralph completes 0-R.3)
    - These will be synced automatically once sync_workers_plan_to_cortex.sh exists
    - Or manually copy for now
 

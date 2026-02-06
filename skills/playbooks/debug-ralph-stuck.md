@@ -271,7 +271,7 @@ Common error patterns:
   - Task depends on unavailable resource
 
 - **Solutions:**
-  - Manually mark task `[x]` in `workers/workers/IMPLEMENTATION_PLAN.md` if actually complete
+  - Manually mark task `[x]` in `workers/IMPLEMENTATION_PLAN.md` if actually complete
   - Add troubleshooting context to `THOUGHTS.md`
   - Request waiver if verifier check is false positive
   - Skip to next task if blocked

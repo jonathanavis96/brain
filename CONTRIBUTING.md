@@ -127,7 +127,7 @@ rg "topic" docs/ README.md NEURONS.md
 **Process:**
 
 1. Search for similar issues: `rg "error_pattern" .`
-2. Check if issue is already tracked in `workers/workers/IMPLEMENTATION_PLAN.md`
+2. Check if issue is already tracked in `workers/IMPLEMENTATION_PLAN.md`
 3. Fix the issue following quality gates below
 4. Run validation commands (see Validation section)
 5. Commit with descriptive message: `fix(scope): description`

@@ -23,7 +23,7 @@ This document provides a human-friendly overview of the Brain repository structu
 
 **What Cortex Can Modify:**
 
-- `workers/workers/IMPLEMENTATION_PLAN.md` - Task contracts for workers
+- `workers/IMPLEMENTATION_PLAN.md` - Task contracts for workers
 - `cortex/THOUGHTS.md` - Cortex's own thinking space
 - Root-level `workers/IMPLEMENTATION_PLAN.md` - When delegating to Ralph
 - Root-level `THOUGHTS.md` - Strategic decisions

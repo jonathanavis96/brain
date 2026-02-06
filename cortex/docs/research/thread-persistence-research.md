@@ -80,7 +80,7 @@ CREATE TABLE fail_log (
 
 ### 1.3 workers/IMPLEMENTATION_PLAN.md - Active Tasks
 
-**Location:** `workers/workers/IMPLEMENTATION_PLAN.md` (synced from `workers/workers/IMPLEMENTATION_PLAN.md`)
+**Location:** `workers/IMPLEMENTATION_PLAN.md` (synced from `workers/IMPLEMENTATION_PLAN.md`)
 
 **Format:** Markdown checkboxes with task contracts
 
@@ -314,7 +314,7 @@ From `cortex/docs/loom_brain_feature_deltas.md`:
 |--------|-----------|-------|
 | `workers/ralph/workers/ralph/THUNK.md` | Primary - task history | High |
 | `tools/rollflow_analyze/src/rollflow_analyze/cache_db.py` | Primary - cache schema | High |
-| `workers/workers/IMPLEMENTATION_PLAN.md` | Primary - active tasks | High |
+| `workers/IMPLEMENTATION_PLAN.md` | Primary - active tasks | High |
 | Git history | Supporting - commit trail | High |
 | Loom feature deltas | Context - inspiration | Medium |
 
