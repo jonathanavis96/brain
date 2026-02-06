@@ -112,8 +112,26 @@ New projects copy/rename the template folder to their pack name.
 - **Skills** (under `skills/`) describe reusable patterns like “how to run a UI/UX audit.”
 - **Design Packs** (under `docs/design-packs/`) hold project-specific design context.
 
+## Required inputs (mirrors the premium audit prompt)
+
+A complete Design Pack should make these inputs available (as files, not tribal knowledge):
+
+1. `DESIGN_SYSTEM.md` — tokens and visual language (colors, typography, spacing, radii, shadows)
+2. `FRONTEND_GUIDELINES.md` — implementation constraints (component structure, styling, state)
+3. Flow inventory
+   - App: `APP_FLOW.md` (screens/routes + journeys)
+   - Website: `SITE_MAP.md` (pages + primary actions)
+4. `PRD.md` (optional but recommended) — requirements + must-not-change behaviors
+5. `TECH_STACK.md` — constraints (theming, motion, responsiveness, tooling)
+6. `LESSONS.md` (optional but recommended) — regressions, mistakes, prior decisions
+
+Progress/completion context should come from:
+
+- `workers/ralph/THUNK.md` — append-only completion log
+
 ## See Also
 
-- `skills/domains/frontend/ui-ux-audit-protocol.md` — the audit protocol itself
+- `skills/domains/frontend/ui-ux-audit-protocol.md` — short reusable audit protocol
+- `cortex/docs/UI_UX_AUDIT_PROMPT_PREMIUM.md` — full premium prompt (copy/paste)
 - `workers/IMPLEMENTATION_PLAN.md` — task contracts and approval state
 - `workers/ralph/THUNK.md` — append-only completion log
