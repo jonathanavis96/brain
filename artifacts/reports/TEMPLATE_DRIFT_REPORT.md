@@ -278,7 +278,7 @@ BEFORE=$(echo "$BEFORE_OUTPUT" | grep -c "error" || true)
 Differences are Brain-specific path references:
 
 - `workers/IMPLEMENTATION_PLAN.md` (shared plan path reference)
-- `workers/ralph/workers/ralph/THUNK.md` vs `workers/ralph/THUNK.md`
+- `workers/ralph/workers/ralph/THUNK.md` vs `workers/ralph/THUNK.md` (**intentional historical comparison; do not normalize this line**)
 
 These reflect Brain's multi-worker structure and are **appropriate for each context**.
 

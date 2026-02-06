@@ -506,6 +506,68 @@ Log **task** completion to workers/ralph/THUNK.md.
 
 ---
 
+## Anti-Pattern 8: Double-Prefixed / Non-Existent Repo Paths
+
+### Problem
+
+Documentation attempts to "normalize" paths during repo refactors and accidentally introduces **double-prefixed** or **non-existent** paths.
+
+This commonly shows up as duplicated segments like:
+
+- `workers/ralph/workers/ralph/THUNK.md`
+- `workers/workers/IMPLEMENTATION_PLAN.md`
+
+### Bad Example
+
+```markdown
+# INTENTIONAL INVALID PATHS BELOW (anti-pattern example) - do not "fix" these strings.
+# Looks plausible but does not exist
+See `workers/workers/IMPLEMENTATION_PLAN.md` for task contracts.
+
+# Duplicated path segment
+grep "\\*\\*TASK_ID\\*\\*" workers/ralph/workers/ralph/THUNK.md
+```
+
+### Why It's Wrong
+
+- Readers copy commands that fail immediately.
+- Reviewers may miss it because the string *looks* like a valid relative path.
+- It creates conflicting "source of truth" guidance (two different canonical locations).
+
+### Good Example
+
+```markdown
+# Verify the file actually exists in the repo
+See `workers/IMPLEMENTATION_PLAN.md` for task contracts.
+
+# Use the real THUNK location
+grep "\\*\\*TASK_ID\\*\\*" workers/ralph/THUNK.md
+```
+
+### Detection
+
+```bash
+# Verify the actual file locations
+find workers -maxdepth 4 -name 'IMPLEMENTATION_PLAN.md' -o -name 'THUNK.md'
+
+# Catch common duplication regressions
+# NOTE: Exclude files that intentionally contain bad paths as examples.
+rg "workers/ralph/workers/ralph/THUNK\.md|workers/workers/IMPLEMENTATION_PLAN\.md" -n docs/ skills/ cortex/ --type md \
+  --glob '!skills/domains/anti-patterns/documentation-anti-patterns.md' \
+  --glob '!artifacts/reports/TEMPLATE_DRIFT_REPORT.md'
+
+# Validate links (best effort for markdown links)
+bash tools/validate_links.sh
+```
+
+### Prevention
+
+- **Don’t bulk search/replace paths without verifying the target exists** (use `find`/`ls` first).
+- After any doc refactor, run the duplication-regex grep above.
+- Prefer writing commands with **placeholders** (e.g., `TASK_ID`) rather than hard-coded IDs that may not exist.
+
+---
+
 ## Summary Checklist
 
 Before committing documentation:
