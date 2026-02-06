@@ -94,10 +94,18 @@ check_protected_file() {
       VALIDATION_FAILED=1
       return 1
     else
-      # File modified but not staged - warning only
-      echo -e "${YELLOW}[WARN]${NC} $file (modified but not staged)"
-      echo "  Expected: $baseline_hash"
-      echo "  Current:  $current_hash"
+      # Hash mismatch, but not staged. Distinguish "git-modified" from "baseline drift".
+      if git diff --quiet -- "$file"; then
+        echo -e "${YELLOW}[WARN]${NC} $file (hash baseline mismatch; file matches HEAD)"
+        echo "  Expected: $baseline_hash"
+        echo "  Current:  $current_hash"
+        echo "  Action:   Update $hash_file if this is intentional baseline drift"
+      else
+        echo -e "${YELLOW}[WARN]${NC} $file (modified but not staged)"
+        echo "  Expected: $baseline_hash"
+        echo "  Current:  $current_hash"
+        echo "  Action:   Revert file or update $hash_file if changes are intentional"
+      fi
       VALIDATION_WARNINGS=$((VALIDATION_WARNINGS + 1))
       return 0
     fi
@@ -143,7 +151,7 @@ if [[ $VALIDATION_FAILED -gt 0 ]]; then
   echo "     git commit --no-verify"
   exit 1
 elif [[ $VALIDATION_WARNINGS -gt 0 ]]; then
-  echo -e "${YELLOW}WARNINGS${NC}: $VALIDATION_WARNINGS file(s) modified but not staged"
+  echo -e "${YELLOW}WARNINGS${NC}: $VALIDATION_WARNINGS file(s) have hash mismatches (not staged)"
   echo "These warnings are informational - commit will proceed"
   exit 0
 else

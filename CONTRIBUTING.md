@@ -86,7 +86,7 @@ rg "topic" docs/ README.md NEURONS.md
 **Process:**
 
 1. Search existing skills: `rg "pattern" skills/`
-2. Check `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` for planned skills
+2. Check `skills/self-improvement/GAP_BACKLOG.md` for planned skills
 3. Use `skills/self-improvement/SKILL_TEMPLATE.md` as template
 4. Place in appropriate category:
    - Broadly reusable → `skills/domains/<category>/<skill>.md`
@@ -127,7 +127,7 @@ rg "topic" docs/ README.md NEURONS.md
 **Process:**
 
 1. Search for similar issues: `rg "error_pattern" .`
-2. Check if issue is already tracked in `workers/workers/IMPLEMENTATION_PLAN.md`
+2. Check if issue is already tracked in `workers/IMPLEMENTATION_PLAN.md`
 3. Fix the issue following quality gates below
 4. Run validation commands (see Validation section)
 5. Commit with descriptive message: `fix(scope): description`
@@ -139,7 +139,7 @@ rg "topic" docs/ README.md NEURONS.md
 **Process:**
 
 1. Search `skills/` for existing documentation
-2. Check `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` for existing entries
+2. Check `skills/self-improvement/GAP_BACKLOG.md` for existing entries
 3. If not found, append entry to `skills/self-improvement/GAP_BACKLOG.md`:
 
 ```markdown

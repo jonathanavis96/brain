@@ -280,7 +280,7 @@ This is a **critical prerequisite** for full Phase 9C value.
 
 ## Suggested Plan Edits
 
-Copy-paste ready for `workers/workers/IMPLEMENTATION_PLAN.md`:
+Copy-paste ready for `workers/IMPLEMENTATION_PLAN.md`:
 
 ```markdown
 ## Phase 9C: Task Optimization (Batching + Decomposition)

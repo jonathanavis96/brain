@@ -16,16 +16,14 @@ This document provides a human-friendly overview of the Brain repository structu
 - `docs/REPO_MAP.md` - This file - navigation guide for the repository
 - `DECISIONS.md` - Architectural decisions and conventions (stability anchor)
 - `docs/RUNBOOK.md` - Operations guide (how to start Cortex, troubleshooting)
-- `workers/IMPLEMENTATION_PLAN.md` - Task contracts for workers (delegation format)
+- `workers/IMPLEMENTATION_PLAN.md` - Task contracts for workers (source of truth)
 - `THOUGHTS.md` - Cortex's analysis and decision log
 - `cortex.bash` - Main entry point to start Cortex
 - `snapshot.sh` - Generates current state summary for Cortex context
 
 **What Cortex Can Modify:**
 
-- `workers/workers/IMPLEMENTATION_PLAN.md` - Task contracts for workers
 - `cortex/THOUGHTS.md` - Cortex's own thinking space
-- Root-level `workers/IMPLEMENTATION_PLAN.md` - When delegating to Ralph
 - Root-level `THOUGHTS.md` - Strategic decisions
 - `skills/self-improvement/GAP_BACKLOG.md` - Knowledge gaps
 - `skills/self-improvement/SKILL_BACKLOG.md` - Skill promotion queue
@@ -49,7 +47,7 @@ This document provides a human-friendly overview of the Brain repository structu
   - `verifier.sh` - Acceptance criteria validation
   - `current_ralph_tasks.sh` - Real-time task monitor
   - `thunk_ralph_tasks.sh` - Completed task log viewer
-  - `workers/IMPLEMENTATION_PLAN.md` - Ralph's local copy of tasks
+  - `workers/IMPLEMENTATION_PLAN.md` - Task contracts (synced into `workers/ralph/workers/IMPLEMENTATION_PLAN.md`)
   - `workers/ralph/THUNK.md` - Completed task log
   - `NEURONS.md` - Ralph's codebase map
   - `THOUGHTS.md` - Ralph's working context
@@ -177,7 +175,7 @@ This document provides a human-friendly overview of the Brain repository structu
 ## Where State Lives
 
 - **Current tasks:** `workers/IMPLEMENTATION_PLAN.md` (root and `workers/ralph/`)
-- **Completed tasks:** `workers/ralph/workers/ralph/THUNK.md`
+- **Completed tasks:** `workers/ralph/THUNK.md`
 - **Strategic context:** `cortex/THOUGHTS.md`
 - **Ralph's context:** `workers/ralph/THOUGHTS.md`
 - **Knowledge gaps:** `skills/self-improvement/GAP_BACKLOG.md`

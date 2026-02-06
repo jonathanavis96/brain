@@ -344,7 +344,7 @@ markdownlint -d MD013 "**/*.md"  # Ignore line length
 - [ ] Example outputs use `text` tag
 - [ ] Code snippets use appropriate language tag
 - [ ] Blank lines before/after code blocks
-- [ ] Run `markdownlint workers/workers/IMPLEMENTATION_PLAN.md` before committing
+- [ ] Run `markdownlint workers/IMPLEMENTATION_PLAN.md` before committing
 
 **Prevention strategy:**
 

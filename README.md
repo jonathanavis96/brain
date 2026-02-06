@@ -649,7 +649,7 @@ Key areas for contribution:
 
 1. **Add Skills** - Document patterns you've discovered (use [skills/self-improvement/SKILL_TEMPLATE.md](skills/self-improvement/SKILL_TEMPLATE.md))
 2. **Improve Templates** - Enhance project scaffolding (follow template sync rules in CONTRIBUTING.md)
-3. **Report Gaps** - Add entries to `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md`
+3. **Report Gaps** - Add entries to `skills/self-improvement/GAP_BACKLOG.md`
 4. **Fix Bugs** - Create issues or submit PRs (run `pre-commit run --all-files` before committing)
 
 ### Quick Contribution Guide

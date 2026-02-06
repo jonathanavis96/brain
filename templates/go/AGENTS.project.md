@@ -153,7 +153,7 @@ if err := doSomething(); err != nil {
 This project uses the Ralph Wiggum iterative loop for systematic development:
 
 - **Single unified prompt**: See `brain/workers/ralph/PROMPT.md` (determines mode from iteration number)
-- **Progress tracking**: All work logged in `brain/workers/ralph/progress.txt`
+- **Completion log**: Append-only record in `brain/workers/ralph/THUNK.md`
 - **Completion**: Look for `:::COMPLETE:::` sentinel
 
 ## RovoDev + CLI Guardrails

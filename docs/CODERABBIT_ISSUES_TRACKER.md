@@ -1,7 +1,7 @@
 # CodeRabbit Issues Tracker
 
 **Created:** 2026-01-25  
-**Last Updated:** 2026-01-27  
+**Last Updated:** 2026-02-06  
 **PRs Covered:** #5, #6  
 **Purpose:** Unified tracker for CodeRabbit findings and prevention systems
 
@@ -10,6 +10,27 @@
 ## Recent Fixes (2026-01-27)
 
 These items were raised by CodeRabbit during review (advisory) and were validated and fixed in the current branch.
+
+## Recent Fixes (2026-02-06)
+
+- **validate_doc_sync paths** — repo-root path regression fixed (✅ Fixed)
+  - **What was broken:** `tools/validate_doc_sync.sh` assumed `brain/skills/...`, failing in repo root.
+  - **Fix approach:** normalize to `skills/...` paths so pre-commit runs from repo root.
+- **GAP_BACKLOG path normalization** — remove duplicated `skills/self-improvement/` (✅ Fixed)
+  - **What was broken:** multiple docs referenced a non-existent nested path.
+  - **Fix approach:** update all references to `skills/self-improvement/GAP_BACKLOG.md`.
+- **Plan path guidance clarification** — keep `workers/IMPLEMENTATION_PLAN.md` as source of truth (✅ Fixed)
+  - **What was broken:** conflicting path references suggested alternate plan locations.
+  - **Fix approach:** restore single plan path in docs and drift reports.
+- **PR5 docs hygiene follow-ups** — stale “future date” notes + code-fence closers (✅ Fixed)
+  - **What was broken:** `docs/CODERABBIT_PR5_ALL_ISSUES.md` D4/D5 entries still said “is future date” even though the date is now past; `cortex/AGENTS.md` and `workers/ralph/HUMAN_REQUIRED.md` had incorrectly-labeled closing fences like ```text.
+  - **Fix approach:** update D4/D5 to “previously flagged (now past)”, and normalize closing fences to plain ``` so code blocks match correctly.
+- **Root cause note:** bulk path normalization without validation can double-prefix paths (e.g., `skills/self-improvement/skills/self-improvement/...`).
+  - **Prevention:** run `bash tools/validate_links.sh` and grep for doubled segments (e.g., `rg "skills/self-improvement/skills/self-improvement" docs/ skills/`) during doc edits.
+- **loop.sh sync script path** — ensure skill sync uses co-located script (✅ Fixed)
+  - **What was broken:** `SYNC_SCRIPT` referenced `${ROOT}/workers/ralph/sync_brain_skills.sh`, which breaks when ROOT is not the local loop.sh directory.
+  - **Fix approach:** set `SYNC_SCRIPT` relative to the running loop.sh directory (`$(dirname "${BASH_SOURCE[0]}")/sync_brain_skills.sh`).
+
 
 ### Fix Notes (what changed + how to apply elsewhere)
 
@@ -134,7 +155,7 @@ These items were raised by CodeRabbit during review (advisory) and were validate
 
 - **Cortex docs — conflicting task contract guidance + CLI break** (✅ Fixed, `11c40b8`, `8b726b1`)
   - **Fix approach:**
-    - Make the source-of-truth explicit: task contracts live in `workers/workers/IMPLEMENTATION_PLAN.md`.
+    - Make the source-of-truth explicit: task contracts live in `workers/IMPLEMENTATION_PLAN.md`.
     - Avoid non-printable control characters in docs (they can break YAML/JSON parsing in tooling).
 
 - **Protected-file workflow — spec alignment** (✅ Fixed, `11c40b8`)
@@ -333,7 +354,7 @@ CodeRabbit has identified **50+ issues** across PR5 and PR6, with significant ov
 ### M10: workers/ralph/THUNK.md Table Column Mismatch (Recurring)
 
 **Status:** ⬜ Open  
-**File:** `workers/ralph/workers/ralph/THUNK.md` lines 748, 770-782  
+**File:** `workers/ralph/THUNK.md` lines 748, 770-782  
 **PRs:** #5 (D8), #6 (PI-6, PI-10)
 
 **Issue:** Table rows have wrong column count (6 instead of 5), unescaped pipes.
@@ -398,6 +419,7 @@ Also made `watch_pid` cleanup safe under `set -u` by using `${watch_pid:-}` in t
 **Prevention:** Document the `script` argument order pitfall in shell anti-patterns; avoid “stringly” extra args like `/dev/null` unless required.
 
 ---
+
 ### M14: bin/notify Broken Redirection Argument (New)
 
 **Status:** ⬜ Open  
@@ -533,6 +555,7 @@ Also made `watch_pid` cleanup safe under `set -u` by using `${watch_pid:-}` in t
 **Prevention:** Wrapper/template scripts should avoid CWD-relative execution for internal entrypoints; prefer `REPO_ROOT` + absolute paths.
 
 ---
+
 ## 🟡 MINOR Issues
 
 ### m1: Observability Patterns Issues (Recurring)
@@ -582,15 +605,15 @@ Also made `watch_pid` cleanup safe under `set -u` by using `${watch_pid:-}` in t
 
 ### m4: Incorrect Dates in Documentation (PR5)
 
-**Status:** ⬜ Open  
+**Status:** ✅ Fixed (2026-02-06)  
 **PRs:** #5 (D4, D5)
 
 | File | Issue |
 |------|-------|
-| `workers/workers/IMPLEMENTATION_PLAN.md` | Future date |
-| `skills/domains/languages/typescript/README.md` | Future date |
+| `workers/IMPLEMENTATION_PLAN.md` | Previously flagged as “future date” (now past) |
+| `skills/domains/languages/typescript/README.md` | Previously flagged as “future date” (now past) |
 
-**Prevention:** Date validation script (no future dates).
+**Prevention:** Date validation script (no future dates) + periodic pruning of time-based issue notes in trackers.
 
 ---
 

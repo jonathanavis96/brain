@@ -34,19 +34,27 @@ else
   # Get absolute path to this script.
   SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-  # brain/workers/ralph -> brain
+  # Default layout: <repo>/brain/workers/ralph/loop.sh
+  # - SCRIPT_DIR points to <repo>/brain/workers/ralph
+  # - BRAIN_ROOT points to <repo>/brain
+  # - REPO_ROOT_CANDIDATE points to <repo>
   BRAIN_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
+  REPO_ROOT_CANDIDATE="$(dirname "$BRAIN_ROOT")"
 
-  # If we are nested in a monorepo (repo root contains brain/ + website/), widen ROOT to the repo root.
-  CANDIDATE_REPO_ROOT="$(dirname "$BRAIN_ROOT")"
-  if [[ -d "$CANDIDATE_REPO_ROOT/brain" && -d "$CANDIDATE_REPO_ROOT/website" ]]; then
-    ROOT="$CANDIDATE_REPO_ROOT"
+  # Monorepo detection:
+  # If this loop lives under <repo>/brain and the *git root* is the parent directory,
+  # default ROOT to the monorepo root (<repo>) so Ralph can operate on the whole workspace.
+  #
+  # This avoids false positives when running inside the standalone Brain repo
+  # (where <repo> == <repo>/brain).
+  if [[ -d "$REPO_ROOT_CANDIDATE/brain" && -d "$REPO_ROOT_CANDIDATE/.git" && ! -d "$BRAIN_ROOT/.git" ]]; then
+    ROOT="$REPO_ROOT_CANDIDATE"
     BRAIN_ROOT="$ROOT/brain"
+    RALPH="$BRAIN_ROOT/workers/ralph"
   else
     ROOT="$BRAIN_ROOT"
+    RALPH="$SCRIPT_DIR"
   fi
-
-  RALPH="$BRAIN_ROOT/workers/ralph"
 fi
 
 # Print effective roots for debugging workspace boundaries.
@@ -632,6 +640,34 @@ done
 if [[ "$CACHE_MODE" != "off" && "$CACHE_MODE" != "record" && "$CACHE_MODE" != "use" ]]; then
   echo "ERROR: Invalid CACHE_MODE='$CACHE_MODE'. Must be: off|record|use" >&2
   exit 2
+fi
+
+# =============================================================================
+# Optional: Auto-refresh vendored Brain skills
+# =============================================================================
+
+# By default we attempt an offline-first refresh from a sibling Brain checkout.
+# This prevents the common failure mode where vendored skills drift out of date.
+#
+# Controls:
+#   - SKIP_BRAIN_SKILLS_SYNC=1       Disable the sync step entirely
+#   - BRAIN_SKILLS_SYNC_MODE=sibling|repo
+#       sibling: use ../brain/skills (no network)
+#       repo: clone/pull into ./brain_upstream (network)
+SKIP_BRAIN_SKILLS_SYNC="${SKIP_BRAIN_SKILLS_SYNC:-0}"
+BRAIN_SKILLS_SYNC_MODE="${BRAIN_SKILLS_SYNC_MODE:-sibling}"
+
+if [[ "$SKIP_BRAIN_SKILLS_SYNC" != "1" ]]; then
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  SYNC_SCRIPT="${SCRIPT_DIR}/sync_brain_skills.sh"
+  if [[ -x "$SYNC_SCRIPT" ]]; then
+    echo "[INFO] Refreshing vendored brain/skills (mode=$BRAIN_SKILLS_SYNC_MODE)..." >&2
+    if [[ "$BRAIN_SKILLS_SYNC_MODE" == "repo" ]]; then
+      bash "$SYNC_SCRIPT" --from-repo || echo "[WARN] brain/skills refresh failed (continuing)" >&2
+    else
+      bash "$SYNC_SCRIPT" --from-sibling || echo "[WARN] brain/skills refresh failed (continuing)" >&2
+    fi
+  fi
 fi
 
 # Model version configuration - SINGLE SOURCE OF TRUTH

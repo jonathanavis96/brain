@@ -20,7 +20,7 @@ A **gap** is missing brain capability that would have helped you complete a task
 Before logging ANY gap:
 
 1. Search `skills/` for existing matching skill
-2. Search `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
+2. Search `skills/self-improvement/GAP_BACKLOG.md` for existing gap entry
 3. If found: **UPDATE existing entry** rather than creating new one
 
 ## Rule 2: Always Log Gaps
@@ -107,7 +107,7 @@ Before ending any session where substantial knowledge was discussed, write a sum
 | Content Type | Write To |
 |--------------|----------|
 | Strategic decisions | `DECISIONS.md` or `cortex/DECISIONS.md` |
-| Knowledge gaps | `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` |
+| Knowledge gaps | `skills/self-improvement/GAP_BACKLOG.md` |
 | Project context/goals | `THOUGHTS.md` |
 | Reusable patterns | `skills/domains/<topic>/<skill>.md` |
 | Research/meeting notes | `cortex/docs/` or project docs |

@@ -11,6 +11,9 @@ Cortex is the high-level planning and management layer for the Brain repository.
 ```bash
 cd /path/to/brain/cortex/
 bash cortex.bash
+
+# Design-only audit mode (loads premium UI/UX audit prompt):
+bash cortex.bash --design
 ```text
 
 **What Cortex does:**
@@ -283,6 +286,7 @@ Example:
 
 ## See Also
 
+- **[UI_UX_AUDIT_PROMPT_PREMIUM.md](UI_UX_AUDIT_PROMPT_PREMIUM.md)** - Premium UI/UX audit prompt + protocol (design-only)
 - **[CORTEX_SYSTEM_PROMPT.md](../CORTEX_SYSTEM_PROMPT.md)** - Cortex identity and rules
 - **[REPO_MAP.md](REPO_MAP.md)** - Brain repository navigation guide
 - **[DECISIONS.md](../DECISIONS.md)** - Architectural decisions and stability anchor

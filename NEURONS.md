@@ -278,9 +278,9 @@ brain/                           # Root of brain repository
 
 ### Self-Improvement System
 
-- `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` - Identified knowledge gaps
+- `skills/self-improvement/GAP_BACKLOG.md` - Identified knowledge gaps
 - `skills/self-improvement/SKILL_BACKLOG.md` - Skills to create
-- `workers/ralph/workers/ralph/THUNK.md` - Completed tasks log
+- `workers/ralph/THUNK.md` - Completed tasks log
 
 ## Domain Coverage
 
@@ -345,10 +345,10 @@ brain/                           # Root of brain repository
 | Understand Ralph loop | `workers/ralph/AGENTS.md` → `skills/domains/ralph/` |
 | Check acceptance criteria | `rules/AC.rules` (read only) |
 | Review verifier output | `.verify/latest.txt` |
-| See completed work | `workers/ralph/workers/ralph/THUNK.md` |
+| See completed work | `workers/ralph/THUNK.md` |
 | Understand brain mission | `THOUGHTS.md` |
 | Get started (human) | `README.md` |
-| Add new skill | `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` |
+| Add new skill | `skills/self-improvement/GAP_BACKLOG.md` |
 | **Use CLI tools** | **`docs/TOOLS.md`** → bin/, tools/ |
 | Search THUNK/git quickly | `bin/brain-search "keyword"` |
 | Get THUNK stats | `bin/thunk-parse --stats` |
@@ -418,7 +418,7 @@ grep -c "^- \[" skills/index.md
 
 ### Adding a New Skill
 
-1. Capture gap in `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md`
+1. Capture gap in `skills/self-improvement/GAP_BACKLOG.md`
 2. Promote to `SKILL_BACKLOG.md` when clear
 3. Create skill file in appropriate `skills/domains/` subdirectory
 4. Update `skills/index.md` with new entry

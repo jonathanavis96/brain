@@ -36,7 +36,7 @@ brain/
 | I need to... | Read this |
 |--------------|-----------|
 | See active tasks | `workers/IMPLEMENTATION_PLAN.md` |
-| See completed tasks | `workers/ralph/workers/ralph/THUNK.md` |
+| See completed tasks | `workers/ralph/THUNK.md` |
 | Fix a verifier error | `skills/SUMMARY.md` → Error table |
 | Understand project goals | `cortex/THOUGHTS.md` |
 | Learn a pattern | `skills/domains/<pattern>.md` |
@@ -46,8 +46,8 @@ brain/
 
 ## Files I Can Modify
 
-✅ `workers/workers/IMPLEMENTATION_PLAN.md`, `cortex/THOUGHTS.md`
-✅ `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md`, `SKILL_BACKLOG.md`
+✅ `workers/IMPLEMENTATION_PLAN.md`, `cortex/THOUGHTS.md`
+✅ `skills/self-improvement/GAP_BACKLOG.md`, `SKILL_BACKLOG.md`
 
 ## Files I Cannot Modify
 

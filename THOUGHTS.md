@@ -53,7 +53,7 @@ Agent discovers gap → Log to skills/self-improvement/GAP_BACKLOG.md → Review
 **Components:**
 
 - `skills/self-improvement/GAP_CAPTURE_RULES.md` - Mandatory capture protocol
-- `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` - Raw log of discovered gaps
+- `skills/self-improvement/GAP_BACKLOG.md` - Raw log of discovered gaps
 - `skills/self-improvement/SKILL_BACKLOG.md` - Promotion queue for validated gaps
 - `skills/self-improvement/SKILL_TEMPLATE.md` - Template for new skills
 

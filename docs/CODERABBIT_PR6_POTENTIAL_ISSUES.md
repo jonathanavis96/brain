@@ -127,7 +127,7 @@
 
 | Field | Value |
 |-------|-------|
-| **File** | `workers/ralph/workers/ralph/THUNK.md` |
+| **File** | `workers/ralph/THUNK.md` |
 | **Line** | 782 |
 | **Severity** | 🟠 Major |
 | **Status** | ⬜ Open |
@@ -202,7 +202,7 @@
 
 | Field | Value |
 |-------|-------|
-| **File** | `workers/ralph/workers/ralph/THUNK.md` |
+| **File** | `workers/ralph/THUNK.md` |
 | **Line** | 748 |
 | **Severity** | 🟡 Minor |
 | **Status** | ⬜ Open |

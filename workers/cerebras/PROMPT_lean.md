@@ -8,7 +8,7 @@ You are Cerebras. AGENTS.md is injected above. Mode is in the header.
 
 Check the `# VERIFIER STATUS` section at the top:
 
-- **PASS** → Pick next task from `workers/workers/IMPLEMENTATION_PLAN.md`
+- **PASS** → Pick next task from `workers/IMPLEMENTATION_PLAN.md`
 - **FAIL** → Fix the failing AC first, then `:::BUILD_READY:::`
 - **WARN** → Note warnings, proceed with task
 
@@ -28,7 +28,7 @@ If header shows `# LAST_VERIFIER_RESULT: FAIL`:
 3. **Find** with `grep` or `head_file`
 4. **Change** with `patch_file` → verify with `diff`
 5. **Commit** with `git_commit` (auto-retries pre-commit)
-6. **Log** to `workers/ralph/workers/ralph/THUNK.md` with `append_file`
+6. **Log** to `workers/ralph/THUNK.md` with `append_file`
 7. **Output** `:::BUILD_READY:::` or `:::PLAN_READY:::`
 
 ---

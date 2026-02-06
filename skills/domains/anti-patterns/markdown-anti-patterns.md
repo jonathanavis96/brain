@@ -357,6 +357,33 @@ rg '\|' FILE.md | awk '{print NF-1}'
 
 ## Anti-Pattern 7: Inconsistent Strong Style (MD050)
 
+---
+
+## Anti-Pattern 8: Closing Code Fence Includes a Language Tag
+
+### Problem
+
+Markdown code blocks must be closed with a plain triple backtick fence:
+
+- ✅ Open with a language tag (examples): `bash`, `markdown`, `text`
+- ✅ Close with a plain fence: ```
+- ❌ Do not close with a language tag: `text`, `markdown`, `bash`
+
+Some linters/parsers will treat a “typed” closing fence as a *new opening fence*, leading to unterminated blocks and broken rendering.
+
+### Detection
+
+```bash
+# Find suspicious closing fences (common mistake)
+rg '^```(bash|text|markdown)\s*$' cortex/AGENTS.md workers/ralph/HUMAN_REQUIRED.md --type md
+```
+
+### Prevention
+
+- Always close fences with a plain ```.
+- If you copy/paste examples, re-check both the opening and closing fences.
+
+
 ### ❌ Bad Pattern
 
 ```markdown

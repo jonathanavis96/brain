@@ -525,4 +525,4 @@ Will add to plan in next PLAN iteration.
 
 ## Gap Identification
 
-If you encounter code review patterns not covered here, add to `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md`.
+If you encounter code review patterns not covered here, add to `skills/self-improvement/GAP_BACKLOG.md`.

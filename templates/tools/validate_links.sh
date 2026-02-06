@@ -12,7 +12,7 @@
 set -euo pipefail
 
 # Configuration
-BRAIN_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BRAIN_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 BROKEN_LINKS=0
 TOTAL_LINKS=0
 VERBOSE="${VERBOSE:-0}"
@@ -31,6 +31,8 @@ IGNORE_FIND_PATHS=(
 IGNORE_FILE_BASENAMES=(
   "PLAYBOOK_TEMPLATE.md"
   "SKILL_TEMPLATE.md"
+  "IMPLEMENTATION_PLAN.md"
+  "plan_snapshot.md"
 )
 
 should_skip_file() {

@@ -965,6 +965,7 @@ EXIT_CODE=$?
 - Look for unexpected extra path arguments like `/dev/null`.
 
 ---
+
 ## Template Pitfall: Incorrect Repo Root From `SCRIPT_DIR` Math
 
 **Context:** Template scripts often live under `templates/...` at authoring time, but are installed to a different path in generated projects.
@@ -1006,6 +1007,7 @@ if [[ -z "$REPO_ROOT" ]]; then
   exit 1
 fi
 ```
+
 ## See Also
 
 - **[Anti-Patterns README](README.md)** - Anti-patterns library overview and format guidelines

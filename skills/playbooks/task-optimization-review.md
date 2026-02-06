@@ -25,7 +25,7 @@
 grep ":::ITER_START:::\|:::ITER_END:::" workers/ralph/logs/*.log | tail -20
 
 # Get task completion times from workers/ralph/THUNK.md
-tail -20 workers/ralph/workers/ralph/THUNK.md
+tail -20 workers/ralph/THUNK.md
 
 # Check rollflow_analyze output (if available)
 cat artifacts/review_packs/iter_latest.md
@@ -45,7 +45,7 @@ Look for patterns in pending tasks:
 
 ```bash
 # Find similar pending tasks
-grep "^\- \[ \]" workers/workers/IMPLEMENTATION_PLAN.md
+grep "^\- \[ \]" workers/IMPLEMENTATION_PLAN.md
 ```
 
 **Clustering signals:**

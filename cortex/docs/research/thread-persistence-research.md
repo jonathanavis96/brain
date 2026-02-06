@@ -13,7 +13,7 @@
 
 ### 1.1 workers/ralph/THUNK.md - Completed Task Log
 
-**Location:** `workers/ralph/workers/ralph/THUNK.md`
+**Location:** `workers/ralph/THUNK.md`
 
 **Purpose:** Append-only record of all completed tasks across iterations.
 
@@ -80,7 +80,7 @@ CREATE TABLE fail_log (
 
 ### 1.3 workers/IMPLEMENTATION_PLAN.md - Active Tasks
 
-**Location:** `workers/workers/IMPLEMENTATION_PLAN.md` (synced from `workers/workers/IMPLEMENTATION_PLAN.md`)
+**Location:** `workers/IMPLEMENTATION_PLAN.md`
 
 **Format:** Markdown checkboxes with task contracts
 
@@ -243,13 +243,13 @@ CREATE INDEX idx_tool_executions_work_item ON tool_executions(work_item_id);
 
 ```bash
 # Find task by keyword
-grep -i "shellcheck" workers/ralph/workers/ralph/THUNK.md
+grep -i "shellcheck" workers/ralph/THUNK.md
 
 # Find tasks in date range
-grep "2026-01-25" workers/ralph/workers/ralph/THUNK.md
+grep "2026-01-25" workers/ralph/THUNK.md
 
 # Count tasks by era
-grep -c "^|" workers/ralph/workers/ralph/THUNK.md
+grep -c "^|" workers/ralph/THUNK.md
 ```
 
 ### 5.2 Search Git History
@@ -312,9 +312,9 @@ From `cortex/docs/loom_brain_feature_deltas.md`:
 
 | Source | Relevance | Trust |
 |--------|-----------|-------|
-| `workers/ralph/workers/ralph/THUNK.md` | Primary - task history | High |
+| `workers/ralph/THUNK.md` | Primary - task history | High |
 | `tools/rollflow_analyze/src/rollflow_analyze/cache_db.py` | Primary - cache schema | High |
-| `workers/workers/IMPLEMENTATION_PLAN.md` | Primary - active tasks | High |
+| `workers/IMPLEMENTATION_PLAN.md` | Primary - active tasks | High |
 | Git history | Supporting - commit trail | High |
 | Loom feature deltas | Context - inspiration | Medium |
 

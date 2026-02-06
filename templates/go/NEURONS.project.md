@@ -211,3 +211,4 @@ GOOS=linux GOARCH=amd64 go build -o bin/app-linux cmd/app/main.go
 - **THOUGHTS.md** - Project vision and goals
 - **README.md** - Setup and usage instructions
 - **brain/workers/IMPLEMENTATION_PLAN.md** - Current task backlog
+- **brain/docs/design-packs/README.md** - Design Packs standard (UI/UX artifacts + workflow contract)

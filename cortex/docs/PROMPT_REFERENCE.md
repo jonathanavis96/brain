@@ -92,7 +92,7 @@ Use complexity tags to estimate iteration time and identify candidates for decom
 ### Monitor Progress
 
 - `bash cortex/snapshot.sh` - Git + Ralph status
-- Read `workers/ralph/workers/ralph/THUNK.md` - Completed work
+- Read `workers/ralph/THUNK.md` - Completed work
 
 ---
 
@@ -100,7 +100,7 @@ Use complexity tags to estimate iteration time and identify candidates for decom
 
 | Problem | Solution |
 |---------|----------|
-| Ralph not picking up tasks | Check `workers/workers/IMPLEMENTATION_PLAN.md` has `[ ]` tasks, restart loop.sh |
+| Ralph not picking up tasks | Check `workers/IMPLEMENTATION_PLAN.md` has `[ ]` tasks, restart loop.sh |
 | Task not marked [x] | Verifier changes `[?]` → `[x]` after AC pass |
 | Ralph blocked | Check workers/ralph/THUNK.md, update task with clearer guidance |
 | Need protected file change | Create SPEC_CHANGE_REQUEST.md for human review |
@@ -123,10 +123,10 @@ curl -s https://raw.githubusercontent.com/user/repo/main/README.md
 
 ```bash
 # Next tasks
-grep -E '^\- \[ \]' workers/workers/IMPLEMENTATION_PLAN.md | head -5
+grep -E '^\- \[ \]' workers/IMPLEMENTATION_PLAN.md | head -5
 
 # Recent completions
-grep -E '^\| [0-9]+' workers/ralph/workers/ralph/THUNK.md | tail -5
+grep -E '^\| [0-9]+' workers/ralph/THUNK.md | tail -5
 
 # Full snapshot
 bash cortex/snapshot.sh

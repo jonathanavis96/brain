@@ -224,7 +224,7 @@ Before marking a task `[x]` complete, verify:
 - [ ] **2. Quality:** All acceptance criteria pass (`bash verifier.sh`)
 - [ ] **3. Standards:** Pre-commit hooks pass (`pre-commit run --all-files`)
 - [ ] **4. Documentation:** workers/ralph/THUNK.md updated with completion entry
-- [ ] **5. Planning:** `workers/workers/IMPLEMENTATION_PLAN.md` task marked `[x]`
+- [ ] **5. Planning:** `workers/IMPLEMENTATION_PLAN.md` task marked `[x]`
 - [ ] **6. Atomicity:** Single commit with all changes (code + THUNK + PLAN)
 - [ ] **7. Message:** Commit message follows conventional format
 - [ ] **8. Attribution:** Co-authored-by line included

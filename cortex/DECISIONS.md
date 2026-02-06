@@ -63,7 +63,7 @@ brain/
 **Workflow:**
 
 1. Human runs `bash cortex/run.sh` → Opus loads as Cortex
-2. Cortex writes `workers/workers/IMPLEMENTATION_PLAN.md` (atomic tasks)
+2. Cortex writes `workers/IMPLEMENTATION_PLAN.md` (atomic tasks)
 3. Human runs `bash workers/ralph/loop.sh`
 4. Ralph copies Cortex plan at startup, executes tasks, logs to workers/ralph/THUNK.md
 5. Cortex can compare both plans to check alignment
@@ -182,7 +182,7 @@ brain/
 
 - Pick **first unchecked task** from `workers/IMPLEMENTATION_PLAN.md`
 - Implement, validate, log to `workers/ralph/THUNK.md`, commit (local only)
-- Check self-improvement: append to `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` if needed
+- Check self-improvement: append to `skills/self-improvement/GAP_BACKLOG.md` if needed
 - **Never push** - wait for planning mode to push
 
 ### Verifier Gates
@@ -228,9 +228,9 @@ brain/
 
 **Allowed:**
 
-- `workers/workers/IMPLEMENTATION_PLAN.md` - Task contracts for Ralph
+- `workers/IMPLEMENTATION_PLAN.md` - Task contracts for Ralph
 - `cortex/THOUGHTS.md` - Cortex's analysis and decision log
-- `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` - Gap capture
+- `skills/self-improvement/GAP_BACKLOG.md` - Gap capture
 - `skills/self-improvement/SKILL_BACKLOG.md` - Skill promotion queue
 - Any files Cortex creates in `cortex/` (e.g., temp analysis files)
 
@@ -344,7 +344,7 @@ brain/
 **Applies to:**
 
 - `cortex/THOUGHTS.md` - Planning session headers
-- `workers/workers/IMPLEMENTATION_PLAN.md` - Last Updated timestamps
+- `workers/IMPLEMENTATION_PLAN.md` - Last Updated timestamps
 - `cortex/DECISIONS.md` - Decision dates
 - Any other `.md` files with temporal markers
 
@@ -361,14 +361,14 @@ brain/
 **Approved Write Access:**
 
 - `cortex/*.md` - Cortex's planning and analysis files
-- `skills/self-improvement/skills/self-improvement/GAP_BACKLOG.md` - Knowledge gap tracking
+- `skills/self-improvement/GAP_BACKLOG.md` - Knowledge gap tracking
 - `skills/self-improvement/SKILL_BACKLOG.md` - Skill promotion queue
 
 **Forbidden Actions:**
 
 - Modifying source code directly (Ralph's responsibility)
 - Modifying protected infrastructure (`PROMPT.md`, `loop.sh`, `verifier.sh`, `rules/AC.rules`)
-- Modifying Ralph's working copy of `workers/IMPLEMENTATION_PLAN.md` (Cortex writes to `workers/workers/IMPLEMENTATION_PLAN.md` instead)
+- Modifying Ralph's working copy of `workers/ralph/IMPLEMENTATION_PLAN.md` (Cortex writes to `workers/IMPLEMENTATION_PLAN.md` instead)
 
 **Enforcement:**
 

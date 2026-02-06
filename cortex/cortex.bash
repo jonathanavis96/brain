@@ -36,10 +36,12 @@ Cortex Interactive Chat - Direct conversation with the Brain manager.
 Options:
   --help, -h           Show this help message
   --model MODEL        Override model (gpt52, codex, opus, sonnet, auto)
+  --design             Start in design-only audit mode (links to the premium UI/UX audit prompt)
 
 Examples:
   bash cortex/chat.sh                    # Start chat with default model
   bash cortex/chat.sh --model opus       # Chat with specific model
+  bash cortex/chat.sh --design           # Design-only UI/UX audit mode
 
 Description:
   Opens an interactive chat session with Cortex. Unlike one-shot.sh,
@@ -61,6 +63,7 @@ EOF
 
 # Defaults
 MODEL_ARG="gpt52" # Default to GPT-5.2 for Cortex
+DESIGN_MODE="false"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -72,6 +75,10 @@ while [[ $# -gt 0 ]]; do
     --model)
       MODEL_ARG="${2:-}"
       shift 2
+      ;;
+    --design)
+      DESIGN_MODE="true"
+      shift
       ;;
     *)
       echo "Unknown argument: $1" >&2
@@ -129,6 +136,26 @@ echo -e "${YELLOW}Generating context snapshot...${NC}"
 echo ""
 SNAPSHOT_OUTPUT=$(bash "${SCRIPT_DIR}/snapshot.sh")
 
+# Optional design-only prompt injection
+DESIGN_PROMPT_BLOCK=""
+if [[ "$DESIGN_MODE" == "true" ]]; then
+  DESIGN_PROMPT_BLOCK=$(
+    cat <<EOF
+
+---
+
+# Design-Only Mode
+
+You are starting Cortex in **design-only audit mode**.
+
+- Do **not** implement code changes.
+- Follow the premium UI/UX audit prompt + protocol here (do not inline/modify it):
+  - `cortex/docs/UI_UX_AUDIT_PROMPT_PREMIUM.md`
+- Produce a structured audit report and a phased plan.
+EOF
+  )
+fi
+
 # Create Cortex system prompt for config
 CORTEX_SYSTEM_PROMPT=$(
   cat <<EOF
@@ -145,6 +172,8 @@ $(cat "${SCRIPT_DIR}/CORTEX_SYSTEM_PROMPT.md")
 ---
 
 $(cat "${SCRIPT_DIR}/THOUGHTS.md")
+
+${DESIGN_PROMPT_BLOCK}
 
 ---
 

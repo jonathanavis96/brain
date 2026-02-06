@@ -26,7 +26,7 @@ VALIDATION_FAILED=0
 VALIDATION_WARNINGS=0
 
 # Get repository root
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$REPO_ROOT"
 
 echo "=== Protected File Hash Validation ==="
