@@ -86,8 +86,8 @@ These block the verifier and must be fixed by a human (hash files are protected)
 
 | # | File | Issue | Fix |
 |---|------|-------|-----|
-| D4 | `workers/IMPLEMENTATION_PLAN.md` | "2026-01-25" is future date | Change to 2026-01-24 |
-| D5 | `skills/domains/languages/typescript/README.md` | "2026-01-25" is future date | Change to 2026-01-24 |
+| D4 | `workers/IMPLEMENTATION_PLAN.md` | "2026-01-25" was previously flagged as a future date (now past) | No change needed |
+| D5 | `skills/domains/languages/typescript/README.md` | "2026-01-25" was previously flagged as a future date (now past) | No change needed |
 
 ### Status/Checklist Mismatches
 

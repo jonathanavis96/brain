@@ -22,6 +22,9 @@ These items were raised by CodeRabbit during review (advisory) and were validate
 - **Plan path guidance clarification** — keep `workers/IMPLEMENTATION_PLAN.md` as source of truth (✅ Fixed)
   - **What was broken:** conflicting path references suggested alternate plan locations.
   - **Fix approach:** restore single plan path in docs and drift reports.
+- **PR5 docs hygiene follow-ups** — stale “future date” notes + code-fence closers (✅ Fixed)
+  - **What was broken:** `docs/CODERABBIT_PR5_ALL_ISSUES.md` D4/D5 entries still said “is future date” even though the date is now past; `cortex/AGENTS.md` and `workers/ralph/HUMAN_REQUIRED.md` had incorrectly-labeled closing fences like ```text.
+  - **Fix approach:** update D4/D5 to “previously flagged (now past)”, and normalize closing fences to plain ``` so code blocks match correctly.
 - **Root cause note:** bulk path normalization without validation can double-prefix paths (e.g., `skills/self-improvement/skills/self-improvement/...`).
   - **Prevention:** run `bash tools/validate_links.sh` and grep for doubled segments (e.g., `rg "skills/self-improvement/skills/self-improvement" docs/ skills/`) during doc edits.
 - **loop.sh sync script path** — ensure skill sync uses co-located script (✅ Fixed)
@@ -602,15 +605,15 @@ Also made `watch_pid` cleanup safe under `set -u` by using `${watch_pid:-}` in t
 
 ### m4: Incorrect Dates in Documentation (PR5)
 
-**Status:** ⬜ Open  
+**Status:** ✅ Fixed (2026-02-06)  
 **PRs:** #5 (D4, D5)
 
 | File | Issue |
 |------|-------|
-| `workers/IMPLEMENTATION_PLAN.md` | Future date |
-| `skills/domains/languages/typescript/README.md` | Future date |
+| `workers/IMPLEMENTATION_PLAN.md` | Previously flagged as “future date” (now past) |
+| `skills/domains/languages/typescript/README.md` | Previously flagged as “future date” (now past) |
 
-**Prevention:** Date validation script (no future dates).
+**Prevention:** Date validation script (no future dates) + periodic pruning of time-based issue notes in trackers.
 
 ---
 

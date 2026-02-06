@@ -90,7 +90,7 @@ You CAN research online (Ralph CANNOT - he captures gaps in GAP_BACKLOG.md).
 
 ```markdown
 - [ ] **1.1** Copy SKILL_TEMPLATE → templates/ [AC: file exists, executable]
-```text
+```
 
 **Complex tasks (when needed):**
 
@@ -99,11 +99,11 @@ You CAN research online (Ralph CANNOT - he captures gaps in GAP_BACKLOG.md).
   - **Goal:** Maximize window when manual action needed
   - **AC:** Window maximizes for CAPTCHA, minimizes after
   - **If Blocked:** Check PowerShell script syntax
-```text
+```
 
 #### Formatting guardrails (prevents orphaned sub-items)
 
-- Never write standalone indented bullets like `  - **AC:** ...` / `  - **Goal:** ...` unless they are *immediately* under a parent task line `- [ ] **X.Y** ...`.
+- Never write standalone indented bullets like `- **AC:** ...` / `- **Goal:** ...` unless they are *immediately* under a parent task line `- [ ] **X.Y** ...` (i.e., don’t create orphaned sub-items).
 - If you include code fences, keep them inside a sub-item under a parent task (usually `- **Implementation:**`) so plan cleanup scripts can reliably associate them.
 - Before syncing or running cleanup, sanity-check with:
 

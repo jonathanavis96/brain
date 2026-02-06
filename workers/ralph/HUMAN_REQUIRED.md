@@ -27,7 +27,7 @@ Manual verification tasks that cannot be automated. Complete these and update `r
 **Steps:**
 
 1. Open a terminal and run: `bash workers/ralph/thunk_ralph_tasks.sh`
-2. In another terminal, edit `workers/IMPLEMENTATION_PLAN.md`
+2. In another terminal, edit `workers/IMPLEMENTATION_PLAN.md` (canonical task-contract location)
 3. Mark any task as complete: change `- [ ]` to `- [x]`
 4. Save the file and wait 5-10 seconds
 5. Check `workers/ralph/THUNK.md` - it should NOT be auto-updated
@@ -46,7 +46,7 @@ After passing a test, add approval to `rules/MANUAL_APPROVALS.rules`:
 # Example
 echo "BugB.UI.1=approved" >> rules/MANUAL_APPROVALS.rules
 echo "BugC.UI.1=approved" >> rules/MANUAL_APPROVALS.rules
-```text
+```
 
 Then run verifier to confirm: `cd workers/ralph && bash verifier.sh`
 
