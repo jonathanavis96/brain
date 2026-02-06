@@ -15,7 +15,7 @@
 ### 1) Automated checks
 
 ```bash
-# Markdown (if docs changed)
+# Markdown lint (if docs changed)
 markdownlint <files>
 
 # Links (if markdown links changed)
@@ -36,7 +36,7 @@ bash tools/validate_links.sh
 <!-- This is an auto-generated comment: release notes by coderabbit.ai -->
 ## CodeRabbit findings addressed
 
-> If CodeRabbit didnt review this PR, write: "N/A  no CodeRabbit review."
+> If CodeRabbit didn't review this PR, write: 'N/A - no CodeRabbit review.'
 
 - <bullets>
 
