@@ -39,7 +39,7 @@ log_info() {
 check_shfmt_flags() {
   log_info "Checking shfmt flags documentation..."
 
-  local readme="skills/domains/languages/shell/README.md"
+  local readme="brain/skills/domains/languages/shell/README.md"
   local precommit=".pre-commit-config.yaml"
 
   if [[ ! -f "$readme" ]]; then
@@ -86,7 +86,7 @@ check_shfmt_flags() {
 check_markdownlint_config() {
   log_info "Checking markdownlint config documentation..."
 
-  local markdown_patterns="skills/domains/code-quality/markdown-patterns.md"
+  local markdown_patterns="brain/skills/domains/code-quality/markdown-patterns.md"
   local markdownlint_yaml=".markdownlint.yaml"
 
   if [[ ! -f "$markdown_patterns" ]]; then
@@ -113,7 +113,7 @@ check_markdownlint_config() {
 check_shellcheck_args() {
   log_info "Checking shellcheck args documentation..."
 
-  local readme="skills/domains/languages/shell/README.md"
+  local readme="brain/skills/domains/languages/shell/README.md"
   local precommit=".pre-commit-config.yaml"
 
   if [[ ! -f "$readme" ]] || [[ ! -f "$precommit" ]]; then

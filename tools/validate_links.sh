@@ -12,7 +12,7 @@
 set -euo pipefail
 
 # Configuration
-BRAIN_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BRAIN_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 BROKEN_LINKS=0
 TOTAL_LINKS=0
 VERBOSE="${VERBOSE:-0}"
