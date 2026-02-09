@@ -1,29 +1,35 @@
+# Deep Personality Assessment
 
-Deep Personality
+**Profile:** WongBater
+**Assessment Type:** AI-Generated Personality Analysis
+**Date:** February 2026
 
-Back to Assessment
-TriHard
-TriHard
-W
-WongBater
+> **Disclaimer:** This AI-generated analysis is based on questionnaire responses and is not a clinical assessment, diagnosis, or substitute for professional mental health care. For self-reflection only.
+
+---
 
 
-Download Results Data
+## Table of Contents
 
-Share
+1. [Executive Summary](#executive-summary)
+2. [Core Personality (Big Five)](#core-personality-big-five)
+3. [Emotional World & Attachment](#emotional-world--attachment)
+4. [Values & Motivation](#values--motivation)
+5. [Superpowers & Growth Edges](#superpowers--growth-edges)
+6. [Career & Work Fit](#career--work-fit)
+7. [Relationship Dynamics](#relationship-dynamics)
+8. [Wellbeing & Life Satisfaction](#wellbeing--life-satisfaction)
+9. [Clinical Screening Results](#clinical-screening-results)
+10. [Resources & Recommendations](#resources--recommendations)
 
-Compare
+---
 
-AI Personality Analysis
-Regenerate
-Saved
-For Self-Reflection Only
 
-This AI-generated analysis is based on your questionnaire responses and is not a clinical assessment, diagnosis, or substitute for professional mental health care.
+## Executive Summary
 
-WongBater's Complete Personality Profile
-What We Discovered About You
-What stood out in your results:
+### What We Discovered About You
+
+**Key Findings:**
 
 Your sexual intimacy gap isn't about attraction—it's about psychological safety. You demand emotional engagement in conflicts while your partner withdraws, and that same pattern shows up in your bedroom. This is fixable, but it requires a different approach than you've probably tried.
 
@@ -33,83 +39,44 @@ You have a rare personality combination: visionary creativity paired with ruthle
 
 Your biggest blind spot is self-compassion. You hold yourself to exacting standards, you process feedback logically, and you move forward efficiently. But you're also running on fumes—your masking/compensation patterns suggest quiet exhaustion that you're not acknowledging.
 
-You at a Glance
-The TL;DR of who you are
 
-Dimension	Your Profile
-Core Personality	Intellectually restless, direct, independent, highly creative, with lower warmth toward others
-Attachment Style	Secure foundation with moderate self-protective edges
-Top Values	Self-Direction, Stimulation, Hedonism
-Career Fit	Enterprising/Conventional — Entrepreneurship, strategy, wealth-building, leadership roles
-Emotional Pattern	High emotional intensity; responsive rather than regulated; tendency toward self-demand in conflict
-Current Wellbeing	Mixed—good across five pillars, but slightly dissatisfied with life direction; flagged alcohol use
-Your Top 3 Superpowers
-Strategic Pattern Recognition. You see angles others miss. Your high openness combined with your pragmatic value system means you naturally spot opportunities in systems and can ruthlessly execute on them. This is your wealth-building superpower.
+### Profile at a Glance
 
-Intellectual Independence. You think for yourself. You're not swayed by social approval or tradition. You'll disagree directly, change your mind on evidence, and pursue what actually works rather than what's socially expected. In the right context, this is magnetic.
-
-Relentless Focus. When something matters to you, you commit fully. Your work style (asynchronous, deep focus) and your core goal (financial independence) aren't casual interests—they're channels for your intensity. When properly directed, this focus is unstoppable.
-
-3 Things Holding You Back
-The Self-Demand Trap. You pursue, push, and escalate in conflicts while your partner withdraws. This pattern shows up in your relationship (sexual intimacy is your primary gap) and likely in your health habits too (pushing toward goals while ignoring rest). You're strong-arming your way through life instead of strategically managing energy.
-
-Low Investment in Others. Your low agreeableness means you're not naturally tuned to others' emotional needs. Combined with your direct communication style, people experience you as transactional or cold, even when you don't intend to be. This limits trust, collaboration, and the relational depth that wealth and success actually require.
-
-Exhaustion You're Not Admitting To. Your elevated emotional intensity, irregular sleep, sedentary periods, and flagged alcohol use aren't separate problems—they're signals. Your nervous system is running too hot, and you're managing it through substances and avoidance rather than addressing the root. This will compound if unaddressed.
-
-What's Inside This Report
-A comprehensive deep dive into every dimension of who you are
-
-What's Inside(tap to jump)
-
-Personality Architecture
-Your Big Five profile and what each trait means for how you think and act
+| Dimension | Your Profile |
+| --- | --- |
+| **Core Personality** | Intellectually restless, direct, independent, highly creative, with lower warmth toward others |
+| **Attachment Style** | Secure foundation with moderate self-protective edges |
+| **Top Values** | Self-Direction, Stimulation, Hedonism |
+| **Career Fit** | Enterprising/Conventional — Entrepreneurship, strategy, wealth-building, leadership roles |
+| **Emotional Pattern** | High emotional intensity; responsive rather than regulated; tendency toward self-demand in conflict |
+| **Current Wellbeing** | Mixed—good across five pillars, but slightly dissatisfied with life direction; flagged alcohol use |
 
 
-Your Emotional World
-How you handle feelings, your attachment patterns, your conflict style, and rejection sensitivity
+### Top 3 Superpowers
+
+1. **Strategic Pattern Recognition** - You see angles others miss. Your high openness combined with your pragmatic value system means you naturally spot opportunities in systems and can ruthlessly execute on them. This is your wealth-building superpower.
+
+2. **Intellectual Independence** - You think for yourself. You're not swayed by social approval or tradition. You'll disagree directly, change your mind on evidence, and pursue what actually works rather than what's socially expected. In the right context, this is magnetic.
+
+3. **Relentless Focus** - When something matters to you, you commit fully. Your work style (asynchronous, deep focus) and your core goal (financial independence) aren't casual interests—they're channels for your intensity. When properly directed, this focus is unstoppable.
 
 
-What Drives You
-Your core values, career interests, and what actually motivates you (vs. what you think should)
+### 3 Things Holding You Back
+
+1. **The Self-Demand Trap** - You pursue, push, and escalate in conflicts while your partner withdraws. This pattern shows up in your relationship (sexual intimacy is your primary gap) and likely in your health habits too (pushing toward goals while ignoring rest). You're strong-arming your way through life instead of strategically managing energy.
+
+2. **Low Investment in Others** - Your low agreeableness means you're not naturally tuned to others' emotional needs. Combined with your direct communication style, people experience you as transactional or cold, even when you don't intend to be. This limits trust, collaboration, and the relational depth that wealth and success actually require.
+
+3. **Exhaustion You're Not Admitting To** - Your elevated emotional intensity, irregular sleep, sedentary periods, and flagged alcohol use aren't separate problems—they're signals. Your nervous system is running too hot, and you're managing it through substances and avoidance rather than addressing the root. This will compound if unaddressed.
+
+---
 
 
-Your Superpowers
-Deep analysis of what you genuinely excel at
+## Core Personality (Big Five)
 
 
-Growth Edge
-Blind spots, patterns that limit you, and what's within reach
+### Who You Actually Are
 
-
-Best Fit: Work & Career
-Your ideal roles, work environment, and why certain careers are perfect while others drain you
-
-
-Relationship Dynamics
-How satisfied you are, your communication patterns, intimacy dimensions, and what's actually driving the sexual disconnect
-
-
-Best Fit: Romantic Partners
-Who brings out your best self (and who doesn't)
-
-
-Friendships & Social Patterns
-Why you connect with certain people and not others
-
-
-Your Wellbeing & Life Satisfaction
-Where you flourish and where you're stuck; what the data reveals about happiness and meaning
-
-
-Areas Worth Exploring
-Screening indicators that suggest talking to a professional
-
-
-Resources for You
-Books, podcasts, and approaches tailored specifically to your profile
-
-Who You Actually Are
 WongBater, you're someone most people get wrong on first impression. They see the directness, the financial ambition, the willingness to disagree—and they assume you're cold, selfish, or hard-charging. Some of that is true. You are direct. You do prioritize your goals. You're not naturally attuned to others' feelings.
 
 But here's what they miss: You're also profoundly curious. You have a rich inner world that most people never access. You're capable of intense focus and commitment when something matters. You're building something real with genuine strategic intention. And despite your pragmatism, you want the relationship to work—you're just approaching it like a problem to solve rather than a dynamic to navigate.
@@ -118,59 +85,109 @@ The tension in your profile is this: You have a visionary mind that operates at 
 
 This report will show you exactly where these tensions live—and more importantly, how to channel your strengths without letting them become liabilities. You're wired for success. The question is whether you're also willing to be wired for connection.
 
-The Real You (Core Personality)
-Your personality emerges from five core dimensions that shape how you move through the world. These aren't just abstract scores—they're the fundamental operating system underneath everything else: how you think, what you're drawn to, how you relate, and what you struggle with. Understanding them is understanding the architecture of your own mind.
 
-Openness (High - 93rd percentile)
+### The Big Five Personality Dimensions
+
+Your personality emerges from five core dimensions that shape how you move through the world. These aren't just abstract scores—they're the fundamental operating system underneath everything else: how you think, what you're drawn to, how you relate, and what you struggle with.
+
+
+#### 1. Openness (High - 93rd percentile)
+
 You scored in the exceptionally high range for Openness, placing you among the most intellectually curious and creatively oriented people. You're drawn to ideas, complexity, and novelty in ways that most people aren't. Your mind naturally gravitates toward the abstract, the unconventional, and the "what if"—you get bored easily by routine and prefer depth over surface-level understanding. You likely question established ways of doing things, aren't bound by tradition, and see possibilities where others see constraints.
 
-Gifts	Challenges
-Intellectual creativity: You generate novel solutions and see connections others miss. In strategy, problem-solving, and creative domains, you're genuinely gifted.	Scattered focus: With so many intellectual interests competing for attention, you may start numerous projects without completing them. Your mind wants to explore everything.
-Adaptability to change: You don't cling to "the way things have always been." You're flexible, curious about new approaches, and can pivot when conditions shift.	Overthinking: Your depth of processing means you can spiral into analysis paralysis. You see all the complexity, all the angles—sometimes analysis prevents action.
-Strategic thinking: You naturally think several moves ahead, imagine future scenarios, and consider abstract possibilities. This is a competitive advantage in planning and foresight.	Difficulty with mundane execution: The practical implementation phase—the repetitive, unglamorous grind—bores you. You're the big-picture visionary, not the detail executor.
-What this means in practice: You're the person with the interesting ideas at the table, but you might struggle to actually ship them. You likely have multiple intellectual interests, creative pursuits, or strategic projects going simultaneously. Your real superpower is seeing what could be—but only if you pair it with enough structure to actually build it.
+**Gifts:**
 
-Conscientiousness (Average - 57th percentile)
+- **Intellectual creativity** - You generate novel solutions and see connections others miss. In strategy, problem-solving, and creative domains, you're genuinely gifted.
+- **Adaptability to change** - You don't cling to "the way things have always been." You're flexible, curious about new approaches, and can pivot when conditions shift.
+- **Strategic thinking** - You naturally think several moves ahead, imagine future scenarios, and consider abstract possibilities. This is a competitive advantage in planning and foresight.
+
+**Challenges:**
+
+- **Scattered focus** - With so many intellectual interests competing for attention, you may start numerous projects without completing them. Your mind wants to explore everything.
+- **Overthinking** - Your depth of processing means you can spiral into analysis paralysis. You see all the complexity, all the angles—sometimes analysis prevents action.
+- **Difficulty with mundane execution** - The practical implementation phase—the repetitive, unglamorous grind—bores you. You're the big-picture visionary, not the detail executor.
+
+**What this means in practice:** You're the person with the interesting ideas at the table, but you might struggle to actually ship them. You likely have multiple intellectual interests, creative pursuits, or strategic projects going simultaneously. Your real superpower is seeing what could be—but only if you pair it with enough structure to actually build it.
+
+
+#### 2. #### 2. Conscientiousness (Average - 57th percentile)
+
 You scored right in the middle for Conscientiousness, which means you're neither naturally rigid nor naturally scattered. You have the capacity to organize, plan, and follow through—but only when something genuinely matters to you or captures your interest. You're not someone who needs external structure to function, and you're not naturally drawn to systems for their own sake. Your organization is selective and strategic, not universal.
 
-Gifts	Challenges
-Flexible discipline: You can marshal focus and execute when you choose to. You're not bound by unnecessary rules or processes that don't serve your goals.	Motivation-dependent follow-through: Your reliability isn't consistent across all domains. Tasks feel easy or hard depending on whether they align with what you actually care about.
-Pragmatic adaptation: You don't rigidly insist on "the plan." If something isn't working, you adjust rather than stubbornly adhering to a structure that's become obsolete.	Procrastination on non-essential tasks: Administrative work, routine maintenance, things that feel meaningless—these get delayed. You're not naturally driven by obligation alone.
-Selective optimization: You expend energy strategically. You're not exhausted by constant self-discipline because you don't apply it uniformly; you direct it where it counts.	Inconsistent reliability in low-interest areas: People might not know if they can count on you for routine matters, even if you're rock-solid on the things you've committed to.
-What this means in practice: Your conscientiousness is real, but it's conditional. You'll move mountains for a project that excites you or a goal you've committed to, but you'll avoid admin work indefinitely if you can. You're not someone who needs a perfect system to be productive—but you also won't create one just to be orderly.
+**Gifts:**
 
-Extraversion (High-Average - 67th percentile)
+- Flexible discipline: You can marshal focus and execute when you choose to. You're not bound by unnecessary rules or processes that don't serve your goals.
+- Pragmatic adaptation: You don't rigidly insist on "the plan." If something isn't working, you adjust rather than stubbornly adhering to a structure that's become obsolete.
+- Selective optimization: You expend energy strategically. You're not exhausted by constant self-discipline because you don't apply it uniformly; you direct it where it counts.
+
+**Challenges:**
+
+- Motivation-dependent follow-through: Your reliability isn't consistent across all domains. Tasks feel easy or hard depending on whether they align with what you actually care about.
+- Procrastination on non-essential tasks: Administrative work, routine maintenance, things that feel meaningless—these get delayed. You're not naturally driven by obligation alone.
+- Inconsistent reliability in low-interest areas: People might not know if they can count on you for routine matters, even if you're rock-solid on the things you've committed to.
+**What this means in practice:** Your conscientiousness is real, but it's conditional. You'll move mountains for a project that excites you or a goal you've committed to, but you'll avoid admin work indefinitely if you can. You're not someone who needs a perfect system to be productive—but you also won't create one just to be orderly.
+
+
+#### 3. Extraversion (High-Average - 67th percentile)
+
 You scored in the high-average range for Extraversion, placing you as moderately social and outgoing. You're genuinely comfortable with people and social situations—you don't dread them or hide from them—but you're not aggressively seeking constant social stimulation either. You likely enjoy collaborative work, group interaction, and social connection, but you also need and value alone time. You're socially functional and reasonably charismatic, but the spotlight doesn't pull at you.
 
-Gifts	Challenges
-Social ease: You're not anxious in social settings and can generally connect with others. You're comfortable being visible and engaging directly.	Doesn't naturally seek connection: You won't automatically reach out or maintain relationships. If you don't deliberately invest, connections fade even with people you like.
-Collaborative capacity: You can work effectively with others, lead group efforts, and function well in team environments without it depleting you.	Can default to isolation: Without structure or intention, you might withdraw into your own projects and lose touch with your social world entirely.
-Genuine but measured warmth: You're engaging without being exhausting. People don't feel like you're performing for them; you're authentically present but not overwhelming.	May be overlooked for leadership: You're competent socially, but you don't naturally dominate rooms or naturally position yourself as the central figure. You're more likely to be the "good colleague" than the "office personality."
-What this means in practice: You're socially viable and can function in collaborative environments, but relationships and community aren't your default pull. You need to deliberately invest in them, or they won't exist. You're happiest with asynchronous, deep-focus work where you can engage intellectually without constant social demands.
+**Gifts:**
 
-Agreeableness (Low - 23rd percentile)
+- Social ease: You're not anxious in social settings and can generally connect with others. You're comfortable being visible and engaging directly.
+- Collaborative capacity: You can work effectively with others, lead group efforts, and function well in team environments without it depleting you.
+- Genuine but measured warmth: You're engaging without being exhausting. People don't feel like you're performing for them; you're authentically present but not overwhelming.
+
+**Challenges:**
+
+- Doesn't naturally seek connection: You won't automatically reach out or maintain relationships. If you don't deliberately invest, connections fade even with people you like.
+- Can default to isolation: Without structure or intention, you might withdraw into your own projects and lose touch with your social world entirely.
+- May be overlooked for leadership: You're competent socially, but you don't naturally dominate rooms or naturally position yourself as the central figure. You're more likely to be the "good colleague" than the "office personality."
+**What this means in practice:** You're socially viable and can function in collaborative environments, but relationships and community aren't your default pull. You need to deliberately invest in them, or they won't exist. You're happiest with asynchronous, deep-focus work where you can engage intellectually without constant social demands.
+
+
+#### 4. Agreeableness (Low - 23rd percentile)
+
 You scored significantly low for Agreeableness, placing you well below average in concern for harmony, cooperation, and others' feelings. You're independent, direct, and not naturally inclined to soften your message for social comfort. You're skeptical of people's motives, you say what you actually think rather than what makes everyone feel good, and you're not driven by a need to be liked. You likely come across as blunt, opinionated, even harsh—and you're generally fine with that because you value authenticity over niceness.
 
-Gifts	Challenges
-Radical honesty: You don't perform, don't manipulate social dynamics to preserve feelings, and won't tell people what they want to hear instead of what's true. People know where they stand with you.	Relationship friction: Your bluntness, while authentic, damages relationships. People feel criticized, uncared-for, or attacked by your straightforwardness. You may seem cold or mean even when you're just being honest.
-Competitive independence: You're not dependent on others' approval or validation. You can make unpopular decisions, stand alone against group pressure, and prioritize your own interests without guilt.	Difficulty with compromise: You're not naturally inclined to sacrifice your preference for group harmony. You expect others to adjust to your needs as much as you adjust to theirs.
-Penetrating skepticism: You're not easily fooled or manipulated by social charm or appeals to emotion. You see through BS and aren't swayed by group consensus or peer pressure.	Struggle reading and valuing social cues: You may miss or dismiss the emotional undercurrents in situations. You don't naturally attune to others' unspoken needs, and honestly, you may not care to.
-What this means in practice: You're authentic but not warm. You're someone people respect for your honesty, but they don't necessarily like being around. You likely have fewer, more transactional relationships rather than a wide circle of close friends. You get impatient with relationship maintenance and emotional labor. You value people who can match your directness and don't require constant emotional reassurance.
+**Gifts:**
 
-Critical pattern: Your low Agreeableness combined with your high Openness creates a specific dynamic. You have intellectually sophisticated ideas about how things should be, and you'll tell people directly when they're not meeting that standard. You're not gentle about it. People experience you as opinionated and critical, which strains relationships—especially with people who are higher in Agreeableness and interpret your honesty as rejection.
+- Radical honesty: You don't perform, don't manipulate social dynamics to preserve feelings, and won't tell people what they want to hear instead of what's true. People know where they stand with you.
+- Competitive independence: You're not dependent on others' approval or validation. You can make unpopular decisions, stand alone against group pressure, and prioritize your own interests without guilt.
+- Penetrating skepticism: You're not easily fooled or manipulated by social charm or appeals to emotion. You see through BS and aren't swayed by group consensus or peer pressure.
 
-Neuroticism (High-Average - 61st percentile)
+**Challenges:**
+
+- Relationship friction: Your bluntness, while authentic, damages relationships. People feel criticized, uncared-for, or attacked by your straightforwardness. You may seem cold or mean even when you're just being honest.
+- Difficulty with compromise: You're not naturally inclined to sacrifice your preference for group harmony. You expect others to adjust to your needs as much as you adjust to theirs.
+- Struggle reading and valuing social cues: You may miss or dismiss the emotional undercurrents in situations. You don't naturally attune to others' unspoken needs, and honestly, you may not care to.
+**What this means in practice:** You're authentic but not warm. You're someone people respect for your honesty, but they don't necessarily like being around. You likely have fewer, more transactional relationships rather than a wide circle of close friends. You get impatient with relationship maintenance and emotional labor. You value people who can match your directness and don't require constant emotional reassurance.
+
+**Critical pattern:** Your low Agreeableness combined with your high Openness creates a specific dynamic. You have intellectually sophisticated ideas about how things should be, and you'll tell people directly when they're not meeting that standard. You're not gentle about it. People experience you as opinionated and critical, which strains relationships—especially with people who are higher in Agreeableness and interpret your honesty as rejection.
+
+
+#### 5. Neuroticism (High-Average - 61st percentile)
+
 You scored in the high-average range for Neuroticism, meaning you experience emotions more intensely and react more strongly to stress than the average person. You're more prone to worry, anxiety, and rumination. You likely experience emotional lows more deeply, and stressful situations impact you more than they impact people lower on this trait. When things go wrong, you don't bounce back as quickly—the emotional weight lingers.
 
-Gifts	Challenges
-Emotional sensitivity to problems: You notice when something's wrong before others do. Your anxiety is often a signal—an early warning system that something needs attention.	Anxiety-driven thinking: You catastrophize, mentally rehearse worst-case scenarios, and struggle to shut off the worry loop. Your mind goes to "what if everything falls apart" easily.
-Depth of feeling: You experience richness in emotional life. You're not numb or disconnected. You can access genuine empathy and care deeply about things that matter.	Stress impacts you harder: Situations that others shrug off stay with you. You ruminate, replay conversations, and remain activated longer after stressful events.
-Motivation to prevent problems: Your anxiety often drives you to prepare, plan ahead, and try to prevent disasters. This can translate to genuine foresight and conscientiousness.	Emotional reactivity under pressure: When stressed, you may become defensive, irritable, or withdrawn. You're not your best self when activated, and recovery takes time.
-What this means in practice: You're not someone who has steady emotional equilibrium. You experience peaks and valleys. You likely worry more than you objectively should, and stressful situations (conflicts, uncertainty, failures) hit you harder and longer than people lower on Neuroticism. You probably benefit from time alone to regulate, and you likely avoid situations that you know will activate your anxiety.
+**Gifts:**
 
-Critical pattern: Your high-average Neuroticism combined with your low Agreeableness creates a specific vulnerability in relationships. When stressed, you become reactive and defensive—and your default mode is to push back rather than reach out. This can make conflict escalate quickly. Combined with your tendency to overthink (from high Openness), you can spiral into anxious rumination about relationship stability or whether you've said the wrong thing.
+- Emotional sensitivity to problems: You notice when something's wrong before others do. Your anxiety is often a signal—an early warning system that something needs attention.
+- Depth of feeling: You experience richness in emotional life. You're not numb or disconnected. You can access genuine empathy and care deeply about things that matter.
+- Motivation to prevent problems: Your anxiety often drives you to prepare, plan ahead, and try to prevent disasters. This can translate to genuine foresight and conscientiousness.
 
-The Integration: Your Personality in Motion
+**Challenges:**
+
+- Anxiety-driven thinking: You catastrophize, mentally rehearse worst-case scenarios, and struggle to shut off the worry loop. Your mind goes to "what if everything falls apart" easily.
+- Stress impacts you harder: Situations that others shrug off stay with you. You ruminate, replay conversations, and remain activated longer after stressful events.
+- Emotional reactivity under pressure: When stressed, you may become defensive, irritable, or withdrawn. You're not your best self when activated, and recovery takes time.
+**What this means in practice:** You're not someone who has steady emotional equilibrium. You experience peaks and valleys. You likely worry more than you objectively should, and stressful situations (conflicts, uncertainty, failures) hit you harder and longer than people lower on Neuroticism. You probably benefit from time alone to regulate, and you likely avoid situations that you know will activate your anxiety.
+
+**Critical pattern:** Your high-average Neuroticism combined with your low Agreeableness creates a specific vulnerability in relationships. When stressed, you become reactive and defensive—and your default mode is to push back rather than reach out. This can make conflict escalate quickly. Combined with your tendency to overthink (from high Openness), you can spiral into anxious rumination about relationship stability or whether you've said the wrong thing.
+
+
+### Personality Integration
+
 These five dimensions don't exist in isolation. They create a unified psychological profile that shows up in everything you do:
 
 You're the intellectually independent operator. High Openness + Low Agreeableness means you think for yourself, reject conventional wisdom, and aren't interested in conforming just to fit in. But it also means you can seem preachy about your ideas and dismissive of different perspectives.
@@ -185,8 +202,11 @@ Your strategic advantage is seeing what others miss. Your combination of high Op
 
 Your personality isn't a limitation—it's a blueprint. Understanding it gives you the map to play to your strengths and manage your edges.
 
-How You Feel & Connect
-How You Connect (Attachment Style)
+
+## Emotional World & Attachment
+
+### Attachment Style
+
 You are securely attached—which means you don't typically fall into the traps of anxious preoccupation or avoidant withdrawal that plague many people. You trust relatively easily, you don't obsessively monitor your partner for signs of abandonment, and you're not terrified of intimacy. This is a genuine advantage.
 
 But here's what the screening reveals beneath that clean label: You carry moderate anxiety AND moderate avoidance simultaneously—a pattern that creates a specific dynamic. You're not chaotically anxious or defensively aloof, but you fluctuate. You can move between wanting connection and needing distance. You're secure until you're not.
@@ -203,12 +223,22 @@ In work, your security manifests as confidence in your own judgment. You don't n
 
 What you're learning to understand: Your secure attachment is real. But it has an edge—a readiness to withdraw when things feel threatening. This isn't insecure attachment; it's defended security. You've learned that protecting your boundaries is more reliable than trusting others to respect them.
 
-Gifts	Challenges
-Don't catastrophize relationships - can tolerate conflict without assuming it means abandonment	Withdraw after conflict rather than repair - leaves partner in limbo
-Build trust gradually but genuinely - when you're in, you're in	Fluctuate between connection-seeking and distance-needing - partner may read as inconsistent
-Maintain your own identity - don't lose yourself in relationships	Can seem cold or dismissive when protecting boundaries
-Secure enough to leave what doesn't work - won't stay out of fear	May exit relationships before fully engaging in repair
-Managing Your Feelings
+**Gifts:**
+
+- Don't catastrophize relationships - can tolerate conflict without assuming it means abandonment
+- Build trust gradually but genuinely - when you're in, you're in
+- Maintain your own identity - don't lose yourself in relationships
+- Secure enough to leave what doesn't work - won't stay out of fear
+
+**Challenges:**
+
+- Withdraw after conflict rather than repair - leaves partner in limbo
+- Fluctuate between connection-seeking and distance-needing - partner may read as inconsistent
+- Can seem cold or dismissive when protecting boundaries
+- May exit relationships before fully engaging in repair
+
+### Emotional Regulation
+
 Your emotional regulation is genuinely strong. Your DERS score of 16 puts you in the good range—you don't have the dysregulation that derails people with depression, anxiety, or trauma. When you're stressed, you don't typically spiral, catastrophize, or fall apart. You can think your way through problems. You have access to your rational mind even under pressure.
 
 But there's a trade-off hiding here: You regulate by controlling, not by expressing.
@@ -224,27 +254,37 @@ In relationships, you may prioritize keeping things functional over exploring fe
 With conflict, you argue your position logically, which can feel dismissive to partners who want emotional understanding.
 With vulnerability, you resist it. Asking for help feels like failure. You'd rather problem-solve alone.
 With joy, you might note it intellectually but not savor it. High mindfulness without matching self-kindness means you observe happiness without fully inhabiting it.
-Your regulation gifts: You have real capacity to stay calm under pressure. You don't need others to regulate you. You can think clearly even when stressed. These are genuinely valuable—especially in crisis, at work, and in parenting.
+**Your regulation gifts:** You have real capacity to stay calm under pressure. You don't need others to regulate you. You can think clearly even when stressed. These are genuinely valuable—especially in crisis, at work, and in parenting.
 
-Your regulation edge: Consider that emotional resilience isn't just about not falling apart—it's about relating kindly to yourself when you do. Your low self-compassion is likely keeping you from deeper connections. Partners sense the self-protection. Friends feel the efficiency. You keep things tidy, but at the cost of intimacy.
+**Your regulation edge:** Consider that emotional resilience isn't just about not falling apart—it's about relating kindly to yourself when you do. Your low self-compassion is likely keeping you from deeper connections. Partners sense the self-protection. Friends feel the efficiency. You keep things tidy, but at the cost of intimacy.
 
-Gifts	Challenges
-Stay calm under pressure - don't catastrophize or spiral	Regulate by controlling rather than processing - emotions feel like problems
-Think clearly in crisis - can access rational mind	Low self-compassion - critical of own emotions and struggles
-Don't depend on others to regulate you - self-sufficient	May seem cold or detached when regulating
-Good awareness of emotions - high mindfulness	Intellectualize feelings rather than feel them
-A concrete strategy: When you notice yourself in regulation mode (thinking your way through), pause and ask: What would it look like to be kind to myself right now, instead of just efficient? Not weakness. Not indulgence. Just: What does this moment actually need—problem-solving, or acknowledgment?
+**Gifts:**
 
-️ Your Conflict Style
-Your Default Conflict Mode:
-Competitive Offensive → Avoidant Retreat
+- Stay calm under pressure - don't catastrophize or spiral
+- Think clearly in crisis - can access rational mind
+- Don't depend on others to regulate you - self-sufficient
+- Good awareness of emotions - high mindfulness
+
+**Challenges:**
+
+- Regulate by controlling rather than processing - emotions feel like problems
+- Low self-compassion - critical of own emotions and struggles
+- May seem cold or detached when regulating
+- Intellectualize feelings rather than feel them
+**A concrete strategy:** When you notice yourself in regulation mode (thinking your way through), pause and ask: What would it look like to be kind to myself right now, instead of just efficient? Not weakness. Not indulgence. Just: What does this moment actually need—problem-solving, or acknowledgment?
+
+
+### Conflict Style
+
+**Your Default Conflict Mode:**
+**Competitive Offensive → Avoidant Retreat**
 You're a Competitor—you engage directly, argue your position, and don't back down. Your low agreeableness (23rd percentile) means you're willing to disagree openly. Your high Openness means you can articulate your position with nuance. Your moderate-to-high Neuroticism means you feel strongly about what matters.
 
 But this isn't pure competition. You have a second move: After the fight, you disappear. You "give it time and wait for things to cool down." This is avoidant repair—you exit the arena, then re-engage once emotions have leveled. Your partner likely experiences this as: fight, then silence, then awkward resumption as if nothing happened.
 
-The real pattern: You pursue hard in conflict (self-demand 3.5), but you withdraw after. This is the push-pull dynamic—aggressive offense, then defensive distance. It leaves your partner in a destabilized state: uncertain whether you're still angry, whether the issue is resolved, whether you care about repair.
+**The real pattern:** You pursue hard in conflict (self-demand 3.5), but you withdraw after. This is the push-pull dynamic—aggressive offense, then defensive distance. It leaves your partner in a destabilized state: uncertain whether you're still angry, whether the issue is resolved, whether you care about repair.
 
-What Triggers You in Conflict
+**What Triggers You in Conflict:**
 Your stated trigger is "Differences in libido or physical intimacy." This is revealing: It's not about sex itself—it's about rejection and misalignment on vulnerability.
 
 But your deeper triggers, based on your profile, are:
@@ -257,24 +297,24 @@ Feeling unheard despite clear communication - Your high Openness means you expec
 
 Emotional demands you experience as neediness - Your moderate avoidance + need for alone time means you have limited tolerance for emotional processing. When your partner wants to "talk about the relationship," your nervous system reads this as engulfment. You defend against it by becoming intellectual/argumentative.
 
-What You Need to Hear During a Fight
+**What You Need to Hear During a Fight:**
 You need respect for your autonomy communicated in real time:
 
 "I want to understand your perspective" (not "You're wrong")
 "I'm not attacking you, I'm trying to connect" (addresses your read of criticism as attack)
 "We can take a break if you need space" (preemptively removes the suffocation you fear)
 Specific acknowledgment of your valid points before introducing disagreement (you need to know you were heard before you'll hear them)
-You also need reassurance that emotional conversation isn't judgment:
+**You also need reassurance that emotional conversation isn't judgment:
 
 "This is about understanding us, not about you being bad"
 "I need 15 minutes of your attention, then we can both step back" (bounded intimacy, not endless processing)
-What you probably don't respond to:
+**What you probably don\'t respond to:**
 
 Emotional intensity or crying (you read it as manipulation or pressure)
 Bringing up past grievances (you see this as punishment, not pattern-naming)
 Tone policing disguised as feedback ("You're too harsh" instead of "I felt attacked")
-What You Say That Makes It Worse
-Based on your defensive, argumentative style:
+**What You Say That Makes It Worse:**
+**Based on your defensive, argumentative style:
 
 Logical dismantling of your partner's feelings - "That doesn't make sense" or "You're being irrational" feels like invalidation to them. You're winning the argument and losing the relationship.
 
@@ -286,16 +326,16 @@ Strategic accuracy that misses the point - Your high Machiavellianism means you 
 
 Stonewalling disguised as calm - You achieve emotional regulation and think you're being mature. Your partner experiences it as coldness and dismissal. Same behavior, completely different meaning.
 
-Your Repair Style
+**Your Repair Style:**
 You repair by creating distance and waiting. You give time. You don't bring up the fight again. You assume that once emotions cool, things return to normal.
 
-What actually works better:
+**What actually works better:**
 
-You need a repair that respects your need for space BUT includes acknowledgment. Not hours of processing. Just: "I was harsh earlier. I value you. Let's not let that sit."
+**You need a repair that respects your need for space BUT includes acknowledgment. Not hours of processing. Just: "I was harsh earlier. I value you. Let's not let that sit."
 
-Because here's what happens with your current repair style: You withdraw. Your partner is left wondering if you're still angry, still care, or if the relationship itself is in question. The unresolved tension festers. By the time you re-engage, you've both moved on, but nothing was actually repaired—just deferred.
+**Because here\'s what happens with your current repair style: You withdraw. Your partner is left wondering if you're still angry, still care, or if the relationship itself is in question. The unresolved tension festers. By the time you re-engage, you've both moved on, but nothing was actually repaired—just deferred.
 
-A better repair pattern for you:
+**A better repair pattern for you:**
 
 Immediate acknowledgment (not endless processing): "I came in too hot. That wasn't fair to you."
 Brief space if you need it: "I'm going to step away for 30 minutes to settle, then I want to come back to this."
@@ -303,7 +343,7 @@ Specific repair action: Not just "I'm sorry," but "Here's what I'm going to do d
 Reconnection ritual: Something small that signals you're back together—touch, eye contact, a specific phrase you both use.
 Your low self-compassion makes repair hard because you either minimize your impact ("It's not that big a deal") or withdraw into shame. Neither repairs the relationship. The middle ground: Hold yourself accountable without self-attack. "I was defensive because I felt criticized, and I handled it poorly. Here's what I'll do differently."
 
-The Strategic Edge You're Missing
+**The Strategic Edge You\'re Missing:**
 Your secure attachment, strong emotional regulation, and direct communication style are genuinely powerful. But they're creating a blind spot:
 
 You assume that being right is the same as being close.
@@ -314,12 +354,15 @@ But your partner doesn't experience any of that as connection. They experience i
 
 The intimacy gap in your relationship (sexual 1.67, emotional 2.75, intellectual 2.0) isn't a mystery. It's a direct result of this pattern: You're so focused on being heard that you're not hearing them. You're so defended that vulnerability feels like weakness. You're so strategic that spontaneity and play disappear.
 
-What would shift this: Not more arguments or better logic. But willingness to be uncertain, curious, and slightly vulnerable in real time. To say "I don't know" without immediately filling the silence. To ask "What do you need from me right now?" without preparing your rebuttal. To let your partner influence you—not because they're right, but because connection matters more than being right.
+**What would shift this:** Not more arguments or better logic. But willingness to be uncertain, curious, and slightly vulnerable in real time. To say "I don't know" without immediately filling the silence. To ask "What do you need from me right now?" without preparing your rebuttal. To let your partner influence you—not because they're right, but because connection matters more than being right.
 
 Your low self-compassion and high defensiveness are keeping you at a distance from the people you claim to value. That's not a relationship problem. That's an intimacy problem, and it starts with you.
 
-What Drives You
-Your Core Values
+
+## Values & Motivation
+
+### Core Values
+
 You operate from a fundamentally autonomous worldview. Your top three values—Self-Direction, Stimulation, and Hedonism—reveal someone who needs freedom to chart your own course, craves novelty and intellectual challenge, and refuses to defer pleasure for arbitrary social conventions.
 
 This is not recklessness. This is strategic individualism. You're willing to bend rules because you evaluate their merit rather than accept them by default. You seek stimulation because a static, predictable existence feels like slow suffocation to you. You value immediate experience because you understand that delayed gratification only makes sense if the payoff is worth the cost.
@@ -330,14 +373,24 @@ Stimulation keeps you engaged. Boring problems bore you. Routine exhausts you. Y
 
 Hedonism—your third value—is misunderstood in productivity culture. It doesn't mean you're lazy or pleasure-seeking in the conventional sense. It means you believe life should include reward, not just grind. You want to enjoy the process. You want your work to pay you well enough that you can actually experience the fruits of your labor, not just accumulate them.
 
-Together, these values create a paradox that many ambitious people face: You want financial independence and wealth building (your stated core goal), but traditional paths to wealth—repetitive work, deferred gratification, accepting direction from others—directly contradict what actually motivates you.
+**Together, these values create a paradox that many ambitious people face: You want financial independence and wealth building (your stated core goal), but traditional paths to wealth—repetitive work, deferred gratification, accepting direction from others—directly contradict what actually motivates you.
 
-Gifts	Challenges
-You don't accept authority for authority's sake. You evaluate ideas on merit and have the confidence to push back. This makes you an excellent strategist and negotiator.	If you perceive a rule as arbitrary, you'll bypass it. This serves you in entrepreneurship but creates friction in hierarchical structures. The trick isn't compliance—it's choosing environments where the rules align with your logic.
-You're drawn to high-leverage work. You naturally look for the 80/20—where small effort creates disproportionate impact. This is how wealth is actually built.	You can lose interest when a project becomes routine, even if it's profitable. You need to build variation into success, or you'll sabotage it to feel something.
-You genuinely enjoy the experience of doing well. This means you're not trapped in ascetic productivity culture. You can actually enjoy your success.	The cultural messaging that says "you must suffer to deserve reward" can create shame around enjoying yourself. You might judge your own hedonism or hide it. Recalibrate: pleasure isn't the enemy of wealth. It's the purpose of it.
-Your resistance to arbitrary constraints means you're a natural builder of your own systems rather than a follower of others'. You have the temperament for entrepreneurship.	You can chafe against stakeholder management and buy-in processes. In roles requiring consensus-building, your directness can be read as dismissive if you're not calibrated.
-Career Sweet Spot
+**Gifts:**
+
+- You don't accept authority for authority's sake. You evaluate ideas on merit and have the confidence to push back. This makes you an excellent strategist and negotiator.
+- You're drawn to high-leverage work. You naturally look for the 80/20—where small effort creates disproportionate impact. This is how wealth is actually built.
+- You genuinely enjoy the experience of doing well. This means you're not trapped in ascetic productivity culture. You can actually enjoy your success.
+- Your resistance to arbitrary constraints means you're a natural builder of your own systems rather than a follower of others'. You have the temperament for entrepreneurship.
+
+**Challenges:**
+
+- If you perceive a rule as arbitrary, you'll bypass it. This serves you in entrepreneurship but creates friction in hierarchical structures. The trick isn't compliance—it's choosing environments where the rules align with your logic.
+- You can lose interest when a project becomes routine, even if it's profitable. You need to build variation into success, or you'll sabotage it to feel something.
+- The cultural messaging that says "you must suffer to deserve reward" can create shame around enjoying yourself. You might judge your own hedonism or hide it. Recalibrate: pleasure isn't the enemy of wealth. It's the purpose of it.
+- You can chafe against stakeholder management and buy-in processes. In roles requiring consensus-building, your directness can be read as dismissive if you're not calibrated.
+
+### Career Sweet Spot
+
 Your RIASEC profile is E-C-I (Enterprising-Conventional-Investigative), which is the profile of someone who belongs in business, finance, strategy, or leadership roles where you build systems, manage resources, and drive outcomes.
 
 Let's be direct: You are built for roles where you can own results, control process, and see direct ROI from your decisions.
@@ -348,7 +401,7 @@ Conventional (C=23) is your secondary strength—and this is important. While yo
 
 Investigative (I=15) rounds out your profile. You want to understand how things work before you optimize them. You think strategically, not just reactively. This gives you the intellectual horsepower for complex problem-solving.
 
-Where you thrive:
+**Where you thrive:**
 
 Entrepreneurship/Ownership — Building something from the ground up where you own the decisions, the risk, and the upside. This is the ultimate expression of Self-Direction + Enterprising.
 Private equity, venture capital, investment banking — High-leverage financial work where strategy matters more than process adherence.
@@ -356,41 +409,51 @@ Management consulting — Solving complex problems for clients, designing system
 Business operations / Chief of Staff roles — Owning the engine room of an organization, building systems, driving efficiency without being trapped in politics.
 Product strategy / Business development — Forward-thinking roles where you shape direction rather than execute someone else's vision.
 Sales leadership or executive roles — Where you lead teams, manage accounts, and directly influence revenue. Strategy + Results + Autonomy.
-The pattern: You want roles where (1) your decisions have direct business impact, (2) you control process and autonomy, (3) there's clear feedback on performance (money, growth, outcomes), and (4) you're not bogged down in politics or consensus-building.
+**The pattern:** You want roles where (1) your decisions have direct business impact, (2) you control process and autonomy, (3) there's clear feedback on performance (money, growth, outcomes), and (4) you're not bogged down in politics or consensus-building.
 
-Gifts	Challenges
-You naturally see the strategic angle. You think like a business owner even as an employee. This makes you valuable in roles where thinking strategically is rare.	You can be impatient with people who move slowly or care more about process than outcomes. You might alienate consensus-builders or people who need more relationship-building.
-You're comfortable with numbers and outcomes. You don't need to be liked; you need to win. This clarity is rare and powerful.	Low agreeableness (23rd percentile) means you can come across as cold or transactional if you're not intentional. In roles requiring stakeholder trust-building, this can be a real limitation. The fix: Recognize when relationship-building IS the strategy, not a distraction from it.
-You're drawn to high-leverage work. You can see where to invest effort for maximum return. This is exactly how wealth is built.	You can lose motivation in stable, predictable roles. High income without stimulation becomes a golden cage.
-Your asynchronous, deep-focus work style means you're actually more productive than people who need constant collaboration. You get more done in less time.	Traditional office environments where visibility = value will frustrate you. You need to position yourself where output matters more than presence. Remote, results-oriented cultures suit you much better than status hierarchies.
-What Motivates You
+**Gifts:**
+
+- You naturally see the strategic angle. You think like a business owner even as an employee. This makes you valuable in roles where thinking strategically is rare.
+- You're comfortable with numbers and outcomes. You don't need to be liked; you need to win. This clarity is rare and powerful.
+- You're drawn to high-leverage work. You can see where to invest effort for maximum return. This is exactly how wealth is built.
+- Your asynchronous, deep-focus work style means you're actually more productive than people who need constant collaboration. You get more done in less time.
+
+**Challenges:**
+
+- You can be impatient with people who move slowly or care more about process than outcomes. You might alienate consensus-builders or people who need more relationship-building.
+- Low agreeableness (23rd percentile) means you can come across as cold or transactional if you're not intentional. In roles requiring stakeholder trust-building, this can be a real limitation. The fix: Recognize when relationship-building IS the strategy, not a distraction from it.
+- You can lose motivation in stable, predictable roles. High income without stimulation becomes a golden cage.
+- Traditional office environments where visibility = value will frustrate you. You need to position yourself where output matters more than presence. Remote, results-oriented cultures suit you much better than status hierarchies.
+
+### What Motivates You
+
 Your motivation profile is intrinsic and integrated—meaning you're driven by genuine interest and alignment with your values, not by external pressure or rewards.
 
 This is the healthy motivation pattern. You're not grinding for approval. You're not chasing external validation. You're motivated by meaning (in your case: building wealth as a vehicle for autonomy and experience).
 
-Here's what this means in practice:
+**What this means in practice:**
 
 You perform best when the work itself is interesting OR when it leads directly to your goal (financial independence). You'll push yourself hard on a project you believe in. You'll resist—maybe even sabotage—a project that feels like busy work, even if it pays well.
 
 Your core goal is financial independence and wealth building. This isn't shallow. This is autonomy. You understand that financial independence is the ultimate form of Self-Direction—no one can fire you, demote you, or tell you what to do if you don't need the paycheck. This is why you're willing to optimize for high income, even in roles that demand focus and discipline.
 
-The catch: Intrinsic motivation means you need the work to matter to you. You won't sustain effort on something that feels pointless just for the paycheck. The money is the vehicle, not the destination. If the money comes from work you find soul-deadening, you'll eventually bail or burn out, even if you're being paid well.
+**The catch:** Intrinsic motivation means you need the work to matter to you. You won't sustain effort on something that feels pointless just for the paycheck. The money is the vehicle, not the destination. If the money comes from work you find soul-deadening, you'll eventually bail or burn out, even if you're being paid well.
 
 Your motivation also shows up in your work preferences:
 
 Asynchronous, remote work with deep focus time — You don't need social interaction to stay motivated. You're energized by autonomy and uninterrupted thinking. Synchronous meetings and collaborative environments don't motivate you; they interrupt your flow.
 Written feedback over real-time conversation — You process through writing. Real-time feedback feels reactive and emotional. Written feedback gives you space to think strategically about what was said.
 Clear ownership of outcomes — You want to know what success looks like and have control over how you get there.
-What will drain your motivation:
+**What will drain your motivation:**
 
 Micromanagement or process-heavy environments where "how you do it" matters more than results
 Lack of feedback or unclear ROI from your effort
 Routine without novelty or strategic challenge
 Being in a subordinate position to someone you don't respect intellectually
 Work that doesn't align with your goal of financial independence (purely mission-driven nonprofits, roles with low upside)
-The strategic advantage: Your intrinsic motivation means you're capable of sustained effort toward a goal you believe in. You don't need constant external motivation. This is rare. Most people need approval, recognition, or pressure to keep going. You just need the goal to matter and the path to make sense.
+**The strategic advantage:** Your intrinsic motivation means you're capable of sustained effort toward a goal you believe in. You don't need constant external motivation. This is rare. Most people need approval, recognition, or pressure to keep going. You just need the goal to matter and the path to make sense.
 
-Your edge right now: You've clearly identified your core goal (wealth building for independence). The question isn't whether you're motivated. It's whether you're directing that motivation toward the highest-leverage vehicles for that goal. Some possibilities:
+**Your edge right now:** You've clearly identified your core goal (wealth building for independence). The question isn't whether you're motivated. It's whether you're directing that motivation toward the highest-leverage vehicles for that goal. Some possibilities:
 
 Equity upside (startup, partnership, commission-based role with real multipliers)
 Building an asset (product, brand, business you can sell or that compounds)
@@ -399,47 +462,56 @@ The worst case is you chase high income without leverage—grinding in a job tha
 
 The best case is you find a role (or build a business) where income is genuinely leveraged—where your effort multiplies and compounds toward your goal. That alignment is what will keep you engaged for the long term.
 
-💪 Your Superpowers
-1. Strategic Intelligence & Long-Term Vision
-How it shows up: You think in systems, not moments. Your core goal—financial independence—requires exactly the kind of calculated planning that comes naturally to you. You see patterns others miss, understand incentive structures, and know how to position yourself for advantage.
 
-Example: While peers get caught up in immediate gains, you're mapping multi-year wealth trajectories. You see relationships, career moves, and financial decisions as pieces of a larger strategy.
+## Superpowers & Growth Edges
 
-How to leverage it: Your strategic mind is your competitive edge. Most people fail at wealth-building because they lack the psychological capacity to delay gratification and think in decades, not quarters. You have it. Double down on financial education—real estate, investment strategy, business formation. This isn't greed; it's your natural gift applied to the domain where you've already decided to excel.
+### 1. Strategic Intelligence & Long-Term Vision
 
-2. Intellectual Openness & Creative Problem-Solving
-How it shows up: Your openness to experience (93rd percentile) combined with your investigative interests means you genuinely enjoy complexity. You're not threatened by novel ideas—you seek them out. You can hold multiple perspectives simultaneously without needing to collapse them into simple answers.
+**How it shows up:** You think in systems, not moments. Your core goal—financial independence—requires exactly the kind of calculated planning that comes naturally to you. You see patterns others miss, understand incentive structures, and know how to position yourself for advantage.
 
-Example: When facing a novel problem, you naturally explore unconventional solutions. You read widely, question assumptions, and aren't bound by "that's how it's always been done."
+**Example:** While peers get caught up in immediate gains, you're mapping multi-year wealth trajectories. You see relationships, career moves, and financial decisions as pieces of a larger strategy.
 
-How to leverage it: This trait is gold for entrepreneurship, innovation, and any field requiring adaptive thinking. Your financial independence goal could be accelerated through starting something novel rather than traditional employment. You have the intellectual bandwidth to understand emerging markets, technology shifts, or niche opportunities that others overlook.
+**How to leverage it:** Your strategic mind is your competitive edge. Most people fail at wealth-building because they lack the psychological capacity to delay gratification and think in decades, not quarters. You have it. Double down on financial education—real estate, investment strategy, business formation. This isn't greed; it's your natural gift applied to the domain where you've already decided to excel.
 
-3. Emotional Self-Sufficiency & Realistic Independence
-How it shows up: Your secure attachment style means you don't need constant reassurance or external validation to feel stable. You're grounded. You can be alone without loneliness, you can disagree without needing repair, you can maintain your perspective even when others are escalating emotionally.
 
-Example: When conflict arises in your relationship, you don't spiral into abandonment anxiety. You can step back, assess, and respond logically. This is genuinely rare and valuable.
+### 2. Intellectual Openness & Creative Problem-Solving
 
-How to leverage it: This is your foundation for everything else. While others are emotionally reactive, you can stay clear-headed. Use this to develop high-stakes skills—leadership, negotiation, investing, difficult conversations. You won't freeze or people-please your way into bad decisions. You can make hard calls others can't.
+**How it shows up:** Your openness to experience (93rd percentile) combined with your investigative interests means you genuinely enjoy complexity. You're not threatened by novel ideas—you seek them out. You can hold multiple perspectives simultaneously without needing to collapse them into simple answers.
 
-4. Persuasion & Social Navigation
-How it shows up: You score high on extraversion combined with strategic thinking. You can read social situations, adjust your presentation, and get people moving in directions that serve your interests. You're not socially anxious about influence—you understand it's a natural part of human interaction.
+**Example:** When facing a novel problem, you naturally explore unconventional solutions. You read widely, question assumptions, and aren't bound by "that's how it's always been done."
 
-Example: You likely get what you want from people more often than not. You know when to charm, when to be direct, when to withdraw. You're not manipulative in the crude sense; you're sophisticated about social dynamics.
+**How to leverage it:** This trait is gold for entrepreneurship, innovation, and any field requiring adaptive thinking. Your financial independence goal could be accelerated through starting something novel rather than traditional employment. You have the intellectual bandwidth to understand emerging markets, technology shifts, or niche opportunities that others overlook.
 
-How to leverage it: This skill accelerates wealth-building. Negotiation, sales, fundraising, alliance-building—these aren't morally neutral skills, but they're enormously valuable. Apply this intentionally in your career and business. Understand that influence is a tool: it can be used to move people toward win-wins or toward exploitation. The choice is yours, and that choice determines whether this strength serves you long-term.
 
-5. Authentic Work Clarity & Self-Knowledge
-How it shows up: You know what you need to perform: asynchronous work, deep focus time, significant alone time to recharge. You've mapped your actual constraints—not idealized versions of yourself. You know feedback works better in writing. This is self-awareness most people never achieve.
+### 3. Emotional Self-Sufficiency & Realistic Independence
 
-Example: Rather than forcing yourself into open-office, real-time collaboration environments and burning out, you've defined boundaries that actually work for your neurology. You protect your energy strategically.
+**How it shows up:** Your secure attachment style means you don't need constant reassurance or external validation to feel stable. You're grounded. You can be alone without loneliness, you can disagree without needing repair, you can maintain your perspective even when others are escalating emotionally.
 
-How to leverage it: This is the infrastructure for sustained success. Most ambitious people burn out because they fight their own nature. You're not doing that. Use this to design your career and business to align with your actual operating system. Remote work, controlled communication, focus blocks—these aren't luxuries for you; they're requirements for peak performance. Make sure any wealth-building strategy honors this.
+**Example:** When conflict arises in your relationship, you don't spiral into abandonment anxiety. You can step back, assess, and respond logically. This is genuinely rare and valuable.
+
+**How to leverage it:** This is your foundation for everything else. While others are emotionally reactive, you can stay clear-headed. Use this to develop high-stakes skills—leadership, negotiation, investing, difficult conversations. You won't freeze or people-please your way into bad decisions. You can make hard calls others can't.
+
+
+### 4. Persuasion & Social Navigation
+
+**How it shows up:** You score high on extraversion combined with strategic thinking. You can read social situations, adjust your presentation, and get people moving in directions that serve your interests. You're not socially anxious about influence—you understand it's a natural part of human interaction.
+
+**Example:** You likely get what you want from people more often than not. You know when to charm, when to be direct, when to withdraw. You're not manipulative in the crude sense; you're sophisticated about social dynamics.
+
+**How to leverage it:** This skill accelerates wealth-building. Negotiation, sales, fundraising, alliance-building—these aren't morally neutral skills, but they're enormously valuable. Apply this intentionally in your career and business. Understand that influence is a tool: it can be used to move people toward win-wins or toward exploitation. The choice is yours, and that choice determines whether this strength serves you long-term.
+
+**5. Authentic Work Clarity & Self-Knowledge
+**How it shows up:**** You know what you need to perform: asynchronous work, deep focus time, significant alone time to recharge. You've mapped your actual constraints—not idealized versions of yourself. You know feedback works better in writing. This is self-awareness most people never achieve.
+
+**Example:** Rather than forcing yourself into open-office, real-time collaboration environments and burning out, you've defined boundaries that actually work for your neurology. You protect your energy strategically.
+
+**How to leverage it:** This is the infrastructure for sustained success. Most ambitious people burn out because they fight their own nature. You're not doing that. Use this to design your career and business to align with your actual operating system. Remote work, controlled communication, focus blocks—these aren't luxuries for you; they're requirements for peak performance. Make sure any wealth-building strategy honors this.
 
 🚧 What's Holding You Back
 Blind Spot #1: The Cost of Low Empathy in Your Relationships
 What's happening: Your empathy baseline is notably low. This shows up as strategic rather than warm relating—you understand people intellectually but don't automatically feel their internal world. Combined with your self-focused communication style in your relationship (you tend to pursue/demand while your partner withdraws), this creates a pattern where you may get what you want while remaining disconnected from the impact on your partner.
 
-How it limits you: High-performing people often mistake relationship "success" (getting compliance, sexual access, agreement on finances) for relationship quality (genuine mutual understanding, trust earned through vulnerability, joy in connection). Your relationship scores look good on paper—trust at 5, security at 4.67—but your sexual intimacy is notably low (1.67), and your pattern shows you doing the demanding while your partner withdraws. This suggests the good scores may reflect surface stability, not genuine depth. Long-term, this becomes a vulnerability: your partner may feel used rather than loved. And you may wonder why success in other domains doesn't translate to the intimate peace you actually want.
+**How it limits you:** High-performing people often mistake relationship "success" (getting compliance, sexual access, agreement on finances) for relationship quality (genuine mutual understanding, trust earned through vulnerability, joy in connection). Your relationship scores look good on paper—trust at 5, security at 4.67—but your sexual intimacy is notably low (1.67), and your pattern shows you doing the demanding while your partner withdraws. This suggests the good scores may reflect surface stability, not genuine depth. Long-term, this becomes a vulnerability: your partner may feel used rather than loved. And you may wonder why success in other domains doesn't translate to the intimate peace you actually want.
 
 Sign to watch for: Notice moments when you're upset with your partner and you quickly move to "here's what they need to do differently" rather than exploring what you might not be understanding about their experience. The demand-withdraw pattern is your tell.
 
@@ -448,7 +520,7 @@ One concrete action: Experiment with this: Next time you're frustrated with your
 Blind Spot #2: The Unexamined Cost of Your Demands
 What's happening: Your self-demanding communication style + low concern for others' feelings (low agreeableness) + strategic orientation = you likely win arguments, get your way, and then wonder why your partner feels resentful. You see it as "I was right and they should accept it." What you may not see: the constant low-level demoralization of being with someone who prioritizes winning over understanding.
 
-How it limits you: This pattern is fine for transactional relationships or subordinate relationships (boss-employee, client-contractor). It's corrosive for intimate partnerships. Your financial independence goal requires a stable foundation—and chronic resentment from your partner destabilizes everything. Worse: if you ever need your partner's genuine support (illness, failure, vulnerability), you've trained them to withdraw rather than show up. You get compliance; you don't get partnership.
+**How it limits you:** This pattern is fine for transactional relationships or subordinate relationships (boss-employee, client-contractor). It's corrosive for intimate partnerships. Your financial independence goal requires a stable foundation—and chronic resentment from your partner destabilizes everything. Worse: if you ever need your partner's genuine support (illness, failure, vulnerability), you've trained them to withdraw rather than show up. You get compliance; you don't get partnership.
 
 Sign to watch for: Pay attention when your partner goes quiet after you've "won" an argument. That silence isn't acceptance—it's them going inward. Count how many conversations end with them agreeing/complying versus conversations where you both feel genuinely understood. If it's mostly the former, your pattern is active.
 
@@ -457,9 +529,9 @@ One concrete action: In your next three conflicts, deliberately don't pursue you
 Blind Spot #3: Stress Regulation Under the Radar
 What's happening: Your baseline anxiety and depression screening are low—you're not clinically anxious or depressed. But your emotion regulation struggles are notably elevated (your emotional stress response scale is in the elevated range). This means: you're holding yourself together through control and willpower, not through genuine emotional balance. You probably don't notice stress building until you hit a wall.
 
-How it limits you: The physical health patterns tell the story: irregular sleep schedule, caffeine dependence, sedentary periods punctuated by activity, moderate alcohol use (flagged on screening). These are how your nervous system is signaling dysregulation even though you're not feeling anxious. Your body knows what your mind hasn't integrated: you're running on fumes. This is fine until it isn't. Burnout hits suddenly for people like you—one day you're fine, the next day you can't get out of bed—because you've been ignoring the warning signals.
+**How it limits you:** The physical health patterns tell the story: irregular sleep schedule, caffeine dependence, sedentary periods punctuated by activity, moderate alcohol use (flagged on screening). These are how your nervous system is signaling dysregulation even though you're not feeling anxious. Your body knows what your mind hasn't integrated: you're running on fumes. This is fine until it isn't. Burnout hits suddenly for people like you—one day you're fine, the next day you can't get out of bed—because you've been ignoring the warning signals.
 
-How it limits you: More importantly for your financial independence goal: dysregulated nervous systems make worse decisions. You're less creative, more reactive, more prone to impulsive financial choices disguised as strategic ones. You also miss opportunities that require sustained presence and flexibility. If you want to build wealth, you need a nervous system that's actually regulated, not just disciplined.
+**How it limits you:** More importantly for your financial independence goal: dysregulated nervous systems make worse decisions. You're less creative, more reactive, more prone to impulsive financial choices disguised as strategic ones. You also miss opportunities that require sustained presence and flexibility. If you want to build wealth, you need a nervous system that's actually regulated, not just disciplined.
 
 Sign to watch for: Notice your sleep schedule. Notice whether you're reaching for caffeine to push through fatigue rather than actually resting. Notice your alcohol use—is it sometimes relaxing, or is it becoming a pattern to downregulate? These aren't moral issues; they're data that your emotion regulation system is running hot.
 
@@ -473,12 +545,12 @@ Your E-C-I profile (Enterprising-Conventional-Investigative) combined with your 
 
 What You NEED to Succeed at Work:
 
-Success Requirement	Why You'll Fail Without This
-Autonomy in execution	You chafe against arbitrary oversight. Micromanagement triggers your natural resistance to external control. You'll either leave or become a liability.
-Clear financial incentives tied to performance	You're motivated by tangible results and wealth building, not titles or praise. Salary-only structures demotivate you; you need to see your impact in dollars.
-Async-first or deep-focus friendly structure	Your social anxiety and need for processing time in writing mean constant meetings and real-time social performance will exhaust you faster than actual work. Remote/async lets you work at your peak.
-Complex, evolving problems (not repetitive tasks)	Your high openness + low conscientiousness combination means routine work feels like a cage. You need intellectual novelty and strategic challenge to stay engaged.
-Minimal emotional labor expectations	Your low agreeableness and preference for written communication mean jobs requiring constant interpersonal warmth, empathy, or people-management are soul-draining. You're not the person.
+Success Requirement    Why You'll Fail Without This
+Autonomy in execution    You chafe against arbitrary oversight. Micromanagement triggers your natural resistance to external control. You'll either leave or become a liability.
+Clear financial incentives tied to performance    You're motivated by tangible results and wealth building, not titles or praise. Salary-only structures demotivate you; you need to see your impact in dollars.
+Async-first or deep-focus friendly structure    Your social anxiety and need for processing time in writing mean constant meetings and real-time social performance will exhaust you faster than actual work. Remote/async lets you work at your peak.
+Complex, evolving problems (not repetitive tasks)    Your high openness + low conscientiousness combination means routine work feels like a cage. You need intellectual novelty and strategic challenge to stay engaged.
+Minimal emotional labor expectations    Your low agreeableness and preference for written communication mean jobs requiring constant interpersonal warmth, empathy, or people-management are soul-draining. You're not the person.
 Specific Roles That Fit:
 
 Founder/Entrepreneur (Tech, Finance, E-commerce, Consulting)
@@ -508,19 +580,19 @@ Async-compatible; you own your schedule
 Direct link between intelligence and income
 Jobs to Avoid
 Job Type 1: High-Touch Customer-Facing Roles (Sales, Customer Success, Client Services)
-Element	Why It Clashes
-Requires constant real-time emotional performance	Your social anxiety + low agreeableness + moderate masking means forced warmth is exhausting. You're not naturally bubbly or people-focused. Masking that identity daily will burn you out fast.
-Success tied to likability, not problem-solving	These roles reward charm and relationship-building—neither your strength. You'll resent performing for commission, and clients will sense your disengagement.
-Interruption-heavy, reactive work	Async isn't an option. You'll be on calls/emails constantly. Your need for deep focus and alone time will conflict with the job's core demands.
-Scripted warmth / corporate enthusiasm expected	Your natural communication style is direct and strategic, not bubbly. The dissonance between your authentic self and the role's expectations creates the conditions for burnout.
+Element    Why It Clashes
+Requires constant real-time emotional performance    Your social anxiety + low agreeableness + moderate masking means forced warmth is exhausting. You're not naturally bubbly or people-focused. Masking that identity daily will burn you out fast.
+Success tied to likability, not problem-solving    These roles reward charm and relationship-building—neither your strength. You'll resent performing for commission, and clients will sense your disengagement.
+Interruption-heavy, reactive work    Async isn't an option. You'll be on calls/emails constantly. Your need for deep focus and alone time will conflict with the job's core demands.
+Scripted warmth / corporate enthusiasm expected    Your natural communication style is direct and strategic, not bubbly. The dissonance between your authentic self and the role's expectations creates the conditions for burnout.
 Example Roles to Avoid: Account Executive, Customer Success Manager, Retail Manager, Restaurant Manager, Hotel Concierge, Real Estate Agent
 
 Job Type 2: Highly Structured, Rule-Following Bureaucratic Roles (Government, Traditional HR, Compliance, Public Sector)
-Element	Why It Clashes
-Arbitrary hierarchy and process take precedence over results	Your high openness + low conscientiousness rebels against "because that's how we've always done it." Your entrepreneurial instinct will constantly conflict with gatekeeping and red tape. You'll become cynical or leave.
-Low financial upside / no performance leverage	Fixed salary, defined benefits, no equity, no commission. Your core value is financial independence—these structures actively prevent it. You'll feel trapped.
-Requires emotional labor + agreeableness	HR, compliance, and public-facing government roles require empathy, people-orientation, and consensus-building. Not your skillset. You'll either be ineffective or resent the work.
-Minimal intellectual novelty	Most government/compliance work follows precedent. Your openness craves new problems, novel approaches, creative solutions. Bureaucracies actively punish innovation.
+Element    Why It Clashes
+Arbitrary hierarchy and process take precedence over results    Your high openness + low conscientiousness rebels against "because that's how we've always done it." Your entrepreneurial instinct will constantly conflict with gatekeeping and red tape. You'll become cynical or leave.
+Low financial upside / no performance leverage    Fixed salary, defined benefits, no equity, no commission. Your core value is financial independence—these structures actively prevent it. You'll feel trapped.
+Requires emotional labor + agreeableness    HR, compliance, and public-facing government roles require empathy, people-orientation, and consensus-building. Not your skillset. You'll either be ineffective or resent the work.
+Minimal intellectual novelty    Most government/compliance work follows precedent. Your openness craves new problems, novel approaches, creative solutions. Bureaucracies actively punish innovation.
 Example Roles to Avoid: HR Generalist, Government Employee (general), Compliance Officer, Grant Writer, Regulatory Affairs Specialist, School Administrator, Civil Servant
 
 The Strategic Play
@@ -535,7 +607,9 @@ The worst move: a "stable" corporate job that pays well but demands constant per
 
 Your financial independence goal is non-negotiable. Design your career around it, not around a job title someone else thinks you should have.
 
-Your Current Relationship
+
+### Your Current Relationship
+
 Where You Stand
 Your relationship satisfaction score (64/80) lands in moderate territory - the zone where things aren't broken enough to warrant panic, but not nourishing enough to stop the quiet calculation running in the back of your mind. You're in the relationship equivalent of "fine."
 
@@ -666,7 +740,7 @@ We found patterns in your results:
 
 •Your attachment style is Secure.—This means you generally feel comfortabl
 
-+ 5 more patterns in your full report
+- 5 more patterns in your full report
 
 What you'll unlock
 
@@ -771,7 +845,9 @@ Your profile suggests someone who values creativity, new ideas, and unconvention
 Attachment Style
 ECR-S
 
-Your Attachment Style
+
+### Your Attachment Style
+
 Secure
 Comfortable with both closeness and independence. Trusting and confident in relationships.
 
@@ -1030,7 +1106,9 @@ High
 Developing emotional stability
 ✓
 Can manage everyday stressors
-Rejection Sensitivity
+
+### Rejection Sensitivity
+
 Social acceptance needs
 Low
 ↑ avg
@@ -1148,7 +1226,9 @@ Physical health assessment covers sleep rhythm, symptoms, energy, nutrition, sub
 Food & Body
 DP-FBS
 
-Food & Body Screen
+
+#### Food & Body Screen
+
 0
 / 31
 Low Concern
@@ -1303,7 +1383,9 @@ Moderate
 100/125
 Total CAT-Q
 
-Masking Subscales
+
+#### Masking Subscales
+
 Compensation
 Moderate
 Masking
@@ -1409,7 +1491,6 @@ Difficulty forming genuine emotional bonds
 ⚠
 Actions without remorse can damage relationships
 Based on the Short Dark Triad (SD3). These traits exist on a spectrum in everyone — they only become problematic at extremes. Self-awareness is the first step to conscious choice.
-
 
 Sections
 © 2026 Deep Personality. All rights reserved.
