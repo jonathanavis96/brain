@@ -39,7 +39,7 @@ This file is filled in using the context pasted alongside the links (not by fetc
     - daily/weekly shipping cadence
   - [ ] Create our own “Day N” build log format (1 short post/day + weekly recap) and define the KPIs to track (revenue, signups, activation, churn).
   - [ ] Set up lightweight revenue dashboard + public proof points:
-    - Stripe metrics (MRR, revenue, refunds)
+    - Payment processor metrics (MRR, revenue, refunds)
     - signup funnel
     - retention/usage
   - [ ] Identify 1–2 replicable growth loops from the case study and run them as 2-week experiments.

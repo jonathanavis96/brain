@@ -486,7 +486,7 @@ Program costs = Rewards paid + Tool costs + Management time
 
 **Built-in options:**
 
-- Stripe (basic referral tracking)
+- Payment processors (basic referral tracking)
 - HubSpot (CRM-integrated)
 - Segment (tracking and analytics)
 
@@ -502,7 +502,7 @@ Program costs = Rewards paid + Tool costs + Management time
 
 **Self-hosted:**
 
-- Rewardful — Stripe-integrated affiliates
+- Rewardful — Payment-integrated affiliates
 - Refersion — E-commerce affiliates
 
 ### Choosing a Tool

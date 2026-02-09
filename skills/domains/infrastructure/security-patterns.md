@@ -608,7 +608,7 @@ API keys, database passwords, and other secrets must never be exposed in code or
 DATABASE_URL=postgresql://user:password@localhost:5432/mydb  # pragma: allowlist secret
 JWT_SECRET=your-super-secret-key-here
 API_KEY=sk_live_51H...
-NEXT_PUBLIC_STRIPE_KEY=pk_test_51H... # NEXT_PUBLIC_ exposes to client!
+NEXT_PUBLIC_PAYMENT_KEY=pk_test_51H... # NEXT_PUBLIC_ exposes to client!
 ```text
 
 **Server-side secret usage:**
@@ -636,12 +636,12 @@ export async function GET() {
 
 export default function Page() {
   // ✅ Only NEXT_PUBLIC_ vars are available in client
-  const stripeKey = process.env.NEXT_PUBLIC_STRIPE_KEY;
+  const paymentKey = process.env.NEXT_PUBLIC_PAYMENT_KEY;
   
   // ❌ This is undefined (server-only secret)
   const jwtSecret = process.env.JWT_SECRET; // undefined!
   
-  return <div>Stripe Key: {stripeKey}</div>;
+  return <div>Payment Key: {paymentKey}</div>;
 }
 ```text
 

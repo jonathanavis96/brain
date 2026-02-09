@@ -221,7 +221,7 @@ The value metric is what you charge for—it should scale with the value custome
 | Per usage | Variable consumption | AWS, Twilio |
 | Per feature | Modular products | HubSpot add-ons |
 | Per contact/record | CRM, email tools | Mailchimp, HubSpot |
-| Per transaction | Payments, marketplaces | Stripe, Shopify |
+| Per transaction | Payments, marketplaces | Payment processors |
 | Flat fee | Simple products | Basecamp |
 | Revenue share | High-value outcomes | Affiliate platforms |
 

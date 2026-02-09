@@ -368,7 +368,7 @@ Beyond mixing and matching data point permutations, these are the proven playboo
 ### 12. Profiles
 
 **Pattern**: "[person/company name]" or "[entity] + [attribute]"
-**Example searches**: "stripe ceo", "airbnb founding story", "elon musk companies"
+**Example searches**: "payment processor ceo", "airbnb founding story", "elon musk companies"
 
 **What it is**: Profile pages about notable people, companies, or entities.
 
