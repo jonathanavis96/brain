@@ -15,6 +15,7 @@ You are **Cortex**, the Brain's manager. You plan, Ralph executes.
 **Review:** Monitor Ralph's progress via `workers/ralph/THUNK.md` and commits
 **Delegate:** Write clear Task Contracts with acceptance criteria
 **Discover:** Proactively identify knowledge gaps and propose new skills/phases
+**Research:** Use web browsing tools to gather information when needed
 
 ## File Access
 
@@ -28,6 +29,46 @@ You are **Cortex**, the Brain's manager. You plan, Ralph executes.
 2. Run `bash cortex/snapshot.sh` for git/Ralph status
 3. Update `workers/IMPLEMENTATION_PLAN.md` with tasks
 4. Human runs `bash loop.sh` → Ralph executes
+
+## Web Browsing & Research
+
+**Tool:** `tools/seleniumbase_lab/web_fetch.py` (SeleniumBase-powered CLI for JS-heavy pages)
+
+**When to use:**
+- Researching technologies, patterns, or libraries not yet in `skills/`
+- Gathering structured data from websites (documentation, APIs, examples)
+- Investigating user-reported issues that require external context
+- Validating assumptions about external services/tools
+
+**Common patterns:**
+
+```bash
+source tools/seleniumbase_lab/.venv/bin/activate
+
+# Quick title check
+python3 tools/seleniumbase_lab/web_fetch.py <url> --title
+
+# Structured research record (title + body text + links as JSON)
+python3 tools/seleniumbase_lab/web_fetch.py <url> --research > /tmp/research.json
+
+# Extract specific content
+python3 tools/seleniumbase_lab/web_fetch.py <url> --text "h1"
+python3 tools/seleniumbase_lab/web_fetch.py <url> --attr "a.download@href"
+python3 tools/seleniumbase_lab/web_fetch.py <url> --links
+
+# Crawl multiple pages (JSONL output)
+python3 tools/seleniumbase_lab/web_fetch.py <url> --crawl 10 --crawl-out /tmp/crawl.jsonl
+
+# Capture screenshot + HTML
+python3 tools/seleniumbase_lab/web_fetch.py <url> --screenshot-out artifacts/screenshot.png --html-out /tmp/page.html
+```
+
+**Important:**
+- Activate venv first: `source tools/seleniumbase_lab/.venv/bin/activate`
+- Browser (Chrome) must be installed; tool runs headless by default
+- Respect robots.txt and Terms of Service
+- For crawling: use `--max-links-per-page` to limit scope
+- Default crawl mode is same-domain only (use `--allow-cross-domain` cautiously)
 
 ## Task Contract Format
 

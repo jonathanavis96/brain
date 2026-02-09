@@ -62,6 +62,7 @@ Catalog of all skill files in the brain system.
 - [refactor-patterns.md](domains/code-quality/refactor-patterns.md) - Safe refactoring patterns
 - [research-cheatsheet.md](domains/code-quality/research-cheatsheet.md) - One-page quick reference for research patterns
 - [research-patterns.md](domains/code-quality/research-patterns.md) - Systematic research methodology for gathering and evaluating information
+- [web-research-patterns.md](domains/code-quality/web-research-patterns.md) - Web browsing and data extraction using SeleniumBase (JS-heavy pages, crawling, screenshots)
 - [security-patterns.md](domains/code-quality/security-patterns.md) - Secure engineering workflow patterns
 - [semantic-code-review.md](domains/code-quality/semantic-code-review.md) - LLM-based semantic analysis patterns for logic validation and intent checking
 - [simplify-patterns.md](domains/code-quality/simplify-patterns.md) - Simplification patterns without breaking behavior
@@ -155,6 +156,7 @@ Catalog of all skill files in the brain system.
 
 - [README.md](projects/README.md) - Project-specific skills overview
 - [brain-example.md](projects/brain-example.md) - Example project-specific skill
+- [ai-integration-audit/README.md](projects/ai_integration_audit/README.md) - End-to-end AI integration audit bundle (research → survey → scoring → deploy scaffold)
 
 ### Marketing
 

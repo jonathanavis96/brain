@@ -1,0 +1,30 @@
+{
+  "id": "support_triage_drafting",
+  "function": "Support",
+  "title": "Support: triage + draft replies",
+  "problem": "High volume of repetitive tickets with slow first response",
+  "current_workflow": {
+    "tools": ["Zendesk"],
+    "steps": ["read ticket", "find policy", "draft reply", "tag", "route"]
+  },
+  "proposed_solution": "AI-assisted classification + response drafting with citations",
+  "required_integrations": ["Zendesk API", "Knowledge base"],
+  "risk_tier": 1,
+  "scores": {
+    "impact": 4,
+    "ease": 4,
+    "data_readiness": 3,
+    "risk": 2,
+    "time_to_value": 4
+  },
+  "derived_scores": {
+    "low_hanging": 9,
+    "strategic": 2
+  },
+  "evidence": {
+    "sources": [
+      "(link to ticket volume report)",
+      "(link to SOP/policy)"
+    ]
+  }
+}

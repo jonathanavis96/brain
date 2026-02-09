@@ -1,0 +1,30 @@
+{
+  "id": "support_triage_v1",
+  "job_to_be_done": "Triage inbound support tickets and draft replies with policy citations",
+  "autonomy_level": "L1",
+  "triggers": ["new_ticket_created"],
+  "inputs": ["ticket_text", "customer_context", "policies_kb"],
+  "tools": ["helpdesk_api", "kb_search"],
+  "outputs": ["draft_reply", "category", "priority"],
+  "human_in_the_loop": {
+    "approval_required": true,
+    "who_approves": "Support agent"
+  },
+  "guardrails": [
+    "No refunds without manager approval",
+    "Cite KB for policy claims"
+  ],
+  "evaluation": {
+    "test_set": "10-50 anonymized historical tickets",
+    "pass_fail": [
+      "Correct category",
+      "Correct citations",
+      "Tone compliance"
+    ]
+  },
+  "metrics": [
+    "time_to_first_response",
+    "rewrite_rate",
+    "csat"
+  ]
+}

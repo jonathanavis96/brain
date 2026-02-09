@@ -477,6 +477,30 @@ rg -l "keyword" tools/ skills/domains/ | head -10
 
 8. **STOP** - Do not push, do not continue to next task
 
+## Web Browsing & Research
+
+**Ralph does NOT browse the web.**
+
+When you encounter missing information that requires online research:
+
+1. **Capture the gap** in `skills/self-improvement/GAP_BACKLOG.md`:
+   - What information is needed?
+   - Why is it needed?
+   - Where would it be documented (e.g., `skills/domains/backend/`, `skills/playbooks/`)?
+
+2. **Mark task as blocked** (if applicable):
+   - Change task status to `[?]` with a note: "Blocked: requires research on [X]"
+   - In your response, explain what research is needed
+
+3. **Cortex handles research:**
+   - Cortex has access to `tools/seleniumbase_lab/web_fetch.py` for web browsing
+   - Cortex will research and either add the knowledge to `skills/` or provide guidance
+
+**Why this rule exists:**
+- Ralph executes tasks with known patterns
+- Cortex handles strategic research and knowledge acquisition
+- Clear separation prevents iteration waste on research loops
+
 **Important:** Warnings-first policy - Always check and fix verifier warnings before numbered tasks.
 
 ---

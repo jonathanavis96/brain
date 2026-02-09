@@ -1,0 +1,133 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [4 0 R 6 0 R 8 0 R] /Count 3 >>
+endobj
+3 0 obj
+<< /Length 2945 >>
+stream
+BT /F2 20 Tf 56 732 Td (Local AI Assistant for Architects) Tj ET
+BT /F1 12 Tf 56 706 Td (Practical time-savers you can run locally \(no coding required to use\)) Tj ET
+BT /F1 11 Tf 56 684 Td (Date: 2026-02-08) Tj ET
+BT /F1 11 Tf 56 663 Td (This handout shows realistic ways a local AI assistant can save time in an) Tj ET
+BT /F1 11 Tf 56 648 Td (architecture workflow. The best wins come from writing, searching, and) Tj ET
+BT /F1 11 Tf 56 633 Td (coordination \(high volume, text-heavy tasks\), not from automatically producing) Tj ET
+BT /F1 11 Tf 56 618 Td (drawings or replacing professional judgement.) Tj ET
+BT /F2 14 Tf 56 591 Td (What's possible \(use cases\)) Tj ET
+BT /F1 11 Tf 56 573 Td (These are common, practical use cases. You can start small and add more over time.) Tj ET
+BT /F1 11 Tf 56 552 Td (- Meeting -> minutes: decisions, action items \(owners + due dates\), and follow-) Tj ET
+BT /F1 11 Tf 56 537 Td (  up emails.) Tj ET
+BT /F1 11 Tf 56 516 Td (- Project Q&A \('Ask my project'\): search across specs, PDFs, notes, and emails) Tj ET
+BT /F1 11 Tf 56 501 Td (  with citations.) Tj ET
+BT /F1 11 Tf 56 480 Td (- Drafting: RFIs, site reports, consultant emails, agendas, scope summaries.) Tj ET
+BT /F1 11 Tf 56 459 Td (- Weekly 'open loops' report: what's unanswered, blocking, or waiting on others.) Tj ET
+BT /F1 11 Tf 56 438 Td (- Submittal/RFI summarization: highlight what changed and what needs a decision.) Tj ET
+BT /F1 11 Tf 56 417 Td (- Code/standards helper: answer questions from your local code PDFs with) Tj ET
+BT /F1 11 Tf 56 402 Td (  referenced excerpts.) Tj ET
+BT /F1 11 Tf 56 381 Td (- Consistency checks \(text-based\): detect contradictions between spec sections /) Tj ET
+BT /F1 11 Tf 56 366 Td (  schedules / notes.) Tj ET
+BT /F1 11 Tf 56 345 Td (- Knowledge library: find similar past decisions/details by searching prior) Tj ET
+BT /F1 11 Tf 56 330 Td (  project folders.) Tj ET
+BT /F1 11 Tf 56 309 Td (- Client-ready summaries: turn technical notes into a clear client update.) Tj ET
+BT /F1 11 Tf 56 288 Td (- Internal onboarding: 'How we do this' quick guides based on your office) Tj ET
+BT /F1 11 Tf 56 273 Td (  standards.) Tj ET
+BT /F2 14 Tf 56 246 Td (The best 5 to implement first \(and why\)) Tj ET
+BT /F1 11 Tf 56 228 Td (These five usually deliver the highest payoff with the lowest risk. They also help) Tj ET
+BT /F1 11 Tf 56 213 Td (build a clean project record.) Tj ET
+BT /F2 12 Tf 56 190 Td (1\) Meeting minutes + actions) Tj ET
+BT /F1 11 Tf 56 176 Td (- Why: immediate time savings; fewer missed tasks; clearer coordination.) Tj ET
+BT /F1 11 Tf 56 155 Td (- How: paste notes/transcript -> get minutes + decisions + action list -> send) Tj ET
+BT /F1 11 Tf 56 140 Td (  follow-ups.) Tj ET
+BT /F1 11 Tf 56 119 Td (- What's required: a consistent template + a place to store meeting notes) Tj ET
+BT /F1 11 Tf 56 104 Td (  \(folder per project\).) Tj ET
+BT /F1 9 Tf 476 35 Td (Page 1 of 3) Tj ET
+endstream
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> >> >> /Contents 3 0 R >>
+endobj
+5 0 obj
+<< /Length 2838 >>
+stream
+BT /F2 12 Tf 56 732 Td (2\) 'Ask my project' document search \(with citations\)) Tj ET
+BT /F1 11 Tf 56 718 Td (- Why: reduces time lost searching across PDFs and email threads.) Tj ET
+BT /F1 11 Tf 56 697 Td (- How: keep a 'Project Vault' folder -> ask questions -> AI answers with quoted) Tj ET
+BT /F1 11 Tf 56 682 Td (  sources.) Tj ET
+BT /F1 11 Tf 56 661 Td (- What's required: exported PDFs/emails/notes + a simple index so the AI can) Tj ET
+BT /F1 11 Tf 56 646 Td (  retrieve the right pages.) Tj ET
+BT /F2 12 Tf 56 623 Td (3\) Draft RFIs / site reports / consultant emails) Tj ET
+BT /F1 11 Tf 56 609 Td (- Why: avoids blank-page writing and keeps tone/format consistent.) Tj ET
+BT /F1 11 Tf 56 588 Td (- How: pick a template -> provide a few bullets -> AI produces a clean first) Tj ET
+BT /F1 11 Tf 56 573 Td (  draft.) Tj ET
+BT /F1 11 Tf 56 552 Td (- What's required: your preferred templates \(1-2 examples is enough to start\).) Tj ET
+BT /F2 12 Tf 56 529 Td (4\) Weekly 'open loops' summary) Tj ET
+BT /F1 11 Tf 56 515 Td (- Why: keeps projects moving; prevents small items from slipping.) Tj ET
+BT /F1 11 Tf 56 494 Td (- How: AI scans meeting actions + RFIs + notes -> produces a single list of) Tj ET
+BT /F1 11 Tf 56 479 Td (  outstanding items.) Tj ET
+BT /F1 11 Tf 56 458 Td (- What's required: store actions consistently \(even in a simple list\) and tag) Tj ET
+BT /F1 11 Tf 56 443 Td (  who owns what.) Tj ET
+BT /F2 12 Tf 56 420 Td (5\) Code/standards Q&A \(local 'code librarian'\)) Tj ET
+BT /F1 11 Tf 56 406 Td (- Why: faster lookups; improves consistency; reduces rework.) Tj ET
+BT /F1 11 Tf 56 385 Td (- How: ask a question -> get an answer + cited excerpts from your local code) Tj ET
+BT /F1 11 Tf 56 370 Td (  documents.) Tj ET
+BT /F1 11 Tf 56 349 Td (- What's required: the code PDFs you use \(and permission to store them locally\).) Tj ET
+BT /F2 14 Tf 56 322 Td (Realistic expectations \(what's harder\)) Tj ET
+BT /F1 11 Tf 56 304 Td (- Reading drawing sheets visually \(plans/sections/callouts\) reliably from PDFs) Tj ET
+BT /F1 11 Tf 56 289 Td (  is harder and less consistent.) Tj ET
+BT /F1 11 Tf 56 268 Td (- Deep Revit/ArchiCAD automation usually needs dedicated plugins and careful) Tj ET
+BT /F1 11 Tf 56 253 Td (  testing.) Tj ET
+BT /F1 11 Tf 56 232 Td (- AI should support decisions, not make them - citations and review are) Tj ET
+BT /F1 11 Tf 56 217 Td (  essential.) Tj ET
+BT /F2 14 Tf 56 190 Td (What a basic setup looks like \(no jargon\)) Tj ET
+BT /F1 11 Tf 56 172 Td (- A 'Project Vault' folder with subfolders: 01_Admin, 02_Notes, 03_Specs,) Tj ET
+BT /F1 11 Tf 56 157 Td (  04_RFIs, 05_Submittals.) Tj ET
+BT /F1 11 Tf 56 136 Td (- A small habit: drop key PDFs/exports into the vault and keep meeting notes in) Tj ET
+BT /F1 11 Tf 56 121 Td (  one place.) Tj ET
+BT /F1 9 Tf 476 35 Td (Page 2 of 3) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 1154 >>
+stream
+BT /F1 11 Tf 56 732 Td (- A local AI app that can: \(1\) draft text, and \(2\) search your vault and cite) Tj ET
+BT /F1 11 Tf 56 717 Td (  sources.) Tj ET
+BT /F2 14 Tf 56 690 Td (Questions to tailor this to your workflow) Tj ET
+BT /F1 11 Tf 56 672 Td (- What tools do you use daily? \(Revit/ArchiCAD, Bluebeam, Outlook/Gmail,) Tj ET
+BT /F1 11 Tf 56 657 Td (  Teams/Zoom, etc.\)) Tj ET
+BT /F1 11 Tf 56 636 Td (- Where do you lose the most time: searching, writing, coordination, or QA) Tj ET
+BT /F1 11 Tf 56 621 Td (  checks?) Tj ET
+BT /F1 11 Tf 56 600 Td (- Which documents are most common for you: RFIs, site reports, meeting minutes,) Tj ET
+BT /F1 11 Tf 56 585 Td (  specs, submittals?) Tj ET
+BT /F1 11 Tf 56 564 Td (- Do you work solo or as a team \(shared standards and shared project folders\)?) Tj ET
+BT /F1 11 Tf 56 543 Td (- Any confidentiality constraints that require everything to stay on your) Tj ET
+BT /F1 11 Tf 56 528 Td (  machine?) Tj ET
+BT /F1 11 Tf 56 507 Td (- What would success look like in 2-3 weeks? \(e.g., save 2 hours/week; fewer) Tj ET
+BT /F1 11 Tf 56 492 Td (  missed actions\)) Tj ET
+BT /F1 9 Tf 476 35 Td (Page 3 of 3) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> >> >> /Contents 7 0 R >>
+endobj
+xref
+0 9
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000133 00000 n 
+0000003130 00000 n 
+0000003369 00000 n 
+0000006259 00000 n 
+0000006498 00000 n 
+0000007704 00000 n 
+trailer
+<< /Size 9 /Root 1 0 R >>
+startxref
+7943
+%%EOF

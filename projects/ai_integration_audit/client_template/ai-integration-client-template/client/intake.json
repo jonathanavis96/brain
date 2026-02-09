@@ -1,0 +1,12 @@
+{
+  "company_name": "(set me)",
+  "website": "(optional)",
+  "industry": null,
+  "size": null,
+  "primary_functions": ["Support", "Sales", "Operations"],
+  "constraints": {
+    "compliance": [],
+    "notes": ""
+  },
+  "hypotheses": []
+}

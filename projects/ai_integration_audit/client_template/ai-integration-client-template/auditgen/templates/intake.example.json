@@ -1,0 +1,16 @@
+{
+  "company_name": "Example Co",
+  "website": "https://example.com",
+  "industry": "(unknown)",
+  "size": "1-10",
+  "primary_functions": ["Support", "Sales", "Operations"],
+  "constraints": {
+    "compliance": ["GDPR"],
+    "notes": "No production customer data may leave approved systems"
+  },
+  "hypotheses": [
+    "Support tickets are high volume and repetitive",
+    "Lead qualification is manual and slow",
+    "Invoice exceptions consume ops time"
+  ]
+}

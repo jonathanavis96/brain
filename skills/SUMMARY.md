@@ -192,6 +192,7 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
   - [Test Coverage Patterns](domains/code-quality/test-coverage-patterns.md) - Coverage tracking, differential coverage, CI integration
   - [Research Patterns](domains/code-quality/research-patterns.md) - Systematic research methodology (CRAAP test, triangulation, source evaluation)
     - [Research Cheatsheet](domains/code-quality/research-cheatsheet.md) - One-page quick reference
+    - [Web Research Patterns](domains/code-quality/web-research-patterns.md) - Web browsing and data extraction using SeleniumBase (JS-heavy pages, crawling, screenshots)
   - [Token Efficiency](domains/code-quality/token-efficiency.md) - Token optimization strategies for AI agents
   - [Ralph Loop Architecture](domains/ralph/ralph-patterns.md) - How Ralph works internally (subagents, tool visibility, execution flow)
   - [Bootstrap Patterns](domains/ralph/bootstrap-patterns.md) - Project bootstrapping, scaffold templates, initialization flows
@@ -292,6 +293,7 @@ This repository serves as a **skills knowledge base** for RovoDev and parallel a
       - [Visual QA](domains/websites/qa/visual-qa.md) - Visual quality assurance
 - **[Projects](projects/README.md)** - Project-specific conventions, decisions, and context
   - [Brain Repository](projects/brain-example.md) - Brain-specific conventions and Ralph usage
+  - [AI Integration Audit](projects/ai_integration_audit/README.md) - End-to-end AI integration audit workflow + runnable generator scaffold
 - **[Self-Improvement](self-improvement/README.md)** - Gap capture and skill promotion system
   - [Gap Capture Rules](self-improvement/GAP_CAPTURE_RULES.md) - Mandatory rules for capturing knowledge gaps
     - **Rule 6: Cross-Project Gap Sync** - Projects capture gaps locally in `brain/cortex/GAP_CAPTURE.md`, create `brain/cortex/.gap_pending`, and Brain syncs via `cortex/sync_gaps.sh` (legacy `cortex/*` also supported)

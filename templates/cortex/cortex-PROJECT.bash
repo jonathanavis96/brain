@@ -13,6 +13,24 @@ done
 SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
+WORKSPACE_ROOT="$PROJECT_ROOT"
+PARENT_ROOT="$(cd "${PROJECT_ROOT}/.." && pwd)"
+PROJECT_BASENAME="$(basename "$PROJECT_ROOT")"
+
+# Heuristic: if the repo is nested in a multi-folder workspace (e.g. parent has sibling
+# app folders like website/), run RovoDev from the parent so tools can access siblings.
+# Keep context generation anchored to the repo itself.
+if [[ "$PARENT_ROOT" != "$PROJECT_ROOT" ]] && [[ -d "${PARENT_ROOT}/${PROJECT_BASENAME}" ]]; then
+  for candidate in website app frontend backend; do
+    if [[ -d "${PARENT_ROOT}/${candidate}" ]] && [[ "${PARENT_ROOT}/${candidate}" != "$PROJECT_ROOT" ]]; then
+      WORKSPACE_ROOT="$PARENT_ROOT"
+      break
+    fi
+  done
+fi
+
+echo "[cortex] workspace root: ${WORKSPACE_ROOT}" >&2
+
 cd "${PROJECT_ROOT}"
 
 # Colors
@@ -179,8 +197,11 @@ if [[ ! -x "$CORTEX_RUN_NOTIFY_BIN" ]]; then
   exit 1
 fi
 
-"$CORTEX_RUN_NOTIFY_BIN" --min-seconds 120 -- \
-  --config-file "$CONFIG_FILE" --yolo
+(
+  cd "$WORKSPACE_ROOT" || exit 1
+  "$CORTEX_RUN_NOTIFY_BIN" --min-seconds 120 -- \
+    --config-file "$CONFIG_FILE" --yolo
+)
 EXIT_CODE=$?
 
 rm -f "$CONFIG_FILE"

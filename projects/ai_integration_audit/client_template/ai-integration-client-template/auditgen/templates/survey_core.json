@@ -1,0 +1,52 @@
+{
+  "sections": [
+    {
+      "id": "basics",
+      "title": "Confirm Basics",
+      "questions": [
+        {
+          "id": "website_confirm",
+          "type": "text",
+          "prompt": "Confirm website URL"
+        },
+        {
+          "id": "top_offers",
+          "type": "multiline",
+          "prompt": "Top 3 offers/services"
+        }
+      ]
+    },
+    {
+      "id": "stack",
+      "title": "Tool Stack & Data",
+      "questions": [
+        {
+          "id": "tools",
+          "type": "multiline",
+          "prompt": "List CRM/helpdesk/accounting/docs tools"
+        },
+        {
+          "id": "kb_location",
+          "type": "text",
+          "prompt": "Where are SOPs/KB stored?"
+        }
+      ]
+    },
+    {
+      "id": "volumes",
+      "title": "Volumes",
+      "questions": [
+        {
+          "id": "tickets_per_week",
+          "type": "number",
+          "prompt": "Tickets per week"
+        },
+        {
+          "id": "leads_per_week",
+          "type": "number",
+          "prompt": "Leads per week"
+        }
+      ]
+    }
+  ]
+}

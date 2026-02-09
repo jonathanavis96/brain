@@ -1,0 +1,39 @@
+%PDF-1.4
+%����
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [2 0 R 4 0 R] /Count 2 >>
+endobj
+3 0 obj
+<< /Length 1045 >>
+stream
+BT /F1 11 Tf 54 738 Td (This keeps the system useful without adding too much overhead.) Tj ET
+BT /F2 14 Tf 54 714 Td (Questions \(to tailor it to your workflow\)) Tj ET
+BT /F1 11 Tf 54 698 Td (• What tools do you use daily? \(Revit/ArchiCAD, Bluebeam, Outlook/Gmail, Teams/Zoom,) Tj ET
+BT /F1 11 Tf 54 684 Td (  Notion/Obsidian, etc.\)) Tj ET
+BT /F1 11 Tf 54 670 Td (• What are your most common ‘repeat writing’ tasks \(RFIs, site reports, emails, meeting) Tj ET
+BT /F1 11 Tf 54 656 Td (  minutes, specs\)?) Tj ET
+BT /F1 11 Tf 54 642 Td (• Where do you lose the most time: searching for info, writing, coordination, or) Tj ET
+BT /F1 11 Tf 54 628 Td (  QA/consistency checks?) Tj ET
+BT /F1 11 Tf 54 614 Td (• Do you want this for personal use only, or shared across a team/office?) Tj ET
+BT /F1 11 Tf 54 600 Td (• Are there confidentiality constraints \(client NDAs\) that require everything to stay local?) Tj ET
+BT /F1 11 Tf 54 586 Td (• What would ‘success’ look like in 2 weeks \(e.g., save 2 hours/week on admin\)?) Tj ET
+endstream
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> >> >> /Contents 3 0 R >>
+endobj
+xref
+0 5
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000127 00000 n 
+0000001224 00000 n 
+trailer
+<< /Size 5 /Root 1 0 R >>
+startxref
+1463
+%%EOF

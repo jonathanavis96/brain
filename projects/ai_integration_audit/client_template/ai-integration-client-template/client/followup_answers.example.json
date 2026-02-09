@@ -1,0 +1,7 @@
+{
+  "tickets_per_week": 120,
+  "leads_per_week": 35,
+  "invoices_per_month": 80,
+  "pii_present": true,
+  "compliance": ["GDPR"]
+}
