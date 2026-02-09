@@ -182,6 +182,7 @@ Before ending any session where substantial knowledge was discussed, write a sum
 | Hash Regen | Protected file changed | Update ALL `.verify/` dirs (root, workers/ralph, templates/ralph) |
 | THUNK Cleanup | Task complete | Add to workers/ralph/THUNK.md, remove from workers/IMPLEMENTATION_PLAN.md |
 | Task Placement | Adding tasks | Below `<!-- Cortex adds new Task Contracts -->` marker |
+| Tight range read | Need line-range content | Prefer `sed -n '<start>,<end>p' <file>` over `expand_code_chunks` if the tool expands extra context |
 
 ## ⚠️ CRITICAL 8 - Check Every Response
 
