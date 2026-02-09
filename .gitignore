@@ -54,3 +54,4 @@ artifacts/rollflow_cache/test_cache.sqlite
 **/rollflow_cache/cache.sqlite
 tools/rollflow_analyze/artifacts/rollflow_cache/cache.sqlite
 workers/ralph/artifacts/rollflow_cache/cache.sqlite
+ai-integration-framework/
