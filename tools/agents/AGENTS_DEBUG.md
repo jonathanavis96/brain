@@ -65,7 +65,7 @@ How to avoid this bug in the future (patterns, checks, tests)
 **Date**: 2026-02-01  
 **Category**: Security  
 **Severity**: Critical  
-**Files**: `app/brain-map/frontend/src/App.jsx`
+**Files**: `path/to/file.ext`
 
 ### Symptoms
 User-controlled data (node title, body, tags) injected directly into HTML via `innerHTML`, allowing script execution.

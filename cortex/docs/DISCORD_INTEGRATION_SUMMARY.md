@@ -85,25 +85,7 @@ Successfully completed task 31.1.1: Enforce canonical type + status enums end-to
 
 Changes Made
 
-Backend (app/brain-map/backend/app/main.py):
-
- • Added enum validation for type field in POST /node endpoint (lines 520-532)
- • Added enum validation for status field in POST /node endpoint (lines 534-546)
- • Invalid values now return 400 status with clear error messages
-
-Frontend (app/brain-map/frontend/src/App.jsx):
-
- • Replaced text input for Type field with dropdown/select element (lines 555-577)
- • Replaced text input for Status field with dropdown/select element (lines 579-601)
- • Dropdowns contain exact enum values matching backend validation
-
-Completed:
-
- • ✅ Backend validation enforces enums with 400 errors
- • ✅ Frontend UI only allows valid enum values via dropdowns
- • ✅ Task logged to workers/ralph/THUNK.md (#48)
 ```
-
 **Extraction Logic:**
 
 - Searches for LAST occurrence of `Summary` header in log

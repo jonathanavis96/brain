@@ -15,7 +15,6 @@ ignores:
   - ".git/**"
   - ".verify/**"
   - "artifacts/rollflow_cache/**"
-  - "app/brain-map/generated/**"
   
   # Test fixtures that intentionally violate rules
   - "tools/tests/fixtures/**"

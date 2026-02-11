@@ -145,7 +145,6 @@ repos:
             skills/playbooks/README\.md$|
             skills/conventions\.md$|
             workers/ralph/README\.md$|
-            app/brain-map/frontend/node_modules/.*
           )$
 
       - id: validate-code-examples

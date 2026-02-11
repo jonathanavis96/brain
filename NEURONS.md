@@ -44,23 +44,6 @@ brain/                           # Root of brain repository
 ├── .markdownlintignore          # Markdown linting exclusions
 ├── .pre-commit-config.yaml      # Pre-commit hook configuration
 │
-├── app/                         # Applications
-│   └── brain-map/              # Brain mapping visualization tool
-│       ├── START.md            # Getting started guide
-│       ├── backend/            # Python FastAPI backend
-│       │   ├── app/            # Application code
-│       │   ├── tests/          # Test suite
-│       │   ├── requirements.txt # Python dependencies
-│       │   └── README.md       # Backend documentation
-│       ├── frontend/           # React/Vite frontend
-│       │   ├── src/            # Source code
-│       │   ├── public/         # Static assets
-│       │   ├── index.html      # Entry point
-│       │   ├── package.json    # NPM dependencies
-│       │   └── vite.config.js  # Vite configuration
-│       ├── notes/              # Sample notes for testing
-│       └── generated/          # Generated artifacts
-│
 ├── artifacts/                   # Build artifacts and reports
 │   ├── brain_metrics.json      # Brain repository metrics
 │   ├── dashboard.html          # Metrics dashboard
@@ -197,10 +180,6 @@ brain/                           # Root of brain repository
 │   ├── QUALITY_GATES.md        # Quality gate definitions
 │   ├── TEST_SCENARIOS.md       # Test scenario catalog
 │   ├── CODERABBIT_*.md         # CodeRabbit analysis reports
-│   └── brain-map/              # Brain-map specific docs
-│       ├── brain-map-spec.md
-│       ├── brain-map-implementation-plan.md
-│       └── brain-map-v2-enhancements.md
 │
 ├── rules/                       # Quality gates and acceptance criteria
 │   ├── AC.rules                # Automated acceptance criteria (protected)

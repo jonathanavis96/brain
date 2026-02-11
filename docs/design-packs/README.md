@@ -31,7 +31,6 @@ docs/
 
 Pack names should be short, stable identifiers, e.g.:
 
-- `brain-map`
 - `website-template`
 - `docs-site`
 

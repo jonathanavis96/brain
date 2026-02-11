@@ -44,7 +44,7 @@ grep -E '^\|[[:space:]]*[0-9]+[[:space:]]*\|' "$THUNK_FILE"
 **Date**: 2026-02-01  
 **Category**: Security  
 **Severity**: Critical  
-**Files**: `app/brain-map/frontend/src/App.jsx`
+**Files**: `external/knowledge-app/frontend/src/App.jsx`
 
 ### Symptoms
 
@@ -136,7 +136,7 @@ fi
 **Date**: 2026-02-01  
 **Category**: Security  
 **Severity**: High  
-**Files**: `app/brain-map/backend/app/main.py`
+**Files**: `external/knowledge-app/backend/app/main.py`
 
 ### Symptoms
 
@@ -177,7 +177,7 @@ app.add_middleware(
 **Date**: 2026-02-01  
 **Category**: Security  
 **Severity**: High  
-**Files**: `app/brain-map/backend/app/main.py`, `app/brain-map/backend/requirements.txt`
+**Files**: `external/knowledge-app/backend/app/main.py`, `external/knowledge-app/backend/requirements.txt`
 
 ### Symptoms
 
@@ -230,7 +230,7 @@ Rate limits applied:
 **Date**: 2026-02-01  
 **Category**: Security  
 **Severity**: Medium  
-**Files**: `app/brain-map/backend/app/main.py`
+**Files**: `external/knowledge-app/backend/app/main.py`
 
 ### Symptoms
 
@@ -270,7 +270,7 @@ body_md: str | None = Field(default=None, max_length=100000)
 **Date**: 2026-02-01  
 **Category**: Style  
 **Severity**: Low  
-**Files**: `app/brain-map/frontend/src/App.jsx`
+**Files**: `external/knowledge-app/frontend/src/App.jsx`
 
 ### Symptoms
 
@@ -306,7 +306,7 @@ showToast('Failed to refresh graph: ' + err.message)
 **Date**: 2026-02-01  
 **Category**: Style  
 **Severity**: Low  
-**Files**: `app/brain-map/backend/app/main.py`
+**Files**: `external/knowledge-app/backend/app/main.py`
 
 ### Symptoms
 
@@ -322,8 +322,8 @@ Added `root_path="/api/v1"` to FastAPI app:
 
 ```python
 app = FastAPI(
-    title="Brain Map API",
-    description="Local-first knowledge graph API for Brain Map system",
+    title="(external knowledge-app app) API",
+    description="Local-first knowledge graph API for (external knowledge-app app) system",
     version="0.1.0",
     lifespan=lifespan,
     root_path="/api/v1",  # API versioning for future compatibility
@@ -421,7 +421,7 @@ fi
 **Date**: 2026-02-01  
 **Category**: Code Quality  
 **Severity**: Medium  
-**Files**: `app/brain-map/frontend/src/GraphView.jsx`
+**Files**: `external/knowledge-app/frontend/src/GraphView.jsx`
 
 ### Symptoms
 
@@ -457,7 +457,7 @@ Added clarifying comment:
 **Date**: 2026-02-01  
 **Category**: Concurrency  
 **Severity**: High  
-**Files**: `app/brain-map/backend/app/index.py`
+**Files**: `external/knowledge-app/backend/app/index.py`
 
 ### Symptoms
 
@@ -518,7 +518,7 @@ def rebuild_index() -> RebuildDiagnostics:
 **Date**: 2026-02-01  
 **Category**: Performance  
 **Severity**: Medium  
-**Files**: `app/brain-map/frontend/src/App.jsx`
+**Files**: `external/knowledge-app/frontend/src/App.jsx`
 
 ### Symptoms
 

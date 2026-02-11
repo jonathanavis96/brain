@@ -289,7 +289,7 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 | 2026-01-27 | 0.L.4 | - [x] **0.L.4** Fix MD009 trailing spaces in TEMPLATE_DRIFT_REPORT.md |
 | 2026-01-27 | 0.L.5 | - [x] **0.L.5** Fix MD040 missing language in TEMPLATE_DRIFT_REPORT.md |
 | 2026-01-27 | 0.L.6 | - [x] **0.L.6** Fix MD056 table column count errors in workers/ralph/THUNK.md |
-| 2026-01-27 | 25.1.1 | - [x] **25.1.1** Scaffold Brain Map app workspace (frontend + backend skeleton) |
+| 2026-01-27 | 25.1.1 | - [x] **25.1.1** Scaffold Knowledge App app workspace (frontend + backend skeleton) |
 | 2026-01-27 | 25.1.2 | - [x] **25.1.2** Define Markdown note discovery + loading (scan notes root) |
 | 2026-01-27 | 25.1.3 | - [x] **25.1.3** Implement canonical frontmatter parser and validator |
 | 2026-01-27 | 25.1.4 | - [x] **25.1.4** Build SQLite schema and deterministic index rebuild |
@@ -323,9 +323,9 @@ This file archives completed tasks from `cortex/IMPLEMENTATION_PLAN.md` to keep 
 
 | Date | Task ID | Description |
 |------|---------|-------------|
-| 2026-01-27 | 26.2 | - [x] **26.2** Verify all Brain Map backend tests pass |
-| 2026-01-27 | 26.3 | - [x] **26.3** Add Brain Map test running to verifier (optional check) |
-| 2026-01-27 | 26.4 | - [x] **26.4** Document Brain Map development workflow |
+| 2026-01-27 | 26.2 | - [x] **26.2** Verify all Knowledge App backend tests pass |
+| 2026-01-27 | 26.3 | - [x] **26.3** Add Knowledge App test running to verifier (optional check) |
+| 2026-01-27 | 26.4 | - [x] **26.4** Document Knowledge App development workflow |
 | 2026-01-27 | 27.1 | - [x] **27.1** Review GAP_BACKLOG for P0/P1 items ready for promotion |
 | 2026-01-27 | 27.2 | - [x] **27.2** Promote "Custom Semantic Code Review Tool (LLM-Based Linting)" gap |
 | 2026-01-27 | 28.1 | - [x] **28.1** Audit templates for post-Phase-24 drift |

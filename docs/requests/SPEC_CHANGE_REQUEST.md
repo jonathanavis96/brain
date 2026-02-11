@@ -216,19 +216,19 @@ Steps:
 
 ---
 
-# Spec Change Request #2: Add Brain Map Tests to Verifier
+# Spec Change Request #2: Add (external knowledge-app app) Tests to Verifier
 
 **Date:** 2026-01-27  
 **Requestor:** Ralph (Build Mode)  
-**Task:** 26.3 - Add Brain Map test running to verifier
+**Task:** 26.3 - Add (external knowledge-app app) test running to verifier
 
 ## Change Required
 
-Add pytest check for Brain Map backend tests to `rules/AC.rules`.
+Add pytest check for (external knowledge-app app) backend tests to `rules/AC.rules`.
 
 ## Reason
 
-Task 26.3 requires adding Brain Map Python tests to the verifier's quality gates. This ensures the Brain Map backend test suite (94 tests) runs as part of the validation process, initially as a WARN gate until stable.
+Task 26.3 requires adding (external knowledge-app app) Python tests to the verifier's quality gates. This ensures the (external knowledge-app app) backend test suite (94 tests) runs as part of the validation process, initially as a WARN gate until stable.
 
 ## Protected File
 
@@ -242,14 +242,14 @@ Add the following section to `rules/AC.rules` (after the existing Lint/Hygiene c
 
 ```ini
 # =============================================================================
-# Brain Map Backend Tests
+# (external knowledge-app app) Backend Tests
 # =============================================================================
 
 [Test.BrainMap.Backend]
 mode=auto
 gate=warn
-desc=Brain Map backend tests pass (if venv exists)
-cmd=bash -c 'if [[ -d ../../app/brain-map/backend/.venv ]]; then cd ../../app/brain-map/backend && source .venv/bin/activate && pytest tests/ -q 2>&1 | tail -5; else echo "ok (venv not found - skip)"; fi'
+desc=(external knowledge-app app) backend tests pass (if venv exists)
+cmd=bash -c 'if [[ -d ../../external/knowledge-app/backend/.venv ]]; then cd ../../external/knowledge-app/backend && source .venv/bin/activate && pytest tests/ -q 2>&1 | tail -5; else echo "ok (venv not found - skip)"; fi'
 expect_stdout_regex=^(ok|.*passed)
 ```
 
@@ -257,7 +257,7 @@ expect_stdout_regex=^(ok|.*passed)
 
 After human approval and hash regeneration:
 
-1. Verifier runs pytest if `app/brain-map/backend/.venv` exists
+1. Verifier runs pytest if `external/knowledge-app/backend/.venv` exists
 2. Shows `[WARN]` if tests fail
 3. Shows `[PASS]` if tests succeed
 4. Shows `[SKIP]` if venv doesn't exist (graceful degradation)
@@ -280,11 +280,11 @@ Selected approach integrates with existing AC.rules infrastructure.
 ## Impact
 
 - **Risk:** Low - gate=warn means failures don't block work
-- **Benefit:** Automated quality checks for Brain Map backend
+- **Benefit:** Automated quality checks for (external knowledge-app app) backend
 - **Scope:** Single new check, no changes to existing rules
 
 ## References
 
 - Task definition: `workers/IMPLEMENTATION_PLAN.md` line 49-57
 - Verifier structure: `workers/ralph/verifier.sh`
-- Brain Map tests: `app/brain-map/backend/tests/` (94 tests)
+- (external knowledge-app app) tests: `external/knowledge-app/backend/tests/` (94 tests)

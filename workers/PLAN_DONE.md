@@ -124,7 +124,7 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | 2026-01-27 | 0.L.7 | - [x] **0.L.7** Fix MD012 in workers/IMPLEMENTATION_PLAN.md lines 25-28 |
 | 2026-01-27 | 0.L.8 | - [x] **0.L.8** Fix MD024 in workers/PLAN_DONE.md line 109 |
 | 2026-01-27 | - [x] Backend can be started in WSL2 and serves `GET /health` successfully. | - [x] Backend can be started in WSL2 and serves `GET /health` successfully. |
-| 2026-01-27 | 25.1.1 | - [x] **25.1.1** Scaffold Brain Map app workspace (frontend + backend skeleton) |
+| 2026-01-27 | 25.1.1 | - [x] **25.1.1** Scaffold (external knowledge-app app) app workspace (frontend + backend skeleton) |
 | 2026-01-27 | 25.1.2 | - [x] **25.1.2** Define Markdown note discovery + loading (scan notes root) |
 | 2026-01-27 | 25.1.3 | - [x] **25.1.3** Implement canonical frontmatter parser and validator |
 | 2026-01-27 |     - [x] Required keys enforced per type. |     - [x] Required keys enforced per type. |
@@ -147,8 +147,8 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 | 2026-01-27 | WARN.MD005.workers/IMPLEMENTATION_PLAN.md | - [x] **WARN.MD005.workers/IMPLEMENTATION_PLAN.md** - Fix MD005/list-indent errors at lines 77-238 (inconsistent indentation for list items) |
 | 2026-01-27 | WARN.MD012.workers/IMPLEMENTATION_PLAN.md | - [x] **WARN.MD012.workers/IMPLEMENTATION_PLAN.md** - Fix MD012/no-multiple-blanks at line 68 (Expected: 2; Actual: 3) |
 | 2026-01-27 | WARN.MD024.workers/PLAN_DONE.md | - [x] **WARN.MD024.workers/PLAN_DONE.md** - Fix MD024/no-duplicate-heading at line 119 (Multiple headings with same content "Archived on 2026-01-27") |
-| 2026-01-27 | - [x] Markdown-first notes exist under `app/brain-map/notes/` and are treated as the canonical source of truth. | - [x] Markdown-first notes exist under `app/brain-map/notes/` and are treated as the canonical source of truth. |
-| 2026-01-27 | - [x] A deterministic index rebuild can be run that produces a local SQLite index at `app/brain-map/.local/index.db`. | - [x] A deterministic index rebuild can be run that produces a local SQLite index at `app/brain-map/.local/index.db`. |
+| 2026-01-27 | - [x] Markdown-first notes exist under `external/knowledge-app/notes/` and are treated as the canonical source of truth. | - [x] Markdown-first notes exist under `external/knowledge-app/notes/` and are treated as the canonical source of truth. |
+| 2026-01-27 | - [x] A deterministic index rebuild can be run that produces a local SQLite index at `external/knowledge-app/.local/index.db`. | - [x] A deterministic index rebuild can be run that produces a local SQLite index at `external/knowledge-app/.local/index.db`. |
 | 2026-01-27 | - [x] Frontend dev server starts and serves on port 5173 (or documented override). | - [x] Frontend dev server starts and serves on port 5173 (or documented override). |
 | 2026-01-27 | - [x] Backend dev server starts and serves on port 8000 (or documented override). | - [x] Backend dev server starts and serves on port 8000 (or documented override). |
 | 2026-01-27 | - [x] `GET /health` returns 200 with expected JSON shape. | - [x] `GET /health` returns 200 with expected JSON shape. |
@@ -165,7 +165,7 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 
 | Date | Task ID | Description |
 |------|---------|-------------|
-| 2026-01-27 | - [x] Backend exposes MVP API endpoints as specified in `docs/brain-map/brain-map-spec.md`: | - [x] Backend exposes MVP API endpoints as specified in `docs/brain-map/brain-map-spec.md`: |
+| 2026-01-27 | - [x] Backend exposes MVP API endpoints as specified in `docs/knowledge-app/knowledge-app-spec.md`: | - [x] Backend exposes MVP API endpoints as specified in `docs/knowledge-app/knowledge-app-spec.md`: |
 | 2026-01-27 |   - [x] `GET /graph` |   - [x] `GET /graph` |
 | 2026-01-27 |   - [x] `GET /node/{id}` |   - [x] `GET /node/{id}` |
 | 2026-01-27 |   - [x] `POST /node` |   - [x] `POST /node` |
@@ -241,7 +241,7 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 
 | Date | Task ID | Description |
 |------|---------|-------------|
-| 2026-01-27 | 26.1 | - [x] **26.1** Setup Python virtual environment for Brain Map backend |
+| 2026-01-27 | 26.1 | - [x] **26.1** Setup Python virtual environment for (external knowledge-app app) backend |
 | 2026-01-27 |   - [x] Unknown id returns 404 with canonical error shape. |   - [x] Unknown id returns 404 with canonical error shape. |
 | 2026-01-27 |   - [x] Response includes `node` and `body_md` fields. |   - [x] Response includes `node` and `body_md` fields. |
 | 2026-01-27 | 24.9.1 | - [x] **24.9.1** Backport `current_ralph_tasks.sh` parsing improvements into templates |
@@ -250,14 +250,14 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 
 | Date | Task ID | Description |
 |------|---------|-------------|
-| 2026-01-27 | 26.2 | - [x] **26.2** Verify all Brain Map backend tests pass |
-| 2026-01-27 | 26.3 | - [x] **26.3** Add Brain Map test running to verifier (optional check) |
+| 2026-01-27 | 26.2 | - [x] **26.2** Verify all (external knowledge-app app) backend tests pass |
+| 2026-01-27 | 26.3 | - [x] **26.3** Add (external knowledge-app app) test running to verifier (optional check) |
 
 ### Archived on 2026-01-27 (Batch 11)
 
 | Date | Task ID | Description |
 |------|---------|-------------|
-| 2026-01-27 | 26.4 | - [x] **26.4** Document Brain Map development workflow |
+| 2026-01-27 | 26.4 | - [x] **26.4** Document (external knowledge-app app) development workflow |
 | 2026-01-27 | 27.1 | - [x] **27.1** Review GAP_BACKLOG for P0/P1 items ready for promotion |
 | 2026-01-27 | 27.2 | - [x] **27.2** Promote "Custom Semantic Code Review Tool (LLM-Based Linting)" gap |
 | 2026-01-27 | 28.1 | - [x] **28.1** Audit templates for post-Phase-24 drift |
@@ -284,16 +284,16 @@ Completed tasks from `workers/IMPLEMENTATION_PLAN.md` are archived here.
 
 ### Archived on 2026-01-27 13:51:24 (Phase 25 acceptance criteria)
 
-**Phase 25: Brain Map (MVP-first)** - All acceptance criteria verified complete via manual testing and THUNK evidence.
+**Phase 25: (external knowledge-app app) (MVP-first)** - All acceptance criteria verified complete via manual testing and THUNK evidence.
 
 #### Phase 25.1: MVP
 
 **Scaffolding & Discovery:**
 
-- [x] Backend can be started: `cd app/brain-map/backend && python3 -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000`
+- [x] Backend can be started: `cd external/knowledge-app/backend && python3 -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000`
 - [x] Health endpoint: `curl -s http://localhost:8000/health | jq .` returns `{"status":"ok"}`
-- [x] Frontend starts: `cd app/brain-map/frontend && npm install && npm run dev -- --host 0.0.0.0 --port 5173`
-- [x] Markdown-first notes exist under `app/brain-map/notes/` (4 files discovered)
+- [x] Frontend starts: `cd external/knowledge-app/frontend && npm install && npm run dev -- --host 0.0.0.0 --port 5173`
+- [x] Markdown-first notes exist under `external/knowledge-app/notes/` (4 files discovered)
 - [x] Notes treated as canonical source of truth
 - [x] Recursive discovery with deterministic ordering (repo-root-relative paths)
 - [x] Non-markdown files ignored (README.txt excluded)

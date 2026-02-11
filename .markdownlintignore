@@ -5,12 +5,8 @@ node_modules
 .git
 .verify
 artifacts/rollflow_cache
-app/brain-map/generated
 .venv
 .pytest_cache
-app/brain-map/.pytest_cache
-app/brain-map/backend/.pytest_cache
-app/brain-map/backend/.venv
 tools/rollflow_analyze/.pytest_cache
 tools/tests/.pytest_cache
 

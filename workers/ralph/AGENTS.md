@@ -1,6 +1,6 @@
 # AGENTS.md - Ralph Loop (Brain Repo Self-Improvement)
 
-## First Step: Read the Brain Map
+## First Step: Read the Brain
 
 **Before any task, read NEURONS.md via subagent** - it maps the brain repository structure.
 

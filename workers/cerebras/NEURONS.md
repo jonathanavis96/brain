@@ -342,9 +342,6 @@ docs/
 ├── TEST_SCENARIOS.md            # Testing scenarios
 ├── TOOLS.md                     # Tool documentation
 ├── EDGE_CASES.md                # Edge case handling
-├── brain-map/                   # Brain map application docs
-│   ├── brain-map-spec.md
-│   └── brain-map-implementation-plan.md
 └── ... (other specialized docs)
 ```
 

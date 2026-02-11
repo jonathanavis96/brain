@@ -1,1 +1,0 @@
-"""Brain Map Backend Application."""

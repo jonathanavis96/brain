@@ -299,7 +299,7 @@ touch cortex/AGENTS.md workers/IMPLEMENTATION_PLAN.md
 
 ```bash
 # GOOD: Use bootstrap generator
-bash new-project.sh brain-map backend,python,fastapi
+bash new-project.sh my-project backend,python,fastapi
 ```
 
 ### ❌ Anti-Pattern: Copy-Paste from Old Project
