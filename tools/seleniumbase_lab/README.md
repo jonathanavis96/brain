@@ -59,6 +59,21 @@ python3 web_fetch.py "https://news.ycombinator.com" --wait-seconds 2 --title
 python3 web_fetch.py "https://example.com" --wait-for-css "h1" --html-out /tmp/page.html
 ```
 
+### Cookie banners / click-to-expand
+
+Some sites block content behind cookie consent banners or "expand" buttons.
+
+- Use `--accept-cookies` for best-effort dismissal using a small set of common selectors.
+- Use one or more `--click-css` selectors (repeatable) for site-specific buttons.
+
+```bash
+python3 web_fetch.py "https://example.com" \
+  --click-css "button#onetrust-accept-btn-handler" \
+  --click-css "button[aria-label='Accept all']" \
+  --wait-for-css ".pricing" \
+  --text ".pricing"
+```
+
 Tip: `--json` prints only metadata (url/final_url/title). Use `--html`/`--html-out` or `--research` to capture rendered content.
 
 ### Crawl mode (N pages)

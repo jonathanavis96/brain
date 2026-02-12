@@ -92,6 +92,25 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Wait until a CSS selector is visible before extracting outputs",
     )
 
+    p.add_argument(
+        "--click-css",
+        action="append",
+        default=[],
+        help=(
+            "CSS selector to click after page load (repeatable). "
+            "Useful for accepting cookie banners or expanding pricing tables."
+        ),
+    )
+
+    p.add_argument(
+        "--accept-cookies",
+        action="store_true",
+        help=(
+            "Best-effort cookie banner dismissal. Tries a small set of common consent "
+            "button selectors after page load."
+        ),
+    )
+
     crawl = p.add_argument_group("crawl")
     crawl.add_argument(
         "--crawl",
@@ -253,9 +272,73 @@ def _extract_body_text(sb: SB) -> str:
     return (txt2 or "").strip() if isinstance(txt2, str) else ""
 
 
+def _best_effort_click(sb: SB, css: str, timeout: float) -> None:
+    """Best-effort click helper.
+
+    Cookie banners frequently block access to underlying content. This helper tries a
+    few click strategies and intentionally swallows errors.
+    """
+
+    if not css:
+        return
+
+    # 1) Only click if visible (avoids hard failures when selector isn't present).
+    try:
+        sb.click_if_visible(css, timeout=min(2, timeout))
+        return
+    except Exception:
+        pass
+
+    # 2) Try JS click if present (sometimes normal click is intercepted).
+    try:
+        sb.js_click_if_present(css, timeout=min(2, timeout))
+        return
+    except Exception:
+        pass
+
+    # 2b) Some selectors may match multiple buttons (try first visible match).
+    try:
+        sb.click_nth_visible_element(css, number=1, timeout=min(2, timeout))
+        return
+    except Exception:
+        pass
+
+    # 3) Last resort: regular click (may throw if missing/not clickable).
+    try:
+        sb.click(css, timeout=min(2, timeout))
+    except Exception:
+        pass
+
+
 def _open_and_wait(sb: SB, url: str, args: argparse.Namespace) -> tuple[str, str]:
     sb.driver.set_page_load_timeout(args.timeout)
     sb.open(url)
+
+    # Optional post-load interactions (cookie banners, expanders, etc.)
+    cookie_selectors: list[str] = []
+    if getattr(args, "accept_cookies", False):
+        # Common consent frameworks / patterns (best-effort; safe to no-op).
+        cookie_selectors.extend(
+            [
+                "button#onetrust-accept-btn-handler",  # OneTrust
+                "button[aria-label='Accept all']",
+                "button[aria-label='Accept All']",
+                "button[title='Accept all']",
+                # Keep this list CSS-only. (Text matching requires XPath/JS and is out of scope here.)
+                "#accept-cookies",
+                "button.cookie-accept",
+                "button#acceptCookies",
+                "button#accept",  # generic
+            ]
+        )
+
+    # User-provided selectors run after built-in ones so they can be more specific.
+    cookie_selectors.extend(getattr(args, "click_css", []) or [])
+
+    for css in cookie_selectors:
+        _best_effort_click(sb, css, timeout=args.timeout)
+        # Small delay helps the DOM settle after dismissing overlays.
+        sb.sleep(0.25)
 
     if args.wait_for_css:
         sb.wait_for_element_visible(args.wait_for_css, timeout=args.timeout)
