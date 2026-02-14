@@ -515,10 +515,12 @@ for f in notify cortex-run-notify ralph-run-notify discord-post; do
 done
 
 # Copy minimal tools dependency used by *-run-notify wrappers.
+# Goes into brain/tools/ because cortex-pc.bash and ralph-run-notify look for it there.
+mkdir -p "$PROJECT_LOCATION/brain/tools"
 if [[ -f "$BRAIN_ROOT/tools/detect_human_required.py" ]]; then
-  cp "$BRAIN_ROOT/tools/detect_human_required.py" "$PROJECT_LOCATION/tools/detect_human_required.py"
-  chmod +x "$PROJECT_LOCATION/tools/detect_human_required.py" 2>/dev/null || true
-  success "Copied tools/detect_human_required.py"
+  cp "$BRAIN_ROOT/tools/detect_human_required.py" "$PROJECT_LOCATION/brain/tools/detect_human_required.py"
+  chmod +x "$PROJECT_LOCATION/brain/tools/detect_human_required.py" 2>/dev/null || true
+  success "Copied brain/tools/detect_human_required.py"
 else
   warn "Missing tools/detect_human_required.py; *-run-notify wrappers may not work"
 fi
