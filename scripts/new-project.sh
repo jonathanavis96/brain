@@ -346,7 +346,6 @@ mkdir -p "$PROJECT_LOCATION/brain/skills"
 mkdir -p "$PROJECT_LOCATION/brain/docs"
 mkdir -p "$PROJECT_LOCATION/src"
 mkdir -p "$PROJECT_LOCATION/docs"
-mkdir -p "$PROJECT_LOCATION/tools"
 
 # ============================================
 # Template Family Selection (for project-local Brain docs)
