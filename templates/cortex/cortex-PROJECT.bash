@@ -12,17 +12,25 @@ while [ -h "$SOURCE" ]; do
 done
 SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-
 WORKSPACE_ROOT="$PROJECT_ROOT"
 PARENT_ROOT="$(cd "${PROJECT_ROOT}/.." && pwd)"
-PROJECT_BASENAME="$(basename "$PROJECT_ROOT")"
+PARENT_BASENAME="$(basename "$PARENT_ROOT")"
 
-# Heuristic: if the repo is nested in a multi-folder workspace (e.g. parent has sibling
-# app folders like website/), run RovoDev from the parent so tools can access siblings.
-# Keep context generation anchored to the repo itself.
-if [[ "$PARENT_ROOT" != "$PROJECT_ROOT" ]] && [[ -d "${PARENT_ROOT}/${PROJECT_BASENAME}" ]]; then
-  for candidate in website app frontend backend; do
-    if [[ -d "${PARENT_ROOT}/${candidate}" ]] && [[ "${PARENT_ROOT}/${candidate}" != "$PROJECT_ROOT" ]]; then
+# Safety: Don't go up to /code/ or other multi-repo directories
+FORBIDDEN_PARENT_NAMES=("code" "projects" "repos" "workspaces" "src" "home")
+IS_FORBIDDEN=false
+for forbidden in "${FORBIDDEN_PARENT_NAMES[@]}"; do
+  if [[ "$PARENT_BASENAME" == "$forbidden" ]]; then
+    IS_FORBIDDEN=true
+    break
+  fi
+done
+
+# If parent is NOT forbidden AND contains sibling app folders, widen workspace to repo root
+if [[ "$IS_FORBIDDEN" == "false" ]] && [[ "$PARENT_ROOT" != "$PROJECT_ROOT" ]]; then
+  # Check for common project structure folders (Next.js, general web, backend, etc.)
+  for candidate in src public app pages components website frontend backend api docs content static assets lib server; do
+    if [[ -d "${PARENT_ROOT}/${candidate}" && "${PARENT_ROOT}/${candidate}" != "$PROJECT_ROOT" ]]; then
       WORKSPACE_ROOT="$PARENT_ROOT"
       break
     fi
@@ -30,6 +38,7 @@ if [[ "$PARENT_ROOT" != "$PROJECT_ROOT" ]] && [[ -d "${PARENT_ROOT}/${PROJECT_BA
 fi
 
 echo "[cortex] workspace root: ${WORKSPACE_ROOT}" >&2
+echo "[cortex] project root (brain): ${PROJECT_ROOT}" >&2
 
 cd "${PROJECT_ROOT}"
 

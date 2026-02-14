@@ -31,30 +31,38 @@ if [[ -n "${RALPH_PROJECT_ROOT:-}" ]]; then
 
   RALPH="$BRAIN_ROOT/workers/ralph"
 else
-  # Get absolute path to this script.
+  # Get absolute path to this script
   SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-  # Default layout: <repo>/brain/workers/ralph/loop.sh
-  # - SCRIPT_DIR points to <repo>/brain/workers/ralph
-  # - BRAIN_ROOT points to <repo>/brain
-  # - REPO_ROOT_CANDIDATE points to <repo>
+  # brain/workers/ralph -> brain
   BRAIN_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
-  REPO_ROOT_CANDIDATE="$(dirname "$BRAIN_ROOT")"
+  CANDIDATE_REPO_ROOT="$(dirname "$BRAIN_ROOT")"
+  CANDIDATE_PARENT_BASENAME="$(basename "$CANDIDATE_REPO_ROOT")"
 
-  # Monorepo detection:
-  # If this loop lives under <repo>/brain and the *git root* is the parent directory,
-  # default ROOT to the monorepo root (<repo>) so Ralph can operate on the whole workspace.
-  #
-  # This avoids false positives when running inside the standalone Brain repo
-  # (where <repo> == <repo>/brain).
-  if [[ -d "$REPO_ROOT_CANDIDATE/brain" && -d "$REPO_ROOT_CANDIDATE/.git" && ! -d "$BRAIN_ROOT/.git" ]]; then
-    ROOT="$REPO_ROOT_CANDIDATE"
-    BRAIN_ROOT="$ROOT/brain"
-    RALPH="$BRAIN_ROOT/workers/ralph"
-  else
-    ROOT="$BRAIN_ROOT"
-    RALPH="$SCRIPT_DIR"
+  # Safety: Don't go up to /code/ or other multi-repo directories
+  FORBIDDEN_PARENT_NAMES=("code" "projects" "repos" "workspaces" "src" "home")
+  IS_FORBIDDEN=false
+  for forbidden in "${FORBIDDEN_PARENT_NAMES[@]}"; do
+    if [[ "$CANDIDATE_PARENT_BASENAME" == "$forbidden" ]]; then
+      IS_FORBIDDEN=true
+      break
+    fi
+  done
+
+  # If monorepo layout (brain/ + src/public/app/etc. siblings) AND parent is safe, widen ROOT to repo root
+  ROOT="$BRAIN_ROOT"  # Default
+  if [[ "$IS_FORBIDDEN" == "false" ]] && [[ -d "$CANDIDATE_REPO_ROOT/brain" ]]; then
+    for candidate in src public app pages components website frontend backend api docs content static assets lib server; do
+      if [[ -d "$CANDIDATE_REPO_ROOT/${candidate}" ]]; then
+        ROOT="$CANDIDATE_REPO_ROOT"
+        BRAIN_ROOT="$ROOT/brain"
+        echo "[ralph] Detected monorepo layout: ROOT widened to ${ROOT}" >&2
+        break
+      fi
+    done
   fi
+
+  RALPH="$BRAIN_ROOT/workers/ralph"
 fi
 
 # Print effective roots for debugging workspace boundaries.

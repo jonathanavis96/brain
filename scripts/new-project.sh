@@ -488,6 +488,30 @@ if [[ -f "$TEMPLATES_DIR/cortex/cortex-PROJECT.bash" ]]; then
 
   chmod +x "$PROJECT_LOCATION/brain/cortex/${cortex_entrypoint}" 2>/dev/null || true
   success "Generated brain/cortex/${cortex_entrypoint}"
+
+# Generate repo-root Cortex wrapper for convenience (allows running from repo root)
+cat > "$PROJECT_LOCATION/cortex-${repo_prefix}.bash" <<'WRAPPER_INNER'
+#!/usr/bin/env bash
+# Repo-root convenience wrapper for Cortex ({{PROJECT_NAME}})
+# Allows running: bash cortex-{{PROJECT_SLUG}}.bash (instead of cd brain/cortex && bash cortex-{{PROJECT_SLUG}}.bash)
+
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if [[ -x "${SCRIPT_DIR}/brain/cortex/cortex-{{PROJECT_SLUG}}.bash" ]]; then
+  exec bash "${SCRIPT_DIR}/brain/cortex/cortex-{{PROJECT_SLUG}}.bash" "$@"
+else
+  echo "ERROR: Could not find brain/cortex/cortex-{{PROJECT_SLUG}}.bash" >&2
+  exit 1
+fi
+WRAPPER_INNER
+
+# Substitute placeholders
+sed -i "s/{{PROJECT_NAME}}/${PROJECT_NAME}/g" "$PROJECT_LOCATION/cortex-${repo_prefix}.bash"
+sed -i "s/{{PROJECT_SLUG}}/${repo_prefix}/g" "$PROJECT_LOCATION/cortex-${repo_prefix}.bash"
+chmod +x "$PROJECT_LOCATION/cortex-${repo_prefix}.bash"
+success "Generated repo-root cortex wrapper: cortex-${repo_prefix}.bash"
+
 else
   warn "Template not found: cortex/cortex-PROJECT.bash (skipping Cortex entrypoint generation)"
 fi
