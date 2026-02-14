@@ -199,6 +199,7 @@ fi
 
 (
   cd "$WORKSPACE_ROOT" || exit 1
+  export BRAIN_PROJECT_LABEL="cortex-{{PROJECT_SLUG}}"
   "$CORTEX_RUN_NOTIFY_BIN" --min-seconds 120 -- \
     --config-file "$CONFIG_FILE" --yolo
 )

@@ -346,6 +346,8 @@ mkdir -p "$PROJECT_LOCATION/brain/skills"
 mkdir -p "$PROJECT_LOCATION/brain/docs"
 mkdir -p "$PROJECT_LOCATION/src"
 mkdir -p "$PROJECT_LOCATION/docs"
+mkdir -p "$PROJECT_LOCATION/bin"
+mkdir -p "$PROJECT_LOCATION/tools"
 
 # ============================================
 # Template Family Selection (for project-local Brain docs)
@@ -496,6 +498,30 @@ fi
 chmod +x "$PROJECT_LOCATION/brain/cortex/"*.sh "$PROJECT_LOCATION/brain/cortex/"*.bash 2>/dev/null || true
 
 success "Copied brain/cortex/ helper pack"
+
+# ============================================
+# Copy Notification/Observability Tooling (required for Cortex + Ralph notifications)
+# ============================================
+
+# Copy essential bin/ utilities used by brain/workers/ralph/loop.sh and brain/cortex entrypoints.
+for f in notify cortex-run-notify ralph-run-notify discord-post; do
+  if [[ -f "$BRAIN_ROOT/bin/$f" ]]; then
+    cp "$BRAIN_ROOT/bin/$f" "$PROJECT_LOCATION/bin/$f"
+    chmod +x "$PROJECT_LOCATION/bin/$f" 2>/dev/null || true
+    success "Copied bin/$f"
+  else
+    warn "Missing Brain bin/$f; notifications/discord may not work"
+  fi
+done
+
+# Copy minimal tools dependency used by *-run-notify wrappers.
+if [[ -f "$BRAIN_ROOT/tools/detect_human_required.py" ]]; then
+  cp "$BRAIN_ROOT/tools/detect_human_required.py" "$PROJECT_LOCATION/tools/detect_human_required.py"
+  chmod +x "$PROJECT_LOCATION/tools/detect_human_required.py" 2>/dev/null || true
+  success "Copied tools/detect_human_required.py"
+else
+  warn "Missing tools/detect_human_required.py; *-run-notify wrappers may not work"
+fi
 
 # Copy loop.sh with placeholder substitution
 
@@ -893,8 +919,8 @@ fi
 echo ""
 info "Next steps:"
 echo "  1. cd $PROJECT_LOCATION"
-echo "  2. Review and customize THOUGHTS.md, NEURONS.md if needed"
-echo "  3. cd workers/ralph && bash loop.sh --iterations 5"
+echo "  2. Review and customize brain/workers/ralph/THOUGHTS.md and brain/workers/ralph/NEURONS.md if needed"
+echo "  3. cd brain/workers/ralph && bash loop.sh --iterations 5"
 echo ""
 info "The project is on '$WORK_BRANCH' branch - ready for development!"
-info "Use 'workers/ralph/pr-batch.sh' to create PRs when ready to merge to main."
+info "Use 'brain/workers/ralph/pr-batch.sh' to create PRs when ready to merge to main."

@@ -102,23 +102,16 @@ This table identifies the single source of truth for each major topic to avoid c
 
 **For Brain Repository**:
 
-```powershell
-# Brain integrity checks (run from brain root)
-..\validate-brain.ps1
+```bash
+# Basic smoke checks (run from brain root)
 
-# Template correctness checks (run from brain root)
-..\validate-templates.ps1
+# Shell syntax
+bash -n scripts/new-project.sh
+bash -n templates/ralph/loop.sh
 
-# Verify 45 React rules unchanged
-(Get-ChildItem -Path "..\references\react-best-practices\rules" -Filter "*.md").Count
-# Should output: 45
-
-# PowerShell syntax validation
-pwsh -NoProfile -File ..\new-project.ps1 -WhatIf -Name test-validation
-
-# Ralph script syntax check
-pwsh -NoProfile -Command "& { . '.\ralph.ps1' }" -WhatIf
-```text
+# Local-only bootstrap (exercise template copy path)
+bash scripts/new-project.sh <idea-file.md> --local-only
+```
 
 **Validation Rules**:
 

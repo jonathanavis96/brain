@@ -108,18 +108,11 @@ When Ralph discovers new conventions or decisions specific to the project, it ca
 
 ## Running Ralph
 
-### PowerShell
-
-```powershell
-.\workers\ralph\ralph.ps1 -Iterations 10 -PlanEvery 3
-```text
-
-### Manual (RovoDev CLI)
-
-```powershell
-# Ralph determines mode from iteration number
-acli rovodev run "$(Get-Content workers\ralph\PROMPT.md -Raw)"
-```text
+```bash
+# From repo root
+cd brain/workers/ralph
+bash loop.sh --iterations 10 --plan-every 3
+```
 
 ## File Structure
 

@@ -105,6 +105,13 @@ else
 fi
 WORK_BRANCH="${REPO_NAME}-work"
 
+# Default notification label if not provided (used by bin/notify and wrappers).
+# Example: repo "pc-quanti" -> "ralph-pc"
+if [[ -z "${BRAIN_PROJECT_LABEL:-}" ]]; then
+  repo_prefix="${REPO_NAME%%-*}"
+  export BRAIN_PROJECT_LABEL="ralph-${repo_prefix}"
+fi
+
 # Lock file to prevent concurrent runs
 # Lock file includes hash of repo path for uniqueness across same-named repos
 REPO_PATH_HASH=$(cd "$ROOT" && pwd | md5sum | cut -c1-8)
@@ -208,7 +215,8 @@ cleanup_and_emit() {
     local notify_bin="$ROOT/bin/notify"
     if [[ -x "$notify_bin" ]]; then
       local level="info"
-      local title="Ralph"
+      local project_label="${BRAIN_PROJECT_LABEL:-Ralph}"
+      local title="$project_label"
       local message=""
       local reason=""
       local sound=false
@@ -234,32 +242,32 @@ cleanup_and_emit() {
       case "$reason" in
         completed*)
           level="info"
-          title="Ralph complete"
-          message="Ralph complete, Please review"
+          title="${project_label} complete"
+          message="${project_label} complete, Please review"
           tts=true
           ;;
         interrupted*)
           level="warn"
-          title="Ralph interrupted"
+          title="${project_label} interrupted"
           message="Stopped"
           ;;
         *HUMAN*|*human*|*intervention*)
           level="warn"
-          title="Ralph needs you"
-          message="Ralph needs you, Please review"
+          title="${project_label} needs you"
+          message="${project_label} needs you, Please review"
           sound=true
           tts=true
           ;;
         *)
           if [[ $exit_code -ne 0 ]]; then
             level="error"
-            title="Ralph error"
-            message="Ralph Error, stopped, Please fix"
+            title="${project_label} error"
+            message="${project_label} Error, stopped, Please fix"
             sound=true
             tts=true
           else
             level="info"
-            title="Ralph stopped"
+            title="${project_label} stopped"
             message="Stopped"
           fi
           ;;

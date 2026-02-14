@@ -259,7 +259,7 @@ find references/react-best-practices/rules/ -name "*.md" | wc -l
 
 ```bash
 # From brain repository root (not implemented in bash yet - legacy PowerShell)
-# ./new-project.ps1 -Name my-project
+# bash scripts/new-project.sh my-project-idea.md --local-only
 # Creates: ../my-project/ with AGENTS.md, ralph/, specs/, src/
 
 ```

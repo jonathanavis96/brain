@@ -208,8 +208,10 @@ This creates a complete project structure at the specified location with:
 
 Before using templates in a new project, validate them:
 
-```powershell
-.\validate-templates.ps1
+```bash
+# (Removed) PowerShell template validator references.
+# Validate via repo checks (markdownlint, shellcheck) and by running a real bootstrap:
+#   bash scripts/new-project.sh <idea-file.md> --local-only
 ```text
 
 This checks:
@@ -227,12 +229,12 @@ When updating templates:
 
 1. **Maintain path standard**: Always use `./brain/` format (bash-style forward slashes)
 2. **Test path depth**: Ensure `..` count matches template location
-3. **Run validation**: Execute `.\validate-templates.ps1` before committing
+3. **Run validation**: Run repo linters/checks and (optionally) a local-only bootstrap before committing
 4. **Update this README**: Document any new conventions or patterns
 
 ## Path Validation Rules
 
-The validation script (`validate-templates.ps1`) enforces:
+Validation expectations:
 
 1. **No mixed styles**: All paths must use `./brain/` format (no backslashes, no absolute paths)
 2. **Correct depth**: Paths must match expected depth from template location
@@ -252,6 +254,5 @@ Consistent path formatting ensures:
 ## See Also
 
 - **AGENTS.md** (brain root) - Agent guidance for brain repository
-- **new-project.ps1** - Project bootstrap script that uses these templates
-- **validate-templates.ps1** - Template validation script
+- `scripts/new-project.sh` - Project bootstrap script that uses these templates
 - **kb/conventions.md** - Knowledge base authoring guidelines

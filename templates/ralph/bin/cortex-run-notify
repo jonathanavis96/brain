@@ -143,13 +143,13 @@ if [[ "$DRY_RUN" == "true" ]]; then
   echo "  min-seconds=$MIN_SECONDS (env: CORTEX_NOTIFY_MIN_SECONDS), always-notify-success=$ALWAYS_NOTIFY_SUCCESS"
   echo ""
   echo "On SUCCESS (exit 0 + duration >= threshold):"
-  echo "  $NOTIFY_BIN --level info --title 'Cortex $PROJECT_LABEL complete' --message 'Cortex complete' --tts"
+  echo "  $NOTIFY_BIN --level info --title '$PROJECT_LABEL complete' --message 'Cortex complete' --tts"
   echo ""
   echo "On HUMAN_REQUIRED (exit != 0 + marker detected):"
-  echo "  $NOTIFY_BIN --level warn --title 'Cortex $PROJECT_LABEL needs you' --message 'Cortex human required' --sound --tts"
+  echo "  $NOTIFY_BIN --level warn --title '$PROJECT_LABEL needs you' --message 'Cortex human required' --sound --tts"
   echo ""
   echo "On FAIL (exit != 0):"
-  echo "  $NOTIFY_BIN --level error --title 'Cortex $PROJECT_LABEL error' --message 'Cortex error' --sound --tts"
+  echo "  $NOTIFY_BIN --level error --title '$PROJECT_LABEL error' --message 'Cortex error' --sound --tts"
 
   if [[ -n "$LOG_FILE" ]]; then
     echo ""
@@ -195,7 +195,7 @@ send_notify() {
 # Send notification based on exit code and HUMAN_REQUIRED detection
 if [[ $EXIT_CODE -eq 0 ]]; then
   if [[ "$should_notify_success" == "true" ]]; then
-    send_notify --level info --title "Cortex $PROJECT_LABEL complete" --message "Cortex complete" --tts
+    send_notify --level info --title "$PROJECT_LABEL complete" --message "Cortex complete" --tts
   fi
   echo "Cortex: SUCCESS (duration=${duration}s)"
 else
@@ -208,10 +208,10 @@ else
   fi
 
   if [[ "$HUMAN_REQUIRED" == "true" ]]; then
-    send_notify --level warn --title "Cortex $PROJECT_LABEL needs you" --message "Cortex human required" --sound --tts
+    send_notify --level warn --title "$PROJECT_LABEL needs you" --message "Cortex human required" --sound --tts
     echo "Cortex: HUMAN_REQUIRED (exit $EXIT_CODE, duration=${duration}s)"
   else
-    send_notify --level error --title "Cortex $PROJECT_LABEL error" --message "Cortex error" --sound --tts
+    send_notify --level error --title "$PROJECT_LABEL error" --message "Cortex error" --sound --tts
     echo "Cortex: FAIL (exit $EXIT_CODE, duration=${duration}s)"
   fi
 fi

@@ -16,15 +16,15 @@ bash scripts/new-project.sh my-project-idea.md
 
 ## Generator Scripts
 
-Three specialized generators create Ralph infrastructure files from your project idea:
+This repo's `scripts/new-project.sh` can optionally call generator scripts when available, but **this Brain repo currently does not include a `generators/` directory**. In that case, bootstrap falls back to copying templates from `templates/`.
+
+If/when `generators/` is reintroduced, these scripts are expected:
 
 ### generate-neurons.sh
 
-**Purpose:** Creates NEURONS.md (codebase map) with intelligent structure inference
+**Status:** Not currently shipped in this repo.
 
-```bash
-bash generators/generate-neurons.sh INPUT_IDEA.md OUTPUT_NEURONS.md
-```text
+If a future version reintroduces `generators/`, this script would create NEURONS.md (codebase map) from a project idea file.
 
 **Intelligence features:**
 
@@ -42,11 +42,9 @@ bash generators/generate-neurons.sh INPUT_IDEA.md OUTPUT_NEURONS.md
 
 ### generate-thoughts.sh
 
-**Purpose:** Creates THOUGHTS.md (goals, success criteria, design decisions)
+**Status:** Not currently shipped in this repo.
 
-```bash
-bash generators/generate-thoughts.sh INPUT_IDEA.md OUTPUT_THOUGHTS.md
-```text
+If reintroduced, it would generate THOUGHTS.md (vision/goals/DoD) from the idea file.
 
 **Intelligence features:**
 
@@ -59,15 +57,9 @@ bash generators/generate-thoughts.sh INPUT_IDEA.md OUTPUT_THOUGHTS.md
 
 ### generate-implementation-plan.sh
 
-**Purpose:** Creates a project implementation plan (task breakdown)
+**Status:** Not currently shipped in this repo.
 
-In downstream projects, the canonical plan location is:
-
-- `brain/workers/IMPLEMENTATION_PLAN.md`
-
-```bash
-bash generators/generate-implementation-plan.sh INPUT_IDEA.md OUTPUT_IMPLEMENTATION_PLAN.md
-```text
+If reintroduced, it would generate `brain/workers/IMPLEMENTATION_PLAN.md` from the idea file.
 
 **Intelligence features:**
 
@@ -92,17 +84,27 @@ Goals: CRUD endpoints, authentication, rate limiting, OpenAPI docs
 Microservice for widget lifecycle management with JWT auth and role-based permissions.
 EOF
 
-# Generate Ralph files
-bash generators/generate-neurons.sh my-api-idea.md NEURONS.md
-bash generators/generate-thoughts.sh my-api-idea.md THOUGHTS.md
-bash generators/generate-implementation-plan.sh my-api-idea.md brain/workers/IMPLEMENTATION_PLAN.md
-
-# Or use new-project.sh to do everything
+# Bootstrap everything (templates + vendored brain pack)
 bash scripts/new-project.sh my-api-idea.md
 
 # In the new project, Ralph is run from:
 #   cd brain/workers/ralph && bash loop.sh
+
+# In the new project, Ralph is run from:
+#   cd brain/workers/ralph && bash loop.sh
 ```text
+
+## Bootstrapped notification tooling
+
+Bootstrapped projects include a small set of notification/observability helpers at repo root:
+
+- `bin/notify` — desktop notification + optional TTS (best-effort)
+- `bin/cortex-run-notify` — wraps Cortex runs and sends notifications
+- `bin/ralph-run-notify` — wraps Ralph runs and sends notifications
+- `bin/discord-post` — optional Discord webhook posting (if configured)
+- `tools/detect_human_required.py` — scans logs for HUMAN_REQUIRED markers (used by the notify wrappers)
+
+These are intentionally minimal (not the full Brain `tools/` suite).
 
 ## Template Types
 
