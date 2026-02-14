@@ -346,7 +346,6 @@ mkdir -p "$PROJECT_LOCATION/brain/skills"
 mkdir -p "$PROJECT_LOCATION/brain/docs"
 mkdir -p "$PROJECT_LOCATION/src"
 mkdir -p "$PROJECT_LOCATION/docs"
-mkdir -p "$PROJECT_LOCATION/bin"
 mkdir -p "$PROJECT_LOCATION/tools"
 
 # ============================================
@@ -504,11 +503,13 @@ success "Copied brain/cortex/ helper pack"
 # ============================================
 
 # Copy essential bin/ utilities used by brain/workers/ralph/loop.sh and brain/cortex entrypoints.
+# These go into brain/bin/ because cortex-pc.bash and ralph loop.sh look for them there.
+mkdir -p "$PROJECT_LOCATION/brain/bin"
 for f in notify cortex-run-notify ralph-run-notify discord-post; do
   if [[ -f "$BRAIN_ROOT/bin/$f" ]]; then
-    cp "$BRAIN_ROOT/bin/$f" "$PROJECT_LOCATION/bin/$f"
-    chmod +x "$PROJECT_LOCATION/bin/$f" 2>/dev/null || true
-    success "Copied bin/$f"
+    cp "$BRAIN_ROOT/bin/$f" "$PROJECT_LOCATION/brain/bin/$f"
+    chmod +x "$PROJECT_LOCATION/brain/bin/$f" 2>/dev/null || true
+    success "Copied brain/bin/$f"
   else
     warn "Missing Brain bin/$f; notifications/discord may not work"
   fi
