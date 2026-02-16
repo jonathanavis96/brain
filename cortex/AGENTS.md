@@ -216,12 +216,23 @@ Full details: `cortex/docs/PLAN_ONLY_MODE.md`.
 
 ---
 
+## Updating Model Configuration
+
+To change the default model for Cortex (e.g., Opus 4.6 → Sonnet, or add new model):
+
+**See:** `cortex/docs/UPDATE_MODEL_CONFIG.md` for complete steps.
+
+**Quick summary:** Update 4 files (global config + 3 launcher scripts), test, commit.
+
+---
+
 ## See Also
 
 - **Full identity:** `CORTEX_SYSTEM_PROMPT.md`
 - **Task sync protocol:** `TASK_SYNC_PROTOCOL.md`
 - **Decisions log:** `DECISIONS.md`
 - **Strategic planning:** `THOUGHTS.md`
+- **Model config updates:** `cortex/docs/UPDATE_MODEL_CONFIG.md`
 
 ---
 

@@ -78,7 +78,7 @@ usage() {
   echo "To run Ralph (execution): bash loop.sh"
 }
 
-MODEL_ARG="gpt52" # Default to GPT-5.2 for Cortex
+MODEL_ARG="opus46" # Default to Opus 4.6 for Cortex
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -100,10 +100,11 @@ done
 
 RESOLVED_MODEL=""
 case "$MODEL_ARG" in
-  opus) RESOLVED_MODEL="anthropic.claude-opus-4-5-20251101-v1:0" ;;
+  opus46 | opus-4-6 | opus4.6) RESOLVED_MODEL="claude-opus-4-6" ;;
+  opus | opus45 | opus-4-5) RESOLVED_MODEL="anthropic.claude-opus-4-5-20251101-v1:0" ;;
   gpt52 | gpt-5.2 | gpt5.2) RESOLVED_MODEL="gpt-5.2" ;;
   codex | gpt-5.2-codex) RESOLVED_MODEL="gpt-5.2-codex" ;;
-  sonnet) RESOLVED_MODEL="anthropic.claude-sonnet-4-5-20250929-v1:0" ;;
+  sonnet | sonnet45 | sonnet-4-5) RESOLVED_MODEL="anthropic.claude-sonnet-4-5-20250929-v1:0" ;;
   auto) RESOLVED_MODEL="" ;;
   *) RESOLVED_MODEL="$MODEL_ARG" ;;
 esac

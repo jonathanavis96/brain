@@ -5,6 +5,7 @@
 Practical patterns for web browsing and data extraction using `tools/seleniumbase_lab/web_fetch.py`. This tool renders JavaScript-heavy pages (via SeleniumBase/Selenium) and extracts structured data.
 
 **When to use:**
+
 - Researching technologies, libraries, or patterns not yet documented in `skills/`
 - Gathering structured data from websites (documentation, examples, pricing pages)
 - Investigating user-reported issues requiring external context
@@ -12,6 +13,7 @@ Practical patterns for web browsing and data extraction using `tools/seleniumbas
 - Building datasets for analysis or decision-making
 
 **Related skills:**
+
 - [research-patterns.md](research-patterns.md) - General research methodology
 - [research-cheatsheet.md](research-cheatsheet.md) - Quick reference for research
 
@@ -20,6 +22,7 @@ Practical patterns for web browsing and data extraction using `tools/seleniumbas
 ## Setup
 
 **Prerequisites:**
+
 - Python 3.9+ and venv
 - Chrome/Chromium browser installed (tool runs headless by default)
 
@@ -80,6 +83,7 @@ python3 tools/seleniumbase_lab/web_fetch.py https://example.com --research > /tm
 ```
 
 **When to use:**
+
 - First-pass exploration of a new site
 - Building a knowledge graph of related pages
 - Extracting text for summarization or analysis
@@ -134,6 +138,7 @@ python3 tools/seleniumbase_lab/web_fetch.py https://example.com \
 ```
 
 **When to use:**
+
 - Single-page applications (SPAs) that render content via JavaScript
 - Lazy-loaded content (infinite scroll, on-demand data)
 - Pages with AJAX-driven updates
@@ -159,6 +164,7 @@ python3 tools/seleniumbase_lab/web_fetch.py https://example.com \
 ```
 
 **When to use:**
+
 - Documenting UI state for bug reports
 - Archiving marketing pages before redesigns
 - Visual regression testing baselines
@@ -203,11 +209,13 @@ python3 tools/seleniumbase_lab/web_fetch.py https://example.com \
 ```
 
 **When to use:**
+
 - Building a sitemap or content inventory
 - Gathering documentation from multi-page guides
 - Competitive analysis (pricing pages, feature lists)
 
 **Safety notes:**
+
 - Default: same-domain only (prevents accidental external crawls)
 - Use `--max-links-per-page` to cap queue growth
 - Respect robots.txt and Terms of Service
@@ -281,6 +289,7 @@ python3 tools/seleniumbase_lab/web_fetch.py https://large-site.com \
 **Risk:** Legal/ethical issues, IP bans.
 
 **Fix:**
+
 - Check `https://example.com/robots.txt` before crawling
 - Respect `Disallow:` directives
 - Add delays if needed (future: `--delay-seconds` flag)

@@ -78,7 +78,7 @@ EOF
 }
 
 # Defaults
-MODEL_ARG="opus" # Default to Opus 4.5 for Cortex strategic planning
+MODEL_ARG="opus46" # Default to Opus 4.6 for Cortex strategic planning
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -103,10 +103,16 @@ done
 RESOLVED_MODEL=""
 if [[ -n "$MODEL_ARG" ]]; then
   case "$MODEL_ARG" in
-    opus)
+    opus46 | opus-4-6 | opus4.6)
+      RESOLVED_MODEL="claude-opus-4-6"
+      ;;
+    opus | opus45 | opus-4-5)
       RESOLVED_MODEL="anthropic.claude-opus-4-5-20251101-v1:0"
       ;;
-    sonnet)
+    sonnet | sonnet45 | sonnet-4-5)
+      RESOLVED_MODEL="anthropic.claude-sonnet-4-5-20250929-v1:0"
+      ;;
+    sonnet4)
       RESOLVED_MODEL="anthropic.claude-sonnet-4-20250514-v1:0"
       ;;
     auto)

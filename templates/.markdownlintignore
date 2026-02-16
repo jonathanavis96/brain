@@ -1,0 +1,15 @@
+# Markdownlint ignore patterns for new repos bootstrapped from Brain templates
+#
+# Keep this file in sync with the Brain root `.markdownlintignore`.
+
+node_modules
+.git
+.verify
+artifacts/rollflow_cache
+.venv
+.pytest_cache
+tools/rollflow_analyze/.pytest_cache
+tools/tests/.pytest_cache
+
+# Test fixtures that intentionally violate rules
+tools/tests/fixtures

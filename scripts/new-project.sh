@@ -678,9 +678,10 @@ else
 fi
 
 # ============================================
-# Create .gitignore
+# Create repo-root dotfiles
 # ============================================
 
+# .gitignore
 if [ -f "$TEMPLATES_DIR/.gitignore" ]; then
   cp "$TEMPLATES_DIR/.gitignore" "$PROJECT_LOCATION/.gitignore"
   success "Copied .gitignore from template"
@@ -699,6 +700,42 @@ brain/workers/ralph/logs/
 Thumbs.db
 EOF
   success "Created .gitignore"
+fi
+
+# markdownlint config
+# New repos must include this so MD013 (line-length) stays disabled.
+if [ -f "$TEMPLATES_DIR/.markdownlint.yaml" ]; then
+  cp "$TEMPLATES_DIR/.markdownlint.yaml" "$PROJECT_LOCATION/.markdownlint.yaml"
+  success "Copied .markdownlint.yaml from template"
+else
+  warn "Template not found: .markdownlint.yaml (markdownlint will use defaults)"
+fi
+
+# markdownlint ignore
+if [ -f "$TEMPLATES_DIR/.markdownlintignore" ]; then
+  cp "$TEMPLATES_DIR/.markdownlintignore" "$PROJECT_LOCATION/.markdownlintignore"
+  success "Copied .markdownlintignore from template"
+else
+  warn "Template not found: .markdownlintignore"
+fi
+
+# pre-commit config
+# This is optional (developers may not use pre-commit), but having it scaffolded
+# makes new repos smoother when contributors do.
+if [ -f "$TEMPLATES_DIR/.pre-commit-config.yaml" ]; then
+  cp "$TEMPLATES_DIR/.pre-commit-config.yaml" "$PROJECT_LOCATION/.pre-commit-config.yaml"
+  success "Copied .pre-commit-config.yaml from template"
+else
+  warn "Template not found: .pre-commit-config.yaml"
+fi
+
+# EditorConfig
+# Helps enforce LF, final newlines, and consistent indentation across editors.
+if [ -f "$TEMPLATES_DIR/.editorconfig" ]; then
+  cp "$TEMPLATES_DIR/.editorconfig" "$PROJECT_LOCATION/.editorconfig"
+  success "Copied .editorconfig from template"
+else
+  warn "Template not found: .editorconfig"
 fi
 
 # ============================================
@@ -808,7 +845,8 @@ ${PROJECT_GOALS:-To be defined.}
 ## Development
 
 **Default workflow:**
-- Work happens on the \`$WORK_BRANCH\` branch (never directly on main)
+
+- Work happens on the \\$`$WORK_BRANCH\\$` branch (never directly on main)
 - Use `brain/workers/ralph/pr-batch.sh` to create PRs back to main
 - Run `brain/workers/ralph/loop.sh` to start AI-assisted development
 

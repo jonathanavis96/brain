@@ -35,7 +35,8 @@ Cortex Interactive Chat - Direct conversation with the Brain manager.
 
 Options:
   --help, -h           Show this help message
-  --model MODEL        Override model (gpt52, codex, opus, sonnet, auto)
+  --model MODEL        Override model (opus46, opus45, sonnet, gpt52, codex, auto)
+                       Default: opus46 (Claude Opus 4.6)
   --design             Start in design-only audit mode (links to the premium UI/UX audit prompt)
 
 Examples:
@@ -62,7 +63,7 @@ EOF
 }
 
 # Defaults
-MODEL_ARG="gpt52" # Default to GPT-5.2 for Cortex
+MODEL_ARG="opus46" # Default to Opus 4.6 for Cortex
 DESIGN_MODE="false"
 
 # Parse arguments
@@ -89,15 +90,18 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Model resolution (same logic as one-shot.sh)
-# Default to GPT-5.2 if no model specified
+# Default to Opus 4.6 if no model specified
 if [[ -z "$MODEL_ARG" ]]; then
-  MODEL_ARG="gpt52"
+  MODEL_ARG="opus46"
 fi
 
 RESOLVED_MODEL=""
 if [[ -n "$MODEL_ARG" ]]; then
   case "$MODEL_ARG" in
-    opus)
+    opus46 | opus-4-6 | opus4.6)
+      RESOLVED_MODEL="claude-opus-4-6"
+      ;;
+    opus | opus45 | opus-4-5)
       RESOLVED_MODEL="anthropic.claude-opus-4-5-20251101-v1:0"
       ;;
     gpt52 | gpt-5.2 | gpt5.2)
@@ -106,7 +110,7 @@ if [[ -n "$MODEL_ARG" ]]; then
     codex | gpt-5.2-codex)
       RESOLVED_MODEL="gpt-5.2-codex"
       ;;
-    sonnet)
+    sonnet | sonnet45 | sonnet-4-5)
       RESOLVED_MODEL="anthropic.claude-sonnet-4-5-20250929-v1:0"
       ;;
     auto)
