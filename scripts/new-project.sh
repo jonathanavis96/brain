@@ -117,13 +117,18 @@ substitute_placeholders() {
 # Usage message
 usage() {
   cat <<'EOF'
-Usage: bash new-project.sh NEW_PROJECT_IDEA.md [--local-only]
+Usage: bash new-project.sh NEW_PROJECT_IDEA.md [OPTIONS]
 
 Bootstrap a new project with complete Ralph infrastructure and GitHub integration.
 
 Arguments:
   NEW_PROJECT_IDEA.md    Path to project idea file (required)
+
+Options:
   --local-only           Skip GitHub setup (non-interactive mode)
+  --create-github        Create GitHub repo without prompting (requires --github-user and --repo-name)
+  --github-user USER     GitHub username (required with --create-github)
+  --repo-name NAME       Repository name (optional, defaults to sanitized project name)
 
 The NEW_PROJECT_IDEA.md file should contain:
   - Project name (# Project: <name>)
@@ -144,28 +149,66 @@ After successful bootstrap:
   - IDEA file archived to project's docs/ folder
   - README.md generated with project info
 
-Example:
+Examples:
+  # Interactive mode
   bash new-project.sh my_cool_app_idea.md
+  
+  # Local-only (no GitHub)
   bash new-project.sh my_cool_app_idea.md --local-only
+  
+  # Non-interactive GitHub creation
+  bash new-project.sh my_cool_app_idea.md --create-github --github-user myusername --repo-name my-project
 
 EOF
   exit 1
 }
 
 # Parse command line arguments
-if [ $# -lt 1 ] || [ $# -gt 2 ]; then
+if [ $# -lt 1 ]; then
   usage
 fi
 
 IDEA_FILE="$1"
-FORCE_LOCAL_ONLY=false
+shift
 
-if [ $# -eq 2 ]; then
-  if [ "$2" == "--local-only" ]; then
-    FORCE_LOCAL_ONLY=true
-  else
-    usage
-  fi
+FORCE_LOCAL_ONLY=false
+FORCE_CREATE_GITHUB=false
+CLI_GITHUB_USER=""
+CLI_REPO_NAME=""
+
+# Parse optional flags
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --local-only)
+      FORCE_LOCAL_ONLY=true
+      shift
+      ;;
+    --create-github)
+      FORCE_CREATE_GITHUB=true
+      shift
+      ;;
+    --github-user)
+      CLI_GITHUB_USER="$2"
+      shift 2
+      ;;
+    --repo-name)
+      CLI_REPO_NAME="$2"
+      shift 2
+      ;;
+    *)
+      error "Unknown option: $1"
+      usage
+      ;;
+  esac
+done
+
+# Validate flag combinations
+if [[ "$FORCE_CREATE_GITHUB" == "true" && -z "$CLI_GITHUB_USER" ]]; then
+  die "--create-github requires --github-user"
+fi
+
+if [[ "$FORCE_LOCAL_ONLY" == "true" && "$FORCE_CREATE_GITHUB" == "true" ]]; then
+  die "Cannot use both --local-only and --create-github"
 fi
 
 # Check dependencies first
@@ -230,6 +273,11 @@ fi
 # Suggest repo name (sanitized, shorter)
 SUGGESTED_REPO=$(sanitize_repo_name "$PROJECT_NAME")
 
+# Use CLI repo name if provided, otherwise use suggested
+if [[ -n "$CLI_REPO_NAME" ]]; then
+  SUGGESTED_REPO="$CLI_REPO_NAME"
+fi
+
 echo ""
 echo -e "${CYAN}========================================${NC}"
 echo -e "${CYAN}Project Summary${NC}"
@@ -266,6 +314,29 @@ if [[ "$FORCE_LOCAL_ONLY" == "true" ]]; then
   LOCAL_ONLY=true
   REPO_NAME="$SUGGESTED_REPO"
   WORK_BRANCH="${REPO_NAME}-work"
+elif [[ "$FORCE_CREATE_GITHUB" == "true" ]]; then
+  info "Running in non-interactive GitHub mode (--create-github flag)"
+  CREATE_REPO=true
+  GITHUB_USERNAME="$CLI_GITHUB_USER"
+  REPO_NAME="$SUGGESTED_REPO"
+  WORK_BRANCH="${REPO_NAME}-work"
+  
+  # Check if gh CLI is available
+  if ! check_gh; then
+    die "GitHub CLI (gh) not installed or not authenticated. Install: https://cli.github.com/"
+  fi
+  
+  # Save username to config
+  save_github_username "$GITHUB_USERNAME"
+  
+  # Show summary
+  echo ""
+  echo -e "${CYAN}----------------------------------------${NC}"
+  info "Repository: $GITHUB_USERNAME/$REPO_NAME (public)"
+  info "Work branch: $WORK_BRANCH"
+  info "Location: $PROJECT_LOCATION"
+  echo -e "${CYAN}----------------------------------------${NC}"
+  echo ""
 else
   read -r -p "Create GitHub repository? (y/n): " create_repo_answer
   if [[ "$create_repo_answer" =~ ^[Yy] ]]; then
