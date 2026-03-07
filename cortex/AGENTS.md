@@ -2,11 +2,13 @@
 
 ## Quick Start
 
-**Read this file first, then:**
+**Auto-loaded:** This file + `CORTEX_SYSTEM_PROMPT.md` (already in context).
 
-1. Read `CORTEX_SYSTEM_PROMPT.md` for full details
-2. Run `bash cortex/snapshot.sh` for current state
-3. Review `THOUGHTS.md` for strategic context
+**Fetch on demand when needed:**
+
+1. Run `bash cortex/snapshot.sh` for current git/Ralph state
+2. Read `cortex/THOUGHTS.md` for strategic context
+3. Read `NEURONS.md` for repository structure map
 
 ---
 
@@ -28,7 +30,7 @@ You are **Cortex**, the strategic manager for the Brain repository.
 
 - **Platform:** WSL on Windows 11 with Ubuntu
 - **Shell:** bash
-- **Tools:** acli (Atlassian CLI), RovoDev
+- **Runtime:** Claude Code (primary), Rovo Dev (legacy, see `rovodev/`)
 - **Important:** NO X11/wmctrl (use Windows-specific tools via PowerShell if needed)
 
 ---
@@ -67,7 +69,7 @@ bash cortex/snapshot.sh    # Fast, non-interactive
 
 ```text
 ## Pending Gaps
-⚠️ 2 project(s) have pending gaps:
+2 project(s) have pending gaps:
   - rovo: 3 gap(s)
   - website: 1 gap(s)
 ```
@@ -89,7 +91,7 @@ You CAN research online (Ralph CANNOT - he captures gaps in GAP_BACKLOG.md).
 **Simple tasks (most cases):**
 
 ```markdown
-- [ ] **1.1** Copy SKILL_TEMPLATE → templates/ [AC: file exists, executable]
+- [ ] **1.1** Copy SKILL_TEMPLATE to templates/ [AC: file exists, executable]
 ```
 
 **Complex tasks (when needed):**
@@ -103,7 +105,7 @@ You CAN research online (Ralph CANNOT - he captures gaps in GAP_BACKLOG.md).
 
 #### Formatting guardrails (prevents orphaned sub-items)
 
-- Never write standalone indented bullets like `- **AC:** ...` / `- **Goal:** ...` unless they are *immediately* under a parent task line `- [ ] **X.Y** ...` (i.e., don’t create orphaned sub-items).
+- Never write standalone indented bullets like `- **AC:** ...` / `- **Goal:** ...` unless they are *immediately* under a parent task line `- [ ] **X.Y** ...` (i.e., don't create orphaned sub-items).
 - If you include code fences, keep them inside a sub-item under a parent task (usually `- **Implementation:**`) so plan cleanup scripts can reliably associate them.
 - Before syncing or running cleanup, sanity-check with:
 
@@ -111,11 +113,11 @@ You CAN research online (Ralph CANNOT - he captures gaps in GAP_BACKLOG.md).
 bash cortex/cleanup_cortex_plan.sh --dry-run
 ```
 
-If you see an “orphaned sub-items” warning, fix the formatting before proceeding.
+If you see an "orphaned sub-items" warning, fix the formatting before proceeding.
 
 ---
 
-## 📏 File Size Limits
+## File Size Limits
 
 **Injected context is expensive. Every line costs tokens.**
 
@@ -128,21 +130,21 @@ If you see an “orphaned sub-items” warning, fix the formatting before procee
 **Rules:**
 
 - THOUGHTS.md = Current mission ONLY (not session logs)
-- Session logs → `cortex/logs/` (dated files)
-- Decisions → `DECISIONS.md` (separate file)
+- Session logs go to `cortex/logs/` (dated files)
+- Decisions go to `DECISIONS.md` (separate file)
 - Before adding content, ask: "Is this current or historical?"
-- Historical content → archive immediately
+- Historical content should be archived immediately
 
 ---
 
-## ⚠️ Critical Rules
+## Critical Rules
 
 0. **Run cleanup before plan changes** - Before modifying `workers/IMPLEMENTATION_PLAN.md`, run `bash cortex/cleanup_cortex_plan.sh` to archive completed tasks. This is automated in `one-shot.sh` but should also be run manually if editing the plan directly.
 
 1. **NEVER mix projects** - This is Brain repository ONLY
-   - ❌ Don't add rovo tasks to brain plan
-   - ❌ Don't discuss other projects in brain THOUGHTS.md
-   - ✅ Create `cortex/<project>/` for other project analysis
+   - Don't add rovo tasks to brain plan
+   - Don't discuss other projects in brain THOUGHTS.md
+   - Create `cortex/<project>/` for other project analysis
 
 2. **Check environment FIRST** - Always verify WSL/Windows 11 context
    - User cannot use X11 tools (wmctrl, xdotool)
@@ -153,26 +155,30 @@ If you see an “orphaned sub-items” warning, fix the formatting before procee
 4. **Timestamps need seconds** - Always `YYYY-MM-DD HH:MM:SS`
 
 5. **NEVER implement tasks yourself** - Cortex plans, Ralph executes
-   - ❌ Don't modify files in `templates/`, `skills/domains/`, `skills/playbooks/`
-   - ❌ Don't write code fixes directly
-   - ✅ Write task contracts in `workers/IMPLEMENTATION_PLAN.md` (below the marker!)
-   - ✅ **Exception:** User explicitly grants permission for a specific task
+   - Don't modify files in `templates/`, `skills/domains/`, `skills/playbooks/`
+   - Don't write code fixes directly
+   - Write task contracts in `workers/IMPLEMENTATION_PLAN.md` (below the marker!)
+   - **Exception:** User explicitly grants permission for a specific task
 
 6. **Tasks go to workers/IMPLEMENTATION_PLAN.md** - This is the source of truth
-   - ❌ Don't add tasks to `cortex/IMPLEMENTATION_PLAN.md` (it's a read-only copy)
-   - ✅ `workers/IMPLEMENTATION_PLAN.md` is where Ralph reads tasks
-   - ✅ `sync_workers_plan_to_cortex.sh` copies workers/ → cortex/ (one-way sync)
+   - Don't add tasks to `cortex/IMPLEMENTATION_PLAN.md` (it's a read-only copy)
+   - `workers/IMPLEMENTATION_PLAN.md` is where Ralph reads tasks
+   - `sync_workers_plan_to_cortex.sh` copies workers/ to cortex/ (one-way sync)
+
+7. **NEVER modify `*/rovodev/` folders** - These are frozen legacy archives
+   - `cortex/rovodev/`, `workers/ralph/rovodev/`, `workers/shared/rovodev/`, `templates/*/rovodev/` are all read-only
+   - They preserve the original Atlassian/Rovo Dev runtime and must not be updated
 
 ---
 
-## 🛑 Implementation Boundary (Hard Stop)
+## Implementation Boundary (Hard Stop)
 
 **BEFORE modifying any file outside `cortex/`:**
 
 1. **STOP** and ask: "Is this a task Ralph should do?"
-2. **If yes** → Write task contract in `workers/IMPLEMENTATION_PLAN.md` (below marker line)
-3. **If no** → Only Cortex config files are allowed
-4. **If user grants explicit permission** → You may proceed with that specific task
+2. **If yes** - Write task contract in `workers/IMPLEMENTATION_PLAN.md` (below marker line)
+3. **If no** - Only Cortex config files are allowed
+4. **If user grants explicit permission** - You may proceed with that specific task
 
 **Files Cortex CAN modify:**
 
@@ -204,8 +210,8 @@ Full details: `cortex/docs/PLAN_ONLY_MODE.md`.
 
 ## Performance
 
-- ✅ Read files directly (`cat`, `grep`), use `bash cortex/snapshot.sh`
-- ❌ Don't call `loop.sh` (infinite loop), `current_ralph_tasks.sh`, or `thunk_ralph_tasks.sh` (interactive tools)
+- Read files directly (`cat`, `grep`), use `bash cortex/snapshot.sh`
+- Don't call `loop.sh` (infinite loop), `current_ralph_tasks.sh`, or `thunk_ralph_tasks.sh` (interactive tools)
 
 ## When You Make Mistakes
 
@@ -218,11 +224,9 @@ Full details: `cortex/docs/PLAN_ONLY_MODE.md`.
 
 ## Updating Model Configuration
 
-To change the default model for Cortex (e.g., Opus 4.6 → Sonnet, or add new model):
+To change the default model for Cortex:
 
 **See:** `cortex/docs/UPDATE_MODEL_CONFIG.md` for complete steps.
-
-**Quick summary:** Update 4 files (global config + 3 launcher scripts), test, commit.
 
 ---
 
@@ -233,6 +237,7 @@ To change the default model for Cortex (e.g., Opus 4.6 → Sonnet, or add new mo
 - **Decisions log:** `DECISIONS.md`
 - **Strategic planning:** `THOUGHTS.md`
 - **Model config updates:** `cortex/docs/UPDATE_MODEL_CONFIG.md`
+- **Legacy Rovo runtime:** `rovodev/`
 
 ---
 

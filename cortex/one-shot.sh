@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# cortex/run.sh - Cortex Manager Entry Point
-# Cortex is the high-level manager that orchestrates Ralph workers
+# cortex/one-shot.sh - Cortex One-Shot Planning Session via Claude Code
+#
+# Legacy Rovo Dev version: cortex/rovodev/one-shot.sh
 
 set -euo pipefail
 
@@ -8,42 +9,27 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BRAIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-# Navigate to brain root
 cd "${BRAIN_ROOT}"
-
-# Set agent name for cache isolation
-export AGENT_NAME="cortex"
-
-# Source shared cache library
-# shellcheck source=../workers/shared/cache.sh
-source "${BRAIN_ROOT}/workers/shared/cache.sh"
 
 # Usage help
 usage() {
   cat <<EOF
-Usage: bash cortex/run.sh [OPTIONS]
+Usage: bash cortex/one-shot.sh [OPTIONS]
 
-Cortex Manager - High-level orchestration for the Brain repository.
+Cortex Manager - One-shot planning session via Claude Code.
 
 Options:
   --help, -h           Show this help message
-  --interactive, -i    Enable interactive chat mode (ask questions)
-  --model MODEL        Override model (gpt52, codex, opus, sonnet, auto)
-  --runner RUNNER      Use specific runner (rovodev, opencode) [default: rovodev]
+  --model MODEL        Override model (opus, sonnet, haiku)
+  --dangerously-skip-permissions  Skip all permission prompts
 
 Examples:
-  bash cortex/run.sh                    # One-shot planning session
-  bash cortex/run.sh --interactive      # Interactive chat with Cortex
-  bash cortex/run.sh -i --model opus    # Interactive with specific model
-  bash cortex/run.sh --runner opencode --model grok
+  bash cortex/one-shot.sh                    # One-shot planning session
+  bash cortex/one-shot.sh --model sonnet     # Use Sonnet (less quota)
 
 Description:
   Cortex reads the current repository state and provides strategic
   direction by creating Task Contracts for Ralph workers.
-
-  Modes:
-  - Default: One-shot planning session (auto-approve with --yolo)
-  - Interactive (-i): Chat with Cortex, ask questions, get guidance
 
   Context provided to Cortex:
   - CORTEX_SYSTEM_PROMPT.md (identity and rules)
@@ -51,13 +37,15 @@ Description:
   - DECISIONS.md (architectural decisions)
   - REPO_MAP.md (navigation guide)
 
+  For interactive chat, use: bash cortex/cortex.bash
+  For legacy Rovo Dev runtime: bash cortex/rovodev/one-shot.sh
+
 EOF
 }
 
 # Defaults
 MODEL_ARG=""
-RUNNER="rovodev"
-INTERACTIVE=false
+SKIP_PERMISSIONS="false"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -66,17 +54,13 @@ while [[ $# -gt 0 ]]; do
       usage
       exit 0
       ;;
-    -i | --interactive)
-      INTERACTIVE=true
-      shift
-      ;;
     --model)
       MODEL_ARG="${2:-}"
       shift 2
       ;;
-    --runner)
-      RUNNER="${2:-rovodev}"
-      shift 2
+    --dangerously-skip-permissions)
+      SKIP_PERMISSIONS="true"
+      shift
       ;;
     *)
       echo "Unknown argument: $1" >&2
@@ -86,105 +70,23 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# Model version configuration - same as loop.sh
-MODEL_SONNET_45="anthropic.claude-sonnet-4-5-20250929-v1:0"
-MODEL_OPUS_45="anthropic.claude-opus-4-5-20251101-v1:0"
-MODEL_SONNET_4="anthropic.claude-sonnet-4-20250514-v1:0"
-MODEL_GPT52="gpt-5.2"            # Valid RovoDev model ID
-MODEL_GPT52_CODEX="gpt-5.2-codex"  # Valid RovoDev model ID (Codex)
-
-# Resolve model shortcut to full model ID
-resolve_model() {
-  local model="$1"
-  case "$model" in
-    opus | opus4.5 | opus45)
-      echo "$MODEL_OPUS_45"
+# Model resolution for Claude Code
+CLAUDE_MODEL_FLAG=""
+if [[ -n "$MODEL_ARG" ]]; then
+  case "$MODEL_ARG" in
+    opus | opus46 | opus-4-6)
+      CLAUDE_MODEL_FLAG="--model claude-opus-4-6"
       ;;
-    sonnet | sonnet4.5 | sonnet45)
-      echo "$MODEL_SONNET_45"
+    sonnet | sonnet46 | sonnet-4-6)
+      CLAUDE_MODEL_FLAG="--model claude-sonnet-4-6"
       ;;
-    sonnet4)
-      echo "$MODEL_SONNET_4"
-      ;;
-    gpt52 | gpt-5.2 | gpt5.2)
-      echo "$MODEL_GPT52"
-      ;;
-    codex | gpt-5.2-codex)
-      echo "$MODEL_GPT52_CODEX"
-      ;;
-    latest | auto)
-      echo ""
+    haiku | haiku45 | haiku-4-5)
+      CLAUDE_MODEL_FLAG="--model claude-haiku-4-5-20251001"
       ;;
     *)
-      echo "$model"
+      CLAUDE_MODEL_FLAG="--model $MODEL_ARG"
       ;;
   esac
-}
-
-# Resolve model shortcut for OpenCode
-resolve_model_opencode() {
-  local model="$1"
-  case "$model" in
-    grok | grokfast | grok-code-fast-1)
-      echo "opencode/grok-code"
-      ;;
-    opus | opus4.5 | opus45)
-      echo "opencode/gpt-5-nano"
-      ;; # Fallback
-    sonnet | sonnet4.5 | sonnet45)
-      echo "opencode/gpt-5-nano"
-      ;; # Fallback
-    latest | auto)
-      echo ""
-      ;;
-    *)
-      echo "$model"
-      ;;
-  esac
-}
-
-# Default to GPT-5.2 for Cortex (RovoDev) / grok for OpenCode
-if [[ -z "$MODEL_ARG" ]]; then
-  if [[ "$RUNNER" == "opencode" ]]; then
-    MODEL_ARG="grok"
-  else
-    MODEL_ARG="gpt52" # Cortex uses GPT-5.2 by default
-  fi
-fi
-
-if [[ "$RUNNER" == "opencode" ]]; then
-  RESOLVED_MODEL="$(resolve_model_opencode "$MODEL_ARG")"
-else
-  RESOLVED_MODEL="$(resolve_model "$MODEL_ARG")"
-fi
-
-# Setup model config for RovoDev
-CONFIG_FLAG=""
-TEMP_CONFIG=""
-
-if [[ "$RUNNER" == "rovodev" ]]; then
-  if [[ -n "$RESOLVED_MODEL" ]]; then
-    TEMP_CONFIG="/tmp/rovodev_cortex_config_$$_$(date +%s).yml"
-
-    # Copy base config and override modelId
-    if [[ -f "$HOME/.rovodev/config.yml" ]]; then
-      sed "s|^  modelId:.*|  modelId: $RESOLVED_MODEL|" "$HOME/.rovodev/config.yml" >"$TEMP_CONFIG"
-    else
-      cat >"$TEMP_CONFIG" <<EOFCONFIG
-version: 1
-agent:
-  modelId: $RESOLVED_MODEL
-EOFCONFIG
-    fi
-    CONFIG_FLAG="--config-file=$TEMP_CONFIG"
-    echo "Using model: $RESOLVED_MODEL"
-  fi
-else
-  if [[ -n "$RESOLVED_MODEL" ]]; then
-    echo "Using model: $RESOLVED_MODEL"
-  else
-    echo "Using model: (OpenCode default)"
-  fi
 fi
 
 # Check required files exist
@@ -196,170 +98,105 @@ REQUIRED_FILES=(
 
 for file in "${REQUIRED_FILES[@]}"; do
   if [[ ! -f "$file" ]]; then
-    echo "❌ Required file missing: $file" >&2
+    echo "Required file missing: $file" >&2
     exit 1
   fi
 done
 
-# Make snapshot.sh executable if not already
-chmod +x cortex/snapshot.sh
-
 echo "========================================"
-echo "🧠 Cortex Manager"
+echo "Cortex Manager - One-Shot Planning"
 echo "========================================"
 echo ""
 
-# Run cleanup before generating context (reduces token usage)
+# Run cleanup before generating context
 if [[ -x "cortex/cleanup_cortex_plan.sh" ]]; then
   echo "Running plan cleanup..."
   if bash cortex/cleanup_cortex_plan.sh 2>/dev/null; then
-    echo "✓ Plan cleanup complete"
+    echo "Plan cleanup complete"
   else
-    echo "⚠ Plan cleanup skipped (no completed tasks or error)"
+    echo "Plan cleanup skipped (no completed tasks or error)"
   fi
   echo ""
 fi
 
 echo "Generating context snapshot..."
+SNAPSHOT_OUTPUT=$(bash cortex/snapshot.sh 2>/dev/null || echo "Snapshot generation failed")
+echo "Snapshot generated."
 echo ""
 
-# Generate snapshot to temporary file
-SNAPSHOT_FILE="/tmp/cortex_snapshot_$$_$(date +%s).txt"
-if ! bash cortex/snapshot.sh >"$SNAPSHOT_FILE" 2>&1; then
-  echo "❌ Failed to generate snapshot" >&2
-  cat "$SNAPSHOT_FILE"
-  rm -f "$SNAPSHOT_FILE"
-  exit 1
+# Build the system prompt
+SYSTEM_PROMPT=$(cat <<EOF
+$(cat cortex/CORTEX_SYSTEM_PROMPT.md)
+
+---
+
+# Current Repository State
+
+${SNAPSHOT_OUTPUT}
+
+---
+
+# Architectural Decisions
+
+$(cat cortex/DECISIONS.md)
+
+---
+
+# Repository Map
+
+$(cat cortex/docs/REPO_MAP.md 2>/dev/null || echo "No REPO_MAP.md found")
+EOF
+)
+
+# Build the one-shot planning message
+PLANNING_MESSAGE=$(cat <<EOF
+You are Cortex, starting a one-shot planning session.
+
+Review the current repository state, implementation plan progress, and pending gaps.
+Then:
+
+1. Assess what has been completed since last session
+2. Identify any blockers or issues
+3. Update workers/IMPLEMENTATION_PLAN.md with new task contracts if needed
+4. Update cortex/THOUGHTS.md with current mission status
+5. Summarize what Ralph should work on next
+
+Be concise and actionable. Focus on the highest-priority work.
+EOF
+)
+
+echo "========================================"
+echo "Invoking Cortex via Claude Code..."
+echo "========================================"
+echo ""
+
+# Write system prompt to temp file
+PROMPT_FILE=$(mktemp /tmp/cortex_oneshot_prompt_XXXXXX.md)
+echo "$SYSTEM_PROMPT" > "$PROMPT_FILE"
+
+# Build Claude command
+CLAUDE_CMD="claude"
+if [[ -n "$CLAUDE_MODEL_FLAG" ]]; then
+  CLAUDE_CMD="$CLAUDE_CMD $CLAUDE_MODEL_FLAG"
+fi
+if [[ "$SKIP_PERMISSIONS" == "true" ]]; then
+  CLAUDE_CMD="$CLAUDE_CMD --dangerously-skip-permissions"
 fi
 
-echo "Snapshot generated successfully."
-echo ""
+# Run one-shot (non-interactive with -p flag)
+$CLAUDE_CMD --system-prompt "$(cat "$PROMPT_FILE")" -p "$PLANNING_MESSAGE"
+EXIT_CODE=$?
 
-# Build composite prompt
-COMPOSITE_PROMPT="/tmp/cortex_prompt_$$_$(date +%s).md"
+# Cleanup
+rm -f "$PROMPT_FILE"
 
-{
-  echo "# Cortex Manager - Strategic Planning Session"
-  echo ""
-  echo "You are Cortex, the high-level manager for the Brain repository."
-  echo ""
-
-  echo "---"
-  echo ""
-
-  cat cortex/CORTEX_SYSTEM_PROMPT.md
-
-  echo ""
-  echo "---"
-  echo ""
-  echo "# Current Repository State"
-  echo ""
-
-  cat "$SNAPSHOT_FILE"
-
-  echo ""
-  echo "---"
-  echo ""
-  echo "# Architectural Decisions"
-  echo ""
-
-  cat cortex/DECISIONS.md
-
-  echo ""
-  echo "---"
-  echo ""
-  echo "# Repository Map"
-  echo ""
-
-  cat cortex/docs/REPO_MAP.md
-
-} >"$COMPOSITE_PROMPT"
-
-echo "Composite prompt prepared: $COMPOSITE_PROMPT"
 echo ""
 echo "========================================"
-echo "Invoking Cortex..."
-echo "========================================"
-echo ""
-
-# Run Cortex
-if [[ "$RUNNER" == "rovodev" ]]; then
-  # RovoDev runner
-  if [[ "$INTERACTIVE" == "true" ]]; then
-    # Interactive mode - with --yolo for auto-approval
-    echo "🧠 Cortex Interactive Mode"
-    echo "📋 Cortex has full context of the Brain repository."
-    echo "💬 You can now ask questions and have a conversation."
-    echo ""
-
-    # Generate cache key for this invocation
-    PROMPT_HASH=$(file_content_hash "$COMPOSITE_PROMPT")
-    GIT_SHA=$(git rev-parse HEAD 2>/dev/null || echo "unknown")
-    CACHE_KEY=$(cache_make_key "rovodev" "cortex" "$PROMPT_HASH" "$GIT_SHA")
-
-    # Check cache if enabled
-    if cache_should_use && lookup_cache_pass "$CACHE_KEY" "$GIT_SHA" "rovodev"; then
-      SAVED_MS=$(cache_try_load "$CACHE_KEY")
-      echo "✓ Cache hit - skipping LLM call (saved ${SAVED_MS}ms)"
-      log_cache_hit "$CACHE_KEY" "rovodev"
-      EXIT_CODE=0
-    else
-      log_cache_miss "$CACHE_KEY" "rovodev"
-      acli rovodev run "$CONFIG_FLAG" --yolo "$(cat "$COMPOSITE_PROMPT")"
-      EXIT_CODE=$?
-
-      # Store successful result in cache
-      if [[ $EXIT_CODE -eq 0 ]]; then
-        cache_store "$CACHE_KEY" "rovodev" 0
-      fi
-    fi
-  else
-    # One-shot mode - auto-approve with --yolo
-
-    # Generate cache key for this invocation
-    PROMPT_HASH=$(file_content_hash "$COMPOSITE_PROMPT")
-    GIT_SHA=$(git rev-parse HEAD 2>/dev/null || echo "unknown")
-    CACHE_KEY=$(cache_make_key "rovodev" "cortex" "$PROMPT_HASH" "$GIT_SHA")
-
-    # Check cache if enabled
-    if cache_should_use && lookup_cache_pass "$CACHE_KEY" "$GIT_SHA" "rovodev"; then
-      SAVED_MS=$(cache_try_load "$CACHE_KEY")
-      echo "✓ Cache hit - skipping LLM call (saved ${SAVED_MS}ms)"
-      log_cache_hit "$CACHE_KEY" "rovodev"
-      EXIT_CODE=0
-    else
-      log_cache_miss "$CACHE_KEY" "rovodev"
-      acli rovodev run "$CONFIG_FLAG" --yolo "$(cat "$COMPOSITE_PROMPT")"
-      EXIT_CODE=$?
-
-      # Store successful result in cache
-      if [[ $EXIT_CODE -eq 0 ]]; then
-        cache_store "$CACHE_KEY" "rovodev" 0
-      fi
-    fi
-  fi
+if [[ $EXIT_CODE -eq 0 ]]; then
+  echo "Cortex planning session complete."
 else
-  # OpenCode runner
-  if [[ "$INTERACTIVE" == "true" ]]; then
-    echo "⚠️  Warning: Interactive mode not fully supported with OpenCode runner"
-    echo "    Falling back to default mode"
-    echo ""
-  fi
-  if [[ -n "$RESOLVED_MODEL" ]]; then
-    opencode run --model "$RESOLVED_MODEL" --format default "$(cat "$COMPOSITE_PROMPT")"
-    EXIT_CODE=$?
-  else
-    opencode run --format default "$(cat "$COMPOSITE_PROMPT")"
-    EXIT_CODE=$?
-  fi
+  echo "Cortex session ended with code ${EXIT_CODE}"
 fi
-
-# Cleanup temp files
-rm -f "$SNAPSHOT_FILE" "$COMPOSITE_PROMPT" "$TEMP_CONFIG"
-
-echo ""
-echo "========================================"
-echo "Cortex session complete."
 echo "========================================"
 
 exit $EXIT_CODE

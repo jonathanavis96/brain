@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# cortex/chat.sh - Interactive chat with Cortex (lightweight, no full planning session)
+# cortex/cortex.bash - Interactive chat with Cortex via Claude Code
+#
+# Legacy Rovo Dev version: cortex/rovodev/cortex.bash
 
 set -euo pipefail
 
@@ -22,49 +24,46 @@ readonly YELLOW='\033[1;33m'
 readonly NC='\033[0m' # No Color
 
 echo -e "${CYAN}========================================${NC}"
-echo -e "${CYAN}🧠 Cortex Interactive Chat${NC}"
+echo -e "${CYAN}Cortex Interactive Chat (Claude Code)${NC}"
 echo -e "${CYAN}========================================${NC}"
 echo ""
 
 # Usage help
 usage() {
   cat <<EOF
-Usage: bash cortex/chat.sh [OPTIONS]
+Usage: bash cortex/cortex.bash [OPTIONS]
 
 Cortex Interactive Chat - Direct conversation with the Brain manager.
 
 Options:
   --help, -h           Show this help message
-  --model MODEL        Override model (opus46, opus45, sonnet, gpt52, codex, auto)
-                       Default: opus46 (Claude Opus 4.6)
-  --design             Start in design-only audit mode (links to the premium UI/UX audit prompt)
+  --model MODEL        Override model (opus, sonnet, haiku)
+                       Default: opus (Claude Opus 4.6)
+  --design             Start in design-only audit mode
+  --dangerously-skip-permissions  Skip all permission prompts
 
 Examples:
-  bash cortex/chat.sh                    # Start chat with default model
-  bash cortex/chat.sh --model opus       # Chat with specific model
-  bash cortex/chat.sh --design           # Design-only UI/UX audit mode
+  bash cortex/cortex.bash                    # Start chat with default model
+  bash cortex/cortex.bash --model sonnet     # Chat with Sonnet (uses less quota)
+  bash cortex/cortex.bash --design           # Design-only UI/UX audit mode
 
 Description:
-  Opens an interactive chat session with Cortex. Unlike one-shot.sh,
-  this does NOT trigger a full planning session. Use this for:
+  Opens an interactive chat session with Cortex via Claude Code.
+  Use this for:
   - Asking questions about the repository
   - Getting guidance on tasks
   - Discussing architectural decisions
   - Quick consultations
 
-  Cortex will have access to:
-  - His identity (CORTEX_SYSTEM_PROMPT.md)
-  - Current repository state (via snapshot)
-  - All Brain documentation
-
-  For automated planning sessions, use: bash cortex/one-shot.sh
+  For the legacy Rovo Dev runtime, use: bash cortex/rovodev/cortex.bash
 
 EOF
 }
 
 # Defaults
-MODEL_ARG="opus46" # Default to Opus 4.6 for Cortex
+MODEL_ARG=""
 DESIGN_MODE="false"
+SKIP_PERMISSIONS="true"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -81,6 +80,10 @@ while [[ $# -gt 0 ]]; do
       DESIGN_MODE="true"
       shift
       ;;
+    --dangerously-skip-permissions)
+      SKIP_PERMISSIONS="true"
+      shift
+      ;;
     *)
       echo "Unknown argument: $1" >&2
       usage
@@ -89,35 +92,21 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# Model resolution (same logic as one-shot.sh)
-# Default to Opus 4.6 if no model specified
-if [[ -z "$MODEL_ARG" ]]; then
-  MODEL_ARG="opus46"
-fi
-
-RESOLVED_MODEL=""
+# Model resolution for Claude Code
+CLAUDE_MODEL_FLAG=""
 if [[ -n "$MODEL_ARG" ]]; then
   case "$MODEL_ARG" in
-    opus46 | opus-4-6 | opus4.6)
-      RESOLVED_MODEL="claude-opus-4-6"
+    opus | opus46 | opus-4-6)
+      CLAUDE_MODEL_FLAG="--model claude-opus-4-6"
       ;;
-    opus | opus45 | opus-4-5)
-      RESOLVED_MODEL="anthropic.claude-opus-4-5-20251101-v1:0"
+    sonnet | sonnet46 | sonnet-4-6)
+      CLAUDE_MODEL_FLAG="--model claude-sonnet-4-6"
       ;;
-    gpt52 | gpt-5.2 | gpt5.2)
-      RESOLVED_MODEL="gpt-5.2"
-      ;;
-    codex | gpt-5.2-codex)
-      RESOLVED_MODEL="gpt-5.2-codex"
-      ;;
-    sonnet | sonnet45 | sonnet-4-5)
-      RESOLVED_MODEL="anthropic.claude-sonnet-4-5-20250929-v1:0"
-      ;;
-    auto)
-      RESOLVED_MODEL=""
+    haiku | haiku45 | haiku-4-5)
+      CLAUDE_MODEL_FLAG="--model claude-haiku-4-5-20251001"
       ;;
     *)
-      RESOLVED_MODEL="$MODEL_ARG"
+      CLAUDE_MODEL_FLAG="--model $MODEL_ARG"
       ;;
   esac
 fi
@@ -128,23 +117,19 @@ echo ""
 if [[ -x "${SCRIPT_DIR}/cleanup_cortex_plan.sh" ]]; then
   echo -e "${YELLOW}Running plan cleanup...${NC}"
   if bash "${SCRIPT_DIR}/cleanup_cortex_plan.sh" 2>/dev/null; then
-    echo -e "${GREEN}✓ Plan cleanup complete${NC}"
+    echo -e "${GREEN}Plan cleanup complete${NC}"
   else
-    echo -e "${YELLOW}⚠ Plan cleanup skipped (no completed tasks)${NC}"
+    echo -e "${YELLOW}Plan cleanup skipped (no completed tasks)${NC}"
   fi
   echo ""
 fi
 
-# Generate lightweight context snapshot
-echo -e "${YELLOW}Generating context snapshot...${NC}"
-echo ""
-SNAPSHOT_OUTPUT=$(bash "${SCRIPT_DIR}/snapshot.sh")
+# Snapshot no longer auto-injected - agent fetches on demand via: bash cortex/snapshot.sh
 
 # Optional design-only prompt injection
 DESIGN_PROMPT_BLOCK=""
 if [[ "$DESIGN_MODE" == "true" ]]; then
-  DESIGN_PROMPT_BLOCK=$(
-    cat <<EOF
+  DESIGN_PROMPT_BLOCK="
 
 ---
 
@@ -154,36 +139,19 @@ You are starting Cortex in **design-only audit mode**.
 
 - Do **not** implement code changes.
 - Follow the premium UI/UX audit prompt + protocol here (do not inline/modify it):
-  - `cortex/docs/UI_UX_AUDIT_PROMPT_PREMIUM.md`
+  - cortex/docs/UI_UX_AUDIT_PROMPT_PREMIUM.md
 - Produce a structured audit report and a phased plan.
-EOF
-  )
+"
 fi
 
-# Create Cortex system prompt for config
-CORTEX_SYSTEM_PROMPT=$(
-  cat <<EOF
+# Build the system prompt - lean injection (THOUGHTS.md, NEURONS.md, snapshot fetched on demand)
+SYSTEM_PROMPT=$(cat <<EOF
 $(cat "${SCRIPT_DIR}/AGENTS.md")
 
 ---
 
-$(cat "${SCRIPT_DIR}/NEURONS.md")
-
----
-
 $(cat "${SCRIPT_DIR}/CORTEX_SYSTEM_PROMPT.md")
-
----
-
-$(cat "${SCRIPT_DIR}/THOUGHTS.md")
-
 ${DESIGN_PROMPT_BLOCK}
-
----
-
-# Current Repository State
-
-${SNAPSHOT_OUTPUT}
 
 ---
 
@@ -194,7 +162,7 @@ You are now in **chat mode**. The user wants to have a direct conversation with 
 **Do NOT:**
 - Automatically start a planning session
 - Update files unless explicitly asked
-- Execute the full planning workflow from one-shot.sh
+- Execute the full planning workflow
 
 **DO:**
 - Answer questions about the Brain repository
@@ -208,50 +176,44 @@ EOF
 )
 
 echo -e "${CYAN}========================================${NC}"
-echo -e "${CYAN}Starting Cortex Chat...${NC}"
+echo -e "${CYAN}Starting Cortex Chat via Claude Code...${NC}"
 echo -e "${CYAN}========================================${NC}"
 echo ""
-echo -e "${GREEN}💬 You can now chat with Cortex!${NC}"
-echo -e "${GREEN}📋 Cortex has full context of the Brain repository.${NC}"
-echo -e "${GREEN}🚪 Type 'exit' or press Ctrl+C to end the session.${NC}"
+echo -e "${GREEN}You can now chat with Cortex!${NC}"
+echo -e "${GREEN}Cortex has full context of the Brain repository.${NC}"
+echo -e "${GREEN}Type 'exit' or press Ctrl+C to end the session.${NC}"
 echo ""
 
-# Create temporary config file with Cortex system prompt
-CONFIG_FILE="/tmp/cortex_config_$$_$(date +%s).yml"
+# Build Claude Code command
+CLAUDE_CMD="claude"
 
-cat >"$CONFIG_FILE" <<EOF
-version: 1
-agent:
-  additionalSystemPrompt: |
-$(while IFS= read -r line; do
-  echo "    $line"
-done <<<"$CORTEX_SYSTEM_PROMPT")
-  streaming: true
-  temperature: 0.3
-EOF
-
-# Add model if specified
-if [[ -n "$RESOLVED_MODEL" ]]; then
-  echo "  modelId: ${RESOLVED_MODEL}" >>"$CONFIG_FILE"
-else
-  echo "  modelId: auto" >>"$CONFIG_FILE"
+# Add model flag if specified
+if [[ -n "$CLAUDE_MODEL_FLAG" ]]; then
+  CLAUDE_CMD="$CLAUDE_CMD $CLAUDE_MODEL_FLAG"
 fi
 
-# Launch interactive chat (NO message argument = interactive mode)
-# Use Cortex notifier wrapper so long sessions can notify when a slow response finishes.
-"${BRAIN_ROOT}/bin/cortex-run-notify" --interactive-watch --min-seconds 120 -- \
-  --config-file "$CONFIG_FILE" --yolo
+# Add permission skip if requested
+if [[ "$SKIP_PERMISSIONS" == "true" ]]; then
+  CLAUDE_CMD="$CLAUDE_CMD --dangerously-skip-permissions"
+fi
+
+# Write system prompt to temp file (avoids shell escaping issues with --system-prompt)
+PROMPT_FILE=$(mktemp /tmp/cortex_prompt_XXXXXX.md)
+echo "$SYSTEM_PROMPT" > "$PROMPT_FILE"
+
+# Launch Claude Code with system prompt
+$CLAUDE_CMD --system-prompt "$(cat "$PROMPT_FILE")"
 EXIT_CODE=$?
 
 # Cleanup
-rm -f "$CONFIG_FILE"
+rm -f "$PROMPT_FILE"
 
 echo ""
 echo -e "${CYAN}========================================${NC}"
 if [[ $EXIT_CODE -eq 0 ]]; then
-  echo -e "${GREEN}✓ Chat session ended${NC}"
+  echo -e "${GREEN}Chat session ended${NC}"
 else
-  echo -e "${YELLOW}⚠ Chat session ended with code ${EXIT_CODE}${NC}"
+  echo -e "${YELLOW}Chat session ended with code ${EXIT_CODE}${NC}"
 fi
 echo -e "${CYAN}========================================${NC}"
 
