@@ -527,6 +527,11 @@ mkdir -p "$PROJECT_LOCATION/brain/cortex"
 for template_path in "$TEMPLATES_DIR/cortex"/*; do
   template_file=$(basename "$template_path")
 
+  # Skip directories (e.g., rovodev/ legacy archives)
+  if [[ -d "$template_path" ]]; then
+    continue
+  fi
+
   # cortex-PROJECT.bash is used to generate the per-project entrypoint below
   if [[ "$template_file" == "cortex-PROJECT.bash" ]]; then
     continue

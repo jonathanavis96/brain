@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# cortex/cortex-{{PROJECT_SLUG}}.bash - Interactive chat with Cortex for {{PROJECT_NAME}}
+# cortex/cortex-{{PROJECT_SLUG}}.bash - Interactive chat with Cortex via Claude Code
+#
+# Usage: bash cortex/cortex-{{PROJECT_SLUG}}.bash [OPTIONS]
 
 set -euo pipefail
 
@@ -11,34 +13,10 @@ while [ -h "$SOURCE" ]; do
   [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
 done
 SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
-PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-WORKSPACE_ROOT="$PROJECT_ROOT"
-PARENT_ROOT="$(cd "${PROJECT_ROOT}/.." && pwd)"
-PARENT_BASENAME="$(basename "$PARENT_ROOT")"
-
-# Safety: Don't go up to /code/ or other multi-repo directories
-FORBIDDEN_PARENT_NAMES=("code" "projects" "repos" "workspaces" "src" "home")
-IS_FORBIDDEN=false
-for forbidden in "${FORBIDDEN_PARENT_NAMES[@]}"; do
-  if [[ "$PARENT_BASENAME" == "$forbidden" ]]; then
-    IS_FORBIDDEN=true
-    break
-  fi
-done
-
-# If parent is NOT forbidden AND contains sibling app folders, widen workspace to repo root
-if [[ "$IS_FORBIDDEN" == "false" ]] && [[ "$PARENT_ROOT" != "$PROJECT_ROOT" ]]; then
-  # Check for common project structure folders (Next.js, general web, backend, etc.)
-  for candidate in src public app pages components website frontend backend api docs content static assets lib server; do
-    if [[ -d "${PARENT_ROOT}/${candidate}" && "${PARENT_ROOT}/${candidate}" != "$PROJECT_ROOT" ]]; then
-      WORKSPACE_ROOT="$PARENT_ROOT"
-      break
-    fi
-  done
-fi
-
-echo "[cortex] workspace root: ${WORKSPACE_ROOT}" >&2
-echo "[cortex] project root (brain): ${PROJECT_ROOT}" >&2
+# brain/ is parent of cortex/
+BRAIN_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+# project root is parent of brain/
+PROJECT_ROOT="$(cd "${BRAIN_DIR}/.." && pwd)"
 
 cd "${PROJECT_ROOT}"
 
@@ -49,36 +27,45 @@ readonly YELLOW='\033[1;33m'
 readonly NC='\033[0m'
 
 echo -e "${CYAN}========================================${NC}"
-echo -e "${CYAN}🧠 Cortex Interactive Chat${NC}"
+echo -e "${CYAN}Cortex Interactive Chat (Claude Code)${NC}"
 echo -e "${CYAN}   {{PROJECT_NAME}}${NC}"
 echo -e "${CYAN}========================================${NC}"
 echo ""
 
 usage() {
-  echo "Usage: bash cortex/cortex-{{PROJECT_SLUG}}.bash [OPTIONS]"
-  echo ""
-  echo "Cortex Interactive Chat - Direct conversation with the project manager."
-  echo ""
-  echo "Options:"
-  echo "  --help, -h           Show this help"
-  echo "  --model MODEL        Override model (gpt52, codex, opus, sonnet, auto)"
-  echo ""
+  cat <<EOF
+Usage: bash brain/cortex/cortex-{{PROJECT_SLUG}}.bash [OPTIONS]
 
-  echo "Examples:"
-  echo "  bash cortex/cortex-{{PROJECT_SLUG}}.bash              # Start chat"
-  echo "  bash cortex/cortex-{{PROJECT_SLUG}}.bash --model opus # Chat with specific model"
-  echo ""
-  echo "Use this for:"
-  echo "  - Asking questions about the project"
-  echo "  - Getting guidance on tasks"
-  echo "  - Discussing design decisions"
-  echo "  - Quick consultations"
-  echo ""
-  echo "For automated planning: bash cortex/one-shot.sh"
-  echo "To run Ralph (execution): bash loop.sh"
+Cortex Interactive Chat - Direct conversation with the project manager.
+
+Options:
+  --help, -h                       Show this help
+  --model MODEL                    Override model (opus, sonnet, haiku)
+                                   Default: opus (Claude Opus 4.6)
+  --design                         Start in design-only audit mode
+  --dangerously-skip-permissions   Skip all permission prompts
+
+Examples:
+  bash brain/cortex/cortex-{{PROJECT_SLUG}}.bash              # Start chat
+  bash brain/cortex/cortex-{{PROJECT_SLUG}}.bash --model sonnet # Use Sonnet (less quota)
+  bash brain/cortex/cortex-{{PROJECT_SLUG}}.bash --design       # Design audit mode
+
+Use this for:
+  - Asking questions about the project
+  - Getting guidance on tasks
+  - Discussing design decisions
+  - Quick consultations
+
+For automated planning: bash brain/cortex/one-shot.sh
+To run Ralph (execution): bash brain/workers/ralph/loop.sh
+
+EOF
 }
 
-MODEL_ARG="opus46" # Default to Opus 4.6 for Cortex
+# Defaults
+MODEL_ARG=""
+DESIGN_MODE="false"
+SKIP_PERMISSIONS="true"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -90,6 +77,14 @@ while [[ $# -gt 0 ]]; do
       MODEL_ARG="${2:-}"
       shift 2
       ;;
+    --design)
+      DESIGN_MODE="true"
+      shift
+      ;;
+    --dangerously-skip-permissions)
+      SKIP_PERMISSIONS="true"
+      shift
+      ;;
     *)
       echo "Unknown: $1" >&2
       usage
@@ -98,55 +93,65 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-RESOLVED_MODEL=""
-case "$MODEL_ARG" in
-  opus46 | opus-4-6 | opus4.6) RESOLVED_MODEL="claude-opus-4-6" ;;
-  opus | opus45 | opus-4-5) RESOLVED_MODEL="anthropic.claude-opus-4-5-20251101-v1:0" ;;
-  gpt52 | gpt-5.2 | gpt5.2) RESOLVED_MODEL="gpt-5.2" ;;
-  codex | gpt-5.2-codex) RESOLVED_MODEL="gpt-5.2-codex" ;;
-  sonnet | sonnet45 | sonnet-4-5) RESOLVED_MODEL="anthropic.claude-sonnet-4-5-20250929-v1:0" ;;
-  auto) RESOLVED_MODEL="" ;;
-  *) RESOLVED_MODEL="$MODEL_ARG" ;;
-esac
-
-echo ""
-echo -e "${YELLOW}Generating context snapshot...${NC}"
-echo ""
-SNAPSHOT_OUTPUT=$(bash "${SCRIPT_DIR}/snapshot.sh")
-
-# Build system prompt with project context
-NEURONS_CONTENT=""
-if [[ -f "${PROJECT_ROOT}/NEURONS.md" ]]; then
-  NEURONS_CONTENT=$(cat "${PROJECT_ROOT}/NEURONS.md")
-elif [[ -f "${PROJECT_ROOT}/workers/ralph/NEURONS.md" ]]; then
-  NEURONS_CONTENT=$(cat "${PROJECT_ROOT}/workers/ralph/NEURONS.md")
-elif [[ -f "${PROJECT_ROOT}/workers/NEURONS.md" ]]; then
-  NEURONS_CONTENT=$(cat "${PROJECT_ROOT}/workers/NEURONS.md")
-else
-  NEURONS_CONTENT="# NEURONS.md not found\n\nCreate it (or generate it) to give Cortex a repo map."
+# Model resolution for Claude Code
+CLAUDE_MODEL_FLAG=""
+if [[ -n "$MODEL_ARG" ]]; then
+  case "$MODEL_ARG" in
+    opus | opus46 | opus-4-6)
+      CLAUDE_MODEL_FLAG="--model claude-opus-4-6"
+      ;;
+    sonnet | sonnet46 | sonnet-4-6)
+      CLAUDE_MODEL_FLAG="--model claude-sonnet-4-6"
+      ;;
+    haiku | haiku45 | haiku-4-5)
+      CLAUDE_MODEL_FLAG="--model claude-haiku-4-5-20251001"
+      ;;
+    *)
+      CLAUDE_MODEL_FLAG="--model $MODEL_ARG"
+      ;;
+  esac
 fi
 
-CORTEX_SYSTEM_PROMPT=$(
-  cat <<EOF
+echo ""
+
+# Run cleanup before generating context (reduces token usage)
+if [[ -x "${SCRIPT_DIR}/cleanup_cortex_plan.sh" ]]; then
+  echo -e "${YELLOW}Running plan cleanup...${NC}"
+  if bash "${SCRIPT_DIR}/cleanup_cortex_plan.sh" 2>/dev/null; then
+    echo -e "${GREEN}Plan cleanup complete${NC}"
+  else
+    echo -e "${YELLOW}Plan cleanup skipped (no completed tasks)${NC}"
+  fi
+  echo ""
+fi
+
+# Snapshot no longer auto-injected - agent fetches on demand via: bash brain/cortex/snapshot.sh
+
+# Optional design-only prompt injection
+DESIGN_PROMPT_BLOCK=""
+if [[ "$DESIGN_MODE" == "true" ]]; then
+  DESIGN_PROMPT_BLOCK="
+
+---
+
+# Design-Only Mode
+
+You are starting Cortex in **design-only audit mode**.
+
+- Do **not** implement code changes.
+- Follow the premium UI/UX audit prompt + protocol (if available in brain/docs/design/).
+- Produce a structured audit report and a phased plan.
+"
+fi
+
+# Build the system prompt - lean injection (THOUGHTS.md, NEURONS.md, snapshot fetched on demand)
+SYSTEM_PROMPT=$(cat <<EOF
 $(cat "${SCRIPT_DIR}/AGENTS.md")
 
 ---
 
-${NEURONS_CONTENT}
-
----
-
 $(cat "${SCRIPT_DIR}/CORTEX_SYSTEM_PROMPT.md")
-
----
-
-$(cat "${SCRIPT_DIR}/THOUGHTS.md")
-
----
-
-# Current Repository State
-
-${SNAPSHOT_OUTPUT}
+${DESIGN_PROMPT_BLOCK}
 
 ---
 
@@ -166,63 +171,47 @@ You are now in **chat mode**. The user wants to have a direct conversation with 
 - Be conversational and helpful
 - Wait for user input and respond naturally
 
-**To run Ralph (execution):** User runs \`bash loop.sh\` from project root
-
 The user will now type their questions. Engage in a natural conversation.
 EOF
 )
 
 echo -e "${CYAN}========================================${NC}"
-echo -e "${CYAN}Starting Cortex Chat...${NC}"
+echo -e "${CYAN}Starting Cortex Chat via Claude Code...${NC}"
 echo -e "${CYAN}========================================${NC}"
 echo ""
-echo -e "${GREEN}💬 You can now chat with Cortex!${NC}"
-echo -e "${GREEN}📋 Cortex has full context of the {{PROJECT_NAME}} project.${NC}"
-echo -e "${GREEN}🚪 Type 'exit' or press Ctrl+C to end the session.${NC}"
+echo -e "${GREEN}You can now chat with Cortex!${NC}"
+echo -e "${GREEN}Cortex has full context of the {{PROJECT_NAME}} project.${NC}"
+echo -e "${GREEN}Type 'exit' or press Ctrl+C to end the session.${NC}"
 echo ""
 
-CONFIG_FILE="/tmp/cortex_config_$$_$(date +%s).yml"
+# Build Claude Code command
+CLAUDE_CMD="claude"
 
-cat >"$CONFIG_FILE" <<EOF
-version: 1
-agent:
-  additionalSystemPrompt: |
-$(while IFS= read -r line; do
-  echo "    $line"
-done <<<"$CORTEX_SYSTEM_PROMPT")
-  streaming: true
-  temperature: 0.3
-EOF
-
-if [[ -n "$RESOLVED_MODEL" ]]; then
-  echo "  modelId: ${RESOLVED_MODEL}" >>"$CONFIG_FILE"
-else
-  echo "  modelId: auto" >>"$CONFIG_FILE"
+if [[ -n "$CLAUDE_MODEL_FLAG" ]]; then
+  CLAUDE_CMD="$CLAUDE_CMD $CLAUDE_MODEL_FLAG"
 fi
 
-CORTEX_RUN_NOTIFY_BIN="${PROJECT_ROOT}/bin/cortex-run-notify"
-if [[ ! -x "$CORTEX_RUN_NOTIFY_BIN" ]]; then
-  echo "Error: cortex-run-notify not found or not executable: $CORTEX_RUN_NOTIFY_BIN" >&2
-  echo "Tip: ensure your project includes bin/cortex-run-notify (from the Brain repo)" >&2
-  exit 1
+if [[ "$SKIP_PERMISSIONS" == "true" ]]; then
+  CLAUDE_CMD="$CLAUDE_CMD --dangerously-skip-permissions"
 fi
 
-(
-  cd "$WORKSPACE_ROOT" || exit 1
-  export BRAIN_PROJECT_LABEL="cortex-{{PROJECT_SLUG}}"
-  "$CORTEX_RUN_NOTIFY_BIN" --min-seconds 120 -- \
-    --config-file "$CONFIG_FILE" --yolo
-)
+# Write system prompt to temp file (avoids shell escaping issues)
+PROMPT_FILE=$(mktemp /tmp/cortex_prompt_XXXXXX.md)
+echo "$SYSTEM_PROMPT" > "$PROMPT_FILE"
+
+# Launch Claude Code with system prompt
+$CLAUDE_CMD --system-prompt "$(cat "$PROMPT_FILE")"
 EXIT_CODE=$?
 
-rm -f "$CONFIG_FILE"
+# Cleanup
+rm -f "$PROMPT_FILE"
 
 echo ""
 echo -e "${CYAN}========================================${NC}"
 if [[ $EXIT_CODE -eq 0 ]]; then
-  echo -e "${GREEN}✓ Chat session ended${NC}"
+  echo -e "${GREEN}Chat session ended${NC}"
 else
-  echo -e "${YELLOW}⚠ Chat session ended with code ${EXIT_CODE}${NC}"
+  echo -e "${YELLOW}Chat session ended with code ${EXIT_CODE}${NC}"
 fi
 echo -e "${CYAN}========================================${NC}"
 

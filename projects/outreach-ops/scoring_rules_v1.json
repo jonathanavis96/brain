@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "maxScore": 100,
+  "thresholds": {
+    "hot": 75,
+    "warm": 45,
+    "cold": 0
+  },
+  "scoreRanges": [
+    { "min": 75, "max": 100, "label": "hot", "description": "High-priority — reach out immediately" },
+    { "min": 45, "max": 74, "label": "warm", "description": "Worth pursuing — queue for outreach" },
+    { "min": 20, "max": 44, "label": "cold", "description": "Low priority — nurture or revisit later" },
+    { "min": 0, "max": 19, "label": "ice", "description": "Not a fit — deprioritize" }
+  ],
+  "factors": [
+    {
+      "name": "companySize",
+      "weight": 20,
+      "description": "Company employee count bracket",
+      "levels": {
+        "enterprise": 20,
+        "midMarket": 15,
+        "smb": 10,
+        "startup": 5,
+        "unknown": 3
+      }
+    },
+    {
+      "name": "techStackMatch",
+      "weight": 20,
+      "description": "How well their tech stack aligns with our offering",
+      "levels": {
+        "perfect": 20,
+        "strong": 15,
+        "partial": 10,
+        "weak": 5,
+        "unknown": 2
+      }
+    },
+    {
+      "name": "painSignalStrength",
+      "weight": 25,
+      "description": "Strength of identified pain signals",
+      "levels": {
+        "explicit": 25,
+        "strong": 20,
+        "moderate": 12,
+        "weak": 5,
+        "none": 0
+      }
+    },
+    {
+      "name": "decisionMakerAccess",
+      "weight": 15,
+      "description": "Access level to decision makers",
+      "levels": {
+        "direct": 15,
+        "introduced": 12,
+        "identified": 8,
+        "unknown": 3
+      }
+    },
+    {
+      "name": "engagementSignals",
+      "weight": 10,
+      "description": "Prior engagement or interaction signals",
+      "levels": {
+        "active": 10,
+        "warm": 7,
+        "cold": 3,
+        "none": 0
+      }
+    },
+    {
+      "name": "segmentFit",
+      "weight": 10,
+      "description": "How well lead fits target segment",
+      "levels": {
+        "ideal": 10,
+        "good": 7,
+        "marginal": 4,
+        "poor": 1
+      }
+    }
+  ]
+}

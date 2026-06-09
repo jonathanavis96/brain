@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Base body styles */
+body {
+  @apply bg-gray-50 text-gray-900 antialiased;
+}
+
+/* Sidebar transition */
+.sidebar-overlay {
+  @apply fixed inset-0 z-40 bg-black/50 transition-opacity;
+}

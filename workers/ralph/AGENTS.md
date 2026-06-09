@@ -10,10 +10,9 @@ Ralph loop for brain repository self-improvement. Runs PLAN/BUILD cycles to main
 
 ## Prerequisites
 
-- **Environment:** WSL2 (Windows Subsystem for Linux) on Windows 11 with Ubuntu (WSL2 is the assumed baseline for this repo)
-- **Shell:** bash (comes with WSL Ubuntu)
-- **Atlassian CLI:** `acli` - <https://developer.atlassian.com/cloud/cli/>
-- **RovoDev:** `acli rovodev auth && acli rovodev usage site`
+- **Environment:** WSL2 (Windows Subsystem for Linux) on Windows 11 with Ubuntu
+- **Shell:** bash
+- **Runtime:** Claude Code (primary), Rovo Dev (legacy, see `rovodev/`)
 
 ## Environment Notes
 
@@ -41,7 +40,7 @@ Mode: Iteration 1 or every 3rd = PLAN, others = BUILD.
 
 Ralph uses two complementary monitors for real-time task tracking:
 
-**Current Ralph Tasks:** `bash current_ralph_tasks.sh` - Shows pending tasks from workers/IMPLEMENTATION_PLAN.md  
+**Current Ralph Tasks:** `bash current_ralph_tasks.sh` - Shows pending tasks from workers/IMPLEMENTATION_PLAN.md
 **THUNK Monitor:** `bash thunk_ralph_tasks.sh` - Shows completed task log from workers/ralph/THUNK.md
 
 ### Rule: Interactive monitors must not be piped
@@ -78,7 +77,6 @@ Ralph outputs when ALL tasks complete:
 
 ## Troubleshooting
 
-- **acli not found**: Add to PATH in ~/.bashrc
 - **Loop doesn't stop**: Check `:::COMPLETE:::` output
 - **Ralph batches tasks**: See PROMPT.md "EXACTLY ONE task" emphasis
 - **Wrong mode**: Check iteration number (1 or 3rd = PLAN)
@@ -93,3 +91,4 @@ See README.md for design philosophy, safety features, and detailed documentation
 - **skills/domains/ralph/ralph-patterns.md** - Ralph loop architecture
 - **docs/BOOTSTRAPPING.md** - New project bootstrapping and generators
 - **skills/** - Skills knowledge base and self-improvement protocol
+- **Legacy Rovo runtime:** `rovodev/`

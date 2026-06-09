@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Good Vibrationz – SEO Report by All Done Sites</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --ads-blue:    #0ea5e9;
+      --ads-dark:    #111111;
+      --ads-mid:     #334155;
+      --ads-light:   #f1f5f9;
+      --ads-border:  #e2e8f0;
+      --red:         #dc2626;
+      --orange:      #ea580c;
+      --green:       #16a34a;
+      --text:        #1e293b;
+      --muted:       #64748b;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text);
+      background: #fff;
+    }
+
+    /* ── COVER ── */
+    .cover {
+      min-height: 100vh;
+      background: var(--ads-dark);
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      page-break-after: always;
+    }
+
+    .cover-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .cover-header .ads-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .cover-header .ads-brand img { height: 28px; width: auto; }
+    .cover-header .ads-brand span {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: -0.3px;
+    }
+
+    .cover-header .report-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .cover-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 48px;
+      text-align: center;
+    }
+
+    .cover-logo {
+      margin-bottom: 36px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 28px 40px;
+      display: inline-block;
+    }
+    .cover-logo img { height: 70px; width: auto; display: block; }
+
+    .cover-body h1 {
+      font-size: 42px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.15;
+      letter-spacing: -1.5px;
+      margin-bottom: 16px;
+    }
+    .cover-body h1 span { color: var(--ads-blue); }
+
+    .cover-body .subtitle {
+      font-size: 16px;
+      color: rgba(255,255,255,0.5);
+      max-width: 440px;
+      margin: 0 auto 48px;
+    }
+
+    .cover-meta {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+    }
+    .cover-meta-item { text-align: center; }
+    .cover-meta-item .label {
+      display: block;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 4px;
+    }
+    .cover-meta-item .value {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .cover-footer {
+      padding: 24px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .cover-footer p {
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+    }
+    .cover-footer .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--ads-blue);
+      border-radius: 50%;
+    }
+
+    /* ── PAGE LAYOUT ── */
+    .page {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 56px 60px;
+    }
+
+    /* ── SECTION HEADERS ── */
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--ads-blue);
+      margin-bottom: 8px;
+    }
+    .section-heading {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--ads-dark);
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+    .section-rule {
+      width: 40px;
+      height: 3px;
+      background: var(--ads-blue);
+      border-radius: 2px;
+      margin-bottom: 24px;
+    }
+
+    /* ── INTRO ── */
+    .intro-block {
+      background: var(--ads-light);
+      border-left: 4px solid var(--ads-blue);
+      border-radius: 0 8px 8px 0;
+      padding: 20px 24px;
+      margin-bottom: 28px;
+    }
+    .intro-block p { color: var(--ads-mid); margin-bottom: 8px; font-size: 14px; }
+    .intro-block p:last-child { margin-bottom: 0; }
+
+    /* ── EXPLAINER GRID ── */
+    .explainer-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin: 24px 0;
+    }
+    .explainer-card {
+      background: #fff;
+      border: 1px solid var(--ads-border);
+      border-radius: 10px;
+      padding: 18px 20px;
+    }
+    .explainer-card .card-tag {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+    .explainer-card h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ads-dark);
+      margin-bottom: 6px;
+    }
+    .explainer-card p { font-size: 12px; color: var(--muted); }
+
+    /* ── SCORE STRIP ── */
+    .score-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 28px 0;
+    }
+    .score-card {
+      border-radius: 10px;
+      padding: 20px 16px;
+      text-align: center;
+      border: 1px solid;
+    }
+    .score-card.fail  { background: #fef2f2; border-color: #fca5a5; }
+    .score-card.warn  { background: #fff7ed; border-color: #fdba74; }
+    .score-card .score-num {
+      font-size: 36px;
+      font-weight: 900;
+      line-height: 1;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .score-card.fail .score-num  { color: var(--red); }
+    .score-card.warn .score-num  { color: var(--orange); }
+    .score-card .score-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── FINDING CARDS ── */
+    .finding {
+      border: 1px solid var(--ads-border);
+      border-radius: 12px;
+      padding: 24px 26px;
+      margin-bottom: 20px;
+      page-break-inside: avoid;
+    }
+    .finding-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .badge {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 3px 9px;
+      border-radius: 20px;
+    }
+    .badge.urgent    { background: #fee2e2; color: #b91c1c; }
+    .badge.important { background: #ffedd5; color: #c2410c; }
+    .badge.quick-win { background: #dcfce7; color: #15803d; }
+    .finding h3 { font-size: 15px; font-weight: 700; color: var(--ads-dark); }
+
+    .finding p { font-size: 13px; color: var(--ads-mid); margin-bottom: 12px; }
+    .finding p:last-child { margin-bottom: 0; }
+
+    /* ── COMPARISON ── */
+    .comparison {
+      border: 1px solid var(--ads-border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 14px 0;
+      font-size: 13px;
+    }
+    .cmp-row { display: flex; align-items: stretch; }
+    .cmp-row + .cmp-row { border-top: 1px solid var(--ads-border); }
+    .cmp-label {
+      min-width: 80px;
+      padding: 12px 14px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      border-right: 1px solid var(--ads-border);
+    }
+    .cmp-label.before { background: #fef2f2; color: #b91c1c; }
+    .cmp-label.after  { background: #f0fdf4; color: #15803d; }
+    .cmp-text {
+      padding: 12px 16px;
+      flex: 1;
+      line-height: 1.5;
+    }
+    .cmp-text.before { background: #fffafa; color: #64748b; }
+    .cmp-text.after  { background: #fafffe; color: var(--ads-dark); font-weight: 500; }
+
+    /* ── WHY BOX ── */
+    .why-box {
+      background: var(--ads-light);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 13px;
+      color: var(--ads-mid);
+      margin-top: 14px;
+    }
+    .why-box strong { display: block; color: var(--ads-dark); font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+
+    /* ── ANALOGY ── */
+    .analogy {
+      background: var(--ads-dark);
+      color: #fff;
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin: 28px 0;
+    }
+    .analogy .analogy-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--ads-blue);
+      margin-bottom: 10px;
+    }
+    .analogy p { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.7; }
+
+    /* ── NEXT STEPS ── */
+    .next-steps {
+      background: var(--ads-dark);
+      border-radius: 14px;
+      padding: 32px 36px;
+      margin: 32px 0;
+    }
+    .next-steps h3 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 24px;
+      letter-spacing: -0.3px;
+    }
+    .step-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding-bottom: 18px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .step-row:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .step-num {
+      width: 32px;
+      height: 32px;
+      background: var(--ads-blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .step-content h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .step-content p  { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+    /* ── ITEM LIST ── */
+    .item-list { margin: 16px 0; }
+    .item-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      border: 1px solid;
+    }
+    .item-row.high     { background: #fef2f2; border-color: #fca5a5; }
+    .item-row.medium   { background: #fff7ed; border-color: #fdba74; }
+    .item-row.optional { background: #f0fdf4; border-color: #86efac; }
+    .item-row .item-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+    .item-row.high .item-indicator     { background: var(--red); }
+    .item-row.medium .item-indicator   { background: var(--orange); }
+    .item-row.optional .item-indicator { background: var(--green); }
+    .item-row .item-text strong { display: block; font-size: 13px; margin-bottom: 2px; }
+    .item-row.high .item-text strong     { color: #991b1b; }
+    .item-row.medium .item-text strong   { color: #9a3412; }
+    .item-row.optional .item-text strong { color: #166534; }
+    .item-row .item-text p { font-size: 12px; color: var(--muted); }
+
+    /* ── PAGE BREAK ── */
+    .page-break { page-break-after: always; }
+
+    /* ── REPORT FOOTER ── */
+    .report-footer {
+      margin-top: 40px;
+      padding: 24px 0 0;
+      border-top: 1px solid var(--ads-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .report-footer .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .report-footer .footer-brand img { height: 18px; width: auto; }
+    .report-footer .footer-brand span { font-size: 12px; color: var(--muted); font-weight: 600; }
+    .report-footer .footer-date { font-size: 12px; color: var(--muted); }
+
+    /* ── DIVIDER ── */
+    .divider { border: none; border-top: 1px solid var(--ads-border); margin: 36px 0; }
+
+    h2, h3 { page-break-after: avoid; }
+    .finding { page-break-inside: avoid; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     COVER
+══════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-header">
+    <a class="ads-brand" href="https://alldonesites.com">
+      <img src="https://alldonesites.com/logo-bimi.svg" alt="All Done Sites Logo">
+      <span>All Done Sites</span>
+    </a>
+    <span class="report-label">SEO Audit Report</span>
+  </div>
+
+  <div class="cover-body">
+    <div class="cover-logo">
+      <img src="https://goodvibrationz.co.za/wp-content/uploads/2025/03/GIF-2024-11-26-19-10-03-80x58.gif"
+           alt="Good Vibrationz Logo">
+    </div>
+
+    <h1>Your Website<br><span>SEO Report</span></h1>
+    <p class="subtitle">An honest look at how Google sees your website — and exactly what to improve.</p>
+
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <span class="label">Website</span>
+        <span class="value">goodvibrationz.co.za</span>
+      </div>
+      <div class="cover-meta-item">
+        <span class="label">Prepared for</span>
+        <span class="value">DJ Mat Pheiffer</span>
+      </div>
+      <div class="cover-meta-item">
+        <span class="label">Date</span>
+        <span class="value">March 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cover-footer">
+    <p>Prepared by All Done Sites &mdash; alldonesites.com</p>
+    <div class="dot"></div>
+    <p>Confidential</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 1 — WHAT IS SEO
+══════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="section-title">Introduction</div>
+  <div class="section-heading">What is SEO and why does it matter for you?</div>
+  <div class="section-rule"></div>
+
+  <div class="intro-block">
+    <p><strong>SEO stands for "Search Engine Optimisation."</strong> In plain English, it means making your website easier for Google to find and understand — so that when someone in Cape Town searches for <em>"wedding DJ Cape Town"</em> or <em>"hire a DJ for my wedding,"</em> your website appears near the top of the results instead of a competitor's.</p>
+    <p>Your website looks great and has all the right information. The problem is that Google is currently struggling to understand what you do, where you are, and why couples should choose you. This report explains exactly what to fix and why it matters for your bookings.</p>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">A simple way to think about it</div>
+    <p>Your website is like your DJ booth — it looks and sounds incredible. But right now the venue doors are locked and there's no sign outside. SEO is the signage, the open doors, and the listing in every wedding directory that gets people through the door in the first place.</p>
+  </div>
+
+  <div class="explainer-grid">
+    <div class="explainer-card">
+      <div class="card-tag">Term 1</div>
+      <h4>Title Tags</h4>
+      <p>The headline Google shows in search results. Like a shop sign — the first thing people see before deciding whether to click.</p>
+    </div>
+    <div class="explainer-card">
+      <div class="card-tag">Term 2</div>
+      <h4>Meta Descriptions</h4>
+      <p>The short description under your title in Google results. Think of it as a two-sentence pitch that convinces someone to choose your link over a competitor's.</p>
+    </div>
+    <div class="explainer-card">
+      <div class="card-tag">Term 3</div>
+      <h4>Headings</h4>
+      <p>The bold text on your pages. Google reads these to understand what each section is about — they're not just for visitors.</p>
+    </div>
+    <div class="explainer-card">
+      <div class="card-tag">Term 4</div>
+      <h4>Schema / Structured Data</h4>
+      <p>Invisible code that tells Google exactly what your business is, where you're located, and what you charge. Unlocks enhanced features in search results.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-title">Summary</div>
+  <div class="section-heading">Your current SEO health</div>
+  <div class="section-rule"></div>
+
+  <div class="score-strip">
+    <div class="score-card fail">
+      <span class="score-num">0/2</span>
+      <div class="score-label">Meta Descriptions</div>
+    </div>
+    <div class="score-card warn">
+      <span class="score-num">2/9</span>
+      <div class="score-label">Headings Optimised</div>
+    </div>
+    <div class="score-card fail">
+      <span class="score-num">0%</span>
+      <div class="score-label">Images With Alt Text</div>
+    </div>
+  </div>
+
+  <p style="font-size: 13px; color: var(--muted); margin-top: 8px;">
+    The good news: every single one of these is fixable. Most changes take your web developer less than an hour.
+  </p>
+
+  <div class="report-footer">
+    <div class="footer-brand">
+      <img src="https://alldonesites.com/logo-bimi.svg" alt="All Done Sites">
+      <span>All Done Sites</span>
+    </div>
+    <span class="footer-date">goodvibrationz.co.za &mdash; SEO Report &mdash; March 2026</span>
+  </div>
+
+</div>
+<div class="page-break"></div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 2 — URGENT FIXES
+══════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="section-title">Priority 1</div>
+  <div class="section-heading">Urgent fixes — do these first</div>
+  <div class="section-rule"></div>
+
+  <p style="font-size: 13px; color: var(--muted); margin-bottom: 24px;">These changes will have the biggest immediate impact on how many people find you through Google. Your developer can implement all three in under an hour.</p>
+
+  <!-- Fix 1 -->
+  <div class="finding">
+    <div class="finding-top">
+      <span class="badge urgent">Urgent</span>
+      <h3>Your website has no Google snippet text</h3>
+    </div>
+    <p>When someone searches for a wedding DJ in Cape Town, Google shows a short description under your website link. Right now that description is completely blank — so Google writes its own (usually badly), and fewer people click your link.</p>
+
+    <div class="comparison">
+      <div class="cmp-row">
+        <div class="cmp-label before">Now</div>
+        <div class="cmp-text before">Google makes something up — often the first sentence of your page, which may not be relevant or compelling.</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-label after">Fix</div>
+        <div class="cmp-text after">Cape Town wedding &amp; events DJ Mat Pheiffer brings professional sound, lighting &amp; personalised playlists to your big day. Packages from R6,000. Get a free quote!</div>
+      </div>
+    </div>
+
+    <div class="why-box">
+      <strong>Why this matters for bookings</strong>
+      This text is your advertisement in Google's search results. When a bride-to-be sees your listing next to a competitor's, this is what convinces her to click yours. Mentioning packages from R6,000 also attracts serious enquiries and filters out people who aren't ready to book.
+    </div>
+  </div>
+
+  <!-- Fix 2 -->
+  <div class="finding">
+    <div class="finding-top">
+      <span class="badge urgent">Urgent</span>
+      <h3>Your website title doesn't tell Google what you do</h3>
+    </div>
+    <p>The title tag is the main blue link text in Google results and the most important signal Google uses to decide when to show your site. Currently it just shows your brand name — which Google doesn't know is a DJ business in Cape Town.</p>
+
+    <div class="comparison">
+      <div class="cmp-row">
+        <div class="cmp-label before">Now</div>
+        <div class="cmp-text before">Good Vibrationz</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-label after">Fix</div>
+        <div class="cmp-text after">Good Vibrationz | Cape Town Wedding &amp; Events DJ | DJ Mat Pheiffer</div>
+      </div>
+    </div>
+
+    <div class="why-box">
+      <strong>Why this matters for bookings</strong>
+      When someone searches "wedding DJ Cape Town," Google doesn't know to show your site because those words aren't in your title. Adding them tells Google exactly where you are and what you do. This is the single biggest ranking signal on the entire page.
+    </div>
+  </div>
+
+  <!-- Fix 3 -->
+  <div class="finding">
+    <div class="finding-top">
+      <span class="badge urgent">Urgent</span>
+      <h3>Your main homepage heading misses a key opportunity</h3>
+    </div>
+    <p>The big headline at the top of your homepage is another major signal to Google. It works well for visitors — but Google needs to see your location and service type in it to rank you for relevant searches.</p>
+
+    <div class="comparison">
+      <div class="cmp-row">
+        <div class="cmp-label before">Now</div>
+        <div class="cmp-text before">Unforgettable Entertainment for Your Wedding</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-label after">Fix</div>
+        <div class="cmp-text after">Cape Town Wedding &amp; Events DJ | Unforgettable Music by DJ Mat Pheiffer</div>
+      </div>
+    </div>
+
+    <div class="why-box">
+      <strong>Why this matters for bookings</strong>
+      "Unforgettable Entertainment" sounds lovely but is invisible to search engines. "Cape Town Wedding DJ" is the exact phrase couples type into Google. Including it here helps your page rank for that search without changing how your site feels to read.
+    </div>
+  </div>
+
+  <div class="report-footer">
+    <div class="footer-brand">
+      <img src="https://alldonesites.com/logo-bimi.svg" alt="All Done Sites">
+      <span>All Done Sites</span>
+    </div>
+    <span class="footer-date">goodvibrationz.co.za &mdash; SEO Report &mdash; March 2026</span>
+  </div>
+
+</div>
+<div class="page-break"></div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 3 — IMPORTANT IMPROVEMENTS
+══════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="section-title">Priority 2</div>
+  <div class="section-heading">Important improvements</div>
+  <div class="section-rule"></div>
+
+  <!-- Fix 4 -->
+  <div class="finding">
+    <div class="finding-top">
+      <span class="badge important">Important</span>
+      <h3>Your pricing packages have vague names</h3>
+    </div>
+    <p>Your packages are called "Basic," "Happy Medium," and "Going Big." These work well as friendly names for visitors, but they give Google nothing to work with when someone searches "wedding DJ packages Cape Town" or "DJ hire price Cape Town."</p>
+
+    <div class="comparison">
+      <div class="cmp-row">
+        <div class="cmp-label before">Now</div>
+        <div class="cmp-text before">BASIC &nbsp;/&nbsp; HAPPY MEDIUM &nbsp;/&nbsp; GOING BIG</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-label after">Fix</div>
+        <div class="cmp-text after">Basic Wedding DJ Package – R6,000 &nbsp;/&nbsp; Standard Wedding DJ Package – R9,500 &nbsp;/&nbsp; Premium Wedding DJ Package – R17,500</div>
+      </div>
+    </div>
+
+    <div class="why-box">
+      <strong>Why this matters for bookings</strong>
+      Including "Wedding DJ Package" and the price in the section headings means Google can sometimes show your pricing directly in search results as a featured snippet — at the very top of the page, above all other results. Couples who are price-comparing will find you before they even visit your site.
+    </div>
+  </div>
+
+  <!-- Fix 5 -->
+  <div class="finding">
+    <div class="finding-top">
+      <span class="badge important">Important</span>
+      <h3>Your Contact page has a technical conflict</h3>
+    </div>
+    <p>Every webpage should have one main heading — like a chapter title in a book. Your Contact page accidentally has two main headings, which confuses Google about what the page is about.</p>
+
+    <div class="comparison">
+      <div class="cmp-row">
+        <div class="cmp-label before">Now</div>
+        <div class="cmp-text before">"Get in Touch" and "We'd Love to Hear from You!" are both set as the main heading.</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-label after">Fix</div>
+        <div class="cmp-text after">Main heading: "Book DJ Mat for Your Cape Town Wedding or Event" — Sub-heading: "We'd Love to Hear from You"</div>
+      </div>
+    </div>
+
+    <div class="why-box">
+      <strong>Why this matters for bookings</strong>
+      One clear main heading focused on booking helps Google rank your Contact page when couples search "book a wedding DJ Cape Town" — which means they land directly on your enquiry form, ready to get in touch.
+    </div>
+  </div>
+
+  <!-- Fix 6 -->
+  <div class="finding">
+    <div class="finding-top">
+      <span class="badge important">Important</span>
+      <h3>Your photos don't have descriptions Google can read</h3>
+    </div>
+    <p>Google cannot see images. It reads a hidden text label (called "alt text") to understand what each photo shows. Right now your images either have no description or use the camera file name, which tells Google nothing.</p>
+
+    <div class="comparison">
+      <div class="cmp-row">
+        <div class="cmp-label before">Now</div>
+        <div class="cmp-text before">PHOTO-2024-11-20-13-07-09</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-label after">Fix</div>
+        <div class="cmp-text after">DJ Mat Pheiffer performing at a Cape Town wedding reception</div>
+      </div>
+    </div>
+
+    <div class="why-box">
+      <strong>Why this matters for bookings</strong>
+      Google Images is a genuine traffic source for event professionals. When a couple searches "wedding DJ Cape Town photos," properly labelled images appear in image results and drive people to your site. Your developer can update all image descriptions in the WordPress Media Library in about 15 minutes.
+    </div>
+  </div>
+
+  <div class="report-footer">
+    <div class="footer-brand">
+      <img src="https://alldonesites.com/logo-bimi.svg" alt="All Done Sites">
+      <span>All Done Sites</span>
+    </div>
+    <span class="footer-date">goodvibrationz.co.za &mdash; SEO Report &mdash; March 2026</span>
+  </div>
+
+</div>
+<div class="page-break"></div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 4 — STRUCTURED DATA & GROWTH
+══════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="section-title">Priority 3</div>
+  <div class="section-heading">Unlocking Google's enhanced features</div>
+  <div class="section-rule"></div>
+
+  <div class="finding">
+    <div class="finding-top">
+      <span class="badge important">Important</span>
+      <h3>Your business isn't registered in Google's structured data system</h3>
+    </div>
+    <p>Google has a system called "structured data" (or schema markup). It's invisible code your developer adds once that tells Google very specifically: what type of business you are, where you're based, what you charge, and how to contact you.</p>
+
+    <div class="why-box">
+      <strong>What this unlocks for you</strong>
+      Once added, your search listing could show your price range (R6,000–R17,500), your phone number, your Cape Town location, and star ratings — all visible in Google results before someone even visits your site. This is a one-time setup that takes your developer about 30 minutes.
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-title">Looking Ahead</div>
+  <div class="section-heading">More pages means more ways to be found</div>
+  <div class="section-rule"></div>
+
+  <div class="intro-block">
+    <p><strong>Your entire website is currently one page.</strong> Google only has one way in. Adding a few extra focused pages — each targeting a different search term — can multiply the number of ways couples discover you.</p>
+  </div>
+
+  <div class="item-list">
+    <div class="item-row high">
+      <div class="item-indicator"></div>
+      <div class="item-text">
+        <strong>Wedding DJ Cape Town — dedicated page</strong>
+        <p>Targets people searching "wedding DJ Cape Town" specifically. A focused page on this single service would be your strongest ranking asset.</p>
+      </div>
+    </div>
+    <div class="item-row high">
+      <div class="item-indicator"></div>
+      <div class="item-text">
+        <strong>DJ Packages &amp; Pricing page</strong>
+        <p>Targets "DJ hire price Cape Town." Couples actively shopping on price will find you more easily, and you'll get more qualified enquiries.</p>
+      </div>
+    </div>
+    <div class="item-row medium">
+      <div class="item-indicator"></div>
+      <div class="item-text">
+        <strong>About DJ Mat — full story page</strong>
+        <p>Your 20 years of experience and journey from East London to Cape Town builds trust. Google also rewards demonstrated expertise with better rankings.</p>
+      </div>
+    </div>
+    <div class="item-row optional">
+      <div class="item-indicator"></div>
+      <div class="item-text">
+        <strong>Photo Gallery page</strong>
+        <p>A gallery of events gives Google more images to index and gives couples social proof before they reach out.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="next-steps">
+    <h3>What happens next</h3>
+
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Share the developer report</h4>
+        <p>There's a separate technical version of this report with all the exact code and instructions. Forward it to your web developer.</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Quick fixes first — under one hour</h4>
+        <p>Title tags, snippet descriptions, and the Contact page heading. Fastest wins with the biggest immediate impact on rankings.</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Add structured data (schema) code</h4>
+        <p>One-time setup by your developer — unlocks the enhanced Google listing showing your prices and phone number in search results.</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>Set up Google Search Console (free)</h4>
+        <p>This free Google tool shows exactly how many people find your site, what they searched, and which pages they visited. Essential for measuring progress.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="report-footer">
+    <div class="footer-brand">
+      <img src="https://alldonesites.com/logo-bimi.svg" alt="All Done Sites">
+      <span>All Done Sites &mdash; alldonesites.com</span>
+    </div>
+    <span class="footer-date">goodvibrationz.co.za &mdash; SEO Report &mdash; March 2026</span>
+  </div>
+
+</div>
+</body>
+</html>

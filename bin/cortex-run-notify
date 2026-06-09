@@ -185,15 +185,19 @@ interactive_watch() {
   # Background watcher state
   local watch_pid=""
 
-  # Ensure cleanup
   cleanup_watch() {
-    if [[ -n "${watch_pid:-}" ]] && kill -0 "$watch_pid" 2>/dev/null; then
-      kill "$watch_pid" 2>/dev/null || true
-      wait "$watch_pid" 2>/dev/null || true
+    # Args are expanded when trap is set, so we don't depend on locals at shell EXIT.
+    local pid="${1:-}"
+    local log="${2:-}"
+
+    if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null; then
+      kill "$pid" 2>/dev/null || true
+      wait "$pid" 2>/dev/null || true
     fi
-    rm -f "$tmp_log" 2>/dev/null || true
+    if [[ -n "$log" ]]; then
+      rm -f "$log" 2>/dev/null || true
+    fi
   }
-  trap cleanup_watch EXIT
 
   # Start watcher
   (
@@ -245,6 +249,10 @@ interactive_watch() {
     done
   ) &
   watch_pid=$!
+
+  # Ensure we always clean up the watcher + tmp_log, even with `set -u`.
+  # IMPORTANT: Expand vars now so the EXIT trap doesn't depend on function-local vars.
+  trap "cleanup_watch \"$watch_pid\" \"$tmp_log\"" EXIT
 
   # Run interactive acli under script (PTY). Flush output to tmp_log.
   # We also keep the session interactive in the current terminal.
