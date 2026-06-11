@@ -55,3 +55,12 @@ artifacts/rollflow_cache/test_cache.sqlite
 tools/rollflow_analyze/artifacts/rollflow_cache/cache.sqlite
 workers/ralph/artifacts/rollflow_cache/cache.sqlite
 ai-integration-framework/
+
+# Playwright MCP local browser state
+.playwright-mcp/
+
+# Top-level artifact files (PDFs, ZIPs, CSVs in artifacts/)
+artifacts/*.pdf
+artifacts/*.zip
+artifacts/*.csv
+artifacts/*.html
