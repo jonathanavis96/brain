@@ -124,7 +124,23 @@ Test every interactive element.
 - [ ] All pages have descriptions
 - [ ] OG images set
 - [ ] Schema valid
+
+### ADS footer credit (every client site ships with this)
+- [ ] Footer credit present, linked, and styled to match the site
 ```text
+
+The ADS footer credit is standard on every client build. Canonical markup
+(adapt classes to the site's design system; live example in baobab-wines
+`src/components/layout/Footer.tsx`):
+
+```tsx
+<p>
+  Built and maintained by{' '}
+  <a href="https://alldonesites.com" target="_blank" rel="noopener">
+    All Done Sites
+  </a>
+</p>
+```
 
 ### Pass 4: Device Testing
 
