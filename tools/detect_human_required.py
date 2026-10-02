@@ -85,10 +85,12 @@ Detected patterns:
 
     try:
         if args.logfile:
-            with open(args.logfile, "r", encoding="utf-8") as f:
+            # errors="replace": a stray non-UTF-8 byte must not turn a log
+            # with a marker into exit 2, which callers read as "no marker".
+            with open(args.logfile, "r", encoding="utf-8", errors="replace") as f:
                 content = f.read()
         else:
-            content = sys.stdin.read()
+            content = sys.stdin.buffer.read().decode("utf-8", errors="replace")
 
         if detect_human_required(content):
             return 0

@@ -58,6 +58,27 @@ def test_nonexistent_file():
     ), f"Expected exit 2 for nonexistent file, got {result.returncode}"
 
 
+def test_marker_found_in_log_with_invalid_utf8(tmp_path):
+    """A stray non-UTF-8 byte must not hide a marker (exit 2 reads as 'no marker')."""
+    log = tmp_path / "mixed.log"
+    log.write_bytes(b"tool output \xff\xfe garbage\n:::HUMAN_REQUIRED::: approve deploy\n")
+    result = subprocess.run(
+        [sys.executable, "tools/detect_human_required.py", str(log)],
+        capture_output=True,
+    )
+    assert result.returncode == 0, result.stderr
+
+
+def test_marker_found_on_stdin_with_invalid_utf8():
+    """Same guarantee when the log arrives on stdin."""
+    result = subprocess.run(
+        [sys.executable, "tools/detect_human_required.py"],
+        input=b"\xc3\x28 bad bytes\nCAPTCHA shown\n",
+        capture_output=True,
+    )
+    assert result.returncode == 0, result.stderr
+
+
 if __name__ == "__main__":
     print("Running human_required detection tests...")
 

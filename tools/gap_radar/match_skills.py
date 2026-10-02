@@ -85,7 +85,12 @@ def match_errors_to_skills(
     """
     results = []
     for error in errors:
-        error_code = error.get("error_code", "")
+        if not isinstance(error, dict):
+            # Malformed entry from an extractor: skip instead of crashing.
+            continue
+        raw_code = error.get("error_code")
+        error_code = "" if raw_code is None else str(raw_code)
+        error = {**error, "error_code": error_code}
         skill_file = find_skill_for_error(error_code, skill_mappings)
 
         result = {
