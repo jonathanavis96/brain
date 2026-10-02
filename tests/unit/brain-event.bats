@@ -99,3 +99,19 @@ last_event_line() {
   [ -z "$output" ]
   [ ! -s "$WORKSPACE_DIR/state/events.jsonl" ]
 }
+
+@test "brain-event: non-numeric --iter/--code still writes valid JSON" {
+  run "$BRAIN_EVENT" --workspace "$WORKSPACE_DIR" --event error --iter "07" --code "1, \"x\": 2" --status fail
+  [ "$status" -eq 0 ]
+
+  line="$(last_event_line)"
+  echo "$line" | jq -e . >/dev/null
+  echo "$line" | jq -e '.event == "error" and (has("iter") | not) and (has("code") | not)' >/dev/null
+}
+
+@test "brain-event: numeric --iter/--code are kept as numbers" {
+  run "$BRAIN_EVENT" --workspace "$WORKSPACE_DIR" --event error --iter 7 --code -1 --status fail
+  [ "$status" -eq 0 ]
+
+  last_event_line | jq -e '.iter == 7 and .code == -1' >/dev/null
+}

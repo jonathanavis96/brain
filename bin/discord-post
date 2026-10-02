@@ -16,6 +16,7 @@ set -euo pipefail
 # Environment:
 #   DISCORD_WEBHOOK_URL    Discord webhook URL (required unless --dry-run)
 #   DISCORD_MAX_LENGTH     Max chars per message (optional; default: 1900)
+#   DISCORD_TIMEOUT        Seconds per webhook request (optional; default: 10)
 #
 # Features:
 #   - Chunks messages at <= max length (default 1900; safety margin from 2000 limit)
@@ -23,7 +24,7 @@ set -euo pipefail
 #   - Non-blocking: exits 0 if webhook fails OR webhook is missing
 
 usage() {
-  sed -n '3,22p' "$0" | sed 's/^# //' | sed 's/^#//'
+  sed -n '3,24p' "$0" | sed 's/^# //' | sed 's/^#//'
   exit 0
 }
 
@@ -129,13 +130,14 @@ for i in "${!CHUNKS[@]}"; do
   CHUNK="${CHUNKS[$i]}"
 
   if [[ $CHUNK_COUNT -gt 1 ]]; then
-    CONTENT="[Part $((i + 1))/$CHUNK_COUNT]\n\n${CHUNK}"
+    CONTENT="[Part $((i + 1))/$CHUNK_COUNT]"$'\n\n'"${CHUNK}"
   else
     CONTENT="${CHUNK}"
   fi
 
-  # Escape JSON safely
-  CONTENT=$(printf "%b" "$CONTENT" | jq -Rs .)
+  # Escape JSON safely. Use %s, not %b: %b expanded backslash sequences in
+  # the message itself (C:\new, \t, \\server) before sending.
+  CONTENT=$(printf '%s' "$CONTENT" | jq -Rs .)
   PAYLOAD="{\"content\": ${CONTENT}}"
 
   if [[ "$DRY_RUN" == "true" ]]; then
@@ -145,7 +147,9 @@ for i in "${!CHUNKS[@]}"; do
   fi
 
   # Send to Discord (non-blocking)
-  if ! curl -s -X POST \
+  # --fail: an HTTP error (429 rate limit, 404 deleted webhook) is a failure,
+  # not a silent success. --max-time: a hung webhook must not stall callers.
+  if ! curl -s --fail --max-time "${DISCORD_TIMEOUT:-10}" -X POST \
     -H "Content-Type: application/json" \
     -d "$PAYLOAD" \
     "${DISCORD_WEBHOOK_URL}" >/dev/null 2>&1; then

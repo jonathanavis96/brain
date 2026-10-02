@@ -227,7 +227,9 @@ JSON+="\"ts\":\"$TS\""
 JSON+=",\"event\":\"$EVENT\""
 
 # Add optional fields if present
-if [[ -n "$ITER" ]]; then
+# Numeric fields go in unquoted, so anything but an integer would corrupt the
+# JSON line (or inject keys); drop such values (best-effort, never fail).
+if [[ "$ITER" =~ ^-?(0|[1-9][0-9]*)$ ]]; then
   JSON+=",\"iter\":$ITER"
 fi
 
@@ -244,7 +246,7 @@ if [[ -n "$MSG" ]]; then
   JSON+=",\"msg\":\"$(json_escape "$MSG_TRUNCATED")\""
 fi
 
-if [[ -n "$CODE" ]]; then
+if [[ "$CODE" =~ ^-?(0|[1-9][0-9]*)$ ]]; then
   JSON+=",\"code\":$CODE"
 fi
 

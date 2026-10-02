@@ -15,6 +15,12 @@ from pathlib import Path
 from typing import Dict, List
 
 
+def _code(result: Dict) -> str:
+    """Error code as a string; "unknown" when the entry lacks one."""
+    code = result.get("error_code")
+    return str(code) if code not in (None, "") else "unknown"
+
+
 def calculate_coverage_stats(results: List[Dict]) -> Dict:
     """
     Calculate coverage statistics from matched results.
@@ -32,7 +38,7 @@ def calculate_coverage_stats(results: List[Dict]) -> Dict:
     coverage_pct = (covered / total * 100) if total > 0 else 0.0
 
     # Count uncovered error codes
-    uncovered_codes = [r["error_code"] for r in results if not r.get("covered", False)]
+    uncovered_codes = [_code(r) for r in results if not r.get("covered", False)]
     top_uncovered = Counter(uncovered_codes).most_common(10)
 
     return {
@@ -86,7 +92,7 @@ These error codes appear most frequently but are not covered by any skill:
                 (
                     r.get("file", "N/A")
                     for r in results
-                    if r["error_code"] == error_code
+                    if _code(r) == error_code
                 ),
                 "N/A",
             )
@@ -99,7 +105,7 @@ These error codes appear most frequently but are not covered by any skill:
 """
     categories = {}
     for result in results:
-        error_code = result["error_code"]
+        error_code = _code(result)
         # Categorize by prefix (SC, MD, E, F, etc.)
         if error_code.startswith("SC"):
             category = "ShellCheck"
@@ -138,7 +144,7 @@ Based on this analysis, consider creating skills for the following:
         uncovered_by_category = {}
         for result in results:
             if not result.get("covered", False):
-                error_code = result["error_code"]
+                error_code = _code(result)
                 if error_code.startswith("SC"):
                     category = "Shell"
                 elif error_code.startswith("MD"):

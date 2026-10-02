@@ -505,9 +505,17 @@ Files to review:
                 total += len(chunk)
 
             stdout_bytes = b"".join(chunks)
-            _, stderr_bytes = proc.communicate(timeout=30)
+            if truncated:
+                # communicate() would read the rest of stdout into memory,
+                # defeating the cap; stop git instead.
+                proc.kill()
+                proc.stdout.close()
+                proc.wait(timeout=30)
+                stderr_bytes = b""
+            else:
+                _, stderr_bytes = proc.communicate(timeout=30)
 
-            if proc.returncode not in (0, 1):
+            if not truncated and proc.returncode not in (0, 1):
                 # git diff returns 1 for differences in some contexts; treat both 0 and 1 as ok.
                 stderr_text = stderr_bytes.decode("utf-8", errors="replace")
                 print(

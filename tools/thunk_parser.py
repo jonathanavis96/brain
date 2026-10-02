@@ -41,14 +41,31 @@ class ThunkParser:
     TABLE_HEADER_PATTERN = re.compile(
         r"^\| THUNK # \| Original # \| Priority \| Description \| Completed \|"
     )
-    TABLE_ROW_PATTERN = re.compile(
-        r"^\| (\d+) \| ([^|]+) \| ([^|]+) \| ([^|]+) \| ([^|]+) \|"
-    )
 
     def __init__(self, thunk_file: Path):
         self.thunk_file = thunk_file
         self.entries: List[ThunkEntry] = []
         self.current_era = ""
+
+    # Cell boundary: a pipe not preceded by a backslash.
+    CELL_SPLIT = re.compile(r"(?<!\\)\|")
+
+    @classmethod
+    def _split_row(cls, line: str) -> Optional[List[str]]:
+        """Split a table row into its five cells.
+
+        Honours escaped pipes (``\\|``) inside cells and allows empty cells,
+        both of which the old single regex rejected, silently dropping rows.
+        Returns None when the line is not a numbered five-column row.
+        """
+        if not line.startswith("|"):
+            return None
+        parts = cls.CELL_SPLIT.split(line)
+        # Leading "" before the first pipe; trailing "" (or text) after the last.
+        cells = [p.strip().replace("\\|", "|") for p in parts[1:-1]]
+        if len(cells) < 5 or not cells[0].isdigit():
+            return None
+        return cells[:5]
 
     def parse(self) -> List[ThunkEntry]:
         """Parse THUNK.md and extract all entries"""
@@ -76,14 +93,14 @@ class ThunkParser:
 
                 # Parse table row
                 if in_table:
-                    row_match = self.TABLE_ROW_PATTERN.match(line)
-                    if row_match:
+                    cells = self._split_row(line)
+                    if cells is not None:
                         entry = ThunkEntry(
-                            thunk_num=int(row_match.group(1)),
-                            original_id=row_match.group(2).strip(),
-                            priority=row_match.group(3).strip(),
-                            description=row_match.group(4).strip(),
-                            completed=row_match.group(5).strip(),
+                            thunk_num=int(cells[0]),
+                            original_id=cells[1],
+                            priority=cells[2],
+                            description=cells[3],
+                            completed=cells[4],
                             era=self.current_era,
                         )
                         self.entries.append(entry)
